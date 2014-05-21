@@ -1,0 +1,230 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mockup_menu"
+    >
+
+    <LinearLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="495px"
+        android:layout_height="match_parent" 
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/bg_grey"
+        >
+
+        
+        <RelativeLayout 
+            android:id="@+id/profileRl"
+            android:layout_width="216px"
+            android:layout_height="216px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90px"
+            >
+        
+            <Button 
+                android:id="@+id/setFavoriteBtn"
+                android:layout_width="52px"
+                android:layout_height="52px"
+                android:background="@drawable/fav_btn_selector"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10px"
+                android:layout_centerVertical="true"
+                
+                />
+            
+        <ImageView 
+            android:id="@+id/profileBack"
+            android:layout_width="216px"
+            android:layout_height="216px"
+            android:background="@drawable/ring"
+            android:tag="mwar"
+            />
+        
+        
+        
+        
+        
+        <ProgressBar 
+            android:id="@+id/profileImgProgress"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_centerInParent="true"
+            />
+        
+        
+        <ImageView 
+            android:id="@+id/profileImg"
+            android:layout_width="180px"
+            android:layout_height="180px"
+            android:tag="mwar"
+            android:layout_centerInParent="true"
+            android:layout_above="@+id/centrePin"
+            />
+        
+        
+        </RelativeLayout>
+        
+        
+        
+        <TextView 
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="John Paulo"
+            android:textSize="30px"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/profileRl"
+            
+            />
+        
+        
+       
+        
+        
+        
+        <RelativeLayout 
+            android:id="@+id/driverModeRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_marginTop="96px"
+            android:background="@color/transparent"
+            
+            
+            >
+            
+            <TextView 
+            android:id="@+id/driverModeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Driver Mode"
+            android:textSize="34px"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42px"
+            />
+            
+            <ImageView 
+                android:id="@+id/driverModeToggle"
+                android:layout_width="90px"
+                android:layout_height="72px"
+                android:background="@drawable/on"
+                android:tag="mwar"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/driverModeText"
+                android:layout_marginLeft="140px"
+                />
+            
+            <Button 
+                android:id="@+id/myLocationBtn"
+                android:layout_width="72px"
+                android:layout_height="72px"
+                android:background="@drawable/mylocation_btn_selector"
+                android:tag="mwar"
+                android:layout_marginLeft="20px"
+                android:layout_above="@+id/requestRideBtn"
+                android:layout_marginBottom="20px"
+                
+                />
+            
+            
+            
+        </RelativeLayout>
+        
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider"
+            />
+        
+        <RelativeLayout 
+            android:id="@+id/inviteFriendRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_below="@+id/userName"
+            
+            
+            >
+            
+            <TextView 
+            android:id="@+id/inviteFriendText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invite a Friend"
+            android:textSize="34px"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42px"
+            />
+            
+            
+        </RelativeLayout>
+        
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider"
+            />
+        
+        <RelativeLayout 
+            android:id="@+id/helpRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_below="@+id/userName"
+            
+            
+            >
+            
+            <TextView 
+            android:id="@+id/helpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help"
+            android:textSize="34px"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42px"
+            />
+            
+            
+        </RelativeLayout>
+        
+        
+         <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider"
+            />
+         
+         
+          <RelativeLayout 
+            android:id="@+id/aboutRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_below="@+id/userName"
+            
+            
+            >
+            
+            <TextView 
+            android:id="@+id/aboutText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About"
+            android:textSize="34px"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42px"
+            />
+            
+            
+        </RelativeLayout>
+         
+        
+        
+    </LinearLayout>
+
+</FrameLayout>

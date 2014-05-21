@@ -1,0 +1,618 @@
+<android.support.v4.widget.DrawerLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawerLayout"
+    android:layout_width="720px"
+    android:layout_height="1134px" >
+    
+<FrameLayout  
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        
+        <RelativeLayout 
+            android:id="@+id/topRl"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:background="@color/bg_grey"
+            >
+            
+            <Button 
+                android:id="@+id/menuBtn"
+                android:layout_width="82px"
+                android:layout_height="82px"
+                android:background="@drawable/menu_btn_selector"
+            android:layout_centerVertical="true"
+                android:tag="mwar"
+                />
+            
+            <ImageView 
+                android:id="@+id/jugnooLogo"
+                android:layout_width="118px"
+                android:layout_height="54px"
+                android:background="@drawable/jugnoo_logo"
+                android:layout_centerInParent="true"
+                android:tag="mwar"
+                />
+            
+            
+            
+            <Button 
+                android:id="@+id/favBtn"
+                android:layout_width="82px"
+                android:layout_height="82px"
+                android:background="@drawable/fav_btn_selector"
+                android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+                android:tag="mwar"
+                />
+            
+            
+        </RelativeLayout>
+        
+
+       
+        
+        
+        <RelativeLayout
+            android:id="@+id/mapLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/topRl"
+            android:visibility="visible"
+             >
+
+
+                <RelativeLayout
+                    android:id="@+id/mapLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:splitMotionEvents="false" >
+                    
+                    
+
+                    <fragment
+                        android:id="@+id/map"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        class="product.clicklabs.jugnoo.TouchableMapFragment" />
+                    
+                    
+                    
+                    <RelativeLayout 
+            android:id="@+id/centreLocationRl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="525px"
+            
+            
+            >
+            
+                        <ProgressBar 
+            android:id="@+id/centreInfoProgress"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_centerInParent="true"
+            />
+                        
+            
+            <!-- android:layout_marginTop="330px" -->
+                        
+            
+                        <RelativeLayout 
+            android:id="@+id/centreInfoRl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            
+            
+            >
+                        
+                            
+                            
+            <RelativeLayout
+            android:id="@+id/bgLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_map_place_info_bg"
+            android:padding="10dp" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+
+                <TextView
+                    android:id="@+id/centreLocationSnippet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="200px"
+                    android:maxWidth="500px"
+                    android:layout_below="@+id/centreLocationTitle"
+                    android:gravity="center"
+                    android:text="Snippet"
+                    android:textColor="@color/white"
+                    android:textSize="30px"
+                android:layout_centerVertical="true"
+                    
+                     />
+                
+                <Button 
+                android:id="@+id/setFavoriteBtn"
+                android:layout_width="62px"
+                android:layout_height="62px"
+                android:background="@drawable/fav_btn_selector"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/centreLocationSnippet"
+                />
+                
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/triangleBorder"
+            android:layout_width="40px"
+            android:layout_height="40px"
+            android:layout_below="@+id/bgLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-4px"
+            android:background="@drawable/triangle_borderd"
+            android:rotation="180" />
+        </RelativeLayout>
+        
+        
+        <ImageView 
+                        android:id="@+id/centrePin"
+                        android:layout_width="47px"
+                        android:layout_height="76px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-22px"
+            android:tag="mwar"
+            			android:background="@drawable/pin"
+            android:layout_below="@+id/centreInfoRl"
+                        />
+        
+            
+        </RelativeLayout>
+                    
+                    
+                    
+                    
+                    <!-- <fragment
+                        android:id="@+id/map"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        class="com.google.android.gms.maps.SupportMapFragment" /> -->
+                    
+                    
+                    
+                    <RelativeLayout 
+                         android:layout_width="707px"
+                android:layout_height="95px"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/search_bar"
+                android:layout_marginTop="34px"
+                android:tag="mwar"
+                        >
+                    
+                        <ImageView 
+                            android:id="@+id/locImg"
+                            android:layout_width="27px"
+                            android:layout_height="36px"
+                            android:tag="mwar"
+                            android:background="@drawable/location_icon"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20px"
+                            />
+                        
+                   <EditText
+                android:id="@+id/searchEt"
+                android:layout_width="580px"
+                android:layout_height="95px"
+                android:hint="Search Place"
+                android:singleLine="true" 
+                android:layout_marginLeft="56px"
+                android:background="#0000"
+                />
+                    <RelativeLayout 
+                        android:id="@+id/searchRl"
+                        android:layout_width="56px"
+                            android:layout_height="95px"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="0px"
+                            android:layout_alignParentRight="true"
+                        >
+                        
+                        
+                        
+                        
+                        <ImageView 
+                            android:id="@+id/searchImg"
+                            android:layout_width="36px"
+                            android:layout_height="36px"
+                            android:tag="mwar"
+                            android:background="@drawable/search_icon"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20px"
+                            android:layout_alignParentRight="true"
+                            />
+                        
+                        <Button 
+                android:id="@+id/search"
+                android:layout_width="56px"
+                android:layout_height="95px"
+            android:background="@color/transparent"
+                />
+                        
+                    </RelativeLayout>
+                   
+                   
+                   
+                   </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#00ff00"
+                        android:text="Dist" 
+                        android:visibility="gone"
+                        />
+                    
+                    
+
+                    <TextView
+                        android:id="@+id/fare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/distance"
+                        android:background="#00ff00"
+                        android:text="Fare" 
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fare"
+                        android:background="#00ff00"
+                        android:text="Rate" 
+                        android:visibility="gone"/>
+
+                    <Button
+                        android:id="@+id/getCentreBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:text="Centre" 
+                        android:visibility="gone"/>
+
+                    <Button
+                        android:id="@+id/getDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:text="T-D" 
+                        android:visibility="gone"/>
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_width="80px"
+                        android:layout_height="80px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true" />
+                    
+                    
+                   <Button 
+                android:id="@+id/myLocationBtn"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/mylocation_btn_selector"
+                android:tag="mwar"
+                android:layout_marginLeft="34px"
+                android:layout_marginBottom="20px"
+                android:layout_above="@+id/requestRideBtn"
+                
+                />
+                    
+                    <Button 
+                        android:id="@+id/requestRideBtn"
+                       	android:layout_width="648px"
+                        android:layout_height="99px"
+           				android:layout_alignParentBottom="true"
+            			android:layout_marginBottom="126px"
+            			android:layout_centerHorizontal="true"
+            			android:background="@drawable/blue_btn_selector"
+            			android:text="Request Ride"
+            			android:textSize="34px"
+            			android:textColor="@drawable/white_color_selector"
+            			
+                        />
+                    
+                     <RelativeLayout 
+            android:id="@+id/nearestDriverRl"
+            android:layout_width="match_parent"
+            android:layout_height="108px"
+            android:background="@color/white_translucent"
+           				android:layout_alignParentBottom="true"
+            >
+            
+                         <ProgressBar 
+            android:id="@+id/nearestDriverProgress"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_centerInParent="true"
+            />
+                         
+            <TextView 
+                android:id="@+id/nearestDriverText"
+                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nearest Driver"
+            android:textSize="30px"
+            android:textColor="@color/black"
+            android:maxLines="2"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+                />
+            
+        </RelativeLayout>
+                    
+
+                </RelativeLayout>
+        </RelativeLayout>
+        
+        
+         <RelativeLayout 
+             android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/topRl"
+            android:visibility="gone"
+            android:background="@color/white"
+            android:padding="20px"
+            >
+            
+            <ListView 
+                android:id="@+id/searchList"
+            	android:layout_width="match_parent"
+            	android:layout_height="match_parent"
+                >
+                
+            </ListView>
+            
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+</FrameLayout>
+
+
+
+<LinearLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="495px"
+        android:layout_height="match_parent" 
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_gravity="start"
+        android:background="@color/bg_grey"
+        >
+
+        
+        <RelativeLayout 
+            android:id="@+id/profileRl"
+            android:layout_width="216px"
+            android:layout_height="216px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90px"
+            >
+        
+        <ImageView 
+            android:id="@+id/profileBack"
+            android:layout_width="216px"
+            android:layout_height="216px"
+            android:background="@drawable/ring"
+            android:tag="mwar"
+            />
+        
+        <ProgressBar 
+            android:id="@+id/profileImgProgress"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_centerInParent="true"
+            />
+        
+        
+        <ImageView 
+            android:id="@+id/profileImg"
+            android:layout_width="180px"
+            android:layout_height="180px"
+            android:tag="mwar"
+            android:layout_centerInParent="true"
+            />
+        
+        
+        </RelativeLayout>
+        
+        
+        
+        <TextView 
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="John Paulo"
+            android:textSize="30px"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/profileRl"
+            />
+        
+        
+        
+        
+        <RelativeLayout 
+            android:id="@+id/driverModeRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_marginTop="96px"
+            
+            
+            >
+            
+            <TextView 
+            android:id="@+id/driverModeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Driver Mode"
+            android:textSize="34px"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42px"
+            />
+            
+            <ImageView 
+                android:id="@+id/driverModeToggle"
+                android:layout_width="90px"
+                android:layout_height="72px"
+                android:background="@drawable/on"
+                android:tag="mwar"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/driverModeText"
+                android:layout_marginLeft="140px"
+                />
+            
+            
+        </RelativeLayout>
+        
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider"
+            />
+        
+        <RelativeLayout 
+            android:id="@+id/inviteFriendRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_below="@+id/userName"
+            
+            
+            >
+            
+            <TextView 
+            android:id="@+id/inviteFriendText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invite a Friend"
+            android:textSize="34px"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42px"
+            />
+            
+            
+        </RelativeLayout>
+        
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider"
+            />
+        
+        <RelativeLayout 
+            android:id="@+id/helpRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_below="@+id/userName"
+            
+            
+            >
+            
+            <TextView 
+            android:id="@+id/helpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help"
+            android:textSize="34px"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42px"
+            />
+            
+            
+        </RelativeLayout>
+        
+        
+         <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider"
+            />
+         
+         
+          <RelativeLayout 
+            android:id="@+id/aboutRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_below="@+id/userName"
+            
+            
+            >
+            
+            <TextView 
+            android:id="@+id/aboutText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About"
+            android:textSize="34px"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42px"
+            />
+            
+            
+        </RelativeLayout>
+         
+        
+        
+    </LinearLayout>
+    
+
+<LinearLayout
+        android:id="@+id/favoriteRl"
+        android:layout_width="495px"
+        android:layout_height="match_parent" 
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_gravity="end"
+        android:background="@color/white_translucent"
+        >
+
+        
+    <ListView 
+                android:id="@+id/favoriteList"
+            	android:layout_width="match_parent"
+            	android:layout_height="match_parent"
+            	
+                >
+            </ListView>
+    
+        
+    </LinearLayout>
+
+
+
+</android.support.v4.widget.DrawerLayout>
