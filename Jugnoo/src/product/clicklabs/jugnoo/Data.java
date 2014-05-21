@@ -19,6 +19,7 @@ public class Data {
 	
 	public static ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
 	
+	public static ArrayList<FavoriteLocation> favoriteLocations = new ArrayList<FavoriteLocation>();
 	
 	public static LatLng getChandigarhLatLng(){
 		if(chandigarhLatLng == null){

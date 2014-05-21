@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import rmn.androidscreenlibrary.ASSL;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -24,11 +25,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,13 +43,13 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -88,11 +93,14 @@ public class HomeActivity extends FragmentActivity {
 	//Favorite bar
 	LinearLayout favoriteRl;
 	ListView favoriteList;
+	FavoriteListAdapter favoriteListAdapter;
 	
 	
 	
 	//Top RL
-	Button menuBtn, favBtn;
+	Button menuBtn, backBtn, favBtn;
+	TextView title;
+	ImageView jugnooLogo;
 	
 	
 	
@@ -168,6 +176,8 @@ public class HomeActivity extends FragmentActivity {
 	
 	LocationManager locationManager;
 	
+	static ScreenMode screenMode;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -183,6 +193,8 @@ public class HomeActivity extends FragmentActivity {
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 		
+		
+		screenMode = ScreenMode.NORMAL;
 		
 		
 		new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
@@ -214,13 +226,23 @@ public class HomeActivity extends FragmentActivity {
 		//Favorite bar
 		favoriteRl = (LinearLayout) findViewById(R.id.favoriteRl);
 		favoriteList = (ListView) findViewById(R.id.favoriteList);
+		favoriteListAdapter = new FavoriteListAdapter();
+		favoriteList.setAdapter(favoriteListAdapter);
 		
 		
 		
 		//Top RL
 		menuBtn = (Button) findViewById(R.id.menuBtn);
+		backBtn = (Button) findViewById(R.id.backBtn);
+		title = (TextView) findViewById(R.id.title);
+		jugnooLogo = (ImageView) findViewById(R.id.jugnooLogo);
 		favBtn = (Button) findViewById(R.id.favBtn);
 		
+		
+		menuBtn.setVisibility(View.VISIBLE);
+		jugnooLogo.setVisibility(View.VISIBLE);
+		backBtn.setVisibility(View.GONE);
+		title.setVisibility(View.GONE);
 		
 		
 		//Search RL
@@ -296,9 +318,20 @@ public class HomeActivity extends FragmentActivity {
 		});
 		
 		
+		backBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				screenMode = ScreenMode.NORMAL;
+				switchLayouts(screenMode);
+			}
+		});
 		
 		
-		searchLayout.setVisibility(View.GONE);
+		
+		screenMode = ScreenMode.NORMAL;
+		switchLayouts(screenMode);
+		
 		
 		search.setOnClickListener(new View.OnClickListener() {
 			
@@ -308,10 +341,30 @@ public class HomeActivity extends FragmentActivity {
 				
 				if(searchPlace.length() > 0){
 					searchGooglePlaces(searchPlace);
+					hideSoftKeyboard();
 				}
 			}
 		});
 		
+		
+		searchEt.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				int result = actionId & EditorInfo.IME_MASK_ACTION;
+				switch (result) {
+					case EditorInfo.IME_ACTION_DONE:
+						search.performClick();
+					break;
+
+					case EditorInfo.IME_ACTION_NEXT:
+					break;
+
+					default:
+				}
+				return true;
+			}
+		});
 		
 		
 		requestRideBtn.setOnClickListener(new View.OnClickListener() {
@@ -410,6 +463,22 @@ public class HomeActivity extends FragmentActivity {
 			}
 			
 			
+			
+			Data.favoriteLocations.add(new FavoriteLocation("1", "1", new LatLng(Data.chandigarhLatLng.latitude+0.2,
+					Data.chandigarhLatLng.longitude)));
+
+			Data.favoriteLocations.add(new FavoriteLocation("2", "2", new LatLng(Data.chandigarhLatLng.latitude-0.2,
+					Data.chandigarhLatLng.longitude)));
+			
+			Data.favoriteLocations.add(new FavoriteLocation("3", "3", new LatLng(Data.chandigarhLatLng.latitude,
+					Data.chandigarhLatLng.longitude+0.2)));
+			
+			Data.favoriteLocations.add(new FavoriteLocation("4", "4", new LatLng(Data.chandigarhLatLng.latitude,
+					Data.chandigarhLatLng.longitude-0.2)));
+			
+			favoriteListAdapter.notifyDataSetChanged();
+			
+			
 			new MapStateListener(map, mapFragment, this) {
 				  @Override
 				  public void onMapTouched() {
@@ -499,6 +568,73 @@ public class HomeActivity extends FragmentActivity {
 		
 		
 	}
+	
+	
+	public void switchLayouts(ScreenMode mode){
+		
+		switch(mode){
+		
+			case NORMAL:
+				
+				searchLayout.setVisibility(View.GONE);
+				
+				menuBtn.setVisibility(View.VISIBLE);
+				jugnooLogo.setVisibility(View.VISIBLE);
+				backBtn.setVisibility(View.GONE);
+				title.setVisibility(View.GONE);
+				favBtn.setVisibility(View.VISIBLE);
+				
+				break;
+				
+				
+		
+			case SEARCH:
+				
+				searchLayout.setVisibility(View.VISIBLE);
+				
+				menuBtn.setVisibility(View.GONE);
+				jugnooLogo.setVisibility(View.GONE);
+				backBtn.setVisibility(View.VISIBLE);
+				title.setVisibility(View.VISIBLE);
+				favBtn.setVisibility(View.GONE);
+				
+				title.setText("Search results");
+				
+				searchListAdapter.notifyDataSetChanged();
+				
+				break;
+				
+				
+			
+			default:
+
+				searchLayout.setVisibility(View.GONE);
+				
+				menuBtn.setVisibility(View.VISIBLE);
+				jugnooLogo.setVisibility(View.VISIBLE);
+				backBtn.setVisibility(View.GONE);
+				title.setVisibility(View.GONE);
+				favBtn.setVisibility(View.VISIBLE);
+				
+		}
+		
+	}
+	
+	
+	/**
+	 * Hides keyboard
+	 * @param activity
+	 */
+	public void hideSoftKeyboard() {
+		try{
+			InputMethodManager mgr = (InputMethodManager) HomeActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+			mgr.hideSoftInputFromWindow(searchEt.getWindowToken(), 0);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+	}
+	
 	
 	GpsStatus.Listener gpsStatusListener = new GpsStatus.Listener() {
 		
@@ -594,8 +730,9 @@ public class HomeActivity extends FragmentActivity {
 	
 	@Override
 	public void onBackPressed() {
-		if(searchLayout.getVisibility() == View.VISIBLE){
-			searchLayout.setVisibility(View.GONE);
+		if(screenMode == ScreenMode.SEARCH){
+			screenMode = ScreenMode.NORMAL;
+			switchLayouts(screenMode);
 		}
 	}
 	
@@ -686,22 +823,22 @@ public class HomeActivity extends FragmentActivity {
 	}
 
 	
-	
+	//https://maps.googleapis.com/maps/api/distancematrix/json?origins=30.75,76.78&destinations=30.78,76.79&language=EN&sensor=false
 	
 	public String makeURL(LatLng source, LatLng destination){
         StringBuilder urlString = new StringBuilder();
-        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
-        urlString.append("?origin=");// from
+        urlString.append("https://maps.googleapis.com/maps/api/distancematrix/json");
+        urlString.append("?origins=");// from
         urlString.append(Double.toString(source.latitude));
         urlString.append(",");
         urlString
                 .append(Double.toString(source.longitude));
-        urlString.append("&destination=");// to
+        urlString.append("&destinations=");// to
         urlString
                 .append(Double.toString(destination.latitude));
         urlString.append(",");
         urlString.append(Double.toString(destination.longitude));
-        urlString.append("&sensor=false&mode=driving&alternatives=true");
+        urlString.append("&language=EN&sensor=false&alternatives=false");
         return urlString.toString();
 	}
 	
@@ -821,7 +958,30 @@ public class HomeActivity extends FragmentActivity {
 		    	SimpleJSONParser jParser = new SimpleJSONParser();
 		    	
 		    	String response = jParser.getJSONFromUrl(url);
-		    	jParser.writeJSONToFile(response, "GoogleLoc");
+//		    	jParser.writeJSONToFile(response, "GoogleLoc");
+		    	
+//		    	{
+//		    		   "destination_addresses" : [ "Shivmandir Road, Nayagaon, Chandigarh 133301, India" ],
+//		    		   "origin_addresses" : [ "Madhya Marg, 16A, Sector 16, Chandigarh, 160015, India" ],
+//		    		   "rows" : [
+//		    		      {
+//		    		         "elements" : [
+//		    		            {
+//		    		               "distance" : {
+//		    		                  "text" : "6.2 km",
+//		    		                  "value" : 6224
+//		    		               },
+//		    		               "duration" : {
+//		    		                  "text" : "11 mins",
+//		    		                  "value" : 679
+//		    		               },
+//		    		               "status" : "OK"
+//		    		            }
+//		    		         ]
+//		    		      }
+//		    		   ],
+//		    		   "status" : "OK"
+//		    		}
 		    	
 		    	JSONObject jsonObject = new JSONObject(response);
 		    	
@@ -830,11 +990,12 @@ public class HomeActivity extends FragmentActivity {
 		    	String status = jsonObject.getString("status");
 		    	
 		    	if("OK".equalsIgnoreCase(status)){
-		    		JSONObject leg0 = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
+		    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
 		    		
-		    		distance = leg0.getJSONObject("distance").getString("text") + " " + driverInfo.name;
+		    		distance = element0.getJSONObject("distance").getString("text") ;
 		    		
-		    		duration = leg0.getJSONObject("duration").getString("text");
+		    		duration = element0.getJSONObject("duration").getString("text");
+		    		
 
 		    		return "Distance: " + distance + "\n" + "Duration: " + duration;
 		    		
@@ -937,8 +1098,9 @@ public class HomeActivity extends FragmentActivity {
 					for (int i = 0; i < searchResults.size(); i++) {
 						Log.i("Results name : ....", "" + searchResults.get(i).name);
 					}
-					searchListAdapter.notifyDataSetChanged();
-					searchLayout.setVisibility(View.VISIBLE);
+					screenMode = ScreenMode.SEARCH;
+					switchLayouts(screenMode);
+					
 					Toast.makeText(getApplicationContext(), ""+searchResults.size() + " results found.", Toast.LENGTH_LONG).show();
 					
 				} catch (JSONException e) {
@@ -1005,6 +1167,9 @@ public class HomeActivity extends FragmentActivity {
 				
 				holder.relative.setTag(holder);
 				
+				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
+				ASSL.DoMagic(holder.relative);
+				
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolderSearch) convertView.getTag();
@@ -1021,21 +1186,15 @@ public class HomeActivity extends FragmentActivity {
 				public void onClick(View v) {
 					holder = (ViewHolderSearch) v.getTag();
 					
-					searchLayout.setVisibility(View.GONE);
+					screenMode = ScreenMode.NORMAL;
+					switchLayouts(screenMode);
 					
 					SearchResult searchResult = searchResults.get(holder.id);
 					
 					
-					
 					Log.e("searchResult.latLng ==",">"+searchResult.latLng);
 					
-					map.clear();
-					map.addMarker(new MarkerOptions().position(searchResult.latLng).title(searchResult.name).snippet(searchResult.address));
-					
-					map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 15), 2000, null);
-					
-					CustomInfoWindow customInfoWindow = new CustomInfoWindow(HomeActivity.this, searchResult.name, searchResult.address);
-					map.setInfoWindowAdapter(customInfoWindow);
+					map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 12), 2000, null);
 					
 				}
 			});
@@ -1045,6 +1204,89 @@ public class HomeActivity extends FragmentActivity {
 		}
 
 	}
+	
+	
+	class ViewHolderFavorite {
+		TextView name;
+		LinearLayout relative;
+		int id;
+	}
+
+	class FavoriteListAdapter extends BaseAdapter {
+		LayoutInflater mInflater;
+		ViewHolderFavorite holder;
+
+		public FavoriteListAdapter() {
+			mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		}
+
+		@Override
+		public int getCount() {
+			return Data.favoriteLocations.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+
+			
+			if (convertView == null) {
+				
+				holder = new ViewHolderFavorite();
+				convertView = mInflater.inflate(R.layout.search_list_item, null);
+				
+				holder.name = (TextView) convertView.findViewById(R.id.name); 
+				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
+				
+				holder.relative.setTag(holder);
+				
+				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
+				ASSL.DoMagic(holder.relative);
+				
+				
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolderFavorite) convertView.getTag();
+			}
+			
+			
+			holder.id = position;
+			
+			holder.name.setText(""+Data.favoriteLocations.get(position).name + "\n" + Data.favoriteLocations.get(position).address);
+			
+			holder.relative.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					holder = (ViewHolderFavorite) v.getTag();
+					
+					FavoriteLocation favoriteLocation = Data.favoriteLocations.get(holder.id);
+					
+					Log.e("searchResult.latLng ==",">"+favoriteLocation.latLng);
+					
+					drawerLayout.closeDrawer(favoriteRl);
+					
+					map.animateCamera(CameraUpdateFactory.newLatLngZoom(favoriteLocation.latLng, 12), 2000, null);
+					
+				}
+			});
+			
+			
+			return convertView;
+		}
+
+	}
+	
+	
 	
 	
 	class GetLatLngAddress extends AsyncTask<String, Integer, String> {
@@ -1135,3 +1377,9 @@ public class HomeActivity extends FragmentActivity {
 	
 	
 }
+
+
+enum ScreenMode{
+	NORMAL, SEARCH
+}
+
