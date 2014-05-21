@@ -396,6 +396,8 @@ public class HomeActivity extends FragmentActivity {
 			Data.driverInfos.add(new DriverInfo("4", "4", new LatLng(Data.chandigarhLatLng.latitude,
 					Data.chandigarhLatLng.longitude-0.1)));
 			
+			
+			
 			for(int i=0; i<Data.driverInfos.size(); i++){
 				DriverInfo driverInfo = Data.driverInfos.get(i);
 				MarkerOptions markerOptions = new MarkerOptions();
