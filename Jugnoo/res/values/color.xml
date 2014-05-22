@@ -25,9 +25,13 @@
     <color name="blue_btn_pressed">#2CA1B2</color>
     
     
+    <color name="blue_dark_btn">#3B5999</color>
+    <color name="blue_dark_btn_pressed">#1B3979</color>
     
     
     
+    <color name="red_btn">#9F3A28</color>
+    <color name="red_btn_pressed">#7F1A08</color>
     
     
    

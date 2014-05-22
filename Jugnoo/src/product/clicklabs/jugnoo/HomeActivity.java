@@ -98,16 +98,15 @@ public class HomeActivity extends FragmentActivity {
 	
 	
 	//Top RL
+	RelativeLayout topRl;
 	Button menuBtn, backBtn, favBtn;
 	TextView title;
 	ImageView jugnooLogo;
 	
 	
 	
-	
-	//Search RL
-	EditText searchEt;
-	Button search;
+	//Passenger main layout
+	RelativeLayout passengerMainLayout;
 	
 	
 	
@@ -117,11 +116,23 @@ public class HomeActivity extends FragmentActivity {
 	TouchableMapFragment mapFragment;
 	
 	
-	//On Map
-	TextView distance, fare, rate;
-	Button getCentreBtn, getDistance;
-	ProgressBar progress;
-	Button myLocationBtn;
+	//Initial layout
+	RelativeLayout initialLayout;
+	RelativeLayout searchBarLayout;
+	EditText searchEt;
+	Button search, myLocationBtn, requestRideBtn;
+	RelativeLayout nearestDriverRl;
+	TextView nearestDriverText;
+	ProgressBar nearestDriverProgress;
+	
+	
+	//Before request final layout
+	RelativeLayout beforeRequestFinalLayout;
+	Button cancelRequestBtn;
+	RelativeLayout assignedDriverRl;
+	ProgressBar assignedDriverProgress;
+	TextView assignedDriverText;
+	
 	
 	
 	//Center Location Layout
@@ -132,20 +143,26 @@ public class HomeActivity extends FragmentActivity {
 	
 	
 	
+	
+	//On Map
+	TextView distance, fare, rate;
+	Button getCentreBtn, getDistance;
+	ProgressBar progress;
+	
+	
+	
+	
+	
+	
+	
 	//Search layout
 	RelativeLayout searchLayout;
 	ListView searchList;
 	SearchListAdapter searchListAdapter;
 	
 	
-	//Bottom 
-	Button requestRideBtn;
 	
 	
-	//Nearest Driver Layout
-	RelativeLayout nearestDriverRl;
-	TextView nearestDriverText;
-	ProgressBar nearestDriverProgress;
 	
 	
 	
@@ -194,7 +211,7 @@ public class HomeActivity extends FragmentActivity {
 				GravityCompat.START);
 		
 		
-		screenMode = ScreenMode.NORMAL;
+		screenMode = ScreenMode.P_INITIAL;
 		
 		
 		new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
@@ -232,6 +249,7 @@ public class HomeActivity extends FragmentActivity {
 		
 		
 		//Top RL
+		topRl = (RelativeLayout) findViewById(R.id.topRl);
 		menuBtn = (Button) findViewById(R.id.menuBtn);
 		backBtn = (Button) findViewById(R.id.backBtn);
 		title = (TextView) findViewById(R.id.title);
@@ -245,9 +263,8 @@ public class HomeActivity extends FragmentActivity {
 		title.setVisibility(View.GONE);
 		
 		
-		//Search RL
-		searchEt = (EditText) findViewById(R.id.searchEt);
-		search = (Button) findViewById(R.id.search);
+		//Passenger main layout
+		passengerMainLayout = (RelativeLayout) findViewById(R.id.passengerMainLayout);
 		
 		
 		
@@ -257,6 +274,51 @@ public class HomeActivity extends FragmentActivity {
 		mapLayout = (RelativeLayout) findViewById(R.id.mapLayout);
 		map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		mapFragment = ((TouchableMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+		
+		
+		
+		
+		
+		//Initial layout 
+		initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
+		
+		searchBarLayout = (RelativeLayout) findViewById(R.id.searchBarLayout);
+		searchEt = (EditText) findViewById(R.id.searchEt);
+		search = (Button) findViewById(R.id.search);
+		
+		myLocationBtn = (Button) findViewById(R.id.myLocationBtn);
+		requestRideBtn = (Button) findViewById(R.id.requestRideBtn);
+
+		nearestDriverRl = (RelativeLayout) findViewById(R.id.nearestDriverRl);
+		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText);
+		nearestDriverProgress = (ProgressBar) findViewById(R.id.nearestDriverProgress);
+		
+		
+		
+		
+		
+		
+		//Before request final layout
+		beforeRequestFinalLayout = (RelativeLayout) findViewById(R.id.beforeRequestFinalLayout);
+
+		cancelRequestBtn = (Button) findViewById(R.id.cancelRequestBtn);
+
+		assignedDriverRl = (RelativeLayout) findViewById(R.id.assignedDriverRl);
+		assignedDriverText = (TextView) findViewById(R.id.assignedDriverText);
+		assignedDriverProgress = (ProgressBar) findViewById(R.id.assignedDriverProgress);
+		
+		
+		
+		
+		//Center location layout
+		centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
+		centreInfoRl = (RelativeLayout) findViewById(R.id.centreInfoRl);
+		centreInfoProgress = (ProgressBar) findViewById(R.id.centreInfoProgress);
+		centreLocationSnippet = (TextView) findViewById(R.id.centreLocationSnippet);
+		
+		
+		
+		
 		
 		
 		//Search Layout
@@ -278,25 +340,14 @@ public class HomeActivity extends FragmentActivity {
 		progress = (ProgressBar) findViewById(R.id.progress);
 		progress.setVisibility(View.GONE);
 		
-		myLocationBtn = (Button) findViewById(R.id.myLocationBtn);
 				 
 		
-		//Center location
-		centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
-		centreInfoRl = (RelativeLayout) findViewById(R.id.centreInfoRl);
 		
-		centreInfoProgress = (ProgressBar) findViewById(R.id.centreInfoProgress);
-		
-		centreLocationSnippet = (TextView) findViewById(R.id.centreLocationSnippet);
 				
 		
 		
 		//Bottom
-		requestRideBtn = (Button) findViewById(R.id.requestRideBtn);
 		
-		nearestDriverRl = (RelativeLayout) findViewById(R.id.nearestDriverRl);
-		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText);
-		nearestDriverProgress = (ProgressBar) findViewById(R.id.nearestDriverProgress);
 		
 		
 		
@@ -322,15 +373,15 @@ public class HomeActivity extends FragmentActivity {
 			
 			@Override
 			public void onClick(View v) {
-				screenMode = ScreenMode.NORMAL;
-				switchLayouts(screenMode);
+				screenMode = ScreenMode.P_INITIAL;
+				switchScreen(screenMode);
 			}
 		});
 		
 		
 		
-		screenMode = ScreenMode.NORMAL;
-		switchLayouts(screenMode);
+		screenMode = ScreenMode.P_INITIAL;
+		switchScreen(screenMode);
 		
 		
 		search.setOnClickListener(new View.OnClickListener() {
@@ -371,14 +422,40 @@ public class HomeActivity extends FragmentActivity {
 			
 			@Override
 			public void onClick(View v) {
-				if(myLocation != null){
-					new GetDistanceTime(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).execute();
-				}
+				
+				screenMode = ScreenMode.P_BEFORE_REQUEST_FINAL;
+				switchScreen(screenMode);
+				
+				new GetDistanceTime(map.getCameraPosition().target, 1).execute();
+				
+			}
+		});
+		
+		cancelRequestBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				screenMode = ScreenMode.P_INITIAL;
+				switchScreen(screenMode);
+				
+				new GetDistanceTime(map.getCameraPosition().target, 0).execute();
 			}
 		});
 		
 		
 		centreInfoRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
+		
+		beforeRequestFinalLayout.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -435,6 +512,7 @@ public class HomeActivity extends FragmentActivity {
 					return false;
 				}
 			});
+			
 			
 			
 			Data.driverInfos.add(new DriverInfo("1", "1", new LatLng(Data.chandigarhLatLng.latitude+0.1,
@@ -505,7 +583,7 @@ public class HomeActivity extends FragmentActivity {
 				    // Map settled
 					  Log.e("onMapSettled","=onMapSettled");
 					  new GetLatLngAddress(map.getCameraPosition().target).execute();
-					  new GetDistanceTime(map.getCameraPosition().target).execute();
+					  new GetDistanceTime(map.getCameraPosition().target, 0).execute();
 				  }
 				};
 			
@@ -527,7 +605,7 @@ public class HomeActivity extends FragmentActivity {
 				@Override
 				public void onClick(View v) {
 					
-					new GetDistanceTime(map.getCameraPosition().target).execute();
+					new GetDistanceTime(map.getCameraPosition().target, 0).execute();
 				}
 			});
 			
@@ -570,13 +648,17 @@ public class HomeActivity extends FragmentActivity {
 	}
 	
 	
-	public void switchLayouts(ScreenMode mode){
+	public void switchScreen(ScreenMode mode){
 		
 		switch(mode){
 		
-			case NORMAL:
-				
+			case P_INITIAL:
+
+				initialLayout.setVisibility(View.VISIBLE);
+				beforeRequestFinalLayout.setVisibility(View.GONE);
+				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
+				
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -584,13 +666,18 @@ public class HomeActivity extends FragmentActivity {
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.VISIBLE);
 				
+				
 				break;
 				
 				
 		
-			case SEARCH:
+			case P_SEARCH:
 				
+				initialLayout.setVisibility(View.GONE);
+				beforeRequestFinalLayout.setVisibility(View.GONE);
+				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.VISIBLE);
+				
 				
 				menuBtn.setVisibility(View.GONE);
 				jugnooLogo.setVisibility(View.GONE);
@@ -605,10 +692,31 @@ public class HomeActivity extends FragmentActivity {
 				break;
 				
 				
+				
+			case P_BEFORE_REQUEST_FINAL:
+				
+				initialLayout.setVisibility(View.GONE);
+				beforeRequestFinalLayout.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.VISIBLE);
+				searchLayout.setVisibility(View.GONE);
+				
+				menuBtn.setVisibility(View.VISIBLE);
+				jugnooLogo.setVisibility(View.VISIBLE);
+				backBtn.setVisibility(View.GONE);
+				title.setVisibility(View.GONE);
+				favBtn.setVisibility(View.GONE);
+				
+				break;
+				
+				
 			
 			default:
 
+				initialLayout.setVisibility(View.VISIBLE);
+				beforeRequestFinalLayout.setVisibility(View.GONE);
+				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
+				
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -730,9 +838,9 @@ public class HomeActivity extends FragmentActivity {
 	
 	@Override
 	public void onBackPressed() {
-		if(screenMode == ScreenMode.SEARCH){
-			screenMode = ScreenMode.NORMAL;
-			switchLayouts(screenMode);
+		if(screenMode == ScreenMode.P_SEARCH){
+			screenMode = ScreenMode.P_INITIAL;
+			switchScreen(screenMode);
 		}
 	}
 	
@@ -916,22 +1024,31 @@ public class HomeActivity extends FragmentActivity {
 	class GetDistanceTime extends AsyncTask<Void, Void, String>{
 	    String url;
 	    
-	    ProgressDialog progressDialog;
 	    String distance, duration;
 	    
 	    LatLng destination;
+	    int switchCase;
 	    
-	    public GetDistanceTime(LatLng destination){
+	    public GetDistanceTime(LatLng destination, int switchCase){
 	    	this.distance = "";
 	    	this.duration = "";
 	    	this.destination = destination;
+	    	this.switchCase = switchCase;
 	    }
 	    
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
-	        nearestDriverProgress.setVisibility(View.VISIBLE);
-	        nearestDriverText.setVisibility(View.GONE);
+	        
+	        if(switchCase == 0){
+	        	nearestDriverProgress.setVisibility(View.VISIBLE);
+	 	        nearestDriverText.setVisibility(View.GONE);
+	        }
+	        else if(switchCase == 1){
+	        	assignedDriverProgress.setVisibility(View.VISIBLE);
+	        	assignedDriverText.setVisibility(View.GONE);
+	        }
+	        
 	    }
 	    @Override
 	    protected String doInBackground(Void... params) {
@@ -958,33 +1075,8 @@ public class HomeActivity extends FragmentActivity {
 		    	SimpleJSONParser jParser = new SimpleJSONParser();
 		    	
 		    	String response = jParser.getJSONFromUrl(url);
-//		    	jParser.writeJSONToFile(response, "GoogleLoc");
-		    	
-//		    	{
-//		    		   "destination_addresses" : [ "Shivmandir Road, Nayagaon, Chandigarh 133301, India" ],
-//		    		   "origin_addresses" : [ "Madhya Marg, 16A, Sector 16, Chandigarh, 160015, India" ],
-//		    		   "rows" : [
-//		    		      {
-//		    		         "elements" : [
-//		    		            {
-//		    		               "distance" : {
-//		    		                  "text" : "6.2 km",
-//		    		                  "value" : 6224
-//		    		               },
-//		    		               "duration" : {
-//		    		                  "text" : "11 mins",
-//		    		                  "value" : 679
-//		    		               },
-//		    		               "status" : "OK"
-//		    		            }
-//		    		         ]
-//		    		      }
-//		    		   ],
-//		    		   "status" : "OK"
-//		    		}
 		    	
 		    	JSONObject jsonObject = new JSONObject(response);
-		    	
 		    	
 		    	
 		    	String status = jsonObject.getString("status");
@@ -1011,26 +1103,50 @@ public class HomeActivity extends FragmentActivity {
 	    protected void onPostExecute(String result) {
 	        super.onPostExecute(result);   
 	        
-
-	        nearestDriverProgress.setVisibility(View.GONE);
-	        nearestDriverText.setVisibility(View.VISIBLE);
 	        
 	        if(!"error".equalsIgnoreCase(result)){
-		        if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-		        	nearestDriverText.setText("Nearest driver is " + distance + " " + duration + " away.");
+		        
+	        String distanceString = "";
+	        
+	        
+	        if(switchCase == 0){
+	        	nearestDriverProgress.setVisibility(View.GONE);
+	 	        nearestDriverText.setVisibility(View.VISIBLE);
+	 	        
+	 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+       	 		distanceString = "Nearest driver is " + distance + " " + duration + " away.";
 		        }
 		        else if(!"".equalsIgnoreCase(duration)){
-		        	nearestDriverText.setText("Nearest driver is " + duration + " away.");
+		        	distanceString = "Nearest driver is " + duration + " away.";
 		        }
 		        else if(!"".equalsIgnoreCase(distance)){
-		        	nearestDriverText.setText("Nearest driver is " + distance + " away.");
+		        	distanceString = "Nearest driver is " + distance + " away.";
 		        }
 		        else{
-		        	nearestDriverText.setText("Could not find nearest driver's distance.");
+		        	distanceString = "Could not find nearest driver's distance.";
 		        }
+	 	        
+	 	       	nearestDriverText.setText(distanceString);
+	 	       
+	        }
+	        else if(switchCase == 1){
+	        	assignedDriverProgress.setVisibility(View.GONE);
+	        	assignedDriverText.setVisibility(View.VISIBLE);
+	        	
+	        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+        	 		distanceString = "Your ride is " + distance + " and will arrive \n in approximately " + duration + ".";
+		        }
+		        else{
+		        	distanceString = "Could not find nearest driver's distance.";
+		        }
+	        	assignedDriverText.setText(distanceString);
+	        	
+	        }
+	        
 	        }
 	        else{
 		        nearestDriverText.setVisibility(View.GONE);
+		        assignedDriverText.setVisibility(View.GONE);
 	        }
 	        
 	    }
@@ -1098,8 +1214,8 @@ public class HomeActivity extends FragmentActivity {
 					for (int i = 0; i < searchResults.size(); i++) {
 						Log.i("Results name : ....", "" + searchResults.get(i).name);
 					}
-					screenMode = ScreenMode.SEARCH;
-					switchLayouts(screenMode);
+					screenMode = ScreenMode.P_SEARCH;
+					switchScreen(screenMode);
 					
 					Toast.makeText(getApplicationContext(), ""+searchResults.size() + " results found.", Toast.LENGTH_LONG).show();
 					
@@ -1186,8 +1302,8 @@ public class HomeActivity extends FragmentActivity {
 				public void onClick(View v) {
 					holder = (ViewHolderSearch) v.getTag();
 					
-					screenMode = ScreenMode.NORMAL;
-					switchLayouts(screenMode);
+					screenMode = ScreenMode.P_INITIAL;
+					switchScreen(screenMode);
 					
 					SearchResult searchResult = searchResults.get(holder.id);
 					
@@ -1380,6 +1496,6 @@ public class HomeActivity extends FragmentActivity {
 
 
 enum ScreenMode{
-	NORMAL, SEARCH
+	P_INITIAL, P_SEARCH, P_BEFORE_REQUEST_FINAL, P_REQUEST_FINAL, P_IN_RIDE, P_RIDE_END
 }
 

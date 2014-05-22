@@ -1,83 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="720px"
     android:layout_height="1134px"
-    android:orientation="vertical" 
-    android:background="@drawable/mockup_login_screen"
-    >
-    
-    <LinearLayout 
+    android:background="@color/bg_grey_opaque"
+    android:orientation="vertical" >
+
+    <LinearLayout
         android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:gravity="center_horizontal"
-        >
-        
-        
-        <ImageView 
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
             android:id="@+id/jugnooLogoBig"
             android:layout_width="405px"
             android:layout_height="183px"
-            android:background="@drawable/jugnoo_logo_big"
-            android:tag="mwar"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="90px"
-            />
-        
-        
-        <LinearLayout 
+            android:background="@drawable/jugnoo_logo_big"
+            android:tag="mwar" />
+
+        <LinearLayout
             android:id="@+id/etLayout"
             android:layout_width="648px"
             android:layout_height="198px"
             android:layout_below="@+id/jugnooLogoBig"
-            android:layout_marginTop="50px"
             android:layout_centerHorizontal="true"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
+            android:layout_marginTop="50px"
             android:background="@drawable/white_bg_rounded"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/emailEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="Email ID"
+                android:singleLine="true"
+                android:textSize="34px" />
+
+            <ImageView
+                android:layout_width="620px"
+                android:layout_height="2px"
+                android:background="#E7E7E7" />
+
+            <EditText
+                android:id="@+id/passwordEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="Password"
+                android:singleLine="true"
+                android:textSize="34px" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/signInBtn"
+            android:layout_width="648px"
+            android:layout_height="99px"
+            android:layout_marginTop="45px"
+            android:background="@drawable/blue_btn_selector"
+            android:text="Sign In"
+            android:textColor="@drawable/white_color_selector"
+            android:textSize="40px" />
+        
+        
+        
+        <RelativeLayout 
+            android:id="@+id/forgotSignupRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18px"
             
             >
             
+            <Button
+            android:id="@+id/forgotPasswordBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35px"
+            android:background="@drawable/transparent"
+            android:text="Forgot Password"
+            android:textColor="@drawable/white_color_selector"
+            android:textSize="34px" 
             
-            <EditText 
-                android:id="@+id/emailEt"
-                 android:layout_width="620px"
-                android:layout_height="98px"
-                android:hint="Email ID"
-                android:singleLine="true" 
-                android:background="#0000"
-                android:textSize="34px"
-                />
+            />
+            
+            
+             <Button
+            android:id="@+id/signupBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="35px"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/transparent"
+            android:text="Sign In"
+            android:textColor="@drawable/white_color_selector"
+            android:textSize="34px" 
+            
+            />
+            
+            
+        </RelativeLayout>
+        
+        
+        <RelativeLayout 
+            android:id="@+id/orDivRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            
+            >
+             
+            
+             <ImageView 
+            android:layout_width="248px"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="36px"
+            />
+            
+             
+             
             
             <ImageView 
-                android:layout_width="620px"
-                android:layout_height="2px"
-                android:background="#E7E7E7"
+                android:id="@+id/orBg"
+                android:layout_width="126px"
+                android:layout_height="126px"
+                android:layout_centerInParent="true"
+                android:background="@drawable/or_bordered_circle"
+                android:tag="mwar"
                 />
             
+            <TextView
+            android:id="@+id/orText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="OR"
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px" 
             
-            <EditText 
-                android:id="@+id/passwordEt"
-                 android:layout_width="620px"
-                android:layout_height="98px"
-                android:hint="Password"
-                android:singleLine="true" 
-                android:background="#0000"
-                android:textSize="34px"
-                />
+            />
             
             
-        </LinearLayout>
+            
+             <ImageView 
+            android:layout_width="248px"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="36px"
+            />
+            
+            
+        </RelativeLayout>
         
         
+        <Button
+            android:id="@+id/facebookSignInBtn"
+            android:layout_width="648px"
+            android:layout_height="99px"
+            android:layout_marginTop="40px"
+            android:background="@drawable/blue_dark_btn_selector"
+            android:text="Sign in with Facebook"
+            android:textColor="@drawable/white_color_selector"
+            android:textSize="40px" />
         
         
         
         
     </LinearLayout>
-    
-    
-    
-    
 
 </LinearLayout>
