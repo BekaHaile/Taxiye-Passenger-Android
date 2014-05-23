@@ -20,6 +20,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
@@ -29,8 +30,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -41,7 +42,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -60,7 +63,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class HomeActivity extends FragmentActivity {
+public class HomeActivity extends FragmentActivity implements DetectRideStart {
 
 	
 	
@@ -118,10 +121,8 @@ public class HomeActivity extends FragmentActivity {
 	
 	//Initial layout
 	RelativeLayout initialLayout;
-	RelativeLayout searchBarLayout;
 	EditText searchEt;
 	Button search, myLocationBtn, requestRideBtn;
-	RelativeLayout nearestDriverRl;
 	TextView nearestDriverText;
 	ProgressBar nearestDriverProgress;
 	
@@ -129,10 +130,38 @@ public class HomeActivity extends FragmentActivity {
 	//Before request final layout
 	RelativeLayout beforeRequestFinalLayout;
 	Button cancelRequestBtn;
-	RelativeLayout assignedDriverRl;
 	ProgressBar assignedDriverProgress;
 	TextView assignedDriverText;
 	
+	
+	//Request Final Layout
+	RelativeLayout requestFinalLayout;
+	ProgressBar driverImageProgress, driverCarProgress;
+	ImageView driverImage, driverCarImage;
+	TextView driverName, driverTime;
+	Button callDriverBtn;
+	
+	
+	
+	
+	
+	//In Ride layout
+	RelativeLayout inRideLayout;
+	TextView rideInProgressText;
+	
+	
+	
+	
+	
+	
+	//Review layout
+	RelativeLayout endRideReviewRl;
+	
+	ImageView reviewUserImgBlured, reviewUserImage;
+	ProgressBar reviewUserImgProgress;
+	TextView reviewUserName, reviewUserRating, reviewReachedDestinationText, reviewDistanceText, reviewDistanceValue, reviewFareText, reviewFareValue, reviewRatingText;
+	RatingBar reviewRatingBar;
+	Button reviewSubmitBtn;
 	
 	
 	//Center Location Layout
@@ -193,13 +222,19 @@ public class HomeActivity extends FragmentActivity {
 	
 	LocationManager locationManager;
 	
-	static ScreenMode screenMode;
+	static PassengerScreenMode passengerScreenMode;
+	static UserMode userMode;
+	
+	static DetectRideStart detectRideStart;
 	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		
+		
+		HomeActivity.detectRideStart = HomeActivity.this;
 		
 		
 		startTracking = false;
@@ -211,7 +246,8 @@ public class HomeActivity extends FragmentActivity {
 				GravityCompat.START);
 		
 		
-		screenMode = ScreenMode.P_INITIAL;
+		passengerScreenMode = PassengerScreenMode.P_INITIAL;
+		userMode = UserMode.PASSENGER;
 		
 		
 		new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
@@ -282,14 +318,12 @@ public class HomeActivity extends FragmentActivity {
 		//Initial layout 
 		initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
 		
-		searchBarLayout = (RelativeLayout) findViewById(R.id.searchBarLayout);
 		searchEt = (EditText) findViewById(R.id.searchEt);
 		search = (Button) findViewById(R.id.search);
 		
 		myLocationBtn = (Button) findViewById(R.id.myLocationBtn);
 		requestRideBtn = (Button) findViewById(R.id.requestRideBtn);
 
-		nearestDriverRl = (RelativeLayout) findViewById(R.id.nearestDriverRl);
 		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText);
 		nearestDriverProgress = (ProgressBar) findViewById(R.id.nearestDriverProgress);
 		
@@ -303,9 +337,53 @@ public class HomeActivity extends FragmentActivity {
 
 		cancelRequestBtn = (Button) findViewById(R.id.cancelRequestBtn);
 
-		assignedDriverRl = (RelativeLayout) findViewById(R.id.assignedDriverRl);
 		assignedDriverText = (TextView) findViewById(R.id.assignedDriverText);
 		assignedDriverProgress = (ProgressBar) findViewById(R.id.assignedDriverProgress);
+		
+		
+		
+		
+		//Request Final Layout
+		requestFinalLayout = (RelativeLayout) findViewById(R.id.requestFinalLayout);
+		
+		driverImageProgress = (ProgressBar) findViewById(R.id.driverImageProgress);
+		driverCarProgress = (ProgressBar) findViewById(R.id.driverCarProgress);
+		driverImage = (ImageView) findViewById(R.id.driverImage);
+		driverCarImage = (ImageView) findViewById(R.id.driverCarImage);
+		
+		driverName = (TextView) findViewById(R.id.driverName);
+		driverTime = (TextView) findViewById(R.id.driverTime);
+		callDriverBtn = (Button) findViewById(R.id.callDriverBtn);
+		
+		
+		
+		
+		//In Ride layout
+		inRideLayout = (RelativeLayout) findViewById(R.id.inRideLayout);
+		rideInProgressText = (TextView) findViewById(R.id.rideInProgressText);
+		
+		
+		
+		
+		
+		//Review Layout
+		endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
+		
+		reviewUserImgBlured = (ImageView) findViewById(R.id.reviewUserImgBlured);
+		reviewUserImage = (ImageView) findViewById(R.id.reviewUserImage);
+		reviewUserImgProgress = (ProgressBar) findViewById(R.id.reviewUserImgProgress);
+		
+		reviewUserName = (TextView) findViewById(R.id.reviewUserName);
+		reviewUserRating = (TextView) findViewById(R.id.reviewUserRating);
+		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText);
+		reviewDistanceText = (TextView) findViewById(R.id.reviewDistanceText);
+		reviewDistanceValue = (TextView) findViewById(R.id.reviewDistanceValue);
+		reviewFareText = (TextView) findViewById(R.id.reviewFareText);
+		reviewFareValue = (TextView) findViewById(R.id.reviewFareValue);
+		reviewRatingText = (TextView) findViewById(R.id.reviewRatingText);
+		
+		reviewRatingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
+		reviewSubmitBtn = (Button) findViewById(R.id.reviewSubmitBtn);
 		
 		
 		
@@ -373,15 +451,15 @@ public class HomeActivity extends FragmentActivity {
 			
 			@Override
 			public void onClick(View v) {
-				screenMode = ScreenMode.P_INITIAL;
-				switchScreen(screenMode);
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
 			}
 		});
 		
 		
 		
-		screenMode = ScreenMode.P_INITIAL;
-		switchScreen(screenMode);
+		passengerScreenMode = PassengerScreenMode.P_INITIAL;
+		switchPassengerScreen(passengerScreenMode);
 		
 		
 		search.setOnClickListener(new View.OnClickListener() {
@@ -423,8 +501,27 @@ public class HomeActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				
-				screenMode = ScreenMode.P_BEFORE_REQUEST_FINAL;
-				switchScreen(screenMode);
+				passengerScreenMode = PassengerScreenMode.P_BEFORE_REQUEST_FINAL;
+				switchPassengerScreen(passengerScreenMode);
+				
+				new Handler().postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+								switchPassengerScreen(passengerScreenMode);
+								startService(new Intent(HomeActivity.this, CustomerStartRideService.class));
+								Log.e("detectRideStart before service","="+HomeActivity.detectRideStart);
+							}
+						});
+					}
+				}, 10000);
+				
 				
 				new GetDistanceTime(map.getCameraPosition().target, 1).execute();
 				
@@ -436,10 +533,29 @@ public class HomeActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				
-				screenMode = ScreenMode.P_INITIAL;
-				switchScreen(screenMode);
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
 				
 				new GetDistanceTime(map.getCameraPosition().target, 0).execute();
+			}
+		});
+		
+		
+		callDriverBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+				switchPassengerScreen(passengerScreenMode);
+			}
+		});
+		
+		rideInProgressText.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+				switchPassengerScreen(passengerScreenMode);
 			}
 		});
 		
@@ -448,7 +564,6 @@ public class HomeActivity extends FragmentActivity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -459,7 +574,31 @@ public class HomeActivity extends FragmentActivity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		requestFinalLayout.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+		
+//		inRideLayout.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				
+//			}
+//		});
+		
+		endRideReviewRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
 				
 			}
 		});
@@ -489,7 +628,6 @@ public class HomeActivity extends FragmentActivity {
 				
 				@Override
 				public void onMapClick(LatLng arg0) {
-					// TODO Auto-generated method stub
 					
 				}
 			});
@@ -499,7 +637,6 @@ public class HomeActivity extends FragmentActivity {
 				
 				@Override
 				public void onMapLongClick(LatLng arg0) {
-					// TODO Auto-generated method stub
 					
 				}
 			});
@@ -508,7 +645,6 @@ public class HomeActivity extends FragmentActivity {
 				
 				@Override
 				public boolean onMarkerClick(Marker arg0) {
-					// TODO Auto-generated method stub
 					return false;
 				}
 			});
@@ -582,8 +718,10 @@ public class HomeActivity extends FragmentActivity {
 				  public void onMapSettled() {
 				    // Map settled
 					  Log.e("onMapSettled","=onMapSettled");
-					  new GetLatLngAddress(map.getCameraPosition().target).execute();
-					  new GetDistanceTime(map.getCameraPosition().target, 0).execute();
+					  if(!startTracking){
+						  new GetLatLngAddress(map.getCameraPosition().target).execute();
+					  	new GetDistanceTime(map.getCameraPosition().target, 0).execute();
+					  }
 				  }
 				};
 			
@@ -648,14 +786,21 @@ public class HomeActivity extends FragmentActivity {
 	}
 	
 	
-	public void switchScreen(ScreenMode mode){
+	
+	
+	
+	public void switchPassengerScreen(PassengerScreenMode mode){
 		
 		switch(mode){
 		
 			case P_INITIAL:
 
+				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.VISIBLE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.GONE);
+				inRideLayout.setVisibility(View.GONE);
+				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -665,6 +810,8 @@ public class HomeActivity extends FragmentActivity {
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.VISIBLE);
+
+				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 				
 				break;
@@ -672,9 +819,13 @@ public class HomeActivity extends FragmentActivity {
 				
 		
 			case P_SEARCH:
-				
+
+				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.GONE);
+				inRideLayout.setVisibility(View.GONE);
+				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.VISIBLE);
 				
@@ -688,15 +839,21 @@ public class HomeActivity extends FragmentActivity {
 				title.setText("Search results");
 				
 				searchListAdapter.notifyDataSetChanged();
+
+				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 				break;
 				
 				
 				
 			case P_BEFORE_REQUEST_FINAL:
-				
+
+				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.VISIBLE);
+				requestFinalLayout.setVisibility(View.GONE);
+				inRideLayout.setVisibility(View.GONE);
+				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -705,15 +862,91 @@ public class HomeActivity extends FragmentActivity {
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.GONE);
+
+				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 				break;
 				
 				
-			
+				
+			case P_REQUEST_FINAL:
+
+				mapLayout.setVisibility(View.VISIBLE);
+				initialLayout.setVisibility(View.GONE);
+				beforeRequestFinalLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.VISIBLE);
+				inRideLayout.setVisibility(View.GONE);
+				endRideReviewRl.setVisibility(View.GONE);
+				centreLocationRl.setVisibility(View.VISIBLE);
+				searchLayout.setVisibility(View.GONE);
+				
+				menuBtn.setVisibility(View.VISIBLE);
+				jugnooLogo.setVisibility(View.VISIBLE);
+				backBtn.setVisibility(View.GONE);
+				title.setVisibility(View.GONE);
+				favBtn.setVisibility(View.GONE);
+
+				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
+				
+				break;
+				
+				
+				
+			case P_IN_RIDE:
+				
+				startTracking = true;
+				
+				mapLayout.setVisibility(View.VISIBLE);
+				initialLayout.setVisibility(View.GONE);
+				beforeRequestFinalLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.GONE);
+				inRideLayout.setVisibility(View.VISIBLE);
+				endRideReviewRl.setVisibility(View.GONE);
+				centreLocationRl.setVisibility(View.GONE);
+				searchLayout.setVisibility(View.GONE);
+				
+				menuBtn.setVisibility(View.VISIBLE);
+				jugnooLogo.setVisibility(View.VISIBLE);
+				backBtn.setVisibility(View.GONE);
+				title.setVisibility(View.GONE);
+				favBtn.setVisibility(View.GONE);
+
+				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
+				
+				break;
+				
+			case P_RIDE_END:
+				
+				startTracking = false;
+				
+				mapLayout.setVisibility(View.GONE);
+				initialLayout.setVisibility(View.GONE);
+				beforeRequestFinalLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.GONE);
+				inRideLayout.setVisibility(View.GONE);
+				endRideReviewRl.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.GONE);
+				searchLayout.setVisibility(View.GONE);
+				
+				menuBtn.setVisibility(View.VISIBLE);
+				jugnooLogo.setVisibility(View.VISIBLE);
+				backBtn.setVisibility(View.GONE);
+				title.setVisibility(View.GONE);
+				favBtn.setVisibility(View.GONE);
+				
+				topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
+				
+				break;
+				
+				
 			default:
 
+				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.VISIBLE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.GONE);
+				inRideLayout.setVisibility(View.GONE);
+				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -723,6 +956,8 @@ public class HomeActivity extends FragmentActivity {
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.VISIBLE);
+
+				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 		}
 		
@@ -838,9 +1073,9 @@ public class HomeActivity extends FragmentActivity {
 	
 	@Override
 	public void onBackPressed() {
-		if(screenMode == ScreenMode.P_SEARCH){
-			screenMode = ScreenMode.P_INITIAL;
-			switchScreen(screenMode);
+		if(passengerScreenMode == PassengerScreenMode.P_SEARCH){
+			passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			switchPassengerScreen(passengerScreenMode);
 		}
 	}
 	
@@ -849,6 +1084,13 @@ public class HomeActivity extends FragmentActivity {
 	@Override
     public void onDestroy() {
         super.onDestroy();
+        
+        ASSL.closeActivity(drawerLayout);
+        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+        stopService(new Intent(HomeActivity.this, CustomerStartRideService.class));
+        
+        System.gc();
+        
     }
 	
 	
@@ -1214,8 +1456,8 @@ public class HomeActivity extends FragmentActivity {
 					for (int i = 0; i < searchResults.size(); i++) {
 						Log.i("Results name : ....", "" + searchResults.get(i).name);
 					}
-					screenMode = ScreenMode.P_SEARCH;
-					switchScreen(screenMode);
+					passengerScreenMode = PassengerScreenMode.P_SEARCH;
+					switchPassengerScreen(passengerScreenMode);
 					
 					Toast.makeText(getApplicationContext(), ""+searchResults.size() + " results found.", Toast.LENGTH_LONG).show();
 					
@@ -1302,8 +1544,8 @@ public class HomeActivity extends FragmentActivity {
 				public void onClick(View v) {
 					holder = (ViewHolderSearch) v.getTag();
 					
-					screenMode = ScreenMode.P_INITIAL;
-					switchScreen(screenMode);
+					passengerScreenMode = PassengerScreenMode.P_INITIAL;
+					switchPassengerScreen(passengerScreenMode);
 					
 					SearchResult searchResult = searchResults.get(holder.id);
 					
@@ -1490,12 +1732,28 @@ public class HomeActivity extends FragmentActivity {
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
 	}
+
+
+	@Override
+	public void sendIntent() {
+		Log.e("in ","here");
+		passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+		switchPassengerScreen(passengerScreenMode);
+		
+	}
+	
+	
+	
 	
 	
 }
 
 
-enum ScreenMode{
+enum PassengerScreenMode{
 	P_INITIAL, P_SEARCH, P_BEFORE_REQUEST_FINAL, P_REQUEST_FINAL, P_IN_RIDE, P_RIDE_END
+}
+
+enum UserMode{
+	PASSENGER, DRIVER
 }
 

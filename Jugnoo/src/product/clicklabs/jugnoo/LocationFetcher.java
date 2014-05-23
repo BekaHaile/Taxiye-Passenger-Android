@@ -18,6 +18,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.LatLng;
 
 public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallbacks,GooglePlayServicesClient.OnConnectionFailedListener,LocationListener {
 
@@ -51,6 +52,24 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		}
 	}
 
+	
+	double distance(LatLng start, LatLng end) {
+		try {
+			Location location1 = new Location("locationA");
+			location1.setLatitude(start.latitude);
+			location1.setLongitude(start.longitude);
+			Location location2 = new Location("locationA");
+			location2.setLatitude(end.latitude);
+			location2.setLongitude(end.longitude);
+
+			double distance = location1.distanceTo(location2);
+			return distance;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+
+	}
 	
 	/**
 	 * Checks if location fetching is enabled in device or not

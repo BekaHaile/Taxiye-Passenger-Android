@@ -50,6 +50,22 @@
             android:name="product.clicklabs.jugnoo.HomeActivity"
             android:label="@string/app_name" >
         </activity>
+        
+        <service
+            android:name="product.clicklabs.jugnoo.DriverLocationUpdateService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":DriverLocationUpdateService"
+             >
+        </service>
+        
+        
+         <service
+            android:name="product.clicklabs.jugnoo.CustomerStartRideService"
+            android:enabled="true"
+            android:exported="true"
+             >
+        </service>
 
         <!--
        <activity
