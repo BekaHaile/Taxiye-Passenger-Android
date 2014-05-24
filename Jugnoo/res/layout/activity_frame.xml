@@ -24,7 +24,19 @@
             android:layout_marginTop="90px"
             >
             
+            
+            <Chronometer
+                            android:id="@+id/waitChronometer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true" 
+                        android:layout_above="@+id/driverWaitBtn"
+                        android:layout_marginBottom="27px"
+                        android:textSize="40px"
+                            />
            
+            
+            
             
             
         
@@ -82,6 +94,109 @@
                 android:tag="mwar"
                 android:layout_centerInParent="true"
                 />
+            
+            
+            
+        </RelativeLayout>
+        
+        
+        
+        
+        <RelativeLayout 
+            android:id="@+id/driverPassengerRatingRl"
+            android:layout_width="420px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="54px"
+            android:layout_marginTop="10px"
+            android:layout_below="@+id/driverPassengerName"
+            >
+            
+            <ImageView 
+                android:id="@+id/driverPassengerRatingStar"
+                android:layout_width="40px"
+                android:layout_height="40px"
+                android:background="@drawable/star_empty"
+                
+                />
+            
+             <TextView 
+            android:id="@+id/driverPassengerRatingValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4.3 Rating"
+            android:textSize="38px"
+            android:textColor="@color/bg_grey_opaque"
+            android:singleLine="true"
+            android:layout_toRightOf="@+id/driverPassengerRatingStar"
+            android:layout_marginLeft="20px"
+            
+            />
+            
+            
+        </RelativeLayout>
+        
+        <Button 
+            android:id="@+id/driverPassengerCallBtn"
+            android:layout_width="214px"
+            android:layout_height="56px"
+            android:layout_above="@+id/driverEngagedBottomRl"
+            android:layout_marginBottom="10px"
+            android:layout_marginLeft="56px"
+            android:background="@drawable/blue_btn_selector"
+            android:text="Call"
+            android:textSize="30px"
+            android:textColor="@drawable/white_color_selector"
+            
+            />
+        
+        
+        
+        <RelativeLayout 
+            android:id="@+id/driverEngagedBottomRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            
+            
+            
+            >
+            
+            
+            <RelativeLayout 
+                android:id="@+id/driverStartRideRl"
+                android:layout_width="648px"
+                android:layout_height="99px"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="27px"
+                android:layout_centerVertical="true"
+                android:background="@color/blue_btn"
+                
+                >
+                
+                
+                <TextView 
+                    android:id="@+id/driverStartRideText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Slide to start your ride"
+                    android:textColor="@color/white"
+                    android:textSize="38px"
+                    android:gravity="center"
+                    
+                    />
+                
+                <product.clicklabs.jugnoo.SlideButton
+            android:id="@+id/driverStartRideSlider"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:max="100"
+            android:progressDrawable="@color/transparent"
+            android:thumb="@drawable/start_ride" >
+        </product.clicklabs.jugnoo.SlideButton>
+                
+                
+            </RelativeLayout>
             
             
             
@@ -366,8 +481,11 @@
             android:layout_marginTop="96px"
             android:background="@color/transparent"
             
-            
             >
+        
+            
+             
+            
             
             <TextView 
             android:id="@+id/driverModeText"

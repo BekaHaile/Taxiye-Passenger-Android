@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:id="@+id/topRl"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:background="@color/bg_grey" >
+
+            <Button
+                android:id="@+id/backBtn"
+                android:layout_width="82px"
+                android:layout_height="82px"
+                android:layout_centerVertical="true"
+                android:background="@drawable/back_btn_selector"
+                android:tag="mwar" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="540px"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="Invite Friends"
+                android:textColor="@color/white"
+                android:textSize="40px" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="90px"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/searchFriendsEt"
+                android:layout_width="680px"
+                android:layout_height="95px"
+                android:layout_marginTop="20px"
+                android:background="@drawable/search_bar"
+                android:hint="Search Facebook Friends"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+                android:singleLine="true"
+                android:textSize="34px" />
+
+            <GridView
+                android:id="@+id/facebookFriendsGrid"
+                android:layout_width="630px"
+                android:layout_height="700px"
+                android:layout_marginTop="50px"
+                android:numColumns="3" >
+            </GridView>
+
+            <Button
+                android:id="@+id/sendInviteBtn"
+                android:layout_width="648px"
+                android:layout_height="99px"
+                android:layout_marginTop="40px"
+                android:background="@drawable/blue_btn_selector"
+                android:text="Done"
+                android:textColor="@drawable/white_color_selector"
+                android:textSize="38px" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

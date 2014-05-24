@@ -45,4 +45,15 @@ public class SplashLogin extends Activity{
 		
 	}
 
+	
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+        
+        ASSL.closeActivity(relative);
+        
+        System.gc();
+	}
+	
 }

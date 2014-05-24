@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/relative"
+    android:orientation="vertical"
+    android:splitMotionEvents="false" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:splitMotionEvents="false" 
+    android:padding="10px"
+    >
+
+        <RelativeLayout
+            android:layout_width="162px"
+            android:layout_height="162px" >
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/friendImage"
+                android:layout_width="162px"
+                android:layout_height="162px"
+                android:layout_centerInParent="true"
+                android:tag="mwar" />
+
+            <ImageView
+                android:id="@+id/tick"
+                android:layout_width="92px"
+                android:layout_height="92px"
+                android:layout_marginRight="-25px"
+                android:layout_marginBottom="-25px"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/check_off"
+                android:tag="mwar" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/friendName"
+        android:layout_width="180px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10px"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="Mat"
+        android:textColor="@color/black"
+        android:textSize="30px" />
+
+</LinearLayout>

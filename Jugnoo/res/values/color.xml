@@ -34,6 +34,8 @@
     <color name="red_btn">#9F3A28</color>
     <color name="red_btn_pressed">#7F1A08</color>
     
+    <color name="red_dark_btn">#9F3527</color>
+    
     
    
 </resources>

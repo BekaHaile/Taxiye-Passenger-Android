@@ -47,3 +47,19 @@ class DriverInfo{
 	}
 	
 }
+
+
+
+class FriendInfo{
+	
+	String name, image;
+	boolean tick;
+	
+	public FriendInfo(String name, String image){
+		this.name = name;
+		this.image = image;
+		this.tick = false;
+	}
+	
+}
+

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,19 +16,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.format.DateFormat;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -37,6 +44,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,7 +53,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-import android.widget.TextClock;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -144,24 +153,21 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 	
 	
 	
-	
 	//In Ride layout
 	RelativeLayout inRideLayout;
 	TextView rideInProgressText;
 	
 	
 	
+	//Search layout
+	RelativeLayout searchLayout;
+	ListView searchList;
+	SearchListAdapter searchListAdapter;
 	
 	
 	
-	//Review layout
-	RelativeLayout endRideReviewRl;
 	
-	ImageView reviewUserImgBlured, reviewUserImage;
-	ProgressBar reviewUserImgProgress;
-	TextView reviewUserName, reviewUserRating, reviewReachedDestinationText, reviewDistanceText, reviewDistanceValue, reviewFareText, reviewFareValue, reviewRatingText;
-	RatingBar reviewRatingBar;
-	Button reviewSubmitBtn;
+	
 	
 	
 	//Center Location Layout
@@ -175,8 +181,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 	
 	//On Map
 	TextView distance, fare, rate;
-	Button getCentreBtn, getDistance;
-	ProgressBar progress;
 	
 	
 	
@@ -184,13 +188,68 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 	
 	
 	
-	//Search layout
-	RelativeLayout searchLayout;
-	ListView searchList;
-	SearchListAdapter searchListAdapter;
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	// Driver main layout 
+	RelativeLayout driverMainLayout;
+	
+	
+	//Driver initial layout
+	RelativeLayout driverInitialLayout;
+	RelativeLayout driverNewRideRequestRl;
+	TextView driverNewRideRequestText;
+	TextView driverNewRideRequestClickText;
+	Button driverInitialMyLocationBtn;
+	
+	
+	
+	// Driver Request Accept layout
+	RelativeLayout driverRequestAcceptLayout;
+	Button driverAcceptRideBtn, driverCancelRequestBtn, driverRequestAcceptMyLocationBtn;
+	
+	
+	// Driver Engaged layout
+	RelativeLayout driverEngagedLayout;
+	
+	TextView driverPassengerName;
+	TextView driverPassengerRatingValue;
+	Button driverPassengerCallBtn;
+	ProgressBar driverPassengerImageProgress;
+	ImageView driverPassengerImage;
+	
+	//Start ride layout
+	RelativeLayout driverStartRideMainRl;
+	Button driverStartRideMyLocationBtn;
+	TextView driverStartRideText;
+	SlideButton driverStartRideSlider;
+	
+	//End ride layout
+	RelativeLayout driverInRideMainRl;
+	PausableChronometer waitChronometer;
+	Button driverWaitBtn;
+	TextView driverEndRideText;
+	SlideButtonInvert driverEndRideSlider;
+	int waitStart = 2;
+	
+	
+	
+	
+	//Review layout
+	RelativeLayout endRideReviewRl;
+		
+	ImageView reviewUserImgBlured, reviewUserImage;
+	ProgressBar reviewUserImgProgress;
+	TextView reviewUserName, reviewUserRating, reviewReachedDestinationText, reviewDistanceText, reviewDistanceValue, reviewFareText, reviewFareValue, reviewRatingText;
+	RatingBar reviewRatingBar;
+	Button reviewSubmitBtn;
 	
 	
 	
@@ -223,7 +282,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 	LocationManager locationManager;
 	
 	static PassengerScreenMode passengerScreenMode;
+	
 	static UserMode userMode;
+	
+	static DriverScreenMode driverScreenMode;
 	
 	static DetectRideStart detectRideStart;
 	
@@ -240,14 +302,11 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		startTracking = false;
 		
 		
-		
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 		
 		
-		passengerScreenMode = PassengerScreenMode.P_INITIAL;
-		userMode = UserMode.PASSENGER;
 		
 		
 		new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
@@ -299,9 +358,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		title.setVisibility(View.GONE);
 		
 		
-		//Passenger main layout
-		passengerMainLayout = (RelativeLayout) findViewById(R.id.passengerMainLayout);
-		
 		
 		
 		
@@ -312,6 +368,14 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		mapFragment = ((TouchableMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 		
 		
+		
+		
+		
+		
+		
+		
+		//Passenger main layout
+		passengerMainLayout = (RelativeLayout) findViewById(R.id.passengerMainLayout);
 		
 		
 		
@@ -326,7 +390,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 
 		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText);
 		nearestDriverProgress = (ProgressBar) findViewById(R.id.nearestDriverProgress);
-		
 		
 		
 		
@@ -361,8 +424,101 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		//In Ride layout
 		inRideLayout = (RelativeLayout) findViewById(R.id.inRideLayout);
 		rideInProgressText = (TextView) findViewById(R.id.rideInProgressText);
+		distance = (TextView) findViewById(R.id.distance);
+		fare = (TextView) findViewById(R.id.fare);
+		rate = (TextView) findViewById(R.id.rate);
 		
 		
+		
+
+		
+		
+		//Center location layout
+		centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
+		centreInfoRl = (RelativeLayout) findViewById(R.id.centreInfoRl);
+		centreInfoProgress = (ProgressBar) findViewById(R.id.centreInfoProgress);
+		centreLocationSnippet = (TextView) findViewById(R.id.centreLocationSnippet);
+		
+		
+		
+		
+		
+		
+		//Search Layout
+		searchLayout = (RelativeLayout) findViewById(R.id.searchLayout);
+		searchList = (ListView) findViewById(R.id.searchList);
+		searchListAdapter = new SearchListAdapter();
+		searchList.setAdapter(searchListAdapter);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Driver main layout 
+		driverMainLayout = (RelativeLayout) findViewById(R.id.driverMainLayout);
+		
+		
+		//Driver initial layout
+		driverInitialLayout = (RelativeLayout) findViewById(R.id.driverInitialLayout);
+		driverNewRideRequestRl = (RelativeLayout) findViewById(R.id.driverNewRideRequestRl);
+		driverNewRideRequestText = (TextView) findViewById(R.id.driverNewRideRequestText);
+		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText);
+		driverInitialMyLocationBtn = (Button) findViewById(R.id.driverInitialMyLocationBtn);
+		
+		
+		
+		// Driver Request Accept layout
+		driverRequestAcceptLayout = (RelativeLayout) findViewById(R.id.driverRequestAcceptLayout);
+		driverAcceptRideBtn = (Button) findViewById(R.id.driverAcceptRideBtn);
+		driverCancelRequestBtn = (Button) findViewById(R.id.driverCancelRequestBtn);
+		driverRequestAcceptMyLocationBtn = (Button) findViewById(R.id.driverRequestAcceptMyLocationBtn);
+		
+		
+		
+		// Driver engaged layout
+		driverEngagedLayout = (RelativeLayout) findViewById(R.id.driverEngagedLayout);
+		
+
+		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName);
+		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue);
+		driverPassengerCallBtn = (Button) findViewById(R.id.driverPassengerCallBtn);
+		driverPassengerImageProgress = (ProgressBar) findViewById(R.id.driverPassengerImageProgress);
+		driverPassengerImage = (ImageView) findViewById(R.id.driverPassengerImage);
+		
+		//Start ride layout
+		driverStartRideMainRl = (RelativeLayout) findViewById(R.id.driverStartRideMainRl);
+		driverStartRideMyLocationBtn = (Button) findViewById(R.id.driverStartRideMyLocationBtn);
+		driverStartRideText = (TextView) findViewById(R.id.driverStartRideText);
+		driverStartRideSlider = (SlideButton) findViewById(R.id.driverStartRideSlider);
+		
+		
+		//End ride layout
+		driverInRideMainRl = (RelativeLayout) findViewById(R.id.driverInRideMainRl);
+		waitChronometer = (PausableChronometer) findViewById(R.id.waitChronometer);
+		driverWaitBtn = (Button) findViewById(R.id.driverWaitBtn);
+		driverEndRideText = (TextView) findViewById(R.id.driverEndRideText);
+		driverEndRideSlider = (SlideButtonInvert) findViewById(R.id.driverEndRideSlider);
+		waitStart = 2;
+		
+		
+		waitChronometer.setText("00:00:00");
+		waitChronometer.setOnChronometerTickListener(new OnChronometerTickListener() {
+					@Override
+					public void onChronometerTick(Chronometer cArg) {
+						long time = SystemClock.elapsedRealtime() - cArg.getBase();
+						int h = (int) (time / 3600000);
+						int m = (int) (time - h * 3600000) / 60000;
+						int s = (int) (time - h * 3600000 - m * 60000) / 1000;
+						String hh = h < 10 ? "0" + h : h + "";
+						String mm = m < 10 ? "0" + m : m + "";
+						String ss = s < 10 ? "0" + s : s + "";
+						cArg.setText(hh + ":" + mm + ":" + ss);
+					}
+				});
 		
 		
 		
@@ -388,35 +544,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		
 		
 		
-		//Center location layout
-		centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
-		centreInfoRl = (RelativeLayout) findViewById(R.id.centreInfoRl);
-		centreInfoProgress = (ProgressBar) findViewById(R.id.centreInfoProgress);
-		centreLocationSnippet = (TextView) findViewById(R.id.centreLocationSnippet);
 		
-		
-		
-		
-		
-		
-		//Search Layout
-		searchLayout = (RelativeLayout) findViewById(R.id.searchLayout);
-		searchList = (ListView) findViewById(R.id.searchList);
-		searchListAdapter = new SearchListAdapter();
-		searchList.setAdapter(searchListAdapter);
-		
-		
-		
-		
-		
-		//On Map
-		distance = (TextView) findViewById(R.id.distance);
-		fare = (TextView) findViewById(R.id.fare);
-		rate = (TextView) findViewById(R.id.rate);
-		getCentreBtn = (Button) findViewById(R.id.getCentreBtn);
-		getDistance = (Button) findViewById(R.id.getDistance);
-		progress = (ProgressBar) findViewById(R.id.progress);
-		progress.setVisibility(View.GONE);
 		
 				 
 		
@@ -424,7 +552,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				
 		
 		
-		//Bottom
+		
+		
 		
 		
 		
@@ -447,6 +576,52 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		});
 		
 		
+		
+		
+		
+		
+		driverModeToggle.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Log.e("userMode","="+userMode);
+				
+				if(userMode == UserMode.DRIVER){
+					userMode = UserMode.PASSENGER;
+					driverModeToggle.setImageResource(R.drawable.off);
+					
+					passengerScreenMode = PassengerScreenMode.P_INITIAL;
+					switchPassengerScreen(passengerScreenMode);
+				}
+				else{
+					userMode = UserMode.DRIVER;
+					driverModeToggle.setImageResource(R.drawable.on);
+					
+					driverScreenMode = DriverScreenMode.D_INITIAL;
+					switchDriverScreen(driverScreenMode);
+				}
+				
+				drawerLayout.closeDrawer(menuLayout);
+				
+				switchUserScreen(userMode);
+			}
+		});
+		
+		
+		
+		inviteFriendRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				drawerLayout.closeDrawer(menuLayout);
+				startActivity(new Intent(HomeActivity.this, InviteFacebookFriendsActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+		
+		
+		
 		backBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -458,8 +633,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		
 		
 		
-		passengerScreenMode = PassengerScreenMode.P_INITIAL;
-		switchPassengerScreen(passengerScreenMode);
+		
 		
 		
 		search.setOnClickListener(new View.OnClickListener() {
@@ -604,6 +778,98 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		});
 		
 		
+		
+		driverNewRideRequestRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
+				switchDriverScreen(driverScreenMode);
+				
+			}
+		});
+		
+		
+		driverAcceptRideBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				driverScreenMode = DriverScreenMode.D_START_RIDE;
+				switchDriverScreen(driverScreenMode);
+			}
+		});
+		
+		
+		
+		
+		driverStartRideSlider.setSlideButtonListener(new SlideButtonListener() {  
+	        @Override
+	        public void handleSlide() {
+	            
+	        	driverStartRideText.setVisibility(View.GONE);
+	        	
+	        	driverScreenMode = DriverScreenMode.D_IN_RIDE;
+				switchDriverScreen(driverScreenMode);
+				
+	        }
+	    });
+		
+		
+		driverWaitBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(waitStart == 2){
+					waitChronometer.setBase(SystemClock.elapsedRealtime());
+					waitChronometer.start();
+					driverWaitBtn.setBackgroundResource(R.drawable.red_btn_selector);
+					driverWaitBtn.setText("Stop wait");
+					waitStart = 1;
+				}
+				else{
+					if(waitStart == 1){
+						waitChronometer.stop();
+						driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
+						driverWaitBtn.setText("Start wait");
+						waitStart = 0;
+					}
+					else if(waitStart == 0){
+						waitChronometer.start();
+						driverWaitBtn.setBackgroundResource(R.drawable.red_btn_selector);
+						driverWaitBtn.setText("Stop wait");
+						waitStart = 1;
+					}
+				}
+				
+			}
+		});
+		
+		
+		
+		driverEndRideSlider.setSlideButtonListener(new SlideButtonInvertListener() {
+			
+			@Override
+			public void handleSlide() {
+				
+				driverEndRideText.setVisibility(View.GONE);
+				waitChronometer.stop();
+				
+				long elapsedMillis = SystemClock.elapsedRealtime() - waitChronometer.getBase();
+				long seconds = elapsedMillis / 1000;
+				long minutes = seconds / 60;
+				long leftSeconds = seconds % 60;
+				String min = (minutes > 9)? ""+minutes : "0"+minutes;
+				String sec = (leftSeconds > 9)? ""+leftSeconds : "0"+leftSeconds;
+				
+				Toast.makeText(getApplicationContext(), "wait = "+min + ":" + sec, Toast.LENGTH_SHORT).show();
+	        	
+	        	driverScreenMode = DriverScreenMode.D_RIDE_END;
+				switchDriverScreen(driverScreenMode);
+				
+			}
+		});
+		
 		fare.setText("Fare = "+unitFare);
 		
 		polyLinesAL = new ArrayList<Polyline>();
@@ -637,6 +903,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				
 				@Override
 				public void onMapLongClick(LatLng arg0) {
+					
+					Log.e("Map Long click arg0","=="+arg0);
 					
 				}
 			});
@@ -728,25 +996,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 			
 			
 			
-			getCentreBtn.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Toast.makeText(getApplicationContext(), "Centre = "+map.getCameraPosition().target, Toast.LENGTH_LONG).show();
-					new GetLatLngAddress(map.getCameraPosition().target).execute();
-				}
-			});
-			
-			
-			getDistance.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					
-					new GetDistanceTime(map.getCameraPosition().target, 0).execute();
-				}
-			});
-			
 			
 			myLocationBtn.setOnClickListener(new View.OnClickListener() {
 				
@@ -777,8 +1026,22 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		
 		
 		
+
+		userMode = UserMode.PASSENGER;
+		passengerScreenMode = PassengerScreenMode.P_INITIAL;
+		driverScreenMode = DriverScreenMode.D_INITIAL;
 		
 		
+		if(userMode == UserMode.DRIVER){
+			driverModeToggle.setImageResource(R.drawable.on);
+		}
+		else{
+			driverModeToggle.setImageResource(R.drawable.off);
+		}
+		
+		switchUserScreen(userMode);
+		switchPassengerScreen(passengerScreenMode);
+		switchDriverScreen(driverScreenMode);
 	  
 		
 		
@@ -787,20 +1050,157 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 	
 	
 	
+	public void switchUserScreen(UserMode mode){
+		
+		switch(mode){
+		
+			case DRIVER:
+				passengerMainLayout.setVisibility(View.GONE);
+				driverMainLayout.setVisibility(View.VISIBLE);
+				
+				favBtn.setVisibility(View.GONE);
+				
+				break;
+			
+				
+				
+				
+			case PASSENGER:
+				passengerMainLayout.setVisibility(View.VISIBLE);
+				driverMainLayout.setVisibility(View.GONE);
+				
+				favBtn.setVisibility(View.VISIBLE);
+				
+				break;
+			
+				
+				
+				
+			default:
+				passengerMainLayout.setVisibility(View.VISIBLE);
+				driverMainLayout.setVisibility(View.GONE);
+				
+				favBtn.setVisibility(View.VISIBLE);
+		
+		
+		}
+		
+	}
+	
+	
+	
+	public void switchDriverScreen(DriverScreenMode mode){
+		
+		if(mode == DriverScreenMode.D_RIDE_END){
+			mapLayout.setVisibility(View.GONE);
+			endRideReviewRl.setVisibility(View.VISIBLE);
+			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
+		}
+		else{
+			mapLayout.setVisibility(View.VISIBLE);
+			endRideReviewRl.setVisibility(View.GONE);
+			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
+		}
+		
+		switch(mode){
+		
+			case D_INITIAL:
+				
+				driverInitialLayout.setVisibility(View.VISIBLE);
+				driverRequestAcceptLayout.setVisibility(View.GONE);
+				driverEngagedLayout.setVisibility(View.GONE);
+			
+				break;
+				
+				
+			case D_REQUEST_ACCEPT:
+				
+				driverInitialLayout.setVisibility(View.GONE);
+				driverRequestAcceptLayout.setVisibility(View.VISIBLE);
+				driverEngagedLayout.setVisibility(View.GONE);
+			
+				break;
+				
+				
+				
+			case D_START_RIDE:
+				
+				driverInitialLayout.setVisibility(View.GONE);
+				driverRequestAcceptLayout.setVisibility(View.GONE);
+				driverEngagedLayout.setVisibility(View.VISIBLE);
+				
+				driverStartRideSlider.setProgress(0);
+				driverStartRideText.setVisibility(View.VISIBLE);
+				
+				driverStartRideMainRl.setVisibility(View.VISIBLE);
+				driverInRideMainRl.setVisibility(View.GONE);
+				
+			
+				break;
+				
+				
+			case D_IN_RIDE:
+				
+				driverInitialLayout.setVisibility(View.GONE);
+				driverRequestAcceptLayout.setVisibility(View.GONE);
+				driverEngagedLayout.setVisibility(View.VISIBLE);
+				
+				driverEndRideSlider.setProgress(100);
+				driverEndRideText.setVisibility(View.VISIBLE);
+				
+				driverStartRideMainRl.setVisibility(View.GONE);
+				driverInRideMainRl.setVisibility(View.VISIBLE);
+				
+			
+				break;
+				
+				
+			case D_RIDE_END:
+				
+				driverInitialLayout.setVisibility(View.GONE);
+				driverRequestAcceptLayout.setVisibility(View.GONE);
+				driverEngagedLayout.setVisibility(View.GONE);
+				
+				
+			
+				break;
+				
+				
+			
+			default:
+				driverInitialLayout.setVisibility(View.VISIBLE);
+				driverRequestAcceptLayout.setVisibility(View.GONE);
+				driverEngagedLayout.setVisibility(View.GONE);
+		
+		}
+		
+	}
+	
 	
 	
 	public void switchPassengerScreen(PassengerScreenMode mode){
+		
+		
+		if(mode == PassengerScreenMode.P_RIDE_END){
+			mapLayout.setVisibility(View.GONE);
+			endRideReviewRl.setVisibility(View.VISIBLE);
+			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
+		}
+		else{
+			mapLayout.setVisibility(View.VISIBLE);
+			endRideReviewRl.setVisibility(View.GONE);
+			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
+		}
+		
 		
 		switch(mode){
 		
 			case P_INITIAL:
 
-				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.VISIBLE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				inRideLayout.setVisibility(View.GONE);
-				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -811,8 +1211,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.VISIBLE);
 
-				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
-				
 				
 				break;
 				
@@ -820,12 +1218,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		
 			case P_SEARCH:
 
-				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				inRideLayout.setVisibility(View.GONE);
-				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.VISIBLE);
 				
@@ -840,7 +1236,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				
 				searchListAdapter.notifyDataSetChanged();
 
-				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 				break;
 				
@@ -848,12 +1243,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				
 			case P_BEFORE_REQUEST_FINAL:
 
-				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
 				inRideLayout.setVisibility(View.GONE);
-				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -863,7 +1256,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.GONE);
 
-				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 				break;
 				
@@ -871,12 +1263,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				
 			case P_REQUEST_FINAL:
 
-				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
 				inRideLayout.setVisibility(View.GONE);
-				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -886,7 +1276,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.GONE);
 
-				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 				break;
 				
@@ -896,12 +1285,11 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				
 				startTracking = true;
 				
-				mapLayout.setVisibility(View.VISIBLE);
+				
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				inRideLayout.setVisibility(View.VISIBLE);
-				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -911,7 +1299,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.GONE);
 
-				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 				break;
 				
@@ -919,12 +1306,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				
 				startTracking = false;
 				
-				mapLayout.setVisibility(View.GONE);
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				inRideLayout.setVisibility(View.GONE);
-				endRideReviewRl.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -933,15 +1318,13 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.GONE);
-				
-				topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
+
 				
 				break;
 				
 				
 			default:
 
-				mapLayout.setVisibility(View.VISIBLE);
 				initialLayout.setVisibility(View.VISIBLE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
@@ -957,9 +1340,11 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.VISIBLE);
 
-				topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
 				
 		}
+		
+		
+		
 		
 	}
 	
@@ -1013,6 +1398,36 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 			
 		}
 	};
+	
+	
+	
+	LocationListener locationListener = new LocationListener() {
+		
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void onProviderEnabled(String provider) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void onProviderDisabled(String provider) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void onLocationChanged(Location location) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
+	
 	
 	
 	void buildAlertMessageNoGps() {
@@ -1757,3 +2172,165 @@ enum UserMode{
 	PASSENGER, DRIVER
 }
 
+enum DriverScreenMode{
+	D_INITIAL, D_REQUEST_ACCEPT, D_START_RIDE, D_IN_RIDE , D_RIDE_END
+}
+
+
+class SlideButton extends SeekBar {
+
+    private Drawable thumb;
+    private SlideButtonListener listener;
+
+    public SlideButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    @Override
+    public void setThumb(Drawable thumb) {
+        super.setThumb(thumb);
+        this.thumb = thumb;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (thumb.getBounds().contains((int) event.getX(), (int) event.getY())) {
+                super.onTouchEvent(event);
+            } else
+                return false;
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (getProgress() > 80){
+                handleSlide();
+            }
+            else{
+            	setProgress(0);
+            }
+        } else
+            super.onTouchEvent(event);
+
+        return true;
+    }
+
+    private void handleSlide() {
+    	setProgress(100);
+        listener.handleSlide();
+    }
+
+    public void setSlideButtonListener(SlideButtonListener listener) {
+        this.listener = listener;
+    }   
+}
+
+interface SlideButtonListener {
+    public void handleSlide();
+}
+
+
+
+class SlideButtonInvert extends SeekBar {
+
+    private Drawable thumb;
+    private SlideButtonInvertListener listener;
+
+    public SlideButtonInvert(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setProgress(100);
+    }
+
+    @Override
+    public void setThumb(Drawable thumb) {
+        super.setThumb(thumb);
+        this.thumb = thumb;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (thumb.getBounds().contains((int) event.getX(), (int) event.getY())) {
+                super.onTouchEvent(event);
+            } else
+                return false;
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (getProgress() < 20){
+                handleSlide();
+            }
+            else{
+            	setProgress(100);
+            }
+        } else
+            super.onTouchEvent(event);
+
+        return true;
+    }
+
+    private void handleSlide() {
+    	setProgress(0);
+        listener.handleSlide();
+    }
+
+    public void setSlideButtonListener(SlideButtonInvertListener listener) {
+        this.listener = listener;
+    }   
+}
+
+interface SlideButtonInvertListener {
+    public void handleSlide();
+}
+
+
+class PausableChronometer extends Chronometer {
+
+	private long eclipsedTime;
+
+	public PausableChronometer(Context context) {
+		super(context);
+		init();
+	}
+
+	public PausableChronometer(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init();
+	}
+
+	public PausableChronometer(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		init();
+	}
+
+	public void start() {
+		setBase(SystemClock.elapsedRealtime() - eclipsedTime);
+		super.start();
+	}
+
+	public void restart() {
+		stop();
+		this.eclipsedTime = 0l;
+		start();
+	}
+
+	public void stop() {
+		this.eclipsedTime = SystemClock.elapsedRealtime() - this.getBase();
+		super.stop();
+	}
+
+	public long stopAndReturnEclipsedTime() {
+		stop();
+		return this.eclipsedTime;
+	}
+
+	private void init() {
+		this.eclipsedTime = 0l;
+		this.setOnChronometerTickListener(new OnChronometerTickListener() {
+			NumberFormat formatter = new DecimalFormat("00");
+
+			@Override
+			public void onChronometerTick(Chronometer arg0) {
+				float countUp = (SystemClock.elapsedRealtime() - arg0.getBase()) / 1000;
+				String asText = formatter.format(countUp / 60) + ":"
+						+ formatter.format(countUp % 60);
+				setText(asText);
+			}
+		});
+	}
+}
