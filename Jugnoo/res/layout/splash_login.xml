@@ -6,7 +6,14 @@
     android:background="@color/bg_grey_opaque"
     android:orientation="vertical" >
 
+    
+    <ScrollView 
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
     <LinearLayout
+        android:id="@+id/mainLinear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
@@ -39,7 +46,10 @@
                 android:background="#0000"
                 android:hint="Email ID"
                 android:singleLine="true"
-                android:textSize="34px" />
+                android:textSize="34px"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                 />
 
             <ImageView
                 android:layout_width="620px"
@@ -53,7 +63,10 @@
                 android:background="#0000"
                 android:hint="Password"
                 android:singleLine="true"
-                android:textSize="34px" />
+                android:textSize="34px" 
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                />
         </LinearLayout>
 
         <Button
@@ -172,8 +185,18 @@
             android:textSize="40px" />
         
         
-        
+        <TextView
+                android:id="@+id/extraTextForScroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48px"
+                android:textColor="@color/white"
+                android:text="      "
+                android:textSize="34px"
+                
+                />
         
     </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

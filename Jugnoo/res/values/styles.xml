@@ -24,5 +24,14 @@
         <item name="android:maxHeight">48dip</item>
     </style>
     
+     
+     
+      <style name="Animations" />
+
+    <style name="Animations.LoadingDialogFade">
+        <item name="@android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="@android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+    
 
 </resources>

@@ -8,8 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -26,10 +26,10 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	private LocationClient locationclient;
 	private LocationRequest locationrequest;
 	private static int count = 0;
-	private static boolean dialogShown = false;
 	private Location location; // location
-	double latitude = 30.7500; // latitude
+	double latitude = 30.7500; // latitude default chandigarh latlng
 	double longitude = 76.7800; // longitude
+	AlertDialog alertDialog;
 //	
 	/**
 	 * Constructor for initializing LocationFetcher class' object
@@ -41,14 +41,15 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			if(isLocationEnabled(context)){															// location fetching enabled
 				locationclient = new LocationClient(context, this, this);
 				locationclient.connect();
-				start(context);
 			}
 			else{																					// location disabled
-//				showSettingsAlert(context);
+				showSettingsAlert(context);
 			}
 		}
 		else{																						// google play services not working
 			Log.e("Google Play Service Error ","="+resp);
+			showGooglePlayErrorAlert(context);
+			//https://play.google.com/store/apps/details?id=com.google.android.gms
 		}
 	}
 
@@ -78,10 +79,10 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	 */
 	public boolean isLocationEnabled(Context context) {
 		try{
-		ContentResolver contentResolver = context.getContentResolver();
-		boolean gpsStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
-		boolean netStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.NETWORK_PROVIDER);
-		return gpsStatus || netStatus;
+			ContentResolver contentResolver = context.getContentResolver();
+			boolean gpsStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
+			boolean netStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.NETWORK_PROVIDER);
+			return gpsStatus || netStatus;
 		} catch(Exception e){
 			e.printStackTrace();
 			return false;
@@ -89,44 +90,92 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	}
 	
 	
+	
+	/**
+	 * Function to show settings alert dialog
+	 * On pressing Settings button will lauch Settings Options
+	 * */
+	public void showGooglePlayErrorAlert(final Context mContext){
+		try{
+			if(alertDialog != null && alertDialog.isShowing()){
+				alertDialog.dismiss();
+			}
+				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
+		   	 
+		        // Setting Dialog Title
+		        alertDialogPrepare.setTitle("Google Play Services Error");
+		        alertDialogPrepare.setCancelable(false);
+		 
+		        // Setting Dialog Message
+		        alertDialogPrepare.setMessage("Google Play services not found. Install Google Play Services?");
+		 
+		        // On pressing Settings button
+		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog,int which) {
+		            	dialog.dismiss();
+		            	Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(Uri.parse("market://details?id=com.google.android.gms"));
+						mContext.startActivity(intent);
+		            }
+		        });
+		 
+		        // on pressing cancel button
+		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		            dialog.dismiss();
+		            }
+		        });
+		 
+		        alertDialog = alertDialogPrepare.create();
+		        
+		        // Showing Alert Message
+		        alertDialog.show();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
 	public void showSettingsAlert(final Context mContext){
 		try{
-		if(!dialogShown){
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-   	 
-        // Setting Dialog Title
-        alertDialog.setTitle("Loaction Settings");
-        alertDialog.setCancelable(false);
- 
-        // Setting Dialog Message
-        alertDialog.setMessage("Location is not enabled. Do you want to go to settings menu?");
- 
-        // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
-            	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            	mContext.startActivity(intent);
-            	dialog.dismiss();
-            	dialogShown = false;
-            }
-        });
- 
-        // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-            dialogShown = false;
-            }
-        });
- 
-        // Showing Alert Message
-        alertDialog.show();
-        dialogShown = true;
-		}} catch(Exception e){e.printStackTrace();}
+			if(alertDialog != null && alertDialog.isShowing()){
+				alertDialog.dismiss();
+			}
+				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
+		   	 
+		        // Setting Dialog Title
+		        alertDialogPrepare.setTitle("Loaction Settings");
+		        alertDialogPrepare.setCancelable(false);
+		 
+		        // Setting Dialog Message
+		        alertDialogPrepare.setMessage("Location is not enabled. Do you want to go to settings menu?");
+		 
+		        // On pressing Settings button
+		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog,int which) {
+		            	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+		            	mContext.startActivity(intent);
+		            	dialog.dismiss();
+		            }
+		        });
+		 
+		        // on pressing cancel button
+		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		            dialog.dismiss();
+		            }
+		        });
+		 
+		        alertDialog = alertDialogPrepare.create();
+		        
+		        // Showing Alert Message
+		        alertDialog.show();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -138,7 +187,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	public double getLatitude(){
 		try{
 		if(location == null){
-			location =locationclient.getLastLocation();
+			location = locationclient.getLastLocation();
 			if(location != null){
 				latitude = location.getLatitude();
 				Log.e("last location","="+latitude);
@@ -191,39 +240,6 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		return null;
 	}
 	
-	/**
-	 * Start receiving location updates
-	 */
-	public void start(final Context context){
-		try{
-		if(isLocationEnabled(context)){	
-			try{
-				this.stop();
-			} catch(Exception e){e.printStackTrace();}
-			
-		Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if(locationclient!=null && locationclient.isConnected()){
-					Log.e("locationclient", "not null");
-					
-					locationrequest = LocationRequest.create();
-					locationrequest.setInterval(20000);
-					locationclient.requestLocationUpdates(locationrequest, LocationFetcher.this);
-				}
-				else{
-					Log.e("locationclient", "null");
-					locationclient = new LocationClient(context, LocationFetcher.this, LocationFetcher.this);
-					locationclient.connect();
-					start(context);
-				}
-			}
-		}, 1000);
-		}
-		} catch(Exception e){e.printStackTrace();}
-		
-	}
 
 
 	/**
@@ -231,32 +247,37 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	 */
 	public void stop() {
 		try{
-		Log.e("location","stop");
-		if(locationclient!=null){
-			locationclient.removeLocationUpdates(this);
+			Log.e("location","stop");
+			if(locationclient!=null){
+				locationclient.removeLocationUpdates(this);
+			}
+		} catch(Exception e){
+			Log.e("e", "="+e.toString());
 		}
-		} catch(Exception e){Log.e("e", "="+e.toString());}
 	}
 	
 	public void destroy(){
 		try{
-		Log.e("location","destroy");
-		if(locationclient!=null){
-			locationclient.removeLocationUpdates(this);
-			locationclient.disconnect();
-		}}catch(Exception e){e.printStackTrace();}
+			Log.e("location","destroy");
+			if(locationclient!=null){
+				locationclient.disconnect();
+			}
+		}catch(Exception e){
+			Log.e("e", "="+e.toString());
+		}
 	}
 
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected");
-
+		locationrequest = LocationRequest.create();
+		locationrequest.setInterval(20000);
+		locationclient.requestLocationUpdates(locationrequest, LocationFetcher.this);
 	}
 
 	@Override
 	public void onDisconnected() {
 		Log.e(TAG, "onDisconnected");
-
 	}
 
 	@Override
@@ -268,11 +289,14 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	@Override
 	public void onLocationChanged(Location location) {
 		try{
-		if(location!=null){
-			this.location = location;
-			Log.e(TAG+count, "Location Request :" + location.getLatitude() + "," + location.getLongitude());
-			count ++;
-		}}catch(Exception e){e.printStackTrace();}
+			if(location!=null){
+				this.location = location;
+//				Log.e(TAG+count, "Location Request :" + location.getLatitude() + "," + location.getLongitude());
+				count ++;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 	}
 

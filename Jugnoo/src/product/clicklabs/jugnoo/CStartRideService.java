@@ -15,17 +15,16 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-
-public class CustomerStartRideService extends Service {
+public class CStartRideService extends Service {
 	
 	static int count = 0; 
 	
 	GetRideStatusFromServer getRideStatusFromServer;
 	
+	static DetectRideStart detectRideStart;
 	
 	
-	public CustomerStartRideService() {
+	public CStartRideService() {
 		Log.e("DriverLocationUpdateService"," instance created");
 		count = 0; 
 	}
@@ -103,7 +102,7 @@ public class CustomerStartRideService extends Service {
     private boolean isMyServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (CustomerStartRideService.class.getName().equals(service.service.getClassName())) {
+            if (CStartRideService.class.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }
@@ -177,10 +176,10 @@ public class CustomerStartRideService extends Service {
     		super.onPostExecute(result);
     		
     		Log.e("count","="+count);
-			Log.e("HomeActivitydetectRideStart=","="+HomeActivity.detectRideStart);
+			Log.e("HomeActivitydetectRideStart=","="+CStartRideService.detectRideStart);
 			
-			if(count == 2 && HomeActivity.detectRideStart != null){
-				HomeActivity.detectRideStart.sendIntent();
+			if(count == 2 && CStartRideService.detectRideStart != null){
+				CStartRideService.detectRideStart.sendIntent();
 				stopSelf();
 			}
 			else{

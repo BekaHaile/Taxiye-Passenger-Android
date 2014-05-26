@@ -5,11 +5,14 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,9 +32,9 @@ import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,6 +61,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
@@ -72,7 +76,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class HomeActivity extends FragmentActivity implements DetectRideStart {
+public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations {
 
 	
 	
@@ -287,7 +291,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 	
 	static DriverScreenMode driverScreenMode;
 	
-	static DetectRideStart detectRideStart;
+	boolean requestStarted = false;
 	
 	
 	@Override
@@ -296,7 +300,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		setContentView(R.layout.activity_home);
 		
 		
-		HomeActivity.detectRideStart = HomeActivity.this;
+		CStartRideService.detectRideStart = HomeActivity.this;
+		CUpdateDriverLocationsService.refreshDriverLocations = HomeActivity.this;
 		
 		
 		startTracking = false;
@@ -675,29 +680,21 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 			@Override
 			public void onClick(View v) {
 				
-				passengerScreenMode = PassengerScreenMode.P_BEFORE_REQUEST_FINAL;
-				switchPassengerScreen(passengerScreenMode);
-				
-				new Handler().postDelayed(new Runnable() {
-					
-					@Override
-					public void run() {
-						
-						runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-								switchPassengerScreen(passengerScreenMode);
-								startService(new Intent(HomeActivity.this, CustomerStartRideService.class));
-								Log.e("detectRideStart before service","="+HomeActivity.detectRideStart);
-							}
-						});
+				if(requestRideBtn.getText().toString().equalsIgnoreCase("Request Ride")){
+					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+						if(Data.driverInfos.size() > 0){
+							requestRideBtn.setText("Assigning driver...");
+							passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+							new RequestRideAsync(HomeActivity.this, 0, map.getCameraPosition().target).execute();
+						}
+						else{
+							new DialogPopup().alertPopup(HomeActivity.this, "", "No driver available currently");
+						}
 					}
-				}, 10000);
-				
-				
-				new GetDistanceTime(map.getCameraPosition().target, 1).execute();
+					else{
+						new DialogPopup().alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
+					}
+				}
 				
 			}
 		});
@@ -760,6 +757,13 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 			}
 		});
 		
+		menuLayout.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
 		
 //		inRideLayout.setOnClickListener(new View.OnClickListener() {
 //			
@@ -879,7 +883,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		
 																	// map object initialized
 		if(map != null){
-			map.getUiSettings().setZoomControlsEnabled(false);
+			map.getUiSettings().setZoomControlsEnabled(true);
 			map.setMyLocationEnabled(true);
 			map.getUiSettings().setMyLocationButtonEnabled(false);
 			map.getUiSettings().setAllGesturesEnabled(true);
@@ -889,6 +893,29 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 			
 			
 			map.setOnMyLocationChangeListener(myLocationChangeListener);
+			
+			// Find ZoomControl view
+			View zoomControls = mapFragment.getView().findViewById(0x1);
+
+			if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+			    // ZoomControl is inside of RelativeLayout
+			    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
+
+			    // Align it to - parent top|left
+			    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+			    // Update margins, set to 10dp
+			    final int marginTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 250*ASSL.Yscale(),
+			            getResources().getDisplayMetrics());
+			    final int marginRight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 20*ASSL.Yscale(),
+			            getResources().getDisplayMetrics());
+			    
+			    params.setMargins(0, marginTop, marginRight, 0);
+			}
+			
+			
+			
 			
 			map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 				
@@ -919,30 +946,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 			
 			
 			
-			Data.driverInfos.add(new DriverInfo("1", "1", new LatLng(Data.chandigarhLatLng.latitude+0.1,
-					Data.chandigarhLatLng.longitude)));
-
-			Data.driverInfos.add(new DriverInfo("2", "2", new LatLng(Data.chandigarhLatLng.latitude-0.1,
-					Data.chandigarhLatLng.longitude)));
-			
-			Data.driverInfos.add(new DriverInfo("3", "3", new LatLng(Data.chandigarhLatLng.latitude,
-					Data.chandigarhLatLng.longitude+0.1)));
-			
-			Data.driverInfos.add(new DriverInfo("4", "4", new LatLng(Data.chandigarhLatLng.latitude,
-					Data.chandigarhLatLng.longitude-0.1)));
 			
 			
 			
-			for(int i=0; i<Data.driverInfos.size(); i++){
-				DriverInfo driverInfo = Data.driverInfos.get(i);
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.title(driverInfo.name);
-				markerOptions.snippet(driverInfo.address);
-				markerOptions.position(driverInfo.latLng);
-				markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-				
-				map.addMarker(markerOptions);
-			}
+			
 			
 			
 			
@@ -978,15 +985,17 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				  public void onMapUnsettled() {
 				    // Map unsettled
 					  Log.e("onMapUnsettled","=onMapUnsettled");
+					  if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
 					  centreInfoRl.setVisibility(View.INVISIBLE);
 					  centreInfoProgress.setVisibility(View.GONE);
+					  }
 				  }
 
 				  @Override
 				  public void onMapSettled() {
 				    // Map settled
 					  Log.e("onMapSettled","=onMapSettled");
-					  if(!startTracking){
+					  if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
 						  new GetLatLngAddress(map.getCameraPosition().target).execute();
 					  	new GetDistanceTime(map.getCameraPosition().target, 0).execute();
 					  }
@@ -997,19 +1006,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 			
 			
 			
-			myLocationBtn.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					
-					if(myLocation != null){
-						map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
-					}
-					else{
-						Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
-					}
-				}
-			});
+			myLocationBtn.setOnClickListener(mapMyLocationClick);
 			
 		}
 		
@@ -1023,6 +1020,9 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
+		
+		
 		
 		
 		
@@ -1044,6 +1044,31 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		switchDriverScreen(driverScreenMode);
 	  
 		
+		setUserData();
+		
+	}
+	
+	
+	OnClickListener mapMyLocationClick = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			if(myLocation != null){
+				map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+			}
+			else{
+				Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
+			}
+		}
+	};
+	
+	
+	public void setUserData(){
+		
+		userName.setText(Data.userData.userName);
+		
+		AQuery aq = new AQuery(profileImg);
+		aq.id(profileImg).progress(profileImgProgress).image(Data.userData.userImage, Data.imageOptionsFullRound());
 		
 		
 	}
@@ -1211,9 +1236,30 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.VISIBLE);
 
+				startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 				
 				break;
 				
+				
+			case P_ASSIGNING:
+				
+				initialLayout.setVisibility(View.VISIBLE);
+				beforeRequestFinalLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.GONE);
+				inRideLayout.setVisibility(View.GONE);
+				centreLocationRl.setVisibility(View.VISIBLE);
+				searchLayout.setVisibility(View.GONE);
+				
+				
+				menuBtn.setVisibility(View.VISIBLE);
+				jugnooLogo.setVisibility(View.VISIBLE);
+				backBtn.setVisibility(View.GONE);
+				title.setVisibility(View.GONE);
+				favBtn.setVisibility(View.VISIBLE);
+
+				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				
+				break;
 				
 		
 			case P_SEARCH:
@@ -1256,6 +1302,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.GONE);
 
+				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				
 				
 				break;
 				
@@ -1500,9 +1548,11 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
     public void onDestroy() {
         super.onDestroy();
         
+        Data.locationFetcher.destroy();
+        
         ASSL.closeActivity(drawerLayout);
         stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-        stopService(new Intent(HomeActivity.this, CustomerStartRideService.class));
+        stopService(new Intent(HomeActivity.this, CStartRideService.class));
         
         System.gc();
         
@@ -1514,7 +1564,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		@Override
 		public void onMyLocationChange(Location location) {
 
-			Log.e("location","=="+location);
+//			Log.e("location","=="+location);
 			
 			HomeActivity.myLocation = location;
 			
@@ -1588,313 +1638,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 	}
 
 	
-	//https://maps.googleapis.com/maps/api/distancematrix/json?origins=30.75,76.78&destinations=30.78,76.79&language=EN&sensor=false
-	
-	public String makeURL(LatLng source, LatLng destination){
-        StringBuilder urlString = new StringBuilder();
-        urlString.append("https://maps.googleapis.com/maps/api/distancematrix/json");
-        urlString.append("?origins=");// from
-        urlString.append(Double.toString(source.latitude));
-        urlString.append(",");
-        urlString
-                .append(Double.toString(source.longitude));
-        urlString.append("&destinations=");// to
-        urlString
-                .append(Double.toString(destination.latitude));
-        urlString.append(",");
-        urlString.append(Double.toString(destination.longitude));
-        urlString.append("&language=EN&sensor=false&alternatives=false");
-        return urlString.toString();
-	}
-	
-	public void drawPath(String  result) {
 
-	    try {
-	            //Tranform the string into a json object
-	           final JSONObject json = new JSONObject(result);
-	           JSONArray routeArray = json.getJSONArray("routes");
-	           JSONObject routes = routeArray.getJSONObject(0);
-	           JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
-	           String encodedString = overviewPolylines.getString("points");
-	           List<LatLng> list = decodePoly(encodedString);
-
-	           for(Polyline polyline : polyLinesAL){
-	        	   polyline.remove();
-	           }
-	           
-	           polyLinesAL.clear();
-	           
-	           for(int z = 0; z<list.size()-1;z++){
-	                LatLng src= list.get(z);
-	                LatLng dest= list.get(z+1);
-	                Polyline line = map.addPolyline(new PolylineOptions()
-	                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-	                .width(5)
-	                .color(Color.RED).geodesic(true));
-
-	                polyLinesAL.add(line);
-	            }
-	           
-
-	    } 
-	    catch (Exception e) {
-	    	e.printStackTrace();
-	    }
-	} 
-	
-	
-	private List<LatLng> decodePoly(String encoded) {
-
-	    List<LatLng> poly = new ArrayList<LatLng>();
-	    int index = 0, len = encoded.length();
-	    int lat = 0, lng = 0;
-
-	    while (index < len) {
-	        int bInt, shift = 0, result = 0;
-	        do {
-	            bInt = encoded.charAt(index++) - 63;
-	            result |= (bInt & 0x1f) << shift;
-	            shift += 5;
-	        } while (bInt >= 0x20);
-	        int dlat = ((result & 1) == 0 ? (result >> 1) : ~(result >> 1));
-	        lat += dlat;
-
-	        shift = 0;
-	        result = 0;
-	        do {
-	            bInt = encoded.charAt(index++) - 63;
-	            result |= (bInt & 0x1f) << shift;
-	            shift += 5;
-	        } while (bInt >= 0x20);
-	        int dlng = ((result & 1) == 0 ? (result >> 1) : ~(result >> 1));
-	        lng += dlng;
-
-	        LatLng pLatLng = new LatLng( (((double) lat / 1E5)),
-	                 (((double) lng / 1E5) ));
-	        poly.add(pLatLng);
-	    }
-
-	    return poly;
-	}
-	
-	
-	class GetDistanceTime extends AsyncTask<Void, Void, String>{
-	    String url;
-	    
-	    String distance, duration;
-	    
-	    LatLng destination;
-	    int switchCase;
-	    
-	    public GetDistanceTime(LatLng destination, int switchCase){
-	    	this.distance = "";
-	    	this.duration = "";
-	    	this.destination = destination;
-	    	this.switchCase = switchCase;
-	    }
-	    
-	    @Override
-	    protected void onPreExecute() {
-	        super.onPreExecute();
-	        
-	        if(switchCase == 0){
-	        	nearestDriverProgress.setVisibility(View.VISIBLE);
-	 	        nearestDriverText.setVisibility(View.GONE);
-	        }
-	        else if(switchCase == 1){
-	        	assignedDriverProgress.setVisibility(View.VISIBLE);
-	        	assignedDriverText.setVisibility(View.GONE);
-	        }
-	        
-	    }
-	    @Override
-	    protected String doInBackground(Void... params) {
-	    	try{
-	    		
-	    		double minDistance = 999999999;
-	    		LatLng source = null;
-	    		DriverInfo driverInfo = null;
-	    		for(int i=0; i<Data.driverInfos.size(); i++){
-	    			if(distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
-	    				minDistance = distance(destination, Data.driverInfos.get(i).latLng);
-	    				source = Data.driverInfos.get(i).latLng;
-	    				driverInfo = Data.driverInfos.get(i);
-	    			}
-	    		}
-	    		
-	    		
-	    		if(source == null){
-	    			return "error";
-	    		}
-	    			
-	    		this.url = makeURL(source, destination);
-	    		
-		    	SimpleJSONParser jParser = new SimpleJSONParser();
-		    	
-		    	String response = jParser.getJSONFromUrl(url);
-		    	
-		    	JSONObject jsonObject = new JSONObject(response);
-		    	
-		    	
-		    	String status = jsonObject.getString("status");
-		    	
-		    	if("OK".equalsIgnoreCase(status)){
-		    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
-		    		
-		    		distance = element0.getJSONObject("distance").getString("text") ;
-		    		
-		    		duration = element0.getJSONObject("duration").getString("text");
-		    		
-
-		    		return "Distance: " + distance + "\n" + "Duration: " + duration;
-		    		
-		    	}
-	    	
-	    	}catch(Exception e){
-	    		e.printStackTrace();
-	    	}
-	    	
-	        return "error";
-	    }
-	    @Override
-	    protected void onPostExecute(String result) {
-	        super.onPostExecute(result);   
-	        
-	        
-	        if(!"error".equalsIgnoreCase(result)){
-		        
-	        String distanceString = "";
-	        
-	        
-	        if(switchCase == 0){
-	        	nearestDriverProgress.setVisibility(View.GONE);
-	 	        nearestDriverText.setVisibility(View.VISIBLE);
-	 	        
-	 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-       	 		distanceString = "Nearest driver is " + distance + " " + duration + " away.";
-		        }
-		        else if(!"".equalsIgnoreCase(duration)){
-		        	distanceString = "Nearest driver is " + duration + " away.";
-		        }
-		        else if(!"".equalsIgnoreCase(distance)){
-		        	distanceString = "Nearest driver is " + distance + " away.";
-		        }
-		        else{
-		        	distanceString = "Could not find nearest driver's distance.";
-		        }
-	 	        
-	 	       	nearestDriverText.setText(distanceString);
-	 	       
-	        }
-	        else if(switchCase == 1){
-	        	assignedDriverProgress.setVisibility(View.GONE);
-	        	assignedDriverText.setVisibility(View.VISIBLE);
-	        	
-	        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-        	 		distanceString = "Your ride is " + distance + " and will arrive \n in approximately " + duration + ".";
-		        }
-		        else{
-		        	distanceString = "Could not find nearest driver's distance.";
-		        }
-	        	assignedDriverText.setText(distanceString);
-	        	
-	        }
-	        
-	        }
-	        else{
-		        nearestDriverText.setVisibility(View.GONE);
-		        assignedDriverText.setVisibility(View.GONE);
-	        }
-	        
-	    }
-	}
-	
-	
-
-	
-	/**
-	 * To search addresses related to particular address available on google
-	 */
-	public void searchGooglePlaces(String searchPlace) {
-		
-		final ProgressDialog dialog = ProgressDialog.show(HomeActivity.this, "","Searching... ", true);
-		
-		RequestParams params = new RequestParams();
-
-		searchResults.clear();
-
-		String ignr2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location="
-				+ ""
-				+ ","
-				+ ""
-				+ "&radius=50000"
-				+ "&query="
-				+ searchPlace
-				+ "&sensor=true&key="+Data.MAPS_BROWSER_KEY;
-		// "https://maps.googleapis.com/maps/api/place/textsearch/json?location=%f,%f&radius=2bb0000&query=%@&sensor=true&key=%@";
-
-		ignr2 = ignr2.replaceAll(" ", "%20");
-
-		AsyncHttpClient client = new AsyncHttpClient();
-		client.post(ignr2, params, new AsyncHttpResponseHandler() {
-
-			@Override
-			public void onSuccess(String response) {
-				Log.e("request result", response);
-				new SimpleJSONParser().writeJSONToFile(response, "googlePlaceJson");
-				try {
-					JSONArray info = null;
-					JSONObject jj = new JSONObject(response);
-					info = jj.getJSONArray("results");
-					Log.v("converted", info + "");
-					for (int a = 0; a < info.length(); a++) {
-						JSONObject first = info.getJSONObject(a);
-						Log.e("first" + a, "" + first);
-					}
-					Log.v("info.len....", "" + info.length());
-					for (int i = 0; i < info.length(); i++) {
-						// printing the values to the logcat
-						try {
-							SearchResult searchResult = new SearchResult(info.getJSONObject(i).getString("name"),
-									info.getJSONObject(i).getString("formatted_address"), 
-									new LatLng(
-									info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
-									info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng")
-									));
-							
-							searchResults.add(searchResult);
-							
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
-					for (int i = 0; i < searchResults.size(); i++) {
-						Log.i("Results name : ....", "" + searchResults.get(i).name);
-					}
-					passengerScreenMode = PassengerScreenMode.P_SEARCH;
-					switchPassengerScreen(passengerScreenMode);
-					
-					Toast.makeText(getApplicationContext(), ""+searchResults.size() + " results found.", Toast.LENGTH_LONG).show();
-					
-				} catch (JSONException e) {
-					e.printStackTrace();
-					Log.e("errorr at response", "" + e.toString());
-				}
-				
-				dialog.dismiss();
-			}
-
-			@Override
-			public void onFailure(Throwable arg0) {
-				try {
-					Log.e("request fail", arg0.getMessage().toString());
-				} catch (Exception e) {
-					Log.e("moving from", e.toString());
-				}
-				dialog.dismiss();
-			}
-		});
-	}
 	
 	
 	class ViewHolderSearch {
@@ -2061,6 +1805,249 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 	
 	
 	
+
+	//https://maps.googleapis.com/maps/api/distancematrix/json?origins=30.75,76.78&destinations=30.78,76.79&language=EN&sensor=false
+	
+	public String makeURL(LatLng source, LatLng destination){
+        StringBuilder urlString = new StringBuilder();
+        urlString.append("https://maps.googleapis.com/maps/api/distancematrix/json");
+        urlString.append("?origins=");// from
+        urlString.append(Double.toString(source.latitude));
+        urlString.append(",");
+        urlString
+                .append(Double.toString(source.longitude));
+        urlString.append("&destinations=");// to
+        urlString
+                .append(Double.toString(destination.latitude));
+        urlString.append(",");
+        urlString.append(Double.toString(destination.longitude));
+        urlString.append("&language=EN&sensor=false&alternatives=false");
+        return urlString.toString();
+	}
+	
+	class GetDistanceTime extends AsyncTask<Void, Void, String>{
+	    String url;
+	    
+	    String distance, duration;
+	    
+	    LatLng destination;
+	    int switchCase;
+	    
+	    public GetDistanceTime(LatLng destination, int switchCase){
+	    	this.distance = "";
+	    	this.duration = "";
+	    	this.destination = destination;
+	    	this.switchCase = switchCase;
+	    }
+	    
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	        
+	        if(switchCase == 0){
+	        	nearestDriverProgress.setVisibility(View.VISIBLE);
+	 	        nearestDriverText.setVisibility(View.GONE);
+	        }
+	        else if(switchCase == 1){
+	        	assignedDriverProgress.setVisibility(View.VISIBLE);
+	        	assignedDriverText.setVisibility(View.GONE);
+	        }
+	        
+	    }
+	    @Override
+	    protected String doInBackground(Void... params) {
+	    	try{
+	    		
+	    		double minDistance = 999999999;
+	    		LatLng source = null;
+	    		DriverInfo driverInfo = null;
+	    		for(int i=0; i<Data.driverInfos.size(); i++){
+	    			if(distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
+	    				minDistance = distance(destination, Data.driverInfos.get(i).latLng);
+	    				source = Data.driverInfos.get(i).latLng;
+	    				driverInfo = Data.driverInfos.get(i);
+	    			}
+	    		}
+	    		
+	    		
+	    		if(source == null){
+	    			return "error";
+	    		}
+	    			
+	    		this.url = makeURL(source, destination);
+	    		
+		    	SimpleJSONParser jParser = new SimpleJSONParser();
+		    	
+		    	String response = jParser.getJSONFromUrl(url);
+		    	
+		    	JSONObject jsonObject = new JSONObject(response);
+		    	
+		    	
+		    	String status = jsonObject.getString("status");
+		    	
+		    	if("OK".equalsIgnoreCase(status)){
+		    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
+		    		
+		    		distance = element0.getJSONObject("distance").getString("text") ;
+		    		
+		    		duration = element0.getJSONObject("duration").getString("text");
+		    		
+
+		    		return "Distance: " + distance + "\n" + "Duration: " + duration;
+		    		
+		    	}
+	    	
+	    	}catch(Exception e){
+	    		e.printStackTrace();
+	    	}
+	    	
+	        return "error";
+	    }
+	    @Override
+	    protected void onPostExecute(String result) {
+	        super.onPostExecute(result);   
+	        
+	        
+	        if(!"error".equalsIgnoreCase(result)){
+		        
+	        String distanceString = "";
+	        
+	        
+	        if(switchCase == 0){
+	        	nearestDriverProgress.setVisibility(View.GONE);
+	 	        nearestDriverText.setVisibility(View.VISIBLE);
+	 	        
+	 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+       	 		distanceString = "Nearest driver is " + distance + " " + duration + " away.";
+		        }
+		        else if(!"".equalsIgnoreCase(duration)){
+		        	distanceString = "Nearest driver is " + duration + " away.";
+		        }
+		        else if(!"".equalsIgnoreCase(distance)){
+		        	distanceString = "Nearest driver is " + distance + " away.";
+		        }
+		        else{
+		        	distanceString = "Could not find nearest driver's distance.";
+		        }
+	 	        
+	 	       	nearestDriverText.setText(distanceString);
+	 	       
+	        }
+	        else if(switchCase == 1){
+	        	assignedDriverProgress.setVisibility(View.GONE);
+	        	assignedDriverText.setVisibility(View.VISIBLE);
+	        	
+	        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+        	 		distanceString = "Your ride is " + distance + " and will arrive \n in approximately " + duration + ".";
+		        }
+		        else{
+		        	distanceString = "Could not find nearest driver's distance.";
+		        }
+	        	assignedDriverText.setText(distanceString);
+	        	
+	        }
+	        
+	        }
+	        else{
+		        nearestDriverText.setVisibility(View.GONE);
+		        assignedDriverText.setVisibility(View.GONE);
+	        }
+	        
+	    }
+	}
+	
+	
+
+	
+	
+	
+	
+	
+	/**
+	 * To search addresses related to particular address available on google
+	 */
+	public void searchGooglePlaces(String searchPlace) {
+		
+		final ProgressDialog dialog = ProgressDialog.show(HomeActivity.this, "","Searching... ", true);
+		
+		RequestParams params = new RequestParams();
+
+		searchResults.clear();
+
+		String ignr2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location="
+				+ ""
+				+ ","
+				+ ""
+				+ "&radius=50000"
+				+ "&query="
+				+ searchPlace
+				+ "&sensor=true&key="+Data.MAPS_BROWSER_KEY;
+		// "https://maps.googleapis.com/maps/api/place/textsearch/json?location=%f,%f&radius=2bb0000&query=%@&sensor=true&key=%@";
+
+		ignr2 = ignr2.replaceAll(" ", "%20");
+
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(ignr2, params, new AsyncHttpResponseHandler() {
+
+			@Override
+			public void onSuccess(String response) {
+				Log.e("request result", response);
+				new SimpleJSONParser().writeJSONToFile(response, "googlePlaceJson");
+				try {
+					JSONArray info = null;
+					JSONObject jj = new JSONObject(response);
+					info = jj.getJSONArray("results");
+					Log.v("converted", info + "");
+					for (int a = 0; a < info.length(); a++) {
+						JSONObject first = info.getJSONObject(a);
+						Log.e("first" + a, "" + first);
+					}
+					Log.v("info.len....", "" + info.length());
+					for (int i = 0; i < info.length(); i++) {
+						// printing the values to the logcat
+						try {
+							SearchResult searchResult = new SearchResult(info.getJSONObject(i).getString("name"),
+									info.getJSONObject(i).getString("formatted_address"), 
+									new LatLng(
+									info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+									info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng")
+									));
+							
+							searchResults.add(searchResult);
+							
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+					for (int i = 0; i < searchResults.size(); i++) {
+						Log.i("Results name : ....", "" + searchResults.get(i).name);
+					}
+					passengerScreenMode = PassengerScreenMode.P_SEARCH;
+					switchPassengerScreen(passengerScreenMode);
+					
+					Toast.makeText(getApplicationContext(), ""+searchResults.size() + " results found.", Toast.LENGTH_LONG).show();
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+					Log.e("errorr at response", "" + e.toString());
+				}
+				
+				dialog.dismiss();
+			}
+
+			@Override
+			public void onFailure(Throwable arg0) {
+				try {
+					Log.e("request fail", arg0.getMessage().toString());
+				} catch (Exception e) {
+					Log.e("moving from", e.toString());
+				}
+				dialog.dismiss();
+			}
+		});
+	}
+	
+	
 	
 	class GetLatLngAddress extends AsyncTask<String, Integer, String> {
 
@@ -2133,21 +2120,224 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 
 	
 	
-	
-	void dialogPopup(String message) {																				// default dialog for displaying messages
-		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-		builder.setMessage(" " + message).setTitle("Alert")
-				.setCancelable(false);
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+
+	class RequestRideAsync extends AsyncTask<String, Integer, String>{
+
+		Activity activity;
+		int driverPos;
+		LatLng pickupLatLng;
+		
+		public RequestRideAsync(Activity activity, int driverPos, LatLng pickupLatLng){
+			this.activity = activity;
+			this.driverPos = driverPos;
+			this.pickupLatLng = pickupLatLng;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			Log.i("driverPos","="+driverPos);
+			if(driverPos > 0){
+				try{
+					Thread.sleep(30000);
+				} catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		});
+			
+			
+			Data.latitude = pickupLatLng.latitude;
+			Data.longitude = pickupLatLng.longitude;
 
-		AlertDialog alertDialog = builder.create();
-		alertDialog.show();
+		
+			String currentDriverId = ""+Data.driverInfos.get(driverPos).userId;
+			String previousDriverId = "";
+			if(driverPos > 0 && driverPos < Data.driverInfos.size()){
+				previousDriverId = ""+Data.driverInfos.get(driverPos-1).userId;
+			}
+			
+			
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+			nameValuePairs.add(new BasicNameValuePair("user_id", currentDriverId));
+			nameValuePairs.add(new BasicNameValuePair("pre_user_id", previousDriverId));
+			nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+Data.latitude));
+			nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "=" + Data.longitude));
+			
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("user_id", "=" + currentDriverId);
+			Log.i("pre_user_id", "=" + previousDriverId);
+			Log.i("pickup_latitude", "=" + Data.latitude);
+			Log.i("pickup_longitude", "=" + Data.longitude);
+			
+			
+			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/send_req_for_ride", nameValuePairs);
+			
+			Log.i("result","="+result);
+			
+			simpleJSONParser = null;
+			nameValuePairs = null;
+			
+			return result;
+			
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+
+			
+			
+			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+				Log.e("timeout","=");
+			}
+			else{
+				try{
+					JSONObject jObj = new JSONObject(result);
+					
+					if(!jObj.isNull("error")){
+						int flag = jObj.getInt("flag");	
+						if(0 == flag){ // {"error": "some parameter missing","flag":0}//error
+						}
+						else if(1 == flag){ // {{"error": 'Invalid access token',"flag":1}//error
+						}
+						else if(2 == flag){ // {"error": "driver not available now","flag":2}
+						}
+						else{
+						}
+					}
+					else{
+						//{"engagement_id":9,"driver_id":"9"}
+						Data.engagementId = jObj.getString("engagement_id");
+						Data.driverId = jObj.getString("driver_id");
+						
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			
+			if(driverPos < Data.driverInfos.size()-1){
+				new RequestRideAsync(activity, driverPos+1, pickupLatLng).execute();
+			}
+			else{
+				new DialogPopup().alertPopup(activity, "", "No Driver available right now.");
+				requestRideBtn.setText("Request Ride");
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			}
+			
+			
+		}
+		
 	}
+	
+	
+	/**
+	 * ASync for login from server
+	 */
+	public void requestRideAsync(final Activity activity, int driverPos) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			LatLng pickupLatLng = map.getCameraPosition().target;
+			
+			
+			Data.latitude = pickupLatLng.latitude;
+			Data.longitude = pickupLatLng.longitude;
 
+		
+			String currentDriverId = ""+Data.driverInfos.get(driverPos).userId;
+			String previousDriverId = "";
+			if(driverPos > 0 && driverPos < Data.driverInfos.size()){
+				previousDriverId = ""+Data.driverInfos.get(driverPos-1).userId;
+			}
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("user_id", currentDriverId);
+			params.put("pre_user_id", previousDriverId);
+			params.put("pickup_latitude", ""+Data.latitude);
+			params.put("pickup_longitude", ""+Data.longitude);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("user_id", "=" + currentDriverId);
+			Log.i("pre_user_id", "=" + previousDriverId);
+			Log.i("pickup_latitude", "=" + Data.latitude);
+			Log.i("pickup_longitude", "=" + Data.longitude);
+			
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/email_login", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else if(2 == flag){ // {"error":"incorrect password","flag":2}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									
+									
+									JSONObject userData = jObj.getJSONObject("user_data");
+									
+									Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
+											userData.getString("user_image"));
+									
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
+	
 
 	@Override
 	public void sendIntent() {
@@ -2156,181 +2346,35 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart {
 		switchPassengerScreen(passengerScreenMode);
 		
 	}
-	
-	
-	
-	
-	
-}
-
-
-enum PassengerScreenMode{
-	P_INITIAL, P_SEARCH, P_BEFORE_REQUEST_FINAL, P_REQUEST_FINAL, P_IN_RIDE, P_RIDE_END
-}
-
-enum UserMode{
-	PASSENGER, DRIVER
-}
-
-enum DriverScreenMode{
-	D_INITIAL, D_REQUEST_ACCEPT, D_START_RIDE, D_IN_RIDE , D_RIDE_END
-}
-
-
-class SlideButton extends SeekBar {
-
-    private Drawable thumb;
-    private SlideButtonListener listener;
-
-    public SlideButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    public void setThumb(Drawable thumb) {
-        super.setThumb(thumb);
-        this.thumb = thumb;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (thumb.getBounds().contains((int) event.getX(), (int) event.getY())) {
-                super.onTouchEvent(event);
-            } else
-                return false;
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (getProgress() > 80){
-                handleSlide();
-            }
-            else{
-            	setProgress(0);
-            }
-        } else
-            super.onTouchEvent(event);
-
-        return true;
-    }
-
-    private void handleSlide() {
-    	setProgress(100);
-        listener.handleSlide();
-    }
-
-    public void setSlideButtonListener(SlideButtonListener listener) {
-        this.listener = listener;
-    }   
-}
-
-interface SlideButtonListener {
-    public void handleSlide();
-}
 
 
 
-class SlideButtonInvert extends SeekBar {
-
-    private Drawable thumb;
-    private SlideButtonInvertListener listener;
-
-    public SlideButtonInvert(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setProgress(100);
-    }
-
-    @Override
-    public void setThumb(Drawable thumb) {
-        super.setThumb(thumb);
-        this.thumb = thumb;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (thumb.getBounds().contains((int) event.getX(), (int) event.getY())) {
-                super.onTouchEvent(event);
-            } else
-                return false;
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (getProgress() < 20){
-                handleSlide();
-            }
-            else{
-            	setProgress(100);
-            }
-        } else
-            super.onTouchEvent(event);
-
-        return true;
-    }
-
-    private void handleSlide() {
-    	setProgress(0);
-        listener.handleSlide();
-    }
-
-    public void setSlideButtonListener(SlideButtonInvertListener listener) {
-        this.listener = listener;
-    }   
-}
-
-interface SlideButtonInvertListener {
-    public void handleSlide();
-}
-
-
-class PausableChronometer extends Chronometer {
-
-	private long eclipsedTime;
-
-	public PausableChronometer(Context context) {
-		super(context);
-		init();
-	}
-
-	public PausableChronometer(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
-
-	public PausableChronometer(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		init();
-	}
-
-	public void start() {
-		setBase(SystemClock.elapsedRealtime() - eclipsedTime);
-		super.start();
-	}
-
-	public void restart() {
-		stop();
-		this.eclipsedTime = 0l;
-		start();
-	}
-
-	public void stop() {
-		this.eclipsedTime = SystemClock.elapsedRealtime() - this.getBase();
-		super.stop();
-	}
-
-	public long stopAndReturnEclipsedTime() {
-		stop();
-		return this.eclipsedTime;
-	}
-
-	private void init() {
-		this.eclipsedTime = 0l;
-		this.setOnChronometerTickListener(new OnChronometerTickListener() {
-			NumberFormat formatter = new DecimalFormat("00");
-
-			@Override
-			public void onChronometerTick(Chronometer arg0) {
-				float countUp = (SystemClock.elapsedRealtime() - arg0.getBase()) / 1000;
-				String asText = formatter.format(countUp / 60) + ":"
-						+ formatter.format(countUp % 60);
-				setText(asText);
+	@Override
+	public void refreshDriverLocations() {
+		
+		if(map != null){
+			
+			map.clear();
+			
+			for(int i=0; i<Data.driverInfos.size(); i++){
+				DriverInfo driverInfo = Data.driverInfos.get(i);
+				MarkerOptions markerOptions = new MarkerOptions();
+				markerOptions.title(""+driverInfo.userId);
+				markerOptions.snippet(""+driverInfo.userId);
+				markerOptions.position(driverInfo.latLng);
+				markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_android));
+				
+				map.addMarker(markerOptions);
 			}
-		});
+			
+		}
+		
+		
+		
 	}
+	
+	
+	
+	
+	
 }

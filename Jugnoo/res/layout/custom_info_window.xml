@@ -30,7 +30,7 @@
                     android:maxWidth="300dp"
                     android:gravity="center"
                     android:text="Title"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -43,7 +43,7 @@
                     android:layout_below="@+id/title"
                     android:gravity="center"
                     android:text="Snippet"
-                    android:textColor="@color/red_bright"
+                    android:textColor="@color/white"
                     android:textSize="10sp" />
             </RelativeLayout>
         </RelativeLayout>

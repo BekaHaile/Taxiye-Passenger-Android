@@ -7,11 +7,14 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -88,21 +91,21 @@ public class DriverLocationUpdateService extends Service {
     	}
     	
     	super.onStartCommand(intent, flags, startId);
-    	return Service.START_NOT_STICKY;
+    	return Service.START_STICKY;
     }
     
     
     @Override
     public void onTaskRemoved(Intent rootIntent) {
     	Log.e("onTaskRemoved","="+rootIntent);
-//        Intent restartService = new Intent(getApplicationContext(),
-//                this.getClass());
-//        restartService.setPackage(getPackageName());
-//        PendingIntent restartServicePI = PendingIntent.getService(
-//                getApplicationContext(), 1, restartService,
-//                PendingIntent.FLAG_ONE_SHOT);
-//        AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-//        alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() +1000, restartServicePI);
+        Intent restartService = new Intent(getApplicationContext(),
+                this.getClass());
+        restartService.setPackage(getPackageName());
+        PendingIntent restartServicePI = PendingIntent.getService(
+                getApplicationContext(), 1, restartService,
+                PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() +1000, restartServicePI);
 
     }
     
