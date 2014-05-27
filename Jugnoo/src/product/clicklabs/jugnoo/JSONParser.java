@@ -24,6 +24,8 @@ public class JSONParser {
 		editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
 		editor.commit();
 		
+		HomeActivity.userMode = UserMode.PASSENGER;
+		
 	}
 	
 	
@@ -32,6 +34,9 @@ public class JSONParser {
 		JSONObject userData = jObj.getJSONObject("user_data");
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
 				userData.getString("user_image"));
+		
+		HomeActivity.userMode = UserMode.PASSENGER;
+		
 	}
 	
 }

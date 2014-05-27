@@ -114,22 +114,17 @@ public class CUpdateDriverLocationsService extends Service {
 
     			if(count > 0){
     				try {
-						Thread.sleep(30000);
+						Thread.sleep(100000);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
     			}
-    			
-				if(Data.locationFetcher != null){
-					Data.latitude = Data.locationFetcher.getLatitude();
-					Data.longitude = Data.locationFetcher.getLongitude();
-				}
 				
 	    				
 		    			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		    			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+Data.latitude));
-		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+Data.longitude));
+		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+Data.mapTarget.latitude));
+		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+Data.mapTarget.longitude));
 		    			
 		    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
 		    			

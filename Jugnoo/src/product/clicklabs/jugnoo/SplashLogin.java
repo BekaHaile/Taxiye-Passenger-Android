@@ -338,7 +338,7 @@ public class SplashLogin extends Activity{
 		}
 		
 		
-		accessTokenLogin(SplashLogin.this);
+//		accessTokenLogin(SplashLogin.this);
 		
 		
 	}
@@ -739,14 +739,14 @@ public class SplashLogin extends Activity{
 	protected void onDestroy() {
 		super.onDestroy();
 		
-		try {	
-			Session session = new Session(SplashLogin.this);
-			Session.setActiveSession(session);	
-			session.closeAndClearTokenInformation();	
-		}
-		catch(Exception e) {
-			Log.v("Logout", "Error"+e);	
-		}
+//		try {	
+//			Session session = new Session(SplashLogin.this);
+//			Session.setActiveSession(session);	
+//			session.closeAndClearTokenInformation();	
+//		}
+//		catch(Exception e) {
+//			Log.v("Logout", "Error"+e);	
+//		}
         
         ASSL.closeActivity(relative);
         

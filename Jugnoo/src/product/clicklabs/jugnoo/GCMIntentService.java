@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import org.json.JSONObject;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,14 +40,19 @@ public class GCMIntentService extends GCMBaseIntentService {
 		    		 }
 		    		 else{
 		    			 
+		    			 try{
+		    				 
+		    				 JSONObject jObj = new JSONObject(message);
+		    				 
+		    			 } catch(Exception e){
+		    				 e.printStackTrace();
+		    			 }
+		    			 
 		    		 }
 		    		 
 		    	 }
 		    	 
-//		    	 
-//		    	 GCMIntentService.context=context;
-//		    	 notificationMessage = arg1.getStringExtra("brand_name") + ": " + arg1.getStringExtra("message") ;
-//		         notificationManager(context,arg1.getStringExtra("message"));
+		         notificationManager(context, arg1.toString());
 //		        	 Log.v("gcm message: ", ""+arg1.getStringExtra("message"));
 //		        	 
 //		        	 ActivityManager activityManager = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);

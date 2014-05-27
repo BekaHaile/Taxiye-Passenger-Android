@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -12,6 +13,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -142,20 +144,28 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
+    		String SERVER_URL = "http://54.81.229.172:7000";
+    		
+    		String SHARED_PREF_NAME = "myPref";
+    		String SP_ACCESS_TOKEN_KEY = "access_token";
+    		
+    		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+    		String accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
+    		
     		try{
 
-				Thread.sleep(10000);
+				Thread.sleep(1000);
     			
 				
 	    		if(locationFetcher != null){
 	    			
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 0){
+	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
 		    			
 	    				DriverLocationUpdateService.this.lastLocation = currentLatLng;
 	    				
 		    			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		    			nameValuePairs.add(new BasicNameValuePair("driver_id", "1"));
+		    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+currentLatLng.latitude));
 		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+currentLatLng.longitude));
 		    			
@@ -163,9 +173,9 @@ public class DriverLocationUpdateService extends Service {
 		    			
 		    			
 		    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-		    			String result = simpleJSONParser.getJSONFromUrlParams("http://jsonlint.com/", nameValuePairs);
+		    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
 		    			
-	//	    			Log.e("result","="+result);
+		    			Log.e("result","="+result);
 		    			
 		    			simpleJSONParser = null;
 		    			nameValuePairs = null;
@@ -175,10 +185,8 @@ public class DriverLocationUpdateService extends Service {
 		    				
 		    			}
 		    			else{
-		    				
+		    				return result;
 		    			}
-		    			
-		    			result = null;
 	    			}
 	    			
 	    		}
@@ -192,6 +200,22 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected void onPostExecute(String result) {
     		super.onPostExecute(result);
+    		
+    		if(!"".equalsIgnoreCase(result)){
+    			try{
+    				JSONObject jObj = new JSONObject(result);
+    				
+    				if(!jObj.isNull("error")){
+    					
+    					stopSelf();
+    					
+    				}
+    				
+    			} catch(Exception e){
+    				e.printStackTrace();
+    			}
+    			
+    		}
     		
     		count++;
         	

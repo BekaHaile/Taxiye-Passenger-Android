@@ -1034,8 +1034,8 @@
 
                 <ImageView
                     android:id="@+id/jugnooLogo"
-                    android:layout_width="118px"
-                    android:layout_height="54px"
+                    android:layout_width="185px"
+                    android:layout_height="60px"
                     android:layout_centerInParent="true"
                     android:background="@drawable/jugnoo_logo"
                     android:tag="mwar" />
@@ -1115,7 +1115,9 @@
             android:id="@+id/driverModeRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
-            android:layout_marginTop="96px" >
+            android:layout_marginTop="96px" 
+            android:background="@drawable/menu_item_selector"
+            >
 
             <TextView
                 android:id="@+id/driverModeText"
@@ -1147,7 +1149,9 @@
             android:id="@+id/inviteFriendRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
-            android:layout_below="@+id/userName" >
+            android:layout_below="@+id/userName" 
+            android:background="@drawable/menu_item_selector"
+            >
 
             <TextView
                 android:id="@+id/inviteFriendText"
@@ -1169,7 +1173,9 @@
             android:id="@+id/helpRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
-            android:layout_below="@+id/userName" >
+            android:layout_below="@+id/userName" 
+            android:background="@drawable/menu_item_selector"
+            >
 
             <TextView
                 android:id="@+id/helpText"
@@ -1191,7 +1197,9 @@
             android:id="@+id/aboutRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
-            android:layout_below="@+id/userName" >
+            android:layout_below="@+id/userName"
+            android:background="@drawable/menu_item_selector"
+             >
 
             <TextView
                 android:id="@+id/aboutText"
@@ -1203,6 +1211,32 @@
                 android:textColor="@color/white"
                 android:textSize="34px" />
         </RelativeLayout>
+        
+         <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider" />
+
+        <RelativeLayout
+            android:id="@+id/logoutRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:layout_below="@+id/userName"
+            android:background="@drawable/menu_item_selector"
+             >
+
+            <TextView
+                android:id="@+id/logoutText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="42px"
+                android:text="Logout"
+                android:textColor="@color/white"
+                android:textSize="34px" />
+        </RelativeLayout>
+        
+        
     </LinearLayout>
 
     <LinearLayout

@@ -53,6 +53,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.facebook.Session;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
@@ -67,7 +68,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt {
+public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt, DriverGetRequestPush {
 
 	
 	
@@ -94,6 +95,9 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	RelativeLayout aboutRl;
 	TextView aboutText;
+	
+	RelativeLayout logoutRl;
+	TextView logoutText;
 	
 	
 	
@@ -288,6 +292,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	Marker pickupLocationMarker;
 	
+	static DriverGetRequestPush driverGetRequestPush;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -298,6 +304,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		CStartRideService.detectRideStart = HomeActivity.this;
 		CUpdateDriverLocationsService.refreshDriverLocations = HomeActivity.this;
 		CRequestRideService.requestRideInterrupt = HomeActivity.this;
+		
+		HomeActivity.driverGetRequestPush = HomeActivity.this;
 		
 		
 		startTracking = false;
@@ -333,7 +341,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		aboutRl = (RelativeLayout) findViewById(R.id.aboutRl);
 		aboutText = (TextView) findViewById(R.id.aboutText);
 		
-		
+		logoutRl = (RelativeLayout) findViewById(R.id.logoutRl);
+		logoutText = (TextView) findViewById(R.id.logoutText);
 		
 		
 		//Favorite bar
@@ -582,8 +591,50 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		
 		
+		aboutRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
 		
-		driverModeToggle.setOnClickListener(new View.OnClickListener() {
+		helpRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+		
+		logoutRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//TODO logout api
+				
+				
+
+				try {	
+					Session session = new Session(HomeActivity.this);
+					Session.setActiveSession(session);	
+					session.closeAndClearTokenInformation();	
+				}
+				catch(Exception e) {
+					Log.v("Logout", "Error"+e);	
+				}
+				
+				Data.clearDataOnLogout(HomeActivity.this);
+				
+				
+			}
+		});
+		
+		
+		
+		
+		driverModeRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -591,23 +642,12 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				Log.e("userMode","="+userMode);
 				
 				if(userMode == UserMode.DRIVER){
-					userMode = UserMode.PASSENGER;
-					driverModeToggle.setImageResource(R.drawable.off);
-					
-					passengerScreenMode = PassengerScreenMode.P_INITIAL;
-					switchPassengerScreen(passengerScreenMode);
+					changeDriverModeAsync(HomeActivity.this, 0);
 				}
 				else{
-					userMode = UserMode.DRIVER;
-					driverModeToggle.setImageResource(R.drawable.on);
-					
-					driverScreenMode = DriverScreenMode.D_INITIAL;
-					switchDriverScreen(driverScreenMode);
+					changeDriverModeAsync(HomeActivity.this, 1);
 				}
 				
-				drawerLayout.closeDrawer(menuLayout);
-				
-				switchUserScreen(userMode);
 			}
 		});
 		
@@ -1029,6 +1069,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			
 			myLocationBtn.setOnClickListener(mapMyLocationClick);
+			driverInitialMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			
 		}
 		
@@ -1062,8 +1103,15 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		}
 		
 		switchUserScreen(userMode);
-		switchPassengerScreen(passengerScreenMode);
-		switchDriverScreen(driverScreenMode);
+		if(userMode == UserMode.DRIVER){
+			switchDriverScreen(driverScreenMode);
+		}
+		else{
+			switchPassengerScreen(passengerScreenMode);
+		}
+		
+		
+		
 	  
 		
 		setUserData();
@@ -1099,6 +1147,11 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	public void switchUserScreen(UserMode mode){
 		
+		stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+        stopService(new Intent(HomeActivity.this, CStartRideService.class));
+        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+		
 		switch(mode){
 		
 			case DRIVER:
@@ -1106,6 +1159,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				driverMainLayout.setVisibility(View.VISIBLE);
 				
 				favBtn.setVisibility(View.GONE);
+				favoriteRl.setVisibility(View.GONE);
+				
 				
 				break;
 			
@@ -1117,6 +1172,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				driverMainLayout.setVisibility(View.GONE);
 				
 				favBtn.setVisibility(View.VISIBLE);
+				favoriteRl.setVisibility(View.VISIBLE);
 				
 				break;
 			
@@ -1128,6 +1184,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				driverMainLayout.setVisibility(View.GONE);
 				
 				favBtn.setVisibility(View.VISIBLE);
+				favoriteRl.setVisibility(View.VISIBLE);
 		
 		
 		}
@@ -1156,6 +1213,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				driverInitialLayout.setVisibility(View.VISIBLE);
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.GONE);
+				
+				driverNewRideRequestRl.setVisibility(View.GONE);
+				
+				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 			
 				break;
 				
@@ -1165,6 +1226,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				driverInitialLayout.setVisibility(View.GONE);
 				driverRequestAcceptLayout.setVisibility(View.VISIBLE);
 				driverEngagedLayout.setVisibility(View.GONE);
+				
+				
 			
 				break;
 				
@@ -1183,6 +1246,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				driverInRideMainRl.setVisibility(View.GONE);
 				
 			
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				
 				break;
 				
 				
@@ -1587,7 +1652,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
         Data.locationFetcher.destroy();
         
         ASSL.closeActivity(drawerLayout);
-        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+        stopService(new Intent(HomeActivity.this, CRequestRideService.class));
         stopService(new Intent(HomeActivity.this, CStartRideService.class));
         stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
         
@@ -2024,6 +2089,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	        }
 	        
 	        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	        	Data.mapTarget = destination;
 	        	startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	        }
 	        
@@ -2397,9 +2463,9 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	
 	/**
-	 * ASync for login from server
+	 * ASync for change driver mode from server
 	 */
-	public void changeDriverModeAsync(final Activity activity) {
+	public void changeDriverModeAsync(final Activity activity, final int flag) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -2408,10 +2474,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("driver_id", Data.driverId);
+			params.put("flag", ""+flag);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("driver_id", "=" + Data.driverId);
+			Log.i("flag", "=" + flag);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
@@ -2441,19 +2507,31 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 								}
 								else{
 									
+//									{"log": "Welcome to driver mode."}//success
+
 									
-									JSONObject driverData = jObj.getJSONObject("driver_data");
-									
-									Data.assignedDriverInfo = new DriverInfo(Data.driverId, driverData.getDouble("latitude"), driverData.getDouble("longitude"), 
-											driverData.getString("name"), driverData.getString("image"), driverData.getString("car_image"), 
-											driverData.getString("phone_number"));
+									map.clear();
 									
 									
+									if(flag == 1){
+										userMode = UserMode.DRIVER;
+										driverModeToggle.setImageResource(R.drawable.on);
+										
+										switchUserScreen(userMode);
+										
+										driverScreenMode = DriverScreenMode.D_INITIAL;
+										switchDriverScreen(driverScreenMode);
+									}
+									else{
+										userMode = UserMode.PASSENGER;
+										driverModeToggle.setImageResource(R.drawable.off);
+										
+										switchUserScreen(userMode);
+										
+										passengerScreenMode = PassengerScreenMode.P_INITIAL;
+										switchPassengerScreen(passengerScreenMode);
+									}
 									
-									passengerScreenMode = PassengerScreenMode.P_BEFORE_REQUEST_FINAL;
-									switchPassengerScreen(passengerScreenMode);
-									
-									new GetDistanceTimeAddress(Data.mapTarget).execute();
 									
 									
 								}
@@ -2535,6 +2613,26 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		else if(switchCase == 1){
 			getAssignedDriverInfoAsync(this);
 		}
+		
+	}
+
+
+
+	@Override
+	public void showRideRequest(String engagementId, LatLng rideLatLng) {
+		
+		driverNewRideRequestRl.setVisibility(View.VISIBLE);
+		
+		
+		MarkerOptions markerOptions = new MarkerOptions();
+		markerOptions.title("");
+		markerOptions.snippet("");
+		markerOptions.position(rideLatLng);
+		markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
+		
+		map.addMarker(markerOptions);
+		
+		
 		
 	}
 	

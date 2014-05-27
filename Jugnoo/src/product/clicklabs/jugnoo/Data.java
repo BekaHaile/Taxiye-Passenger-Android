@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -79,6 +81,7 @@ public class Data {
 	public static String fbAccessToken = "", fbId = "", fbFirstName = "", fbLastName = "", fbUserName = "", fbUserEmail = "";
 	
 	
+	
 	public static LatLng getChandigarhLatLng(){
 		if(chandigarhLatLng == null){
 			chandigarhLatLng = new LatLng(30.7500, 76.7800);
@@ -86,6 +89,28 @@ public class Data {
 		return chandigarhLatLng;
 	}
 	
+	
+	
+	public static void clearDataOnLogout(Context context){
+		latitude = 30.7500; longitude = 76.7800;
+		chandigarhLatLng = new LatLng(30.7500, 76.7800);
+		driverInfos = new ArrayList<DriverInfo>();
+		favoriteLocations = new ArrayList<FavoriteLocation>();
+		friendInfos = new ArrayList<FriendInfo>();
+		friendInfosDuplicate = new ArrayList<FriendInfo>();
+		userData = null;
+		locationFetcher = null;
+		deviceToken = ""; country = ""; deviceName = ""; appVersion = ""; osVersion = "";
+		engagementId = ""; driverId = "";
+		assignedDriverInfo = null;
+		mapTarget = null;
+		fbAccessToken = ""; fbId = ""; fbFirstName = ""; fbLastName = ""; fbUserName = ""; fbUserEmail = "";
+		
+		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		Editor editor = pref.edit();
+		editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
+		editor.commit();
+	}
 	
 	
 	

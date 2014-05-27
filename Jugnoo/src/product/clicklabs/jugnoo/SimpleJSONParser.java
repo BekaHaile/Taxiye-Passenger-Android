@@ -28,6 +28,7 @@ public class SimpleJSONParser {
 	
     // constructor
     public SimpleJSONParser() {
+    	SERVER_TIMEOUT = "SERVER_TIMEOUT";
     }
     public String getJSONFromUrl(String url) {
     	InputStream inputStream = null;
