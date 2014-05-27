@@ -367,10 +367,7 @@ public class RegisterScreen extends Activity{
 									}
 								}
 								else{
-									JSONObject userData = jObj.getJSONObject("user_data");
-									
-									Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-											userData.getString("user_image"));
+									new JSONParser().parseLoginData(activity, response);
 									loginDataFetched = true;
 									
 								}
@@ -551,11 +548,7 @@ public class RegisterScreen extends Activity{
 								}
 								else{
 									
-									
-									JSONObject userData = jObj.getJSONObject("user_data");
-									
-									Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-											userData.getString("user_image"));
+									new JSONParser().parseLoginData(activity, response);
 									
 									loginDataFetched = true;
 									

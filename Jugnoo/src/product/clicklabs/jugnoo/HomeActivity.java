@@ -708,19 +708,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			@Override
 			public void onClick(View v) {
-				
-				stopService(new Intent(HomeActivity.this, CRequestRideService.class));
-				requestRideBtn.setText("Request Ride");
-				passengerScreenMode = PassengerScreenMode.P_INITIAL;
-				switchPassengerScreen(passengerScreenMode);
-				
-				
-				if(map != null && pickupLocationMarker != null){
-					pickupLocationMarker.remove();
-				}
-				
-				new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
-				
+				cancelCustomerRequestAsync(HomeActivity.this, 0);
 			}
 		});
 		
@@ -729,20 +717,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			@Override
 			public void onClick(View v) {
-				
-				passengerScreenMode = PassengerScreenMode.P_INITIAL;
-				switchPassengerScreen(passengerScreenMode);
-				
-				if(beforeCancelRequestAsync != null){
-					beforeCancelRequestAsync.cancel(true);
-					beforeCancelRequestAsync = null;
-				}
-				
-				if(map != null && pickupLocationMarker != null){
-					pickupLocationMarker.remove();
-				}
-				
-				new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
+				cancelCustomerRequestAsync(HomeActivity.this, 1);
 			}
 		});
 		
@@ -2193,107 +2168,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	/**
 	 * ASync for login from server
 	 */
-	public void requestRideAsync(final Activity activity, int driverPos) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-		
-			LatLng pickupLatLng = map.getCameraPosition().target;
-			
-			
-			Data.latitude = pickupLatLng.latitude;
-			Data.longitude = pickupLatLng.longitude;
-
-		
-			String currentDriverId = ""+Data.driverInfos.get(driverPos).userId;
-			String previousDriverId = "";
-			if(driverPos > 0 && driverPos < Data.driverInfos.size()){
-				previousDriverId = ""+Data.driverInfos.get(driverPos-1).userId;
-			}
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("user_id", currentDriverId);
-			params.put("pre_user_id", previousDriverId);
-			params.put("pickup_latitude", ""+Data.latitude);
-			params.put("pickup_longitude", ""+Data.longitude);
-
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("user_id", "=" + currentDriverId);
-			Log.i("pre_user_id", "=" + previousDriverId);
-			Log.i("pickup_latitude", "=" + Data.latitude);
-			Log.i("pickup_longitude", "=" + Data.longitude);
-			
-			
-		
-			AsyncHttpClient client = new AsyncHttpClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
-			client.post(Data.SERVER_URL + "/email_login", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(2 == flag){ // {"error":"incorrect password","flag":2}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-								}
-								else{
-									
-									
-									JSONObject userData = jObj.getJSONObject("user_data");
-									
-									Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-											userData.getString("user_image"));
-									
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-	
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-
-	}
-	
-	
-	/**
-	 * ASync for login from server
-	 */
 	public void getAssignedDriverInfoAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
@@ -2406,8 +2280,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			driverName.setText(Data.assignedDriverInfo.name);
 			driverTime.setText("Will arrive in "+Data.assignedDriverInfo.durationToReach);
 			
-			//TODO
-			
 			AQuery aq = new AQuery(driverImage);
 			aq.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
 			
@@ -2417,6 +2289,196 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		}
 		
 	}
+	
+	
+	
+	
+	/**
+	 * ASync for cancelCustomerRequestAsync from server
+	 */
+	public void cancelCustomerRequestAsync(final Activity activity, final int switchCase) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("driver_id", Data.driverId);
+			params.put("engage_id", Data.engagementId);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("driver_id", "=" + Data.driverId);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/cancel_the_req", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									
+//									{"log":"cancelled sucessfully"}//result
+
+									if(switchCase == 0){
+										stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+										requestRideBtn.setText("Request Ride");
+										passengerScreenMode = PassengerScreenMode.P_INITIAL;
+										switchPassengerScreen(passengerScreenMode);
+										
+										
+										if(map != null && pickupLocationMarker != null){
+											pickupLocationMarker.remove();
+										}
+										
+										new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
+									}
+									else{
+										passengerScreenMode = PassengerScreenMode.P_INITIAL;
+										switchPassengerScreen(passengerScreenMode);
+										
+										if(beforeCancelRequestAsync != null){
+											beforeCancelRequestAsync.cancel(true);
+											beforeCancelRequestAsync = null;
+										}
+										
+										if(map != null && pickupLocationMarker != null){
+											pickupLocationMarker.remove();
+										}
+										
+										new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
+									}
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
+	
+	
+	
+	/**
+	 * ASync for login from server
+	 */
+	public void changeDriverModeAsync(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("driver_id", Data.driverId);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("driver_id", "=" + Data.driverId);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/switch_to_driver_mode", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									
+									
+									JSONObject driverData = jObj.getJSONObject("driver_data");
+									
+									Data.assignedDriverInfo = new DriverInfo(Data.driverId, driverData.getDouble("latitude"), driverData.getDouble("longitude"), 
+											driverData.getString("name"), driverData.getString("image"), driverData.getString("car_image"), 
+											driverData.getString("phone_number"));
+									
+									
+									
+									passengerScreenMode = PassengerScreenMode.P_BEFORE_REQUEST_FINAL;
+									switchPassengerScreen(passengerScreenMode);
+									
+									new GetDistanceTimeAddress(Data.mapTarget).execute();
+									
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
 	
 	
 

@@ -22,6 +22,9 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Data {
 	
+	public static final String SHARED_PREF_NAME = "myPref";
+	public static final String SP_ACCESS_TOKEN_KEY = "access_token";
+	
 	public static final int SERVER_TIMEOUT = 60000;
 
 	public static final String SERVER_URL = "http://54.81.229.172:7000";

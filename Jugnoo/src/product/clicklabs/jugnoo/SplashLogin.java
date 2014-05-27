@@ -9,6 +9,7 @@ import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -336,7 +337,93 @@ public class SplashLogin extends Activity{
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
 		
+		
+		accessTokenLogin(SplashLogin.this);
+		
+		
 	}
+	
+	
+	/**
+	 * ASync for access token login from server
+	 */
+	public void accessTokenLogin(final Activity activity) {
+		
+		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		final String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
+		if(!"".equalsIgnoreCase(accessToken)){
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				
+				RequestParams params = new RequestParams();
+				params.put("access_token", accessToken);
+
+				Log.i("accessToken", "=" + accessToken);
+			
+				AsyncHttpClient client = new AsyncHttpClient();
+				client.setTimeout(Data.SERVER_TIMEOUT);
+				client.post(Data.SERVER_URL + "/access_token", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+		
+							@Override
+							public void onSuccess(String response) {
+								Log.v("Server response", "response = " + response);
+		
+								try {
+									jObj = new JSONObject(response);
+									
+									if(!jObj.isNull("error")){
+										
+										
+//										{"error":"some parameter missing","flag":0}//error
+//										{"error":"invalid access token","flag":1}//error
+
+										int flag = jObj.getInt("flag");	
+										String errorMessage = jObj.getString("error");
+										
+										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+									}
+									else{
+										
+										new JSONParser().parseAccessTokenLoginData(response, accessToken);
+										
+										loginDataFetched = true;
+										
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								}
+		
+								DialogPopup.dismissLoadingDialog();
+							}
+		
+							@Override
+							public void onFailure(Throwable arg0) {
+								Log.e("request fail", arg0.toString());
+								DialogPopup.dismissLoadingDialog();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+		}
+
+	}
+	
+	
 
 	
 	
@@ -417,11 +504,7 @@ public class SplashLogin extends Activity{
 								}
 								else{
 									
-									
-									JSONObject userData = jObj.getJSONObject("user_data");
-									
-									Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-											userData.getString("user_image"));
+									new JSONParser().parseLoginData(activity, response);
 									
 									loginDataFetched = true;
 									
@@ -588,10 +671,7 @@ public class SplashLogin extends Activity{
 								else{
 									
 									
-									JSONObject userData = jObj.getJSONObject("user_data");
-									
-									Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-											userData.getString("user_image"));
+									new JSONParser().parseLoginData(activity, response);
 									
 									loginDataFetched = true;
 									
