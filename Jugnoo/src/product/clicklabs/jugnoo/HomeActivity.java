@@ -76,7 +76,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations {
+public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt {
 
 	
 	
@@ -135,7 +135,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	//Initial layout
 	RelativeLayout initialLayout;
 	EditText searchEt;
-	Button search, myLocationBtn, requestRideBtn;
+	Button search, myLocationBtn, requestRideBtn, initialCancelRideBtn;
+	RelativeLayout nearestDriverRl;
 	TextView nearestDriverText;
 	ProgressBar nearestDriverProgress;
 	
@@ -291,7 +292,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	static DriverScreenMode driverScreenMode;
 	
-	boolean requestStarted = false;
+	
+	BeforeCancelRequestAsync beforeCancelRequestAsync;
+	
+	Marker pickupLocationMarker;
 	
 	
 	@Override
@@ -302,6 +306,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		CStartRideService.detectRideStart = HomeActivity.this;
 		CUpdateDriverLocationsService.refreshDriverLocations = HomeActivity.this;
+		CRequestRideService.requestRideInterrupt = HomeActivity.this;
 		
 		
 		startTracking = false;
@@ -392,7 +397,9 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		myLocationBtn = (Button) findViewById(R.id.myLocationBtn);
 		requestRideBtn = (Button) findViewById(R.id.requestRideBtn);
-
+		initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
+		
+		nearestDriverRl = (RelativeLayout) findViewById(R.id.nearestDriverRl);
 		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText);
 		nearestDriverProgress = (ProgressBar) findViewById(R.id.nearestDriverProgress);
 		
@@ -684,8 +691,14 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 						if(Data.driverInfos.size() > 0){
 							requestRideBtn.setText("Assigning driver...");
+							
 							passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-							new RequestRideAsync(HomeActivity.this, 0, map.getCameraPosition().target).execute();
+							Data.engagementId = "";
+							Data.mapTarget = map.getCameraPosition().target;
+							
+							switchPassengerScreen(passengerScreenMode);
+							
+							startService(new Intent(HomeActivity.this, CRequestRideService.class));
 						}
 						else{
 							new DialogPopup().alertPopup(HomeActivity.this, "", "No driver available currently");
@@ -699,6 +712,28 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			}
 		});
 		
+		
+		initialCancelRideBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+				requestRideBtn.setText("Request Ride");
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+				
+				
+				if(map != null && pickupLocationMarker != null){
+					pickupLocationMarker.remove();
+				}
+				
+				new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
+				
+			}
+		});
+		
+		
 		cancelRequestBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -707,7 +742,16 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				passengerScreenMode = PassengerScreenMode.P_INITIAL;
 				switchPassengerScreen(passengerScreenMode);
 				
-				new GetDistanceTime(map.getCameraPosition().target, 0).execute();
+				if(beforeCancelRequestAsync != null){
+					beforeCancelRequestAsync.cancel(true);
+					beforeCancelRequestAsync = null;
+				}
+				
+				if(map != null && pickupLocationMarker != null){
+					pickupLocationMarker.remove();
+				}
+				
+				new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
 			}
 		});
 		
@@ -940,7 +984,19 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				
 				@Override
 				public boolean onMarkerClick(Marker arg0) {
-					return false;
+					
+					if(arg0.getTitle().equalsIgnoreCase("pickup location")){
+						
+						CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, "Your Pickup Location", "Start");
+						map.setInfoWindowAdapter(customIW);
+						
+						return false;
+					}
+					else{
+						return true;
+					}
+					
+					
 				}
 			});
 			
@@ -986,8 +1042,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				    // Map unsettled
 					  Log.e("onMapUnsettled","=onMapUnsettled");
 					  if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
-					  centreInfoRl.setVisibility(View.INVISIBLE);
-					  centreInfoProgress.setVisibility(View.GONE);
+						  centreInfoRl.setVisibility(View.INVISIBLE);
+						  centreInfoProgress.setVisibility(View.GONE);
 					  }
 				  }
 
@@ -996,8 +1052,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				    // Map settled
 					  Log.e("onMapSettled","=onMapSettled");
 					  if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						  new GetLatLngAddress(map.getCameraPosition().target).execute();
-					  	new GetDistanceTime(map.getCameraPosition().target, 0).execute();
+						  stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+						  new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
 					  }
 				  }
 				};
@@ -1229,6 +1285,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
+				nearestDriverRl.setVisibility(View.VISIBLE);
+				initialCancelRideBtn.setVisibility(View.GONE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -1247,9 +1305,22 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				inRideLayout.setVisibility(View.GONE);
-				centreLocationRl.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
 				
+				if(map != null){
+					MarkerOptions markerOptions = new MarkerOptions();
+					markerOptions.title("pickup location");
+					markerOptions.snippet("");
+					markerOptions.position(Data.mapTarget);
+					markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ball1));
+					
+					pickupLocationMarker = map.addMarker(markerOptions);
+				}
+				
+				
+				nearestDriverRl.setVisibility(View.GONE);
+				initialCancelRideBtn.setVisibility(View.VISIBLE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -1302,7 +1373,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				title.setVisibility(View.GONE);
 				favBtn.setVisibility(View.GONE);
 
-				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 				
 				
 				break;
@@ -1399,7 +1469,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	/**
 	 * Hides keyboard
-	 * @param activity
+	 * @param context
 	 */
 	public void hideSoftKeyboard() {
 		try{
@@ -1553,6 +1623,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
         ASSL.closeActivity(drawerLayout);
         stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
         stopService(new Intent(HomeActivity.this, CStartRideService.class));
+        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
         
         System.gc();
         
@@ -1825,30 +1896,36 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
         return urlString.toString();
 	}
 	
-	class GetDistanceTime extends AsyncTask<Void, Void, String>{
+	
+	
+	class GetDistanceTimeAddress extends AsyncTask<Void, Void, String>{
 	    String url;
 	    
-	    String distance, duration;
+	    String distance, duration, fullAddress;
 	    
 	    LatLng destination;
-	    int switchCase;
 	    
-	    public GetDistanceTime(LatLng destination, int switchCase){
+	    public GetDistanceTimeAddress(LatLng destination){
 	    	this.distance = "";
 	    	this.duration = "";
 	    	this.destination = destination;
-	    	this.switchCase = switchCase;
 	    }
+	    
+
 	    
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
 	        
-	        if(switchCase == 0){
+	        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	        	centreInfoRl.setVisibility(View.INVISIBLE);
+				centreInfoProgress.setVisibility(View.VISIBLE);
 	        	nearestDriverProgress.setVisibility(View.VISIBLE);
 	 	        nearestDriverText.setVisibility(View.GONE);
 	        }
-	        else if(switchCase == 1){
+	        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
+	        	centreInfoRl.setVisibility(View.VISIBLE);
+				centreInfoProgress.setVisibility(View.INVISIBLE);
 	        	assignedDriverProgress.setVisibility(View.VISIBLE);
 	        	assignedDriverText.setVisibility(View.GONE);
 	        }
@@ -1858,15 +1935,24 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	    protected String doInBackground(Void... params) {
 	    	try{
 	    		
-	    		double minDistance = 999999999;
+	    		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	    			fullAddress = getAddress(destination.latitude, destination.longitude);
+	    			Log.e("fullAddress",">"+fullAddress);
+	    		}
+	    		
 	    		LatLng source = null;
-	    		DriverInfo driverInfo = null;
-	    		for(int i=0; i<Data.driverInfos.size(); i++){
-	    			if(distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
-	    				minDistance = distance(destination, Data.driverInfos.get(i).latLng);
-	    				source = Data.driverInfos.get(i).latLng;
-	    				driverInfo = Data.driverInfos.get(i);
-	    			}
+				
+	    		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	    			double minDistance = 999999999;
+		    		for(int i=0; i<Data.driverInfos.size(); i++){
+		    			if(distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
+		    				minDistance = distance(destination, Data.driverInfos.get(i).latLng);
+		    				source = Data.driverInfos.get(i).latLng;
+		    			}
+		    		}
+	    		}
+	    		else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
+	    			source = Data.assignedDriverInfo.latLng;
 	    		}
 	    		
 	    		
@@ -1892,6 +1978,11 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		    		
 		    		duration = element0.getJSONObject("duration").getString("text");
 		    		
+		    		
+		    		if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
+		    			Data.assignedDriverInfo.distanceToReach = distance;
+		    			Data.assignedDriverInfo.durationToReach = duration;
+		    		}
 
 		    		return "Distance: " + distance + "\n" + "Duration: " + duration;
 		    		
@@ -1907,53 +1998,78 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	    protected void onPostExecute(String result) {
 	        super.onPostExecute(result);   
 	        
+	        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	        	 if(fullAddress != null && !"".equalsIgnoreCase(fullAddress)){
+	 				centreLocationSnippet.setText(fullAddress);
+	 				centreInfoRl.setVisibility(View.VISIBLE);
+	 			}
+	 			else{
+	 				centreInfoRl.setVisibility(View.INVISIBLE);
+	 			}
+	 			centreInfoProgress.setVisibility(View.GONE);
+    		}
+	        
+	        
+	       
+			
 	        
 	        if(!"error".equalsIgnoreCase(result)){
+			        
+		        String distanceString = "";
 		        
-	        String distanceString = "";
-	        
-	        
-	        if(switchCase == 0){
-	        	nearestDriverProgress.setVisibility(View.GONE);
-	 	        nearestDriverText.setVisibility(View.VISIBLE);
-	 	        
-	 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-       	 		distanceString = "Nearest driver is " + distance + " " + duration + " away.";
+		        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+		        	nearestDriverProgress.setVisibility(View.GONE);
+		 	        nearestDriverText.setVisibility(View.VISIBLE);
+		 	        
+		 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+	       	 		distanceString = "Nearest driver is " + distance + " " + duration + " away.";
+			        }
+			        else if(!"".equalsIgnoreCase(duration)){
+			        	distanceString = "Nearest driver is " + duration + " away.";
+			        }
+			        else if(!"".equalsIgnoreCase(distance)){
+			        	distanceString = "Nearest driver is " + distance + " away.";
+			        }
+			        else{
+			        	distanceString = "Could not find nearest driver's distance.";
+			        }
+		 	        
+		 	       	nearestDriverText.setText(distanceString);
+		 	       
 		        }
-		        else if(!"".equalsIgnoreCase(duration)){
-		        	distanceString = "Nearest driver is " + duration + " away.";
+		        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
+		        	assignedDriverProgress.setVisibility(View.GONE);
+		        	assignedDriverText.setVisibility(View.VISIBLE);
+		        	
+		        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+	        	 		distanceString = "Your ride is " + distance + " and will arrive \n in approximately " + duration + ".";
+			        }
+			        else{
+			        	distanceString = "Could not find nearest driver's distance.";
+			        }
+		        	assignedDriverText.setText(distanceString);
+		        	
 		        }
-		        else if(!"".equalsIgnoreCase(distance)){
-		        	distanceString = "Nearest driver is " + distance + " away.";
-		        }
-		        else{
-		        	distanceString = "Could not find nearest driver's distance.";
-		        }
-	 	        
-	 	       	nearestDriverText.setText(distanceString);
-	 	       
-	        }
-	        else if(switchCase == 1){
-	        	assignedDriverProgress.setVisibility(View.GONE);
-	        	assignedDriverText.setVisibility(View.VISIBLE);
-	        	
-	        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-        	 		distanceString = "Your ride is " + distance + " and will arrive \n in approximately " + duration + ".";
-		        }
-		        else{
-		        	distanceString = "Could not find nearest driver's distance.";
-		        }
-	        	assignedDriverText.setText(distanceString);
-	        	
-	        }
-	        
+		        
 	        }
 	        else{
 		        nearestDriverText.setVisibility(View.GONE);
 		        assignedDriverText.setVisibility(View.GONE);
 	        }
 	        
+	        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	        	startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+	        }
+	        
+	        if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
+	        	beforeCancelRequestAsync = new BeforeCancelRequestAsync();
+	        	beforeCancelRequestAsync.execute();
+	        }
+	        
 	    }
+	    
+	    
+	    
 	}
 	
 	
@@ -2049,45 +2165,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	
 	
-	class GetLatLngAddress extends AsyncTask<String, Integer, String> {
-
-		LatLng latLng;
-		
-		public GetLatLngAddress(LatLng latLng){
-			this.latLng = latLng;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			centreInfoRl.setVisibility(View.INVISIBLE);
-			centreInfoProgress.setVisibility(View.VISIBLE);
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			
-			String fullAddress = getAddress(latLng.latitude, latLng.longitude);
-			Log.e("fullAddress",">"+fullAddress);
-			
-			return fullAddress;
-		}
-		
-		@Override
-		protected void onPostExecute(final String result) {
-			super.onPostExecute(result);
-			if(result != null && !"".equalsIgnoreCase(result)){
-				centreLocationSnippet.setText(result);
-				centreInfoRl.setVisibility(View.VISIBLE);
-			}
-			else{
-				centreInfoRl.setVisibility(View.INVISIBLE);
-			}
-			centreInfoProgress.setVisibility(View.GONE);
-		}
-
-		
-	}
 	
 	String getAddress(double curLatitude, double curLongitude) {
     	String fullAddress = "";
@@ -2120,121 +2197,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 
 	
 	
-
-	class RequestRideAsync extends AsyncTask<String, Integer, String>{
-
-		Activity activity;
-		int driverPos;
-		LatLng pickupLatLng;
-		
-		public RequestRideAsync(Activity activity, int driverPos, LatLng pickupLatLng){
-			this.activity = activity;
-			this.driverPos = driverPos;
-			this.pickupLatLng = pickupLatLng;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
-		
-		@Override
-		protected String doInBackground(String... params) {
-			Log.i("driverPos","="+driverPos);
-			if(driverPos > 0){
-				try{
-					Thread.sleep(30000);
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			
-			
-			Data.latitude = pickupLatLng.latitude;
-			Data.longitude = pickupLatLng.longitude;
-
-		
-			String currentDriverId = ""+Data.driverInfos.get(driverPos).userId;
-			String previousDriverId = "";
-			if(driverPos > 0 && driverPos < Data.driverInfos.size()){
-				previousDriverId = ""+Data.driverInfos.get(driverPos-1).userId;
-			}
-			
-			
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-			nameValuePairs.add(new BasicNameValuePair("user_id", currentDriverId));
-			nameValuePairs.add(new BasicNameValuePair("pre_user_id", previousDriverId));
-			nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+Data.latitude));
-			nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "=" + Data.longitude));
-			
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("user_id", "=" + currentDriverId);
-			Log.i("pre_user_id", "=" + previousDriverId);
-			Log.i("pickup_latitude", "=" + Data.latitude);
-			Log.i("pickup_longitude", "=" + Data.longitude);
-			
-			
-			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/send_req_for_ride", nameValuePairs);
-			
-			Log.i("result","="+result);
-			
-			simpleJSONParser = null;
-			nameValuePairs = null;
-			
-			return result;
-			
-		}
-		
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-
-			
-			
-			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
-				Log.e("timeout","=");
-			}
-			else{
-				try{
-					JSONObject jObj = new JSONObject(result);
-					
-					if(!jObj.isNull("error")){
-						int flag = jObj.getInt("flag");	
-						if(0 == flag){ // {"error": "some parameter missing","flag":0}//error
-						}
-						else if(1 == flag){ // {{"error": 'Invalid access token',"flag":1}//error
-						}
-						else if(2 == flag){ // {"error": "driver not available now","flag":2}
-						}
-						else{
-						}
-					}
-					else{
-						//{"engagement_id":9,"driver_id":"9"}
-						Data.engagementId = jObj.getString("engagement_id");
-						Data.driverId = jObj.getString("driver_id");
-						
-					}
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			
-			if(driverPos < Data.driverInfos.size()-1){
-				new RequestRideAsync(activity, driverPos+1, pickupLatLng).execute();
-			}
-			else{
-				new DialogPopup().alertPopup(activity, "", "No Driver available right now.");
-				requestRideBtn.setText("Request Ride");
-				passengerScreenMode = PassengerScreenMode.P_INITIAL;
-			}
-			
-			
-		}
-		
-	}
 	
 	
 	/**
@@ -2338,6 +2300,134 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	}
 	
 	
+	/**
+	 * ASync for login from server
+	 */
+	public void getAssignedDriverInfoAsync(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("driver_id", Data.driverId);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("driver_id", "=" + Data.driverId);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/get_driver_info", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									
+									
+									JSONObject driverData = jObj.getJSONObject("driver_data");
+									
+									Data.assignedDriverInfo = new DriverInfo(Data.driverId, driverData.getDouble("latitude"), driverData.getDouble("longitude"), 
+											driverData.getString("name"), driverData.getString("image"), driverData.getString("car_image"), 
+											driverData.getString("phone_number"));
+									
+									
+									
+									passengerScreenMode = PassengerScreenMode.P_BEFORE_REQUEST_FINAL;
+									switchPassengerScreen(passengerScreenMode);
+									
+									new GetDistanceTimeAddress(Data.mapTarget).execute();
+									
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
+	
+	class BeforeCancelRequestAsync extends AsyncTask<String, Integer, String>{
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			
+			try{
+				Thread.sleep(10000);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			
+			passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+			switchPassengerScreen(passengerScreenMode);
+			
+			
+			driverName.setText(Data.assignedDriverInfo.name);
+			driverTime.setText("Will arrive in "+Data.assignedDriverInfo.durationToReach);
+			
+			//TODO
+			
+			AQuery aq = new AQuery(driverImage);
+			aq.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
+			
+			AQuery aq1 = new AQuery(driverCarImage);
+			aq1.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
+			
+		}
+		
+	}
+	
+	
 
 	@Override
 	public void sendIntent() {
@@ -2370,6 +2460,28 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		}
 		
 		
+		
+	}
+
+
+
+	// 0 = not found   1 = accept
+	@Override
+	public void requestRideInterrupt(int switchCase) {
+		
+		stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+		
+		if(switchCase == 0){
+			
+			new DialogPopup().alertPopup(this, "", "No Driver available right now.");
+			requestRideBtn.setText("Request Ride");
+			passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			switchPassengerScreen(passengerScreenMode);
+			
+		}
+		else if(switchCase == 1){
+			getAssignedDriverInfoAsync(this);
+		}
 		
 	}
 	

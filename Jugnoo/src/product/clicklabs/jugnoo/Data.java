@@ -23,13 +23,19 @@ public class Data {
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Oops!! Server not responding. Please try again later.";
 	public static final String CHECK_INTERNET_MSG = "Check your internet connection.";
 	
+	
+	
 	public static final String GOOGLE_PROJECT_ID = "506849624961";
 
 	public static final String MAPS_BROWSER_KEY = "AIzaSyAHVDCyeC13xO_GxG5zE8_wbRJolqkBg90";
 	
+	
+	
 	public static double latitude = 30.7500, longitude = 76.7800;
 	
 	public static LatLng chandigarhLatLng = new LatLng(30.7500, 76.7800);
+	
+	
 	
 	public static ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
 	
@@ -38,15 +44,25 @@ public class Data {
 	public static ArrayList<FriendInfo> friendInfos = new ArrayList<FriendInfo>();
 	public static ArrayList<FriendInfo> friendInfosDuplicate = new ArrayList<FriendInfo>();
 	
+	
+	
+	
 	public static UserData userData;
 	
 	public static LocationFetcher locationFetcher;
+	
 
 	public static String deviceToken = "", country = "", deviceName = "", appVersion = "", osVersion = "";
 	
 	
+	
 	public static String engagementId = "", driverId = "";
-	public static LatLng driverLatLng;
+	
+	public static DriverInfo assignedDriverInfo;
+	
+	
+	
+	public static LatLng mapTarget;
 	
 	
 	public static LatLng getChandigarhLatLng(){

@@ -184,7 +184,7 @@ public class CUpdateDriverLocationsService extends Service {
 		    							
 		    							JSONObject dataI = data.getJSONObject(i);
 		    							
-		    							int userId = dataI.getInt("user_id");
+		    							String userId = dataI.getString("user_id");
 		    							double latitude = dataI.getDouble("latitude");
 		    							double longitude = dataI.getDouble("longitude");
 		    							

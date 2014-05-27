@@ -47,7 +47,6 @@ public class DriverLocationUpdateService extends Service {
 	
 	@Override
     public void onCreate() {
-        Toast.makeText(this, "The new Service was Created", Toast.LENGTH_LONG).show();
        
 //        Notification notification = new Notification();
 //        startForeground(1, notification);
@@ -60,7 +59,6 @@ public class DriverLocationUpdateService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
     	// For time consuming an long tasks you can launch a new thread here...
-        Toast.makeText(this, " DriverLocationUpdateService Started", Toast.LENGTH_LONG).show();
        
         try{
         	locationFetcher = new LocationFetcher(getApplicationContext());
@@ -124,7 +122,6 @@ public class DriverLocationUpdateService extends Service {
  
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
         if(sendDriverLocationToServer != null){
     		sendDriverLocationToServer.cancel(true);
     		sendDriverLocationToServer = null;

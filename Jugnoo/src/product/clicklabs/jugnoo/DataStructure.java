@@ -37,16 +37,17 @@ class FavoriteLocation{
 
 class DriverInfo{
 	
-	int userId;
-	String name, image, carImage, phoneNumber;
+	String userId, name, image, carImage, phoneNumber;
 	LatLng latLng;
 	
-	public DriverInfo(int userId, double latitude, double longitude){
+	String distanceToReach, durationToReach;
+	
+	public DriverInfo(String userId, double latitude, double longitude){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 	}
 	
-	public DriverInfo(int userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber){
+	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;

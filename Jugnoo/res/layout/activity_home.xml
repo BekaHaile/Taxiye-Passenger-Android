@@ -33,14 +33,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <RelativeLayout
                         android:id="@+id/searchBarLayout"
@@ -117,13 +117,28 @@
                         android:text="Request Ride"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="38px" />
+                    
+                    
+                    <Button
+                        android:id="@+id/initialCancelRideBtn"
+                        android:layout_width="648px"
+                        android:layout_height="99px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="10px"
+                        android:background="@drawable/red_btn_selector"
+                        android:text="Cancel Ride"
+                        android:textColor="@drawable/white_color_selector"
+                        android:textSize="38px" />
 
                     <RelativeLayout
                         android:id="@+id/nearestDriverRl"
                         android:layout_width="match_parent"
                         android:layout_height="108px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/white_translucent" >
+                        android:background="@color/white_translucent"
+                        android:visibility="gone"
+                         >
 
                         <ProgressBar
                             android:id="@+id/nearestDriverProgress"
@@ -452,7 +467,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
@@ -546,7 +561,7 @@
                     android:id="@+id/driverEngagedLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <RelativeLayout
                         android:id="@+id/driverPassengerInfoRl"

@@ -10,12 +10,6 @@ import com.google.android.gcm.GCMBaseIntentService;
 
 public class GCMIntentService extends GCMBaseIntentService {
 	
-	static Intent notificationIntent;  
-	static String notificationMessage;
-	
-	static Context context;
-	
-	
 	    protected void onError(Context arg0, String arg1) {
 	    	 Log.e("Registration", "Got an error1!");
 	         Log.e("Registration",arg1.toString());
@@ -31,8 +25,23 @@ public class GCMIntentService extends GCMBaseIntentService {
 		
 	    protected void onMessage(Context context, Intent arg1) {
 	    	try{
-//		    	 Log.e("Recieved a description...", ","+arg1.getStringExtra("brand_name"));
-//		    	 Log.e("Recieved a message arg1...", ","+arg1.getExtras());
+		    	 Log.e("Recieved a gcm message arg1...", ","+arg1.getExtras());
+		    	 
+		    	 if("".equalsIgnoreCase(arg1.getExtras().getString("message", ""))){
+		    		 
+		    		 String message = arg1.getExtras().getString("message");
+		    		 
+		    		 if("0".equalsIgnoreCase(message)){
+		    			 if(CRequestRideService.requestRideInterrupt != null){
+		    				 CRequestRideService.requestRideInterrupt.requestRideInterrupt(1);
+		    			 }
+		    		 }
+		    		 else{
+		    			 
+		    		 }
+		    		 
+		    	 }
+		    	 
 //		    	 
 //		    	 GCMIntentService.context=context;
 //		    	 notificationMessage = arg1.getStringExtra("brand_name") + ": " + arg1.getStringExtra("message") ;
@@ -75,18 +84,18 @@ public class GCMIntentService extends GCMBaseIntentService {
 			
 			Log.v("message",","+message);
 			
-			notificationIntent = new Intent(context, SplashLogin.class);
-			Log.v("notification_message",","+notificationMessage);
+			Intent notificationIntent = new Intent(context, SplashLogin.class);
+			Log.v("notification_message",","+message);
 			
-			Notification notification = new Notification(R.drawable.ic_launcher, notificationMessage, when);
-			String title = "New Offer in Bistro";
+			Notification notification = new Notification(R.drawable.ic_launcher, message, when);
+			String title = "Jugnoo";
 			
 			// set intent so it does not start a new activity
 			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			
 			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-			notification.setLatestEventInfo(context, title, notificationMessage, intent);
+			notification.setLatestEventInfo(context, title, message, intent);
 			notification.flags |= Notification.FLAG_AUTO_CANCEL;
 			notificationManager.notify(0, notification);
 			

@@ -50,7 +50,6 @@ public class CStartRideService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
     	// For time consuming an long tasks you can launch a new thread here...
-        Toast.makeText(this, " DriverLocationUpdateService Started", Toast.LENGTH_LONG).show();
        
         try{
         	if(getRideStatusFromServer != null){
@@ -112,7 +111,6 @@ public class CStartRideService extends Service {
  
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
         if(getRideStatusFromServer != null){
     		getRideStatusFromServer.cancel(true);
     		getRideStatusFromServer = null;
