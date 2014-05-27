@@ -8,5 +8,7 @@
     <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> <!-- Office -->
     <string name="google_maps_browser_key">AIzaSyAHVDCyeC13xO_GxG5zE8_wbRJolqkBg90</string>
     
+	<string name="fb_app_id">782131025144439</string>
+    
 
 </resources>

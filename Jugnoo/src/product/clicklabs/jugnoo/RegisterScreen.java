@@ -37,10 +37,15 @@ public class RegisterScreen extends Activity{
 	
 	String firstName = "", lastName = "", emailId = "", phoneNo = "", password = "";
 	
+	public static boolean facebookLogin = false;
+	boolean loginDataFetched = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register_screen);
+		
+		loginDataFetched = false;
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(RegisterScreen.this, relative, 1134, 720, false);
@@ -117,6 +122,10 @@ public class RegisterScreen extends Activity{
 				}
 				String lastName = lastNameEt.getText().toString().trim();
 				String emailId = emailIdEt.getText().toString().trim();
+				if(emailId.length() == 0){
+					emailId = " ";
+				}
+				
 				String phoneNo = phoneNoEt.getText().toString().trim();
 				String password = passwordEt.getText().toString().trim();
 				String confirmPassword = confirmPasswordEt.getText().toString().trim();
@@ -150,8 +159,15 @@ public class RegisterScreen extends Activity{
 										if(isPhoneValid(phoneNo)){
 											if(password.equals(confirmPassword)){
 												if(password.length() >= 6){
-													Toast.makeText(getApplicationContext(), "bingo", Toast.LENGTH_SHORT).show();
-													sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, "");
+													if(emailId.equalsIgnoreCase(" ")){
+														emailId = "";
+													}
+													if(facebookLogin){
+														sendFacebookSignupValues(RegisterScreen.this, "", phoneNo, password);
+													}
+													else{
+														sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, "");
+													}
 												}
 												else{
 													passwordEt.requestFocus();
@@ -200,6 +216,18 @@ public class RegisterScreen extends Activity{
 				return true;
 			}
 		});
+		
+		
+		
+		if(facebookLogin){
+			firstNameEt.setText(Data.fbFirstName);
+			lastNameEt.setText(Data.fbLastName);
+			emailIdEt.setText(Data.fbUserEmail);
+			
+			firstNameEt.setEnabled(false);
+			lastNameEt.setEnabled(false);
+			emailIdEt.setEnabled(false);
+		}
 		
 		
 		final View activityRootView = findViewById(R.id.mainLinear);
@@ -339,6 +367,11 @@ public class RegisterScreen extends Activity{
 									}
 								}
 								else{
+									JSONObject userData = jObj.getJSONObject("user_data");
+									
+									Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
+											userData.getString("user_image"));
+									loginDataFetched = true;
 									
 								}
 							}  catch (Exception exception) {
@@ -392,7 +425,12 @@ public class RegisterScreen extends Activity{
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, etCode.getText().toString());
+					if(facebookLogin){
+						sendFacebookSignupValues(RegisterScreen.this, etCode.getText().toString(), phoneNo, password);
+					}
+					else{
+						sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, etCode.getText().toString());
+					}
 				}
 				
 			});
@@ -412,6 +450,139 @@ public class RegisterScreen extends Activity{
 		}
 	
 	}
+	
+	
+	
+
+	/**
+	 * ASync for login from server
+	 */
+	public void sendFacebookSignupValues(final Activity activity, String otp, final String phoneNo, final String password) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			if(Data.locationFetcher != null){
+				Data.latitude = Data.locationFetcher.getLatitude();
+				Data.longitude = Data.locationFetcher.getLongitude();
+			}
+
+		
+			params.put("user_fb_id", Data.fbId);
+			params.put("user_fb_name", Data.fbFirstName + " " + Data.fbLastName);
+			params.put("fb_access_token", Data.fbAccessToken);
+			params.put("username", Data.fbUserName);
+			params.put("fb_mail", Data.fbUserEmail);
+			params.put("latitude", ""+Data.latitude);
+			params.put("longitude", ""+Data.longitude);
+			params.put("device_token", Data.deviceToken);
+			params.put("country", Data.country);
+			params.put("app_version", Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("device_name", Data.deviceName);
+			params.put("device_type", "0");
+			params.put("otp", otp);
+			params.put("ph_no", phoneNo);
+			params.put("password", password);
+			
+
+			Log.i("user_fb_id", "="+Data.fbId);
+			Log.i("user_fb_name", "="+Data.fbFirstName + " " + Data.fbLastName);
+			Log.i("fb_access_token", "="+Data.fbAccessToken);
+			Log.i("username", "="+Data.fbUserName);
+			Log.i("fb_mail", "="+Data.fbUserEmail);
+			Log.i("latitude", "="+Data.latitude);
+			Log.i("longitude", "="+Data.longitude);
+			Log.i("device_token", "="+Data.deviceToken);
+			Log.i("country", "="+Data.country);
+			Log.i("app_version", "="+Data.appVersion);
+			Log.i("os_version", "="+Data.osVersion);
+			Log.i("device_name", "="+Data.deviceName);
+			Log.i("device_type", "="+"0");
+			Log.i("otp", "="+otp);
+			Log.i("ph_no", "="+phoneNo);
+			Log.i("password", "="+password);
+			
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/customer_fb_registeration_form", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+//									{"error": 'Some parameter missing',"flag":0} //error
+//									{"error": 'Not An Authenticated User!',"flag":1}
+//									{"error": 'Please enter otp',"flag":2}  
+//							{"error": 'Please enter details',"flag":3}
+//								{"error": 'Message sending failed',"flag":4}
+//								{"error": 'User not registered',"flag":5}
+//								{"error": 'Incorrect verification code',"flag":6}
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
+										RegisterScreen.this.phoneNo = phoneNo;
+										RegisterScreen.this.password = password;
+										confirmOTPPopup(activity);
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else if(6 == flag){ // {"error": 'Incorrect verification code',"flag":6}
+										RegisterScreen.this.phoneNo = phoneNo;
+										RegisterScreen.this.password = password;
+										confirmOTPPopup(activity);
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									
+									
+									JSONObject userData = jObj.getJSONObject("user_data");
+									
+									Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
+											userData.getString("user_image"));
+									
+									loginDataFetched = true;
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
+	
 	
 	
 	boolean isEmailValid(CharSequence email) {

@@ -1,8 +1,15 @@
 package product.clicklabs.jugnoo;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
+import android.util.Base64;
 
 import com.androidquery.callback.ImageOptions;
 import com.google.android.gcm.GCMRegistrar;
@@ -28,6 +35,8 @@ public class Data {
 	public static final String GOOGLE_PROJECT_ID = "506849624961";
 
 	public static final String MAPS_BROWSER_KEY = "AIzaSyAHVDCyeC13xO_GxG5zE8_wbRJolqkBg90";
+	
+	public static final String FACEBOOK_APP_ID = "782131025144439";
 	
 	
 	
@@ -63,6 +72,8 @@ public class Data {
 	
 	
 	public static LatLng mapTarget;
+
+	public static String fbAccessToken = "", fbId = "", fbFirstName = "", fbLastName = "", fbUserName = "", fbUserEmail = "";
 	
 	
 	public static LatLng getChandigarhLatLng(){
@@ -121,6 +132,28 @@ public class Data {
 		}
 	}
 	
+	
+	
+	
+	public static void generateKeyHash(Context context){
+		try { // single sign-on for fb application
+			PackageInfo info = context.getPackageManager().getPackageInfo(
+					"product.clicklabs.jugnoo",
+					PackageManager.GET_SIGNATURES);
+			for (Signature signature : info.signatures) {
+				MessageDigest md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				Log.e("KeyHash:",
+						","
+								+ Base64.encodeToString(md.digest(),
+										Base64.DEFAULT));
+			}
+		} catch (NameNotFoundException e) {
+			Log.e("error:", "," + e.toString());
+		} catch (NoSuchAlgorithmException e) {
+			Log.e("error:", "," + e.toString());
+		}
+	}
 	
 	
 }
