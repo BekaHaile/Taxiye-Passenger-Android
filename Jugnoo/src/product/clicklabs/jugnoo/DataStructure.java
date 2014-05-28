@@ -98,6 +98,21 @@ class UserData{
 }
 
 
+
+class DriverRideRequest{
+	
+	String engagementId, customerId;
+	LatLng latLng;
+	
+	public DriverRideRequest(String engagementId, String customerId, LatLng latLng){
+		this.engagementId = engagementId;
+		this.customerId = customerId;
+		this.latLng = latLng;
+	}
+	
+}
+
+
 enum PassengerScreenMode{
 	P_INITIAL, P_ASSIGNING, P_SEARCH, P_BEFORE_REQUEST_FINAL, P_REQUEST_FINAL, P_IN_RIDE, P_RIDE_END
 }

@@ -78,6 +78,8 @@ public class Data {
 	
 	public static String dEngagementId = "", dCustomerId = "";
 	
+	public static ArrayList<DriverRideRequest> driverRideRequests = new ArrayList<DriverRideRequest>();
+	
 	public static CustomerInfo assignedCustomerInfo;
 	
 	

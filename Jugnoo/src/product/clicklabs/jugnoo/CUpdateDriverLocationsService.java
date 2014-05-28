@@ -113,7 +113,7 @@ public class CUpdateDriverLocationsService extends Service {
 
     			if(count > 0){
     				try {
-						Thread.sleep(10000);
+						Thread.sleep(60000);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

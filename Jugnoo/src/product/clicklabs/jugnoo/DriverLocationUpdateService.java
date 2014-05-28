@@ -155,7 +155,7 @@ public class DriverLocationUpdateService extends Service {
     		
     		try{
 
-				Thread.sleep(10000);
+				Thread.sleep(60000);
     			
 				
 	    		if(locationFetcher != null){

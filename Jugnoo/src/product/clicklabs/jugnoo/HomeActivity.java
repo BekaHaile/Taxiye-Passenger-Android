@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,6 +45,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -71,7 +73,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt, DriverGetRequestPush {
+public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt, DriverChangeRideRequest {
 
 	
 	
@@ -274,6 +276,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
 	
 	double totalDistance = 0, totalFare = 0;
+	String fullAddress = "";
 	
 	
 	
@@ -295,7 +298,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	Marker pickupLocationMarker;
 	
-	static DriverGetRequestPush driverGetRequestPush;
+	static DriverChangeRideRequest driverGetRequestPush;
 	
 	static Activity activity;
 	
@@ -965,8 +968,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Set favorite
-				
+				saveToFavoritePopup(HomeActivity.this, fullAddress, map.getCameraPosition().target);
 			}
 		});
 		
@@ -1007,10 +1009,14 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			@Override
 			public void onClick(View v) {
 				
-				driverNewRideRequestRl.setVisibility(View.GONE);
+				if(Data.driverRideRequests.size() == 1){
+					driverNewRideRequestRl.setVisibility(View.GONE);
+					
+					driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
+					switchDriverScreen(driverScreenMode);
+				}
+					
 				
-				driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
-				switchDriverScreen(driverScreenMode);
 				
 			}
 		});
@@ -1302,6 +1308,21 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 						return false;
 					}
 					else{
+						
+						for(int i=0; i<Data.driverRideRequests.size(); i++){
+							if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(arg0.getTitle())){
+								Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
+								Data.dEngagementId = Data.driverRideRequests.get(i).engagementId;
+								break;
+							}
+						}
+						
+						driverNewRideRequestRl.setVisibility(View.GONE);
+						
+						driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
+						switchDriverScreen(driverScreenMode);
+						
+						
 						return true;
 					}
 					
@@ -2303,7 +2324,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	class GetDistanceTimeAddress extends AsyncTask<Void, Void, String>{
 	    String url;
 	    
-	    String distance, duration, fullAddress;
+	    String distance, duration;
 	    
 	    LatLng destination;
 	    
@@ -3012,6 +3033,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 									switchDriverScreen(driverScreenMode);
 									
 									
+									
+									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -3092,7 +3115,20 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 									switchDriverScreen(driverScreenMode);
 									
 									
-									map.clear();
+									int index = -1;
+									for(int i=0; i<Data.driverRideRequests.size(); i++){
+										if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(Data.dEngagementId)){
+											index = i;
+											break;
+										}
+									}
+									
+									if(index != -1){
+										Data.driverRideRequests.remove(index);
+									}
+									
+									showAllRideRequests();
+									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -3426,6 +3462,136 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	}
 	
 	
+	
+	
+	void saveToFavoritePopup(final Activity activity, String locationName, final LatLng favLatLng){
+
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.save_to_favorite_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
+			final EditText favoriteNameEt = (EditText) dialog.findViewById(R.id.favoriteNameEt);
+			
+			favoriteNameEt.setText(locationName);
+			
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					saveToFavoriteAsync(activity, favoriteNameEt.getText().toString(), favLatLng);
+				}
+				
+			});
+			
+			
+			crossbtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+				
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+	}
+	
+	
+	/**
+	 * ASync for saveToFavoriteAsync from server
+	 */
+	public void saveToFavoriteAsync(final Activity activity, String favName, LatLng favLatLng) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("fav_name", favName);
+			params.put("fav_latitude", ""+favLatLng.latitude);
+			params.put("fav_longitude", ""+favLatLng.longitude);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("fav_name", "="+favName);
+			Log.i("fav_latitude", "="+favLatLng.latitude);
+			Log.i("fav_longitude", "="+favLatLng.longitude);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/fav_locations", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									
+//									{"log":"Added to favourite successfully"}	//result
+
+									
+									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
 
 	@Override
 	public void sendIntent() {
@@ -3506,55 +3672,103 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	}
 
 
-	public void showNewRideRequest(LatLng rideLatLng){
+	public void showAllRideRequests(){
 		
-		Log.i("showNewRideRequest","="+rideLatLng);
+		map.clear();
 		
-		driverNewRideRequestRl.setVisibility(View.VISIBLE);
+		if(Data.driverRideRequests.size() > 0){
+			driverNewRideRequestRl.setVisibility(View.VISIBLE);
+			
+			LatLng last = map.getCameraPosition().target;
+			
+			for(int i=0; i<Data.driverRideRequests.size(); i++){
+				MarkerOptions markerOptions = new MarkerOptions();
+				markerOptions.title(Data.driverRideRequests.get(i).engagementId);
+				markerOptions.snippet("");
+				markerOptions.position(Data.driverRideRequests.get(i).latLng);
+				markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
+				
+				map.addMarker(markerOptions);
+				
+				if(i == Data.driverRideRequests.size()-1){
+					last = Data.driverRideRequests.get(i).latLng;
+					Data.dEngagementId = Data.driverRideRequests.get(i).engagementId;
+					Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
+				}
+			}
+			
+			
+			driverNewRideRequestText.setText("You have "+Data.driverRideRequests.size()+" ride request");
+			
+			map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
+			
+		}
+		else{
+			driverNewRideRequestRl.setVisibility(View.GONE);
+		}
 		
 		
-		MarkerOptions markerOptions = new MarkerOptions();
-		markerOptions.title("");
-		markerOptions.snippet("");
-		markerOptions.position(rideLatLng);
-		markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
 		
-		map.addMarker(markerOptions);
 		
-		map.animateCamera(CameraUpdateFactory.newLatLng(rideLatLng), 1000, null);
 		
 	}
 	
 
 	@Override
-	public void showRideRequest(String dEngagementId, String dCustomerId, final LatLng rideLatLng) {
+	public void changeRideRequest(String dEngagementId, String dCustomerId, final LatLng rideLatLng, boolean add) {
 		
-		Data.dEngagementId = dEngagementId;
-		Data.dCustomerId = dCustomerId;
+		Log.i("in home class","Data.dEngagementId = "+Data.dEngagementId + " " + add);
 		
-//		showNewRideRequest(rideLatLng);
-		
-		Log.i("in home class","Data.dEngagementId = "+Data.dEngagementId);
-		
-		new Thread(new Runnable() {
+		if(add){
+			Data.driverRideRequests.add(new DriverRideRequest(dEngagementId, dCustomerId, rideLatLng));
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							showAllRideRequests();
+						}
+					});
+				}
+			}).start();
 			
-			@Override
-			public void run() {
-				Log.i("in run class","=");
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						Log.i("in in run class","=");
-						showNewRideRequest(rideLatLng);
-					}
-				});
+		}
+		else{
+			
+			int index = -1;
+			for(int i=0; i<Data.driverRideRequests.size(); i++){
+				if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(Data.dEngagementId)){
+					index = i;
+					break;
+				}
 			}
-		}).start();
-		
-		
+			
+			if(index != -1){
+				Data.driverRideRequests.remove(index);
+			}
+			
+			Data.driverRideRequests.add(new DriverRideRequest(dEngagementId, dCustomerId, rideLatLng));
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							showAllRideRequests();
+						}
+					});
+				}
+			}).start();
+		}
 		
 	}
+
+
 	
 	
 	

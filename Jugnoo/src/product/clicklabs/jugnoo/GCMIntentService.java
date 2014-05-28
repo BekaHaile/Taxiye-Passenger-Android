@@ -39,7 +39,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 	    				 
 	    				 int flag = jObj.getInt("flag");
 	    				 
-	    				//{"engagement_id":engagementid,"user_id":customer_user_id,"flag":0}
 	    				 //flag 0 for customer ride request to driver
 	    				 if(0 == flag){
 	    					 
@@ -51,13 +50,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
 	    					 
 	    					 if(HomeActivity.driverGetRequestPush != null){
-	    						 HomeActivity.driverGetRequestPush.showRideRequest(engagementId, userId, new LatLng(latitude, longitude));
+	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
 	    					 }
 	    					 else{
 	    						 notificationManager(context, "You have got a new ride request.");
 	    					 }
 	    					 
 	    				 }
+	    				 // flag 1 for driver request accepted 
 	    				 else if(1 == flag){
 	    					 String driverId = jObj.getString("driver_id");
 	    					 Data.cDriverId = driverId;
@@ -65,6 +65,21 @@ public class GCMIntentService extends GCMBaseIntentService {
 	    					 if(CRequestRideService.requestRideInterrupt != null){
 			    				 CRequestRideService.requestRideInterrupt.requestRideInterrupt(1);
 			    			 }
+	    				 }
+	    				// flag 2 for driver request canceled 
+	    				 else if(2 == flag){
+
+	    					 String engagementId = jObj.getString("engagement_id");
+	    					 
+	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
+	    					 
+	    					 if(HomeActivity.driverGetRequestPush != null){
+	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
+	    					 }
+	    					 else{
+	    						 notificationManager(context, "You have got a new ride request.");
+	    					 }
+	    					 
 	    				 }
 	    				 else{
 	    					 
