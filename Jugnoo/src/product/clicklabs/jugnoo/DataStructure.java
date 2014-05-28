@@ -59,6 +59,18 @@ class DriverInfo{
 }
 
 
+class CustomerInfo{
+	String userId, name, image, phoneNumber;
+	
+	public CustomerInfo(String userId, String name, String image, String phoneNumber){
+		this.userId = userId;
+		this.name = name;
+		this.image = image;
+		this.phoneNumber = phoneNumber;
+	}
+}
+
+
 
 class FriendInfo{
 	

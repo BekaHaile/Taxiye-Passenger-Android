@@ -119,7 +119,7 @@ public class CRequestRideService extends Service {
 			Log.i("driverPos","="+driverPos);
 			if(driverPos > 0){
 				try{
-					Thread.sleep(1000);
+					Thread.sleep(60000);
 				} catch(Exception e){
 					e.printStackTrace();
 				}
@@ -155,7 +155,7 @@ public class CRequestRideService extends Service {
 			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 			nameValuePairs.add(new BasicNameValuePair("user_id", currentDriverId));
 			nameValuePairs.add(new BasicNameValuePair("pre_user_id", previousDriverId));
-			nameValuePairs.add(new BasicNameValuePair("pre_engage_id", Data.engagementId));
+			nameValuePairs.add(new BasicNameValuePair("pre_engage_id", Data.cEngagementId));
 			nameValuePairs.add(new BasicNameValuePair("flag", ""+flag));
 			nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+Data.latitude));
 			nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + Data.longitude));
@@ -163,7 +163,7 @@ public class CRequestRideService extends Service {
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("user_id", "=" + currentDriverId);
 			Log.i("pre_user_id", "=" + previousDriverId);
-			Log.i("pre_engage_id", "=" + Data.engagementId);
+			Log.i("pre_engage_id", "=" + Data.cEngagementId);
 			Log.i("flag", "=" + flag);
 			Log.i("pickup_latitude", "=" + Data.latitude);
 			Log.i("pickup_longitude", "=" + Data.longitude);
@@ -207,8 +207,8 @@ public class CRequestRideService extends Service {
 					}
 					else{
 						//{"engagement_id":9,"driver_id":"9"}
-						Data.engagementId = jObj.getString("engagement_id");
-						Data.driverId = jObj.getString("driver_id");
+						Data.cEngagementId = jObj.getString("engagement_id");
+						Data.cDriverId = jObj.getString("driver_id");
 						
 					}
 				} catch(Exception e){

@@ -33,14 +33,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <RelativeLayout
                         android:id="@+id/searchBarLayout"
@@ -329,7 +329,7 @@
                     <RelativeLayout
                         android:id="@+id/inRideInfoRl"
                         android:layout_width="match_parent"
-                        android:layout_height="107px"
+                        android:layout_height="match_parent"
                         android:background="@color/white_translucent" >
 
                         <TextView
@@ -467,7 +467,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
@@ -482,7 +482,9 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="90px"
                         android:background="@drawable/white_bg_bordered"
-                        android:gravity="center" >
+                        android:gravity="center" 
+                        android:visibility="gone"
+                        >
 
                         <TextView
                             android:id="@+id/driverNewRideRequestText"
@@ -561,7 +563,7 @@
                     android:id="@+id/driverEngagedLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <RelativeLayout
                         android:id="@+id/driverPassengerInfoRl"
@@ -659,9 +661,9 @@
                     <RelativeLayout
                         android:id="@+id/driverStartRideMainRl"
                         android:layout_width="match_parent"
-                        android:layout_height="250px"
+                        android:layout_height="380px"
                         android:layout_alignParentBottom="true"
-                        android:visibility="gone"
+                        android:visibility="visible"
                          >
 
                         <Button
@@ -678,10 +680,10 @@
                             android:id="@+id/driverStartRideRl"
                             android:layout_width="648px"
                             android:layout_height="100px"
-                            android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="27px"
                             android:background="@drawable/blue_btn_normal"
+                			android:layout_above="@+id/driverCancelRideBtn"
                             android:tag="mwar" >
 
                             <TextView
@@ -705,6 +707,21 @@
                                 android:thumb="@drawable/start_ride" >
                             </product.clicklabs.jugnoo.SlideButton>
                         </RelativeLayout>
+                        
+                        
+                        <Button
+                        android:id="@+id/driverCancelRideBtn"
+                        android:layout_width="648px"
+                        android:layout_height="99px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="27px"
+                        android:background="@drawable/red_btn_selector"
+                        android:text="Cancel Ride"
+                        android:textColor="@drawable/white_color_selector"
+                        android:textSize="38px" />
+                        
+                        
                     </RelativeLayout>
                     
                     
@@ -714,6 +731,7 @@
                         android:layout_height="400px"
                         android:layout_alignParentBottom="true"
                         android:background="@color/white"
+                        android:visibility="gone"
                          >
 
                          <ImageView
@@ -794,15 +812,26 @@
                 android:visibility="gone" >
 
 
+                <RelativeLayout 
+                    android:id="@+id/upLayout"
+                    android:layout_width="match_parent"
+                        android:layout_height="640px" 
+                    >
+                    
+                    
+               
+                
                     <ImageView
                         android:id="@+id/reviewUserImgBlured"
                         android:layout_width="match_parent"
-                        android:layout_height="630px" />
+                        android:layout_height="640px" 
+            android:scaleType="centerCrop"
+                        />
 
                     <ImageView
                         android:id="@+id/reviewUserImgBlurTop"
                         android:layout_width="match_parent"
-                        android:layout_height="630px"
+                        android:layout_height="640px"
                         android:background="@drawable/profile_pic_top" />
 
                     <RelativeLayout
@@ -810,7 +839,9 @@
                         android:layout_width="243px"
                         android:layout_height="243px"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="90px" >
+                        android:layout_marginTop="90px"
+                            android:tag="mwar"
+                             >
 
                         <ImageView
                             android:id="@+id/reviewUserImgBack"
@@ -869,6 +900,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:singleLine="true"
+                android:layout_marginLeft="10px"
                             android:text="3.0"
                             android:textColor="@color/white"
                             android:textSize="38px" />
@@ -878,6 +910,8 @@
                         android:id="@+id/reviewReachedDistanceRl"
                         android:layout_width="match_parent"
                         android:layout_height="180px"
+                        android:layout_marginTop="10px"
+                android:layout_alignParentBottom="true"
                         android:layout_below="@+id/reviewUserRatingRl"
                         android:background="@color/black_translucent" >
 
@@ -966,11 +1000,13 @@
                         </RelativeLayout>
                     </RelativeLayout>
 
+                     </RelativeLayout>
+                    
                     <TextView
                         android:id="@+id/reviewRatingText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/reviewReachedDistanceRl"
+                        android:layout_below="@+id/upLayout"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="20px"
                         android:gravity="center"
@@ -1077,7 +1113,8 @@
             android:layout_width="216px"
             android:layout_height="216px"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="90px" >
+            android:layout_marginTop="90px"
+            android:tag="mwar" >
 
             <ImageView
                 android:id="@+id/profileBack"
@@ -1136,7 +1173,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="140px"
                 android:layout_toRightOf="@+id/driverModeText"
-                android:background="@drawable/on"
+                android:src="@drawable/on"
                 android:tag="mwar" />
         </RelativeLayout>
 

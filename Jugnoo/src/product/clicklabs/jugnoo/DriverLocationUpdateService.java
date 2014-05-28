@@ -141,6 +141,7 @@ public class DriverLocationUpdateService extends Service {
     	}
     	
     	
+    	
     	@Override
     	protected String doInBackground(String... params) {
     		
@@ -154,13 +155,13 @@ public class DriverLocationUpdateService extends Service {
     		
     		try{
 
-				Thread.sleep(1000);
+				Thread.sleep(10000);
     			
 				
 	    		if(locationFetcher != null){
 	    			
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
+	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 0){
 		    			
 	    				DriverLocationUpdateService.this.lastLocation = currentLatLng;
 	    				

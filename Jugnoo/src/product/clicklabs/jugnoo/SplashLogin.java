@@ -128,6 +128,17 @@ public class SplashLogin extends Activity{
 			}
 		});
 		
+		forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ForgotPasswordScreen.emailAlready = emailEt.getText().toString();
+				startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				finish();
+			}
+		});
+		
 		
 		passwordEt.setOnEditorActionListener(new OnEditorActionListener() {
 
@@ -338,7 +349,7 @@ public class SplashLogin extends Activity{
 		}
 		
 		
-//		accessTokenLogin(SplashLogin.this);
+		accessTokenLogin(SplashLogin.this);
 		
 		
 	}
@@ -448,6 +459,7 @@ public class SplashLogin extends Activity{
 			}
 
 		
+			
 			params.put("email", emailId);
 			params.put("password", password);
 			params.put("device_type", "0");
@@ -461,7 +473,7 @@ public class SplashLogin extends Activity{
 
 			Log.i("email", "=" + emailId);
 			Log.i("password", "=" + password);
-			Log.i("device_token", "=" + Data.deviceToken);
+			Log.e("device_token", "=" + Data.deviceToken);
 			Log.i("latitude", "=" + Data.latitude);
 			Log.i("longitude", "=" + Data.longitude);
 			Log.i("country", "=" + Data.country);

@@ -18,7 +18,7 @@ import android.util.Log;
 
 public class CUpdateDriverLocationsService extends Service {
 	
-	static int count = 0; 
+	int count = 0; 
 	
 	GetDriverLocationsFromServer getDriverLocationsFromServer;
 	
@@ -43,7 +43,6 @@ public class CUpdateDriverLocationsService extends Service {
 	
     @Override
     public void onStart(Intent intent, int startId) {
-       
         try{
         	if(getDriverLocationsFromServer != null){
         		getDriverLocationsFromServer.cancel(true);
@@ -114,7 +113,7 @@ public class CUpdateDriverLocationsService extends Service {
 
     			if(count > 0){
     				try {
-						Thread.sleep(100000);
+						Thread.sleep(10000);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -212,7 +211,7 @@ public class CUpdateDriverLocationsService extends Service {
 			Log.e("CustomerUpdateDriverLocationsService.refreshDriverLocations=","="+CUpdateDriverLocationsService.refreshDriverLocations);
 			
 			if("refresh".equalsIgnoreCase(result)  && CUpdateDriverLocationsService.refreshDriverLocations != null){
-				CUpdateDriverLocationsService.refreshDriverLocations.refreshDriverLocations();
+				CUpdateDriverLocationsService.refreshDriverLocations.refreshDriverLocations(count);
 			}
 			else if("stop".equalsIgnoreCase(result)){
 				stopSelf();

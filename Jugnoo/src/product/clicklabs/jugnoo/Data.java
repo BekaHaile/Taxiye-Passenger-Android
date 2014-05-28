@@ -70,9 +70,16 @@ public class Data {
 	
 	
 	
-	public static String engagementId = "", driverId = "";
+	public static String cEngagementId = "", cDriverId = "";
 	
 	public static DriverInfo assignedDriverInfo;
+	
+	
+	
+	public static String dEngagementId = "", dCustomerId = "";
+	
+	public static CustomerInfo assignedCustomerInfo;
+	
 	
 	
 	
@@ -101,7 +108,7 @@ public class Data {
 		userData = null;
 		locationFetcher = null;
 		deviceToken = ""; country = ""; deviceName = ""; appVersion = ""; osVersion = "";
-		engagementId = ""; driverId = "";
+		cEngagementId = ""; cDriverId = "";
 		assignedDriverInfo = null;
 		mapTarget = null;
 		fbAccessToken = ""; fbId = ""; fbFirstName = ""; fbLastName = ""; fbUserName = ""; fbUserEmail = "";
