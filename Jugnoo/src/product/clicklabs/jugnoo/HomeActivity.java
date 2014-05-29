@@ -2854,6 +2854,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 											driverData.getString("phone_no"));
 									
 									
+									map.clear();
 									
 									passengerScreenMode = PassengerScreenMode.P_BEFORE_REQUEST_FINAL;
 									switchPassengerScreen(passengerScreenMode);
@@ -2911,20 +2912,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			super.onPostExecute(result);
 			Log.e("BeforeCancelRequestAsync","==onpost");
 			
-			passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-			switchPassengerScreen(passengerScreenMode);
-			
-			
-			driverName.setText(Data.assignedDriverInfo.name);
-			driverTime.setText("Will arrive in "+Data.assignedDriverInfo.durationToReach);
-			
-			AQuery aq = new AQuery(driverImage);
-			aq.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
-			
-			AQuery aq1 = new AQuery(driverCarImage);
-			aq1.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
-			
-			cancelCustomerRequestAsync(HomeActivity.this, 1, 1);
+			cancelCustomerRequestAsync(HomeActivity.this, 2, 1);
 			
 		}
 		
@@ -2996,7 +2984,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
 										getDistanceTimeAddress.execute();
 									}
-									else{
+									else if(switchCase == 1){
 										
 										passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
@@ -3012,6 +3000,23 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										
 										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
 										getDistanceTimeAddress.execute();
+									
+									}
+									else{
+
+										passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+										switchPassengerScreen(passengerScreenMode);
+										
+										
+										driverName.setText(Data.assignedDriverInfo.name);
+										driverTime.setText("Will arrive in "+Data.assignedDriverInfo.durationToReach);
+										
+										AQuery aq = new AQuery(driverImage);
+										aq.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
+										
+										AQuery aq1 = new AQuery(driverCarImage);
+										aq1.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
+										
 									}
 									
 								}
@@ -4042,6 +4047,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						
 						@Override
 						public void run() {
+							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(HomeActivity.this, "", "No Driver available right now.");
 							requestRideBtn.setText("Request Ride");
 							passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -4063,6 +4069,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						@Override
 						public void run() {
 							Log.i("in in run class","=");
+							requestRideBtn.setText("Request Ride");
+							DialogPopup.dismissLoadingDialog();
 							getAssignedDriverInfoAsync(HomeActivity.this);
 						}
 					});

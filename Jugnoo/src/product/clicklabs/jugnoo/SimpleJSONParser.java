@@ -147,7 +147,9 @@ public class SimpleJSONParser {
         	stringBuilder = null;
         	line = null;
         	try {
-				inputStream.close();
+        		if(inputStream != null){
+        			inputStream.close();
+        		}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
