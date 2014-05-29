@@ -2,6 +2,6 @@ package product.clicklabs.jugnoo;
 
 public interface DetectRideStart {
 
-	public void sendIntent();
+	public void startRideForCustomer();
 	
 }

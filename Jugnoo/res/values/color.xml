@@ -39,5 +39,8 @@
     <color name="red_dark_btn">#9F3527</color>
     
     
+    <color name="favorite_bg">#393E44</color>
+    <color name="favorite_div">#97989C</color>
+    
    
 </resources>

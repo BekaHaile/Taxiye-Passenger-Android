@@ -175,6 +175,9 @@
                     
                     />
                 
+                
+                
+                
                 <product.clicklabs.jugnoo.SlideButton
             android:id="@+id/driverStartRideSlider"
             android:layout_width="match_parent"

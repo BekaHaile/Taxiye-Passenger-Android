@@ -39,7 +39,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	    				 
 	    				 int flag = jObj.getInt("flag");
 	    				 
-	    				 //flag 0 for customer ride request to driver
+	    				 //flag 0 for customer ride request to driver show marker on map
 	    				 if(0 == flag){
 	    					 
 	    					 String engagementId = jObj.getString("engagement_id");
@@ -57,16 +57,19 @@ public class GCMIntentService extends GCMBaseIntentService {
 	    					 }
 	    					 
 	    				 }
-	    				 // flag 1 for driver request accepted 
+	    				 // flag 1 for driver request accepted  show customer cancel and then call driver
 	    				 else if(1 == flag){
 	    					 String driverId = jObj.getString("driver_id");
 	    					 Data.cDriverId = driverId;
+	    					 
+	    					 String engagementId = jObj.getString("engagement_id");
+	    					 Data.cEngagementId = engagementId;
 	    					 
 	    					 if(CRequestRideService.requestRideInterrupt != null){
 			    				 CRequestRideService.requestRideInterrupt.requestRideInterrupt(1);
 			    			 }
 	    				 }
-	    				// flag 2 for driver request canceled 
+	    				// flag 2 for driver request canceled customer cancels the ride and show driver the popups
 	    				 else if(2 == flag){
 	    					 // {"engagement_id": engagementid, "flag": 2}
 
@@ -78,6 +81,32 @@ public class GCMIntentService extends GCMBaseIntentService {
 	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
 	    					 }
 	    					 
+	    				 }
+	    				// flag 3 for driver ride started show customer ride in progress  
+	    				 else if(3 == flag){
+
+	    					 if (CStartRideService.detectRideStart != null) {
+	    						 CStartRideService.detectRideStart.startRideForCustomer();
+	    					 }
+	    				 }
+	    				 // {"flag": 4,"log":"show"}  customer cancel 10 seconds done show driver start ride option
+	    				 else if(4 == flag){
+
+	    					 if (HomeActivity.driverStartRideInterrupt != null) {
+	    						 HomeActivity.driverStartRideInterrupt.driverStartRideInterrupt();
+	    					 }
+	    				 }
+	    				// {"flag": 5} end ride on customer side show review
+	    				 else if(5 == flag){
+
+//	    					 {"flag": 5, "fare": fare, "distance_travelled": distance_travelled}
+	    					 
+	    					 Data.totalDistance = jObj.getDouble("distance_travelled");
+	    					 Data.totalFare = jObj.getDouble("fare");
+	    					 
+	    					 if (HomeActivity.customerEndRideInterrupt != null) {
+	    						 HomeActivity.customerEndRideInterrupt.customerEndRideInterrupt();
+	    					 }
 	    				 }
 	    				 else{
 	    					 

@@ -9,11 +9,13 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#0000" >
+        android:background="#0000" 
+        android:padding="20px"
+        >
 
         <RelativeLayout
             android:id="@+id/rlt"
-            android:layout_width="250px"
+            android:layout_width="wrap_content"
             android:layout_height="250px"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
@@ -24,16 +26,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                android:layout_centerHorizontal="true"
+               android:minWidth="250px"
                android:layout_marginTop="50px"
-                android:gravity="center_vertical"
-                android:paddingLeft="10px"
-                android:paddingRight="10px"
-                android:text="Creating Game... "
+                android:gravity="center"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+                android:text="Creating Game ... "
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#ffffff"
                 android:singleLine="true"
                 android:textSize="28px"
-                android:textStyle="bold" />
+                android:textStyle="bold" 
+                />
 
             <ProgressBar
                 android:id="@+id/progressBar1"

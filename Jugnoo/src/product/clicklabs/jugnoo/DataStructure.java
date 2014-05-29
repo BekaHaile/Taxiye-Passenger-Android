@@ -23,12 +23,13 @@ class SearchResult{
 
 class FavoriteLocation{
 	
-	String name, address;
+	int sNo;
+	String name;
 	LatLng latLng;
 	
-	public FavoriteLocation(String name, String address, LatLng latLng){
+	public FavoriteLocation(int sNo, String name, LatLng latLng){
+		this.sNo = sNo;
 		this.name = name;
-		this.address = address;
 		this.latLng = latLng;
 	}
 	

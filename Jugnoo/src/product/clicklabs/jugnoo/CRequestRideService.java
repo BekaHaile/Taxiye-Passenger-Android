@@ -112,6 +112,8 @@ public class CRequestRideService extends Service {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			
+			
 		}
 		
 		@Override
@@ -119,10 +121,14 @@ public class CRequestRideService extends Service {
 			Log.i("driverPos","="+driverPos);
 			if(driverPos > 0){
 				try{
-					Thread.sleep(60000);
+					Thread.sleep(10000);
 				} catch(Exception e){
 					e.printStackTrace();
 				}
+			}
+			
+			if(requestRideInterrupt != null){
+				requestRideInterrupt.apiStart(driverPos+1);
 			}
 			
 			
@@ -214,6 +220,10 @@ public class CRequestRideService extends Service {
 				} catch(Exception e){
 					e.printStackTrace();
 				}
+			}
+			
+			if(requestRideInterrupt != null){
+				requestRideInterrupt.apiEnd();
 			}
 			
 			if(driverPos < Data.driverInfos.size()-1){

@@ -177,7 +177,7 @@ public class CStartRideService extends Service {
 			Log.e("HomeActivitydetectRideStart=","="+CStartRideService.detectRideStart);
 			
 			if(count == 2 && CStartRideService.detectRideStart != null){
-				CStartRideService.detectRideStart.sendIntent();
+				CStartRideService.detectRideStart.startRideForCustomer();
 				stopSelf();
 			}
 			else{

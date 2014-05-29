@@ -75,7 +75,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt, DriverChangeRideRequest {
+public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt, 
+DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	
 	
@@ -111,6 +112,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	//Favorite bar
 	LinearLayout favoriteRl;
 	ListView favoriteList;
+	ProgressBar favoriteProgress;
+	TextView noFavoriteLocationsText, favTitleText;
 	FavoriteListAdapter favoriteListAdapter;
 	
 	
@@ -304,6 +307,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	static DriverChangeRideRequest driverGetRequestPush;
 	
+	static DriverStartRideInterrupt driverStartRideInterrupt;
+	
+	static CustomerEndRideInterrupt customerEndRideInterrupt;
+	
 	static Activity activity;
 	
 	@Override
@@ -317,6 +324,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		CRequestRideService.requestRideInterrupt = HomeActivity.this;
 		
 		HomeActivity.driverGetRequestPush = HomeActivity.this;
+		HomeActivity.driverStartRideInterrupt = HomeActivity.this;
+		HomeActivity.customerEndRideInterrupt = HomeActivity.this;
 		
 		activity = this;
 		
@@ -363,6 +372,12 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		favoriteList = (ListView) findViewById(R.id.favoriteList);
 		favoriteListAdapter = new FavoriteListAdapter();
 		favoriteList.setAdapter(favoriteListAdapter);
+		favoriteProgress = (ProgressBar) findViewById(R.id.favoriteProgress);
+		favoriteProgress.setVisibility(View.GONE);
+		noFavoriteLocationsText = (TextView) findViewById(R.id.noFavoriteLocationsText);
+		noFavoriteLocationsText.setVisibility(View.GONE);
+		favTitleText = (TextView) findViewById(R.id.favTitleText);
+		
 		
 		
 		
@@ -442,6 +457,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		driverName = (TextView) findViewById(R.id.driverName);
 		driverTime = (TextView) findViewById(R.id.driverTime);
 		callDriverBtn = (Button) findViewById(R.id.callDriverBtn);
+		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress);
 		
 		
 		
@@ -817,7 +833,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			@Override
 			public void onClick(View v) {
-				cancelCustomerRequestAsync(HomeActivity.this, 0);
+				cancelCustomerRequestAsync(HomeActivity.this, 0, 0);
 			}
 		});
 		
@@ -855,7 +871,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			@Override
 			public void onClick(View v) {
-				cancelCustomerRequestAsync(HomeActivity.this, 1);
+				cancelCustomerRequestAsync(HomeActivity.this, 1, 0);
 			}
 		});
 		
@@ -1349,22 +1365,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			
 			
-			
-			Data.favoriteLocations.add(new FavoriteLocation("1", "1", new LatLng(Data.chandigarhLatLng.latitude+0.2,
-					Data.chandigarhLatLng.longitude)));
-
-			Data.favoriteLocations.add(new FavoriteLocation("2", "2", new LatLng(Data.chandigarhLatLng.latitude-0.2,
-					Data.chandigarhLatLng.longitude)));
-			
-			Data.favoriteLocations.add(new FavoriteLocation("3", "3", new LatLng(Data.chandigarhLatLng.latitude,
-					Data.chandigarhLatLng.longitude+0.2)));
-			
-			Data.favoriteLocations.add(new FavoriteLocation("4", "4", new LatLng(Data.chandigarhLatLng.latitude,
-					Data.chandigarhLatLng.longitude-0.2)));
-			
-			favoriteListAdapter.notifyDataSetChanged();
-			
-			
 			new MapStateListener(map, mapFragment, this) {
 				  @Override
 				  public void onMapTouched() {
@@ -1452,6 +1452,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		setUserData();
 		
+		getAllFavoriteAsync(HomeActivity.this);
+		
 	}
 	
 	
@@ -1538,6 +1540,11 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	class LoadBlurImage extends AsyncTask<Bitmap, Integer, String>{
 
 		Bitmap bitmap;
+		String imageLink;
+		
+		public LoadBlurImage(String imageLink){
+			this.imageLink = imageLink;
+		}
 		
 		@Override
 		protected String doInBackground(Bitmap... params) {
@@ -1559,10 +1566,13 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				reviewUserImgBlured.setImageBitmap(bitmap);
 			}
 			AQuery aq = new AQuery(reviewUserImage);
-			aq.id(reviewUserImage).progress(reviewUserImgProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsFullRound());
+			aq.id(reviewUserImage).progress(reviewUserImgProgress).image(imageLink, Data.imageOptionsFullRound());
 			
 		}
 	}
+	
+	
+	
 	
 	
 	public void switchDriverScreen(DriverScreenMode mode){
@@ -1597,7 +1607,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 
 			        @Override
 			        public void callback(String url, ImageView ivView, Bitmap bmBitmap, com.androidquery.callback.AjaxStatus status){
-			                new LoadBlurImage().execute(bmBitmap);
+			                new LoadBlurImage(Data.assignedCustomerInfo.image).execute(bmBitmap);
 			        }
 			        
 			});
@@ -1704,6 +1714,40 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			mapLayout.setVisibility(View.GONE);
 			endRideReviewRl.setVisibility(View.VISIBLE);
 			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
+			
+			DecimalFormat decimalFormat = new DecimalFormat("#.##");
+			double totalDistanceInKm = Data.totalDistance;
+			
+			
+			String kmsStr = "";
+			if(totalDistanceInKm > 1){
+				kmsStr = "kms";
+			}
+			else{
+				kmsStr = "km";
+			}
+			
+			reviewDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
+			reviewFareValue.setText("Rs. "+decimalFormat.format(Data.totalFare));
+			
+			reviewRatingText.setText("Driver Rating");
+			
+			reviewUserRating.setText("3.0");
+			reviewUserName.setText(Data.assignedDriverInfo.name);
+			
+			AQuery aquery = new AQuery(reviewUserImgBlured);
+			aquery.id(reviewUserImgBlured).image(Data.assignedDriverInfo.image, true, true, 0, 0, new BitmapAjaxCallback(){
+
+			        @Override
+			        public void callback(String url, ImageView ivView, Bitmap bmBitmap, com.androidquery.callback.AjaxStatus status){
+			                new LoadBlurImage(Data.assignedDriverInfo.image).execute(bmBitmap);
+			        }
+			        
+			});
+			
+			
+			
+			
 		}
 		else{
 			mapLayout.setVisibility(View.VISIBLE);
@@ -1838,8 +1882,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				
 				
 			case P_IN_RIDE:
-				
-				startTracking = true;
 				
 				
 				initialLayout.setVisibility(View.GONE);
@@ -2247,6 +2289,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	class ViewHolderFavorite {
 		TextView name;
+		Button favDeleteBtn;
 		LinearLayout relative;
 		int id;
 	}
@@ -2281,14 +2324,17 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			if (convertView == null) {
 				
 				holder = new ViewHolderFavorite();
-				convertView = mInflater.inflate(R.layout.search_list_item, null);
+				convertView = mInflater.inflate(R.layout.favorite_list_item, null);
 				
 				holder.name = (TextView) convertView.findViewById(R.id.name); 
+				holder.favDeleteBtn = (Button) convertView.findViewById(R.id.favDeleteBtn);
+				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);
+				holder.favDeleteBtn.setTag(holder);
 				
-				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
+				holder.relative.setLayoutParams(new ListView.LayoutParams(495, 127));
 				ASSL.DoMagic(holder.relative);
 				
 				
@@ -2300,7 +2346,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			holder.id = position;
 			
-			holder.name.setText(""+Data.favoriteLocations.get(position).name + "\n" + Data.favoriteLocations.get(position).address);
+			holder.name.setText(""+Data.favoriteLocations.get(position).name);
 			
 			holder.relative.setOnClickListener(new OnClickListener() {
 
@@ -2315,6 +2361,21 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 					drawerLayout.closeDrawer(favoriteRl);
 					
 					map.animateCamera(CameraUpdateFactory.newLatLngZoom(favoriteLocation.latLng, 12), 2000, null);
+					
+				}
+			});
+			
+			
+			
+			holder.favDeleteBtn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					holder = (ViewHolderFavorite) v.getTag();
+					
+					FavoriteLocation favoriteLocation = Data.favoriteLocations.get(holder.id);
+					
+					deleteFavoriteAsync(HomeActivity.this, favoriteLocation.sNo, holder.id);
 					
 				}
 			});
@@ -2863,6 +2924,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			AQuery aq1 = new AQuery(driverCarImage);
 			aq1.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
 			
+			cancelCustomerRequestAsync(HomeActivity.this, 1, 1);
+			
 		}
 		
 	}
@@ -2873,7 +2936,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	/**
 	 * ASync for cancelCustomerRequestAsync from server
 	 */
-	public void cancelCustomerRequestAsync(final Activity activity, final int switchCase) {
+	public void cancelCustomerRequestAsync(final Activity activity, final int switchCase, int flag) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -2884,6 +2947,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			params.put("access_token", Data.userData.accessToken);
 			params.put("driver_id", Data.cDriverId);
 			params.put("engage_id", Data.cEngagementId);
+			params.put("flag", ""+flag);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("driver_id", "=" + Data.cDriverId);
@@ -3078,7 +3142,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	public void driverAcceptRideAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, "Fetching user data...");
 			
 			RequestParams params = new RequestParams();
 		
@@ -3134,8 +3198,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 											userData.getString("user_image"), userData.getString("phone_no"));
 									
 									
-									driverScreenMode = DriverScreenMode.D_START_RIDE;
-									switchDriverScreen(driverScreenMode);
+									
 									
 									Data.driverRideRequests.clear();
 									
@@ -3147,13 +3210,12 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
-							DialogPopup.dismissLoadingDialog();
+							
 						}
 	
 						@Override
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 					});
@@ -3587,7 +3649,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setText("Save to favorite");
 			final EditText favoriteNameEt = (EditText) dialog.findViewById(R.id.favoriteNameEt);
 			
 			favoriteNameEt.setText(locationName);
@@ -3675,6 +3737,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 									
 									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
 									
+									getAllFavoriteAsync(activity);
+									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -3698,12 +3762,199 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 
 	}
 	
+	
+	void updateFavoriteList(){
+		
+		favoriteListAdapter.notifyDataSetChanged();
+		
+		if(Data.favoriteLocations.size() == 0){
+			noFavoriteLocationsText.setVisibility(View.VISIBLE);
+		}
+		else{
+			noFavoriteLocationsText.setVisibility(View.GONE);
+		}
+		
+	}
+	
+	/**
+	 * ASync for get all favorite locations from server
+	 */
+	public void getAllFavoriteAsync(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			favoriteProgress.setVisibility(View.VISIBLE);
+			
+			
+			RequestParams params = new RequestParams();
+			
+			params.put("access_token", Data.userData.accessToken);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/get_fav_locations", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									}
+									else{
+									}
+								}
+								else{
+									
+									JSONArray favouriteData = jObj.getJSONArray("favourite_data");
+									
+									Data.favoriteLocations.clear();
+									
+									if(favouriteData.length() > 0){
+										
+										for(int i=0; i<favouriteData.length(); i++){
+											JSONObject favData = favouriteData.getJSONObject(i);
+											
+											Data.favoriteLocations.add(new FavoriteLocation(favData.getInt("s_no"), favData.getString("fav_name"), 
+													new LatLng(favData.getDouble("fav_latitude"), favData.getDouble("fav_longitude"))));
+											
+										}
+										
+									}
+									
+									updateFavoriteList();
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+							}
+	
+							favoriteProgress.setVisibility(View.GONE);
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							favoriteProgress.setVisibility(View.GONE);
+						}
+					});
+		}
+		else {
+		}
+
+	}
+	
+	
+	
+	
+	/**
+	 * ASync for deleteFavoriteAsync from server
+	 */
+	public void deleteFavoriteAsync(final Activity activity, int sNo, final int index) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("s_no", ""+sNo);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("s_no", "="+sNo);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/delete_fav_locations", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									
+//									{"log":"Removed from favourite successfully"}	//result
+									
+									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
+									
+									Data.favoriteLocations.remove(index);
+									updateFavoriteList();
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
+	
 
 	@Override
-	public void sendIntent() {
-		Log.e("in ","here");
-		passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-		switchPassengerScreen(passengerScreenMode);
+	public void startRideForCustomer() {
+		Log.e("in ","herestartRideForCustomer");
+		
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Log.i("in run herestartRideForCustomer class","=");
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Log.i("in in herestartRideForCustomer  run class","=");
+						passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+						switchPassengerScreen(passengerScreenMode);
+					}
+				});
+			}
+		}).start();
+		
+		
 		
 	}
 
@@ -3721,6 +3972,56 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	}
 
 
+	
+	@Override
+	public void apiStart(final int driverPos) {
+		
+		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					Log.i("in run class","=");
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Log.i("apiStart in in run class","=");
+							DialogPopup.showLoadingDialog(HomeActivity.this, "Contacting Driver "+ driverPos +" ...");
+						}
+					});
+				}
+			}).start();
+		}
+		
+		
+	}
+
+
+
+
+	@Override
+	public void apiEnd() {
+		
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Log.i("in run class","=");
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Log.i("apiStart in in run class","=");
+						DialogPopup.dismissLoadingDialog();
+					}
+				});
+			}
+		}).start();
+	}
+
+	
 
 	// 0 = not found   1 = accept
 	@Override
@@ -3733,10 +4034,22 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		if(switchCase == 0){
 			
-			new DialogPopup().alertPopup(this, "", "No Driver available right now.");
-			requestRideBtn.setText("Request Ride");
-			passengerScreenMode = PassengerScreenMode.P_INITIAL;
-			switchPassengerScreen(passengerScreenMode);
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							new DialogPopup().alertPopup(HomeActivity.this, "", "No Driver available right now.");
+							requestRideBtn.setText("Request Ride");
+							passengerScreenMode = PassengerScreenMode.P_INITIAL;
+							switchPassengerScreen(passengerScreenMode);
+						}
+					});
+				}
+			}).start();
 			
 		}
 		else if(switchCase == 1){
@@ -3763,44 +4076,46 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 
 	public void showAllRideRequests(){
 		
-		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+		if(userMode == UserMode.DRIVER){
 		
-		map.clear();
+			driverScreenMode = DriverScreenMode.D_INITIAL;
+			switchDriverScreen(driverScreenMode);
+			
+			map.clear();
 		
-		if(Data.driverRideRequests.size() > 0){
-			driverNewRideRequestRl.setVisibility(View.VISIBLE);
-			
-			LatLng last = map.getCameraPosition().target;
-			
-			for(int i=0; i<Data.driverRideRequests.size(); i++){
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.title(Data.driverRideRequests.get(i).engagementId);
-				markerOptions.snippet("");
-				markerOptions.position(Data.driverRideRequests.get(i).latLng);
-				markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
+			if(Data.driverRideRequests.size() > 0){
+				driverNewRideRequestRl.setVisibility(View.VISIBLE);
 				
-				map.addMarker(markerOptions);
+				LatLng last = map.getCameraPosition().target;
 				
-				if(i == Data.driverRideRequests.size()-1){
-					last = Data.driverRideRequests.get(i).latLng;
-					Data.dEngagementId = Data.driverRideRequests.get(i).engagementId;
-					Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
+				for(int i=0; i<Data.driverRideRequests.size(); i++){
+					MarkerOptions markerOptions = new MarkerOptions();
+					markerOptions.title(Data.driverRideRequests.get(i).engagementId);
+					markerOptions.snippet("");
+					markerOptions.position(Data.driverRideRequests.get(i).latLng);
+					markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
+					
+					map.addMarker(markerOptions);
+					
+					if(i == Data.driverRideRequests.size()-1){
+						last = Data.driverRideRequests.get(i).latLng;
+						Data.dEngagementId = Data.driverRideRequests.get(i).engagementId;
+						Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
+					}
 				}
+				
+				
+				
+				driverNewRideRequestText.setText("You have "+Data.driverRideRequests.size()+" ride request");
+				
+				map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
+				
 			}
-			
-			
-			
-			driverNewRideRequestText.setText("You have "+Data.driverRideRequests.size()+" ride request");
-			
-			map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
-			
-		}
-		else{
-			driverNewRideRequestRl.setVisibility(View.GONE);
-		}
+			else{
+				driverNewRideRequestRl.setVisibility(View.GONE);
+			}
 		
 		}
-		
 		
 		
 	}
@@ -3830,34 +4145,147 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		}
 		else{
 			
-			int index = -1;
-			for(int i=0; i<Data.driverRideRequests.size(); i++){
-				if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(dEngagementId)){
-					index = i;
-					break;
+			if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+				int index = -1;
+				for(int i=0; i<Data.driverRideRequests.size(); i++){
+					if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(dEngagementId)){
+						index = i;
+						break;
+					}
 				}
-			}
-			
-			if(index != -1){
-				Data.driverRideRequests.remove(index);
-			}
-			
-			new Thread(new Runnable() {
 				
-				@Override
-				public void run() {
-					runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							showAllRideRequests();
-						}
-					});
+				if(index != -1){
+					Data.driverRideRequests.remove(index);
 				}
-			}).start();
+				
+				
+				
+				
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								showAllRideRequests();
+							}
+						});
+					}
+				}).start();
+			}
+			else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
+				
+				int index = -1;
+				for(int i=0; i<Data.driverRideRequests.size(); i++){
+					if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(dEngagementId)){
+						index = i;
+						break;
+					}
+				}
+				
+				if(index != -1){
+					Data.driverRideRequests.remove(index);
+				}
+				
+				
+				
+				
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								showAllRideRequests();
+								
+								new DialogPopup().alertPopup(HomeActivity.this, "", "The user has canceled the request");
+								
+							}
+						});
+					}
+				}).start();
+				
+			}
+			else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_START_RIDE){
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								
+								driverScreenMode = DriverScreenMode.D_INITIAL;
+								switchDriverScreen(driverScreenMode);
+								new DialogPopup().alertPopup(HomeActivity.this, "", "The user has canceled the request");
+								
+							}
+						});
+					}
+				}).start();
+			}
+			
+			
 		}
 		
 	}
+
+
+
+
+	@Override
+	public void driverStartRideInterrupt() {
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						driverScreenMode = DriverScreenMode.D_START_RIDE;
+						switchDriverScreen(driverScreenMode);
+						DialogPopup.dismissLoadingDialog();
+					}
+				});
+			}
+		}).start();
+		
+		
+	}
+
+
+
+
+	@Override
+	public void customerEndRideInterrupt() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+						switchPassengerScreen(passengerScreenMode);
+					}
+				});
+			}
+		}).start();
+		
+		
+	}
+
+
+
+
 
 
 	

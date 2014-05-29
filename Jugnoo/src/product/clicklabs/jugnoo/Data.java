@@ -85,6 +85,8 @@ public class Data {
 	public static boolean driversRefreshedFirstTime = false;
 	
 	
+	public static double totalDistance = 0, totalFare = 0;
+	
 	
 	public static LatLng mapTarget;
 
