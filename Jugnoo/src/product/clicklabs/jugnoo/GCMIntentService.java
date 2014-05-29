@@ -68,6 +68,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	    				 }
 	    				// flag 2 for driver request canceled 
 	    				 else if(2 == flag){
+	    					 // {"engagement_id": engagementid, "flag": 2}
 
 	    					 String engagementId = jObj.getString("engagement_id");
 	    					 
@@ -75,9 +76,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 	    					 
 	    					 if(HomeActivity.driverGetRequestPush != null){
 	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
-	    					 }
-	    					 else{
-	    						 notificationManager(context, "You have got a new ride request.");
 	    					 }
 	    					 
 	    				 }

@@ -82,6 +82,7 @@ public class Data {
 	
 	public static CustomerInfo assignedCustomerInfo;
 	
+	public static boolean driversRefreshedFirstTime = false;
 	
 	
 	

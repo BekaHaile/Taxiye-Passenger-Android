@@ -3,6 +3,8 @@ package product.clicklabs.jugnoo;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -154,13 +156,12 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	ImageView driverImage, driverCarImage;
 	TextView driverName, driverTime;
 	Button callDriverBtn;
+	TextView inRideRideInProgress;
 	
 	
 	
 	
-	//In Ride layout
-	RelativeLayout inRideLayout;
-	TextView rideInProgressText;
+	
 	
 	
 	
@@ -294,7 +295,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	static DriverScreenMode driverScreenMode;
 	
 	
+	GetDistanceTimeAddress getDistanceTimeAddress;
+	
 	BeforeCancelRequestAsync beforeCancelRequestAsync;
+	
 	
 	Marker pickupLocationMarker;
 	
@@ -442,10 +446,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		
 		
-		//In Ride layout
-		inRideLayout = (RelativeLayout) findViewById(R.id.inRideLayout);
-		rideInProgressText = (TextView) findViewById(R.id.rideInProgressText);
-		distance = (TextView) findViewById(R.id.distance);
 		
 		
 		
@@ -929,15 +929,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		
 		
-		//customer in ride layout
-		inRideLayout.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-			}
-		});
-		
 		
 		
 		
@@ -1309,18 +1300,38 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 					}
 					else{
 						
+						int index = -1;
+						
 						for(int i=0; i<Data.driverRideRequests.size(); i++){
 							if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(arg0.getTitle())){
-								Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
-								Data.dEngagementId = Data.driverRideRequests.get(i).engagementId;
+								index = i;
 								break;
 							}
 						}
 						
-						driverNewRideRequestRl.setVisibility(View.GONE);
+						if(index != -1){
+							Data.dCustomerId = Data.driverRideRequests.get(index).customerId;
+							Data.dEngagementId = Data.driverRideRequests.get(index).engagementId;
+							
+							map.clear();
+							
+							MarkerOptions markerOptions = new MarkerOptions();
+							markerOptions.title(Data.driverRideRequests.get(index).engagementId);
+							markerOptions.snippet("");
+							markerOptions.position(Data.driverRideRequests.get(index).latLng);
+							markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
+							
+							map.addMarker(markerOptions);
+							
+							driverNewRideRequestRl.setVisibility(View.GONE);
+							
+							driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
+							switchDriverScreen(driverScreenMode);
+						}
 						
-						driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
-						switchDriverScreen(driverScreenMode);
+						
+						
+						
 						
 						
 						return true;
@@ -1382,8 +1393,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				    // Map settled
 					  Log.e("onMapSettled","=onMapSettled");
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						  stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-						  new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
+						  getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+						  getDistanceTimeAddress.execute();
 					  }
 				  }
 				};
@@ -1470,8 +1481,13 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	
 	
+	
 	public void switchUserScreen(UserMode mode){
 		
+		if(getDistanceTimeAddress != null){
+			getDistanceTimeAddress.cancel(true);
+			getDistanceTimeAddress = null;
+		}
 		
 		stopService(new Intent(HomeActivity.this, CRequestRideService.class));
         stopService(new Intent(HomeActivity.this, CStartRideService.class));
@@ -1703,7 +1719,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				initialLayout.setVisibility(View.VISIBLE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
-				inRideLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -1726,7 +1741,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				initialLayout.setVisibility(View.VISIBLE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
-				inRideLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -1760,7 +1774,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
-				inRideLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.VISIBLE);
 				
@@ -1785,7 +1798,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
-				inRideLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -1806,9 +1818,13 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
-				inRideLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
+				
+				requestFinalLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+				driverTime.setVisibility(View.VISIBLE);
+				inRideRideInProgress.setVisibility(View.GONE);
+				
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -1828,10 +1844,13 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
-				requestFinalLayout.setVisibility(View.GONE);
-				inRideLayout.setVisibility(View.VISIBLE);
+				requestFinalLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
+				
+				requestFinalLayout.setBackgroundColor(getResources().getColor(R.color.white_dark1));
+				driverTime.setVisibility(View.GONE);
+				inRideRideInProgress.setVisibility(View.VISIBLE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -1849,7 +1868,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
-				inRideLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
 				
@@ -1868,7 +1886,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				initialLayout.setVisibility(View.VISIBLE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
-				inRideLayout.setVisibility(View.GONE);
 				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
@@ -1945,12 +1962,12 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub
-			
+			Log.e("locationListener onStatusChanged","= provider = "+provider + ", status = "+status+ ", extras = "+extras);
 		}
 		
 		@Override
 		public void onProviderEnabled(String provider) {
+			Log.e("locationListener onProviderEnabled","="+provider);
 			if(map != null){
 				map.setMyLocationEnabled(true);
 			}
@@ -1958,6 +1975,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		@Override
 		public void onProviderDisabled(String provider) {
+			Log.e("locationListener onProviderDisabled","="+provider);
 			if(map != null){
 				map.setMyLocationEnabled(false);
 			}
@@ -1965,8 +1983,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		
 		@Override
 		public void onLocationChanged(Location location) {
-			// TODO Auto-generated method stub
-			
+			Log.e("locationListener location changed","="+location);
 		}
 	};
 	
@@ -2012,6 +2029,15 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	    }
 
 		
+	    if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+	    	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+	    }
+	    else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+	    	locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, locationListener);
+	    }
+	    
+	    
+	    
 	    
 	}
 	
@@ -2021,6 +2047,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		this.mWakeLock.release();
 		
 		locationManager.removeGpsStatusListener(gpsStatusListener);
+		
+		locationManager.removeUpdates(locationListener);
 		
 		super.onPause();
 	}
@@ -2321,6 +2349,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	
 	
 	
+	
 	class GetDistanceTimeAddress extends AsyncTask<Void, Void, String>{
 	    String url;
 	    
@@ -2329,6 +2358,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	    LatLng destination;
 	    
 	    public GetDistanceTimeAddress(LatLng destination){
+	    	stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	    	this.distance = "";
 	    	this.duration = "";
 	    	this.destination = destination;
@@ -2357,6 +2387,49 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	    @Override
 	    protected String doInBackground(Void... params) {
 	    	try{
+	    		
+	    		Log.e("","");
+	    		
+	    		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+		    		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	    			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+	    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+destination.latitude));
+	    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+destination.longitude));
+	    			Log.e("nameValuePairs ","="+nameValuePairs);
+	    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+	    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
+	    			Log.e("result","="+result);
+	    			simpleJSONParser = null;
+	    			nameValuePairs = null;
+	    			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+	    				Log.e("timeout","=");
+	    			}
+	    			else{
+	    				Log.e("sucess","=");
+	    				try{
+	    					JSONObject jObj = new JSONObject(result);
+	    						
+	    					JSONArray data = jObj.getJSONArray("data");
+	    						
+	    					Data.driverInfos.clear();
+	    						
+	    					for(int i=0; i<data.length(); i++){
+	    							
+	    						JSONObject dataI = data.getJSONObject(i);
+	    							
+	    						String userId = dataI.getString("user_id");
+	    						double latitude = dataI.getDouble("latitude");
+	    						double longitude = dataI.getDouble("longitude");
+	    							
+	    						Data.driverInfos.add(new DriverInfo(userId, latitude, longitude));
+	    					}
+	    				}
+	    				catch(Exception e){
+	    					e.printStackTrace();
+	    				}
+	    			}
+	    		
+	    		}
 	    		
 	    		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
 	    			fullAddress = getAddress(destination.latitude, destination.longitude);
@@ -2433,19 +2506,42 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	 				centreInfoRl.setVisibility(View.INVISIBLE);
 	 			}
 	 			centreInfoProgress.setVisibility(View.GONE);
+	 			
+	 			
+	 			if(map != null){
+					map.clear();
+					for(int i=0; i<Data.driverInfos.size(); i++){
+						DriverInfo driverInfo = Data.driverInfos.get(i);
+						MarkerOptions markerOptions = new MarkerOptions();
+						markerOptions.title(""+driverInfo.userId);
+						markerOptions.snippet(""+driverInfo.userId);
+						markerOptions.position(driverInfo.latLng);
+						markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_android));
+						
+						map.addMarker(markerOptions);
+					}
+					
+				}
+	 			
+	 			
     		}
 	        
 	        
 	        nearestDriverProgress.setVisibility(View.GONE);
 	        assignedDriverProgress.setVisibility(View.GONE);
+	        
+	        nearestDriverText.setVisibility(View.VISIBLE);
+	        assignedDriverText.setVisibility(View.VISIBLE);
+	        
 			
+	        String distanceString = "";
 	        
 	        if(!"error".equalsIgnoreCase(result)){
-			        
-		        String distanceString = "";
+		        
+		        Log.i("passengerScreenMode","="+passengerScreenMode);
 		        
 		        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
-		 	        nearestDriverText.setVisibility(View.VISIBLE);
+		 	        
 		 	        
 		 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
 	       	 		distanceString = "Nearest driver is " + distance + " " + duration + " away.";
@@ -2464,7 +2560,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		 	       
 		        }
 		        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
-		        	assignedDriverText.setVisibility(View.VISIBLE);
+		        	
 		        	
 		        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
 	        	 		distanceString = "Your ride is " + distance + " and will arrive \n in approximately " + duration + ".";
@@ -2478,9 +2574,14 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 		        
 	        }
 	        else{
-		        nearestDriverText.setText("No drivers nearby.");
+	        	distanceString = "No drivers nearby.";
+	        	nearestDriverText.setText("No drivers nearby.");
 		        assignedDriverText.setText("No drivers nearby.");
 	        }
+	        
+	        Log.i("distanceString","="+distanceString);
+	        
+	        
 	        
 	        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
 	        	Data.mapTarget = destination;
@@ -2696,7 +2797,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 									passengerScreenMode = PassengerScreenMode.P_BEFORE_REQUEST_FINAL;
 									switchPassengerScreen(passengerScreenMode);
 									
-									new GetDistanceTimeAddress(Data.mapTarget).execute();
+									getDistanceTimeAddress = new GetDistanceTimeAddress(Data.mapTarget);
+									getDistanceTimeAddress.execute();
 									
 									
 								}
@@ -2827,9 +2929,11 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 											pickupLocationMarker.remove();
 										}
 										
-										new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
+										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+										getDistanceTimeAddress.execute();
 									}
 									else{
+										
 										passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
 										
@@ -2842,7 +2946,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 											pickupLocationMarker.remove();
 										}
 										
-										new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
+										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+										getDistanceTimeAddress.execute();
 									}
 									
 								}
@@ -3032,6 +3137,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 									driverScreenMode = DriverScreenMode.D_START_RIDE;
 									switchDriverScreen(driverScreenMode);
 									
+									Data.driverRideRequests.clear();
 									
 									
 									
@@ -3606,27 +3712,10 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 	@Override
 	public void refreshDriverLocations(int count) {
 		
-		if(map != null){
-			
-			map.clear();
-			
-			for(int i=0; i<Data.driverInfos.size(); i++){
-				DriverInfo driverInfo = Data.driverInfos.get(i);
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.title(""+driverInfo.userId);
-				markerOptions.snippet(""+driverInfo.userId);
-				markerOptions.position(driverInfo.latLng);
-				markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_android));
-				
-				map.addMarker(markerOptions);
-			}
-			
+		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+			getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+			getDistanceTimeAddress.execute();
 		}
-		
-		if(count == 0){
-			new GetDistanceTimeAddress(map.getCameraPosition().target).execute();
-		}
-		
 		
 		
 	}
@@ -3674,6 +3763,8 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 
 	public void showAllRideRequests(){
 		
+		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+		
 		map.clear();
 		
 		if(Data.driverRideRequests.size() > 0){
@@ -3698,6 +3789,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			}
 			
 			
+			
 			driverNewRideRequestText.setText("You have "+Data.driverRideRequests.size()+" ride request");
 			
 			map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
@@ -3707,7 +3799,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			driverNewRideRequestRl.setVisibility(View.GONE);
 		}
 		
-		
+		}
 		
 		
 		
@@ -3740,7 +3832,7 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 			
 			int index = -1;
 			for(int i=0; i<Data.driverRideRequests.size(); i++){
-				if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(Data.dEngagementId)){
+				if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(dEngagementId)){
 					index = i;
 					break;
 				}
@@ -3750,7 +3842,6 @@ public class HomeActivity extends FragmentActivity implements DetectRideStart, R
 				Data.driverRideRequests.remove(index);
 			}
 			
-			Data.driverRideRequests.add(new DriverRideRequest(dEngagementId, dCustomerId, rideLatLng));
 			new Thread(new Runnable() {
 				
 				@Override

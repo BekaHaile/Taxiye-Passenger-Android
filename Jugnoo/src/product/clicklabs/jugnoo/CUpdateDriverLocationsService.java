@@ -1,12 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Service;
@@ -18,7 +11,7 @@ import android.util.Log;
 
 public class CUpdateDriverLocationsService extends Service {
 	
-	int count = 0; 
+	static int count = 0; 
 	
 	GetDriverLocationsFromServer getDriverLocationsFromServer;
 	
@@ -26,7 +19,6 @@ public class CUpdateDriverLocationsService extends Service {
 	
 	public CUpdateDriverLocationsService() {
 		Log.e("CUpdateDriverLocationsService"," instance created");
-		count = 0; 
 	}
 
 	@Override
@@ -118,88 +110,10 @@ public class CUpdateDriverLocationsService extends Service {
 						e.printStackTrace();
 					}
     			}
-				
-	    				
-		    			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		    			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+Data.mapTarget.latitude));
-		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+Data.mapTarget.longitude));
-		    			
-		    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
-		    			
-		    			
-		    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-		    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
-		    			
-		    			Log.e("result","="+result);
-		    			
-		    			simpleJSONParser = null;
-		    			nameValuePairs = null;
-		    			
-		    			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
-		    				Log.e("timeout","=");
-		    				
-		    				
-		    			}
-		    			else{
-		    				Log.e("sucess","=");
-
-//		    				{"error": "some parameter missing","flag":0}
-//		    				{"error": "Invalid access token","flag":1}
-		    				
-		    				try{
-		    					JSONObject jObj = new JSONObject(result);
-		    					
-		    					if(!jObj.isNull("error")){
-		    						int flag = jObj.getInt("flag");
-		    						
-		    						if(1 == flag){
-		    							return "stop";
-		    						}
-		    						
-		    					}
-		    					else{
-		    						
-//		    						{
-//		    						    "data": [
-//		    						        {
-//		    						            "user_id": 9,
-//		    						            "latitude": 30.73625,
-//		    						            "longitude": 76.778735
-//		    						        }
-//		    						    ]
-//		    						}
-		    						
-		    						JSONArray data = jObj.getJSONArray("data");
-		    						
-		    						Data.driverInfos.clear();
-		    						
-		    						for(int i=0; i<data.length(); i++){
-		    							
-		    							JSONObject dataI = data.getJSONObject(i);
-		    							
-		    							String userId = dataI.getString("user_id");
-		    							double latitude = dataI.getDouble("latitude");
-		    							double longitude = dataI.getDouble("longitude");
-		    							
-		    							Data.driverInfos.add(new DriverInfo(userId, latitude, longitude));
-		    						}
-		    						
-		    						return "refresh";
-		    						
-		    					}
-		    					
-		    				}
-		    				catch(Exception e){
-		    					e.printStackTrace();
-		    				}
-		    			}
-		    			result = null;
-	    			
     		} catch(Exception e){
     			e.printStackTrace();
     		}
-    		return "error";
+    		return "refresh";
     	}
     	
     	
@@ -212,9 +126,6 @@ public class CUpdateDriverLocationsService extends Service {
 			
 			if("refresh".equalsIgnoreCase(result)  && CUpdateDriverLocationsService.refreshDriverLocations != null){
 				CUpdateDriverLocationsService.refreshDriverLocations.refreshDriverLocations(count);
-			}
-			else if("stop".equalsIgnoreCase(result)){
-				stopSelf();
 			}
 				count++;
 	        	

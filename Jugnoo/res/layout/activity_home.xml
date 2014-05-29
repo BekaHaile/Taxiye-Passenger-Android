@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -209,7 +209,21 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
+                    
+                    <TextView 
+            android:id="@+id/inRideRideInProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ride in progress..."
+            android:textSize="38px"
+            android:textColor="@color/bg_grey_opaque"
+            android:singleLine="true"
+            android:layout_marginTop="300px"
+            android:layout_centerHorizontal="true"
+            
+            />
+                    
 
                     <RelativeLayout
                         android:id="@+id/finalDriverInfoRl"
@@ -320,53 +334,6 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/inRideLayout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:splitMotionEvents="false"
-                    android:visibility="gone" >
-
-                    <RelativeLayout
-                        android:id="@+id/inRideInfoRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/white_translucent" >
-
-                        <TextView
-                            android:id="@+id/rideInProgressText"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_centerHorizontal="true"
-                            android:gravity="center"
-                            android:text="Ride In Progress"
-                            android:textColor="@color/black"
-                            android:textSize="38px" />
-
-                        
-
-                        <TextView
-                            android:id="@+id/distance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Dist" />
-
-                        <TextView
-                            android:id="@+id/fare"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/distance"
-                            android:text="Fare" />
-
-                        <TextView
-                            android:id="@+id/rate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/fare"
-                            android:text="Rate" />
-                    </RelativeLayout>
-                </RelativeLayout>
-
-                <RelativeLayout
                     android:id="@+id/centreLocationRl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -467,7 +434,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
@@ -563,7 +530,7 @@
                     android:id="@+id/driverEngagedLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <RelativeLayout
                         android:id="@+id/driverPassengerInfoRl"

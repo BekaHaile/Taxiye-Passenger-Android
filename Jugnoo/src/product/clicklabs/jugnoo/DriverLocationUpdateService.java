@@ -161,7 +161,7 @@ public class DriverLocationUpdateService extends Service {
 	    		if(locationFetcher != null){
 	    			
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 0){
+	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
 		    			
 	    				DriverLocationUpdateService.this.lastLocation = currentLatLng;
 	    				

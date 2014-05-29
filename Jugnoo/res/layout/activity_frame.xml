@@ -120,18 +120,7 @@
                 
                 />
             
-             <TextView 
-            android:id="@+id/driverPassengerRatingValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4.3 Rating"
-            android:textSize="38px"
-            android:textColor="@color/bg_grey_opaque"
-            android:singleLine="true"
-            android:layout_toRightOf="@+id/driverPassengerRatingStar"
-            android:layout_marginLeft="20px"
-            
-            />
+             
             
             
         </RelativeLayout>
