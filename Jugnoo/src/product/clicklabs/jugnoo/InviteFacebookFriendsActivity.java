@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
+import com.facebook.Session;
+import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.Builder;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 
 public class InviteFacebookFriendsActivity extends Activity{
 	
@@ -56,27 +64,6 @@ public class InviteFacebookFriendsActivity extends Activity{
 		sendInviteBtn = (Button) findViewById(R.id.sendInviteBtn);
 		
 		
-		Data.friendInfos.add(new FriendInfo("Ram1", "http://graph.facebook.com/100005838482296/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra2", "http://graph.facebook.com/100005838482297/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra3", "http://graph.facebook.com/100005838482298/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra4", "http://graph.facebook.com/100005838482299/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra5", "http://graph.facebook.com/100005838482206/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra6", "http://graph.facebook.com/100005838482207/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra7", "http://graph.facebook.com/100005838482208/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra8", "http://graph.facebook.com/100005838482216/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra9", "http://graph.facebook.com/100005838482227/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("Ra0", "http://graph.facebook.com/100005838482238/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("sam", "http://graph.facebook.com/100005838482249/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("dam", "http://graph.facebook.com/100005838482256/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("fam", "http://graph.facebook.com/100005838482267/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("gam", "http://graph.facebook.com/100005838482278/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("ham", "http://graph.facebook.com/100005838482116/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("jam", "http://graph.facebook.com/100005838482227/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("kam", "http://graph.facebook.com/100005838482338/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("lam", "http://graph.facebook.com/100005838482449/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("qam", "http://graph.facebook.com/100005838482556/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("wam", "http://graph.facebook.com/100005838482667/picture?width=160&height=160"));
-		Data.friendInfos.add(new FriendInfo("eam", "http://graph.facebook.com/100005838482778/picture?width=160&height=160"));
 		
 		Data.friendInfosDuplicate.addAll(Data.friendInfos);
 		
@@ -109,6 +96,30 @@ public class InviteFacebookFriendsActivity extends Activity{
 				facebookFriendsGridAdapter.search(s.toString());
 			}
 		});
+		
+		
+		sendInviteBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				String userIds = "";
+				
+				for(int i = 0; i<Data.friendInfosDuplicate.size(); i++){
+					if(Data.friendInfosDuplicate.get(i).tick){
+						userIds = userIds + Data.friendInfosDuplicate.get(i).fbId + ",";
+					}
+				}
+				
+				if(!"".equalsIgnoreCase(userIds)){
+					userIds = userIds.substring(0, userIds.length()-1);
+				}
+				
+				inviteFbFriend(userIds);
+			}
+		});
+		
+		
 		
 		
 	}
@@ -162,10 +173,10 @@ public class InviteFacebookFriendsActivity extends Activity{
 			
 			FriendInfo friendInfo = Data.friendInfos.get(position);
 			
-			holder.friendName.setText(friendInfo.name);
+			holder.friendName.setText(friendInfo.fbName);
 			
 			AQuery aq = new AQuery(holder.friendImage);  //http://graph.facebook.com/100005838482296/picture?width=160&height=160
-			aq.id(holder.friendImage).progress(holder.progress).image(friendInfo.image, Data.imageOptionsFullRound());
+			aq.id(holder.friendImage).progress(holder.progress).image(friendInfo.fbImage, Data.imageOptionsFullRound());
 			
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +191,24 @@ public class InviteFacebookFriendsActivity extends Activity{
 					else{
 						Data.friendInfos.get(holder.idPos).tick = true;
 					}
+					
+					for(int i=0; i<Data.friendInfosDuplicate.size(); i++){
+						if(Data.friendInfosDuplicate.get(i).fbId.equalsIgnoreCase(Data.friendInfos.get(holder.idPos).fbId)){
+							Data.friendInfosDuplicate.get(i).tick = Data.friendInfos.get(holder.idPos).tick;
+						}
+					}
+					
+					
+//					new Thread(new Runnable() {
+//						
+//						@Override
+//						public void run() {
+//							
+//							
+//							
+//						}
+//					}).start();
+					
 					
 					notifyDataSetChanged();
 				}
@@ -211,7 +240,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 			}
 			else{
 				for(FriendInfo friendInfo : Data.friendInfosDuplicate){
-					if(friendInfo.name.toLowerCase().contains(text)){
+					if(friendInfo.fbName.toLowerCase().contains(text)){
 						Data.friendInfos.add(friendInfo);
 					}
 				}
@@ -232,6 +261,53 @@ public class InviteFacebookFriendsActivity extends Activity{
 	}
 	
 
+	
+	
+	public void inviteFbFriend(String userId){
+		
+		Bundle parameters = new Bundle();
+		parameters.putString("message", "Jugnoo App request");
+		parameters.putString("to", ""+userId);
+		parameters.putString("message", "Download app now to get started. Available on Google Play Store and App Store");
+		parameters.putString("data", "Get from one place to another with ease.");
+		
+
+		WebDialog.Builder builder = new Builder(InviteFacebookFriendsActivity.this, Session.getActiveSession(),
+		                                "apprequests", parameters);
+
+		builder.setOnCompleteListener(new OnCompleteListener() {
+
+		    @Override
+		    public void onComplete(Bundle values, FacebookException error) {
+		    	Log.e("values","="+values);
+		    	Log.e("error","="+error);
+		        if (error != null){
+		            if (error instanceof FacebookOperationCanceledException){
+		                Toast.makeText(InviteFacebookFriendsActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();
+		            }
+		            else{
+		                Toast.makeText(InviteFacebookFriendsActivity.this,"Network Error",Toast.LENGTH_SHORT).show();
+		            }
+		        }
+		        else{
+
+		            final String requestId = values.getString("request");
+		            if (requestId != null) {
+		            	new DialogPopup().alertPopup(InviteFacebookFriendsActivity.this, "", "Friends invited.");
+		            } 
+		            else {
+		                Toast.makeText(InviteFacebookFriendsActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();
+		            }
+		        }                       
+		    }
+		});
+
+		WebDialog webDialog = builder.build();
+		webDialog.show();
+	        
+	        
+		}
+	
 	
 	@Override
 	public void onBackPressed() {

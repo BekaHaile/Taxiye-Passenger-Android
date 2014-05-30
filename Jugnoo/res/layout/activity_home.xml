@@ -238,7 +238,8 @@
                             android:layout_width="225px"
                             android:layout_height="225px"
                             android:layout_marginLeft="60px"
-                            android:layout_marginTop="22px" >
+                            android:layout_marginTop="22px" 
+                                android:tag="mwar">
 
                             <ImageView
                                 android:id="@+id/driverImageBg"
@@ -281,7 +282,8 @@
                             android:layout_height="225px"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="60px"
-                            android:layout_marginTop="22px" >
+                            android:layout_marginTop="22px"
+                                android:tag="mwar" >
 
                             <ImageView
                                 android:id="@+id/driverCarBg"
@@ -594,7 +596,8 @@
                             android:layout_height="178px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="40px" >
+                            android:layout_marginRight="40px" 
+                                android:tag="mwar">
 
                             <ImageView
                                 android:id="@+id/driverPassengerImageBg"

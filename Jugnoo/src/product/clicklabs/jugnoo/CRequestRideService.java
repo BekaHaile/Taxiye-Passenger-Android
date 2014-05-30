@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class CRequestRideService extends Service {
 	
 	static int count = 0; 
+	static boolean stop = false;
 	
 	RequestRideAsync requestRideAsync;
 	
@@ -44,7 +45,7 @@ public class CRequestRideService extends Service {
 	
     @Override
     public void onStart(Intent intent, int startId) {
-       
+    	stop = false;
         try{
         	if(requestRideAsync != null){
         		requestRideAsync.cancel(true);
@@ -92,8 +93,15 @@ public class CRequestRideService extends Service {
     @Override
     public void onDestroy() {
         if(requestRideAsync != null){
+        	
+        	stop = true;
+        	
         	requestRideAsync.cancel(true);
     		requestRideAsync = null;
+    		
+    		if(requestRideInterrupt != null){
+				requestRideInterrupt.apiEnd();
+			}
     	}
         System.gc();
     }
@@ -109,81 +117,86 @@ public class CRequestRideService extends Service {
 			this.pickupLatLng = pickupLatLng;
 		}
 		
+		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			
-			
+			Log.e("RequestRideAsync","working");
 		}
+		
 		
 		@Override
 		protected String doInBackground(String... params) {
-			Log.i("driverPos","="+driverPos);
+			Log.i("===========================driverPos","="+driverPos);
 			if(driverPos > 0){
 				try{
-					Thread.sleep(10000);
+					Thread.sleep(60000);
 				} catch(Exception e){
-					e.printStackTrace();
 				}
 			}
 			
-			if(requestRideInterrupt != null){
-				requestRideInterrupt.apiStart(driverPos+1);
+			if(!stop){
+			
+				if(requestRideInterrupt != null){
+					requestRideInterrupt.apiStart(driverPos+1);
+				}
+				
+				
+				Data.latitude = pickupLatLng.latitude;
+				Data.longitude = pickupLatLng.longitude;
+	
+			
+				String currentDriverId = "";
+				String previousDriverId = "";
+				if(driverPos == 0){
+					previousDriverId = "";
+					currentDriverId = ""+Data.driverInfos.get(driverPos).userId;
+				}
+				else if(driverPos > 0 && driverPos < Data.driverInfos.size()){
+					previousDriverId = ""+Data.driverInfos.get(driverPos-1).userId;
+					currentDriverId = ""+Data.driverInfos.get(driverPos).userId;
+				}
+				else if(driverPos == Data.driverInfos.size()){
+					previousDriverId = ""+Data.driverInfos.get(driverPos-1).userId;
+					currentDriverId = "";
+				}
+				
+				int flag = 0;
+				if(driverPos == Data.driverInfos.size()){
+					flag = 1;
+				}
+				
+				
+				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+				nameValuePairs.add(new BasicNameValuePair("user_id", currentDriverId));
+				nameValuePairs.add(new BasicNameValuePair("pre_user_id", previousDriverId));
+				nameValuePairs.add(new BasicNameValuePair("pre_engage_id", Data.cEngagementId));
+				nameValuePairs.add(new BasicNameValuePair("flag", ""+flag));
+				nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+Data.latitude));
+				nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + Data.longitude));
+				
+				Log.i("access_token", "=" + Data.userData.accessToken);
+				Log.i("user_id", "=" + currentDriverId);
+				Log.i("pre_user_id", "=" + previousDriverId);
+				Log.i("pre_engage_id", "=" + Data.cEngagementId);
+				Log.i("flag", "=" + flag);
+				Log.i("pickup_latitude", "=" + Data.latitude);
+				Log.i("pickup_longitude", "=" + Data.longitude);
+				
+				
+				SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+				String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/send_req_for_ride", nameValuePairs);
+				
+				Log.i("result","="+result);
+				
+				simpleJSONParser = null;
+				nameValuePairs = null;
+				return result;
 			}
-			
-			
-			Data.latitude = pickupLatLng.latitude;
-			Data.longitude = pickupLatLng.longitude;
-
-		
-			String currentDriverId = "";
-			String previousDriverId = "";
-			if(driverPos == 0){
-				previousDriverId = "";
-				currentDriverId = ""+Data.driverInfos.get(driverPos).userId;
+			else{
+				return "";
 			}
-			else if(driverPos > 0 && driverPos < Data.driverInfos.size()){
-				previousDriverId = ""+Data.driverInfos.get(driverPos-1).userId;
-				currentDriverId = ""+Data.driverInfos.get(driverPos).userId;
-			}
-			else if(driverPos == Data.driverInfos.size()){
-				previousDriverId = ""+Data.driverInfos.get(driverPos-1).userId;
-				currentDriverId = "";
-			}
-			
-			int flag = 0;
-			if(driverPos == Data.driverInfos.size()){
-				flag = 1;
-			}
-			
-			
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-			nameValuePairs.add(new BasicNameValuePair("user_id", currentDriverId));
-			nameValuePairs.add(new BasicNameValuePair("pre_user_id", previousDriverId));
-			nameValuePairs.add(new BasicNameValuePair("pre_engage_id", Data.cEngagementId));
-			nameValuePairs.add(new BasicNameValuePair("flag", ""+flag));
-			nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+Data.latitude));
-			nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + Data.longitude));
-			
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("user_id", "=" + currentDriverId);
-			Log.i("pre_user_id", "=" + previousDriverId);
-			Log.i("pre_engage_id", "=" + Data.cEngagementId);
-			Log.i("flag", "=" + flag);
-			Log.i("pickup_latitude", "=" + Data.latitude);
-			Log.i("pickup_longitude", "=" + Data.longitude);
-			
-			
-			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/send_req_for_ride", nameValuePairs);
-			
-			Log.i("result","="+result);
-			
-			simpleJSONParser = null;
-			nameValuePairs = null;
-			
-			return result;
 			
 		}
 		
@@ -245,7 +258,7 @@ public class CRequestRideService extends Service {
 				stopSelf();
 			}
 			
-			
+			Log.e("RequestRideAsync","stopped");
 		}
 		
 	}

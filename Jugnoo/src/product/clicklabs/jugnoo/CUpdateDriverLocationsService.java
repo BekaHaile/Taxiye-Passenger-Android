@@ -95,6 +95,7 @@ public class CUpdateDriverLocationsService extends Service {
     	@Override
     	protected void onPreExecute() {
     		super.onPreExecute();
+    		 Log.e("GetDriverLocationsFromServer","working");
     	}
     	
     	
@@ -107,7 +108,6 @@ public class CUpdateDriverLocationsService extends Service {
     				try {
 						Thread.sleep(60000);
 					} catch (Exception e) {
-						e.printStackTrace();
 					}
     			}
     		} catch(Exception e){
@@ -133,7 +133,7 @@ public class CUpdateDriverLocationsService extends Service {
 	        	
 	        	getDriverLocationsFromServer = new GetDriverLocationsFromServer();
 	        	getDriverLocationsFromServer.execute();
-    		
+	        	Log.e("GetDriverLocationsFromServer","stopped");
     	}
     	
     	

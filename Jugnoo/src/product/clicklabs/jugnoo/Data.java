@@ -25,7 +25,27 @@ import com.google.android.gms.maps.model.LatLng;
 public class Data {
 	
 	public static final String SHARED_PREF_NAME = "myPref";
-	public static final String SP_ACCESS_TOKEN_KEY = "access_token";
+	public static final String SP_ACCESS_TOKEN_KEY = "access_token",
+			
+			SP_TOTAL_DISTANCE = "total_distance", 
+			SP_WAIT_TIME = "wait_time",
+			SP_LAST_LATITUDE = "last_latitude",
+			SP_LAST_LONGITUDE = "last_longitude",
+			
+			SP_DRIVER_SCREEN_MODE = "driver_screen_mode", 
+			
+			SP_D_ENGAGEMENT_ID = "d_engagement_id", 
+			SP_D_LATITUDE = "d_latitude",
+			SP_D_LONGITUDE = "d_longitude",
+			SP_D_CUSTOMER_ID = "d_customer_id",
+			SP_D_CUSTOMER_NAME = "d_customer_name", 
+			SP_D_CUSTOMER_IMAGE = "d_customer_image", 
+			SP_D_CUSTOMER_PHONE = "d_customer_phone";
+	
+	public static String D_START_RIDE = "D_START_RIDE", D_IN_RIDE = "D_IN_RIDE";
+	
+	public static LatLng startRidePreviousLatLng;
+	
 	
 	public static final int SERVER_TIMEOUT = 60000;
 
@@ -77,6 +97,7 @@ public class Data {
 	
 	
 	public static String dEngagementId = "", dCustomerId = "";
+	public static LatLng dCustLatLng;
 	
 	public static ArrayList<DriverRideRequest> driverRideRequests = new ArrayList<DriverRideRequest>();
 	
@@ -121,6 +142,7 @@ public class Data {
 		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		Editor editor = pref.edit();
 		editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
+		editor.clear();
 		editor.commit();
 	}
 	
@@ -166,6 +188,7 @@ public class Data {
 				Log.i("GCM", "Already registered");
 				Log.i("deviceToken....in else", ">" + Data.deviceToken);
 				Log.i("deviceToken....length", ">"+Data.deviceToken.length());
+				
 			}
 		} catch (Exception e) {
 			Log.e("exception GCM", ""+e.toString());
