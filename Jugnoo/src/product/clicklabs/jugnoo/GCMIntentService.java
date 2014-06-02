@@ -8,8 +8,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -18,7 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class GCMIntentService extends IntentService {
 	
 	public static final int NOTIFICATION_ID = 1;
-    private NotificationManager mNotificationManager;
+//    private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
     public GCMIntentService() {
@@ -249,8 +250,28 @@ public class GCMIntentService extends IntentService {
 	    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
 	    	    					 }
 	    	    					 else{
+	    	    						 
+	    	    						 String SHARED_PREF_NAME = "myPref", 
+	    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
+	    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
+	    	    									SP_D_NR_USER_ID = "d_nr_user_id",
+	    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
+	    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
+	    	    						 
+	    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+	    	    						 Editor editor = pref.edit();
+	    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "yes");
+	    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, engagementId);
+	    	    						 editor.putString(SP_D_NR_USER_ID, userId);
+	    	    						 editor.putString(SP_D_NR_LATITUDE, ""+latitude);
+	    	    						 editor.putString(SP_D_NR_LONGITUDE, ""+longitude);
+	    	    						 editor.commit();
+	    	    						 
 	    	    						 notificationManager(this, "You have got a new ride request.");
+	    	    						 
+	    	    						 
 	    	    					 }
+	    	    					 
 	    	    					 
 	    	    					 
 	    	    					 
@@ -279,12 +300,39 @@ public class GCMIntentService extends IntentService {
 	    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
 	    	    					 }
 	    	    					 
+    	    						 String SHARED_PREF_NAME = "myPref", 
+    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
+    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
+    	    									SP_D_NR_USER_ID = "d_nr_user_id",
+    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
+    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
+    	    						 
+    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+    	    						 Editor editor = pref.edit();
+    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
+    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
+    	    						 editor.putString(SP_D_NR_USER_ID, "");
+    	    						 editor.putString(SP_D_NR_LATITUDE, "");
+    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
+    	    						 editor.commit();
+	    	    					 
 	    	    				 }
 	    	    				// flag 3 for driver ride started show customer ride in progress  
 	    	    				 else if(3 == flag){
 
 	    	    					 if (HomeActivity.detectRideStart != null) {
 	    	    						 HomeActivity.detectRideStart.startRideForCustomer(0);
+	    	    					 }
+	    	    					 else{
+	    	    						 String SHARED_PREF_NAME = "myPref",
+	    	    						 SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
+	    	    								 P_IN_RIDE = "P_IN_RIDE";
+	    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+	    	    						 Editor editor = pref.edit();
+	    	    						 editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
+	    	    						 editor.commit();
+	    	    						 
+	    	    						 notificationManager(this, "Your ride has started.");
 	    	    					 }
 	    	    				 }
 	    	    				 // {"flag": 4,"log":"show"}  customer cancel 10 seconds done show driver start ride option
@@ -304,6 +352,21 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    					 if (HomeActivity.customerEndRideInterrupt != null) {
 	    	    						 HomeActivity.customerEndRideInterrupt.customerEndRideInterrupt();
+	    	    					 }
+	    	    					 else{
+	    	    						 String SHARED_PREF_NAME = "myPref",
+	    	    						 SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
+	    	    								 P_RIDE_END = "P_RIDE_END",
+	    	    										 SP_C_TOTAL_DISTANCE = "c_total_distance",
+	    	    											SP_C_TOTAL_FARE = "c_total_fare";
+	    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+	    	    						 Editor editor = pref.edit();
+	    	    						 editor.putString(SP_CUSTOMER_SCREEN_MODE, P_RIDE_END);
+	    	    						 editor.putString(SP_C_TOTAL_DISTANCE, ""+Data.totalDistance);
+	    	    						 editor.putString(SP_C_TOTAL_FARE, ""+Data.totalFare);
+	    	    						 editor.commit();
+	    	    						 
+	    	    						 notificationManager(this, "Your ride has ended.");
 	    	    					 }
 	    	    				 }
 	    	    				// flag 6 for driver ride canceled show customer ride canceled by driver  
@@ -342,24 +405,24 @@ public class GCMIntentService extends IntentService {
 	    // Put the message into a notification and post it.
 	    // This is just one simple example of what you might choose to do with
 	    // a GCM message.
-	    private void sendNotification(String msg) {
-	        mNotificationManager = (NotificationManager)
-	                this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-	        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-	                new Intent(this, SplashLogin.class), 0);
-
-	        NotificationCompat.Builder mBuilder =
-	                new NotificationCompat.Builder(this)
-	        .setSmallIcon(R.drawable.jugnoo_icon)
-	        .setContentTitle("GCM Notification")
-	        .setStyle(new NotificationCompat.BigTextStyle()
-	        .bigText(msg))
-	        .setContentText(msg);
-
-	        mBuilder.setContentIntent(contentIntent);
-	        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-	    }
+//	    private void sendNotification(String msg) {
+//	        mNotificationManager = (NotificationManager)
+//	                this.getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//	        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//	                new Intent(this, SplashLogin.class), 0);
+//
+//	        NotificationCompat.Builder mBuilder =
+//	                new NotificationCompat.Builder(this)
+//	        .setSmallIcon(R.drawable.jugnoo_icon)
+//	        .setContentTitle("GCM Notification")
+//	        .setStyle(new NotificationCompat.BigTextStyle()
+//	        .bigText(msg))
+//	        .setContentText(msg);
+//
+//	        mBuilder.setContentIntent(contentIntent);
+//	        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+//	    }
 
 
 

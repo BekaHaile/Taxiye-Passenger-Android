@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
@@ -40,6 +41,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 	TextView title;
 	EditText searchFriendsEt;
 	GridView facebookFriendsGrid;
+	TextView noFriendsText;
 	Button sendInviteBtn;
 	
 	FacebookFriendsGridAdapter facebookFriendsGridAdapter;
@@ -60,11 +62,12 @@ public class InviteFacebookFriendsActivity extends Activity{
 		searchFriendsEt = (EditText) findViewById(R.id.searchFriendsEt);
 		
 		facebookFriendsGrid = (GridView) findViewById(R.id.facebookFriendsGrid);
+		noFriendsText = (TextView) findViewById(R.id.noFriendsText);
 		
 		sendInviteBtn = (Button) findViewById(R.id.sendInviteBtn);
 		
 		
-		
+		Data.friendInfosDuplicate.clear();
 		Data.friendInfosDuplicate.addAll(Data.friendInfos);
 		
 		
@@ -113,14 +116,26 @@ public class InviteFacebookFriendsActivity extends Activity{
 				
 				if(!"".equalsIgnoreCase(userIds)){
 					userIds = userIds.substring(0, userIds.length()-1);
+					inviteFbFriend(userIds);
+				}
+				else{
+					new DialogPopup().alertPopup(InviteFacebookFriendsActivity.this, "", "Select some friends first.");
 				}
 				
-				inviteFbFriend(userIds);
+				
 			}
 		});
 		
 		
+		if(Data.friendInfos.size() == 0){
+			noFriendsText.setVisibility(View.VISIBLE);
+		}
+		else{
+			noFriendsText.setVisibility(View.GONE);
+		}
 		
+		
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 	}
 	
@@ -185,17 +200,21 @@ public class InviteFacebookFriendsActivity extends Activity{
 				public void onClick(View v) {
 					holder = (FriendViewHolder) v.getTag();
 					
-					if(Data.friendInfos.get(holder.idPos).tick){
-						Data.friendInfos.get(holder.idPos).tick = false;
-					}
-					else{
-						Data.friendInfos.get(holder.idPos).tick = true;
-					}
-					
-					for(int i=0; i<Data.friendInfosDuplicate.size(); i++){
-						if(Data.friendInfosDuplicate.get(i).fbId.equalsIgnoreCase(Data.friendInfos.get(holder.idPos).fbId)){
-							Data.friendInfosDuplicate.get(i).tick = Data.friendInfos.get(holder.idPos).tick;
+					if(Data.friendInfos.get(holder.idPos).flag == 0){
+						if(Data.friendInfos.get(holder.idPos).tick){
+							Data.friendInfos.get(holder.idPos).tick = false;
 						}
+						else{
+							Data.friendInfos.get(holder.idPos).tick = true;
+						}
+						
+						for(int i=0; i<Data.friendInfosDuplicate.size(); i++){
+							if(Data.friendInfosDuplicate.get(i).fbId.equalsIgnoreCase(Data.friendInfos.get(holder.idPos).fbId)){
+								Data.friendInfosDuplicate.get(i).tick = Data.friendInfos.get(holder.idPos).tick;
+								break;
+							}
+						}
+						notifyDataSetChanged();
 					}
 					
 					
@@ -210,7 +229,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 //					}).start();
 					
 					
-					notifyDataSetChanged();
+					
 				}
 			});
 			

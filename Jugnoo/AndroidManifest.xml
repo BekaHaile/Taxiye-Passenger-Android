@@ -105,11 +105,6 @@
             android:process=":DriverLocationUpdateService" >
         </service>
         <service
-            android:name="product.clicklabs.jugnoo.CStartRideService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
-        <service
             android:name="product.clicklabs.jugnoo.CUpdateDriverLocationsService"
             android:enabled="true"
             android:exported="true" >

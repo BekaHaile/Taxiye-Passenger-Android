@@ -40,9 +40,37 @@ public class Data {
 			SP_D_CUSTOMER_ID = "d_customer_id",
 			SP_D_CUSTOMER_NAME = "d_customer_name", 
 			SP_D_CUSTOMER_IMAGE = "d_customer_image", 
-			SP_D_CUSTOMER_PHONE = "d_customer_phone";
+			SP_D_CUSTOMER_PHONE = "d_customer_phone", 
+			
+			SP_D_NEW_RIDE_REQUEST = "d_new_ride_request",
+			
+			SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
+			SP_D_NR_USER_ID = "d_nr_user_id",
+			SP_D_NR_LATITUDE = "d_nr_latitude",
+			SP_D_NR_LONGITUDE = "d_nr_longitude",
+			
+			
+			
+			SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
+			
+			SP_C_ENGAGEMENT_ID = "c_engagement_id",
+			SP_C_DRIVER_ID = "c_driver_id",
+			SP_C_LATITUDE = "c_latitude",
+			SP_C_LONGITUDE = "c_longitude",
+			SP_C_DRIVER_NAME = "c_driver_name",
+			SP_C_DRIVER_IMAGE = "c_driver_image",
+			SP_C_DRIVER_CAR_IMAGE = "c_driver_car_image",
+			SP_C_DRIVER_PHONE = "c_driver_phone",
+			SP_C_DRIVER_DISTANCE = "c_driver_distance",
+			SP_C_DRIVER_DURATION = "c_driver_duration",
+			
+			SP_C_TOTAL_DISTANCE = "c_total_distance",
+			SP_C_TOTAL_FARE = "c_total_fare"
+			
+			;
 	
 	public static String D_START_RIDE = "D_START_RIDE", D_IN_RIDE = "D_IN_RIDE";
+	public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_REQUEST_FINAL = "P_REQUEST_FINAL";
 	
 	public static LatLng startRidePreviousLatLng;
 	
@@ -125,25 +153,29 @@ public class Data {
 	
 	
 	public static void clearDataOnLogout(Context context){
-		latitude = 30.7500; longitude = 76.7800;
-		chandigarhLatLng = new LatLng(30.7500, 76.7800);
-		driverInfos = new ArrayList<DriverInfo>();
-		favoriteLocations = new ArrayList<FavoriteLocation>();
-		friendInfos = new ArrayList<FriendInfo>();
-		friendInfosDuplicate = new ArrayList<FriendInfo>();
-		userData = null;
-		locationFetcher = null;
-		deviceToken = ""; country = ""; deviceName = ""; appVersion = ""; osVersion = "";
-		cEngagementId = ""; cDriverId = "";
-		assignedDriverInfo = null;
-		mapTarget = null;
-		fbAccessToken = ""; fbId = ""; fbFirstName = ""; fbLastName = ""; fbUserName = ""; fbUserEmail = "";
-		
-		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-		Editor editor = pref.edit();
-		editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
-		editor.clear();
-		editor.commit();
+		try{
+			latitude = 30.7500; longitude = 76.7800;
+			chandigarhLatLng = new LatLng(30.7500, 76.7800);
+			driverInfos = new ArrayList<DriverInfo>();
+			favoriteLocations = new ArrayList<FavoriteLocation>();
+			friendInfos = new ArrayList<FriendInfo>();
+			friendInfosDuplicate = new ArrayList<FriendInfo>();
+			userData = null;
+			locationFetcher = null;
+			deviceToken = ""; country = ""; deviceName = ""; appVersion = ""; osVersion = "";
+			cEngagementId = ""; cDriverId = "";
+			assignedDriverInfo = null;
+			mapTarget = null;
+			fbAccessToken = ""; fbId = ""; fbFirstName = ""; fbLastName = ""; fbUserName = ""; fbUserEmail = "";
+			
+			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+			Editor editor = pref.edit();
+			editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
+			editor.clear();
+			editor.commit();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	

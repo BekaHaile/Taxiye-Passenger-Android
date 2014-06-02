@@ -33,7 +33,7 @@ public class ForgotPasswordScreen extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.register_screen);
+		setContentView(R.layout.forgot_password_screen);
 		
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
@@ -41,7 +41,7 @@ public class ForgotPasswordScreen extends Activity{
 		
 		emailEt = (EditText) findViewById(R.id.emailEt);
 		
-		sendEmailBtn = (Button) findViewById(R.id.signUpBtn);
+		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn);
 		
 
 
@@ -100,6 +100,7 @@ public class ForgotPasswordScreen extends Activity{
 		});
 		
 		emailEt.setText(emailAlready);
+		emailEt.setSelection(emailEt.getText().toString().length());
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
@@ -137,7 +138,6 @@ public class ForgotPasswordScreen extends Activity{
 								
 								if(!jObj.isNull("error")){
 									
-									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
 									new DialogPopup().alertPopup(activity, "", errorMessage);

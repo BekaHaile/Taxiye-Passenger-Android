@@ -40,7 +40,7 @@
              />
         
         
-        <Button 
+        <ImageView 
             android:id="@+id/favDeleteBtn"
             android:layout_width="45px"
             android:layout_height="45px"

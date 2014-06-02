@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 
 public class JSONParser {
 
@@ -74,6 +75,8 @@ public class JSONParser {
 					
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone);
 					
+					
+					
 				}
 				else if(Data.D_IN_RIDE.equalsIgnoreCase(screenMode)){
 					
@@ -91,6 +94,10 @@ public class JSONParser {
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "0"));
 					HomeActivity.previousWaitTime = Double.parseDouble(pref.getString(Data.SP_WAIT_TIME, "0"));
 					
+					HomeActivity.waitStart = 2;
+					
+					Log.e("Data.SP_WAIT_TIME on login ", "=="+HomeActivity.previousWaitTime);
+					
 					String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
 					String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
 					
@@ -106,8 +113,66 @@ public class JSONParser {
 			
 		}
 		else{
+			
 			HomeActivity.userMode = UserMode.PASSENGER;
-			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			
+			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+			
+			String screenMode = pref.getString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+			
+			if("".equalsIgnoreCase(screenMode)){
+				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			}
+			else{
+				
+				String SP_C_ENGAGEMENT_ID = pref.getString(Data.SP_C_ENGAGEMENT_ID, "");
+				String SP_C_DRIVER_ID = pref.getString(Data.SP_C_DRIVER_ID, "");
+				String SP_C_LATITUDE = pref.getString(Data.SP_C_LATITUDE, "0");
+				String SP_C_LONGITUDE = pref.getString(Data.SP_C_LONGITUDE, "0");
+				String SP_C_DRIVER_NAME = pref.getString(Data.SP_C_DRIVER_NAME, "");
+				String SP_C_DRIVER_IMAGE = pref.getString(Data.SP_C_DRIVER_IMAGE, "");
+				String SP_C_DRIVER_CAR_IMAGE = pref.getString(Data.SP_C_DRIVER_CAR_IMAGE, "");
+				String SP_C_DRIVER_PHONE = pref.getString(Data.SP_C_DRIVER_PHONE, "");
+				String SP_C_DRIVER_DISTANCE = pref.getString(Data.SP_C_DRIVER_DISTANCE, "");
+				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
+				
+				Data.cEngagementId = SP_C_ENGAGEMENT_ID;
+				Data.cDriverId = SP_C_DRIVER_ID;
+				
+				double latitude = Double.parseDouble(SP_C_LATITUDE);
+				double longitude = Double.parseDouble(SP_C_LONGITUDE);
+				
+				Data.assignedDriverInfo = new DriverInfo(SP_C_DRIVER_ID, latitude, longitude, SP_C_DRIVER_NAME, 
+						SP_C_DRIVER_IMAGE, SP_C_DRIVER_CAR_IMAGE, SP_C_DRIVER_PHONE);
+				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
+				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
+				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;
+				
+				
+				if(Data.P_REQUEST_FINAL.equalsIgnoreCase(screenMode)){
+					HomeActivity.passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+				}
+				else if(Data.P_IN_RIDE.equalsIgnoreCase(screenMode)){
+					HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+				}
+				else if(Data.P_RIDE_END.equalsIgnoreCase(screenMode)){
+					
+					String SP_C_TOTAL_DISTANCE = pref.getString(Data.SP_C_TOTAL_DISTANCE, "0");
+					String SP_C_TOTAL_FARE = pref.getString(Data.SP_C_TOTAL_FARE, "0");
+					
+					Data.totalDistance = Double.parseDouble(SP_C_TOTAL_DISTANCE);
+					Data.totalFare = Double.parseDouble(SP_C_TOTAL_FARE);
+					
+					
+					HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+					
+				}
+			}
+			
+			
+			
+			
+			
 		}
 		
 		

@@ -109,7 +109,7 @@
             android:layout_marginRight="35px"
             android:layout_alignParentRight="true"
             android:background="@drawable/transparent"
-            android:text="Sign In"
+            android:text="Sign Up"
             android:textColor="@drawable/white_color_selector"
             android:textSize="34px" 
             

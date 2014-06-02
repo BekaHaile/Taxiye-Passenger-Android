@@ -356,8 +356,8 @@ public class SplashLogin extends Activity{
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		
-		emailEt.setText("tirthankar@clicklabs.in");
-		passwordEt.setText("tirthankar");
+//		emailEt.setText("tirthankar@clicklabs.in");
+//		passwordEt.setText("tirthankar");
 		
 		
 		Data.locationFetcher = new LocationFetcher(SplashLogin.this);

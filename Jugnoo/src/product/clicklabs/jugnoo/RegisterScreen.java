@@ -38,7 +38,8 @@ public class RegisterScreen extends Activity{
 	String firstName = "", lastName = "", emailId = "", phoneNo = "", password = "";
 	
 	public static boolean facebookLogin = false;
-	boolean loginDataFetched = false;
+	boolean loginDataFetched = false, showOtpDialog = false;
+	String otpAlertString = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -350,8 +351,8 @@ public class RegisterScreen extends Activity{
 										RegisterScreen.this.emailId = emailId;
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
-										confirmOTPPopup(activity);
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										otpAlertString = errorMessage;
+										showOtpDialog = true;
 									}
 									else if(1 == flag){ // {"error": 'Incorrect verification code',"flag":1}
 										RegisterScreen.this.firstName = firstName;
@@ -359,8 +360,8 @@ public class RegisterScreen extends Activity{
 										RegisterScreen.this.emailId = emailId;
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
-										confirmOTPPopup(activity);
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										otpAlertString = errorMessage;
+										showOtpDialog = true;
 									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
@@ -533,14 +534,14 @@ public class RegisterScreen extends Activity{
 									if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
-										confirmOTPPopup(activity);
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										otpAlertString = errorMessage;
+										showOtpDialog = true;
 									}
 									else if(6 == flag){ // {"error": 'Incorrect verification code',"flag":6}
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
-										confirmOTPPopup(activity);
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										otpAlertString = errorMessage;
+										showOtpDialog = true;
 									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
@@ -577,6 +578,24 @@ public class RegisterScreen extends Activity{
 	
 	
 	
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		
+		if(hasFocus && loginDataFetched){
+			loginDataFetched = false;
+			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			finish();
+		}
+		else if(hasFocus && showOtpDialog){
+			showOtpDialog = false;
+			confirmOTPPopup(RegisterScreen.this);
+			new DialogPopup().alertPopup(RegisterScreen.this, "", otpAlertString);
+		}
+		
+	}
 	
 	boolean isEmailValid(CharSequence email) {
 		return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();

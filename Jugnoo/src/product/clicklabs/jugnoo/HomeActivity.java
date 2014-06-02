@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -93,6 +94,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	DrawerLayout drawerLayout;
+	
+	
 	
 	
 	
@@ -259,7 +262,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	Button driverWaitBtn;
 	TextView driverEndRideText;
 	SlideButtonInvert driverEndRideSlider;
-	int waitStart = 2;
+	public static int waitStart = 2;
 	
 	
 	
@@ -269,7 +272,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 	ImageView reviewUserImgBlured, reviewUserImage;
 	ProgressBar reviewUserImgProgress;
-	TextView reviewUserName, reviewUserRating, reviewReachedDestinationText, reviewDistanceText, reviewDistanceValue, reviewFareText, reviewFareValue, reviewRatingText;
+	TextView reviewUserName, reviewReachedDestinationText, reviewDistanceText, reviewDistanceValue, reviewFareText, reviewFareValue, reviewRatingText;
 	RatingBar reviewRatingBar;
 	Button reviewSubmitBtn;
 	
@@ -492,6 +495,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		centreLocationSnippet = (TextView) findViewById(R.id.centreLocationSnippet);
 		setFavoriteBtn = (Button) findViewById(R.id.setFavoriteBtn);
 		
+		centreLocationSnippet.setMinimumWidth((int)(200.0 * ASSL.Xscale()));
+		centreLocationSnippet.setMaxWidth((int)(500.0 * ASSL.Xscale()));
 		
 		
 		
@@ -586,7 +591,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		reviewUserImgProgress = (ProgressBar) findViewById(R.id.reviewUserImgProgress);
 		
 		reviewUserName = (TextView) findViewById(R.id.reviewUserName);
-		reviewUserRating = (TextView) findViewById(R.id.reviewUserRating);
 		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText);
 		reviewDistanceText = (TextView) findViewById(R.id.reviewDistanceText);
 		reviewDistanceValue = (TextView) findViewById(R.id.reviewDistanceValue);
@@ -727,13 +731,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				//TODO logout api
-				
-				
-
 				
 				logoutAsync(HomeActivity.this);
-				
 				
 			}
 		});
@@ -1031,6 +1030,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				if(Data.driverRideRequests.size() == 1){
 					driverNewRideRequestRl.setVisibility(View.GONE);
+					
+					Data.dCustLatLng = Data.driverRideRequests.get(0).latLng;
 					
 					driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
 					switchDriverScreen(driverScreenMode);
@@ -1408,6 +1409,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 						  getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
 						  getDistanceTimeAddress.execute();
+						  
+						  Log.e("==","==="+makeURLPath(map.getCameraPosition().target, Data.chandigarhLatLng));
 					  }
 				  }
 				};
@@ -1419,6 +1422,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			myLocationBtn.setOnClickListener(mapMyLocationClick);
 			driverInitialMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			driverRequestAcceptMyLocationBtn.setOnClickListener(mapMyLocationClick);
+			driverStartRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			
 		}
 		
@@ -1450,6 +1454,24 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		switchUserScreen(userMode);
 		if(userMode == UserMode.DRIVER){
+			try{
+			SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+			String newRideRequest = pref.getString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+			
+			if("yes".equalsIgnoreCase(newRideRequest)){
+				
+				String nrEngagementId = pref.getString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+				String nrUserId = pref.getString(Data.SP_D_NR_USER_ID, "");
+				double nrLat = Double.parseDouble(pref.getString(Data.SP_D_NR_LATITUDE, ""));
+				double nrLng = Double.parseDouble(pref.getString(Data.SP_D_NR_LONGITUDE, ""));
+				
+				Data.driverRideRequests.add(new DriverRideRequest(nrEngagementId, nrUserId, new LatLng(nrLat, nrLng)));
+				showAllRideRequests();
+			}
+			} catch(Exception e){
+				
+			}
+			
 			switchDriverScreen(driverScreenMode);
 		}
 		else{
@@ -1592,7 +1614,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			
 			DecimalFormat decimalFormat = new DecimalFormat("#.##");
-			double totalDistanceInKm = totalDistance/1000.0;
+			double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 			
 			
 			String kmsStr = "";
@@ -1610,7 +1632,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			reviewRatingText.setText("Customer Rating");
 			reviewRatingBar.setRating(0);
 			
-			reviewUserRating.setText("3.0");
 			reviewUserName.setText(Data.assignedCustomerInfo.name);
 			
 			AQuery aquery = new AQuery(reviewUserImgBlured);
@@ -1668,6 +1689,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				map.addMarker(markerOptions);
 				
+				driverPassengerName.setText(Data.assignedCustomerInfo.name);
+				AQuery aq = new AQuery(driverPassengerImage);
+				aq.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
+				
+			
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				
 				
 				driverInitialLayout.setVisibility(View.GONE);
 				driverRequestAcceptLayout.setVisibility(View.GONE);
@@ -1679,19 +1707,28 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverStartRideMainRl.setVisibility(View.VISIBLE);
 				driverInRideMainRl.setVisibility(View.GONE);
 				
-				driverPassengerName.setText(Data.assignedCustomerInfo.name);
-				AQuery aq = new AQuery(driverPassengerImage);
-				aq.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
 				
 				
-			
-				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				
 				
 				break;
 				
 				
 			case D_IN_RIDE:
 				
+				Log.e("SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime =","==="+(SystemClock.elapsedRealtime() + 
+						(long)HomeActivity.previousWaitTime));
+				
+				waitChronometer.setBase(SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime);
+				
+				map.clear();
+				
+				driverPassengerName.setText(Data.assignedCustomerInfo.name);
+				AQuery aq2 = new AQuery(driverPassengerImage);
+				aq2.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
+				
+			
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				
 				driverInitialLayout.setVisibility(View.GONE);
@@ -1757,7 +1794,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			reviewRatingText.setText("Driver Rating");
 			reviewRatingBar.setRating(0);
 			
-			reviewUserRating.setText("3.0");
 			reviewUserName.setText(Data.assignedDriverInfo.name);
 			
 			AQuery aquery = new AQuery(reviewUserImgBlured);
@@ -1769,8 +1805,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			        }
 			        
 			});
-			
-			
 			
 			
 		}
@@ -1867,6 +1901,17 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 			case P_BEFORE_REQUEST_FINAL:
+				
+				if(map != null){
+					MarkerOptions markerOptions = new MarkerOptions();
+					markerOptions.title("");
+					markerOptions.snippet("");
+					markerOptions.position(Data.assignedDriverInfo.latLng);
+					markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_android));
+					
+					pickupLocationMarker = map.addMarker(markerOptions);
+				}
+				
 
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.VISIBLE);
@@ -1888,13 +1933,22 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			case P_REQUEST_FINAL:
 
+				driverName.setText(Data.assignedDriverInfo.name);
+				driverTime.setText("Will arrive in "+Data.assignedDriverInfo.durationToReach);
+				
+				AQuery aq = new AQuery(driverImage);
+				aq.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
+				
+				AQuery aq1 = new AQuery(driverCarImage);
+				aq1.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
+				
+				
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
 				
-				requestFinalLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
 				driverTime.setVisibility(View.VISIBLE);
 				inRideRideInProgress.setVisibility(View.GONE);
 				
@@ -1912,6 +1966,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			case P_IN_RIDE:
 				
+				driverName.setText(Data.assignedDriverInfo.name);
+				
+				AQuery aq2 = new AQuery(driverImage);
+				aq2.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
+				
+				AQuery aq12 = new AQuery(driverCarImage);
+				aq12.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
 				
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
@@ -1919,7 +1980,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
 				
-				requestFinalLayout.setBackgroundColor(getResources().getColor(R.color.white_dark1));
 				driverTime.setVisibility(View.GONE);
 				inRideRideInProgress.setVisibility(View.VISIBLE);
 				
@@ -2146,6 +2206,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         		editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
         		
         		
+        	
+        		
         	}
         	else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
         		
@@ -2162,14 +2224,75 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
             	
         		editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
         		editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
-        		editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
-        		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
+        		
+        		Log.e("Data.SP_WAIT_TIME", "=="+elapsedMillis);
+        		
+        		if(HomeActivity.myLocation != null){
+        			editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
+            		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
+        		}
+        		else if(Data.locationFetcher != null){
+        			editor.putString(Data.SP_LAST_LATITUDE, ""+Data.locationFetcher.getLatitude());
+            		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.locationFetcher.getLongitude());
+        		}
+        		else{
+        			editor.putString(Data.SP_LAST_LATITUDE, "0");
+            		editor.putString(Data.SP_LAST_LONGITUDE, "0");
+        		}
+        		
+        		
         		
         	}
         	
         	
+        	
+        	
         	editor.commit();
     		
+        }
+        else if(userMode == UserMode.PASSENGER){
+        	
+        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+    		Editor editor = pref.edit();
+    		
+        	if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+        		
+        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
+        		
+        		editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
+        		editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
+        		editor.putString(Data.SP_C_LATITUDE, ""+Data.assignedDriverInfo.latLng.latitude);
+        		editor.putString(Data.SP_C_LONGITUDE, ""+Data.assignedDriverInfo.latLng.longitude);
+        		editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
+        		editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
+        		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
+        		editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+        		editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
+        		editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
+        		
+        	}
+        	else if(passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
+        		
+        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_IN_RIDE);
+        		
+        		editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
+        		editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
+        		editor.putString(Data.SP_C_LATITUDE, ""+Data.assignedDriverInfo.latLng.latitude);
+        		editor.putString(Data.SP_C_LONGITUDE, ""+Data.assignedDriverInfo.latLng.longitude);
+        		editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
+        		editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
+        		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
+        		editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+        		editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
+        		editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
+        	
+        	}
+        	else{
+        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+        	}
+        	
+        	editor.commit();
+        	
         }
 		
 			}
@@ -2222,7 +2345,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			HomeActivity.myLocation = location;
 			
 			
-			if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
+			if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
 			
 			LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 			Log.e("locations.size()", "="+locations.size());
@@ -2233,14 +2356,20 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				double displacement = distance(lastLatLng, currentLatLng);
 				Log.e("displacement", "="+displacement);
 				
-				totalDistance = totalDistance + displacement;
-				
-				Polyline line = map.addPolyline(new PolylineOptions()
-		        .add(lastLatLng, currentLatLng)
-		        .width(5)
-		        .color(Color.RED).geodesic(true));
+				if(displacement < 100){
+					totalDistance = totalDistance + displacement;
+					
+					Polyline line = map.addPolyline(new PolylineOptions()
+			        .add(lastLatLng, currentLatLng)
+			        .width(5)
+			        .color(Color.RED).geodesic(true));
 
-		        polyLinesAL.add(line);
+			        polyLinesAL.add(line);
+				}
+				else{
+					new CreatePathAsyncTask(lastLatLng, currentLatLng).execute();
+				}
+				
 				
 				
 			}
@@ -2250,10 +2379,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					totalDistance = 0;
 				}
 				else{
-					double prevoiusDistance = distance(Data.startRidePreviousLatLng, currentLatLng);
-					totalDistance = totalDistance + prevoiusDistance;
+					try{
+						double prevoiusDistance = distance(Data.startRidePreviousLatLng, currentLatLng);
+						totalDistance = totalDistance + prevoiusDistance;
+					} catch(Exception e){
+						e.printStackTrace();
+					}
 				}
-					
 				
 				
 				
@@ -2294,8 +2426,124 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	}
 
-	
+	public String makeURLPath(LatLng source, LatLng destination){
+        StringBuilder urlString = new StringBuilder();
+        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
+        urlString.append("?origin=");// from
+        urlString.append(Double.toString(source.latitude));
+        urlString.append(",");
+        urlString
+                .append(Double.toString(source.longitude));
+        urlString.append("&destination=");// to
+        urlString
+                .append(Double.toString(destination.latitude));
+        urlString.append(",");
+        urlString.append(Double.toString(destination.longitude));
+        urlString.append("&sensor=false&mode=driving&alternatives=true");
+        return urlString.toString();
+	}
 
+	
+	class CreatePathAsyncTask extends AsyncTask<Void, Void, String>{
+	    String url;
+	    CreatePathAsyncTask(LatLng source, LatLng destination){
+	        url = makeURLPath(source, destination);
+	    }
+	    
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	    }
+	    @Override
+	    protected String doInBackground(Void... params) {
+	    	return new SimpleJSONParser().getJSONFromUrl(url);
+	    }
+	    @Override
+	    protected void onPostExecute(String result) {
+	        super.onPostExecute(result);   
+	        if(result!=null){
+	            ArrayList<Polyline> al = drawPath(result);
+	            polyLinesAL.addAll(al);
+	            
+	            
+	        }
+	    }
+	}
+	
+	
+	public ArrayList<Polyline> drawPath(String result) {
+
+	    try {
+	    	ArrayList<Polyline> polylines = new ArrayList<Polyline>();
+//	    	new SimpleJSONParser().writeJSONToFile(result, "Google location");
+	    	
+	           final JSONObject json = new JSONObject(result);
+	           JSONArray routeArray = json.getJSONArray("routes");
+	           JSONObject routes = routeArray.getJSONObject(0);
+	           JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
+	           String encodedString = overviewPolylines.getString("points");
+	           List<LatLng> list = decodePoly(encodedString);
+
+	           
+		    	JSONObject leg0 = json.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
+		    	totalDistance = leg0.getJSONObject("distance").getDouble("value");
+		    	
+	           
+	           for(int z = 0; z<list.size()-1;z++){
+	                LatLng src= list.get(z);
+	                LatLng dest= list.get(z+1);
+	                Polyline line = map.addPolyline(new PolylineOptions()
+	                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+	                .width(5)
+			        .color(Color.RED).geodesic(true));
+
+	                polylines.add(line);
+	            }
+	           
+	           return polylines;
+	    } 
+	    catch (Exception e) {
+	    	e.printStackTrace();
+	    	return new ArrayList<Polyline>();
+	    }
+	} 
+	
+	
+	private List<LatLng> decodePoly(String encoded) {
+
+	    List<LatLng> poly = new ArrayList<LatLng>();
+	    int index = 0, len = encoded.length();
+	    int lat = 0, lng = 0;
+
+	    while (index < len) {
+	        int bInt, shift = 0, result = 0;
+	        do {
+	            bInt = encoded.charAt(index++) - 63;
+	            result |= (bInt & 0x1f) << shift;
+	            shift += 5;
+	        } while (bInt >= 0x20);
+	        int dlat = ((result & 1) == 0 ? (result >> 1) : ~(result >> 1));
+	        lat += dlat;
+
+	        shift = 0;
+	        result = 0;
+	        do {
+	            bInt = encoded.charAt(index++) - 63;
+	            result |= (bInt & 0x1f) << shift;
+	            shift += 5;
+	        } while (bInt >= 0x20);
+	        int dlng = ((result & 1) == 0 ? (result >> 1) : ~(result >> 1));
+	        lng += dlng;
+
+	        LatLng pLatLng = new LatLng( (((double) lat / 1E5)),
+	                 (((double) lng / 1E5) ));
+	        poly.add(pLatLng);
+	    }
+
+	    return poly;
+	}
+	
+	
 	
 	
 	class ViewHolderSearch {
@@ -2382,7 +2630,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	class ViewHolderFavorite {
 		TextView name;
-		Button favDeleteBtn;
+		ImageView favDeleteBtn;
 		LinearLayout relative;
 		int id;
 	}
@@ -2420,7 +2668,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				convertView = mInflater.inflate(R.layout.favorite_list_item, null);
 				
 				holder.name = (TextView) convertView.findViewById(R.id.name); 
-				holder.favDeleteBtn = (Button) convertView.findViewById(R.id.favDeleteBtn);
+				holder.favDeleteBtn = (ImageView) convertView.findViewById(R.id.favDeleteBtn);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
@@ -2453,7 +2701,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 					drawerLayout.closeDrawer(favoriteRl);
 					
-					map.animateCamera(CameraUpdateFactory.newLatLngZoom(favoriteLocation.latLng, 12), 2000, null);
+					map.animateCamera(CameraUpdateFactory.newLatLng(favoriteLocation.latLng), 2000, null);
 					
 				}
 			});
@@ -2994,14 +3242,49 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		@Override
 		protected String doInBackground(String... params) {
-			
+			publishProgress(5);
 			try{
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 			} catch(Exception e){
 				e.printStackTrace();
 			}
+			publishProgress(4);
+			try{
+				Thread.sleep(1000);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			publishProgress(3);
+			try{
+				Thread.sleep(1000);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			publishProgress(2);
+			try{
+				Thread.sleep(1000);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			publishProgress(1);
+			try{
+				Thread.sleep(1000);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			publishProgress(0);
 			
 			return "";
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			try{
+				cancelRequestBtn.setText("Cancel request " + values[0] + " ?");
+			} catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 		@Override
@@ -3100,19 +3383,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									}
 									else{
+										
+										map.clear();
 
 										passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
 										switchPassengerScreen(passengerScreenMode);
-										
-										
-										driverName.setText(Data.assignedDriverInfo.name);
-										driverTime.setText("Will arrive in "+Data.assignedDriverInfo.durationToReach);
-										
-										AQuery aq = new AQuery(driverImage);
-										aq.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
-										
-										AQuery aq1 = new AQuery(driverCarImage);
-										aq1.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
 										
 									}
 									
@@ -3305,6 +3580,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									Data.driverRideRequests.clear();
 									
+									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+									Editor editor = pref.edit();
+									editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+									editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+									editor.putString(Data.SP_D_NR_USER_ID, "");
+									editor.putString(Data.SP_D_NR_LATITUDE, "");
+									editor.putString(Data.SP_D_NR_LONGITUDE, "");
+									editor.commit();
 									
 									
 								}
@@ -3399,6 +3682,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										Data.driverRideRequests.remove(index);
 									}
 									
+									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+									Editor editor = pref.edit();
+									editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+									editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+									editor.putString(Data.SP_D_NR_USER_ID, "");
+									editor.putString(Data.SP_D_NR_LATITUDE, "");
+									editor.putString(Data.SP_D_NR_LONGITUDE, "");
+									editor.commit();
+									
 									showAllRideRequests();
 									
 								}
@@ -3480,9 +3772,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									new DialogPopup().alertPopup(activity, "", "Ride started");
 
 									locations.clear();
+									polyLinesAL.clear();
 									
 									HomeActivity.previousWaitTime = 0;
 									HomeActivity.totalDistance = -1;
+									
+									waitStart = 2;
 									
 						        	driverScreenMode = DriverScreenMode.D_IN_RIDE;
 									switchDriverScreen(driverScreenMode);
@@ -3603,6 +3898,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									polyLinesAL.clear();
 									
+									waitStart = 2;
+									waitChronometer.stop();
+									
 						        	driverScreenMode = DriverScreenMode.D_RIDE_END;
 									switchDriverScreen(driverScreenMode);
 									
@@ -3691,6 +3989,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 //									{"log":"Rated successfully"}
 
 									
+									
+									
 									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
 
 									if(flag.equalsIgnoreCase("0")){
@@ -3711,6 +4011,53 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
 									}
+									
+									
+									new Thread(new Runnable() {
+										
+										@Override
+										public void run() {
+							        	
+							        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+							    		Editor editor = pref.edit();
+							        		
+							        		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
+							        		
+							        		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
+							        		editor.putString(Data.SP_D_CUSTOMER_ID, "");
+							        		
+							        		editor.putString(Data.SP_D_LATITUDE, "0");
+							        		editor.putString(Data.SP_D_LONGITUDE, "0");
+							        		
+							        		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
+							        		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
+							        		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
+							        		
+							        		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+							        		editor.putString(Data.SP_WAIT_TIME, "0");
+							        		editor.putString(Data.SP_LAST_LATITUDE, "0");
+							        		editor.putString(Data.SP_LAST_LONGITUDE, "0");
+							        		
+							        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+							        		
+							        		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
+							        		editor.putString(Data.SP_C_DRIVER_ID, "");
+							        		editor.putString(Data.SP_C_LATITUDE, "0");
+							        		editor.putString(Data.SP_C_LONGITUDE, "0");
+							        		editor.putString(Data.SP_C_DRIVER_NAME, "");
+							        		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
+							        		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
+							        		editor.putString(Data.SP_C_DRIVER_PHONE, "");
+							        		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
+							        		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
+							        		
+							        	
+							        	editor.commit();
+							    		
+							        	
+									
+										}
+									}).start();
 									
 									
 								}
@@ -4316,6 +4663,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									Data.clearDataOnLogout(HomeActivity.this);
 									
+									userMode = UserMode.PASSENGER;
+									passengerScreenMode = PassengerScreenMode.P_INITIAL;
+									driverScreenMode = DriverScreenMode.D_INITIAL;
+									
 									loggedOut = true;
 									
 								}
@@ -4354,6 +4705,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
+	
+	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
@@ -4390,6 +4743,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					@Override
 					public void run() {
 						Log.i("in in herestartRideForCustomer  run class","=");
+						
+						locations.clear();
+						polyLinesAL.clear();
+						
+						HomeActivity.totalDistance = -1;
+						
 						passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
 						switchPassengerScreen(passengerScreenMode);
 					}
@@ -4749,6 +5108,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 					@Override
 					public void run() {
+						locations.clear();
+						
+						map.clear();
+						
+						for(Polyline polyline : polyLinesAL){
+							polyline.remove();
+						}
+						
+						polyLinesAL.clear();
+						
 						passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 						switchPassengerScreen(passengerScreenMode);
 					}

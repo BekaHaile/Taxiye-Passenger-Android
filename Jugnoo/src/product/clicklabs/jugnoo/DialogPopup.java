@@ -88,6 +88,8 @@ public class DialogPopup {
 		
 		TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1);
 		messageText.setText(message);
+		messageText.setMinimumWidth((int)(250.0 * ASSL.Xscale()));
+		
 		
 	}
 	

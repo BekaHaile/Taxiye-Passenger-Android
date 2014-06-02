@@ -19,6 +19,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:splitMotionEvents="false"
+                android:layout_marginTop="90px"
                 android:visibility="gone" >
 
                 <fragment
@@ -33,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -341,8 +342,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="565px"
-                    android:visibility="gone" >
+                    android:layout_marginBottom="520px"
+                    android:visibility="visible" >
 
                     <ProgressBar
                         android:id="@+id/centreInfoProgress"
@@ -848,41 +849,13 @@
                         android:textColor="@color/white"
                         android:textSize="38px" />
 
-                    <LinearLayout
-                        android:id="@+id/reviewUserRatingRl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/reviewUserName"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10px"
-                        android:orientation="horizontal" >
-
-                        <ImageView
-                            android:id="@+id/reviewUserStar"
-                            android:layout_width="50px"
-                            android:layout_height="50px"
-                            android:background="@drawable/star_white"
-                            android:tag="mwar" />
-
-                        <TextView
-                            android:id="@+id/reviewUserRating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:singleLine="true"
-                android:layout_marginLeft="10px"
-                            android:text="3.0"
-                            android:textColor="@color/white"
-                            android:textSize="38px" />
-                    </LinearLayout>
-
                     <RelativeLayout
                         android:id="@+id/reviewReachedDistanceRl"
                         android:layout_width="match_parent"
                         android:layout_height="180px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_below="@+id/reviewUserName"
                         android:layout_marginTop="10px"
-                android:layout_alignParentBottom="true"
-                        android:layout_below="@+id/reviewUserRatingRl"
                         android:background="@color/black_translucent" >
 
                         <TextView
@@ -1252,7 +1225,7 @@
         android:layout_width="495px"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="@color/white_translucent"
+        android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
         
@@ -1265,7 +1238,7 @@
                 android:id="@+id/favTitleRl"
                android:layout_width="match_parent"
         	android:layout_height="90px"
-                android:background="@color/bg_grey" 
+                android:background="@color/bg_grey_opaque" 
                 >
                 
                 <TextView 
@@ -1307,6 +1280,8 @@
             android:layout_height="match_parent"
                     android:layout_below="@+id/favTitleRl"
                 android:dividerHeight="0px"
+            android:divider="@drawable/transparent"
+                
              >
         </ListView>
         

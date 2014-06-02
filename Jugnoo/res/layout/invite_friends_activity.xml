@@ -54,13 +54,29 @@
                 android:singleLine="true"
                 android:textSize="34px" />
 
+            <RelativeLayout 
+                android:layout_width="630px"
+                android:layout_height="700px"
+                android:layout_marginTop="50px">
+                
+                <TextView 
+                    android:id="@+id/noFriendsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/black"
+                    android:textSize="36px"
+                    android:text="No friends to invite."
+                    
+                    />
+            
             <GridView
                 android:id="@+id/facebookFriendsGrid"
                 android:layout_width="630px"
                 android:layout_height="700px"
-                android:layout_marginTop="50px"
                 android:numColumns="3" >
             </GridView>
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/sendInviteBtn"
