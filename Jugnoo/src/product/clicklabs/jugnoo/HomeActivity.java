@@ -124,13 +124,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	//Favorite bar
-	LinearLayout favoriteRl;
-	ListView favoriteList;
-	ProgressBar favoriteProgress;
-	TextView noFavoriteLocationsText, favTitleText;
-	FavoriteListAdapter favoriteListAdapter;
-	
 	
 	
 	//Top RL
@@ -272,7 +265,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 	ImageView reviewUserImgBlured, reviewUserImage;
 	ProgressBar reviewUserImgProgress;
-	TextView reviewUserName, reviewReachedDestinationText, reviewDistanceText, reviewDistanceValue, reviewFareText, reviewFareValue, reviewRatingText;
+	TextView reviewUserName, reviewReachedDestinationText, 
+	reviewDistanceText, reviewDistanceValue, 
+	reviewWaitText, reviewWaitValue,
+	reviewFareText, reviewFareValue, 
+	reviewRatingText;
 	RatingBar reviewRatingBar;
 	Button reviewSubmitBtn;
 	
@@ -294,6 +291,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
 	
 	static double totalDistance = -1, totalFare = 0, previousWaitTime = 0;
+	static String waitTime = "";
 	String fullAddress = "";
 	
 	
@@ -386,16 +384,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		logoutText = (TextView) findViewById(R.id.logoutText);
 		
 		
-		//Favorite bar
-		favoriteRl = (LinearLayout) findViewById(R.id.favoriteRl);
-		favoriteList = (ListView) findViewById(R.id.favoriteList);
-		favoriteListAdapter = new FavoriteListAdapter();
-		favoriteList.setAdapter(favoriteListAdapter);
-		favoriteProgress = (ProgressBar) findViewById(R.id.favoriteProgress);
-		favoriteProgress.setVisibility(View.GONE);
-		noFavoriteLocationsText = (TextView) findViewById(R.id.noFavoriteLocationsText);
-		noFavoriteLocationsText.setVisibility(View.GONE);
-		favTitleText = (TextView) findViewById(R.id.favTitleText);
 		
 		
 		
@@ -594,6 +582,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText);
 		reviewDistanceText = (TextView) findViewById(R.id.reviewDistanceText);
 		reviewDistanceValue = (TextView) findViewById(R.id.reviewDistanceValue);
+		reviewWaitText = (TextView) findViewById(R.id.reviewWaitText);
+		reviewWaitValue = (TextView) findViewById(R.id.reviewWaitValue);
 		reviewFareText = (TextView) findViewById(R.id.reviewFareText);
 		reviewFareValue = (TextView) findViewById(R.id.reviewFareValue);
 		reviewRatingText = (TextView) findViewById(R.id.reviewRatingText);
@@ -638,7 +628,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				drawerLayout.openDrawer(favoriteRl);
+				startActivity(new Intent(HomeActivity.this, FavoriteActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
@@ -732,8 +723,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				
-				logoutAsync(HomeActivity.this);
+//				if(passengerScreenMode == PassengerScreenMode.P_INITIAL || driverScreenMode == DriverScreenMode.D_INITIAL){
+					logoutAsync(HomeActivity.this);
+//				}
 				
 			}
 		});
@@ -1077,6 +1069,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
+				GCMIntentService.clearNotifications(HomeActivity.this);
 				driverRejectRideAsync(HomeActivity.this, 0);
 			}
 		});
@@ -1121,6 +1114,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverStartRideSlider.setSlideButtonListener(new SlideButtonListener() {  
 	        @Override
 	        public void handleSlide() {
+	        	GCMIntentService.clearNotifications(HomeActivity.this);
 	        	driverStartRideText.setVisibility(View.GONE);
 	        	driverStartRideAsync(HomeActivity.this);
 	        }
@@ -1130,6 +1124,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
+				GCMIntentService.clearNotifications(HomeActivity.this);
 				driverRejectRideAsync(HomeActivity.this, 1);
 			}
 		});
@@ -1161,7 +1156,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				if(waitStart == 2){
-					waitChronometer.setBase(SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime);
+					waitChronometer.eclipsedTime =  (long)HomeActivity.previousWaitTime;
+					Log.e("waitChronometer.eclipsedTime on first start","="+waitChronometer.eclipsedTime);
 					waitChronometer.start();
 					driverWaitBtn.setBackgroundResource(R.drawable.red_btn_selector);
 					driverWaitBtn.setText("Stop wait");
@@ -1191,17 +1187,17 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void handleSlide() {
-				
+				GCMIntentService.clearNotifications(HomeActivity.this);
 				driverEndRideText.setVisibility(View.GONE);
 				waitChronometer.stop();
 				
-				long elapsedMillis = SystemClock.elapsedRealtime() - waitChronometer.getBase();
+				long elapsedMillis = waitChronometer.eclipsedTime;
 				long seconds = elapsedMillis / 1000;
 				double minutes = Math.ceil(((double)seconds) / 60.0);
 				String min = (minutes > 9)? ""+minutes : "0"+minutes;
 				
 	        	
-				driverEndRideAsync(HomeActivity.this, min);
+				driverEndRideAsync(HomeActivity.this, minutes);
 				
 			}
 		});
@@ -1240,7 +1236,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				
+				GCMIntentService.clearNotifications(HomeActivity.this);
 				int rating = (int)reviewRatingBar.getRating();
 				
 				if(rating > 0){
@@ -1263,6 +1259,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 			}
 		});
+		
+		
 		
 		
 		
@@ -1540,7 +1538,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				favBtn.setVisibility(View.GONE);
 				
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, favoriteRl);
 				
 				break;
 			
@@ -1552,7 +1549,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverMainLayout.setVisibility(View.GONE);
 				
 				favBtn.setVisibility(View.VISIBLE);
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 				
 				break;
 			
@@ -1564,7 +1560,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverMainLayout.setVisibility(View.GONE);
 				
 				favBtn.setVisibility(View.VISIBLE);
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 		
 		
 		}
@@ -1631,6 +1626,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			
 			reviewDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
+			reviewWaitValue.setText(waitTime+" min");
 			reviewFareValue.setText("Rs. "+decimalFormat.format(totalFare));
 			
 			reviewRatingText.setText("Customer Rating");
@@ -1718,12 +1714,20 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				break;
 				
 				
+				
+				
 			case D_IN_RIDE:
 				
-//				Log.e("SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime =","==="+(SystemClock.elapsedRealtime() + 
-//						(long)HomeActivity.previousWaitTime));
-//				
-//				waitChronometer.setBase(SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime);
+				
+				long time = (long)HomeActivity.previousWaitTime;
+				int h = (int) (time / 3600000);
+				int m = (int) (time - h * 3600000) / 60000;
+				int s = (int) (time - h * 3600000 - m * 60000) / 1000;
+				String hh = h < 10 ? "0" + h : h + "";
+				String mm = m < 10 ? "0" + m : m + "";
+				String ss = s < 10 ? "0" + s : s + "";
+				waitChronometer.setText(hh + ":" + mm + ":" + ss);
+				
 				
 				map.clear();
 				
@@ -1793,6 +1797,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			}
 			
 			reviewDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
+			reviewWaitValue.setText(Data.waitTime+" min");
 			reviewFareValue.setText("Rs. "+decimalFormat.format(Data.totalFare));
 			
 			reviewRatingText.setText("Driver Rating");
@@ -2172,6 +2177,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    
 	    
 	    
+	    if(FavoriteActivity.zoomToMap){
+	    	FavoriteActivity.zoomToMap = false;
+	    	if(map != null){
+	    		map.animateCamera(CameraUpdateFactory.newLatLng(FavoriteActivity.zoomLatLng), 1000, null);
+	    	}
+	    }
+	    
 	    
 	}
 	
@@ -2215,6 +2227,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         	}
         	else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
         		
+        		waitChronometer.stop();
+        		
         		editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
         		
         		editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
@@ -2224,7 +2238,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         		editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
         		editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
         		
-        		long elapsedMillis = SystemClock.elapsedRealtime() - waitChronometer.getBase();
+        		long elapsedMillis = waitChronometer.eclipsedTime;
             	
         		editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
         		editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
@@ -2635,104 +2649,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	class ViewHolderFavorite {
-		TextView name;
-		ImageView favDeleteBtn;
-		LinearLayout relative;
-		int id;
-	}
-
-	class FavoriteListAdapter extends BaseAdapter {
-		LayoutInflater mInflater;
-		ViewHolderFavorite holder;
-
-		public FavoriteListAdapter() {
-			mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		}
-
-		@Override
-		public int getCount() {
-			return Data.favoriteLocations.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return position;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
-
-			
-			if (convertView == null) {
-				
-				holder = new ViewHolderFavorite();
-				convertView = mInflater.inflate(R.layout.favorite_list_item, null);
-				
-				holder.name = (TextView) convertView.findViewById(R.id.name); 
-				holder.favDeleteBtn = (ImageView) convertView.findViewById(R.id.favDeleteBtn);
-				
-				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
-				
-				holder.relative.setTag(holder);
-				holder.favDeleteBtn.setTag(holder);
-				
-				holder.relative.setLayoutParams(new ListView.LayoutParams(495, 127));
-				ASSL.DoMagic(holder.relative);
-				
-				
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolderFavorite) convertView.getTag();
-			}
-			
-			
-			holder.id = position;
-			
-			holder.name.setText(""+Data.favoriteLocations.get(position).name);
-			
-			holder.relative.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					holder = (ViewHolderFavorite) v.getTag();
-					
-					FavoriteLocation favoriteLocation = Data.favoriteLocations.get(holder.id);
-					
-					Log.e("searchResult.latLng ==",">"+favoriteLocation.latLng);
-					
-					drawerLayout.closeDrawer(favoriteRl);
-					
-					map.animateCamera(CameraUpdateFactory.newLatLng(favoriteLocation.latLng), 2000, null);
-					
-				}
-			});
-			
-			
-			
-			holder.favDeleteBtn.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					holder = (ViewHolderFavorite) v.getTag();
-					
-					FavoriteLocation favoriteLocation = Data.favoriteLocations.get(holder.id);
-					
-					deleteFavoriteAsync(HomeActivity.this, favoriteLocation.sNo, holder.id);
-					
-				}
-			});
-			
-			
-			return convertView;
-		}
-
-	}
+	
 	
 	
 	
@@ -3822,7 +3739,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	/**
 	 * ASync for start ride in  driver mode from server
 	 */
-	public void driverEndRideAsync(final Activity activity, String waitMinutes) {
+	public void driverEndRideAsync(final Activity activity, double waitMinutes) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -3834,6 +3751,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				Data.longitude = Data.locationFetcher.getLongitude();
 			}
 			
+			DecimalFormat decimalFormatWait = new DecimalFormat("#");
+			
+			waitTime = decimalFormatWait.format(waitMinutes);
+			
 			DecimalFormat decimalFormat = new DecimalFormat("#.##");
 			double totalDistanceInKm = totalDistance/1000.0;
 			
@@ -3844,7 +3765,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
 			params.put("distance_travelled", decimalFormat.format(totalDistanceInKm));
-			params.put("wait_time", waitMinutes);
+			params.put("wait_time", waitTime);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("customer_id", "=" + Data.dCustomerId);
@@ -3852,7 +3773,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("latitude", "="+Data.latitude);
 			Log.i("longitude", "="+Data.longitude);
 			Log.i("distance_travelled", "="+(totalDistance / 1000.0));
-			Log.i("wait_time", "="+waitMinutes);
+			Log.i("wait_time", "="+waitTime);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
@@ -4224,27 +4145,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	void updateFavoriteList(){
-		
-		favoriteListAdapter.notifyDataSetChanged();
-		
-		if(Data.favoriteLocations.size() == 0){
-			noFavoriteLocationsText.setVisibility(View.VISIBLE);
-		}
-		else{
-			noFavoriteLocationsText.setVisibility(View.GONE);
-		}
-		
-	}
+
 	
 	/**
 	 * ASync for get all favorite locations from server
 	 */
 	public void getAllFavoriteAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			favoriteProgress.setVisibility(View.VISIBLE);
-			
 			
 			RequestParams params = new RequestParams();
 			
@@ -4292,20 +4199,17 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										
 									}
 									
-									updateFavoriteList();
 									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 							}
 	
-							favoriteProgress.setVisibility(View.GONE);
 						}
 	
 						@Override
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
-							favoriteProgress.setVisibility(View.GONE);
 						}
 					});
 		}
@@ -4317,79 +4221,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	/**
-	 * ASync for deleteFavoriteAsync from server
-	 */
-	public void deleteFavoriteAsync(final Activity activity, int sNo, final int index) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("s_no", ""+sNo);
-
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("s_no", "="+sNo);
-			
-		
-			AsyncHttpClient client = new AsyncHttpClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
-			client.post(Data.SERVER_URL + "/delete_fav_locations", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
 	
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-								}
-								else{
-									
-//									{"log":"Removed from favourite successfully"}	//result
-									
-									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
-									
-									Data.favoriteLocations.remove(index);
-									updateFavoriteList();
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-	
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-
-	}
 	
 	
 	

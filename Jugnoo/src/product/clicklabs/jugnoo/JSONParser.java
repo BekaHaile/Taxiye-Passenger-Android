@@ -159,9 +159,11 @@ public class JSONParser {
 					
 					String SP_C_TOTAL_DISTANCE = pref.getString(Data.SP_C_TOTAL_DISTANCE, "0");
 					String SP_C_TOTAL_FARE = pref.getString(Data.SP_C_TOTAL_FARE, "0");
+					String SP_C_WAIT_TIME = pref.getString(Data.SP_C_WAIT_TIME, "0");
 					
 					Data.totalDistance = Double.parseDouble(SP_C_TOTAL_DISTANCE);
 					Data.totalFare = Double.parseDouble(SP_C_TOTAL_FARE);
+					Data.waitTime = SP_C_WAIT_TIME;
 					
 					
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;

@@ -194,7 +194,7 @@ public class GCMIntentService extends IntentService {
 		                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 		                                    | Intent.FLAG_ACTIVITY_SINGLE_TOP),
 		                    PendingIntent.FLAG_CANCEL_CURRENT));
-		    notification.flags |= Notification.FLAG_ONGOING_EVENT;
+//		    notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		    notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		    notification.defaults |= Notification.DEFAULT_ALL;
 			notificationManager.notify(NOTIFICATION_ID, notification);
@@ -253,6 +253,12 @@ public class GCMIntentService extends IntentService {
 	                    MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 	                // This loop represents the service doing some work.
 
+	            	String SHARED_PREF_NAME1 = "myPref", SP_ACCESS_TOKEN_KEY = "access_token";
+	            	
+	            	SharedPreferences pref1 = getSharedPreferences(SHARED_PREF_NAME1, 0);
+	        		final String accessToken = pref1.getString(SP_ACCESS_TOKEN_KEY, "");
+	        		if(!"".equalsIgnoreCase(accessToken)){
+	            	
 	    	    	try{
 	    		    	 Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
 	    		    	 
@@ -301,8 +307,6 @@ public class GCMIntentService extends IntentService {
 	    	    						 
 	    	    						 
 	    	    					 }
-	    	    					 
-	    	    					 
 	    	    					 
 	    	    					 
 	    	    				 }
@@ -382,6 +386,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    					 Data.totalDistance = jObj.getDouble("distance_travelled");
 	    	    					 Data.totalFare = jObj.getDouble("fare");
+	    	    					 Data.waitTime = jObj.getString("wait_time");
 	    	    					 
 	    	    					 if (HomeActivity.customerEndRideInterrupt != null) {
 	    	    						 notificationManagerResume(this, "Your ride has ended.");
@@ -392,12 +397,14 @@ public class GCMIntentService extends IntentService {
 	    	    						 SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
 	    	    								 P_RIDE_END = "P_RIDE_END",
 	    	    										 SP_C_TOTAL_DISTANCE = "c_total_distance",
-	    	    											SP_C_TOTAL_FARE = "c_total_fare";
+	    	    											SP_C_TOTAL_FARE = "c_total_fare", 
+	    	    											SP_C_WAIT_TIME = "c_wait_time";
 	    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
 	    	    						 Editor editor = pref.edit();
 	    	    						 editor.putString(SP_CUSTOMER_SCREEN_MODE, P_RIDE_END);
 	    	    						 editor.putString(SP_C_TOTAL_DISTANCE, ""+Data.totalDistance);
 	    	    						 editor.putString(SP_C_TOTAL_FARE, ""+Data.totalFare);
+	    	    						 editor.putString(SP_C_WAIT_TIME, Data.waitTime);
 	    	    						 editor.commit();
 	    	    						 
 	    	    						 
@@ -429,7 +436,7 @@ public class GCMIntentService extends IntentService {
 	    	    		 Log.e("Recieved exception message arg1...", ","+intent);
 	    	    		 Log.e("exception", ","+e);
 	    	    	 }
-
+	        		}
 	    	         
 	    	    
 	            }
@@ -437,29 +444,6 @@ public class GCMIntentService extends IntentService {
 	        // Release the wake lock provided by the WakefulBroadcastReceiver.
 	        GcmBroadcastReceiver.completeWakefulIntent(intent);
 	    }
-
-	    // Put the message into a notification and post it.
-	    // This is just one simple example of what you might choose to do with
-	    // a GCM message.
-//	    private void sendNotification(String msg) {
-//	        mNotificationManager = (NotificationManager)
-//	                this.getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//	        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-//	                new Intent(this, SplashLogin.class), 0);
-//
-//	        NotificationCompat.Builder mBuilder =
-//	                new NotificationCompat.Builder(this)
-//	        .setSmallIcon(R.drawable.jugnoo_icon)
-//	        .setContentTitle("GCM Notification")
-//	        .setStyle(new NotificationCompat.BigTextStyle()
-//	        .bigText(msg))
-//	        .setContentText(msg);
-//
-//	        mBuilder.setContentIntent(contentIntent);
-//	        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-//	    }
-
 
 
 }

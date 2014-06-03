@@ -45,7 +45,7 @@ public class SplashNewActivity extends Activity{
 		jugnooTextImg.setVisibility(View.GONE);
 		
 		
-		int initialTime = 1000;
+		int initialTime = 500;
 		int blinkInterval = 100;
 		int waitBeforeMove = 200;
 		int waitAfterMove = 100;

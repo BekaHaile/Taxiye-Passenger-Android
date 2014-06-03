@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="495px"
+    android:layout_width="720px"
     android:layout_height="127px"
     android:orientation="vertical"
     android:background="@drawable/list_white_selector"
@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="400px"
+            android:layout_width="610px"
             android:layout_height="wrap_content"
             android:text="Office"
             android:textColor="@drawable/white_color_selector"

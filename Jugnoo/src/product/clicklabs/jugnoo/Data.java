@@ -65,7 +65,8 @@ public class Data {
 			SP_C_DRIVER_DURATION = "c_driver_duration",
 			
 			SP_C_TOTAL_DISTANCE = "c_total_distance",
-			SP_C_TOTAL_FARE = "c_total_fare"
+			SP_C_TOTAL_FARE = "c_total_fare",
+			SP_C_WAIT_TIME = "c_wait_time"
 			
 			;
 	
@@ -135,6 +136,7 @@ public class Data {
 	
 	
 	public static double totalDistance = 0, totalFare = 0;
+	public static String waitTime = "";
 	
 	
 	public static LatLng mapTarget;
