@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.graphics.Typeface;
 import android.util.Base64;
 
 import com.androidquery.callback.ImageOptions;
@@ -252,5 +253,16 @@ public class Data {
 		}
 	}
 	
+	
+	
+	public static Typeface regular;																// fonts declaration
+	
+
+	public static Typeface regularFont(Context appContext) {											// accessing fonts functions
+		if (regular == null) {
+			regular = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_regular.ttf");
+		}
+		return regular;
+	}
 	
 }

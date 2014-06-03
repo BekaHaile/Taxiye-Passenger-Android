@@ -26,8 +26,8 @@ public class AboutActivity extends Activity{
 		new ASSL(AboutActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn);
-		aboutText = (TextView) findViewById(R.id.aboutText);
+		backBtn = (Button) findViewById(R.id.backBtn); 
+		aboutText = (TextView) findViewById(R.id.aboutText); aboutText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {

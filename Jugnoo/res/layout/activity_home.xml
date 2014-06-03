@@ -112,11 +112,13 @@
                         android:layout_height="99px"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="126px"
+                        android:layout_marginBottom="146px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="Request Ride"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size" 
+                        
+                        />
                     
                     
                     <Button
@@ -125,16 +127,16 @@
                         android:layout_height="99px"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="10px"
+                        android:layout_marginBottom="27px"
                         android:background="@drawable/red_btn_selector"
                         android:text="Cancel Ride"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size" />
 
                     <RelativeLayout
                         android:id="@+id/nearestDriverRl"
                         android:layout_width="match_parent"
-                        android:layout_height="108px"
+                        android:layout_height="128px"
                         android:layout_alignParentBottom="true"
                         android:background="@color/white_translucent"
                         android:visibility="gone"
@@ -176,7 +178,7 @@
                         android:background="@drawable/red_btn_selector"
                         android:text="Cancel request in 5s ?"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size"  />
 
                     <RelativeLayout
                         android:id="@+id/assignedDriverRl"
@@ -321,7 +323,7 @@
                         android:background="@drawable/blue_btn_selector"
                         android:text="Call Driver"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size"  />
                     
                     
                     <TextView 
@@ -511,7 +513,7 @@
                         android:background="@drawable/blue_btn_selector"
                         android:text="Accept Ride"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size"  />
 
                     <Button
                         android:id="@+id/driverCancelRequestBtn"
@@ -523,7 +525,7 @@
                         android:background="@drawable/red_btn_selector"
                         android:text="Cancel Request"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size" />
 
                     <Button
                         android:id="@+id/driverRequestAcceptMyLocationBtn"
@@ -596,7 +598,7 @@
                             android:background="@drawable/blue_btn_selector"
                             android:text="Call"
                             android:textColor="@drawable/white_color_selector"
-                            android:textSize="34px" />
+                            android:textSize="36px" />
 
                         <RelativeLayout
                             android:id="@+id/driverPassengerImageRL"
@@ -672,7 +674,7 @@
                                 android:tag="mwar"
                                 android:text="Slide to start your ride"
                                 android:textColor="@color/white"
-                                android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size"  />
 
                             <product.clicklabs.jugnoo.SlideButton
                                 android:id="@+id/driverStartRideSlider"
@@ -697,7 +699,7 @@
                         android:background="@drawable/red_btn_selector"
                         android:text="Cancel Ride"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size"  />
                         
                         
                     </RelativeLayout>
@@ -740,7 +742,7 @@
                         android:background="@drawable/blue_btn_selector"
                         android:text="Start wait"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size"  />
                          
                          
 
@@ -762,7 +764,7 @@
                                 android:tag="mwar"
                                 android:text="Slide to end your ride"
                                 android:textColor="@color/white"
-                                android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size" />
 
                             <product.clicklabs.jugnoo.SlideButtonInvert
                                 android:id="@+id/driverEndRideSlider"
@@ -1024,7 +1026,7 @@
                             android:id="@+id/reviewRatingBar"
                             style="@style/CustomRatingBar"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="80px"
                             android:numStars="5"
                             android:rating="1"
                             android:stepSize="1.0" />
@@ -1040,7 +1042,7 @@
                         android:background="@drawable/blue_btn_selector"
                         android:text="Submit"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size"  />
             </RelativeLayout>
 
             <RelativeLayout

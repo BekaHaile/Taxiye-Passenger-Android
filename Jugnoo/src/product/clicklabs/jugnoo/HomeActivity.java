@@ -1651,7 +1651,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		else{
 			mapLayout.setVisibility(View.VISIBLE);
 			endRideReviewRl.setVisibility(View.GONE);
-			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
+			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey));
 		}
 		
 		switch(mode){
@@ -1822,7 +1822,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		else{
 			mapLayout.setVisibility(View.VISIBLE);
 			endRideReviewRl.setVisibility(View.GONE);
-			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey_opaque));
+			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey));
 		}
 		
 		
@@ -1927,7 +1927,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
-				centreLocationRl.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
@@ -1957,7 +1957,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
-				centreLocationRl.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.VISIBLE);
@@ -4449,7 +4449,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	/**
-	 * ASync for fetching fb friends from server
+	 * ASync for logout from server
 	 */
 	public void logoutAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {

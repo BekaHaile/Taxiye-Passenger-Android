@@ -86,7 +86,7 @@
                 android:background="@drawable/blue_btn_selector"
                 android:text="Done"
                 android:textColor="@drawable/white_color_selector"
-                android:textSize="38px" />
+                        android:textSize="@dimen/button_text_size"  />
         </LinearLayout>
     </RelativeLayout>
 

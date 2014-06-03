@@ -75,7 +75,7 @@
                         android:layout_alignParentBottom="true"
             android:background="@drawable/blue_btn_selector"
             android:text="Done"
-            android:textSize="40px"
+                        android:textSize="@dimen/button_text_size" 
             android:textColor="@drawable/white_color_selector"
             
             />

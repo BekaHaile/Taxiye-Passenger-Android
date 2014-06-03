@@ -150,7 +150,7 @@
             android:background="@drawable/blue_btn_selector"
             android:text="Sign Up"
             android:textColor="@drawable/white_color_selector"
-            android:textSize="40px" />
+                        android:textSize="@dimen/button_text_size"  />
         
         
         
