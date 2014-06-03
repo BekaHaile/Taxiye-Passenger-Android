@@ -381,9 +381,9 @@ public class SplashLogin extends Activity{
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
 		
-		if (checkPlayServices()) {
-			accessTokenLogin(SplashLogin.this);
-		}
+//		if (checkPlayServices()) {
+//			accessTokenLogin(SplashLogin.this);
+//		}
 		
 	}
 	
@@ -838,15 +838,15 @@ public class SplashLogin extends Activity{
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
 			startActivity(new Intent(SplashLogin.this, HomeActivity.class));
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 		else if(hasFocus && facebookRegister){
 			facebookRegister = false;
 			RegisterScreen.facebookLogin = true;
 			startActivity(new Intent(SplashLogin.this, RegisterScreen.class));
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 			
 		

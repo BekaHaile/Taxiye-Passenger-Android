@@ -19,7 +19,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:splitMotionEvents="false"
-                android:layout_marginTop="90px"
                 android:visibility="gone" >
 
                 <fragment
@@ -34,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -175,7 +174,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="126px"
                         android:background="@drawable/red_btn_selector"
-                        android:text="Cancel Request"
+                        android:text="Cancel request in 5s ?"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="38px" />
 
@@ -212,18 +211,7 @@
                     android:splitMotionEvents="false"
                     android:visibility="gone" >
                     
-                    <TextView 
-            android:id="@+id/inRideRideInProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ride in progress..."
-            android:textSize="38px"
-            android:textColor="@color/bg_grey_opaque"
-            android:singleLine="true"
-            android:layout_marginTop="300px"
-            android:layout_centerHorizontal="true"
-            
-            />
+                    
                     
 
                     <RelativeLayout
@@ -334,6 +322,25 @@
                         android:text="Call Driver"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="38px" />
+                    
+                    
+                    <TextView 
+            android:id="@+id/inRideRideInProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ride in progress..."
+                android:padding="25px"
+                android:gravity="center"
+                        android:layout_alignParentTop="true"
+                android:background="@color/white"
+            android:textSize="32px"
+            android:textColor="@color/bg_grey_opaque"
+            android:singleLine="true"
+            android:layout_centerHorizontal="true"
+            
+            />
+                    
+                    
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -342,8 +349,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="520px"
-                    android:visibility="visible" >
+                    android:layout_marginBottom="560px"
+                    android:visibility="gone" >
 
                     <ProgressBar
                         android:id="@+id/centreInfoProgress"
@@ -780,13 +787,13 @@
                 android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
 
                 <RelativeLayout 
                     android:id="@+id/upLayout"
                     android:layout_width="match_parent"
-                        android:layout_height="640px" 
+                        android:layout_height="600px" 
                     >
                     
                     
@@ -795,14 +802,14 @@
                     <ImageView
                         android:id="@+id/reviewUserImgBlured"
                         android:layout_width="match_parent"
-                        android:layout_height="640px" 
+                        android:layout_height="600px" 
             android:scaleType="centerCrop"
                         />
 
                     <ImageView
                         android:id="@+id/reviewUserImgBlurTop"
                         android:layout_width="match_parent"
-                        android:layout_height="640px"
+                        android:layout_height="600px"
                         android:background="@drawable/profile_pic_top" />
 
                     <RelativeLayout
@@ -855,7 +862,7 @@
                         android:layout_height="180px"
                         android:layout_alignParentBottom="true"
                         android:layout_below="@+id/reviewUserName"
-                        android:layout_marginTop="10px"
+                        android:layout_marginTop="20px"
                         android:background="@color/black_translucent" >
 
                         <TextView
@@ -872,7 +879,7 @@
 
                         <RelativeLayout
                             android:id="@+id/reviewDistanceRl"
-                            android:layout_width="359px"
+                            android:layout_width="239px"
                             android:layout_height="match_parent"
                             android:layout_below="@+id/reviewReachedDestinationText" >
 
@@ -905,13 +912,25 @@
                         <ImageView
                             android:layout_width="2px"
                             android:layout_height="90px"
-                            android:layout_centerHorizontal="true"
                             android:layout_marginTop="77px"
-                            android:background="@color/white" />
+                            android:background="@color/white" 
+                android:layout_toRightOf="@+id/reviewDistanceRl"
+                            
+                            />
+                        
+                        
+                         <ImageView
+                            android:layout_width="2px"
+                            android:layout_height="90px"
+                            android:layout_marginTop="77px"
+                            android:background="@color/white" 
+                android:layout_toLeftOf="@+id/reviewFareRl"
+                            
+                            />
 
                         <RelativeLayout
                             android:id="@+id/reviewFareRl"
-                            android:layout_width="359px"
+                            android:layout_width="239px"
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/reviewReachedDestinationText" >
@@ -1151,7 +1170,7 @@
             android:background="@drawable/menu_divider" />
 
         <RelativeLayout
-            android:id="@+id/helpRl"
+            android:id="@+id/bookingsRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
             android:layout_below="@+id/userName" 
@@ -1159,12 +1178,12 @@
             >
 
             <TextView
-                android:id="@+id/helpText"
+                android:id="@+id/bookingsText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="42px"
-                android:text="Help"
+                android:text="Bookings"
                 android:textColor="@color/white"
                 android:textSize="34px" />
         </RelativeLayout>

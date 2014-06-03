@@ -113,8 +113,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	RelativeLayout inviteFriendRl;
 	TextView inviteFriendText;
 	
-	RelativeLayout helpRl;
-	TextView helpText;
+	RelativeLayout bookingsRl;
+	TextView bookingsText;
 	
 	RelativeLayout aboutRl;
 	TextView aboutText;
@@ -376,8 +376,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		inviteFriendRl = (RelativeLayout) findViewById(R.id.inviteFriendRl);
 		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText);
 		
-		helpRl = (RelativeLayout) findViewById(R.id.helpRl);
-		helpText = (TextView) findViewById(R.id.helpText);
+		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
+		bookingsText = (TextView) findViewById(R.id.bookingsText);
 		
 		aboutRl = (RelativeLayout) findViewById(R.id.aboutRl);
 		aboutText = (TextView) findViewById(R.id.aboutText);
@@ -714,15 +714,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				
+				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
-		helpRl.setOnClickListener(new View.OnClickListener() {
+		bookingsRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				
+				//TODO booking
 			}
 		});
 		
@@ -925,13 +926,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			}
 		});
 		
-		requestFinalLayout.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-			}
-		});
+//		requestFinalLayout.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				
+//			}
+//		});
 		
 		
 		
@@ -1065,6 +1066,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
+				 GCMIntentService.clearNotifications(HomeActivity.this);
+				
 				driverAcceptRideAsync(HomeActivity.this);
 			}
 		});
@@ -1197,7 +1200,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				double minutes = Math.ceil(((double)seconds) / 60.0);
 				String min = (minutes > 9)? ""+minutes : "0"+minutes;
 				
-				Toast.makeText(getApplicationContext(), "wait = "+min, Toast.LENGTH_SHORT).show();
 	        	
 				driverEndRideAsync(HomeActivity.this, min);
 				
@@ -1402,6 +1404,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					  }
 				  }
 
+				  
+				  
 				  @Override
 				  public void onMapSettled() {
 				    // Map settled
@@ -1716,10 +1720,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			case D_IN_RIDE:
 				
-				Log.e("SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime =","==="+(SystemClock.elapsedRealtime() + 
-						(long)HomeActivity.previousWaitTime));
-				
-				waitChronometer.setBase(SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime);
+//				Log.e("SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime =","==="+(SystemClock.elapsedRealtime() + 
+//						(long)HomeActivity.previousWaitTime));
+//				
+//				waitChronometer.setBase(SystemClock.elapsedRealtime() + (long)HomeActivity.previousWaitTime);
 				
 				map.clear();
 				
@@ -2317,14 +2321,17 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	@Override
     public void onDestroy() {
-        
-        Data.locationFetcher.destroy();
-        
-        ASSL.closeActivity(drawerLayout);
-        stopService(new Intent(HomeActivity.this, CRequestRideService.class));
-        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-        
-        System.gc();
+        try{
+	        Data.locationFetcher.destroy();
+	        
+	        ASSL.closeActivity(drawerLayout);
+	        stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+	        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+	        
+	        System.gc();
+        }catch(Exception e){
+        	e.printStackTrace();
+        }
         
         super.onDestroy();
     }
@@ -3281,7 +3288,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		protected void onProgressUpdate(Integer... values) {
 			super.onProgressUpdate(values);
 			try{
-				cancelRequestBtn.setText("Cancel request " + values[0] + " ?");
+				cancelRequestBtn.setText("Cancel request in " + values[0] + "s ?");
 			} catch(Exception e){
 				e.printStackTrace();
 			}

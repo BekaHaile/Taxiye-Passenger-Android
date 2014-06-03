@@ -44,11 +44,13 @@
                 android:id="@+id/setFavoriteBtn"
                 android:layout_width="52px"
                 android:layout_height="52px"
-                android:background="@drawable/fav_btn_selector"
+                android:background="@color/white"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10px"
                 android:layout_centerVertical="true"
                 android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:padding="40px"
                 
                 />
             

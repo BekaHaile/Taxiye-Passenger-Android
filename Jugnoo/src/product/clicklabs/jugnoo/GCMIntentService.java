@@ -160,7 +160,7 @@ public class GCMIntentService extends IntentService {
 			
 			Log.v("message",","+message);
 			
-			Intent notificationIntent = new Intent(context, SplashLogin.class);
+			Intent notificationIntent = new Intent(context, SplashNewActivity.class);
 			Log.v("notification_message",","+message);
 			
 			Notification notification = new Notification(R.drawable.jugnoo_icon, message, when);
@@ -173,10 +173,39 @@ public class GCMIntentService extends IntentService {
 
 			notification.setLatestEventInfo(context, title, message, intent);
 			notification.flags |= Notification.FLAG_AUTO_CANCEL;
-			notificationManager.notify(0, notification);
+		    notification.defaults |= Notification.DEFAULT_ALL;
+			notificationManager.notify(NOTIFICATION_ID, notification);
+			
 			
 		}
 
+	    @SuppressWarnings("deprecation")
+		private void notificationManagerResume(Context context, String message) {
+			
+			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+			
+			Log.v("notification_message",","+message);
+			
+			Notification notification = new Notification(R.drawable.jugnoo_icon,
+		            "Jugnoo", System.currentTimeMillis());
+		    notification.setLatestEventInfo(this, "Jugnoo",
+		    		message, PendingIntent.getActivity(this,
+		                    0, new Intent(this, HomeActivity.class)
+		                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+		                                    | Intent.FLAG_ACTIVITY_SINGLE_TOP),
+		                    PendingIntent.FLAG_CANCEL_CURRENT));
+		    notification.flags |= Notification.FLAG_ONGOING_EVENT;
+		    notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		    notification.defaults |= Notification.DEFAULT_ALL;
+			notificationManager.notify(NOTIFICATION_ID, notification);
+		}
+	    
+	    
+	    public static void clearNotifications(Context context){
+	    	NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+	    	notificationManager.cancel(NOTIFICATION_ID);
+	    }
+	    
 		protected void onRegistered(Context arg0, String arg1) {
 	    	 Log.e("Registration", "!");
 	         Log.e("Registration", arg1.toString());
@@ -247,6 +276,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
 	    	    					 
 	    	    					 if(HomeActivity.driverGetRequestPush != null){
+	    	    						 notificationManagerResume(this, "You have got a new ride request.");
 	    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
 	    	    					 }
 	    	    					 else{
@@ -296,6 +326,8 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
 	    	    					 
+	    	    					 clearNotifications(this);
+	    	    					 
 	    	    					 if(HomeActivity.driverGetRequestPush != null){
 	    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
 	    	    					 }
@@ -321,6 +353,7 @@ public class GCMIntentService extends IntentService {
 	    	    				 else if(3 == flag){
 
 	    	    					 if (HomeActivity.detectRideStart != null) {
+	    	    						 notificationManagerResume(this, "Your ride has started.");
 	    	    						 HomeActivity.detectRideStart.startRideForCustomer(0);
 	    	    					 }
 	    	    					 else{
@@ -351,6 +384,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 Data.totalFare = jObj.getDouble("fare");
 	    	    					 
 	    	    					 if (HomeActivity.customerEndRideInterrupt != null) {
+	    	    						 notificationManagerResume(this, "Your ride has ended.");
 	    	    						 HomeActivity.customerEndRideInterrupt.customerEndRideInterrupt();
 	    	    					 }
 	    	    					 else{
@@ -365,6 +399,8 @@ public class GCMIntentService extends IntentService {
 	    	    						 editor.putString(SP_C_TOTAL_DISTANCE, ""+Data.totalDistance);
 	    	    						 editor.putString(SP_C_TOTAL_FARE, ""+Data.totalFare);
 	    	    						 editor.commit();
+	    	    						 
+	    	    						 
 	    	    						 
 	    	    						 notificationManager(this, "Your ride has ended.");
 	    	    					 }
