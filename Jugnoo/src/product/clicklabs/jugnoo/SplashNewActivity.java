@@ -259,6 +259,7 @@ public class SplashNewActivity extends Activity{
 		
 		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		final String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
+		final String id = pref.getString(Data.SP_ID_KEY, "");
 		if(!"".equalsIgnoreCase(accessToken)){
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
@@ -303,7 +304,7 @@ public class SplashNewActivity extends Activity{
 									}
 									else{
 										
-										new JSONParser().parseAccessTokenLoginData(activity, response, accessToken);
+										new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
 										
 										loginDataFetched = true;
 										

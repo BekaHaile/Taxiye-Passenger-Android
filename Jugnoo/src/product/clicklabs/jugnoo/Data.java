@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class Data {
 	
 	public static final String SHARED_PREF_NAME = "myPref";
-	public static final String SP_ACCESS_TOKEN_KEY = "access_token",
+	public static final String SP_ACCESS_TOKEN_KEY = "access_token", SP_ID_KEY = "session_id",
 			
 			SP_TOTAL_DISTANCE = "total_distance", 
 			SP_WAIT_TIME = "wait_time",

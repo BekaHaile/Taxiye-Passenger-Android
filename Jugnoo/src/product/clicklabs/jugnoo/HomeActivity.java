@@ -723,10 +723,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-//				if(passengerScreenMode == PassengerScreenMode.P_INITIAL || driverScreenMode == DriverScreenMode.D_INITIAL){
+				if(passengerScreenMode == PassengerScreenMode.P_INITIAL || driverScreenMode == DriverScreenMode.D_INITIAL){
 					logoutAsync(HomeActivity.this);
-//				}
-				
+				}
+				else{
+					new DialogPopup().alertPopup(activity, "", "You can't logout in between ride transcation.");
+				}
 			}
 		});
 		
@@ -4457,8 +4459,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
+			params.put("id", Data.userData.id);
 
-			Log.i("access_token", Data.userData.accessToken);
+			Log.i("access_token", "="+Data.userData.accessToken);
+			Log.i("id", "="+Data.userData.id);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();

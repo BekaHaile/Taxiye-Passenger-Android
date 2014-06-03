@@ -97,12 +97,13 @@ class FriendInfo implements Comparable<FriendInfo> {
 
 
 class UserData{
-	String accessToken, userName, userImage;
+	String accessToken, userName, userImage, id;
 	
-	public UserData(String accessToken, String userName, String userImage){
+	public UserData(String accessToken, String userName, String userImage, String id){
 		this.accessToken = accessToken;
 		this.userName = userName;
 		this.userImage = userImage;
+		this.id = id;
 	}
 }
 

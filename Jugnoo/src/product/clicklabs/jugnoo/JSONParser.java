@@ -20,11 +20,12 @@ public class JSONParser {
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-				userData.getString("user_image"));
+				userData.getString("user_image"), userData.getString("id"));
 		
 		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		Editor editor = pref.edit();
 		editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
+		editor.putString(Data.SP_ID_KEY, Data.userData.id);
 		editor.commit();
 		
 		HomeActivity.userMode = UserMode.PASSENGER;
@@ -35,11 +36,11 @@ public class JSONParser {
 	}
 	
 	
-	public void parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
+	public void parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
-				userData.getString("user_image"));
+				userData.getString("user_image"), id);
 		
 		//current_user_status = 1 driver or 2 user
 		
