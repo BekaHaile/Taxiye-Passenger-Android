@@ -41,6 +41,7 @@ import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.model.GraphUser;
+import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -54,6 +55,7 @@ public class SplashLogin extends Activity{
 	Button signInBtn, forgotPasswordBtn, signupBtn, facebookSignInBtn;
 	TextView extraTextForScroll;
 	ImageView orBg;
+	TextView orText;
 	
 	LinearLayout relative;
 	
@@ -74,6 +76,8 @@ public class SplashLogin extends Activity{
 	GoogleCloudMessaging gcm;
 	String regid;
 	
+	String enteredEmail = "";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,35 +86,30 @@ public class SplashLogin extends Activity{
 		loginDataFetched = false;
 		facebookRegister = false;
 		
+		enteredEmail = "";
+		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashLogin.this, relative, 1134, 720, false);
 		
-		emailEt = (EditText) findViewById(R.id.emailEt);
-		passwordEt = (EditText) findViewById(R.id.passwordEt);
+		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
+		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
 		
-		signInBtn = (Button) findViewById(R.id.signInBtn);
-		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn);
-		signupBtn = (Button) findViewById(R.id.signupBtn);
-		facebookSignInBtn = (Button) findViewById(R.id.facebookSignInBtn);
+		signInBtn = (Button) findViewById(R.id.signInBtn); signInBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		signupBtn = (Button) findViewById(R.id.signupBtn); signupBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		facebookSignInBtn = (Button) findViewById(R.id.facebookSignInBtn); facebookSignInBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 		
-		orBg = (ImageView) findViewById(R.id.orBg);
+		orBg = (ImageView) findViewById(R.id.orBg); 
+		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
-		gcm = GoogleCloudMessaging.getInstance(this);
-        regid = getRegistrationId(this);
-
-        if (regid.isEmpty()) {
-            registerInBackground();
-        }
 		
 		orBg.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				
-				
 				
 			}
 		});
@@ -134,6 +133,7 @@ public class SplashLogin extends Activity{
 					}
 					else{
 						if(isEmailValid(email)){
+							enteredEmail = email;
 							sendLoginValues(SplashLogin.this, email, password);
 						}
 						else{
@@ -373,9 +373,24 @@ public class SplashLogin extends Activity{
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
 			
-			Data.registerForGCM(SplashLogin.this);
+//			Data.deviceToken = GCMRegistrar.getRegistrationId(this);
+//			Log.i("Data.deviceToken", Data.deviceToken + "..");
 			
-			Data.generateKeyHash(SplashLogin.this);
+//			Data.registerForGCM(SplashLogin.this);
+//			
+//			
+//			
+			gcm = GoogleCloudMessaging.getInstance(this);
+		    regid = getRegistrationId(this);
+		    Data.deviceToken = regid;
+	
+		    Log.i("deviceToken", Data.deviceToken + "..");
+		    
+		    if (regid.isEmpty()) {
+		        registerInBackground();
+		    }
+			
+//			Data.generateKeyHash(SplashLogin.this);
 			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
@@ -409,6 +424,15 @@ public class SplashLogin extends Activity{
 	    }
 	    return registrationId;
 	}
+	
+	private void setRegistrationId(Context context, String regId) {
+	    final SharedPreferences prefs = getGCMPreferences(context);
+	    SharedPreferences.Editor editor = prefs.edit();
+	    editor.putString(PROPERTY_REG_ID, regId);
+	    editor.putInt(PROPERTY_APP_VERSION, getAppVersion(context));
+	    editor.commit();
+	}
+	
 	/**
 	 * @return Application's {@code SharedPreferences}.
 	 */
@@ -448,6 +472,8 @@ public class SplashLogin extends Activity{
 	                regid = gcm.register(Data.GOOGLE_PROJECT_ID);
 	                Data.deviceToken = regid;
 	                msg = "Device registered, registration ID=" + regid;
+	                
+	                setRegistrationId(SplashLogin.this, regid);
 	            } catch (IOException ex) {
 	                msg = "Error :" + ex.getMessage();
 	            }
@@ -461,87 +487,6 @@ public class SplashLogin extends Activity{
 	        }
 	    }.execute(null, null, null);
 	}
-	
-	/**
-	 * ASync for access token login from server
-	 */
-	public void accessTokenLogin(final Activity activity) {
-		
-		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-		final String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
-		final String id = pref.getString(Data.SP_ID_KEY, "");
-		if(!"".equalsIgnoreCase(accessToken)){
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
-				
-				RequestParams params = new RequestParams();
-				params.put("access_token", accessToken);
-
-				Log.i("accessToken", "=" + accessToken);
-			
-				AsyncHttpClient client = new AsyncHttpClient();
-				client.setTimeout(Data.SERVER_TIMEOUT);
-				client.post(Data.SERVER_URL + "/access_token", params,
-						new AsyncHttpResponseHandler() {
-						private JSONObject jObj;
-		
-							@Override
-							public void onSuccess(String response) {
-								Log.v("Server response", "response = " + response);
-		
-								try {
-									jObj = new JSONObject(response);
-									
-									if(!jObj.isNull("error")){
-										
-										
-//										{"error":"some parameter missing","flag":0}//error
-//										{"error":"invalid access token","flag":1}//error
-
-										int flag = jObj.getInt("flag");	
-										String errorMessage = jObj.getString("error");
-										
-										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-									}
-									else{
-										
-										new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
-										
-										loginDataFetched = true;
-										
-									}
-								}  catch (Exception exception) {
-									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								}
-		
-								DialogPopup.dismissLoadingDialog();
-							}
-		
-							@Override
-							public void onFailure(Throwable arg0) {
-								Log.e("request fail", arg0.toString());
-								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							}
-						});
-			}
-			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			}
-		}
-
-	}
-	
 	
 
 	
@@ -618,6 +563,10 @@ public class SplashLogin extends Activity{
 									else if(2 == flag){ // {"error":"incorrect password","flag":2}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
+									else if(3 == flag){ // {"error":"enter otp","flag":2}//error
+										confirmOTPPopup(activity, 1);
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
@@ -652,7 +601,7 @@ public class SplashLogin extends Activity{
 	}
 	
 	
-	void confirmOTPPopup(Activity activity){
+	void confirmOTPPopup(Activity activity, final int flag){
 
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -669,18 +618,23 @@ public class SplashLogin extends Activity{
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode);
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(getApplicationContext()));
+			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			
-			Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
+			Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(getApplicationContext()));
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			btnConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					sendFacebookLoginValues(SplashLogin.this, etCode.getText().toString());
+					if(flag == 0){
+						sendFacebookLoginValues(SplashLogin.this, etCode.getText().toString());
+					}
+					else{
+						sendSignupValues(SplashLogin.this, enteredEmail, etCode.getText().toString());
+					}
 				}
 				
 			});
@@ -699,6 +653,110 @@ public class SplashLogin extends Activity{
 			e.printStackTrace();
 		}
 	
+	}
+	
+	
+	
+	/**
+	 * ASync for register from server
+	 */
+	public void sendSignupValues(final Activity activity, final String emailId, final String otp) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			if(Data.locationFetcher != null){
+				Data.latitude = Data.locationFetcher.getLatitude();
+				Data.longitude = Data.locationFetcher.getLongitude();
+			}
+
+		
+			params.put("user_name", "");
+			params.put("ph_no", "");
+			params.put("email", emailId);
+			params.put("password", "");
+			params.put("otp", otp);
+			params.put("device_type", "0");
+			params.put("device_token", Data.deviceToken);
+			params.put("latitude", ""+Data.latitude);
+			params.put("longitude", ""+Data.longitude);
+			params.put("country", Data.country);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", Data.appVersion);
+			params.put("os_version", Data.osVersion);
+
+			Log.i("email", "=" + emailId);
+			Log.i("device_token", "=" + Data.deviceToken);
+			Log.i("latitude", "=" + Data.latitude);
+			Log.i("longitude", "=" + Data.longitude);
+			Log.i("country", "=" + Data.country);
+			Log.i("device_name", "=" + Data.deviceName);
+			Log.i("app_version", "=" + Data.appVersion);
+			Log.i("os_version", "=" + Data.osVersion);
+			
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/customer_registeration", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@SuppressWarnings("unused")
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(2 == flag){ // {"error": "email already registered","flag":2}/error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else if(0 == flag){ // {"error": 'Please enter otp',"flag":0} //error
+										confirmOTPPopup(activity, 1);
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else if(1 == flag){ // {"error": 'Incorrect verification code',"flag":1}
+										confirmOTPPopup(activity, 1);
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									new JSONParser().parseLoginData(activity, response);
+									loginDataFetched = true;
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
 	}
 	
 	
@@ -779,7 +837,8 @@ public class SplashLogin extends Activity{
 									String errorMessage = jObj.getString("error");
 									
 									if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
-										confirmOTPPopup(activity);
+										confirmOTPPopup(activity, 0);
+										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else if(3 == flag){ // {"error": 'Please enter details',"flag":3}
 										facebookRegister = true;

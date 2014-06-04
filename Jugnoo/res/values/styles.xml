@@ -20,8 +20,8 @@
     
      <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/star_rating_bar_full</item>
-        <item name="android:minHeight">48dip</item>
-        <item name="android:maxHeight">48dip</item>
+        <item name="android:minHeight">56dip</item>
+        <item name="android:maxHeight">56dip</item>
     </style>
     
      
@@ -32,6 +32,9 @@
         <item name="@android:windowEnterAnimation">@anim/fade_in</item>
         <item name="@android:windowExitAnimation">@anim/fade_out</item>
     </style>
+    
+    
+    
     
 
 </resources>

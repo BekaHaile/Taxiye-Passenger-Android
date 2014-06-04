@@ -57,14 +57,14 @@ public class InviteFacebookFriendsActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title);
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
 		
-		searchFriendsEt = (EditText) findViewById(R.id.searchFriendsEt);
+		searchFriendsEt = (EditText) findViewById(R.id.searchFriendsEt); searchFriendsEt.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		facebookFriendsGrid = (GridView) findViewById(R.id.facebookFriendsGrid);
-		noFriendsText = (TextView) findViewById(R.id.noFriendsText);
+		noFriendsText = (TextView) findViewById(R.id.noFriendsText); noFriendsText.setTypeface(Data.regularFont(getApplicationContext()));
 		
-		sendInviteBtn = (Button) findViewById(R.id.sendInviteBtn);
+		sendInviteBtn = (Button) findViewById(R.id.sendInviteBtn); sendInviteBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
 		Data.friendInfosDuplicate.clear();
@@ -169,7 +169,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 				
 				holder.progress = (ProgressBar) row.findViewById(R.id.progress);
 				
-				holder.friendName = (TextView) row.findViewById(R.id.friendName);
+				holder.friendName = (TextView) row.findViewById(R.id.friendName); holder.friendName.setTypeface(Data.regularFont(getApplicationContext()));
 				
 				holder.relative = (LinearLayout) row.findViewById(R.id.relative);
 				holder.relative.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -193,6 +193,12 @@ public class InviteFacebookFriendsActivity extends Activity{
 			AQuery aq = new AQuery(holder.friendImage);  //http://graph.facebook.com/100005838482296/picture?width=160&height=160
 			aq.id(holder.friendImage).progress(holder.progress).image(friendInfo.fbImage, Data.imageOptionsFullRound());
 			
+			if(friendInfo.flag == 0){
+				holder.tick.setVisibility(View.VISIBLE);
+			}
+			else{
+				holder.tick.setVisibility(View.GONE);
+			}
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
 				

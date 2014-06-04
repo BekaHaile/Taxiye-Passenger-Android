@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -30,13 +29,15 @@ public class DriverLocationUpdateService extends Service {
 	
 	SendDriverLocationToServer sendDriverLocationToServer;
 	
+	boolean stop = false;
+	
 	LatLng lastLocation;
 	
 	public DriverLocationUpdateService() {
 		Log.e("DriverLocationUpdateService"," instance created");
 		
 		lastLocation = Data.chandigarhLatLng;
-		
+		stop = false;
 		count = 0; 
 		
 	}
@@ -124,6 +125,7 @@ public class DriverLocationUpdateService extends Service {
  
     @Override
     public void onDestroy() {
+    	stop = true;
         if(sendDriverLocationToServer != null){
     		sendDriverLocationToServer.cancel(true);
     		sendDriverLocationToServer = null;
@@ -145,7 +147,7 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		String SERVER_URL = "http://54.81.229.172:7000";
+    		String SERVER_URL = "http://54.81.229.172:8000";
     		
     		String SHARED_PREF_NAME = "myPref";
     		String SP_ACCESS_TOKEN_KEY = "access_token";
@@ -161,6 +163,8 @@ public class DriverLocationUpdateService extends Service {
     			}
     			
 				
+    			if(!stop){
+    			
 	    		if(locationFetcher != null){
 	    			
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
@@ -194,6 +198,7 @@ public class DriverLocationUpdateService extends Service {
 	    			}
 	    			
 	    		}
+    		}
     		} catch(Exception e){
     			e.printStackTrace();
     		}

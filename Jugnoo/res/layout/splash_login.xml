@@ -52,7 +52,7 @@
                  />
 
             <ImageView
-                android:layout_width="620px"
+                android:layout_width="648px"
                 android:layout_height="2px"
                 android:background="#E7E7E7" />
 

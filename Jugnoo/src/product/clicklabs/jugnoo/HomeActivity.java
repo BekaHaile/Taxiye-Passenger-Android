@@ -25,6 +25,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
@@ -37,10 +38,12 @@ import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -118,6 +121,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	RelativeLayout aboutRl;
 	TextView aboutText;
+	
+	RelativeLayout sosRl;
+	TextView sosText;
 	
 	RelativeLayout logoutRl;
 	TextView logoutText;
@@ -365,23 +371,26 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		profileImgProgress = (ProgressBar) findViewById(R.id.profileImgProgress);
 		profileImg = (ImageView) findViewById(R.id.profileImg);
-		userName = (TextView) findViewById(R.id.userName);
+		userName = (TextView) findViewById(R.id.userName); userName.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		driverModeRl = (RelativeLayout) findViewById(R.id.driverModeRl);
-		driverModeText = (TextView) findViewById(R.id.driverModeText);
+		driverModeText = (TextView) findViewById(R.id.driverModeText); driverModeText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverModeToggle = (ImageView) findViewById(R.id.driverModeToggle);
 		
 		inviteFriendRl = (RelativeLayout) findViewById(R.id.inviteFriendRl);
-		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText);
+		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText); inviteFriendText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
-		bookingsText = (TextView) findViewById(R.id.bookingsText);
+		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		aboutRl = (RelativeLayout) findViewById(R.id.aboutRl);
-		aboutText = (TextView) findViewById(R.id.aboutText);
+		aboutText = (TextView) findViewById(R.id.aboutText); aboutText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		sosRl = (RelativeLayout) findViewById(R.id.sosRl);
+		sosText = (TextView) findViewById(R.id.sosText); sosText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		logoutRl = (RelativeLayout) findViewById(R.id.logoutRl);
-		logoutText = (TextView) findViewById(R.id.logoutText);
+		logoutText = (TextView) findViewById(R.id.logoutText); logoutText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
 		
@@ -392,7 +401,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		topRl = (RelativeLayout) findViewById(R.id.topRl);
 		menuBtn = (Button) findViewById(R.id.menuBtn);
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title);
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
 		jugnooLogo = (ImageView) findViewById(R.id.jugnooLogo);
 		favBtn = (Button) findViewById(R.id.favBtn);
 		
@@ -428,15 +437,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
 		searchBarLayout = (RelativeLayout) findViewById(R.id.searchBarLayout);
 		
-		searchEt = (EditText) findViewById(R.id.searchEt);
+		searchEt = (EditText) findViewById(R.id.searchEt); searchEt.setTypeface(Data.regularFont(getApplicationContext()));
 		search = (Button) findViewById(R.id.search);
 		
 		myLocationBtn = (Button) findViewById(R.id.myLocationBtn);
-		requestRideBtn = (Button) findViewById(R.id.requestRideBtn);
-		initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
+		requestRideBtn = (Button) findViewById(R.id.requestRideBtn); requestRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn); initialCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		nearestDriverRl = (RelativeLayout) findViewById(R.id.nearestDriverRl);
-		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText);
+		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText); nearestDriverText.setTypeface(Data.regularFont(getApplicationContext()));
 		nearestDriverProgress = (ProgressBar) findViewById(R.id.nearestDriverProgress);
 		
 		
@@ -446,9 +455,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		//Before request final layout
 		beforeRequestFinalLayout = (RelativeLayout) findViewById(R.id.beforeRequestFinalLayout);
 
-		cancelRequestBtn = (Button) findViewById(R.id.cancelRequestBtn);
+		cancelRequestBtn = (Button) findViewById(R.id.cancelRequestBtn); cancelRequestBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		cancelRequestBtn.setText("Cancel request in 5s ?");
 
-		assignedDriverText = (TextView) findViewById(R.id.assignedDriverText);
+		assignedDriverText = (TextView) findViewById(R.id.assignedDriverText); assignedDriverText.setTypeface(Data.regularFont(getApplicationContext()));
 		assignedDriverProgress = (ProgressBar) findViewById(R.id.assignedDriverProgress);
 		
 		
@@ -462,10 +472,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverImage = (ImageView) findViewById(R.id.driverImage);
 		driverCarImage = (ImageView) findViewById(R.id.driverCarImage);
 		
-		driverName = (TextView) findViewById(R.id.driverName);
-		driverTime = (TextView) findViewById(R.id.driverTime);
-		callDriverBtn = (Button) findViewById(R.id.callDriverBtn);
-		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress);
+		driverName = (TextView) findViewById(R.id.driverName); driverName.setTypeface(Data.regularFont(getApplicationContext()));
+		driverTime = (TextView) findViewById(R.id.driverTime); driverTime.setTypeface(Data.regularFont(getApplicationContext()));
+		callDriverBtn = (Button) findViewById(R.id.callDriverBtn); callDriverBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress); inRideRideInProgress.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
 		
@@ -480,7 +490,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
 		centreInfoRl = (RelativeLayout) findViewById(R.id.centreInfoRl);
 		centreInfoProgress = (ProgressBar) findViewById(R.id.centreInfoProgress);
-		centreLocationSnippet = (TextView) findViewById(R.id.centreLocationSnippet);
+		centreLocationSnippet = (TextView) findViewById(R.id.centreLocationSnippet); centreLocationSnippet.setTypeface(Data.regularFont(getApplicationContext()));
 		setFavoriteBtn = (Button) findViewById(R.id.setFavoriteBtn);
 		
 		centreLocationSnippet.setMinimumWidth((int)(200.0 * ASSL.Xscale()));
@@ -511,16 +521,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		//Driver initial layout
 		driverInitialLayout = (RelativeLayout) findViewById(R.id.driverInitialLayout);
 		driverNewRideRequestRl = (RelativeLayout) findViewById(R.id.driverNewRideRequestRl);
-		driverNewRideRequestText = (TextView) findViewById(R.id.driverNewRideRequestText);
-		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText);
+		driverNewRideRequestText = (TextView) findViewById(R.id.driverNewRideRequestText); driverNewRideRequestText.setTypeface(Data.regularFont(getApplicationContext()));
+		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText); driverNewRideRequestClickText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverInitialMyLocationBtn = (Button) findViewById(R.id.driverInitialMyLocationBtn);
 		
 		
 		
 		// Driver Request Accept layout
 		driverRequestAcceptLayout = (RelativeLayout) findViewById(R.id.driverRequestAcceptLayout);
-		driverAcceptRideBtn = (Button) findViewById(R.id.driverAcceptRideBtn);
-		driverCancelRequestBtn = (Button) findViewById(R.id.driverCancelRequestBtn);
+		driverAcceptRideBtn = (Button) findViewById(R.id.driverAcceptRideBtn); driverAcceptRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		driverCancelRequestBtn = (Button) findViewById(R.id.driverCancelRequestBtn); driverCancelRequestBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		driverRequestAcceptMyLocationBtn = (Button) findViewById(R.id.driverRequestAcceptMyLocationBtn);
 		
 		
@@ -529,25 +539,25 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverEngagedLayout = (RelativeLayout) findViewById(R.id.driverEngagedLayout);
 		
 
-		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName);
-		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue);
-		driverPassengerCallBtn = (Button) findViewById(R.id.driverPassengerCallBtn);
+		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName); driverPassengerName.setTypeface(Data.regularFont(getApplicationContext()));
+		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue); driverPassengerRatingValue.setTypeface(Data.regularFont(getApplicationContext()));
+		driverPassengerCallBtn = (Button) findViewById(R.id.driverPassengerCallBtn); driverPassengerCallBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		driverPassengerImageProgress = (ProgressBar) findViewById(R.id.driverPassengerImageProgress);
 		driverPassengerImage = (ImageView) findViewById(R.id.driverPassengerImage);
 		
 		//Start ride layout
 		driverStartRideMainRl = (RelativeLayout) findViewById(R.id.driverStartRideMainRl);
 		driverStartRideMyLocationBtn = (Button) findViewById(R.id.driverStartRideMyLocationBtn);
-		driverStartRideText = (TextView) findViewById(R.id.driverStartRideText);
+		driverStartRideText = (TextView) findViewById(R.id.driverStartRideText); driverStartRideText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverStartRideSlider = (SlideButton) findViewById(R.id.driverStartRideSlider);
-		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn);
+		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
 		//End ride layout
 		driverInRideMainRl = (RelativeLayout) findViewById(R.id.driverInRideMainRl);
-		waitChronometer = (PausableChronometer) findViewById(R.id.waitChronometer);
-		driverWaitBtn = (Button) findViewById(R.id.driverWaitBtn);
-		driverEndRideText = (TextView) findViewById(R.id.driverEndRideText);
+		waitChronometer = (PausableChronometer) findViewById(R.id.waitChronometer); waitChronometer.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		driverWaitBtn = (Button) findViewById(R.id.driverWaitBtn); driverWaitBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		driverEndRideText = (TextView) findViewById(R.id.driverEndRideText); driverEndRideText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverEndRideSlider = (SlideButtonInvert) findViewById(R.id.driverEndRideSlider);
 		waitStart = 2;
 		
@@ -578,18 +588,18 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		reviewUserImage = (ImageView) findViewById(R.id.reviewUserImage);
 		reviewUserImgProgress = (ProgressBar) findViewById(R.id.reviewUserImgProgress);
 		
-		reviewUserName = (TextView) findViewById(R.id.reviewUserName);
-		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText);
-		reviewDistanceText = (TextView) findViewById(R.id.reviewDistanceText);
-		reviewDistanceValue = (TextView) findViewById(R.id.reviewDistanceValue);
-		reviewWaitText = (TextView) findViewById(R.id.reviewWaitText);
-		reviewWaitValue = (TextView) findViewById(R.id.reviewWaitValue);
-		reviewFareText = (TextView) findViewById(R.id.reviewFareText);
-		reviewFareValue = (TextView) findViewById(R.id.reviewFareValue);
-		reviewRatingText = (TextView) findViewById(R.id.reviewRatingText);
+		reviewUserName = (TextView) findViewById(R.id.reviewUserName); reviewUserName.setTypeface(Data.regularFont(getApplicationContext()));
+		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText); reviewReachedDestinationText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		reviewDistanceText = (TextView) findViewById(R.id.reviewDistanceText); reviewDistanceText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		reviewDistanceValue = (TextView) findViewById(R.id.reviewDistanceValue); reviewDistanceValue.setTypeface(Data.regularFont(getApplicationContext()));
+		reviewWaitText = (TextView) findViewById(R.id.reviewWaitText); reviewWaitText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		reviewWaitValue = (TextView) findViewById(R.id.reviewWaitValue); reviewWaitValue.setTypeface(Data.regularFont(getApplicationContext()));
+		reviewFareText = (TextView) findViewById(R.id.reviewFareText); reviewFareText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		reviewFareValue = (TextView) findViewById(R.id.reviewFareValue); reviewFareValue.setTypeface(Data.regularFont(getApplicationContext()));
+		reviewRatingText = (TextView) findViewById(R.id.reviewRatingText); reviewRatingText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 		
 		reviewRatingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
-		reviewSubmitBtn = (Button) findViewById(R.id.reviewSubmitBtn);
+		reviewSubmitBtn = (Button) findViewById(R.id.reviewSubmitBtn); reviewSubmitBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		reviewRatingBar.setRating(0);
 		
@@ -619,6 +629,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
+				setUserData();
 				drawerLayout.openDrawer(menuLayout);
 			}
 		});
@@ -665,8 +676,30 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-		// menu events
-		driverModeRl.setOnClickListener(new View.OnClickListener() {
+		// menu events\
+		driverModeToggle.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				switch(event.getAction()){
+				
+				case MotionEvent.ACTION_UP:
+					if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+						changeDriverModeAsync(HomeActivity.this, 0);
+					}
+					else if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+						changeDriverModeAsync(HomeActivity.this, 1);
+					}
+					break;
+				
+				}
+				
+				return false;
+			}
+		});
+		
+		driverModeToggle.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -710,6 +743,18 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			}
 		});
 		
+		
+		sosRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent callIntent = new Intent(Intent.ACTION_VIEW);
+		        callIntent.setData(Uri.parse("tel:100"));
+		        startActivity(callIntent);
+			}
+		});
+		
+		
 		bookingsRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -724,7 +769,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				if(passengerScreenMode == PassengerScreenMode.P_INITIAL || driverScreenMode == DriverScreenMode.D_INITIAL){
-					logoutAsync(HomeActivity.this);
+					logoutPopup(HomeActivity.this);
 				}
 				else{
 					new DialogPopup().alertPopup(activity, "", "You can't logout in between ride transcation.");
@@ -1118,7 +1163,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        public void handleSlide() {
 	        	GCMIntentService.clearNotifications(HomeActivity.this);
 	        	driverStartRideText.setVisibility(View.GONE);
-	        	driverStartRideAsync(HomeActivity.this);
+	        	new GetAddressStartRide().execute();
 	        }
 	    });
 		
@@ -1164,6 +1209,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					driverWaitBtn.setBackgroundResource(R.drawable.red_btn_selector);
 					driverWaitBtn.setText("Stop wait");
 					waitStart = 1;
+					
+					startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 1);
+					
 				}
 				else{
 					if(waitStart == 1){
@@ -1171,12 +1219,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
 						driverWaitBtn.setText("Start wait");
 						waitStart = 0;
+						
+						startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
 					}
 					else if(waitStart == 0){
 						waitChronometer.start();
 						driverWaitBtn.setBackgroundResource(R.drawable.red_btn_selector);
 						driverWaitBtn.setText("Stop wait");
 						waitStart = 1;
+						
+						startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 1);
 					}
 				}
 				
@@ -1198,8 +1250,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				double minutes = Math.ceil(((double)seconds) / 60.0);
 				String min = (minutes > 9)? ""+minutes : "0"+minutes;
 				
-	        	
-				driverEndRideAsync(HomeActivity.this, minutes);
+				new GetAddressEndRide(minutes).execute();
 				
 			}
 		});
@@ -1443,7 +1494,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-		
+		setUserData();
 		
 		
 
@@ -1486,7 +1537,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 	  
 		
-		setUserData();
+		
 		
 		getAllFavoriteAsync(HomeActivity.this);
 		
@@ -1692,6 +1743,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				map.addMarker(markerOptions);
 				
 				driverPassengerName.setText(Data.assignedCustomerInfo.name);
+				driverPassengerRatingValue.setText("4.0 Rating");
 				AQuery aq = new AQuery(driverPassengerImage);
 				aq.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
 				
@@ -2607,7 +2659,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				holder = new ViewHolderSearch();
 				convertView = mInflater.inflate(R.layout.search_list_item, null);
 				
-				holder.name = (TextView) convertView.findViewById(R.id.name); 
+				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);
@@ -2871,15 +2923,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        
 		        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
 		 	        
-		 	        
 		 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-	       	 		distanceString = "Nearest driver is " + distance + " " + duration + " away.";
-			        }
-			        else if(!"".equalsIgnoreCase(duration)){
-			        	distanceString = "Nearest driver is " + duration + " away.";
-			        }
-			        else if(!"".equalsIgnoreCase(distance)){
-			        	distanceString = "Nearest driver is " + distance + " away.";
+	       	 		distanceString = "Nearest driver is " + distance + " away.";
 			        }
 			        else{
 			        	distanceString = "Could not find nearest driver's distance.";
@@ -3024,7 +3069,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	String getAddress(double curLatitude, double curLongitude) {
-    	String fullAddress = "";
+    	String fullAddress = "Unnamed";
 
         try {
 
@@ -3041,7 +3086,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
                 JSONArray Results = jsonObj.getJSONArray("results");
                 JSONObject zero = Results.getJSONObject(0);
                 fullAddress = zero.getString("formatted_address");
-
                 Log.e("Results.length() ==","="+Results.length());
             }
 
@@ -3164,6 +3208,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			Log.e("BeforeCancelRequestAsync","==onpre");
+			cancelRequestBtn.setText("Cancel request in 5s ?");
 		}
 		
 		@Override
@@ -3207,6 +3252,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		protected void onProgressUpdate(Integer... values) {
 			super.onProgressUpdate(values);
 			try{
+				Log.e("values[0]","="+values[0]);
 				cancelRequestBtn.setText("Cancel request in " + values[0] + "s ?");
 			} catch(Exception e){
 				e.printStackTrace();
@@ -3451,6 +3497,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			RequestParams params = new RequestParams();
 		
 			
+			
 			params.put("access_token", Data.userData.accessToken);
 			params.put("user_id", Data.dCustomerId);
 			params.put("engage_id", Data.dEngagementId);
@@ -3644,10 +3691,37 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	public class GetAddressStartRide extends AsyncTask<String, Integer, String>{
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			if(Data.dCustLatLng != null){
+				fullAddress = getAddress(Data.dCustLatLng.latitude, Data.dCustLatLng.longitude);
+				return fullAddress;
+			}
+			return "Unnamed";
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			DialogPopup.dismissLoadingDialog();
+			driverStartRideAsync(HomeActivity.this, fullAddress);
+		}
+		
+	}
+	
+	
 	/**
 	 * ASync for start ride in  driver mode from server
 	 */
-	public void driverStartRideAsync(final Activity activity) {
+	public void driverStartRideAsync(final Activity activity, String address) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -3658,10 +3732,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			params.put("access_token", Data.userData.accessToken);
 			params.put("customer_id", Data.dCustomerId);
 			params.put("engagement_id", Data.dEngagementId);
+			params.put("pickup_location_address", address);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("customer_id", "=" + Data.dCustomerId);
 			Log.i("engagement_id", "=" + Data.dEngagementId);
+			Log.i("pickup_location_address", "=" + address);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
@@ -3738,10 +3814,45 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
+	
+	
+	
+	public class GetAddressEndRide extends AsyncTask<String, Integer, String>{
+		
+		double waitMinutes;
+		
+		public GetAddressEndRide(double waitMinutes){
+			this.waitMinutes = waitMinutes;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			if(myLocation != null){
+				fullAddress = getAddress(myLocation.getLatitude(), myLocation.getLongitude());
+				return fullAddress;
+			}
+			return "Unnamed";
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			DialogPopup.dismissLoadingDialog();
+			driverEndRideAsync(HomeActivity.this, waitMinutes, fullAddress);
+		}
+		
+	}
+	
 	/**
 	 * ASync for start ride in  driver mode from server
 	 */
-	public void driverEndRideAsync(final Activity activity, double waitMinutes) {
+	public void driverEndRideAsync(final Activity activity, double waitMinutes, String address) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -3768,6 +3879,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			params.put("longitude", ""+Data.longitude);
 			params.put("distance_travelled", decimalFormat.format(totalDistanceInKm));
 			params.put("wait_time", waitTime);
+			params.put("drop_location_address", address);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("customer_id", "=" + Data.dCustomerId);
@@ -3776,6 +3888,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("longitude", "="+Data.longitude);
 			Log.i("distance_travelled", "="+(totalDistance / 1000.0));
 			Log.i("wait_time", "="+waitTime);
+			Log.i("drop_location_address", "="+address);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
@@ -4033,14 +4146,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setText("Save to favorite");
-			final EditText favoriteNameEt = (EditText) dialog.findViewById(R.id.favoriteNameEt);
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setText("Save to favorite"); textHead.setTypeface(Data.regularFont(getApplicationContext()));
+			final EditText favoriteNameEt = (EditText) dialog.findViewById(R.id.favoriteNameEt); favoriteNameEt.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			favoriteNameEt.setText(locationName);
 			
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(getApplicationContext()));
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -4534,6 +4647,193 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 
 	}
+	
+	
+	/**
+	 * ASync for start or end wait from server
+	 */
+	public void startEndWaitAsync(final Activity activity, String userId, int flag) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			
+			RequestParams params = new RequestParams();
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("user_id", userId);
+			params.put("flag", ""+flag);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("user_id", "="+userId);
+			Log.i("flag", "="+flag);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/wait_push", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+								}
+								else{
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+							}
+	
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+						}
+					});
+		}
+		else {
+		}
+
+	}
+	
+	
+	
+	
+	void logoutPopup(final Activity activity) {
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.logout_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					logoutAsync(activity);
+				}
+				
+			});
+			
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+				
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	/**
+	 * ASync for get bookings from server
+	 */
+	public void getBookingsAsync(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			RequestParams params = new RequestParams();
+			
+			params.put("access_token", Data.userData.accessToken);
+
+			Log.i("access_token", "=" + Data.userData.accessToken);
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/get_bookings", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String error = jObj.getString("error");
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+								}
+								else{
+									
+									JSONArray favouriteData = jObj.getJSONArray("favourite_data");
+									
+									Data.favoriteLocations.clear();
+									
+									if(favouriteData.length() > 0){
+										
+										for(int i=0; i<favouriteData.length(); i++){
+											JSONObject favData = favouriteData.getJSONObject(i);
+											
+											Data.favoriteLocations.add(new FavoriteLocation(favData.getInt("s_no"), favData.getString("fav_name"), 
+													new LatLng(favData.getDouble("fav_latitude"), favData.getDouble("fav_longitude"))));
+											
+										}
+										
+									}
+									
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
+	
 	
 	
 	@Override

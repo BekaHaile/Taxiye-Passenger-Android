@@ -4,11 +4,14 @@
     android:layout_height="wrap_content"
     android:id="@+id/relative"
     android:orientation="vertical"
-    android:splitMotionEvents="false" >
+    android:splitMotionEvents="false" 
+     android:padding="10px"
+    
+    >
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:splitMotionEvents="false" 
     android:padding="10px"
     >
@@ -34,8 +37,8 @@
                 android:id="@+id/tick"
                 android:layout_width="92px"
                 android:layout_height="92px"
-                android:layout_marginRight="-25px"
-                android:layout_marginBottom="-25px"
+                android:layout_marginRight="-22px"
+                android:layout_marginBottom="-22px"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/check_off"

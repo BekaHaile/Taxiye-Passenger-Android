@@ -26,7 +26,7 @@ public class SplashNewActivity extends Activity{
 	ImageView jugnooImg;
 	ImageView jugnooTextImg;
 	
-	boolean loginDataFetched = false;
+	boolean loginDataFetched = false, loginFailed = false;
 	
 	
 	@Override
@@ -35,6 +35,7 @@ public class SplashNewActivity extends Activity{
 		setContentView(R.layout.splash_new);
 		
 		loginDataFetched = false;
+		loginFailed = false;
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashNewActivity.this, relative, 1134, 720, false);
@@ -298,6 +299,10 @@ public class SplashNewActivity extends Activity{
 										else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
 											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
+										else if(8 == flag){ // {"error":"email not  registered","flag":1}//error
+//											new DialogPopup().alertPopup(activity, "", errorMessage);
+											loginFailed = true;
+										}
 										else{
 											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
@@ -345,6 +350,12 @@ public class SplashNewActivity extends Activity{
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
 			startActivity(new Intent(SplashNewActivity.this, HomeActivity.class));
+			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		}
+		else if(hasFocus && loginFailed){
+			loginFailed = false;
+			startActivity(new Intent(SplashNewActivity.this, SplashLogin.class));
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}

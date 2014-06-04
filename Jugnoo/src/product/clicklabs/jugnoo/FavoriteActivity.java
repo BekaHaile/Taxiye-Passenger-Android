@@ -48,9 +48,10 @@ public class FavoriteActivity extends Activity{
 		new ASSL(FavoriteActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn);
-		favTitleText = (TextView) findViewById(R.id.favTitleText);
-		noFavoriteLocationsText = (TextView) findViewById(R.id.noFavoriteLocationsText);
+		backBtn = (Button) findViewById(R.id.backBtn); 
+		favTitleText = (TextView) findViewById(R.id.favTitleText); favTitleText.setTypeface(Data.regularFont(getApplicationContext()));
+		noFavoriteLocationsText = (TextView) findViewById(R.id.noFavoriteLocationsText); 
+		noFavoriteLocationsText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		favoriteList = (ListView) findViewById(R.id.favoriteList);
 		favoriteListAdapter = new FavoriteListAdapter();
@@ -123,7 +124,7 @@ public class FavoriteActivity extends Activity{
 				holder = new ViewHolderFavorite();
 				convertView = mInflater.inflate(R.layout.favorite_list_item, null);
 				
-				holder.name = (TextView) convertView.findViewById(R.id.name); 
+				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
 				holder.favDeleteBtn = (ImageView) convertView.findViewById(R.id.favDeleteBtn);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 

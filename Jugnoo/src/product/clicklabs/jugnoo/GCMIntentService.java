@@ -419,6 +419,11 @@ public class GCMIntentService extends IntentService {
 	    	    						 HomeActivity.detectRideStart.startRideForCustomer(1);
 	    	    					 }
 	    	    				 }
+	    	    				 // flag 7 for start and stop wait for customer
+	    	    				 else if(7 == flag){
+	    	    					 String message1 = jObj.getString("message");
+	    	    					 notificationManager(this, ""+message1);
+	    	    				 }
 	    	    				 else{
 	    	    					 
 	    	    				 }

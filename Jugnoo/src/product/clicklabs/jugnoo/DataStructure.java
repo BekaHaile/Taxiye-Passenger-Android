@@ -61,7 +61,7 @@ class DriverInfo{
 
 
 class CustomerInfo{
-	String userId, name, image, phoneNumber;
+	String userId, name, image, phoneNumber, rating;
 	
 	public CustomerInfo(String userId, String name, String image, String phoneNumber){
 		this.userId = userId;
@@ -118,6 +118,21 @@ class DriverRideRequest{
 		this.engagementId = engagementId;
 		this.customerId = customerId;
 		this.latLng = latLng;
+	}
+	
+}
+
+class Booking{
+	
+	String id, fromLocation, toLocation, fare, distance, time;
+	
+	public Booking(String id, String fromLocation, String toLocation, String fare, String distance, String time){
+		this.id = id;
+		this.fromLocation = fromLocation;
+		this.toLocation = toLocation;
+		this.fare = fare;
+		this.distance = distance;
+		this.time = time;
 	}
 	
 }

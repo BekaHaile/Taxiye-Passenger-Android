@@ -1,24 +1,35 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
+
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -51,14 +62,14 @@ public class RegisterScreen extends Activity{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(RegisterScreen.this, relative, 1134, 720, false);
 		
-		firstNameEt = (EditText) findViewById(R.id.firstNameEt);
-		lastNameEt = (EditText) findViewById(R.id.lastNameEt);
-		emailIdEt = (EditText) findViewById(R.id.emailIdEt);
-		phoneNoEt = (EditText) findViewById(R.id.phoneNoEt);
-		passwordEt = (EditText) findViewById(R.id.passwordEt);
-		confirmPasswordEt = (EditText) findViewById(R.id.confirmPasswordEt);
+		firstNameEt = (EditText) findViewById(R.id.firstNameEt); firstNameEt.setTypeface(Data.regularFont(getApplicationContext()));
+		lastNameEt = (EditText) findViewById(R.id.lastNameEt); lastNameEt.setTypeface(Data.regularFont(getApplicationContext()));
+		emailIdEt = (EditText) findViewById(R.id.emailIdEt); emailIdEt.setTypeface(Data.regularFont(getApplicationContext()));
+		phoneNoEt = (EditText) findViewById(R.id.phoneNoEt); phoneNoEt.setTypeface(Data.regularFont(getApplicationContext()));
+		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
+		confirmPasswordEt = (EditText) findViewById(R.id.confirmPasswordEt); confirmPasswordEt.setTypeface(Data.regularFont(getApplicationContext()));
 		
-		signUpBtn = (Button) findViewById(R.id.signUpBtn);
+		signUpBtn = (Button) findViewById(R.id.signUpBtn); signUpBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 
@@ -123,9 +134,12 @@ public class RegisterScreen extends Activity{
 				}
 				String lastName = lastNameEt.getText().toString().trim();
 				String emailId = emailIdEt.getText().toString().trim();
-				if(emailId.length() == 0){
-					emailId = " ";
+				
+				if(facebookLogin && emailId.equalsIgnoreCase("")){
+					emailId = "n@n.c";
 				}
+				
+				
 				
 				String phoneNo = phoneNoEt.getText().toString().trim();
 				String password = passwordEt.getText().toString().trim();
@@ -137,8 +151,8 @@ public class RegisterScreen extends Activity{
 				}
 				else{
 					if("".equalsIgnoreCase(emailId)){
-						emailIdEt.requestFocus();
-						emailIdEt.setError("Please enter email id");
+						phoneNoEt.requestFocus();
+						phoneNoEt.setError("Please enter email id");
 					}
 					else{
 						if("".equalsIgnoreCase(phoneNo)){
@@ -160,10 +174,10 @@ public class RegisterScreen extends Activity{
 										if(isPhoneValid(phoneNo)){
 											if(password.equals(confirmPassword)){
 												if(password.length() >= 6){
-													if(emailId.equalsIgnoreCase(" ")){
-														emailId = "";
-													}
 													if(facebookLogin){
+														if(emailId.equalsIgnoreCase("n@n.c")){
+															emailId = "";
+														}
 														sendFacebookSignupValues(RegisterScreen.this, "", phoneNo, password);
 													}
 													else{
@@ -186,8 +200,8 @@ public class RegisterScreen extends Activity{
 										}
 									}
 									else{
-										emailIdEt.requestFocus();
-										emailIdEt.setError("Please enter valid email id");
+										phoneNoEt.requestFocus();
+										phoneNoEt.setError("Please enter valid email id");
 									}
 								}
 							}
@@ -273,9 +287,35 @@ public class RegisterScreen extends Activity{
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
+
+		
+		phoneNoEt.setText("+"+GetCountryZipCode());
+		
+//		Toast.makeText(getApplicationContext(), ""+GetCountryZipCode(), Toast.LENGTH_LONG).show();
+		
 		
 	}
 
+	
+	String GetCountryZipCode() {
+
+		String CountryID = "";
+		String CountryZipCode = "";
+
+		TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+		// getNetworkCountryIso
+		CountryID = manager.getSimCountryIso().toUpperCase();
+		Log.e("CountryID", "="+CountryID);
+		String[] rl = this.getResources().getStringArray(R.array.CountryCodes);
+		for (int i = 0; i < rl.length; i++) {
+			String[] g = rl[i].split(",");
+			if (g[1].trim().equals(CountryID.trim())) {
+				CountryZipCode = g[0];
+				return CountryZipCode;
+			}
+		}
+		return "";
+	}
 	
 	
 	/**
@@ -412,12 +452,12 @@ public class RegisterScreen extends Activity{
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode);
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(getApplicationContext()));
+			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			
-			Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
+			Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(getApplicationContext()));
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			btnConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override

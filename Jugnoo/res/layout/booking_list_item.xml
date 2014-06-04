@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="720px"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+     >
+
+    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        
+        
+        >
+        
+        
+        <LinearLayout 
+            android:id="@+id/fromRl"
+            android:layout_width="540px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+            >
+            
+            
+       
+
+        <TextView
+            android:id="@+id/fromText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From: "
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px"
+            android:layout_marginLeft="20px"
+            android:singleLine="true"
+             />
+        
+        <TextView
+            android:id="@+id/fromValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elante shjksfjkrhldehkfthlrtewterwtrwtywery"
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px"
+            android:layout_marginLeft="0px"
+             />
+        
+        
+         </LinearLayout>
+         
+        
+        <LinearLayout 
+            android:id="@+id/toRl"
+            android:layout_width="540px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            >
+            
+            
+       
+
+        <TextView
+            android:id="@+id/toText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To: "
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px"
+            android:layout_marginLeft="20px"
+            android:singleLine="true"
+             />
+        
+        <TextView
+            android:id="@+id/toValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elante shjksfjkrhldehkfthlrtewterwtrwtywery"
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px"
+            android:layout_marginLeft="0px"
+             />
+        
+        
+         </LinearLayout>
+         
+        
+        
+        <LinearLayout 
+            android:id="@+id/distTimeRl"
+            android:layout_width="540px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:orientation="horizontal"
+            >
+            
+            
+       
+
+        <TextView
+            android:id="@+id/distanceValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5.6 Km"
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="26px"
+            android:layout_marginLeft="40px"
+            android:singleLine="true"
+             />
+        
+        
+        <TextView
+            android:id="@+id/timeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 June, 2014"
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="26px"
+            android:layout_marginLeft="40px"
+            android:singleLine="true"
+             />
+        
+        
+         </LinearLayout>
+        
+        
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:background="@drawable/shadow_up"
+            android:layout_marginTop="10px"
+            />
+        
+        
+    </LinearLayout>
+    
+    
+    
+    <TextView
+            android:id="@+id/fareValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rs. 2500"
+            android:textColor="@color/blue_btn"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20px"
+            android:textSize="36px"
+            android:layout_marginLeft="0px"
+             />
+    
+    
+    </RelativeLayout>
+
+</LinearLayout>

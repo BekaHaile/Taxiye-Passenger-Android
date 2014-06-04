@@ -39,9 +39,9 @@ public class ForgotPasswordScreen extends Activity{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(ForgotPasswordScreen.this, relative, 1134, 720, false);
 		
-		emailEt = (EditText) findViewById(R.id.emailEt);
+		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
 		
-		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn);
+		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn); sendEmailBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 
 

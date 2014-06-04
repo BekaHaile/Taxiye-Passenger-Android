@@ -34,6 +34,13 @@
                 android:textColor="@color/white"
                 android:textSize="40px" />
         </RelativeLayout>
+        
+        <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                        android:background="@drawable/shadow_down"
+                android:layout_below="@+id/topRl"
+                            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,9 +79,12 @@
             
             <GridView
                 android:id="@+id/facebookFriendsGrid"
-                android:layout_width="630px"
+                android:layout_width="606px"
                 android:layout_height="700px"
-                android:numColumns="3" >
+                android:numColumns="3" 
+                android:layout_centerHorizontal="true"
+                
+                >
             </GridView>
             </RelativeLayout>
 

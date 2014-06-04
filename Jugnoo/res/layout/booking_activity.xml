@@ -26,10 +26,10 @@
             
             
             <TextView 
-                    android:id="@+id/favTitleText"
+                    android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Favorites"
+                    android:text="Bookings"
                     android:textColor="@color/white"
                     android:textSize="48px"
                     android:gravity="center"
@@ -44,10 +44,10 @@
 
         
         <TextView 
-                    android:id="@+id/noFavoriteLocationsText"
+                    android:id="@+id/noBookingsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No favorite locations added."
+                    android:text="No bookings currently."
                     android:textColor="@color/black"
                     android:textSize="38px"
                     android:gravity="center"
@@ -56,11 +56,10 @@
                     />
 
         <ListView
-            android:id="@+id/favoriteList"
+            android:id="@+id/bookingsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="90px"
-                    android:layout_below="@+id/favTitleRl"
                 android:dividerHeight="0px"
             android:divider="@drawable/transparent"
                 

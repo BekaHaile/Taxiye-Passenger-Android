@@ -41,6 +41,7 @@
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
                     android:visibility="gone" >
+                    
 
                     <RelativeLayout
                         android:id="@+id/searchBarLayout"
@@ -62,9 +63,9 @@
 
                         <EditText
                             android:id="@+id/searchEt"
-                            android:layout_width="580px"
+                            android:layout_width="560px"
                             android:layout_height="95px"
-                            android:layout_marginLeft="56px"
+                            android:layout_marginLeft="66px"
                             android:background="#0000"
                             android:hint="Search Place"
                             android:singleLine="true"
@@ -72,7 +73,7 @@
 
                         <RelativeLayout
                             android:id="@+id/searchRl"
-                            android:layout_width="56px"
+                            android:layout_width="66px"
                             android:layout_height="95px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
@@ -90,7 +91,7 @@
 
                             <Button
                                 android:id="@+id/search"
-                                android:layout_width="56px"
+                                android:layout_width="66px"
                                 android:layout_height="95px"
                                 android:background="@color/transparent" />
                         </RelativeLayout>
@@ -131,16 +132,38 @@
                         android:background="@drawable/red_btn_selector"
                         android:text="Cancel Ride"
                         android:textColor="@drawable/white_color_selector"
-                        android:textSize="@dimen/button_text_size" />
+                        android:textSize="@dimen/button_text_size"
+                        android:visibility="gone"
+                        
+                         />
 
+                    
                     <RelativeLayout
                         android:id="@+id/nearestDriverRl"
+                        android:layout_width="match_parent"
+                        android:layout_height="134px"
+                        android:layout_alignParentBottom="true"
+                        android:visibility="visible"
+                         >
+                    
+                    <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                        android:background="@drawable/shadow_up"
+                            />
+                    
+                    
+                    
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="128px"
                         android:layout_alignParentBottom="true"
                         android:background="@color/white_translucent"
-                        android:visibility="gone"
+                        android:visibility="visible"
                          >
+                        
+                        
+                        
 
                         <ProgressBar
                             android:id="@+id/nearestDriverProgress"
@@ -158,6 +181,7 @@
                             android:text=" "
                             android:textColor="@color/black"
                             android:textSize="30px" />
+                    </RelativeLayout>
                     </RelativeLayout>
                 </RelativeLayout>
 
@@ -180,12 +204,22 @@
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size"  />
 
+                    
+                    <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                android:layout_above="@+id/assignedDriverRl"
+                        android:background="@drawable/shadow_up"
+                            />
+                    
                     <RelativeLayout
                         android:id="@+id/assignedDriverRl"
                         android:layout_width="match_parent"
                         android:layout_height="108px"
                         android:layout_alignParentBottom="true"
                         android:background="@color/white_translucent" >
+                        
+                        
 
                         <ProgressBar
                             android:id="@+id/assignedDriverProgress"
@@ -211,10 +245,15 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
                     
-                    
-                    
+                   
+                    <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                android:layout_above="@+id/finalDriverInfoRl"
+                        android:background="@drawable/shadow_up"
+                            />
 
                     <RelativeLayout
                         android:id="@+id/finalDriverInfoRl"
@@ -224,11 +263,13 @@
                         android:layout_marginBottom="26px"
                         android:background="@color/white_translucent" >
 
+                         
+                        
                         <RelativeLayout
                             android:id="@+id/driverImageRL"
                             android:layout_width="225px"
                             android:layout_height="225px"
-                            android:layout_marginLeft="60px"
+                            android:layout_marginLeft="80px"
                             android:layout_marginTop="22px" 
                                 android:tag="mwar">
 
@@ -272,7 +313,7 @@
                             android:layout_width="225px"
                             android:layout_height="225px"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="60px"
+                            android:layout_marginRight="80px"
                             android:layout_marginTop="22px"
                                 android:tag="mwar" >
 
@@ -311,8 +352,20 @@
                             android:text="Will arrive in 15 mins"
                             android:textColor="@color/black_light"
                             android:textSize="30px" />
+                        
+                         
+                        
                     </RelativeLayout>
 
+                    <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                        android:background="@drawable/shadow_down"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="146px"
+                
+                            />
+                    
                     <Button
                         android:id="@+id/callDriverBtn"
                         android:layout_width="648px"
@@ -334,13 +387,14 @@
                 android:padding="25px"
                 android:gravity="center"
                         android:layout_alignParentTop="true"
-                android:background="@color/white"
+                android:background="@color/white_translucent"
             android:textSize="32px"
             android:textColor="@color/bg_grey_opaque"
             android:singleLine="true"
             android:layout_centerHorizontal="true"
             
             />
+                 
                     
                     
                 </RelativeLayout>
@@ -446,14 +500,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
+                
+                
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone" >
 
+                    
+                    
                     <RelativeLayout
                         android:id="@+id/driverNewRideRequestRl"
                         android:layout_width="565px"
@@ -502,6 +560,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone" >
+                    
 
                     <Button
                         android:id="@+id/driverAcceptRideBtn"
@@ -542,7 +601,9 @@
                     android:id="@+id/driverEngagedLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
+                    
+                    
 
                     <RelativeLayout
                         android:id="@+id/driverPassengerInfoRl"
@@ -581,6 +642,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10px"
+                android:layout_centerVertical="true"
                                 android:layout_toRightOf="@+id/driverPassengerRatingStar"
                                 android:singleLine="true"
                                 android:text="4.3 Rating"
@@ -631,19 +693,22 @@
                                 android:tag="mwar" />
                         </RelativeLayout>
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/shadow_down_line" />
+                        
                     </RelativeLayout>
+                    
+                    <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                android:layout_below="@+id/driverPassengerInfoRl"
+                        android:background="@drawable/shadow_down"
+                            />
 
                     <RelativeLayout
                         android:id="@+id/driverStartRideMainRl"
                         android:layout_width="match_parent"
                         android:layout_height="380px"
                         android:layout_alignParentBottom="true"
-                        android:visibility="visible"
+                        android:visibility="gone"
                          >
 
                         <Button
@@ -682,9 +747,14 @@
                                 android:layout_height="100px"
                                 android:clickable="false"
                                 android:max="100"
+                                android:progress="0"
                                 android:progressDrawable="@color/transparent"
                                 android:tag="mwar"
-                                android:thumb="@drawable/start_ride" >
+                                android:thumb="@drawable/start_ride"
+    							android:minHeight="100px"
+    							android:maxHeight="100px" 
+                                
+                                 >
                             </product.clicklabs.jugnoo.SlideButton>
                         </RelativeLayout>
                         
@@ -708,17 +778,26 @@
                      <RelativeLayout
                         android:id="@+id/driverInRideMainRl"
                         android:layout_width="match_parent"
+                        android:layout_height="406px"
+                        android:layout_alignParentBottom="true"
+                        android:visibility="visible"
+                         >
+                    
+                    <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                        android:background="@drawable/shadow_up"
+                            />
+                    
+                     <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="400px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/white"
-                        android:visibility="gone"
+                        android:background="@color/white_translucent"
                          >
 
-                         <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:background="@drawable/shadow_down_line" />
+                         
+                         
                          
                          
                          <product.clicklabs.jugnoo.PausableChronometer
@@ -775,10 +854,15 @@
                                 android:progress="100"
                                 android:progressDrawable="@color/transparent"
                                 android:tag="mwar"
-                                android:thumb="@drawable/end_ride" >
+                                android:thumb="@drawable/end_ride"
+                                android:minHeight="100px"
+    							android:maxHeight="100px" 
+                                
+                                 >
                             </product.clicklabs.jugnoo.SlideButtonInvert>
                             
                         </RelativeLayout>
+                    </RelativeLayout>
                     </RelativeLayout>
                     
                     
@@ -789,7 +873,7 @@
                 android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
 
                 <RelativeLayout 
@@ -823,6 +907,7 @@
                             android:tag="mwar"
                              >
 
+                        
                         <ImageView
                             android:id="@+id/reviewUserImgBack"
                             android:layout_width="243px"
@@ -883,6 +968,7 @@
                             android:id="@+id/reviewDistanceRl"
                             android:layout_width="239px"
                             android:layout_height="match_parent"
+                android:layout_marginTop="15px"
                             android:layout_below="@+id/reviewReachedDestinationText" >
 
                             <TextView
@@ -926,6 +1012,7 @@
                             android:id="@+id/reviewWaitTimeRl"
                             android:layout_width="239px"
                             android:layout_height="match_parent"
+                android:layout_marginTop="15px"
                 android:layout_centerHorizontal="true"
                             android:layout_below="@+id/reviewReachedDestinationText" >
 
@@ -971,6 +1058,7 @@
                             android:layout_width="239px"
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"
+                android:layout_marginTop="15px"
                             android:layout_below="@+id/reviewReachedDestinationText" >
 
                             <TextView
@@ -1002,6 +1090,15 @@
 
                      </RelativeLayout>
                     
+                
+                <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                        android:background="@drawable/shadow_down"
+                android:layout_below="@+id/upLayout"
+                            />
+                
+                
                     <TextView
                         android:id="@+id/reviewRatingText"
                         android:layout_width="wrap_content"
@@ -1026,7 +1123,7 @@
                             android:id="@+id/reviewRatingBar"
                             style="@style/CustomRatingBar"
                             android:layout_width="wrap_content"
-                            android:layout_height="80px"
+                            android:layout_height="wrap_content"
                             android:numStars="5"
                             android:rating="1"
                             android:stepSize="1.0" />
@@ -1038,7 +1135,7 @@
                         android:layout_height="99px"
                         android:layout_below="@+id/reviewRatingBarRl"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="30px"
+                        android:layout_marginTop="20px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="Submit"
                         android:textColor="@drawable/white_color_selector"
@@ -1147,7 +1244,8 @@
             android:gravity="center"
             android:text="John Paulo"
             android:textColor="@color/white"
-            android:textSize="30px" />
+            android:textSize="30px" 
+                android:layout_marginTop="10px"/>
 
         <RelativeLayout
             android:id="@+id/driverModeRl"
@@ -1187,7 +1285,6 @@
             android:id="@+id/inviteFriendRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
-            android:layout_below="@+id/userName" 
             android:background="@drawable/menu_item_selector"
             >
 
@@ -1211,7 +1308,6 @@
             android:id="@+id/bookingsRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
-            android:layout_below="@+id/userName" 
             android:background="@drawable/menu_item_selector"
             >
 
@@ -1235,7 +1331,6 @@
             android:id="@+id/aboutRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
-            android:layout_below="@+id/userName"
             android:background="@drawable/menu_item_selector"
              >
 
@@ -1256,10 +1351,33 @@
             android:background="@drawable/menu_divider" />
 
         <RelativeLayout
+            android:id="@+id/sosRl"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:background="@drawable/menu_item_selector"
+             >
+
+            <TextView
+                android:id="@+id/sosText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="42px"
+                android:text="SOS"
+                android:textColor="@color/white"
+                android:textSize="34px" />
+            
+            </RelativeLayout>
+        
+         <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@drawable/menu_divider" />
+
+        <RelativeLayout
             android:id="@+id/logoutRl"
             android:layout_width="match_parent"
             android:layout_height="84px"
-            android:layout_below="@+id/userName"
             android:background="@drawable/menu_item_selector"
              >
 

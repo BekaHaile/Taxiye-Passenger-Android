@@ -67,8 +67,8 @@
 
                      <Button
             android:id="@+id/btnConfirm"
-            android:layout_width="200px"
-            android:layout_height="98px"
+                        android:layout_width="247px"
+                        android:layout_height="83px"
             android:gravity="center"
                      android:layout_gravity="center_horizontal"
                         android:layout_marginTop="40px"
