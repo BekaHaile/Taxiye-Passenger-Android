@@ -36,10 +36,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -737,7 +737,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				//TODO booking
 				getBookingsAsync(HomeActivity.this);
 			}
 		});
@@ -856,7 +855,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								
 							}
 							else{
-								new DialogPopup().alertPopup(HomeActivity.this, "", "No driver available currently");
+								noDriverAvailablePopup(HomeActivity.this);
 							}
 						}
 						else{
@@ -1248,7 +1247,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				long elapsedMillis = waitChronometer.eclipsedTime;
 				long seconds = elapsedMillis / 1000;
 				double minutes = Math.ceil(((double)seconds) / 60.0);
-				String min = (minutes > 9)? ""+minutes : "0"+minutes;
 				
 				new GetAddressEndRide(minutes).execute();
 				
@@ -4873,6 +4871,137 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	void noDriverAvailablePopup(final Activity activity){
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.no_driver_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			
+			textHead.setText("No Driver Available");
+			textMessage.setText("Currently there are no drivers available. Do you want a driver right away?");
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					noDriverAsync(activity, dialog);
+				}
+			});
+			
+			crossbtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+				
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	/**
+	 * ASync for no drivers from server
+	 */
+	public void noDriverAsync(final Activity activity, final Dialog dialog) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+			
+			params.put("access_token", Data.userData.accessToken);
+
+			if(Data.locationFetcher != null){
+				Data.latitude = Data.locationFetcher.getLatitude();
+				Data.longitude = Data.locationFetcher.getLongitude();
+			}
+			
+			params.put("latitude", ""+Data.latitude);
+			params.put("longitude", ""+Data.longitude);
+			
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("latitude", "=" + Data.latitude);
+			Log.i("longitude", "=" + Data.longitude);
+			
+			
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/request_now", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String error = jObj.getString("error");
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									}
+									else{
+									}
+								}
+								else{
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+							}
+
+							dialog.dismiss();
+							DialogPopup.dismissLoadingDialog();
+							
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							dialog.dismiss();
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			dialog.dismiss();
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
+	
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
@@ -5061,7 +5190,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						public void run() {
 							DialogPopup.dismissLoadingDialog();
 							map.clear();
-							new DialogPopup().alertPopup(HomeActivity.this, "", "No Driver available right now.");
+							noDriverAvailablePopup(HomeActivity.this);
 							requestRideBtn.setText("Request Ride");
 							passengerScreenMode = PassengerScreenMode.P_INITIAL;
 							switchPassengerScreen(passengerScreenMode);
