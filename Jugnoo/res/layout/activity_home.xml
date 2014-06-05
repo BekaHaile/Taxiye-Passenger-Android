@@ -6,7 +6,9 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        
+         >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -395,6 +397,12 @@
             
             />
                  
+                    <ImageView 
+                            android:layout_width="match_parent"
+                        android:layout_height="6px"
+                android:layout_below="@+id/inRideRideInProgress"
+                        android:background="@drawable/shadow_down"
+                            />
                     
                     
                 </RelativeLayout>
@@ -686,8 +694,8 @@
 
                             <ImageView
                                 android:id="@+id/driverPassengerImage"
-                                android:layout_width="174px"
-                                android:layout_height="174px"
+                                android:layout_width="163px"
+                                android:layout_height="163px"
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/transparent"
                                 android:tag="mwar" />
@@ -756,6 +764,17 @@
                                 
                                  >
                             </product.clicklabs.jugnoo.SlideButton>
+                            
+                            <ImageView
+                                android:id="@+id/startRideInv"
+                                android:layout_width="118px"
+                                android:layout_height="100px"
+                                android:layout_alignParentRight="true"
+                                android:src="@drawable/start_ride_inv"
+                                android:tag="mwar" 
+                                android:visibility="gone"
+                                />
+                            
                         </RelativeLayout>
                         
                         
@@ -861,6 +880,16 @@
                                  >
                             </product.clicklabs.jugnoo.SlideButtonInvert>
                             
+                            <ImageView
+                                android:id="@+id/endRideInv"
+                                android:layout_width="118px"
+                                android:layout_height="100px"
+                                android:layout_alignParentLeft="true"
+                                android:src="@drawable/end_ride_inv"
+                                android:tag="mwar" 
+                                android:visibility="gone"
+                                />
+                            
                         </RelativeLayout>
                     </RelativeLayout>
                     </RelativeLayout>
@@ -879,7 +908,8 @@
                 <RelativeLayout 
                     android:id="@+id/upLayout"
                     android:layout_width="match_parent"
-                        android:layout_height="600px" 
+                        android:layout_height="700px"
+                        android:tag="mwar" 
                     >
                     
                     
@@ -888,30 +918,32 @@
                     <ImageView
                         android:id="@+id/reviewUserImgBlured"
                         android:layout_width="match_parent"
-                        android:layout_height="600px" 
+                        android:layout_height="700px" 
+                        android:tag="mwar" 
             android:scaleType="centerCrop"
                         />
 
                     <ImageView
                         android:id="@+id/reviewUserImgBlurTop"
                         android:layout_width="match_parent"
-                        android:layout_height="600px"
-                        android:background="@drawable/profile_pic_top" />
+                        android:layout_height="700px"
+                        android:background="@drawable/profile_pic_top"
+                        android:tag="mwar"  />
 
                     <RelativeLayout
                         android:id="@+id/reviewUserImageRL"
-                        android:layout_width="243px"
-                        android:layout_height="243px"
+                        android:layout_width="300px"
+                        android:layout_height="300px"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="90px"
+                        android:layout_marginTop="110px"
                             android:tag="mwar"
                              >
 
                         
                         <ImageView
                             android:id="@+id/reviewUserImgBack"
-                            android:layout_width="243px"
-                            android:layout_height="243px"
+                            android:layout_width="300px"
+                            android:layout_height="300px"
                             android:layout_centerHorizontal="true"
                             android:background="@drawable/ring_white"
                             android:tag="mwar" />
@@ -924,8 +956,8 @@
 
                         <ImageView
                             android:id="@+id/reviewUserImage"
-                            android:layout_width="205px"
-                            android:layout_height="205px"
+                            android:layout_width="260px"
+                            android:layout_height="260px"
                             android:layout_centerInParent="true"
                             android:tag="mwar" />
                     </RelativeLayout>
@@ -936,7 +968,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/reviewUserImageRL"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10px"
+                        android:layout_marginTop="20px"
                         android:gravity="center"
                         android:singleLine="true"
                         android:text="John Paulo"
@@ -948,8 +980,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="180px"
                         android:layout_alignParentBottom="true"
-                        android:layout_below="@+id/reviewUserName"
-                        android:layout_marginTop="20px"
                         android:background="@color/black_translucent" >
 
                         <TextView
@@ -1103,9 +1133,10 @@
                         android:id="@+id/reviewRatingText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/upLayout"
+                        android:layout_above="@+id/reviewRatingBarRl"
+                        android:layout_marginBottom="20px"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="20px"
+                        android:layout_marginTop="120px"
                         android:gravity="center"
                         android:singleLine="true"
                         android:text="Driver Rating"
@@ -1116,7 +1147,8 @@
                         android:id="@+id/reviewRatingBarRl"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/reviewRatingText"
+                        android:layout_above="@+id/reviewSubmitBtn"
+                        android:layout_marginBottom="10px"
                         android:layout_centerHorizontal="true" >
 
                         <RatingBar
@@ -1133,9 +1165,9 @@
                         android:id="@+id/reviewSubmitBtn"
                         android:layout_width="648px"
                         android:layout_height="99px"
-                        android:layout_below="@+id/reviewRatingBarRl"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="20px"
+                                android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="30px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="Submit"
                         android:textColor="@drawable/white_color_selector"
@@ -1195,6 +1227,8 @@
                     android:tag="mwar" />
             </RelativeLayout>
         </RelativeLayout>
+        
+        
     </FrameLayout>
 
     <LinearLayout
@@ -1202,22 +1236,39 @@
         android:layout_width="495px"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/bg_grey"
+        android:background="@drawable/profile_pic_top"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
 
+         <LinearLayout
+        android:layout_width="495px"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/profile_pic_top"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+        
+        <LinearLayout
+        android:layout_width="495px"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/bg_grey"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+        
+        
         <RelativeLayout
             android:id="@+id/profileRl"
-            android:layout_width="216px"
-            android:layout_height="216px"
+            android:layout_width="300px"
+            android:layout_height="300px"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="90px"
+            android:layout_marginTop="110px"
             android:tag="mwar" >
 
             <ImageView
                 android:id="@+id/profileBack"
-                android:layout_width="216px"
-                android:layout_height="216px"
+                android:layout_width="300px"
+                android:layout_height="300px"
                 android:background="@drawable/ring"
                 android:tag="mwar" />
 
@@ -1229,8 +1280,8 @@
 
             <ImageView
                 android:id="@+id/profileImg"
-                android:layout_width="180px"
-                android:layout_height="180px"
+                android:layout_width="270px"
+                android:layout_height="270px"
                 android:layout_centerInParent="true"
                 android:tag="mwar" />
         </RelativeLayout>
@@ -1244,7 +1295,7 @@
             android:gravity="center"
             android:text="John Paulo"
             android:textColor="@color/white"
-            android:textSize="30px" 
+            android:textSize="34px" 
                 android:layout_marginTop="10px"/>
 
         <RelativeLayout
@@ -1392,6 +1443,8 @@
                 android:textSize="34px" />
         </RelativeLayout>
         
+        </LinearLayout>
+        </LinearLayout>
         
     </LinearLayout>
 

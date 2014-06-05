@@ -57,10 +57,10 @@ public class BookingActivity extends Activity{
 		
 		
 		
-		Data.bookings.add(new Booking("1", "Sector 28 dfsfgdsgfgsdfsgsfgdsfgsdgsgsgfdg", "Sector 11sdfgsdfgsfdgsdgfsg", "50", "5.4", "2014-06-05 09:11:11"));
-		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11sdfgsdfgsgdfsfgds", "50", "5.4", "2014-06-05 09:11:11"));
-		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11", "50", "5.4", "2014-06-05 09:11:11"));
-		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11", "50", "5.4", "2014-06-05 09:11:11"));
+//		Data.bookings.add(new Booking("1", "Sector 28 dfsfgdsgfgsdfsgsfgdsfgsdgsgsgfdg", "Sector 11sdfgsdfgsfdgsdgfsg", "50", "5.4", "2014-06-05 09:11:11"));
+//		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11sdfgsdfgsgdfsfgds", "50", "5.4", "2014-06-05 09:11:11"));
+//		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11", "50", "5.4", "2014-06-05 09:11:11"));
+//		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11", "50", "5.4", "2014-06-05 09:11:11"));
 		
 		
 		

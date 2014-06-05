@@ -36,7 +36,7 @@ public class DriverLocationUpdateService extends Service {
 	public DriverLocationUpdateService() {
 		Log.e("DriverLocationUpdateService"," instance created");
 		
-		lastLocation = Data.chandigarhLatLng;
+		lastLocation = new LatLng(30.7500, 76.7800);
 		stop = false;
 		count = 0; 
 		
@@ -147,7 +147,7 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		String SERVER_URL = "http://54.81.229.172:8000";
+    		String SERVER_URL = "http://54.81.229.172:7000";
     		
     		String SHARED_PREF_NAME = "myPref";
     		String SP_ACCESS_TOKEN_KEY = "access_token";

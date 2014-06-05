@@ -309,8 +309,10 @@ public class GCMIntentService extends IntentService {
 	    	    					 }
 	    	    					 
 	    	    					 
+	    	    					 
+	    	    					 
 	    	    				 }
-	    	    				 // flag 1 for driver request accepted  show customer cancel and then call driver
+	    	    				 // flag 1 for driver request accepted  show customer cancel for 5 sec and then call driver
 	    	    				 else if(1 == flag){
 	    	    					 String driverId = jObj.getString("driver_id");
 	    	    					 Data.cDriverId = driverId;

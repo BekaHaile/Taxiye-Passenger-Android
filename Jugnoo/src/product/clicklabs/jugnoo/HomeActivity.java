@@ -33,17 +33,17 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -97,9 +97,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	DrawerLayout drawerLayout;
-	
-	
-	
 	
 	
 	//menu bar 
@@ -253,6 +250,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	Button driverStartRideMyLocationBtn;
 	TextView driverStartRideText;
 	SlideButton driverStartRideSlider;
+	ImageView startRideInv;
 	Button driverCancelRideBtn;
 	
 	//End ride layout
@@ -261,6 +259,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	Button driverWaitBtn;
 	TextView driverEndRideText;
 	SlideButtonInvert driverEndRideSlider;
+	ImageView endRideInv;
 	public static int waitStart = 2;
 	
 	
@@ -332,7 +331,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	static Activity activity;
 	
-	boolean fbFriendsFetched = false, bookingsFetched = false;
+	boolean fbFriendsFetched = false, bookingsFetched = false, customerCancelBeforePushReceive = false;
 	boolean loggedOut = false;
 	
 	@Override
@@ -353,15 +352,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		fbFriendsFetched = false;
 		bookingsFetched = false;
+		customerCancelBeforePushReceive = false;
 		loggedOut = false;
 		
 		
 		
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
-		
-		
+		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		
 		
 		new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
@@ -551,6 +548,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverStartRideMyLocationBtn = (Button) findViewById(R.id.driverStartRideMyLocationBtn);
 		driverStartRideText = (TextView) findViewById(R.id.driverStartRideText); driverStartRideText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverStartRideSlider = (SlideButton) findViewById(R.id.driverStartRideSlider);
+		startRideInv = (ImageView) findViewById(R.id.startRideInv);
 		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
@@ -560,6 +558,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverWaitBtn = (Button) findViewById(R.id.driverWaitBtn); driverWaitBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		driverEndRideText = (TextView) findViewById(R.id.driverEndRideText); driverEndRideText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverEndRideSlider = (SlideButtonInvert) findViewById(R.id.driverEndRideSlider);
+		endRideInv = (ImageView) findViewById(R.id.endRideInv);
 		waitStart = 2;
 		
 		
@@ -678,28 +677,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		// menu events\
-		driverModeToggle.setOnTouchListener(new View.OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				
-				switch(event.getAction()){
-				
-				case MotionEvent.ACTION_UP:
-					if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-						changeDriverModeAsync(HomeActivity.this, 0);
-					}
-					else if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						changeDriverModeAsync(HomeActivity.this, 1);
-					}
-					break;
-				
-				}
-				
-				return false;
-			}
-		});
-		
 		driverModeToggle.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -761,13 +738,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				//TODO booking
-				
-				startActivity(new Intent(HomeActivity.this, BookingActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				
-				//getBookingsAsync(HomeActivity.this);
+				getBookingsAsync(HomeActivity.this);
 			}
 		});
+		
+		
+		
+		
 		
 		
 		logoutRl.setOnClickListener(new View.OnClickListener() {
@@ -857,32 +834,38 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				
-				if(requestRideBtn.getText().toString().equalsIgnoreCase("Request Ride")){
-					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-						if(Data.driverInfos.size() > 0){
-							requestRideBtn.setText("Assigning driver...");
-							
-							passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-							Data.cEngagementId = "";
-							Data.mapTarget = map.getCameraPosition().target;
-							
-							stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-							
-							switchPassengerScreen(passengerScreenMode);
-							
-							startService(new Intent(HomeActivity.this, CRequestRideService.class));
-							
+				try{
+					if(requestRideBtn.getText().toString().equalsIgnoreCase("Request Ride")){
+						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+							if(Data.driverInfos.size() > 0){
+								requestRideBtn.setText("Assigning driver...");
+								
+								passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+								Data.cEngagementId = "";
+								Data.mapTarget = map.getCameraPosition().target;
+								
+								stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+								
+								switchPassengerScreen(passengerScreenMode);
+								
+								startService(new Intent(HomeActivity.this, CRequestRideService.class));
+
+								customerCancelBeforePushReceive = false;
+								
+								
+								
+							}
+							else{
+								new DialogPopup().alertPopup(HomeActivity.this, "", "No driver available currently");
+							}
 						}
 						else{
-							new DialogPopup().alertPopup(HomeActivity.this, "", "No driver available currently");
+							new DialogPopup().alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
 						}
 					}
-					else{
-						new DialogPopup().alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
-					}
+				} catch(Exception e){
+					e.printStackTrace();
 				}
-				
 			}
 		});
 		
@@ -891,6 +874,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
+				customerCancelBeforePushReceive = true;
 				cancelCustomerRequestAsync(HomeActivity.this, 0, 0);
 			}
 		});
@@ -1171,6 +1155,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverStartRideSlider.setSlideButtonListener(new SlideButtonListener() {  
 	        @Override
 	        public void handleSlide() {
+	        	
+	        	startRideInv.setVisibility(View.VISIBLE);
+	        	
 	        	GCMIntentService.clearNotifications(HomeActivity.this);
 	        	driverStartRideText.setVisibility(View.GONE);
 	        	new GetAddressStartRide().execute();
@@ -1251,6 +1238,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void handleSlide() {
+				
+				endRideInv.setVisibility(View.VISIBLE);
+				
 				GCMIntentService.clearNotifications(HomeActivity.this);
 				driverEndRideText.setVisibility(View.GONE);
 				waitChronometer.stop();
@@ -1545,13 +1535,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-	  
-		
-		
 		
 		getAllFavoriteAsync(HomeActivity.this);
 		
 	}
+	
 	
 	
 	OnClickListener mapMyLocationClick = new OnClickListener() {
@@ -1765,11 +1753,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.VISIBLE);
 				
+				startRideInv.setVisibility(View.GONE);
 				driverStartRideSlider.setProgress(0);
 				driverStartRideText.setVisibility(View.VISIBLE);
 				
 				driverStartRideMainRl.setVisibility(View.VISIBLE);
 				driverInRideMainRl.setVisibility(View.GONE);
+				
 				
 				
 				
@@ -1807,6 +1797,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.VISIBLE);
 				
+				endRideInv.setVisibility(View.GONE);
 				driverEndRideSlider.setProgress(100);
 				driverEndRideText.setVisibility(View.VISIBLE);
 				
@@ -2549,8 +2540,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        if(result!=null){
 	            ArrayList<Polyline> al = drawPath(result);
 	            polyLinesAL.addAll(al);
-	            
-	            
 	        }
 	    }
 	}
@@ -2571,7 +2560,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	           
 		    	JSONObject leg0 = json.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
-		    	totalDistance = leg0.getJSONObject("distance").getDouble("value");
+		    	totalDistance = totalDistance + leg0.getJSONObject("distance").getDouble("value");
 		    	
 	           
 	           for(int z = 0; z<list.size()-1;z++){
@@ -3327,6 +3316,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
+									customerCancelBeforePushReceive = false;
+									
 								}
 								else{
 									
@@ -3371,11 +3362,20 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
 										switchPassengerScreen(passengerScreenMode);
 										
+										new Handler().postDelayed(new Runnable() {
+											
+											@Override
+											public void run() {
+												driverTime.setVisibility(View.GONE);
+											}
+										}, 60000);
+										
 									}
 									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
+								customerCancelBeforePushReceive = false;
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
@@ -3386,12 +3386,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
 							DialogPopup.dismissLoadingDialog();
+							customerCancelBeforePushReceive = false;
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 					});
 		}
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			customerCancelBeforePushReceive = false;
 		}
 
 	}
@@ -3774,6 +3776,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
+									startRideInv.setVisibility(View.GONE);
 									driverStartRideSlider.setProgress(0);
 									driverStartRideText.setVisibility(View.VISIBLE);
 								}
@@ -3797,6 +3800,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
+								startRideInv.setVisibility(View.GONE);
 								driverStartRideSlider.setProgress(0);
 								driverStartRideText.setVisibility(View.VISIBLE); 
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -3809,6 +3813,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
 							DialogPopup.dismissLoadingDialog();
+							startRideInv.setVisibility(View.GONE);
 							driverStartRideSlider.setProgress(0);
 							driverStartRideText.setVisibility(View.VISIBLE);
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -3817,6 +3822,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			startRideInv.setVisibility(View.GONE);
 			driverStartRideSlider.setProgress(0);
 			driverStartRideText.setVisibility(View.VISIBLE);
 		}
@@ -3925,6 +3931,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
+									endRideInv.setVisibility(View.GONE);
 									driverEndRideSlider.setProgress(100);
 									driverEndRideText.setVisibility(View.VISIBLE);
 								}
@@ -3960,6 +3967,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
+								endRideInv.setVisibility(View.GONE);
 								driverEndRideSlider.setProgress(100);
 								driverEndRideText.setVisibility(View.VISIBLE);
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -3972,6 +3980,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
 							DialogPopup.dismissLoadingDialog();
+							endRideInv.setVisibility(View.GONE);
 							driverEndRideSlider.setProgress(100);
 							driverEndRideText.setVisibility(View.VISIBLE);
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -3980,6 +3989,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			endRideInv.setVisibility(View.GONE);
 			driverEndRideSlider.setProgress(100);
 			driverEndRideText.setVisibility(View.VISIBLE);
 		}
@@ -4772,15 +4782,27 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	public void getBookingsAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
 
+			if(userMode == UserMode.DRIVER){
+				params.put("current_mode", "1");
+				Log.i("current_mode", "1");
+			}
+			else{
+				params.put("current_mode", "0");
+				Log.i("current_mode", "0");
+			}
+			
 			Log.i("access_token", "=" + Data.userData.accessToken);
+			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
-			client.post(Data.SERVER_URL + "/get_bookings", params,
+			client.post(Data.SERVER_URL + "/booking_history", params,
 					new AsyncHttpResponseHandler() {
 					private JSONObject jObj;
 	
@@ -4805,7 +4827,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								}
 								else{
 									
-									JSONArray bookingData = jObj.getJSONArray("bookings_data");
+									JSONArray bookingData = jObj.getJSONArray("booking_data");
 									
 									Data.bookings.clear();
 									
@@ -4814,15 +4836,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										for(int i=0; i<bookingData.length(); i++){
 											JSONObject booData = bookingData.getJSONObject(i);
 											
-											Data.bookings.add(new Booking(booData.getString("id"), booData.getString("fromLocation"),
-													booData.getString("toLocation"), booData.getString("fare"), booData.getString("distance"),
+											Data.bookings.add(new Booking(booData.getString("id"), booData.getString("from"),
+													booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
 													booData.getString("time")));
 											
 										}
 										
-										bookingsFetched = true;
 									}
 									
+									bookingsFetched = true;
 									
 								}
 							}  catch (Exception exception) {
@@ -4830,11 +4852,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
+							DialogPopup.dismissLoadingDialog();
+							
 						}
 	
 						@Override
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 					});
@@ -4874,6 +4899,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 		else if(hasFocus && loggedOut){
 			loggedOut = false;
+			
+			stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+	        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+	        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+			
 			startActivity(new Intent(HomeActivity.this, SplashLogin.class));
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -5042,27 +5072,30 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 		}
 		else if(switchCase == 1){
-			new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					Log.i("in run class","=");
-					runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							Log.i("in in run class","=");
-							requestRideBtn.setText("Request Ride");
-							DialogPopup.dismissLoadingDialog();
+			Log.e("customerCancelBeforePushReceive ","="+customerCancelBeforePushReceive);
+			if(!customerCancelBeforePushReceive){
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Log.i("in run class","=");
+						runOnUiThread(new Runnable() {
 							
-							if(getDistanceTimeAddress != null){
-								getDistanceTimeAddress.cancel(true);
+							@Override
+							public void run() {
+								Log.i("in in run class","=");
+								requestRideBtn.setText("Request Ride");
+								DialogPopup.dismissLoadingDialog();
+								
+								if(getDistanceTimeAddress != null){
+									getDistanceTimeAddress.cancel(true);
+								}
+								getAssignedDriverInfoAsync(HomeActivity.this);
 							}
-							getAssignedDriverInfoAsync(HomeActivity.this);
-						}
-					});
-				}
-			}).start();
+						});
+					}
+				}).start();
+			}
 			
 		}
 		

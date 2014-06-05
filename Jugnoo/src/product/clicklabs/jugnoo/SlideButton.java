@@ -21,6 +21,7 @@ public class SlideButton extends SeekBar {
         this.thumb = thumb;
     }
 
+    
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
