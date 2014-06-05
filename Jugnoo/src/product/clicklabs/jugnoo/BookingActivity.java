@@ -1,29 +1,19 @@
 package product.clicklabs.jugnoo;
 
-import org.json.JSONObject;
-
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 public class BookingActivity extends Activity{
 	
@@ -63,6 +53,17 @@ public class BookingActivity extends Activity{
 				overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
 		});
+		
+		
+		
+		
+		Data.bookings.add(new Booking("1", "Sector 28 dfsfgdsgfgsdfsgsfgdsfgsdgsgsgfdg", "Sector 11sdfgsdfgsfdgsdgfsg", "50", "5.4", "2014-06-05 09:11:11"));
+		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11sdfgsdfgsgdfsfgds", "50", "5.4", "2014-06-05 09:11:11"));
+		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11", "50", "5.4", "2014-06-05 09:11:11"));
+		Data.bookings.add(new Booking("1", "Sector 28", "Sector 11", "50", "5.4", "2014-06-05 09:11:11"));
+		
+		
+		
 		
 		updateBookingList();
 		
@@ -118,7 +119,7 @@ public class BookingActivity extends Activity{
 			if (convertView == null) {
 				
 				holder = new ViewHolderBooking();
-				convertView = mInflater.inflate(R.layout.favorite_list_item, null);
+				convertView = mInflater.inflate(R.layout.booking_list_item, null);
 				
 				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.regularFont(getApplicationContext()));

@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,7 @@ public class AboutActivity extends Activity{
 	LinearLayout relative;
 	
 	Button backBtn;
-	TextView aboutText;
+	TextView about1Text, about2Text, about3Text;
 	
 	
 	@Override
@@ -27,7 +28,10 @@ public class AboutActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
-		aboutText = (TextView) findViewById(R.id.aboutText); aboutText.setTypeface(Data.regularFont(getApplicationContext()));
+		about1Text = (TextView) findViewById(R.id.about1Text); about1Text.setTypeface(Data.regularFont(getApplicationContext()));
+		about2Text = (TextView) findViewById(R.id.about2Text); about2Text.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		about3Text = (TextView) findViewById(R.id.about3Text); about3Text.setTypeface(Data.regularFont(getApplicationContext()));
+		
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {

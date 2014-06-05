@@ -332,7 +332,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	static Activity activity;
 	
-	boolean fbFriendsFetched = false;
+	boolean fbFriendsFetched = false, bookingsFetched = false;
 	boolean loggedOut = false;
 	
 	@Override
@@ -352,6 +352,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		activity = this;
 		
 		fbFriendsFetched = false;
+		bookingsFetched = false;
 		loggedOut = false;
 		
 		
@@ -760,6 +761,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				//TODO booking
+				
+				startActivity(new Intent(HomeActivity.this, BookingActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				
+				//getBookingsAsync(HomeActivity.this);
 			}
 		});
 		
@@ -1062,6 +1068,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
+		
 		// driver initial layout events
 		driverNewRideRequestRl.setOnClickListener(new View.OnClickListener() {
 			
@@ -1070,6 +1077,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				if(Data.driverRideRequests.size() == 1){
 					driverNewRideRequestRl.setVisibility(View.GONE);
+					
+					Data.dEngagementId = Data.driverRideRequests.get(0).engagementId;
+					Data.dCustomerId = Data.driverRideRequests.get(0).customerId;
 					
 					Data.dCustLatLng = Data.driverRideRequests.get(0).latLng;
 					
@@ -4795,20 +4805,22 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								}
 								else{
 									
-									JSONArray favouriteData = jObj.getJSONArray("favourite_data");
+									JSONArray bookingData = jObj.getJSONArray("bookings_data");
 									
-									Data.favoriteLocations.clear();
+									Data.bookings.clear();
 									
-									if(favouriteData.length() > 0){
+									if(bookingData.length() > 0){
 										
-										for(int i=0; i<favouriteData.length(); i++){
-											JSONObject favData = favouriteData.getJSONObject(i);
+										for(int i=0; i<bookingData.length(); i++){
+											JSONObject booData = bookingData.getJSONObject(i);
 											
-											Data.favoriteLocations.add(new FavoriteLocation(favData.getInt("s_no"), favData.getString("fav_name"), 
-													new LatLng(favData.getDouble("fav_latitude"), favData.getDouble("fav_longitude"))));
+											Data.bookings.add(new Booking(booData.getString("id"), booData.getString("fromLocation"),
+													booData.getString("toLocation"), booData.getString("fare"), booData.getString("distance"),
+													booData.getString("time")));
 											
 										}
 										
+										bookingsFetched = true;
 									}
 									
 									
@@ -4865,6 +4877,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			startActivity(new Intent(HomeActivity.this, SplashLogin.class));
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		}
+		else if(hasFocus && bookingsFetched){
+			bookingsFetched = false;
+			drawerLayout.closeDrawer(menuLayout);
+			startActivity(new Intent(HomeActivity.this, BookingActivity.class));
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 	}
 	
@@ -5080,6 +5098,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
 					}
 				}
+				
 				
 				
 				
