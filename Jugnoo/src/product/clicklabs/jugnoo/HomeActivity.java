@@ -40,7 +40,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -97,6 +96,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	DrawerLayout drawerLayout;
+	
 	
 	
 	//menu bar 
@@ -331,8 +331,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	static Activity activity;
 	
-	boolean fbFriendsFetched = false, bookingsFetched = false, customerCancelBeforePushReceive = false;
-	boolean loggedOut = false;
+	boolean fbFriendsFetched = false, bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false;
+	boolean loggedOut = false, zoomedToMyLocation = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -354,6 +354,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		bookingsFetched = false;
 		customerCancelBeforePushReceive = false;
 		loggedOut = false;
+		zoomedToMyLocation = false;
 		
 		
 		
@@ -754,7 +755,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					logoutPopup(HomeActivity.this);
 				}
 				else{
-					new DialogPopup().alertPopup(activity, "", "You can't logout in between ride transcation.");
+					new DialogPopup().alertPopup(activity, "", "Ride in progress. You can logout only after the ride ends.");
 				}
 			}
 		});
@@ -767,6 +768,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			}
 		});
+		
 		
 		
 		
@@ -1100,6 +1102,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			public void onClick(View v) {
 				 GCMIntentService.clearNotifications(HomeActivity.this);
 				
+				 userPushStart = false;
 				driverAcceptRideAsync(HomeActivity.this);
 			}
 		});
@@ -1110,7 +1113,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				GCMIntentService.clearNotifications(HomeActivity.this);
-				driverRejectRideAsync(HomeActivity.this, 0);
+				driverRejectRideAsync(HomeActivity.this, 0, true);
 			}
 		});
 		
@@ -1168,7 +1171,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				GCMIntentService.clearNotifications(HomeActivity.this);
-				driverRejectRideAsync(HomeActivity.this, 1);
+				driverRejectRideAsync(HomeActivity.this, 1, true);
 			}
 		});
 		
@@ -1331,7 +1334,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			map.getUiSettings().setMyLocationButtonEnabled(false);
 			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getChandigarhLatLng(), 12));
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getChandigarhLatLng(), 14));
 			
 			
 			map.setOnMyLocationChangeListener(myLocationChangeListener);
@@ -1738,8 +1741,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				map.addMarker(markerOptions);
 				
+				DecimalFormat decimalFormat = new DecimalFormat("#.#");
+				double rateingD = 4;
+				try{
+					rateingD = Double.parseDouble(Data.assignedCustomerInfo.rating);
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+				
 				driverPassengerName.setText(Data.assignedCustomerInfo.name);
-				driverPassengerRatingValue.setText("4.0 Rating");
+				driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " Rating");
 				AQuery aq = new AQuery(driverPassengerImage);
 				aq.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
 				
@@ -1877,10 +1888,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 		
 		
+		
+		
 		switch(mode){
 		
 			case P_INITIAL:
 
+				getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+				getDistanceTimeAddress.execute();
+				
 				initialLayout.setVisibility(View.VISIBLE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
@@ -2273,6 +2289,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         		editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
         		editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
         		editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
+        		editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
         		
         		
         	
@@ -2290,6 +2307,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         		editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
         		editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
         		editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
+        		editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
         		
         		long elapsedMillis = waitChronometer.eclipsedTime;
             	
@@ -2406,16 +2424,19 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	
+	
 	OnMyLocationChangeListener myLocationChangeListener = new OnMyLocationChangeListener() {
 		
 		@Override
 		public void onMyLocationChange(Location location) {
 //			Log.e("location","=="+location);
 			
-			if(HomeActivity.myLocation == null){
-				
+			if(!zoomedToMyLocation){
 				map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+				zoomedToMyLocation = true;
 			}
+			
 			HomeActivity.myLocation = location;
 			
 			
@@ -3288,6 +3309,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("driver_id", "=" + Data.cDriverId);
+			Log.i("engage_id", Data.cEngagementId);
+			Log.i("flag", ""+flag);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
@@ -3507,14 +3530,23 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			RequestParams params = new RequestParams();
 		
 			
+			if(Data.locationFetcher != null){
+				Data.latitude = Data.locationFetcher.getLatitude();
+				Data.longitude = Data.locationFetcher.getLongitude();
+			}
+			
 			
 			params.put("access_token", Data.userData.accessToken);
 			params.put("user_id", Data.dCustomerId);
 			params.put("engage_id", Data.dEngagementId);
+			params.put("latitude", ""+Data.latitude);
+			params.put("longitude", ""+Data.longitude);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("user_id", "=" + Data.dCustomerId);
 			Log.i("engage_id", "=" + Data.dEngagementId);
+			Log.i("latitude", "="+Data.latitude);
+			Log.i("longitude", "="+Data.longitude);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
@@ -3549,14 +3581,24 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 //							        "user_name": "Tirthankar",
 //							        "phone_no": "+919803879562",
 //							        "user_image": "http://graph.facebook.com/100001398069768/picture?width=160&height=160"
+//							        "user_rating": ""
 //							    }
 //							}
 
 									
 									JSONObject userData = jObj.getJSONObject("user_data");
 									
+									String rating = "4";
+									try{
+										rating = userData.getString("user_rating");
+									} catch(Exception e){
+										e.printStackTrace();
+									}
+									
 									Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, userData.getString("user_name"),
-											userData.getString("user_image"), userData.getString("phone_no"));
+											userData.getString("user_image"), userData.getString("phone_no"), rating);
+									
+									
 									
 									
 									
@@ -3571,6 +3613,31 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									editor.putString(Data.SP_D_NR_LATITUDE, "");
 									editor.putString(Data.SP_D_NR_LONGITUDE, "");
 									editor.commit();
+									
+									
+									new Handler().postDelayed(new Runnable() {
+										
+										@Override
+										public void run() {
+											if(!userPushStart){
+												
+												new Thread(new Runnable() {
+													
+													@Override
+													public void run() {
+														runOnUiThread(new Runnable() {
+															
+															@Override
+															public void run() {
+																DialogPopup.dismissLoadingDialog();
+																driverRejectRideAsync(HomeActivity.this, 1, false);
+															}
+														});
+													}
+												}).start();
+											}
+										}
+									}, 60000);
 									
 									
 								}
@@ -3600,103 +3667,178 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	/**
 	 * ASync for change driver mode from server
 	 */
-	public void driverRejectRideAsync(final Activity activity, int flag) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
+	public void driverRejectRideAsync(final Activity activity, int flag, boolean showDialog) {
 		
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("user_id", Data.dCustomerId);
-			params.put("engage_id", Data.dEngagementId);
-			params.put("flag", ""+flag);
+		if(showDialog){
 
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("user_id", "=" + Data.dCustomerId);
-			Log.i("engage_id", "=" + Data.dEngagementId);
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				
+				RequestParams params = new RequestParams();
 			
+				
+				params.put("access_token", Data.userData.accessToken);
+				params.put("user_id", Data.dCustomerId);
+				params.put("engage_id", Data.dEngagementId);
+				params.put("flag", ""+flag);
+
+				Log.i("access_token", "=" + Data.userData.accessToken);
+				Log.i("user_id", "=" + Data.dCustomerId);
+				Log.i("engage_id", "=" + Data.dEngagementId);
+				
+			
+				AsyncHttpClient client = new AsyncHttpClient();
+				client.setTimeout(Data.SERVER_TIMEOUT);
+				client.post(Data.SERVER_URL + "/reject_a_ride", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
 		
-			AsyncHttpClient client = new AsyncHttpClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
-			client.post(Data.SERVER_URL + "/reject_a_ride", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
+							@Override
+							public void onSuccess(String response) {
+								Log.v("Server response", "response = " + response);
+		
+								try {
+									jObj = new JSONObject(response);
 									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-								}
-								else{
-									
-//									{"log":"rejected successfully"}
-
-									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
-									
-									driverScreenMode = DriverScreenMode.D_INITIAL;
-									switchDriverScreen(driverScreenMode);
-									
-									
-									int index = -1;
-									for(int i=0; i<Data.driverRideRequests.size(); i++){
-										if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(Data.dEngagementId)){
-											index = i;
-											break;
+									if(!jObj.isNull("error")){
+										
+										int flag = jObj.getInt("flag");	
+										String errorMessage = jObj.getString("error");
+										
+										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 									}
-									
-									if(index != -1){
-										Data.driverRideRequests.remove(index);
-									}
-									
-									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-									Editor editor = pref.edit();
-									editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-									editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-									editor.putString(Data.SP_D_NR_USER_ID, "");
-									editor.putString(Data.SP_D_NR_LATITUDE, "");
-									editor.putString(Data.SP_D_NR_LONGITUDE, "");
-									editor.commit();
-									
-									showAllRideRequests();
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-	
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
+									else{
+										
+//										{"log":"rejected successfully"}
 
+										new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
+										
+										driverScreenMode = DriverScreenMode.D_INITIAL;
+										switchDriverScreen(driverScreenMode);
+										
+										
+										int index = -1;
+										for(int i=0; i<Data.driverRideRequests.size(); i++){
+											if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(Data.dEngagementId)){
+												index = i;
+												break;
+											}
+										}
+										
+										if(index != -1){
+											Data.driverRideRequests.remove(index);
+										}
+										
+										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+										Editor editor = pref.edit();
+										editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+										editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+										editor.putString(Data.SP_D_NR_USER_ID, "");
+										editor.putString(Data.SP_D_NR_LATITUDE, "");
+										editor.putString(Data.SP_D_NR_LONGITUDE, "");
+										editor.commit();
+										
+										showAllRideRequests();
+										
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								}
+		
+								DialogPopup.dismissLoadingDialog();
+							}
+		
+							@Override
+							public void onFailure(Throwable arg0) {
+								Log.e("request fail", arg0.toString());
+								DialogPopup.dismissLoadingDialog();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+
+		}
+		else{
+
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				
+				RequestParams params = new RequestParams();
+			
+				
+				params.put("access_token", Data.userData.accessToken);
+				params.put("user_id", Data.dCustomerId);
+				params.put("engage_id", Data.dEngagementId);
+				params.put("flag", ""+flag);
+//TODO
+				
+				Log.i("access_token", "=" + Data.userData.accessToken);
+				Log.i("user_id", "=" + Data.dCustomerId);
+				Log.i("engage_id", "=" + Data.dEngagementId);
+				
+			
+				AsyncHttpClient client = new AsyncHttpClient();
+				client.setTimeout(Data.SERVER_TIMEOUT);
+				client.post(Data.SERVER_URL + "/reject_a_ride", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+		
+							@Override
+							public void onSuccess(String response) {
+								Log.v("Server response", "response = " + response);
+		
+								try {
+									jObj = new JSONObject(response);
+									
+									if(!jObj.isNull("error")){
+										
+										int flag = jObj.getInt("flag");	
+										
+										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										}
+										else{
+										}
+									}
+									else{
+										
+//										{"log":"rejected successfully"}
+
+										new DialogPopup().alertPopup(activity, "", "Connection from user was lost. The ride has been canceled.");
+										
+										driverScreenMode = DriverScreenMode.D_INITIAL;
+										switchDriverScreen(driverScreenMode);
+										
+										showAllRideRequests();
+										
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+								}
+		
+								DialogPopup.dismissLoadingDialog();
+							}
+		
+							@Override
+							public void onFailure(Throwable arg0) {
+								Log.e("request fail", arg0.toString());
+								DialogPopup.dismissLoadingDialog();
+							}
+						});
+			}
+
+		}
+		
 	}
 	
 	
@@ -4093,6 +4235,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							        		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
 							        		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
 							        		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
+							        		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
 							        		
 							        		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
 							        		editor.putString(Data.SP_WAIT_TIME, "0");
@@ -4443,7 +4586,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 																
 															}
 															else{
-																new DialogPopup().alertPopup(HomeActivity.this, "", "Error: Error in fetching information from Facebook.");
+																new DialogPopup().alertPopup(HomeActivity.this, "Facebook Error", "Error in fetching information from Facebook.");
 															}
 															
 
@@ -4550,7 +4693,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										fbFriendsFetched = true;
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", "No friends.");
+										new DialogPopup().alertPopup(activity, "", "No friends found on Facebook.");
 									}
 									
 									
@@ -4893,8 +5036,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
-			textHead.setText("No Driver Available");
-			textMessage.setText("Currently there are no drivers available. Do you want a driver right away?");
+			textHead.setText("No Drivers Available");
+			textMessage.setText("Currently there are no drivers available. Please let us know.");
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
@@ -5408,6 +5551,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 					@Override
 					public void run() {
+						userPushStart = true;
 						driverScreenMode = DriverScreenMode.D_START_RIDE;
 						switchDriverScreen(driverScreenMode);
 						DialogPopup.dismissLoadingDialog();

@@ -50,9 +50,9 @@
     <TextView
         android:id="@+id/friendName"
         android:layout_width="180px"
-        android:layout_height="wrap_content"
+        android:layout_height="40px"
         android:layout_marginTop="10px"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:singleLine="true"
         android:text="Mat"
         android:textColor="@color/black"

@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 public class BlurImage {
 

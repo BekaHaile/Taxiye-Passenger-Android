@@ -2,21 +2,25 @@ package product.clicklabs.jugnoo;
 
 import org.json.JSONObject;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.crashlytics.android.Crashlytics;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 public class SplashNewActivity extends Activity{
 	
@@ -32,6 +36,7 @@ public class SplashNewActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Crashlytics.start(this);
 		setContentView(R.layout.splash_new);
 		
 		loginDataFetched = false;
@@ -46,209 +51,54 @@ public class SplashNewActivity extends Activity{
 		jugnooTextImg.setVisibility(View.GONE);
 		
 		
-		int initialTime = 500;
-		int blinkInterval = 100;
-		int waitBeforeMove = 200;
-		int waitAfterMove = 100;
-		
-		final float moveDist = 60.0f;
-		
-		//First blink
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_02);
-			}
-		}, initialTime);
-		
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_03);
-			}
-		}, initialTime + blinkInterval);
-		
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_01);
-			}
-		}, initialTime + (blinkInterval * 2));
-		initialTime = initialTime + (blinkInterval * 2);
-		
-		
-		// first move
-		initialTime = initialTime + waitBeforeMove;
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(jugnooImg.getLayoutParams());
-				layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-				layoutParams.setMargins(0, (int)(moveDist * ASSL.Yscale()), 0, 0);
-				jugnooImg.setLayoutParams(layoutParams);
-			}
-		}, initialTime);
-		initialTime = initialTime + waitAfterMove;
+		Animation animation = new TranslateAnimation(0, 0, 0, (int)(550*ASSL.Yscale()));
+		animation.setFillAfter(false);
+		animation.setDuration(650);
+		animation.setInterpolator(new AccelerateDecelerateInterpolator());
+		animation.setAnimationListener(new ShowAnimListener());
+		jugnooImg.startAnimation(animation);
 		
 		
 		
-		// second blink
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_02);
-			}
-		}, initialTime);
+		
+	}
+	
+	
+	
+	class ShowAnimListener implements AnimationListener{
 
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_03);
-			}
-		}, initialTime + blinkInterval);
+		
+		public ShowAnimListener(){
+		}
+		
+		@Override
+		public void onAnimationStart(Animation animation) {
+			Log.i("onAnimationStart", "onAnimationStart");
+		}
 
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_01);
-			}
-		}, initialTime + (blinkInterval * 2));
-		initialTime = initialTime + (blinkInterval * 2);
-		
-		// second move
-		initialTime = initialTime + waitBeforeMove;
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(jugnooImg.getLayoutParams());
-				layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-				layoutParams.setMargins(0, (int) (moveDist * 2 * ASSL.Yscale()), 0, 0);
-				jugnooImg.setLayoutParams(layoutParams);
-			}
-		}, initialTime);
-		initialTime = initialTime + waitAfterMove;
-		
-		
-		
-		
-		
-		// third blink
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_02);
-			}
-		}, initialTime);
+		@Override
+		public void onAnimationEnd(Animation animation) {
+			Log.i("onAnimationStart", "onAnimationStart");
+			jugnooImg.clearAnimation();
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(jugnooImg.getLayoutParams());
+			layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			layoutParams.setMargins(0, (int)(262 * ASSL.Yscale()), 0, 0);
+			jugnooImg.setLayoutParams(layoutParams);
+			
+			jugnooTextImg.setVisibility(View.VISIBLE);
+			
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					accessTokenLogin(SplashNewActivity.this);
+				}
+			}, 500);
+			
+		}
 
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_03);
-			}
-		}, initialTime + blinkInterval);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_01);
-			}
-		}, initialTime + (blinkInterval * 2));
-		initialTime = initialTime + (blinkInterval * 2);
-
-		// third move
-		initialTime = initialTime + waitBeforeMove;
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(jugnooImg.getLayoutParams());
-				layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-				layoutParams.setMargins(0, (int) (moveDist * 3 * ASSL.Yscale()), 0, 0);
-				jugnooImg.setLayoutParams(layoutParams);
-			}
-		}, initialTime);
-		initialTime = initialTime + waitAfterMove;
-		
-		
-		// fourth blink
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_02);
-			}
-		}, initialTime);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_03);
-			}
-		}, initialTime + blinkInterval);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_01);
-			}
-		}, initialTime + (blinkInterval * 2));
-		initialTime = initialTime + (blinkInterval * 2);
-		
-		
-		// fourth move
-		initialTime = initialTime + waitBeforeMove;
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(jugnooImg.getLayoutParams());
-				layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-				layoutParams.setMargins(0, (int) (moveDist * 4 * ASSL.Yscale()), 0, 0);
-				jugnooImg.setLayoutParams(layoutParams);
-			}
-		}, initialTime);
-		initialTime = initialTime + waitAfterMove;
-		
-		
-		// fifth blink
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_02);
-			}
-		}, initialTime);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_03);
-			}
-		}, initialTime + blinkInterval);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooImg.setImageResource(R.drawable.img_01);
-			}
-		}, initialTime + (blinkInterval * 2));
-		initialTime = initialTime + (blinkInterval * 2);
-		
-		
-		// fifth show
-		initialTime = initialTime + waitBeforeMove;
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				jugnooTextImg.setVisibility(View.VISIBLE);
-			}
-		}, initialTime);
-		initialTime = initialTime + waitBeforeMove;
-		
-		
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				accessTokenLogin(SplashNewActivity.this);
-			}
-		}, initialTime);
-		
+		@Override
+		public void onAnimationRepeat(Animation animation) {
+		}
 		
 	}
 	

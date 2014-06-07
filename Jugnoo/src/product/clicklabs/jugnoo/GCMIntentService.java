@@ -374,7 +374,7 @@ public class GCMIntentService extends IntentService {
 	    	    						 notificationManager(this, "Your ride has started.");
 	    	    					 }
 	    	    				 }
-	    	    				 // {"flag": 4,"log":"show"}  customer cancel 10 seconds done show driver start ride option
+	    	    				 // {"flag": 4,"log":"show"}  customer cancel 5 seconds done show driver start ride option
 	    	    				 else if(4 == flag){
 
 	    	    					 if (HomeActivity.driverStartRideInterrupt != null) {
@@ -433,6 +433,7 @@ public class GCMIntentService extends IntentService {
 	    		    		 } catch(Exception e){
 	    		    			 
 	    		    		 }
+	    		    		 
 	    		    		 
 	    		    		 
 	    		    	 }

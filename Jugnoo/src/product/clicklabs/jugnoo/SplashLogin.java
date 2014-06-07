@@ -18,7 +18,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -281,7 +280,7 @@ public class SplashLogin extends Activity{
 																		
 																	}
 																	else{
-																		new DialogPopup().alertPopup(SplashLogin.this, "", "Error: Error in fetching information from Facebook.");
+																		new DialogPopup().alertPopup(SplashLogin.this, "Facebook Error", "Error in fetching information from Facebook.");
 																	}
 																	
 

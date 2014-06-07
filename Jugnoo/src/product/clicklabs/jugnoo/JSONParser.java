@@ -7,7 +7,6 @@ import com.google.android.gms.maps.model.LatLng;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 
 public class JSONParser {
 
@@ -73,8 +72,9 @@ public class JSONParser {
 					String name = pref.getString(Data.SP_D_CUSTOMER_NAME, "");
 					String image = pref.getString(Data.SP_D_CUSTOMER_IMAGE, "");
 					String phone = pref.getString(Data.SP_D_CUSTOMER_PHONE, "");
+					String rating = pref.getString(Data.SP_D_CUSTOMER_RATING, "");
 					
-					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone);
+					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
 					
 					
 					
@@ -89,8 +89,9 @@ public class JSONParser {
 					String name = pref.getString(Data.SP_D_CUSTOMER_NAME, "");
 					String image = pref.getString(Data.SP_D_CUSTOMER_IMAGE, "");
 					String phone = pref.getString(Data.SP_D_CUSTOMER_PHONE, "");
+					String rating = pref.getString(Data.SP_D_CUSTOMER_RATING, "");
 					
-					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone);
+					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "0"));
 					HomeActivity.previousWaitTime = Double.parseDouble(pref.getString(Data.SP_WAIT_TIME, "0"));

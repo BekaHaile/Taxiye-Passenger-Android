@@ -508,7 +508,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 
                 
@@ -902,14 +902,13 @@
                 android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
 
                 <RelativeLayout 
                     android:id="@+id/upLayout"
                     android:layout_width="match_parent"
                         android:layout_height="700px"
-                        android:tag="mwar" 
                     >
                     
                     
@@ -919,7 +918,6 @@
                         android:id="@+id/reviewUserImgBlured"
                         android:layout_width="match_parent"
                         android:layout_height="700px" 
-                        android:tag="mwar" 
             android:scaleType="centerCrop"
                         />
 
@@ -928,7 +926,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="700px"
                         android:background="@drawable/profile_pic_top"
-                        android:tag="mwar"  />
+                          />
 
                     <RelativeLayout
                         android:id="@+id/reviewUserImageRL"
@@ -1167,7 +1165,7 @@
                         android:layout_height="99px"
                         android:layout_centerHorizontal="true"
                                 android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="30px"
+                        android:layout_marginBottom="35px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="Submit"
                         android:textColor="@drawable/white_color_selector"
@@ -1303,7 +1301,7 @@
             android:layout_width="match_parent"
             android:layout_height="84px"
             android:layout_marginTop="96px" 
-            android:background="@drawable/menu_item_selector"
+            android:background="@drawable/transparent"
             >
 
             <TextView
@@ -1368,7 +1366,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="42px"
-                android:text="Bookings"
+                android:text="Rides"
                 android:textColor="@color/white"
                 android:textSize="34px" />
         </RelativeLayout>

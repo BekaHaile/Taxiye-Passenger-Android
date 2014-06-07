@@ -51,7 +51,7 @@
                 android:maxHeight="800px"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:text="Are you sure you want to logout ?"
+                android:text="Are you sure you want to logout?"
                 android:layout_marginTop="20px"
                 android:textColor="@color/black"
                 android:lineSpacingExtra="10px"

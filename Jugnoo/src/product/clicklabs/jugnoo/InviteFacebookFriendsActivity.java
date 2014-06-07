@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +95,14 @@ public class InviteFacebookFriendsActivity extends Activity{
 			
 			@Override
 			public void afterTextChanged(Editable s) {
-				facebookFriendsGridAdapter.search(s.toString());
+				int count = facebookFriendsGridAdapter.search(s.toString());
+				if(count == 0){
+					searchFriendsEt.requestFocus();
+					searchFriendsEt.setError("No results found");
+				}
+				else{
+					searchFriendsEt.setError(null);
+				}
 			}
 		});
 		
@@ -255,7 +261,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 		}
 
 		
-		public void search(String text){
+		public int search(String text){
 			text = text.toLowerCase();
 			
 			Data.friendInfos.clear();
@@ -273,6 +279,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 			
 			notifyDataSetChanged();
 			
+			return Data.friendInfos.size();
 		}
 		
 	}
@@ -318,7 +325,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 
 		            final String requestId = values.getString("request");
 		            if (requestId != null) {
-		            	new DialogPopup().alertPopup(InviteFacebookFriendsActivity.this, "", "Friends invited.");
+		            	new DialogPopup().alertPopup(InviteFacebookFriendsActivity.this, "", "Friends invited successfully.");
 		            } 
 		            else {
 		                Toast.makeText(InviteFacebookFriendsActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();

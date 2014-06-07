@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -127,10 +126,11 @@ public class CRequestRideService extends Service {
 		
 		@Override
 		protected String doInBackground(String... params) {
+			try{
 			Log.i("===========================driverPos","="+driverPos);
 			if(driverPos > 0){
 				try{
-					Thread.sleep(60000);
+					Thread.sleep(30000);
 				} catch(Exception e){
 				}
 			}
@@ -197,6 +197,10 @@ public class CRequestRideService extends Service {
 			else{
 				return "";
 			}
+			} catch(Exception e){
+				e.printStackTrace();
+				return "";
+			}
 			
 		}
 		
@@ -204,6 +208,7 @@ public class CRequestRideService extends Service {
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 
+			
 			
 			
 			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
@@ -250,6 +255,7 @@ public class CRequestRideService extends Service {
 				requestRideAsync.execute();
 			}
 			else{
+				Log.e("requestRideInterrupt(0) ============ ","requestRideInterrupt(0)");
 				requestRideAsync = null;
 				if(requestRideInterrupt != null){
 					requestRideInterrupt.requestRideInterrupt(0);
@@ -257,6 +263,7 @@ public class CRequestRideService extends Service {
 				
 				stopSelf();
 			}
+			
 			
 			Log.e("RequestRideAsync","stopped");
 		}

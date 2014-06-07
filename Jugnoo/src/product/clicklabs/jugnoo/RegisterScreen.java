@@ -1,9 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
-
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
@@ -14,25 +10,18 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -151,8 +140,8 @@ public class RegisterScreen extends Activity{
 				}
 				else{
 					if("".equalsIgnoreCase(emailId)){
-						phoneNoEt.requestFocus();
-						phoneNoEt.setError("Please enter email id");
+						emailIdEt.requestFocus();
+						emailIdEt.setError("Please enter email id");
 					}
 					else{
 						if("".equalsIgnoreCase(phoneNo)){
@@ -200,8 +189,8 @@ public class RegisterScreen extends Activity{
 										}
 									}
 									else{
-										phoneNoEt.requestFocus();
-										phoneNoEt.setError("Please enter valid email id");
+										emailIdEt.requestFocus();
+										emailIdEt.setError("Please enter valid email id");
 									}
 								}
 							}

@@ -19,6 +19,7 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/img_01"
         android:tag="mwar"
+        android:layout_marginTop="-288px"
         
         />
     

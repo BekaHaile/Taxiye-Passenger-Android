@@ -63,11 +63,12 @@ class DriverInfo{
 class CustomerInfo{
 	String userId, name, image, phoneNumber, rating;
 	
-	public CustomerInfo(String userId, String name, String image, String phoneNumber){
+	public CustomerInfo(String userId, String name, String image, String phoneNumber, String rating){
 		this.userId = userId;
 		this.name = name;
 		this.image = image;
 		this.phoneNumber = phoneNumber;
+		this.rating = rating;
 	}
 }
 

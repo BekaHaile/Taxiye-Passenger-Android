@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 /**
  * date and time related operations functions
