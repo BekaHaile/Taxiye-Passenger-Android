@@ -97,8 +97,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	DrawerLayout drawerLayout;
 	
-	
-	
 	//menu bar 
 	LinearLayout menuLayout;
 	
@@ -124,6 +122,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	RelativeLayout logoutRl;
 	TextView logoutText;
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -286,8 +290,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	ArrayList<Polyline> polyLinesAL = new ArrayList<Polyline>();
-	
 	ArrayList<Location> locations = new ArrayList<Location>();
 	
 	ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>(); 
@@ -363,6 +365,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
+		
+//		drawerLayout.setScrimColor(Color.parseColor("#D8242930"));
 		
 		
 		//Swipe menu
@@ -752,6 +756,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				if(passengerScreenMode == PassengerScreenMode.P_INITIAL || driverScreenMode == DriverScreenMode.D_INITIAL){
+					GCMIntentService.clearNotifications(HomeActivity.this);
 					logoutPopup(HomeActivity.this);
 				}
 				else{
@@ -1320,9 +1325,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-		
-		polyLinesAL = new ArrayList<Polyline>();
-		
 		locations = new ArrayList<Location>();
 		
 		
@@ -1558,13 +1560,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	public void setUserData(){
-		
-		userName.setText(Data.userData.userName);
-		
-		AQuery aq = new AQuery(profileImg);
-		aq.id(profileImg).progress(profileImgProgress).image(Data.userData.userImage, Data.imageOptionsFullRound());
-		
-		
+		try{
+			
+			userName.setText(Data.userData.userName);
+			AQuery aq = new AQuery(profileImg);
+			aq.id(profileImg).progress(profileImgProgress).image(Data.userData.userImage, Data.imageOptionsFullRound());
+			
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -2459,7 +2463,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			        .width(5)
 			        .color(Color.RED).geodesic(true));
 
-			        polyLinesAL.add(line);
 				}
 				else{
 					new CreatePathAsyncTask(lastLatLng, currentLatLng).execute();
@@ -2557,8 +2560,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    protected void onPostExecute(String result) {
 	        super.onPostExecute(result);   
 	        if(result!=null){
-	            ArrayList<Polyline> al = drawPath(result);
-	            polyLinesAL.addAll(al);
+	            drawPath(result);
 	        }
 	    }
 	}
@@ -3781,7 +3783,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				params.put("user_id", Data.dCustomerId);
 				params.put("engage_id", Data.dEngagementId);
 				params.put("flag", ""+flag);
-//TODO
 				
 				Log.i("access_token", "=" + Data.userData.accessToken);
 				Log.i("user_id", "=" + Data.dCustomerId);
@@ -3927,7 +3928,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									new DialogPopup().alertPopup(activity, "", "Ride started");
 
 									locations.clear();
-									polyLinesAL.clear();
 									
 									HomeActivity.previousWaitTime = 0;
 									HomeActivity.totalDistance = -1;
@@ -4091,12 +4091,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									locations.clear();
 									
 									map.clear();
-									
-									for(Polyline polyline : polyLinesAL){
-										polyline.remove();
-									}
-									
-									polyLinesAL.clear();
 									
 									waitStart = 2;
 									waitChronometer.stop();
@@ -5208,7 +5202,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						Log.i("in in herestartRideForCustomer  run class","=");
 						
 						locations.clear();
-						polyLinesAL.clear();
 						
 						HomeActivity.totalDistance = -1;
 						
@@ -5579,12 +5572,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						locations.clear();
 						
 						map.clear();
-						
-						for(Polyline polyline : polyLinesAL){
-							polyline.remove();
-						}
-						
-						polyLinesAL.clear();
 						
 						passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 						switchPassengerScreen(passengerScreenMode);

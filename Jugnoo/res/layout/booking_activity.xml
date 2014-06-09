@@ -47,7 +47,7 @@
                     android:id="@+id/noBookingsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No bookings currently."
+                    android:text="No rides currently."
                     android:textColor="@color/black"
                     android:textSize="38px"
                     android:gravity="center"

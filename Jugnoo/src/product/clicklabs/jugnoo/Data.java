@@ -15,7 +15,6 @@ import android.graphics.Typeface;
 import android.util.Base64;
 
 import com.androidquery.callback.ImageOptions;
-import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -78,12 +77,15 @@ public class Data {
 	public static LatLng startRidePreviousLatLng;
 	
 	
+	
 	public static final int SERVER_TIMEOUT = 60000;
 
 	
-	//"http://54.81.229.172:7000";
-	// staged http://54.81.229.172:8000
-	public static final String SERVER_URL = "http://dev.jugnoo.in:3000";
+	
+	//Dev staged :  "http://54.81.229.172:7000";
+	// Dev staged :   http://54.81.229.172:8000
+	// live 1st:    http://dev.jugnoo.in:3000
+	public static final String SERVER_URL = "http://54.81.229.172:8000";
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Oops!! Server not responding. Please try again later.";

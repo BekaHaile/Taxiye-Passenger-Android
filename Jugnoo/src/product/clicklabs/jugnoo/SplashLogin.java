@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -40,7 +42,6 @@ import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.model.GraphUser;
-import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -50,7 +51,8 @@ import com.loopj.android.http.RequestParams;
 
 public class SplashLogin extends Activity{
 	
-	EditText emailEt, passwordEt;
+	AutoCompleteTextView emailEt;
+	EditText passwordEt;
 	Button signInBtn, forgotPasswordBtn, signupBtn, facebookSignInBtn;
 	TextView extraTextForScroll;
 	ImageView orBg;
@@ -90,7 +92,7 @@ public class SplashLogin extends Activity{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashLogin.this, relative, 1134, 720, false);
 		
-		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
+		emailEt = (AutoCompleteTextView) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
 		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		signInBtn = (Button) findViewById(R.id.signInBtn); signInBtn.setTypeface(Data.regularFont(getApplicationContext()));
@@ -103,6 +105,22 @@ public class SplashLogin extends Activity{
 		orBg = (ImageView) findViewById(R.id.orBg); 
 		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.regularFont(getApplicationContext()));
 		
+		
+		Database database = new Database(SplashLogin.this);													// getting already logged in email strings for drop down
+		String[] emails = database.getEmails();
+		database.close();
+		
+		ArrayAdapter<String> adapter;
+		
+		if (emails == null) {																			// if emails from database are not null
+			emails = new String[]{};
+			adapter = new ArrayAdapter<String>(this, R.layout.dropdown_textview, emails);
+		} else {																						// else reinitializing emails to be empty
+			adapter = new ArrayAdapter<String>(this, R.layout.dropdown_textview, emails);
+		}
+		
+		adapter.setDropDownViewResource(R.layout.dropdown_textview);					// setting email array to EditText DropDown list
+		emailEt.setAdapter(adapter);
 		
 		
 		orBg.setOnClickListener(new View.OnClickListener() {
@@ -259,16 +277,31 @@ public class SplashLogin extends Activity{
 																		Data.fbLastName = user.getLastName();
 																		Data.fbUserName = user.getUsername();
 																		
+																		
 																		try {
 																			Data.fbUserEmail = ((String)user.asMap().get("email"));
-																			if("".equalsIgnoreCase(Data.fbUserEmail)){
-																				Data.fbUserEmail = user.getUsername() + "@facebook.com";
+																			Log.e("Data.userEmail before","="+Data.fbUserEmail);
+																			if(Data.fbUserEmail == null && Data.fbUserName != null){
+																				Data.fbUserEmail = Data.fbUserName + "@facebook.com";
 																			}
 																		} catch (Exception e2) {
-																			Data.fbUserEmail = user.getUsername() + "@facebook.com";
 																			e2.printStackTrace();
 																		}
 
+																		
+
+																		
+																		
+																		if(Data.fbUserName == null){
+																			Data.fbUserName = "";
+																		}
+																		
+																		if(Data.fbUserEmail == null){
+																			Data.fbUserEmail = "";
+																		}
+																		
+																		
+																		
 																		Log.e("Data.fbId","="+Data.fbId);
 																		Log.e("Data.fbFirstName","="+Data.fbFirstName);
 																		Log.e("Data.fbLastName","="+Data.fbLastName);
@@ -576,6 +609,9 @@ public class SplashLogin extends Activity{
 									
 									loginDataFetched = true;
 									
+									Database database22 = new Database(SplashLogin.this);
+									database22.insertEmail(emailId);
+									database22.close();
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();

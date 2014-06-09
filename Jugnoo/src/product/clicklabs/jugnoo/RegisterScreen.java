@@ -400,6 +400,10 @@ public class RegisterScreen extends Activity{
 									new JSONParser().parseLoginData(activity, response);
 									loginDataFetched = true;
 									
+									Database database22 = new Database(RegisterScreen.this);
+									database22.insertEmail(emailId);
+									database22.close();
+									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
