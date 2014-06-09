@@ -1,5 +1,9 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -23,6 +27,12 @@ public class Database {																	// class for handling database related a
 	// **********************//
 	private static final String TABLE_EMAILS = "table_email_suggestions";
 	private static final String EMAIL = "email";
+	
+	// ***************** table_previous_latlng table columns
+		// **********************//
+	private static final String TABLE_PREVIOUS_LATLNG = "table_previous_latlng";
+	private static final String LAT = "lat";
+	private static final String LNG = "lng";
 
 	/**
 	 * Creates and opens database for the application use 
@@ -42,6 +52,12 @@ public class Database {																	// class for handling database related a
 			// table_email_suggestions
 			database.execSQL(" CREATE TABLE " + TABLE_EMAILS + " ("
 					+ EMAIL + " TEXT NOT NULL" + ");");
+
+			// table_previous_latlng
+			database.execSQL(" CREATE TABLE " + TABLE_PREVIOUS_LATLNG + " (" 
+					+ LAT + " REAL NOT NULL" + ","
+					+ LNG + " REAL NOT NULL" + ""
+					+ ");");
 
 		}
 
@@ -140,4 +156,53 @@ public class Database {																	// class for handling database related a
 				new String[] { email });
 	}
 
+	
+	
+	
+	public void insertLatLngArr(ArrayList<LatLng> latLngs){
+		
+		if(latLngs.size() > 0){
+			
+			ContentValues contentValues = new ContentValues();
+			
+			for(LatLng latLng : latLngs){
+				contentValues.put(Database.LAT, latLng.latitude);
+				contentValues.put(Database.LNG, latLng.longitude);
+				database.insert(Database.TABLE_PREVIOUS_LATLNG, null, contentValues);
+				contentValues.clear();
+			}
+			
+		}
+		
+	}
+	
+	
+	public ArrayList<LatLng> getSavedLatLngs(){
+		
+		ArrayList<LatLng> latLngs = new ArrayList<LatLng>();
+		
+		String[] columns = new String[] { Database.LAT, Database.LNG };
+
+		Cursor cursor = database.query(Database.TABLE_PREVIOUS_LATLNG, columns, null, null, null, null, null);
+		
+		int in0 = cursor.getColumnIndex(Database.LAT);
+		int in1 = cursor.getColumnIndex(Database.LNG);
+		
+		if(latLngs.size() > 0){
+			
+			ContentValues contentValues = new ContentValues();
+			
+			for(LatLng latLng : latLngs){
+				contentValues.put(Database.LAT, latLng.latitude);
+				contentValues.put(Database.LNG, latLng.longitude);
+				database.insert(Database.TABLE_PREVIOUS_LATLNG, null, contentValues);
+				contentValues.clear();
+			}
+			
+		}
+		
+	}
+	
+	
+	
 }
