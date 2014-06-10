@@ -707,6 +707,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
+				//TODO
 				
 				if("".equalsIgnoreCase(Data.fbAccessToken)){
 					facebookLogin();
@@ -4655,6 +4656,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	
 	
+	
+	
 	/**
 	 * ASync for fetching fb friends from server
 	 */
@@ -5184,10 +5187,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Toast.makeText(getApplicationContext(), "in activt", Toast.LENGTH_SHORT).show();
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
-			Session.getActiveSession().onActivityResult(this, requestCode,
-					resultCode, data);
+			Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

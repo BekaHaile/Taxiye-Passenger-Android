@@ -152,7 +152,7 @@ public class BookingActivity extends Activity{
 			
 			holder.fromValue.setText(booking.fromLocation);
 			holder.toValue.setText(booking.toLocation);
-			holder.distanceValue.setText(booking.distance + " Km");
+			holder.distanceValue.setText(booking.distance + " km");
 			holder.timeValue.setText(dateOperations.convertDate(dateOperations.utcToLocal(booking.time)));
 			holder.fareValue.setText("Rs. "+booking.fare);
 			

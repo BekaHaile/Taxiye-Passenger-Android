@@ -1,6 +1,11 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -10,8 +15,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,7 +31,11 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.model.GraphObject;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.Builder;
 import com.facebook.widget.WebDialog.OnCompleteListener;
@@ -111,23 +120,32 @@ public class InviteFacebookFriendsActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				
-				String userIds = "";
-				
-				for(int i = 0; i<Data.friendInfosDuplicate.size(); i++){
-					if(Data.friendInfosDuplicate.get(i).tick){
-						userIds = userIds + Data.friendInfosDuplicate.get(i).fbId + ",";
+				try{
+					
+					String userIds = "";
+					
+					for(int i = 0; i<Data.friendInfosDuplicate.size(); i++){
+						if(Data.friendInfosDuplicate.get(i).tick){
+							userIds = userIds + Data.friendInfosDuplicate.get(i).fbId + ",";
+						}
 					}
+					
+					
+					//TODO
+					if(!"".equalsIgnoreCase(userIds)){
+						userIds = userIds.substring(0, userIds.length()-1);
+						inviteFbFriend(userIds);
+					}
+					else{
+						inviteFbFriend("");
+//						new DialogPopup().alertPopup(InviteFacebookFriendsActivity.this, "", "Select some friends first.");
+					}
+					
+//					getAllFBFriends();
+					
+				} catch(Exception e){
+					e.printStackTrace();
 				}
-				
-				if(!"".equalsIgnoreCase(userIds)){
-					userIds = userIds.substring(0, userIds.length()-1);
-					inviteFbFriend(userIds);
-				}
-				else{
-					new DialogPopup().alertPopup(InviteFacebookFriendsActivity.this, "", "Select some friends first.");
-				}
-				
 				
 			}
 		});
@@ -142,6 +160,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 		
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
 		
 	}
 	
@@ -293,6 +312,20 @@ public class InviteFacebookFriendsActivity extends Activity{
 	}
 	
 
+	
+//	public void getAllFBFriends(){
+////		Request request = new Request(Session.getActiveSession(), "me/taggable_friends", null, HttpMethod.POST);
+////		request.setCallback(new Request.Callback() {
+////		    @Override
+////		    public void onCompleted(Response response) {
+////		        if (response.getError() == null) {
+////		        	
+////		        }
+////		        Log.e("Tests", "got response: " + response);
+////		    }
+////		});
+////		request.executeAsync();
+//	}
 	
 	
 	public void inviteFbFriend(String userId){

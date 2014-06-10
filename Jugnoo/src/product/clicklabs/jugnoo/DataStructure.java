@@ -88,6 +88,14 @@ class FriendInfo implements Comparable<FriendInfo> {
 		this.tick = false;
 	}
 	
+	public FriendInfo(String fbId, String fbName, String image){
+		this.fbId = fbId;
+		this.fbName = fbName;
+		this.fbImage = image;
+		this.flag = 0;
+		this.tick = false;
+	}
+	
 	@Override
 	public int compareTo(FriendInfo another) {
 		return this.fbName.toLowerCase().compareTo(another.fbName.toLowerCase());
