@@ -40,6 +40,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -2296,8 +2297,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         		editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
         		
         		
-        	
-        		
         	}
         	else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
         		
@@ -2434,7 +2433,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		@Override
 		public void onMyLocationChange(Location location) {
-//			Log.e("location","=="+location);
 			
 			if(!zoomedToMyLocation){
 				map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
@@ -2446,29 +2444,35 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
 			
-			LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+			final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 			Log.e("locations.size()", "="+locations.size());
 			if(locations.size() > 0){
 				
-				LatLng lastLatLng = new LatLng(locations.get(locations.size()-1).getLatitude(), locations.get(locations.size()-1).getLongitude());
+				final LatLng lastLatLng = new LatLng(locations.get(locations.size()-1).getLatitude(), locations.get(locations.size()-1).getLongitude());
 				
 				double displacement = distance(lastLatLng, currentLatLng);
 				Log.e("displacement", "="+displacement);
 				
 				if(displacement < 100){
 					totalDistance = totalDistance + displacement;
-					
-					Polyline line = map.addPolyline(new PolylineOptions()
+					map.addPolyline(new PolylineOptions()
 			        .add(lastLatLng, currentLatLng)
 			        .width(5)
 			        .color(Color.RED).geodesic(true));
-
+					
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Database database = new Database(HomeActivity.this);
+							database.insertPolyLine(lastLatLng, currentLatLng);
+							database.close();
+						}
+					}).start();
 				}
 				else{
 					new CreatePathAsyncTask(lastLatLng, currentLatLng).execute();
 				}
-				
-				
 				
 			}
 			else if(locations.size() == 0){
@@ -2478,8 +2482,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				else{
 					try{
-						double prevoiusDistance = distance(Data.startRidePreviousLatLng, currentLatLng);
-						totalDistance = totalDistance + prevoiusDistance;
+						displayOldPath();
+						new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng).execute();
 					} catch(Exception e){
 						e.printStackTrace();
 					}
@@ -2496,14 +2500,34 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			}
 			
 			map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-			
-			
 
+			
+			
 			locations.add(location);
 			
 			}
 		}
 	};
+	
+	
+	//TODO
+	
+	public void displayOldPath(){
+		
+		Database database = new Database(getApplicationContext());
+		ArrayList<Pair<LatLng, LatLng>> path = database.getSavedPath();
+		database.close();
+		
+		for(Pair<LatLng, LatLng> pair : path){
+			LatLng src = pair.first;
+            LatLng dest = pair.second;
+            map.addPolyline(new PolylineOptions()
+            .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+            .width(5)
+    	    .color(Color.RED).geodesic(true));
+		}
+		
+	}
 	
 	
 	double distance(LatLng start, LatLng end) {
@@ -2566,40 +2590,34 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	public ArrayList<Polyline> drawPath(String result) {
-
+	public void drawPath(String result) {
 	    try {
-	    	ArrayList<Polyline> polylines = new ArrayList<Polyline>();
-//	    	new SimpleJSONParser().writeJSONToFile(result, "Google location");
-	    	
 	           final JSONObject json = new JSONObject(result);
 	           JSONArray routeArray = json.getJSONArray("routes");
 	           JSONObject routes = routeArray.getJSONObject(0);
 	           JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
 	           String encodedString = overviewPolylines.getString("points");
 	           List<LatLng> list = decodePoly(encodedString);
-
 	           
 		    	JSONObject leg0 = json.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
 		    	totalDistance = totalDistance + leg0.getJSONObject("distance").getDouble("value");
 		    	
-	           
+		    	 Database database = new Database(HomeActivity.this);
+		    	 
 	           for(int z = 0; z<list.size()-1;z++){
 	                LatLng src= list.get(z);
 	                LatLng dest= list.get(z+1);
-	                Polyline line = map.addPolyline(new PolylineOptions()
+	                map.addPolyline(new PolylineOptions()
 	                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 	                .width(5)
 			        .color(Color.RED).geodesic(true));
-
-	                polylines.add(line);
+					database.insertPolyLine(src, dest);
 	            }
+	           database.close();
 	           
-	           return polylines;
 	    } 
 	    catch (Exception e) {
 	    	e.printStackTrace();
-	    	return new ArrayList<Polyline>();
 	    }
 	} 
 	
@@ -2634,7 +2652,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	                 (((double) lng / 1E5) ));
 	        poly.add(pLatLng);
 	    }
-
 	    return poly;
 	}
 	
@@ -3030,7 +3047,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onSuccess(String response) {
 				Log.e("request result", response);
-				new SimpleJSONParser().writeJSONToFile(response, "googlePlaceJson");
 				try {
 					JSONArray info = null;
 					JSONObject jj = new JSONObject(response);
@@ -3932,6 +3948,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									HomeActivity.previousWaitTime = 0;
 									HomeActivity.totalDistance = -1;
 									
+									Database database = new Database(HomeActivity.this);
+									database.deleteSavedPath();
+									database.close();
+									
 									waitStart = 2;
 									
 						        	driverScreenMode = DriverScreenMode.D_IN_RIDE;
@@ -4098,6 +4118,57 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						        	driverScreenMode = DriverScreenMode.D_RIDE_END;
 									switchDriverScreen(driverScreenMode);
 									
+									
+									new Thread(new Runnable() {
+										
+										@Override
+										public void run() {
+							        	
+							        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+							    		Editor editor = pref.edit();
+							        		
+							        		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
+							        		
+							        		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
+							        		editor.putString(Data.SP_D_CUSTOMER_ID, "");
+							        		
+							        		editor.putString(Data.SP_D_LATITUDE, "0");
+							        		editor.putString(Data.SP_D_LONGITUDE, "0");
+							        		
+							        		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
+							        		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
+							        		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
+							        		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
+							        		
+							        		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+							        		editor.putString(Data.SP_WAIT_TIME, "0");
+							        		editor.putString(Data.SP_LAST_LATITUDE, "0");
+							        		editor.putString(Data.SP_LAST_LONGITUDE, "0");
+							        		
+							        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+							        		
+							        		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
+							        		editor.putString(Data.SP_C_DRIVER_ID, "");
+							        		editor.putString(Data.SP_C_LATITUDE, "0");
+							        		editor.putString(Data.SP_C_LONGITUDE, "0");
+							        		editor.putString(Data.SP_C_DRIVER_NAME, "");
+							        		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
+							        		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
+							        		editor.putString(Data.SP_C_DRIVER_PHONE, "");
+							        		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
+							        		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
+							        		
+							        	
+							        	editor.commit();
+							    		
+							        	
+							        	Database database = new Database(HomeActivity.this);
+										database.deleteSavedPath();
+										database.close();
+							        	
+									
+										}
+									}).start();
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -4209,53 +4280,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										switchPassengerScreen(passengerScreenMode);
 									}
 									
-									
-									new Thread(new Runnable() {
-										
-										@Override
-										public void run() {
-							        	
-							        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-							    		Editor editor = pref.edit();
-							        		
-							        		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
-							        		
-							        		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
-							        		editor.putString(Data.SP_D_CUSTOMER_ID, "");
-							        		
-							        		editor.putString(Data.SP_D_LATITUDE, "0");
-							        		editor.putString(Data.SP_D_LONGITUDE, "0");
-							        		
-							        		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
-							        		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
-							        		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
-							        		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
-							        		
-							        		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-							        		editor.putString(Data.SP_WAIT_TIME, "0");
-							        		editor.putString(Data.SP_LAST_LATITUDE, "0");
-							        		editor.putString(Data.SP_LAST_LONGITUDE, "0");
-							        		
-							        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
-							        		
-							        		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
-							        		editor.putString(Data.SP_C_DRIVER_ID, "");
-							        		editor.putString(Data.SP_C_LATITUDE, "0");
-							        		editor.putString(Data.SP_C_LONGITUDE, "0");
-							        		editor.putString(Data.SP_C_DRIVER_NAME, "");
-							        		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
-							        		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
-							        		editor.putString(Data.SP_C_DRIVER_PHONE, "");
-							        		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-							        		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
-							        		
-							        	
-							        	editor.commit();
-							    		
-							        	
-									
-										}
-									}).start();
 									
 									
 								}
@@ -5102,7 +5126,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								if(!jObj.isNull("error")){
 									
 									int flag = jObj.getInt("flag");	
-									String error = jObj.getString("error");
 									
 									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 									}

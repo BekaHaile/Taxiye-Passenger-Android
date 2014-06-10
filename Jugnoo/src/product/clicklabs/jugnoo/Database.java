@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Pair;
 
 /**
  * Handles database related work
@@ -30,9 +31,11 @@ public class Database {																	// class for handling database related a
 	
 	// ***************** table_previous_latlng table columns
 		// **********************//
-	private static final String TABLE_PREVIOUS_LATLNG = "table_previous_latlng";
-	private static final String LAT = "lat";
-	private static final String LNG = "lng";
+	private static final String TABLE_PREVIOUS_PATH = "table_previous_path";
+	private static final String SLAT = "slat";
+	private static final String SLNG = "slng";
+	private static final String DLAT = "dlat";
+	private static final String DLNG = "dlng";
 
 	/**
 	 * Creates and opens database for the application use 
@@ -54,9 +57,11 @@ public class Database {																	// class for handling database related a
 					+ EMAIL + " TEXT NOT NULL" + ");");
 
 			// table_previous_latlng
-			database.execSQL(" CREATE TABLE " + TABLE_PREVIOUS_LATLNG + " (" 
-					+ LAT + " REAL NOT NULL" + ","
-					+ LNG + " REAL NOT NULL" + ""
+			database.execSQL(" CREATE TABLE " + TABLE_PREVIOUS_PATH + " (" 
+					+ SLAT + " REAL NOT NULL" + ","
+					+ SLNG + " REAL NOT NULL" + ","
+					+ DLAT + " REAL NOT NULL" + ","
+					+ DLNG + " REAL NOT NULL" + ""
 					+ ");");
 
 		}
@@ -158,51 +163,42 @@ public class Database {																	// class for handling database related a
 
 	
 	
-	
-	public void insertLatLngArr(ArrayList<LatLng> latLngs){
-		
-		if(latLngs.size() > 0){
-			
-			ContentValues contentValues = new ContentValues();
-			
-			for(LatLng latLng : latLngs){
-				contentValues.put(Database.LAT, latLng.latitude);
-				contentValues.put(Database.LNG, latLng.longitude);
-				database.insert(Database.TABLE_PREVIOUS_LATLNG, null, contentValues);
-				contentValues.clear();
-			}
-			
-		}
-		
+	public void insertPolyLine(LatLng slatLng, LatLng dlatLng){
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(Database.SLAT, slatLng.latitude);
+		contentValues.put(Database.SLNG, slatLng.longitude);
+		contentValues.put(Database.SLAT, dlatLng.latitude);
+		contentValues.put(Database.SLNG, dlatLng.longitude);
+		database.insert(Database.TABLE_PREVIOUS_PATH, null, contentValues);
 	}
 	
 	
-	public ArrayList<LatLng> getSavedLatLngs(){
+	public ArrayList<Pair<LatLng, LatLng>> getSavedPath(){
 		
-		ArrayList<LatLng> latLngs = new ArrayList<LatLng>();
+		ArrayList<Pair<LatLng, LatLng>> pathList = new ArrayList<Pair<LatLng, LatLng>>();
 		
-		String[] columns = new String[] { Database.LAT, Database.LNG };
+		String[] columns = new String[] { Database.SLAT, Database.SLNG, Database.DLAT, Database.DLNG };
 
-		Cursor cursor = database.query(Database.TABLE_PREVIOUS_LATLNG, columns, null, null, null, null, null);
+		Cursor cursor = database.query(Database.TABLE_PREVIOUS_PATH, columns, null, null, null, null, null);
 		
-		int in0 = cursor.getColumnIndex(Database.LAT);
-		int in1 = cursor.getColumnIndex(Database.LNG);
+		int in0 = cursor.getColumnIndex(Database.SLAT);
+		int in1 = cursor.getColumnIndex(Database.SLNG);
+		int in2 = cursor.getColumnIndex(Database.DLAT);
+		int in3 = cursor.getColumnIndex(Database.DLNG);
 		
-		if(latLngs.size() > 0){
-			
-			ContentValues contentValues = new ContentValues();
-			
-			for(LatLng latLng : latLngs){
-				contentValues.put(Database.LAT, latLng.latitude);
-				contentValues.put(Database.LNG, latLng.longitude);
-				database.insert(Database.TABLE_PREVIOUS_LATLNG, null, contentValues);
-				contentValues.clear();
-			}
-			
+		
+		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+			pathList.add(new Pair<LatLng, LatLng>(new LatLng(cursor.getDouble(in0), cursor.getDouble(in1)),
+					new LatLng(cursor.getDouble(in2), cursor.getDouble(in3))));
 		}
 		
+		return pathList;
 	}
 	
 	
+	
+	public void deleteSavedPath(){
+		database.delete(Database.TABLE_PREVIOUS_PATH, null, null);
+	}
 	
 }
