@@ -164,12 +164,16 @@ public class Database {																	// class for handling database related a
 	
 	
 	public void insertPolyLine(LatLng slatLng, LatLng dlatLng){
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(Database.SLAT, slatLng.latitude);
-		contentValues.put(Database.SLNG, slatLng.longitude);
-		contentValues.put(Database.SLAT, dlatLng.latitude);
-		contentValues.put(Database.SLNG, dlatLng.longitude);
-		database.insert(Database.TABLE_PREVIOUS_PATH, null, contentValues);
+		try{
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database.SLAT, slatLng.latitude);
+			contentValues.put(Database.SLNG, slatLng.longitude);
+			contentValues.put(Database.DLAT, dlatLng.latitude);
+			contentValues.put(Database.DLNG, dlatLng.longitude);
+			database.insert(Database.TABLE_PREVIOUS_PATH, null, contentValues);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
 	}
 	
 	

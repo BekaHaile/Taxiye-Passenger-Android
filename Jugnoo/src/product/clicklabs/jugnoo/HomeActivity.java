@@ -2139,7 +2139,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		@Override
 		public void onGpsStatusChanged(int event) {
 			
-			Log.e("event","=="+event);
 			
 //			switch(event){
 //				case GpsStatus.GPS_EVENT_FIRST_FIX:
@@ -2464,6 +2463,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						
 						@Override
 						public void run() {
+							Log.e("lastLatLng","="+lastLatLng);
+							Log.e("currentLatLng","="+currentLatLng);
 							Database database = new Database(HomeActivity.this);
 							database.insertPolyLine(lastLatLng, currentLatLng);
 							database.close();
@@ -2479,6 +2480,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				if(totalDistance == -1){
 					totalDistance = 0;
+					
+					MarkerOptions markerOptions = new MarkerOptions();
+					markerOptions.snippet("");
+					markerOptions.title("start ride location");
+					markerOptions.position(currentLatLng);
+					markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ball1));
+					map.addMarker(markerOptions);
 				}
 				else{
 					try{
@@ -2491,12 +2499,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 				
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.snippet("");
-				markerOptions.title("start ride location");
-				markerOptions.position(currentLatLng);
-				markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ball1));
-				map.addMarker(markerOptions);
+				
 			}
 			
 			map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
@@ -2510,6 +2513,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	};
 	
 	
+	
 	//TODO
 	
 	public void displayOldPath(){
@@ -2518,13 +2522,29 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		ArrayList<Pair<LatLng, LatLng>> path = database.getSavedPath();
 		database.close();
 		
+		LatLng firstLatLng = null;
+		
 		for(Pair<LatLng, LatLng> pair : path){
 			LatLng src = pair.first;
             LatLng dest = pair.second;
+            
+			if(firstLatLng == null){
+				firstLatLng = src;
+			}
+			
             map.addPolyline(new PolylineOptions()
             .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
             .width(5)
     	    .color(Color.RED).geodesic(true));
+		}
+		
+		if(firstLatLng != null){
+			MarkerOptions markerOptions = new MarkerOptions();
+			markerOptions.snippet("");
+			markerOptions.title("start ride location");
+			markerOptions.position(firstLatLng);
+			markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ball1));
+			map.addMarker(markerOptions);
 		}
 		
 	}
