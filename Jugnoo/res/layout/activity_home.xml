@@ -508,7 +508,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 
                 
@@ -752,7 +752,7 @@
                             <product.clicklabs.jugnoo.SlideButton
                                 android:id="@+id/driverStartRideSlider"
                                 android:layout_width="match_parent"
-                                android:layout_height="100px"
+                                android:layout_height="match_parent"
                                 android:clickable="false"
                                 android:max="100"
                                 android:progress="0"
@@ -867,7 +867,7 @@
                             <product.clicklabs.jugnoo.SlideButtonInvert
                                 android:id="@+id/driverEndRideSlider"
                                 android:layout_width="match_parent"
-                                android:layout_height="100px"
+                                android:layout_height="match_parent"
                                 android:clickable="false"
                                 android:max="100"
                                 android:progress="100"
@@ -902,7 +902,7 @@
                 android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
 
                 <RelativeLayout 

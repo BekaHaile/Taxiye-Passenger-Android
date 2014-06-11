@@ -24,8 +24,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
@@ -85,7 +87,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -582,6 +583,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						cArg.setText(hh + ":" + mm + ":" + ss);
 					}
 				});
+		
 		
 		
 		
@@ -1407,7 +1409,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							markerOptions.title(Data.driverRideRequests.get(index).engagementId);
 							markerOptions.snippet("");
 							markerOptions.position(Data.driverRideRequests.get(index).latLng);
-							markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
+							markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
 							
 							map.addMarker(markerOptions);
 							
@@ -1743,7 +1745,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				markerOptions.title(Data.dEngagementId);
 				markerOptions.snippet("");
 				markerOptions.position(Data.dCustLatLng);
-				markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
+				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
 				
 				map.addMarker(markerOptions);
 				
@@ -1940,7 +1942,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					markerOptions.title("pickup location");
 					markerOptions.snippet("");
 					markerOptions.position(Data.mapTarget);
-					markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ball1));
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
 					
 					pickupLocationMarker = map.addMarker(markerOptions);
 				}
@@ -1991,7 +1993,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					markerOptions.title("");
 					markerOptions.snippet("");
 					markerOptions.position(Data.assignedDriverInfo.latLng);
-					markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_android));
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
 					
 					pickupLocationMarker = map.addMarker(markerOptions);
 				}
@@ -2486,13 +2488,39 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					markerOptions.snippet("");
 					markerOptions.title("start ride location");
 					markerOptions.position(currentLatLng);
-					markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ball1));
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
 					map.addMarker(markerOptions);
 				}
 				else{
 					try{
 						displayOldPath();
-						new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng).execute();
+						
+						double displacement = distance(Data.startRidePreviousLatLng, currentLatLng);
+						Log.e("displacement", "="+displacement);
+						
+						if(displacement < 100){
+							totalDistance = totalDistance + displacement;
+							map.addPolyline(new PolylineOptions()
+					        .add(Data.startRidePreviousLatLng, currentLatLng)
+					        .width(5)
+					        .color(Color.RED).geodesic(true));
+							
+							new Thread(new Runnable() {
+								
+								@Override
+								public void run() {
+									Log.e("Data.startRidePreviousLatLng","="+Data.startRidePreviousLatLng);
+									Log.e("currentLatLng","="+currentLatLng);
+									Database database = new Database(HomeActivity.this);
+									database.insertPolyLine(Data.startRidePreviousLatLng, currentLatLng);
+									database.close();
+								}
+							}).start();
+						}
+						else{
+							new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng).execute();
+						}
+						
 					} catch(Exception e){
 						e.printStackTrace();
 					}
@@ -2544,11 +2572,64 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			markerOptions.snippet("");
 			markerOptions.title("start ride location");
 			markerOptions.position(firstLatLng);
-			markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ball1));
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
 			map.addMarker(markerOptions);
 		}
 		
 	}
+	
+	
+//	public Bitmap createCarMarkerBitmap(){
+//		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
+//		int width = (int)(70.0f * scale);
+//		int height = (int)(70.0f * scale);
+//		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//		Canvas canvas = new Canvas(mDotMarkerBitmap);
+//		Drawable shape = getResources().getDrawable(R.drawable.car_android);
+//		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
+//		shape.draw(canvas);
+//		return mDotMarkerBitmap;
+//	}
+	
+	
+	
+	public Bitmap createCarMarkerBitmap(){
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
+		int width = (int)(70.0f * scale);
+		int height = (int)(70.0f * scale);
+		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(mDotMarkerBitmap);
+		Drawable shape = getResources().getDrawable(R.drawable.car_android);
+		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
+		shape.draw(canvas);
+		return mDotMarkerBitmap;
+	}
+	
+	public Bitmap createPassengerMarkerBitmap(){
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
+		int width = (int)(50.0f * scale);
+		int height = (int)(69.0f * scale);
+		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(mDotMarkerBitmap);
+		Drawable shape = getResources().getDrawable(R.drawable.passenger);
+		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
+		shape.draw(canvas);
+		return mDotMarkerBitmap;
+	}
+	
+	
+	public Bitmap createPinMarkerBitmap(){
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
+		int width = (int)(37.0f * scale);
+		int height = (int)(60.0f * scale);
+		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(mDotMarkerBitmap);
+		Drawable shape = getResources().getDrawable(R.drawable.pin_ball);
+		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
+		shape.draw(canvas);
+		return mDotMarkerBitmap;
+	}
+	
 	
 	
 	double distance(LatLng start, LatLng end) {
@@ -2955,7 +3036,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						markerOptions.title(""+driverInfo.userId);
 						markerOptions.snippet(""+driverInfo.userId);
 						markerOptions.position(driverInfo.latLng);
-						markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_android));
+						markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
 						
 						map.addMarker(markerOptions);
 					}
@@ -5432,7 +5513,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					markerOptions.title(Data.driverRideRequests.get(i).engagementId);
 					markerOptions.snippet("");
 					markerOptions.position(Data.driverRideRequests.get(i).latLng);
-					markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.passenger));
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
 					
 					map.addMarker(markerOptions);
 					
