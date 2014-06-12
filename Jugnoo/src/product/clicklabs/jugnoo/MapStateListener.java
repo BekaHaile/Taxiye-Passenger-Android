@@ -1,12 +1,12 @@
 package product.clicklabs.jugnoo;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public abstract class MapStateListener {
 

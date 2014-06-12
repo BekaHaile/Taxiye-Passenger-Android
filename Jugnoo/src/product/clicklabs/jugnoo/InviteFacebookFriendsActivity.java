@@ -1,11 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -31,11 +26,7 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
-import com.facebook.HttpMethod;
-import com.facebook.Request;
-import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.model.GraphObject;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.Builder;
 import com.facebook.widget.WebDialog.OnCompleteListener;
@@ -90,6 +81,7 @@ public class InviteFacebookFriendsActivity extends Activity{
 				overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
 		});
+		
 		
 		
 		searchFriendsEt.addTextChangedListener(new TextWatcher() {
@@ -331,14 +323,13 @@ public class InviteFacebookFriendsActivity extends Activity{
 	public void inviteFbFriend(String userId){
 		
 		Bundle parameters = new Bundle();
-		parameters.putString("message", "Jugnoo App request");
 		parameters.putString("to", ""+userId);
 		parameters.putString("message", "Download app now to get started. Available on Google Play Store and App Store");
 		parameters.putString("data", "Get from one place to another with ease.");
+		parameters.putString("link", "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo");
 		
 
-		WebDialog.Builder builder = new Builder(InviteFacebookFriendsActivity.this, Session.getActiveSession(),
-		                                "apprequests", parameters);
+		WebDialog.Builder builder = new Builder(InviteFacebookFriendsActivity.this, Session.getActiveSession(), "apprequests", parameters);
 
 		builder.setOnCompleteListener(new OnCompleteListener() {
 

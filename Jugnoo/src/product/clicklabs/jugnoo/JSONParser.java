@@ -2,11 +2,11 @@ package product.clicklabs.jugnoo;
 
 import org.json.JSONObject;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class JSONParser {
 

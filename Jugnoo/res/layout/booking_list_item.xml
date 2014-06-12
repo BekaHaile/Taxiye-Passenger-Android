@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:text="5.6 Km"
             android:textColor="@color/bg_grey_opaque"
-            android:textSize="26px"
+            android:textSize="30px"
             android:layout_marginLeft="5px"
             android:singleLine="true"
              />
@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:text="3 June, 2014"
             android:textColor="@color/bg_grey_opaque"
-            android:textSize="26px"
+            android:textSize="30px"
             android:layout_marginLeft="5px"
             android:singleLine="true"
              />

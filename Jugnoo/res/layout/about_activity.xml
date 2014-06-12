@@ -44,34 +44,41 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:padding="40px" >
+                android:padding="40px"
+                >
 
+                
                 <TextView
                     android:id="@+id/about1Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/about_1_text"
-                    android:textColor="@color/black"
-                    android:textSize="34px"
+                    android:lineSpacingExtra="10px"
+                    android:text=""
+                    android:textColor="@color/bg_grey_opaque"
+                    android:textSize="36px"
                     android:visibility="visible" />
+                
                 
                 <TextView
                     android:id="@+id/about2Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/about_2_text"
-                    android:textColor="@color/black"
-                    android:textSize="34px"
+                    android:textColor="@color/bg_grey_opaque"
+                    android:textSize="38px"
                     android:visibility="visible" />
+                
                 
                 <TextView
                     android:id="@+id/about3Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/about_3_text"
-                    android:textColor="@color/black"
-                    android:textSize="34px"
+                    android:lineSpacingExtra="10px"
+                    android:textColor="@color/bg_grey_opaque"
+                    android:textSize="36px"
                     android:visibility="visible" />
+                
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

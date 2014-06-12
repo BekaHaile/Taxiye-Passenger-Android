@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -584,7 +585,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					}
 				});
 		
-		
+		driverStartRideSlider.setThumb(createStartRideThumbDrawable());
 		
 		
 		
@@ -1110,7 +1111,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				 GCMIntentService.clearNotifications(HomeActivity.this);
-				
 				 userPushStart = false;
 				driverAcceptRideAsync(HomeActivity.this);
 			}
@@ -1121,6 +1121,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
+				userPushStart = true;
 				GCMIntentService.clearNotifications(HomeActivity.this);
 				driverRejectRideAsync(HomeActivity.this, 0, true);
 			}
@@ -2543,7 +2544,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	//TODO
 	
 	public void displayOldPath(){
 		
@@ -2576,6 +2576,31 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			map.addMarker(markerOptions);
 		}
 		
+	}
+	
+	
+	public Drawable createStartRideThumbDrawable(){
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
+		int width = (int)(119.0f * scale);
+		int height = (int)(100.0f * scale);
+		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(mDotMarkerBitmap);
+		Drawable shape = getResources().getDrawable(R.drawable.start_ride);
+		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
+		shape.draw(canvas);
+		return new BitmapDrawable(getResources(), mDotMarkerBitmap);
+	}
+	
+	public Drawable createEndRideThumbDrawable(){
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
+		int width = (int)(119.0f * scale);
+		int height = (int)(100.0f * scale);
+		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(mDotMarkerBitmap);
+		Drawable shape = getResources().getDrawable(R.drawable.start_ride);
+		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
+		shape.draw(canvas);
+		return new BitmapDrawable(getResources(), mDotMarkerBitmap);
 	}
 	
 	
@@ -2830,7 +2855,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 					Log.e("searchResult.latLng ==",">"+searchResult.latLng);
 					
-					map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 12), 2000, null);
+					map.animateCamera(CameraUpdateFactory.newLatLng(searchResult.latLng), 1000, null);
 					
 				}
 			});
@@ -5268,7 +5293,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Toast.makeText(getApplicationContext(), "in activt", Toast.LENGTH_SHORT).show();
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
 			Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);

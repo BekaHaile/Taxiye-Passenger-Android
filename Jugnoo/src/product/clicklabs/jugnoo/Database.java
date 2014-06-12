@@ -2,14 +2,14 @@ package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Pair;
+
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Handles database related work

@@ -82,6 +82,7 @@ public class Data {
 
 	
 	
+	
 	//Dev staged :  "http://54.81.229.172:7000";
 	// Dev staged :   http://54.81.229.172:8000
 	// live 1st:    http://dev.jugnoo.in:3000
@@ -95,7 +96,7 @@ public class Data {
 	
 	public static final String GOOGLE_PROJECT_ID = "506849624961";
 
-	public static final String MAPS_BROWSER_KEY = "AIzaSyAHVDCyeC13xO_GxG5zE8_wbRJolqkBg90";
+	public static final String MAPS_BROWSER_KEY = "AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY";
 	
 	public static final String FACEBOOK_APP_ID = "782131025144439";
 	
