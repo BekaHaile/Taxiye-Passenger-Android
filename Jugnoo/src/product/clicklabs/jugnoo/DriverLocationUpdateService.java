@@ -63,7 +63,7 @@ public class DriverLocationUpdateService extends Service {
     	// For time consuming an long tasks you can launch a new thread here...
        
         try{
-        	locationFetcher = new LocationFetcher(getApplicationContext());
+        	locationFetcher = new LocationFetcher(this);
         	
         	if(sendDriverLocationToServer != null){
         		sendDriverLocationToServer.cancel(true);

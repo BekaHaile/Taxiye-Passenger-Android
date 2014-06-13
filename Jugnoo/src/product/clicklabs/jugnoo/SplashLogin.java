@@ -392,7 +392,7 @@ public class SplashLogin extends Activity{
 //		passwordEt.setText("tirthankar");
 		
 		
-		Data.locationFetcher = new LocationFetcher(SplashLogin.this);
+		
 		
 		try {																						// to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -853,7 +853,7 @@ public class SplashLogin extends Activity{
 	
 						@Override
 						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
+							Log.e("Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);

@@ -266,7 +266,6 @@ public class InviteFacebookFriendsActivity extends Activity{
 			}
 			
 			
-			
 
 			return row;
 		}

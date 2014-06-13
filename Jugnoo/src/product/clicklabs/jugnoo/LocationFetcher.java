@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -35,7 +36,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	 * Constructor for initializing LocationFetcher class' object
 	 * @param context application context
 	 */
-	public LocationFetcher(Context context){
+	public LocationFetcher(Activity context){
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 		if(resp == ConnectionResult.SUCCESS){														// google play services working
 			if(isLocationEnabled(context)){															// location fetching enabled
@@ -49,6 +50,22 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		else{																						// google play services not working
 			Log.e("Google Play Service Error ","="+resp);
 			showGooglePlayErrorAlert(context);
+			//https://play.google.com/store/apps/details?id=com.google.android.gms
+		}
+	}
+	
+	public LocationFetcher(Context context){
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+		if(resp == ConnectionResult.SUCCESS){														// google play services working
+			if(isLocationEnabled(context)){															// location fetching enabled
+				locationclient = new LocationClient(context, this, this);
+				locationclient.connect();
+			}
+			else{																					// location disabled
+			}
+		}
+		else{																						// google play services not working
+			Log.e("Google Play Service Error ","="+resp);
 			//https://play.google.com/store/apps/details?id=com.google.android.gms
 		}
 	}
@@ -95,7 +112,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
-	public void showGooglePlayErrorAlert(final Context mContext){
+	public void showGooglePlayErrorAlert(final Activity mContext){
 		try{
 			if(alertDialog != null && alertDialog.isShowing()){
 				alertDialog.dismiss();
@@ -122,7 +139,8 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		        // on pressing cancel button
 		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog, int which) {
-		            dialog.dismiss();
+		            	dialog.dismiss();
+		            	mContext.finish();
 		            }
 		        });
 		 
@@ -139,7 +157,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
-	public void showSettingsAlert(final Context mContext){
+	public void showSettingsAlert(final Activity mContext){
 		try{
 			if(alertDialog != null && alertDialog.isShowing()){
 				alertDialog.dismiss();

@@ -24,6 +24,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -39,6 +41,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -72,6 +75,8 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
 import com.facebook.LoggingBehavior;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -80,6 +85,9 @@ import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.Builder;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
@@ -100,8 +108,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	DrawerLayout drawerLayout;
 	
+	
 	//menu bar 
 	LinearLayout menuLayout;
+	
 	
 	ProgressBar profileImgProgress;
 	ImageView profileImg;
@@ -369,11 +379,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
 		
-//		drawerLayout.setScrimColor(Color.parseColor("#D8242930"));
+		
+		
 		
 		
 		//Swipe menu
 		menuLayout = (LinearLayout) findViewById(R.id.menuLayout);
+		
+		
+		
+		
 		
 		profileImgProgress = (ProgressBar) findViewById(R.id.profileImgProgress);
 		profileImg = (ImageView) findViewById(R.id.profileImg);
@@ -716,7 +731,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					facebookLogin();
 				}
 				else{
-					fetchInviteFriendsAsync(HomeActivity.this);
+					inviteFbFriend();
 				}
 			}
 		});
@@ -1550,6 +1565,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	
+	
+	
+	
+	
 	OnClickListener mapMyLocationClick = new OnClickListener() {
 		
 		@Override
@@ -2278,6 +2298,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void run() {
 		
+				
 		
         if(userMode == UserMode.DRIVER){
         	
@@ -2405,6 +2426,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		if(passengerScreenMode == PassengerScreenMode.P_SEARCH){
 			passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			switchPassengerScreen(passengerScreenMode);
+		}
+		else{
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			startActivity(intent);
 		}
 	}
 	
@@ -4727,7 +4754,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 																Log.e("Data.userEmail","="+Data.fbUserEmail);
 
 																
-																fetchInviteFriendsAsync(HomeActivity.this);
+																inviteFbFriend();
 																
 															}
 															else{
@@ -4767,7 +4794,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	/**
 	 * ASync for fetching fb friends from server
 	 */
-	public void fetchInviteFriendsAsync(final Activity activity) {
+	public void fetchInviteFriendsAsync1(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -5184,7 +5211,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
 			textHead.setText("No Drivers Available");
-			textMessage.setText("Currently there are no drivers available. Please let us know.");
+			textMessage.setText("Currently there are no drivers available. We will look into it");
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
@@ -5290,6 +5317,51 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
+	public void inviteFbFriend(){
+		
+		Bundle parameters = new Bundle();
+		parameters.putString("message", "Download app now to get started. Available on Google Play Store and App Store");
+		parameters.putString("data", "Get from one place to another with ease.");
+		parameters.putString("link", "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo");
+		
+
+		WebDialog.Builder builder = new Builder(HomeActivity.this, Session.getActiveSession(), "apprequests", parameters);
+
+		builder.setOnCompleteListener(new OnCompleteListener() {
+
+		    @Override
+		    public void onComplete(Bundle values, FacebookException error) {
+		    	Log.e("values","="+values);
+		    	Log.e("error","="+error);
+		        if (error != null){
+		            if (error instanceof FacebookOperationCanceledException){
+		                Toast.makeText(HomeActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();
+		            }
+		            else{
+		                Toast.makeText(HomeActivity.this,"Network Error",Toast.LENGTH_SHORT).show();
+		            }
+		        }
+		        else{
+
+		            final String requestId = values.getString("request");
+		            if (requestId != null) {
+		            	new DialogPopup().alertPopup(HomeActivity.this, "", "Friends invited successfully.");
+		            } 
+		            else {
+		                Toast.makeText(HomeActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();
+		            }
+		        }                       
+		    }
+		});
+
+		WebDialog webDialog = builder.build();
+		webDialog.show();
+	        
+	        
+	}
+	
+	
+	
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -5332,6 +5404,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 	}
+	
+	
 	
 	
 

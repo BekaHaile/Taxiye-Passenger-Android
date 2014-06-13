@@ -45,7 +45,7 @@ public class AboutActivity extends Activity{
 		String s7 = "rides";
 		String s8 = " to users who find ";
 		String s9 = "taxis";
-		String s10 = " a bit too expensive. \nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.\n";
+		String s10 = " a bit too expensive. \nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.";
 		
 		
 		
