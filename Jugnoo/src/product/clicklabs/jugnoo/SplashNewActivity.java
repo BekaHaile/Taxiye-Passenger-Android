@@ -1,26 +1,36 @@
 package product.clicklabs.jugnoo;
 
+import java.util.Locale;
+
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -54,9 +64,24 @@ public class SplashNewActivity extends Activity{
 		jugnooTextImg.setVisibility(View.GONE);
 		
 		
-		Data.deviceToken = getRegistrationId(this);
 		
-		Data.locationFetcher = new LocationFetcher(SplashNewActivity.this);
+		try {																						// to get AppVersion, OS version, country code and device name
+			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			Data.appVersion = ""+pInfo.versionCode;
+			Log.i("appVersion", Data.appVersion + "..");
+			Data.osVersion = android.os.Build.VERSION.RELEASE;
+			Log.i("osVersion", Data.osVersion + "..");
+			Data.country = getApplicationContext().getResources().getConfiguration().locale.getDisplayCountry(Locale.getDefault());
+			Log.i("countryCode", Data.country + "..");
+			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
+			Log.i("deviceName", Data.deviceName + "..");
+			
+			Data.deviceToken = getRegistrationId(this);
+			
+		} catch (Exception e) {
+			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
+		}
+		
 		
 		Animation animation = new TranslateAnimation(0, 0, 0, (int)(550*ASSL.Yscale()));
 		animation.setFillAfter(false);
@@ -168,21 +193,20 @@ public class SplashNewActivity extends Activity{
 				
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
-				if(Data.locationFetcher != null){
-					Data.latitude = Data.locationFetcher.getLatitude();
-					Data.longitude = Data.locationFetcher.getLongitude();
-				}
 				
 				RequestParams params = new RequestParams();
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.deviceToken);
 				params.put("latitude", ""+Data.latitude);
 				params.put("longitude", ""+Data.longitude);
+				params.put("app_version", ""+Data.appVersion);
+				params.put("device_type", "0");
 
 				Log.i("accessToken", "=" + accessToken);
 				Log.i("device_token", Data.deviceToken);
 				Log.i("latitude", ""+Data.latitude);
 				Log.i("longitude", ""+Data.longitude);
+				Log.i("app_version", ""+Data.appVersion);
 			
 				AsyncHttpClient client = new AsyncHttpClient();
 				client.setTimeout(Data.SERVER_TIMEOUT);
@@ -197,35 +221,39 @@ public class SplashNewActivity extends Activity{
 								try {
 									jObj = new JSONObject(response);
 									
-									if(!jObj.isNull("error")){
-										
-										
-//										{"error":"some parameter missing","flag":0}//error
-//										{"error":"invalid access token","flag":1}//error
-
-										int flag = jObj.getInt("flag");	
-										String errorMessage = jObj.getString("error");
-										
-										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										else if(8 == flag){ // {"error":"email not  registered","flag":1}//error
-//											new DialogPopup().alertPopup(activity, "", errorMessage);
-											loginFailed = true;
+									boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
+									
+									if(!newUpdate){
+										if(!jObj.isNull("error")){
+											
+											
+	//										{"error":"some parameter missing","flag":0}//error
+	//										{"error":"invalid access token","flag":1}//error
+	
+											int flag = jObj.getInt("flag");	
+											String errorMessage = jObj.getString("error");
+											
+											if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+												new DialogPopup().alertPopup(activity, "", errorMessage);
+											}
+											else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
+												new DialogPopup().alertPopup(activity, "", errorMessage);
+											}
+											else if(8 == flag){ // {"error":"email not  registered","flag":1}//error
+	//											new DialogPopup().alertPopup(activity, "", errorMessage);
+												loginFailed = true;
+											}
+											else{
+												new DialogPopup().alertPopup(activity, "", errorMessage);
+											}
 										}
 										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+											
+											new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
+											
+											loginDataFetched = true;
+											
 										}
-									}
-									else{
-										
-										new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
-										
-										loginDataFetched = true;
-										
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
@@ -253,6 +281,94 @@ public class SplashNewActivity extends Activity{
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 
+	}
+	
+	
+	public static boolean checkIfUpdate(JSONObject jObj, Activity activity) throws Exception{
+		
+		if(!jObj.isNull("popup")){
+			JSONObject jupdatePopupInfo = jObj.getJSONObject("popup"); 
+			String title = jupdatePopupInfo.getString("title");
+			String text = jupdatePopupInfo.getString("text");
+			
+			SplashNewActivity.appUpdatePopup(title, text, activity);
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
+	
+	
+	
+	/**
+	 * Displays appUpdatePopup dialog
+	 */
+	public static void appUpdatePopup(String title, String message, final Activity activity) {
+		try {
+
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.custom_message_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1184, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			
+			textHead.setText(title);
+			textMessage.setText(message);
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
+			
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					activity.finish();
+				}
+			});
+			
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse("market://details?id=product.clicklabs.jugnoo"));
+					activity.startActivity(intent);
+					activity.finish();
+				}
+				
+			});
+			
+			crossbtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					activity.finish();
+				}
+			});
+			
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

@@ -24,8 +24,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -41,7 +39,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -346,7 +343,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	static Activity activity;
 	
-	boolean fbFriendsFetched = false, bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false;
+	boolean bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false;
 	boolean loggedOut = false, zoomedToMyLocation = false;
 	
 	@Override
@@ -365,7 +362,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		activity = this;
 		
-		fbFriendsFetched = false;
 		bookingsFetched = false;
 		customerCancelBeforePushReceive = false;
 		loggedOut = false;
@@ -600,7 +596,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					}
 				});
 		
-		driverStartRideSlider.setThumb(createStartRideThumbDrawable());
 		
 		
 		
@@ -1575,7 +1570,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		@Override
 		public void onClick(View v) {
 			if(myLocation != null){
-				map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+				if(map.getCameraPosition().zoom < 12){
+					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 12));
+				}
+				else if(map.getCameraPosition().zoom < 17){
+					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 17));
+				}
+				else{
+					map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+				}
 			}
 			else{
 				Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
@@ -2624,7 +2627,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		int height = (int)(100.0f * scale);
 		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = getResources().getDrawable(R.drawable.start_ride);
+		Drawable shape = getResources().getDrawable(R.drawable.end_ride);
 		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
 		shape.draw(canvas);
 		return new BitmapDrawable(getResources(), mDotMarkerBitmap);
@@ -2702,6 +2705,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	}
 
+	
+	//http://maps.googleapis.com/maps/api/directions/json?origin=36.76,76.78&destination=36.86,76.88&sensor=false&mode=driving&alternatives=true
 	public String makeURLPath(LatLng source, LatLng destination){
         StringBuilder urlString = new StringBuilder();
         urlString.append("http://maps.googleapis.com/maps/api/directions/json");
@@ -4864,7 +4869,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										
 										Collections.sort(Data.friendInfos);
 										
-										fbFriendsFetched = true;
 									}
 									else{
 										new DialogPopup().alertPopup(activity, "", "No friends found on Facebook.");
@@ -5380,13 +5384,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 		
-		if(hasFocus && fbFriendsFetched){
-			fbFriendsFetched = false;
-			drawerLayout.closeDrawer(menuLayout);
-			startActivity(new Intent(HomeActivity.this, InviteFacebookFriendsActivity.class));
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		}
-		else if(hasFocus && loggedOut){
+		if(hasFocus && loggedOut){
 			loggedOut = false;
 			
 			stopService(new Intent(HomeActivity.this, CRequestRideService.class));

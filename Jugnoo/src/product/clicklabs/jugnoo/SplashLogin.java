@@ -388,9 +388,8 @@ public class SplashLogin extends Activity{
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		
-//		emailEt.setText("tirthankar@clicklabs.in");
-//		passwordEt.setText("tirthankar");
 		
+		Data.locationFetcher = new LocationFetcher(SplashLogin.this);
 		
 		
 		
@@ -581,37 +580,42 @@ public class SplashLogin extends Activity{
 							try {
 								jObj = new JSONObject(response);
 								
-								if(!jObj.isNull("error")){
+								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
+								
+								if(!newUpdate){
 									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(2 == flag){ // {"error":"incorrect password","flag":2}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(3 == flag){ // {"error":"enter otp","flag":2}//error
-										confirmOTPPopup(activity, 1);
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+									if(!jObj.isNull("error")){
+										
+										int flag = jObj.getInt("flag");	
+										String errorMessage = jObj.getString("error");
+										
+										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else if(2 == flag){ // {"error":"incorrect password","flag":2}//error
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else if(3 == flag){ // {"error":"enter otp","flag":2}//error
+											confirmOTPPopup(activity, 1);
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										
+										new JSONParser().parseLoginData(activity, response);
+										
+										loginDataFetched = true;
+										
+										Database database22 = new Database(SplashLogin.this);
+										database22.insertEmail(emailId);
+										database22.close();
 									}
-								}
-								else{
-									
-									new JSONParser().parseLoginData(activity, response);
-									
-									loginDataFetched = true;
-									
-									Database database22 = new Database(SplashLogin.this);
-									database22.insertEmail(emailId);
-									database22.close();
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -747,30 +751,35 @@ public class SplashLogin extends Activity{
 							try {
 								jObj = new JSONObject(response);
 								
-								if(!jObj.isNull("error")){
+								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
+								
+								if(!newUpdate){
 									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(2 == flag){ // {"error": "email already registered","flag":2}/error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(0 == flag){ // {"error": 'Please enter otp',"flag":0} //error
-										confirmOTPPopup(activity, 1);
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(1 == flag){ // {"error": 'Incorrect verification code',"flag":1}
-										confirmOTPPopup(activity, 1);
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+									if(!jObj.isNull("error")){
+										
+										int flag = jObj.getInt("flag");	
+										String errorMessage = jObj.getString("error");
+										
+										if(2 == flag){ // {"error": "email already registered","flag":2}/error
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else if(0 == flag){ // {"error": 'Please enter otp',"flag":0} //error
+											confirmOTPPopup(activity, 1);
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else if(1 == flag){ // {"error": 'Incorrect verification code',"flag":1}
+											confirmOTPPopup(activity, 1);
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										new JSONParser().parseLoginData(activity, response);
+										loginDataFetched = true;
+										
 									}
-								}
-								else{
-									new JSONParser().parseLoginData(activity, response);
-									loginDataFetched = true;
-									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -857,38 +866,43 @@ public class SplashLogin extends Activity{
 	
 							try {
 								jObj = new JSONObject(response);
+
+								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
 								
-								if(!jObj.isNull("error")){
-									
-//									{"error": 'Some parameter missing',"flag":0} //error
-//									{"error": 'Not An Authenticated User!',"flag":1}
-//									{"error": 'Please enter otp',"flag":2}  
-//							{"error": 'Please enter details',"flag":3}
-//								{"error": 'Message sending failed',"flag":4}
-//								{"error": 'User not registered',"flag":5}
-//								{"error": 'Incorrect verification code',"flag":6}
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
-										confirmOTPPopup(activity, 0);
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(3 == flag){ // {"error": 'Please enter details',"flag":3}
-										facebookRegister = true;
+								if(!newUpdate){
+										
+									if(!jObj.isNull("error")){
+										
+	//									{"error": 'Some parameter missing',"flag":0} //error
+	//									{"error": 'Not An Authenticated User!',"flag":1}
+	//									{"error": 'Please enter otp',"flag":2}  
+	//							{"error": 'Please enter details',"flag":3}
+	//								{"error": 'Message sending failed',"flag":4}
+	//								{"error": 'User not registered',"flag":5}
+	//								{"error": 'Incorrect verification code',"flag":6}
+										
+										int flag = jObj.getInt("flag");	
+										String errorMessage = jObj.getString("error");
+										
+										if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
+											confirmOTPPopup(activity, 0);
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else if(3 == flag){ // {"error": 'Please enter details',"flag":3}
+											facebookRegister = true;
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										
+										
+										new JSONParser().parseLoginData(activity, response);
+										
+										loginDataFetched = true;
+										
 									}
-								}
-								else{
-									
-									
-									new JSONParser().parseLoginData(activity, response);
-									
-									loginDataFetched = true;
-									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();

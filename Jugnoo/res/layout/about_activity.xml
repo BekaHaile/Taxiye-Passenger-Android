@@ -48,13 +48,6 @@
                 >
 
                 
-                <ImageView 
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/white_dark"
-                    android:layout_marginTop="2px"
-                    android:layout_marginBottom="2px"
-                    />
                 
                 <TextView
                     android:id="@+id/about1Text"
@@ -66,14 +59,6 @@
                     android:textSize="36px"
                     android:visibility="visible" />
                 
-                <ImageView 
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/white_dark"
-                    android:layout_marginTop="2px"
-                    android:layout_marginBottom="2px"
-                    />
-                
                 
                 <TextView
                     android:id="@+id/about2Text"
@@ -81,16 +66,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/about_2_text"
                     android:textColor="@color/bg_grey_opaque"
+                    android:layout_marginTop="80px"
                     android:textSize="38px"
                     android:visibility="visible" />
                 
-                <ImageView 
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/white_dark"
-                    android:layout_marginTop="4px"
-                    android:layout_marginBottom="4px"
-                    />
                 
                 
                 <TextView
@@ -98,18 +77,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/about_3_text"
+                    android:layout_marginTop="4px"
                     android:lineSpacingExtra="10px"
                     android:textColor="@color/bg_grey_opaque"
                     android:textSize="36px"
                     android:visibility="visible" />
                 
-                <ImageView 
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/white_dark"
-                    android:layout_marginTop="2px"
-                    android:layout_marginBottom="2px"
-                    />
                 
             </LinearLayout>
         </ScrollView>

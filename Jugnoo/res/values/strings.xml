@@ -11,12 +11,12 @@
     <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
     <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> <!-- Dev -->
     
-    <string name="google_maps_browser_key">AIzaSyAHVDCyeC13xO_GxG5zE8_wbRJolqkBg90</string>
+    <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
     
     
     
     
-	<!-- <string name="fb_app_id">782131025144439</string> --> <!-- 669711796407982    demo bistro 576617829041060 -->
+	<!-- <string name="fb_app_id">782131025144439</string> -->
 	<string name="fb_app_id">782131025144439</string>
     
 	
@@ -28,7 +28,7 @@
 	    \n\nPeople with cars can offer rides to users who find taxis a bit too expensive.
 	    \n\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.\n</string>
 	    
-	<string name="about_2_text">\nRate card</string>
+	<string name="about_2_text">Rate card</string>
 	    
 	<string name="about_3_text">First 2 kms: Rs.45\nAfter 2 kms: Rs. 15/km\nWaiting time: Rs.1.5/min</string>
 	

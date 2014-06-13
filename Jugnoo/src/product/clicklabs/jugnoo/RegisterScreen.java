@@ -358,13 +358,17 @@ public class RegisterScreen extends Activity{
 					new AsyncHttpResponseHandler() {
 					private JSONObject jObj;
 	
-						@SuppressWarnings("unused")
 						@Override
 						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
+								
+
+								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
+								
+								if(!newUpdate){
 								
 								if(!jObj.isNull("error")){
 									
@@ -404,6 +408,7 @@ public class RegisterScreen extends Activity{
 									database22.insertEmail(emailId);
 									database22.close();
 									
+								}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -551,6 +556,11 @@ public class RegisterScreen extends Activity{
 							try {
 								jObj = new JSONObject(response);
 								
+
+								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
+								
+								if(!newUpdate){
+								
 								if(!jObj.isNull("error")){
 									
 //									{"error": 'Some parameter missing',"flag":0} //error
@@ -586,6 +596,7 @@ public class RegisterScreen extends Activity{
 									
 									loginDataFetched = true;
 									
+								}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
