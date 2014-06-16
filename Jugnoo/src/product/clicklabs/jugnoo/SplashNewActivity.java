@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.androidquery.util.AQUtility;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
@@ -78,6 +79,8 @@ public class SplashNewActivity extends Activity{
 			
 			Data.deviceToken = getRegistrationId(this);
 			
+			
+			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
@@ -90,8 +93,7 @@ public class SplashNewActivity extends Activity{
 		animation.setAnimationListener(new ShowAnimListener());
 		jugnooImg.startAnimation(animation);
 		
-		
-		
+		AQUtility.cleanCacheAsync(SplashNewActivity.this);
 		
 		
 	}
@@ -287,12 +289,17 @@ public class SplashNewActivity extends Activity{
 	public static boolean checkIfUpdate(JSONObject jObj, Activity activity) throws Exception{
 		
 		if(!jObj.isNull("popup")){
-			JSONObject jupdatePopupInfo = jObj.getJSONObject("popup"); 
-			String title = jupdatePopupInfo.getString("title");
-			String text = jupdatePopupInfo.getString("text");
-			
-			SplashNewActivity.appUpdatePopup(title, text, activity);
-			return true;
+			try{
+				JSONObject jupdatePopupInfo = jObj.getJSONObject("popup"); 
+				String title = jupdatePopupInfo.getString("title");
+				String text = jupdatePopupInfo.getString("text");
+				
+				SplashNewActivity.appUpdatePopup(title, text, activity);
+				return true;
+			} catch(Exception e){
+				e.printStackTrace();
+				return false;
+			}
 		}
 		else{
 			return false;
@@ -308,12 +315,12 @@ public class SplashNewActivity extends Activity{
 	public static void appUpdatePopup(String title, String message, final Activity activity) {
 		try {
 
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.custom_message_dialog);
+			dialog.setContentView(R.layout.app_update_dialog);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1184, 720, true);
+			new ASSL(activity, frameLayout, 1134, 720, false);
 			
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
@@ -332,7 +339,6 @@ public class SplashNewActivity extends Activity{
 			textMessage.setText(message);
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
 			
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
 			btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -354,14 +360,6 @@ public class SplashNewActivity extends Activity{
 					activity.finish();
 				}
 				
-			});
-			
-			crossbtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-					activity.finish();
-				}
 			});
 			
 
@@ -388,10 +386,6 @@ public class SplashNewActivity extends Activity{
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
-	}
-	
-	@Override
-	public void onBackPressed() {
 	}
 	
 	

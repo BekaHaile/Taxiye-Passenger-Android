@@ -26,8 +26,6 @@ public class Log {
 	public static void e(String tag, String message){
 		if(PRINT){
 			android.util.Log.e(tag, message);
-//			if(HomeActivity.logText != null)
-//			HomeActivity.logText.append(tag + "  " + message + "\n");
 		}
 	}
 	

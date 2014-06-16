@@ -120,12 +120,13 @@ public class CUpdateDriverLocationsService extends Service {
     	protected void onPostExecute(String result) {
     		super.onPostExecute(result);
     		
-    		Log.e("count","="+count);
-			Log.e("CustomerUpdateDriverLocationsService.refreshDriverLocations=","="+CUpdateDriverLocationsService.refreshDriverLocations);
-			
-			if("refresh".equalsIgnoreCase(result)  && CUpdateDriverLocationsService.refreshDriverLocations != null){
-				CUpdateDriverLocationsService.refreshDriverLocations.refreshDriverLocations(count);
-			}
+    		try{
+	    		Log.e("count","="+count);
+				Log.e("CustomerUpdateDriverLocationsService.refreshDriverLocations=","="+CUpdateDriverLocationsService.refreshDriverLocations);
+				
+				if("refresh".equalsIgnoreCase(result)  && CUpdateDriverLocationsService.refreshDriverLocations != null){
+					CUpdateDriverLocationsService.refreshDriverLocations.refreshDriverLocations(count);
+				}
 				count++;
 	        	
 	        	getDriverLocationsFromServer = null;
@@ -133,6 +134,9 @@ public class CUpdateDriverLocationsService extends Service {
 	        	getDriverLocationsFromServer = new GetDriverLocationsFromServer();
 	        	getDriverLocationsFromServer.execute();
 	        	Log.e("GetDriverLocationsFromServer","stopped");
+    		} catch(Exception e){
+    			e.printStackTrace();
+    		}
     	}
     	
     	

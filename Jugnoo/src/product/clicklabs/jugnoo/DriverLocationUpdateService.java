@@ -31,12 +31,14 @@ public class DriverLocationUpdateService extends Service {
 	boolean stop = false;
 	
 	LatLng lastLocation;
+	boolean noUpdate = true;
 	
 	public DriverLocationUpdateService() {
 		Log.e("DriverLocationUpdateService"," instance created");
 		
-		lastLocation = new LatLng(30.7500, 76.7800);
+		lastLocation = new LatLng(30.7900, 76.7800);
 		stop = false;
+		noUpdate = true;
 		count = 0; 
 		
 	}
@@ -143,6 +145,7 @@ public class DriverLocationUpdateService extends Service {
     	
     	
     	
+    	
     	@Override
     	protected String doInBackground(String... params) {
     		
@@ -155,10 +158,34 @@ public class DriverLocationUpdateService extends Service {
     		String accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
     		
     		try{
+    			
+    			if(noUpdate){
+					
+    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+	    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
+	    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude));
+	    			
+	    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
+	    			
+	    			
+	    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+	    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
+	    			
+	    			Log.e("result","="+result);
+	    			
+	    			simpleJSONParser = null;
+	    			nameValuePairs = null;
+    				
+    				noUpdate = false;
+				}
+    			
 
-    			try{
-    				Thread.sleep(60000);
-    			} catch(Exception e){
+    			if(count > 0){
+	    			try{
+	    				Thread.sleep(60000);
+	    			} catch(Exception e){
+	    			}
     			}
     			
 				
@@ -167,6 +194,8 @@ public class DriverLocationUpdateService extends Service {
 	    		if(locationFetcher != null){
 	    			
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
+	    			
+	    			
 	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
 		    			
 	    				DriverLocationUpdateService.this.lastLocation = currentLatLng;
@@ -226,6 +255,7 @@ public class DriverLocationUpdateService extends Service {
     		}
     		
     		count++;
+    		noUpdate = false;
         	
         	sendDriverLocationToServer = null;
         	

@@ -71,6 +71,13 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	}
 
 	
+	public boolean isConnected(){
+		if(locationclient != null){
+			return locationclient.isConnected();
+		}
+		return false;
+	}
+	
 	double distance(LatLng start, LatLng end) {
 		try {
 			Location location1 = new Location("locationA");
@@ -124,7 +131,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		        alertDialogPrepare.setCancelable(false);
 		 
 		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Google Play services not found. Install Google Play Services?");
+		        alertDialogPrepare.setMessage("Google Play services not found or outdated. Install Google Play Services?");
 		 
 		        // On pressing Settings button
 		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {

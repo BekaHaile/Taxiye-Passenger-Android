@@ -72,6 +72,7 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
+import com.androidquery.util.AQUtility;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.LoggingBehavior;
@@ -1926,6 +1927,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 			case P_INITIAL:
 
+				if(getDistanceTimeAddress != null){
+					getDistanceTimeAddress.cancel(true);
+					getDistanceTimeAddress = null;
+				}
+				
 				getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
 				getDistanceTimeAddress.execute();
 				
@@ -2444,6 +2450,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     public void onDestroy() {
         try{
 	        Data.locationFetcher.destroy();
+	        AQUtility.cleanCacheAsync(HomeActivity.this);
 	        
 	        ASSL.closeActivity(drawerLayout);
 	        stopService(new Intent(HomeActivity.this, CRequestRideService.class));
@@ -4489,6 +4496,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			favoriteNameEt.setText(locationName);
 			
+			favoriteNameEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+				
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					favoriteNameEt.setError(null);
+				}
+			});
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(getApplicationContext()));
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(getApplicationContext()));
@@ -4496,8 +4510,18 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					dialog.dismiss();
-					saveToFavoriteAsync(activity, favoriteNameEt.getText().toString(), favLatLng);
+					
+					String favName = favoriteNameEt.getText().toString().trim();
+					
+					if(!"".equalsIgnoreCase(favName)){
+						dialog.dismiss();
+						saveToFavoriteAsync(activity, favName, favLatLng);
+					}
+					else{
+						favoriteNameEt.requestFocus();
+						favoriteNameEt.setError("Favorite location name cannot be empty.");
+					}
+					
 				}
 				
 			});
@@ -4943,8 +4967,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 //									}
 								}
 								else{
-									
 
+									AQUtility.cleanCacheAsync(HomeActivity.this);
+									
 									try {	
 										Session session = new Session(HomeActivity.this);
 										Session.setActiveSession(session);	

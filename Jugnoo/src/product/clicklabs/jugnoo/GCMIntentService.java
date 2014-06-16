@@ -411,6 +411,7 @@ public class GCMIntentService extends IntentService {
 	    	    						 
 	    	    						 
 	    	    						 
+	    	    						 
 	    	    						 notificationManager(this, "Your ride has ended.");
 	    	    					 }
 	    	    				 }

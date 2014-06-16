@@ -44,6 +44,22 @@
                 />
 		 
             
+            <TextView
+                android:id="@+id/textMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="Check your registered email/phone number for OTP"
+                android:layout_marginTop="20px"
+                android:textColor="@color/black"
+                android:textSize="32px" 
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                
+                />
+            
+            
              <EditText
             android:id="@+id/etCode"
             android:layout_width="480px"
