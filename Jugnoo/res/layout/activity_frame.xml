@@ -68,7 +68,8 @@
                                 android:layout_height="205px"
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/transparent"
-                                android:tag="mwar" />
+                                android:tag="mwar"
+                                 />
                             
                             
                              <ImageView

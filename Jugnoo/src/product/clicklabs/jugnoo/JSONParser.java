@@ -156,6 +156,19 @@ public class JSONParser {
 				}
 				else if(Data.P_IN_RIDE.equalsIgnoreCase(screenMode)){
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+					
+					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "0"));
+					HomeActivity.previousWaitTime = Double.parseDouble(pref.getString(Data.SP_WAIT_TIME, "0"));
+					
+					HomeActivity.waitStart = 2;
+					
+					Log.e("Data.SP_WAIT_TIME on login ", "=="+HomeActivity.previousWaitTime);
+					
+					String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
+					String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+					
+					Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+					
 				}
 				else if(Data.P_RIDE_END.equalsIgnoreCase(screenMode)){
 					
