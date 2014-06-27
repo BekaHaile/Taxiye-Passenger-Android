@@ -167,6 +167,7 @@ public class CRequestRideService extends Service {
 					}
 					
 					
+					
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 					nameValuePairs.add(new BasicNameValuePair("user_id", currentDriverId));
@@ -175,6 +176,8 @@ public class CRequestRideService extends Service {
 					nameValuePairs.add(new BasicNameValuePair("flag", ""+flag));
 					nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+Data.latitude));
 					nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + Data.longitude));
+					nameValuePairs.add(new BasicNameValuePair("session_id", Data.cSessionId));
+					
 					
 					Log.i("access_token", "=" + Data.userData.accessToken);
 					Log.i("user_id", "=" + currentDriverId);
@@ -183,6 +186,7 @@ public class CRequestRideService extends Service {
 					Log.i("flag", "=" + flag);
 					Log.i("pickup_latitude", "=" + Data.latitude);
 					Log.i("pickup_longitude", "=" + Data.longitude);
+					Log.i("session_id", "="+Data.cSessionId);
 					
 					
 					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();

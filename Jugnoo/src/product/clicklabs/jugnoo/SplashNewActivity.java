@@ -193,7 +193,7 @@ public class SplashNewActivity extends Activity{
 		if(!"".equalsIgnoreCase(accessToken)){
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+//				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
 				
 				RequestParams params = new RequestParams();
@@ -255,6 +255,8 @@ public class SplashNewActivity extends Activity{
 											
 											loginDataFetched = true;
 											
+											DialogPopup.showLoadingDialog(activity, "Loading...");
+											DialogPopup.dismissLoadingDialog();
 										}
 									}
 								}  catch (Exception exception) {
@@ -368,6 +370,7 @@ public class SplashNewActivity extends Activity{
 			e.printStackTrace();
 		}
 	}
+	
 	
 	
 	@Override

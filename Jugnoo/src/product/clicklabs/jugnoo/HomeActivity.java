@@ -722,7 +722,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				//TODO
 				
 				if("".equalsIgnoreCase(Data.fbAccessToken)){
 					facebookLogin();
@@ -861,19 +860,23 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					if(requestRideBtn.getText().toString().equalsIgnoreCase("Request Ride")){
 						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 							if(Data.driverInfos.size() > 0){
-								requestRideBtn.setText("Assigning driver...");
+								//TODO
 								
-								passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-								Data.cEngagementId = "";
-								Data.mapTarget = map.getCameraPosition().target;
+								getSessionIdAsync(HomeActivity.this);
 								
-								stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-								
-								switchPassengerScreen(passengerScreenMode);
-								
-								startService(new Intent(HomeActivity.this, CRequestRideService.class));
-
-								customerCancelBeforePushReceive = false;
+//								requestRideBtn.setText("Assigning driver...");
+//								
+//								passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+//								Data.cEngagementId = "";
+//								Data.mapTarget = map.getCameraPosition().target;
+//								
+//								stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+//								
+//								switchPassengerScreen(passengerScreenMode);
+//								
+//								startService(new Intent(HomeActivity.this, CRequestRideService.class));
+//
+//								customerCancelBeforePushReceive = false;
 								
 								
 								
@@ -3514,11 +3517,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			params.put("driver_id", Data.cDriverId);
 			params.put("engage_id", Data.cEngagementId);
 			params.put("flag", ""+flag);
+			params.put("session_id", Data.cSessionId);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("driver_id", "=" + Data.cDriverId);
 			Log.i("engage_id", Data.cEngagementId);
 			Log.i("flag", ""+flag);
+			Log.i("session_id", "="+Data.cSessionId);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
@@ -5369,6 +5374,91 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 
 	}
+	
+	
+	//TODO
+	/**
+	 * ASync for retrieving session id from server
+	 */
+	public void getSessionIdAsync(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Connecting...");
+			
+			RequestParams params = new RequestParams();
+			
+			params.put("access_token", Data.userData.accessToken);
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/request_session_id", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									new DialogPopup().alertPopup(activity, "", "Connection could not be established. Please try after some time.");
+									
+									//{"error": 'Some parameter missing',"flag":0}//ERROR
+									//{"error":"Invalid access token","flag":1}//ERROR
+
+									
+									int flag = jObj.getInt("flag");	
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									}
+									else{
+									}
+								}
+								else{
+//									{"session_id":2}
+									
+									Data.cSessionId = jObj.getString("session_id");
+									
+									requestRideBtn.setText("Assigning driver...");
+									
+									passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+									Data.cEngagementId = "";
+									Data.mapTarget = map.getCameraPosition().target;
+									
+									stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+									
+									switchPassengerScreen(passengerScreenMode);
+									
+									startService(new Intent(HomeActivity.this, CRequestRideService.class));
+
+									customerCancelBeforePushReceive = false;
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+							}
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+	
 	
 	
 	public void inviteFbFriend(){

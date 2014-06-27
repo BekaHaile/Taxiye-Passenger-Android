@@ -130,8 +130,7 @@ public class Data {
 	
 	
 	
-	public static String cEngagementId = "", cDriverId = "";
-	
+	public static String cEngagementId = "", cDriverId = "", cSessionId = "";
 	public static DriverInfo assignedDriverInfo;
 	
 	
