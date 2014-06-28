@@ -1138,7 +1138,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			public void onClick(View v) {
 				userPushStart = true;
 				GCMIntentService.clearNotifications(HomeActivity.this);
-				driverRejectRideAsync(HomeActivity.this, 0, true);
+				driverRejectRideAsync(HomeActivity.this, 0);
 			}
 		});
 		
@@ -1196,7 +1196,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				GCMIntentService.clearNotifications(HomeActivity.this);
-				driverRejectRideAsync(HomeActivity.this, 1, true);
+				driverRejectRideAsync(HomeActivity.this, 1);
 			}
 		});
 		
@@ -3844,7 +3844,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 															@Override
 															public void run() {
 																DialogPopup.dismissLoadingDialog();
-																driverRejectRideAsync(HomeActivity.this, 1, false);
+																connectionLostAsync(HomeActivity.this);
 															}
 														});
 													}
@@ -3877,13 +3877,86 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
+	//TODO
+	/**
+	 * ASync for change driver mode from server
+	 */
+	public void connectionLostAsync(final Activity activity) {
+
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			
+			params.put("access_token", Data.userData.accessToken);
+//			params.put("user_id", Data.dCustomerId);
+			params.put("engage_id", Data.dEngagementId);
+			
+			Log.i("access_token", "=" + Data.userData.accessToken);
+//			Log.i("user_id", "=" + Data.dCustomerId);
+			Log.i("engage_id", "=" + Data.dEngagementId);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/connection_lost_on_user_end", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									
+									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									}
+									else{
+									}
+								}
+								else{
+									
+//									{"log":"rejected successfully"}
+
+									new DialogPopup().alertPopup(activity, "", "Connection from user was lost. The ride has been canceled.");
+									
+									driverScreenMode = DriverScreenMode.D_INITIAL;
+									switchDriverScreen(driverScreenMode);
+									
+									showAllRideRequests();
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+						}
+					});
+		}
+
+		
+	}
+	
+	
 	
 	/**
 	 * ASync for change driver mode from server
 	 */
-	public void driverRejectRideAsync(final Activity activity, int flag, boolean showDialog) {
-		
-		if(showDialog){
+	public void driverRejectRideAsync(final Activity activity, int flag) {
 
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
@@ -3981,76 +4054,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
 
-		}
-		else{
-
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
-				
-				RequestParams params = new RequestParams();
-			
-				
-				params.put("access_token", Data.userData.accessToken);
-				params.put("user_id", Data.dCustomerId);
-				params.put("engage_id", Data.dEngagementId);
-				params.put("flag", ""+flag);
-				
-				Log.i("access_token", "=" + Data.userData.accessToken);
-				Log.i("user_id", "=" + Data.dCustomerId);
-				Log.i("engage_id", "=" + Data.dEngagementId);
-				
-			
-				AsyncHttpClient client = new AsyncHttpClient();
-				client.setTimeout(Data.SERVER_TIMEOUT);
-				client.post(Data.SERVER_URL + "/reject_a_ride", params,
-						new AsyncHttpResponseHandler() {
-						private JSONObject jObj;
-		
-							@Override
-							public void onSuccess(String response) {
-								Log.v("Server response", "response = " + response);
-		
-								try {
-									jObj = new JSONObject(response);
-									
-									if(!jObj.isNull("error")){
-										
-										int flag = jObj.getInt("flag");	
-										
-										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										}
-										else{
-										}
-									}
-									else{
-										
-//										{"log":"rejected successfully"}
-
-										new DialogPopup().alertPopup(activity, "", "Connection from user was lost. The ride has been canceled.");
-										
-										driverScreenMode = DriverScreenMode.D_INITIAL;
-										switchDriverScreen(driverScreenMode);
-										
-										showAllRideRequests();
-										
-									}
-								}  catch (Exception exception) {
-									exception.printStackTrace();
-								}
-		
-								DialogPopup.dismissLoadingDialog();
-							}
-		
-							@Override
-							public void onFailure(Throwable arg0) {
-								Log.e("request fail", arg0.toString());
-								DialogPopup.dismissLoadingDialog();
-							}
-						});
-			}
-
-		}
 		
 	}
 	
@@ -5804,6 +5807,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 		}
 		else{
+
+			userPushStart = true;
 			
 			if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 				int index = -1;

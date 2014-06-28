@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import org.json.JSONObject;
@@ -13,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
@@ -46,6 +48,8 @@ public class SplashNewActivity extends Activity{
 	
 	boolean loginDataFetched = false, loginFailed = false;
 	
+	GoogleCloudMessaging gcm;
+	String regid;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +100,16 @@ public class SplashNewActivity extends Activity{
 		AQUtility.cleanCacheAsync(SplashNewActivity.this);
 		
 		
+		gcm = GoogleCloudMessaging.getInstance(this);
+	    regid = getRegistrationId(this);
+	    Data.deviceToken = regid;
+
+	    Log.i("deviceToken", Data.deviceToken + "..");
+	    
+	    if (regid.isEmpty()) {
+	        registerInBackground();
+	    }
+		
 	}
 	
 	
@@ -120,6 +134,43 @@ public class SplashNewActivity extends Activity{
 	        return "";
 	    }
 	    return registrationId;
+	}
+	
+	private void registerInBackground() {
+	    new AsyncTask<String, Integer, String>() {
+	        @Override
+	        protected String doInBackground(String... params) {
+	            String msg = "";
+	            try {
+	                if (gcm == null) {
+	                    gcm = GoogleCloudMessaging.getInstance(SplashNewActivity.this);
+	                }
+	                regid = gcm.register(Data.GOOGLE_PROJECT_ID);
+	                Data.deviceToken = regid;
+	                msg = "Device registered, registration ID=" + regid;
+	                
+	                setRegistrationId(SplashNewActivity.this, regid);
+	            } catch (IOException ex) {
+	                msg = "Error :" + ex.getMessage();
+	            }
+	            return msg;
+	        }
+
+	        @Override
+	        protected void onPostExecute(String msg) {
+	        	Log.e("msg  ===== ","="+msg);
+	        	//=Device registered, registration ID=APA91bHaLnaJLjUGLXDKcW39Gke0eK78tFRe1ByJsj8rmFS2boJ2_HNzvxkS39tfo0z6IahCUPyV49gpHx-2M3WzWmpHv4u4O0cGuYxN-aKuPx1SG4Gy-2WHBg8o3sSP_GtJgfThb3G36miecVxQ1xGafeKMgbV2sO9EP1aaVDyXI3t6bgS7gmQ
+	        }
+	    }.execute(null, null, null);
+	}
+	
+	
+	private void setRegistrationId(Context context, String regId) {
+	    final SharedPreferences prefs = getGCMPreferences(context);
+	    SharedPreferences.Editor editor = prefs.edit();
+	    editor.putString(PROPERTY_REG_ID, regId);
+	    editor.putInt(PROPERTY_APP_VERSION, getAppVersion(context));
+	    editor.commit();
 	}
 	
 	/**
