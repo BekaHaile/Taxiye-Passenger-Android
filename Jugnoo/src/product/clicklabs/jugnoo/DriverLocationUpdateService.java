@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationUpdateService extends Service {
@@ -157,6 +158,21 @@ public class DriverLocationUpdateService extends Service {
     		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
     		String accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
     		
+    		String deviceToken = DriverLocationUpdateService.this.getSharedPreferences(SplashLogin.class.getSimpleName(), 
+    				Context.MODE_PRIVATE).getString("registration_id", "");
+    		
+    		if("".equalsIgnoreCase(deviceToken)){
+    			
+    			
+    			GoogleCloudMessaging gcm;
+    			String regid;
+    			
+    		}
+    		else{
+    			
+    		}
+    		
+    		
     		try{
     			
     			if(noUpdate){
@@ -164,7 +180,8 @@ public class DriverLocationUpdateService extends Service {
     				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 	    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
-	    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude));
+	    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude)); //device_token
+	    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 	    			
 	    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
 	    			
@@ -204,6 +221,7 @@ public class DriverLocationUpdateService extends Service {
 		    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+currentLatLng.latitude));
 		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+currentLatLng.longitude));
+		    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 		    			
 		    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
 		    			

@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -134,6 +135,39 @@ public class RegisterScreen extends Activity{
 				String password = passwordEt.getText().toString().trim();
 				String confirmPassword = confirmPasswordEt.getText().toString().trim();
 				
+				//TODO remove extra characters phoneNo
+				try{
+					//     (/)N,*;#-.
+					phoneNo = phoneNo.replace(" ", "");
+					
+					phoneNo = phoneNo.replace("(", "");
+					phoneNo = phoneNo.replace("/", "");
+					phoneNo = phoneNo.replace(")", "");
+					phoneNo = phoneNo.replace("N", "");
+					phoneNo = phoneNo.replace(",", "");
+					phoneNo = phoneNo.replace("*", "");
+					phoneNo = phoneNo.replace(";", "");
+					phoneNo = phoneNo.replace("#", "");
+					phoneNo = phoneNo.replace("-", "");
+					phoneNo = phoneNo.replace(".", "");
+					
+					
+					if(phoneNo.charAt(0) != '+'){
+						if(phoneNo.charAt(0) == '0'){
+							phoneNo = "+" + GetCountryZipCode() + phoneNo.substring(1);
+						}
+						else{
+							phoneNo = "+" + GetCountryZipCode() + phoneNo;
+						}
+					}
+					
+					Toast.makeText(getApplicationContext(), ""+phoneNo, Toast.LENGTH_SHORT).show();
+					
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				
 				if("".equalsIgnoreCase(firstName)){
 					firstNameEt.requestFocus();
 					firstNameEt.setError("Please enter firstname");
@@ -163,6 +197,7 @@ public class RegisterScreen extends Activity{
 										if(isPhoneValid(phoneNo)){
 											if(password.equals(confirmPassword)){
 												if(password.length() >= 6){
+													
 													if(facebookLogin){
 														if(emailId.equalsIgnoreCase("n@n.c")){
 															emailId = "";
@@ -454,7 +489,7 @@ public class RegisterScreen extends Activity{
 			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			
-			Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(getApplicationContext()));
+			final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(getApplicationContext()));
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			btnConfirm.setOnClickListener(new View.OnClickListener() {
@@ -471,6 +506,25 @@ public class RegisterScreen extends Activity{
 				
 			});
 			
+			
+			etCode.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					int result = actionId & EditorInfo.IME_MASK_ACTION;
+					switch (result) {
+						case EditorInfo.IME_ACTION_DONE:
+							btnConfirm.performClick();
+						break;
+
+						case EditorInfo.IME_ACTION_NEXT:
+						break;
+
+						default:
+					}
+					return true;
+				}
+			});
 			
 			crossbtn.setOnClickListener(new View.OnClickListener() {
 				@Override

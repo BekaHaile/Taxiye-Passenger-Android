@@ -34,8 +34,13 @@
         android:tag="mwar"
         
         />
-    
-    
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="80px"
+        android:layout_height="80px"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="700px" />
     
 </RelativeLayout>
 </LinearLayout>

@@ -152,9 +152,9 @@ public class SplashLogin extends Activity{
 						if(isEmailValid(email)){
 							enteredEmail = email;
 							
-							new CheckDeviceTokenAsync(email, password, 0).execute();
+//							new CheckDeviceTokenAsync(email, password, 0).execute();
 							
-//							sendLoginValues(SplashLogin.this, email, password);
+							sendLoginValues(SplashLogin.this, email, password);
 						}
 						else{
 							emailEt.requestFocus();
@@ -248,6 +248,7 @@ public class SplashLogin extends Activity{
 
 							if (session.isOpened()) {
 								Session.openActiveSession(SplashLogin.this, true, new Session.StatusCallback() {
+											@SuppressWarnings("deprecation")
 											@Override
 											public void call(final Session session, SessionState state, Exception exception) {
 												Log.v("session.isOpened()", "" + session.isOpened());
@@ -312,8 +313,8 @@ public class SplashLogin extends Activity{
 																		Log.e("Data.userEmail","="+Data.fbUserEmail);
 
 																		//TODO
-//																		sendFacebookLoginValues(SplashLogin.this, "");
-																		new CheckDeviceTokenAsync("", "", 1).execute();
+																		sendFacebookLoginValues(SplashLogin.this, "");
+//																		new CheckDeviceTokenAsync("", "", 1).execute();
 																		
 																	}
 																	else{
@@ -531,69 +532,69 @@ public class SplashLogin extends Activity{
 	}
 	
 	
-	class CheckDeviceTokenAsync extends AsyncTask<String, Integer, String>{
-		
-		String emailId, password;
-		int flag;
-		public CheckDeviceTokenAsync(String emailId, String password, int flag){
-			this.emailId = emailId;
-			this.password = password;
-			this.flag = flag;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			
-			DialogPopup.showLoadingDialog(SplashLogin.this, "Loading...");
-		}
-		
-		@Override
-		protected String doInBackground(String... params) {
-			
-			String msg = "";
-			
-			try {
-				
-				gcm = GoogleCloudMessaging.getInstance(SplashLogin.this);
-			    regid = getRegistrationId(SplashLogin.this);
-			    Data.deviceToken = regid;
-
-			    Log.i("deviceToken", Data.deviceToken + "..");
-			    
-			    if (regid.isEmpty()) {
-			    	regid = gcm.register(Data.GOOGLE_PROJECT_ID);
-	                Data.deviceToken = regid;
-	                msg = "Device registered, registration ID=" + regid;
-	                
-	                setRegistrationId(SplashLogin.this, regid);
-			    }
-                
-                Log.e("msg","="+msg);
-            } catch (Exception ex) {
-                msg = "Error :" + ex.getMessage();
-                Log.e("msg","="+msg);
-            }
-			
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			
-			DialogPopup.dismissLoadingDialog();
-			
-			if(flag == 0){
-				sendLoginValues(SplashLogin.this, emailId, password);
-			}
-			else{
-				sendFacebookLoginValues(SplashLogin.this, "");
-			}
-			
-		}
-		
-	}
+//	class CheckDeviceTokenAsync extends AsyncTask<String, Integer, String>{
+//		
+//		String emailId, password;
+//		int flag;
+//		public CheckDeviceTokenAsync(String emailId, String password, int flag){
+//			this.emailId = emailId;
+//			this.password = password;
+//			this.flag = flag;
+//		}
+//		
+//		@Override
+//		protected void onPreExecute() {
+//			super.onPreExecute();
+//			
+//			DialogPopup.showLoadingDialog(SplashLogin.this, "Loading...");
+//		}
+//		
+//		@Override
+//		protected String doInBackground(String... params) {
+//			
+//			String msg = "";
+//			
+//			try {
+//				
+//				gcm = GoogleCloudMessaging.getInstance(SplashLogin.this);
+//			    regid = getRegistrationId(SplashLogin.this);
+//			    Data.deviceToken = regid;
+//
+//			    Log.i("deviceToken", Data.deviceToken + "..");
+//			    
+//			    if (regid.isEmpty()) {
+//			    	regid = gcm.register(Data.GOOGLE_PROJECT_ID);
+//	                Data.deviceToken = regid;
+//	                msg = "Device registered, registration ID=" + regid;
+//	                
+//	                setRegistrationId(SplashLogin.this, regid);
+//			    }
+//                
+//                Log.e("msg","="+msg);
+//            } catch (Exception ex) {
+//                msg = "Error :" + ex.getMessage();
+//                Log.e("msg","="+msg);
+//            }
+//			
+//			return null;
+//		}
+//		
+//		@Override
+//		protected void onPostExecute(String result) {
+//			super.onPostExecute(result);
+//			
+//			DialogPopup.dismissLoadingDialog();
+//			
+//			if(flag == 0){
+//				sendLoginValues(SplashLogin.this, emailId, password);
+//			}
+//			else{
+//				sendFacebookLoginValues(SplashLogin.this, "");
+//			}
+//			
+//		}
+//		
+//	}
 	
 	
 	
@@ -731,7 +732,7 @@ public class SplashLogin extends Activity{
 			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			
-			Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(getApplicationContext()));
+			final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(getApplicationContext()));
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			btnConfirm.setOnClickListener(new View.OnClickListener() {
@@ -746,6 +747,25 @@ public class SplashLogin extends Activity{
 					}
 				}
 				
+			});
+			
+			etCode.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					int result = actionId & EditorInfo.IME_MASK_ACTION;
+					switch (result) {
+						case EditorInfo.IME_ACTION_DONE:
+							btnConfirm.performClick();
+						break;
+
+						case EditorInfo.IME_ACTION_NEXT:
+						break;
+
+						default:
+					}
+					return true;
+				}
 			});
 			
 			
@@ -915,7 +935,7 @@ public class SplashLogin extends Activity{
 			Log.i("fb_mail", "="+Data.fbUserEmail);
 			Log.i("latitude", "="+Data.latitude);
 			Log.i("longitude", "="+Data.longitude);
-			Log.i("device_token", "="+Data.deviceToken);
+			Log.i("device_token in fb login", "="+Data.deviceToken);
 			Log.i("country", "="+Data.country);
 			Log.i("app_version", "="+Data.appVersion);
 			Log.i("os_version", "="+Data.osVersion);
@@ -946,7 +966,7 @@ public class SplashLogin extends Activity{
 	//									{"error": 'Some parameter missing',"flag":0} //error
 	//									{"error": 'Not An Authenticated User!',"flag":1}
 	//									{"error": 'Please enter otp',"flag":2}  
-	//							{"error": 'Please enter details',"flag":3}
+	//								{"error": 'Please enter details',"flag":3}
 	//								{"error": 'Message sending failed',"flag":4}
 	//								{"error": 'User not registered',"flag":5}
 	//								{"error": 'Incorrect verification code',"flag":6}

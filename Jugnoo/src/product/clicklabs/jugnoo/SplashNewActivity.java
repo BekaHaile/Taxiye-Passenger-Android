@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ public class SplashNewActivity extends Activity{
 	
 	ImageView jugnooImg;
 	ImageView jugnooTextImg;
+	ProgressBar progressBar1;
 	
 	boolean loginDataFetched = false, loginFailed = false;
 	
@@ -67,6 +69,9 @@ public class SplashNewActivity extends Activity{
 		jugnooImg = (ImageView) findViewById(R.id.jugnooImg);
 		jugnooTextImg = (ImageView) findViewById(R.id.jugnooTextImg);
 		jugnooTextImg.setVisibility(View.GONE);
+		
+		progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
+		progressBar1.setVisibility(View.GONE);
 		
 		
 		
@@ -106,11 +111,12 @@ public class SplashNewActivity extends Activity{
 
 	    Log.i("deviceToken", Data.deviceToken + "..");
 	    
-	    if (regid.isEmpty()) {
-	        registerInBackground();
-	    }
+	    
 		
 	}
+	
+	
+	
 	
 	
 	public static final String EXTRA_MESSAGE = "message";
@@ -138,6 +144,12 @@ public class SplashNewActivity extends Activity{
 	
 	private void registerInBackground() {
 	    new AsyncTask<String, Integer, String>() {
+
+	        @Override
+	    	protected void onPreExecute() {
+	    		progressBar1.setVisibility(View.VISIBLE);
+	    	};
+	    	
 	        @Override
 	        protected String doInBackground(String... params) {
 	            String msg = "";
@@ -159,6 +171,8 @@ public class SplashNewActivity extends Activity{
 	        @Override
 	        protected void onPostExecute(String msg) {
 	        	Log.e("msg  ===== ","="+msg);
+	    		progressBar1.setVisibility(View.GONE);
+	    		accessTokenLogin(SplashNewActivity.this);
 	        	//=Device registered, registration ID=APA91bHaLnaJLjUGLXDKcW39Gke0eK78tFRe1ByJsj8rmFS2boJ2_HNzvxkS39tfo0z6IahCUPyV49gpHx-2M3WzWmpHv4u4O0cGuYxN-aKuPx1SG4Gy-2WHBg8o3sSP_GtJgfThb3G36miecVxQ1xGafeKMgbV2sO9EP1aaVDyXI3t6bgS7gmQ
 	        }
 	    }.execute(null, null, null);
@@ -220,7 +234,13 @@ public class SplashNewActivity extends Activity{
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					accessTokenLogin(SplashNewActivity.this);
+					
+					if (regid.isEmpty()){
+				        registerInBackground();
+				    }
+				    else{
+				    	accessTokenLogin(SplashNewActivity.this);
+				    }
 				}
 			}, 500);
 			

@@ -145,6 +145,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	
 	//Top RL
 	RelativeLayout topRl;
 	Button menuBtn, backBtn, favBtn;
@@ -860,7 +861,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					if(requestRideBtn.getText().toString().equalsIgnoreCase("Request Ride")){
 						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 							if(Data.driverInfos.size() > 0){
-								//TODO
 								
 								getSessionIdAsync(HomeActivity.this);
 								
@@ -3180,7 +3180,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        else{
 	        	distanceString = "No drivers nearby.";
 	        	nearestDriverText.setText("No drivers nearby.");
-		        assignedDriverText.setText("No drivers nearby.");
+		        assignedDriverText.setText("");
 	        }
 	        
 	        Log.i("distanceString","="+distanceString);
@@ -3192,6 +3192,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        	startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	        }
 	        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
+	        	cancelRequestBtn.setText("Cancel request in 5s ?");
 	        	beforeCancelRequestAsync = new BeforeCancelRequestAsync();
 	        	beforeCancelRequestAsync.execute();
 	        }
@@ -3674,8 +3675,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+									else if(1 == flag){
+										makeMeDriverPopup(activity, errorMessage);
 									}
 								}
 								else{
@@ -5379,7 +5380,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	//TODO
 	/**
 	 * ASync for retrieving session id from server
 	 */
@@ -5507,6 +5507,131 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        
 	}
 	
+	
+	
+	
+	
+	
+	void makeMeDriverPopup(final Activity activity, String message){
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.app_update_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			
+			textHead.setText("Alert");
+			textMessage.setText(message);
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					makeMeDriverAsync(activity);
+				}
+			});
+			
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+				
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	/**
+	 * ASync for make me driver server
+	 */
+	public void makeMeDriverAsync(final Activity activity) {
+		try {
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				
+				RequestParams params = new RequestParams();
+				
+				params.put("access_token", Data.userData.accessToken);
+				
+			
+				AsyncHttpClient client = new AsyncHttpClient();
+				client.setTimeout(Data.SERVER_TIMEOUT);
+				client.post(Data.SERVER_URL + "/make_me_driver_request", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+
+							@Override
+							public void onSuccess(String response) {
+								Log.v("Server response", "response = " + response);
+
+								try {
+									jObj = new JSONObject(response);
+									
+									if(!jObj.isNull("error")){
+										
+										int flag = jObj.getInt("flag");	
+										
+										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										}
+										else{
+										}
+									}
+									else{
+										
+//									{"log": "Thank you for signing up. We will reach out to you soon."}
+										
+										new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
+
+										
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+								}
+
+								DialogPopup.dismissLoadingDialog();
+								
+							}
+
+							@Override
+							public void onFailure(Throwable arg0) {
+								Log.e("request fail", arg0.toString());
+								DialogPopup.dismissLoadingDialog();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 	
 	
 	
