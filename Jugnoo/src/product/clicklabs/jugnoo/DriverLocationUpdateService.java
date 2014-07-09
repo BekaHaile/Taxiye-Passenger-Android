@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
@@ -14,6 +15,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -150,7 +152,10 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		String SERVER_URL = "http://54.81.229.172:8000";
+    		String SERVER_URL = "http://107.21.79.63:4001",
+    				GOOGLE_PROJECT_ID = "506849624961", 
+    				PROPERTY_REG_ID = "registration_id", 
+    				PROPERTY_APP_VERSION = "appVersion";
     		
     		String SHARED_PREF_NAME = "myPref";
     		String SP_ACCESS_TOKEN_KEY = "access_token";
@@ -163,12 +168,18 @@ public class DriverLocationUpdateService extends Service {
     		
     		if("".equalsIgnoreCase(deviceToken)){
     			
-    			
-    			GoogleCloudMessaging gcm;
-    			String regid;
-    			
-    		}
-    		else{
+    			try {
+					GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(DriverLocationUpdateService.this);
+					String regid = gcm.register(GOOGLE_PROJECT_ID);
+					deviceToken = regid;
+					final SharedPreferences prefs = getSharedPreferences(SplashLogin.class.getSimpleName(), Context.MODE_PRIVATE);
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putString(PROPERTY_REG_ID, regid);
+					editor.putInt(PROPERTY_APP_VERSION, getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
+					editor.commit();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
     			
     		}
     		

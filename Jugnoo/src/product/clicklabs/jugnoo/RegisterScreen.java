@@ -161,8 +161,6 @@ public class RegisterScreen extends Activity{
 						}
 					}
 					
-					Toast.makeText(getApplicationContext(), ""+phoneNo, Toast.LENGTH_SHORT).show();
-					
 				} catch(Exception e){
 					e.printStackTrace();
 				}

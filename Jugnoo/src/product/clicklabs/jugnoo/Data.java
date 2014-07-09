@@ -83,7 +83,7 @@ public class Data {
 	
 	
 	
-	
+	// dev review http://107.21.79.63:4001
 	//Dev staged :  "http://54.81.229.172:7000";
 	// Dev staged :   http://54.81.229.172:8000
 	// live 1st:    http://dev.jugnoo.in:3000

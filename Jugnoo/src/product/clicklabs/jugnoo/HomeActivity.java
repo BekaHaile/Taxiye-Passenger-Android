@@ -3845,6 +3845,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 															@Override
 															public void run() {
 																DialogPopup.dismissLoadingDialog();
+																userPushStart = true;
 																connectionLostAsync(HomeActivity.this);
 															}
 														});
