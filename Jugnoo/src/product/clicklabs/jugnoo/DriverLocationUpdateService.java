@@ -152,7 +152,7 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		String SERVER_URL = "http://107.21.79.63:4001",
+    		String SERVER_URL = "http://54.81.229.172:8000",
     				GOOGLE_PROJECT_ID = "506849624961", 
     				PROPERTY_REG_ID = "registration_id", 
     				PROPERTY_APP_VERSION = "appVersion";

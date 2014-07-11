@@ -346,7 +346,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	static Activity activity;
 	
-	boolean bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false;
+	boolean bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false, userCanceledDialogShown = false;
 	boolean loggedOut = false, zoomedToMyLocation = false;
 	
 	@Override
@@ -367,6 +367,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		bookingsFetched = false;
 		customerCancelBeforePushReceive = false;
+		userCanceledDialogShown = false;
 		loggedOut = false;
 		zoomedToMyLocation = false;
 		
@@ -2245,6 +2246,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	
+	
 	void buildAlertMessageNoGps() {
 	    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    builder.setMessage("The app needs active GPS connection. Do you want to enable it?")
@@ -2344,7 +2347,26 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         	}
         	else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
         		
-        		waitChronometer.stop();
+        		runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						try{
+			        		waitChronometer.stop();
+			        		driverWaitBtn.setText("Start wait");
+			        		driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
+							waitStart = 0;
+		        		} catch(Exception e){
+		        			e.printStackTrace();
+		        		}
+					}
+				});
+        		try{
+        			startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
+        		} catch(Exception e){
+        			e.printStackTrace();
+        		}
+				
         		
         		editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
         		
@@ -3349,6 +3371,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("driver_id", "=" + Data.cDriverId);
 			
+			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
@@ -3739,6 +3762,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	public void driverAcceptRideAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
+			userCanceledDialogShown = false;
+			
 			DialogPopup.showLoadingDialog(activity, "Fetching user data...");
 			
 			RequestParams params = new RequestParams();
@@ -3783,6 +3808,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									String errorMessage = jObj.getString("error");
 									
 									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else if(11 == flag){
+										userCanceledDialogShown = true;
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
@@ -3879,9 +3908,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	//TODO
 	/**
-	 * ASync for change driver mode from server
+	 * ASync for connection lost on customer side from server
 	 */
 	public void connectionLostAsync(final Activity activity) {
 
@@ -4769,6 +4797,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 					if (session.isOpened()) {
 						Session.openActiveSession(HomeActivity.this, true, new Session.StatusCallback() {
+									@SuppressWarnings("deprecation")
 									@Override
 									public void call(final Session session, SessionState state, Exception exception) {
 										Log.v("session.isOpened()", "" + session.isOpened());
@@ -5850,6 +5879,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								if(getDistanceTimeAddress != null){
 									getDistanceTimeAddress.cancel(true);
 								}
+					        	cancelRequestBtn.setText("Cancel request in 5s ?");
+								
 								getAssignedDriverInfoAsync(HomeActivity.this);
 							}
 						});
@@ -5994,8 +6025,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							public void run() {
 								DialogPopup.dismissLoadingDialog();
 								showAllRideRequests();
-								new DialogPopup().alertPopup(HomeActivity.this, "", "The user has canceled the request");
-								
+								//TODO
+								if(!userCanceledDialogShown){
+									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+								}
+								userCanceledDialogShown = false;
 							}
 						});
 					}

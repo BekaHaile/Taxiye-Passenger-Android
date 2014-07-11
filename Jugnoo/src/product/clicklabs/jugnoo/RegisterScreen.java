@@ -124,9 +124,11 @@ public class RegisterScreen extends Activity{
 				}
 				String lastName = lastNameEt.getText().toString().trim();
 				String emailId = emailIdEt.getText().toString().trim();
+				boolean noFbEmail = false;
 				
 				if(facebookLogin && emailId.equalsIgnoreCase("")){
 					emailId = "n@n.c";
+					noFbEmail = true;
 				}
 				
 				
@@ -197,7 +199,7 @@ public class RegisterScreen extends Activity{
 												if(password.length() >= 6){
 													
 													if(facebookLogin){
-														if(emailId.equalsIgnoreCase("n@n.c")){
+														if(noFbEmail){
 															emailId = "";
 														}
 														sendFacebookSignupValues(RegisterScreen.this, "", phoneNo, password);
