@@ -4,12 +4,14 @@
     android:layout_width="720px"
     android:layout_height="1134px"
     android:background="@color/bg_grey_opaque"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+        android:splitMotionEvents="false" >
 
     <ScrollView 
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:splitMotionEvents="false"
         >
     
     <LinearLayout
@@ -17,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:splitMotionEvents="false" >
 
         <ImageView
             android:id="@+id/jugnooLogoBig"
@@ -37,7 +40,8 @@
             android:layout_marginTop="100px"
             android:background="@drawable/white_bg_rounded"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+        android:splitMotionEvents="false">
 
             <EditText
                 android:id="@+id/firstNameEt"
@@ -150,7 +154,8 @@
             android:background="@drawable/blue_btn_selector"
             android:text="Sign Up"
             android:textColor="@drawable/white_color_selector"
-                        android:textSize="@dimen/button_text_size"  />
+                        android:textSize="@dimen/button_text_size" 
+        android:splitMotionEvents="false" />
         
         
         

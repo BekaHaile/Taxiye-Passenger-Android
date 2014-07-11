@@ -43,6 +43,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -1699,6 +1700,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	public void switchDriverScreen(DriverScreenMode mode){
+		if(userMode == UserMode.DRIVER){
 		if(mode == DriverScreenMode.D_RIDE_END){
 			mapLayout.setVisibility(View.GONE);
 			endRideReviewRl.setVisibility(View.VISIBLE);
@@ -1876,13 +1878,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverEngagedLayout.setVisibility(View.GONE);
 		
 		}
+		}
 		
 	}
 	
 	
 	
 	public void switchPassengerScreen(PassengerScreenMode mode){
-		
+		if(userMode == UserMode.PASSENGER){
 		
 		if(mode == PassengerScreenMode.P_RIDE_END){
 			mapLayout.setVisibility(View.GONE);
@@ -2159,7 +2162,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 		
 		
-		
+		}
 		
 	}
 	
@@ -3393,7 +3396,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
@@ -3568,7 +3574,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
@@ -3695,7 +3704,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else if(1 == flag){
@@ -3807,7 +3819,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else if(11 == flag){
@@ -3945,8 +3960,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								if(!jObj.isNull("error")){
 									
 									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 									}
 									else{
 									}
@@ -4023,7 +4042,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										int flag = jObj.getInt("flag");	
 										String errorMessage = jObj.getString("error");
 										
-										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
+										}
+										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 										else{
@@ -4156,7 +4178,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
@@ -4314,7 +4339,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
@@ -4474,7 +4502,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
@@ -4645,7 +4676,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
@@ -4715,8 +4749,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								if(!jObj.isNull("error")){
 									
 									int flag = jObj.getInt("flag");	
-									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+
+									String errorMessage = jObj.getString("error");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 									}
 									else{
 									}
@@ -4919,7 +4957,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
@@ -5019,6 +5060,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								jObj = new JSONObject(response);
 								
 								if(!jObj.isNull("error")){
+
+									String errorMessage = jObj.getString("error");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
 //									
 //									int flag = jObj.getInt("flag");	
 //									String errorMessage = jObj.getString("error");
@@ -5107,8 +5153,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 							try {
 								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
+
+								String errorMessage = jObj.getString("error");
+								if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+									HomeActivity.logoutUser(activity);
+								}
+								else if(!jObj.isNull("error")){
 									
 								}
 								else{
@@ -5225,8 +5275,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									int flag = jObj.getInt("flag");	
 									String error = jObj.getString("error");
-									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+
+									String errorMessage = jObj.getString("error");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", error);
 									}
 									else{
@@ -5375,10 +5429,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								if(!jObj.isNull("error")){
 									
 									int flag = jObj.getInt("flag");	
-									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+
+									String errorMessage = jObj.getString("error");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
 									}
 									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -5446,10 +5503,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 									
 									int flag = jObj.getInt("flag");	
-									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+
+									String errorMessage = jObj.getString("error");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
 									}
 									else{
+										new DialogPopup().alertPopup(activity, "",errorMessage);
 									}
 								}
 								else{
@@ -5624,10 +5684,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									if(!jObj.isNull("error")){
 										
 										int flag = jObj.getInt("flag");	
-										
-										if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+
+										String errorMessage = jObj.getString("error");
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
 										}
 										else{
+											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 									}
 									else{
@@ -6025,7 +6088,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							public void run() {
 								DialogPopup.dismissLoadingDialog();
 								showAllRideRequests();
-								//TODO
 								if(!userCanceledDialogShown){
 									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
 								}
@@ -6173,9 +6235,96 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 
 
+	static class FBLogoutNoIntent extends AsyncTask<Void, Void, String> {
+		
+		Activity act;
+		
+		public FBLogoutNoIntent(Activity act){
+			this.act = act;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+		
+		protected String doInBackground(Void... urls) {
+			try {
+				//deactivating current session of FB
+				try {	
+					Session session = new Session(act);
+					Session.setActiveSession(session);	
+					session.closeAndClearTokenInformation();	
+				}
+				catch(Exception e) {
+					Log.v("Logout", "Error"+e);	
+				}
+			
+				SharedPreferences pref = act.getSharedPreferences("myPref", 0);
+				Editor editor = pref.edit();
+				editor.clear();
+				editor.commit();
+			} catch (Exception e) {
+				Log.v("e", e.toString());
 
+			}
+			
+			return "";
+		}
 
+		@Override
+		protected void onPostExecute(String text) {
+			
+		}
+	}
+
+	public static void logoutUser(final Activity cont){
+		try{
+			
+			new FBLogoutNoIntent(cont).execute();
+			
+		AlertDialog.Builder builder = new AlertDialog.Builder(cont);
+		builder.setMessage("Your Login session has expired. Please login again.").setTitle("Alert");
+		builder.setCancelable(false);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    	try {
+                			
+                			
+                			SharedPreferences pref = cont.getSharedPreferences(
+                					"myPref", 0);
+                			Editor editor = pref.edit();
+
+                			editor.clear();
+                			editor.commit();
+                			
+                			
+                			dialog.dismiss();
+                			
+                			Data.clearDataOnLogout(cont);
+
+                			cont.startActivity(new Intent(cont, SplashLogin.class));
+                			cont.finish();
+                			cont.overridePendingTransition(
+                					R.anim.left_in,
+                					R.anim.left_out);
+
+                		} catch (Exception e) {
+                			Log.i("excption logout",
+                					e.toString());
+                		}
+                    }
+                });
+        
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        
+		} catch(Exception e){e.printStackTrace();}
+		
+	}
 	
+	//Invalid access token
 	
 	
 	

@@ -220,7 +220,10 @@ public class FavoriteActivity extends Activity{
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{

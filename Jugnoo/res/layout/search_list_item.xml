@@ -5,13 +5,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/list_white_selector"
+        android:splitMotionEvents="false"
      >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20px" >
+        android:padding="20px"
+        android:splitMotionEvents="false" >
 
         <TextView
             android:id="@+id/name"

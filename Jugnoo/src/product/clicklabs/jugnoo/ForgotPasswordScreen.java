@@ -138,8 +138,12 @@ public class ForgotPasswordScreen extends Activity{
 								if(!jObj.isNull("error")){
 									
 									String errorMessage = jObj.getString("error");
-									
-									new DialogPopup().alertPopup(activity, "", errorMessage);
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
 									
 								}
 								else{

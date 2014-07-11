@@ -24,6 +24,9 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Data {
 	
+	public static final String INVALID_ACCESS_TOKEN = "invalid access token";
+	
+	
 	public static final String SHARED_PREF_NAME = "myPref";
 	public static final String SP_ACCESS_TOKEN_KEY = "access_token", SP_ID_KEY = "session_id",
 			

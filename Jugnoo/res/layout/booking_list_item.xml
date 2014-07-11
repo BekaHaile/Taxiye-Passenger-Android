@@ -5,18 +5,21 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/white"
+        android:splitMotionEvents="false"
      >
 
     
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:splitMotionEvents="false"
         >
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:splitMotionEvents="false"
         
         
         >
@@ -27,6 +30,7 @@
             android:layout_width="540px"
             android:layout_height="wrap_content"
             android:layout_marginTop="20px"
+        android:splitMotionEvents="false"
             >
             
             
@@ -62,6 +66,7 @@
             android:layout_width="540px"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
+        android:splitMotionEvents="false"
             >
             
             
@@ -100,6 +105,7 @@
             android:layout_marginTop="10px"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+        android:splitMotionEvents="false"
             >
             
             

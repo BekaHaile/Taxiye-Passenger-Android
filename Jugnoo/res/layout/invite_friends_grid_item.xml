@@ -18,7 +18,8 @@
 
         <RelativeLayout
             android:layout_width="162px"
-            android:layout_height="162px" >
+            android:layout_height="162px" 
+        android:splitMotionEvents="false">
 
             <ProgressBar
                 android:id="@+id/progress"

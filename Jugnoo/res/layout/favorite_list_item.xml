@@ -7,12 +7,14 @@
     android:background="@drawable/list_white_selector"
     android:paddingTop="8px"
     android:paddingBottom="8px"
+        android:splitMotionEvents="false"
      >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="111px"
         android:orientation="vertical"
+        android:splitMotionEvents="false"
         android:background="@color/bg_grey"
         
         

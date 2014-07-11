@@ -6,13 +6,15 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:splitMotionEvents="false" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+        android:splitMotionEvents="false" >
 
             <RelativeLayout
                 android:id="@+id/mapLayout"
@@ -33,7 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="gone" >
+                android:visibility="gone"
+        android:splitMotionEvents="false" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -49,7 +52,8 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="34px"
                         android:background="@drawable/search_bar"
-                        android:tag="mwar" >
+                        android:tag="mwar" 
+        android:splitMotionEvents="false">
 
                         <ImageView
                             android:id="@+id/locImg"
@@ -76,7 +80,8 @@
                             android:layout_height="95px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="0px" >
+                            android:layout_marginRight="0px"
+        android:splitMotionEvents="false" >
 
                             <ImageView
                                 android:id="@+id/searchImg"
@@ -136,7 +141,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="134px"
                         android:layout_alignParentBottom="true"
-                        android:visibility="visible" >
+                        android:visibility="visible"
+        android:splitMotionEvents="false" >
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -148,7 +154,8 @@
                             android:layout_height="128px"
                             android:layout_alignParentBottom="true"
                             android:background="@color/white_translucent"
-                            android:visibility="visible" >
+                            android:visibility="visible"
+        android:splitMotionEvents="false" >
 
                             <ProgressBar
                                 android:id="@+id/nearestDriverProgress"
@@ -200,7 +207,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="108px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/white_translucent" >
+                        android:background="@color/white_translucent"
+        android:splitMotionEvents="false" >
 
                         <ProgressBar
                             android:id="@+id/assignedDriverProgress"
@@ -240,7 +248,8 @@
                         android:layout_height="307px"
                         android:layout_above="@+id/callDriverBtn"
                         android:layout_marginBottom="26px"
-                        android:background="@color/white_translucent" >
+                        android:background="@color/white_translucent"
+        android:splitMotionEvents="false" >
 
                         <RelativeLayout
                             android:id="@+id/driverImageRL"
@@ -248,7 +257,8 @@
                             android:layout_height="225px"
                             android:layout_marginLeft="80px"
                             android:layout_marginTop="22px"
-                            android:tag="mwar" >
+                            android:tag="mwar"
+        android:splitMotionEvents="false" >
 
                             <ImageView
                                 android:id="@+id/driverImageBg"
@@ -293,7 +303,8 @@
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="80px"
                             android:layout_marginTop="22px"
-                            android:tag="mwar" >
+                            android:tag="mwar"
+        android:splitMotionEvents="false" >
 
                             <ImageView
                                 android:id="@+id/driverCarBg"
@@ -380,7 +391,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="560px"
-                    android:visibility="gone" >
+                    android:visibility="gone"
+        android:splitMotionEvents="false" >
 
                     <ProgressBar
                         android:id="@+id/centreInfoProgress"
@@ -395,18 +407,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:visibility="invisible" >
+                        android:visibility="invisible" 
+        android:splitMotionEvents="false">
 
                         <RelativeLayout
                             android:id="@+id/bgLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/white_map_place_info_bg"
-                            android:padding="15px" >
+                            android:padding="15px" 
+        android:splitMotionEvents="false">
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" >
+                                android:layout_height="wrap_content"
+        android:splitMotionEvents="false" >
 
                                 <TextView
                                     android:id="@+id/centreLocationSnippet"
@@ -459,7 +474,8 @@
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:padding="20px"
-                    android:visibility="gone" >
+                    android:visibility="gone" 
+        android:splitMotionEvents="false">
 
                     <ListView
                         android:id="@+id/searchList"
@@ -474,13 +490,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
-                android:visibility="gone" >
+                android:visibility="gone"
+        android:splitMotionEvents="false" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone" >
+                    android:visibility="gone"
+        android:splitMotionEvents="false" >
 
                     <RelativeLayout
                         android:id="@+id/driverNewRideRequestRl"
@@ -490,7 +508,8 @@
                         android:layout_marginTop="90px"
                         android:background="@drawable/white_bg_bordered"
                         android:gravity="center"
-                        android:visibility="gone" >
+                        android:visibility="gone" 
+        android:splitMotionEvents="false">
 
                         <TextView
                             android:id="@+id/driverNewRideRequestText"
@@ -528,7 +547,8 @@
                     android:id="@+id/driverRequestAcceptLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone" >
+                    android:visibility="gone"
+        android:splitMotionEvents="false" >
 
                     <Button
                         android:id="@+id/driverAcceptRideBtn"
@@ -569,13 +589,15 @@
                     android:id="@+id/driverEngagedLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible" >
+                    android:visibility="visible"
+        android:splitMotionEvents="false" >
 
                     <RelativeLayout
                         android:id="@+id/driverPassengerInfoRl"
                         android:layout_width="match_parent"
                         android:layout_height="214px"
-                        android:background="@color/white_translucent" >
+                        android:background="@color/white_translucent"
+        android:splitMotionEvents="false" >
 
                         <TextView
                             android:id="@+id/driverPassengerName"
@@ -595,7 +617,8 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/driverPassengerName"
                             android:layout_marginLeft="54px"
-                            android:layout_marginTop="10px" >
+                            android:layout_marginTop="10px" 
+        android:splitMotionEvents="false">
 
                             <ImageView
                                 android:id="@+id/driverPassengerRatingStar"
@@ -635,7 +658,8 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="40px"
-                            android:tag="mwar" >
+                            android:tag="mwar" 
+        android:splitMotionEvents="false">
 
                             <ImageView
                                 android:id="@+id/driverPassengerImageBg"
@@ -671,7 +695,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="380px"
                         android:layout_alignParentBottom="true"
-                        android:visibility="gone" >
+                        android:visibility="gone" 
+        android:splitMotionEvents="false">
 
                         <Button
                             android:id="@+id/driverStartRideMyLocationBtn"
@@ -691,7 +716,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="27px"
                             android:background="@drawable/blue_btn_normal"
-                            android:tag="mwar" >
+                            android:tag="mwar"
+        android:splitMotionEvents="false" >
 
                             <TextView
                                 android:id="@+id/driverStartRideText"
@@ -745,7 +771,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="406px"
                         android:layout_alignParentBottom="true"
-                        android:visibility="visible" >
+                        android:visibility="visible" 
+        android:splitMotionEvents="false">
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -756,7 +783,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="400px"
                             android:layout_alignParentBottom="true"
-                            android:background="@color/white_translucent" >
+                            android:background="@color/white_translucent" 
+        android:splitMotionEvents="false">
 
                             <product.clicklabs.jugnoo.PausableChronometer
                                 android:id="@+id/waitChronometer"
@@ -787,7 +815,8 @@
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="27px"
                                 android:background="@drawable/red_dark_btn_normal"
-                                android:tag="mwar" >
+                                android:tag="mwar"
+        android:splitMotionEvents="false" >
 
                                 <TextView
                                     android:id="@+id/driverEndRideText"
@@ -831,12 +860,14 @@
                 android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible" >
+                android:visibility="visible"
+        android:splitMotionEvents="false" >
 
                 <RelativeLayout
                     android:id="@+id/upLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="700px" >
+                    android:layout_height="700px" 
+        android:splitMotionEvents="false">
 
                     <ImageView
                         android:id="@+id/reviewUserImgBlured"
@@ -856,7 +887,8 @@
                         android:layout_height="300px"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="110px"
-                        android:tag="mwar" >
+                        android:tag="mwar" 
+        android:splitMotionEvents="false">
 
                         <ImageView
                             android:id="@+id/reviewUserImgBack"
@@ -898,7 +930,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="180px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/black_translucent" >
+                        android:background="@color/black_translucent" 
+        android:splitMotionEvents="false">
 
                         <TextView
                             android:id="@+id/reviewReachedDestinationText"
@@ -917,7 +950,8 @@
                             android:layout_width="239px"
                             android:layout_height="match_parent"
                             android:layout_below="@+id/reviewReachedDestinationText"
-                            android:layout_marginTop="15px" >
+                            android:layout_marginTop="15px" 
+        android:splitMotionEvents="false">
 
                             <TextView
                                 android:id="@+id/reviewDistanceText"
@@ -958,7 +992,8 @@
                             android:layout_height="match_parent"
                             android:layout_below="@+id/reviewReachedDestinationText"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="15px" >
+                            android:layout_marginTop="15px" 
+        android:splitMotionEvents="false">
 
                             <TextView
                                 android:id="@+id/reviewWaitText"
@@ -999,7 +1034,8 @@
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/reviewReachedDestinationText"
-                            android:layout_marginTop="15px" >
+                            android:layout_marginTop="15px"
+        android:splitMotionEvents="false" >
 
                             <TextView
                                 android:id="@+id/reviewFareText"
@@ -1055,7 +1091,8 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/reviewSubmitBtn"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="10px" >
+                    android:layout_marginBottom="10px"
+        android:splitMotionEvents="false" >
 
                     <RatingBar
                         android:id="@+id/reviewRatingBar"
@@ -1084,7 +1121,8 @@
                 android:id="@+id/topRl"
                 android:layout_width="match_parent"
                 android:layout_height="90px"
-                android:background="@color/bg_grey" >
+                android:background="@color/bg_grey"
+        android:splitMotionEvents="false" >
 
                 <Button
                     android:id="@+id/menuBtn"
@@ -1140,11 +1178,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:splitMotionEvents="false" >
 
         <RelativeLayout
             android:layout_width="495px"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+        android:splitMotionEvents="false" >
 
             <ImageView
                 android:layout_width="match_parent"
@@ -1171,7 +1211,8 @@
                 android:layout_height="match_parent"
                 android:background="@color/bg_grey"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+        android:splitMotionEvents="false" >
 
                 <RelativeLayout
                     android:id="@+id/profileRl"
@@ -1179,7 +1220,8 @@
                     android:layout_height="300px"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="110px"
-                    android:tag="mwar" >
+                    android:tag="mwar" 
+        android:splitMotionEvents="false">
 
                     <ImageView
                         android:id="@+id/profileBack"
@@ -1219,7 +1261,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="84px"
                     android:layout_marginTop="76px"
-                    android:background="@drawable/transparent" >
+                    android:background="@drawable/transparent"
+        android:splitMotionEvents="false" >
 
                     <TextView
                         android:id="@+id/driverModeText"
@@ -1251,7 +1294,8 @@
                     android:id="@+id/inviteFriendRl"
                     android:layout_width="match_parent"
                     android:layout_height="84px"
-                    android:background="@drawable/menu_item_selector" >
+                    android:background="@drawable/menu_item_selector" 
+        android:splitMotionEvents="false">
 
                     <TextView
                         android:id="@+id/inviteFriendText"
@@ -1273,7 +1317,8 @@
                     android:id="@+id/bookingsRl"
                     android:layout_width="match_parent"
                     android:layout_height="84px"
-                    android:background="@drawable/menu_item_selector" >
+                    android:background="@drawable/menu_item_selector" 
+        android:splitMotionEvents="false">
 
                     <TextView
                         android:id="@+id/bookingsText"
@@ -1295,7 +1340,8 @@
                     android:id="@+id/aboutRl"
                     android:layout_width="match_parent"
                     android:layout_height="84px"
-                    android:background="@drawable/menu_item_selector" >
+                    android:background="@drawable/menu_item_selector" 
+        android:splitMotionEvents="false">
 
                     <TextView
                         android:id="@+id/aboutText"
@@ -1317,7 +1363,8 @@
                     android:id="@+id/sosRl"
                     android:layout_width="match_parent"
                     android:layout_height="84px"
-                    android:background="@drawable/menu_item_selector" >
+                    android:background="@drawable/menu_item_selector" 
+        android:splitMotionEvents="false">
 
                     <TextView
                         android:id="@+id/sosText"
@@ -1339,7 +1386,8 @@
                     android:id="@+id/logoutRl"
                     android:layout_width="match_parent"
                     android:layout_height="84px"
-                    android:background="@drawable/menu_item_selector" >
+                    android:background="@drawable/menu_item_selector"
+        android:splitMotionEvents="false" >
 
                     <TextView
                         android:id="@+id/logoutText"

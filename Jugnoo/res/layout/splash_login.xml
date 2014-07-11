@@ -4,20 +4,24 @@
     android:layout_width="720px"
     android:layout_height="1134px"
     android:background="@color/bg_grey_opaque"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+        android:splitMotionEvents="false" >
 
     
     <ScrollView 
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:splitMotionEvents="false"
         >
     <LinearLayout
         android:id="@+id/mainLinear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:splitMotionEvents="false"
+        >
 
         <ImageView
             android:id="@+id/jugnooLogoBig"
@@ -37,7 +41,9 @@
             android:layout_marginTop="100px"
             android:background="@drawable/white_bg_rounded"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+        android:splitMotionEvents="false"
+         >
 
             <AutoCompleteTextView
                 android:id="@+id/emailEt"
@@ -124,6 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
+        android:splitMotionEvents="false"
             
             >
              
