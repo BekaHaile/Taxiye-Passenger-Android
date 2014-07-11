@@ -347,7 +347,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	static Activity activity;
 	
-	boolean bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false, userCanceledDialogShown = false;
+	boolean bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false, userCanceledDialogShown = false, startUserFreeAPI = false;
 	boolean loggedOut = false, zoomedToMyLocation = false;
 	
 	@Override
@@ -371,6 +371,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		userCanceledDialogShown = false;
 		loggedOut = false;
 		zoomedToMyLocation = false;
+		startUserFreeAPI = false;
 		
 		
 		
@@ -3637,6 +3638,21 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 											}
 										}, 60000);
 										
+										startUserFreeAPI = true;
+										
+										new Handler().postDelayed(new Runnable() {
+											
+											@Override
+											public void run() {
+												if(startUserFreeAPI){
+													checkSessionStateByCustomerAsync(activity);
+												}
+											}
+										}, 120000);
+										
+										//TODO
+										
+										
 									}
 									
 								}
@@ -3663,6 +3679,80 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			customerCancelBeforePushReceive = false;
 		}
 
+	}
+	
+	
+	
+	/**
+	 * ASync for checking Session State on customer side from server
+	 */
+	public void checkSessionStateByCustomerAsync(final Activity activity) {
+
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			RequestParams params = new RequestParams();
+		
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("session_id", Data.cSessionId);
+			
+			Log.i("checkSessionStateByCustomerAsync", "=");
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("session_id", Data.cSessionId);
+			
+		
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.setTimeout(Data.SERVER_TIMEOUT);
+			client.post(Data.SERVER_URL + "/check_session_active_inactive", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else{
+									}
+								}
+								else{
+									
+//									{"log": "Session is active"}
+//									{"log": "Session is inactive"}
+									
+									String logMessage = jObj.getString("log");
+									if(logMessage.equalsIgnoreCase("Session is inactive")){
+										//TODO 
+										passengerScreenMode = PassengerScreenMode.P_INITIAL;
+										switchPassengerScreen(passengerScreenMode);
+										new DialogPopup().alertPopup(HomeActivity.this, "", "Connection from Driver was lost. The ride has been canceled.");
+									}
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+							}
+	
+						}
+	
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+						}
+					});
+		}
+
+		
 	}
 	
 	
@@ -5784,6 +5874,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					@Override
 					public void run() {
 						Log.i("in in herestartRideForCustomer  run class","=");
+
+						startUserFreeAPI = false;
 						
 						locations.clear();
 						
@@ -5791,6 +5883,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						Database database = new Database(HomeActivity.this);
 						database.deleteSavedPath();
 						database.close();
+						
 						
 						passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
 						switchPassengerScreen(passengerScreenMode);
@@ -5813,6 +5906,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							Log.i("in in herestartRideForCustomer  run class","=");
 							passengerScreenMode = PassengerScreenMode.P_INITIAL;
 							switchPassengerScreen(passengerScreenMode);
+							startUserFreeAPI = false;
 							new DialogPopup().alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
 						}
 					});
