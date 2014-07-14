@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
@@ -15,7 +14,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -65,10 +63,18 @@ public class DriverLocationUpdateService extends Service {
 	
     @Override
     public void onStart(Intent intent, int startId) {
-    	// For time consuming an long tasks you can launch a new thread here...
+    	//For time consuming an long tasks you can launch a new thread here...
        
         try{
-        	locationFetcher = new LocationFetcher(this);
+        	
+        	if(locationFetcher == null){
+        		locationFetcher = new LocationFetcher(this);
+        	}
+        	else if(!locationFetcher.isConnected()){
+        		locationFetcher.destroy();
+        		locationFetcher = null;
+        		locationFetcher = new LocationFetcher(this);
+        	}
         	
         	if(sendDriverLocationToServer != null){
         		sendDriverLocationToServer.cancel(true);
@@ -126,10 +132,13 @@ public class DriverLocationUpdateService extends Service {
         return false;
     }
     
+    
+    
  
     @Override
     public void onDestroy() {
     	stop = true;
+    	Log.e("DriverLocationUpdateService onDestroy","=");
         if(sendDriverLocationToServer != null){
     		sendDriverLocationToServer.cancel(true);
     		sendDriverLocationToServer = null;
@@ -187,7 +196,7 @@ public class DriverLocationUpdateService extends Service {
     		try{
     			
     			if(noUpdate){
-					
+					Log.i("noUpdate","inside");
     				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 	    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
@@ -208,7 +217,9 @@ public class DriverLocationUpdateService extends Service {
     				noUpdate = false;
 				}
     			
+    			
 
+    			
     			if(count > 0){
 	    			try{
 	    				Thread.sleep(60000);
@@ -220,7 +231,8 @@ public class DriverLocationUpdateService extends Service {
     			if(!stop){
     			
 	    		if(locationFetcher != null){
-	    			
+
+					Log.i("locationFetcher not null","inside");
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
 	    			
 	    			

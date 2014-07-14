@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -13,10 +14,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -100,6 +104,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+@SuppressLint("DefaultLocale")
 public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt, 
 DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
@@ -350,6 +355,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	boolean bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false, userCanceledDialogShown = false, startUserFreeAPI = false;
 	boolean loggedOut = false, zoomedToMyLocation = false;
 	
+	Handler driverConnectionLostHandler, passengerConnectionLostHandler;
+	Runnable driverCLRunnable, passengerCLRunnable;
+	
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -371,7 +381,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		userCanceledDialogShown = false;
 		loggedOut = false;
 		zoomedToMyLocation = false;
-		startUserFreeAPI = false;
 		
 		
 		
@@ -575,6 +584,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverStartRideSlider = (SlideButton) findViewById(R.id.driverStartRideSlider);
 		startRideInv = (ImageView) findViewById(R.id.startRideInv);
 		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
+
+		driverStartRideSlider.setThumb(createStartRideThumbDrawable());
+//		driverStartRideSlider.setThumbOffset((int)(5.0f * ASSL.Xscale()));
 		
 		
 		//End ride layout
@@ -585,6 +597,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverEndRideSlider = (SlideButtonInvert) findViewById(R.id.driverEndRideSlider);
 		endRideInv = (ImageView) findViewById(R.id.endRideInv);
 		waitStart = 2;
+
+		driverEndRideSlider.setThumb(createEndRideThumbDrawable());
+//		driverEndRideSlider.setThumbOffset((int)(5.0f * ASSL.Xscale()));
+		
 		
 		
 		waitChronometer.setText("00:00:00");
@@ -1129,7 +1145,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				 GCMIntentService.clearNotifications(HomeActivity.this);
-				 userPushStart = false;
 				driverAcceptRideAsync(HomeActivity.this);
 			}
 		});
@@ -1140,6 +1155,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				userPushStart = true;
+				try{driverConnectionLostHandler.removeCallbacks(driverCLRunnable);}catch(Exception e){}
 				GCMIntentService.clearNotifications(HomeActivity.this);
 				driverRejectRideAsync(HomeActivity.this, 0);
 			}
@@ -1274,6 +1290,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				GCMIntentService.clearNotifications(HomeActivity.this);
 				driverEndRideText.setVisibility(View.GONE);
 				waitChronometer.stop();
+				
+				driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
+				driverWaitBtn.setText("Start wait");
+				waitStart = 0;
 				
 				long elapsedMillis = waitChronometer.eclipsedTime;
 				long seconds = elapsedMillis / 1000;
@@ -1611,7 +1631,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	
+	public static boolean isServiceRunning(Context context, String className) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+        	//DriverLocationUpdateService.class.getName()
+            if (className.equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 	
 	public void switchUserScreen(UserMode mode){
 		
@@ -1620,14 +1649,18 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			getDistanceTimeAddress = null;
 		}
 		
-		stopService(new Intent(HomeActivity.this, CRequestRideService.class));
-        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-        
 		
 		switch(mode){
 		
 			case DRIVER:
+				if(isServiceRunning(HomeActivity.this, CRequestRideService.class.getName())){
+					stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+				}
+				
+				if(isServiceRunning(HomeActivity.this, CUpdateDriverLocationsService.class.getName())){
+					stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				}
+				
 				passengerMainLayout.setVisibility(View.GONE);
 				driverMainLayout.setVisibility(View.VISIBLE);
 				
@@ -1640,6 +1673,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 			case PASSENGER:
+				
+				if(isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
+					stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				}
+				
 				passengerMainLayout.setVisibility(View.VISIBLE);
 				driverMainLayout.setVisibility(View.GONE);
 				
@@ -1651,6 +1689,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 			default:
+				
+				if(isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
+					stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				}
+				
 				passengerMainLayout.setVisibility(View.VISIBLE);
 				driverMainLayout.setVisibility(View.GONE);
 				
@@ -1756,7 +1799,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.GONE);
 				
-				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
+					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				}
 			
 				break;
 				
@@ -1843,7 +1888,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				aq2.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
 				
 			
-				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				
 				driverInitialLayout.setVisibility(View.GONE);
@@ -3388,7 +3432,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 						@Override
 						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
+							Log.e("getAssignedDriverInfoAsync Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
@@ -3400,7 +3444,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase(Locale.getDefault()))){
 										HomeActivity.logoutUser(activity);
 									}
 									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
@@ -3643,16 +3687,21 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										
 										startUserFreeAPI = true;
 										
-										new Handler().postDelayed(new Runnable() {
+										passengerConnectionLostHandler = new Handler();
+										passengerCLRunnable = new Runnable() {
 											
 											@Override
 											public void run() {
 												if(startUserFreeAPI){
+													startUserFreeAPI = false;
+													try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
 													Log.i("startUserFreeAPI ===== ", "=="+startUserFreeAPI);
 													checkSessionStateByCustomerAsync(activity);
 												}
 											}
-										}, 120000);
+										};
+										
+										passengerConnectionLostHandler.postDelayed(passengerCLRunnable, 120000);
 										
 										//TODO
 										
@@ -3869,6 +3918,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			userCanceledDialogShown = false;
+			userPushStart = false;
 			
 			DialogPopup.showLoadingDialog(activity, "Fetching user data...");
 			
@@ -3878,6 +3928,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			if(Data.locationFetcher != null){
 				Data.latitude = Data.locationFetcher.getLatitude();
 				Data.longitude = Data.locationFetcher.getLongitude();
+				
+				if(myLocation != null){
+					Data.latitude = myLocation.getLatitude();
+					Data.longitude = myLocation.getLongitude();
+				}
 			}
 			
 			
@@ -3968,7 +4023,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									editor.commit();
 									
 									
-									new Handler().postDelayed(new Runnable() {
+									driverConnectionLostHandler = new Handler();
+									driverCLRunnable = new Runnable() {
 										
 										@Override
 										public void run() {
@@ -3984,6 +4040,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 															public void run() {
 																DialogPopup.dismissLoadingDialog();
 																userPushStart = true;
+																try{driverConnectionLostHandler.removeCallbacks(driverCLRunnable);}catch(Exception e){}
 																connectionLostAsync(HomeActivity.this);
 															}
 														});
@@ -3991,8 +4048,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 												}).start();
 											}
 										}
-									}, 60000);
+									};
 									
+									driverConnectionLostHandler.postDelayed(driverCLRunnable, 60000);
 									
 								}
 							}  catch (Exception exception) {
@@ -5880,6 +5938,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						Log.i("in in herestartRideForCustomer  run class","=");
 
 						startUserFreeAPI = false;
+						try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
 						
 						locations.clear();
 						
@@ -5911,6 +5970,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							passengerScreenMode = PassengerScreenMode.P_INITIAL;
 							switchPassengerScreen(passengerScreenMode);
 							startUserFreeAPI = false;
+							try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
 							new DialogPopup().alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
 						}
 					});
@@ -6127,6 +6187,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		else{
 
 			userPushStart = true;
+			try{driverConnectionLostHandler.removeCallbacks(driverCLRunnable);}catch(Exception e){}
 			
 			if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 				int index = -1;
@@ -6238,6 +6299,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					@Override
 					public void run() {
 						userPushStart = true;
+						try{driverConnectionLostHandler.removeCallbacks(driverCLRunnable);}catch(Exception e){}
 
 				        GCMIntentService.clearNotifications(getApplicationContext());
 				        
