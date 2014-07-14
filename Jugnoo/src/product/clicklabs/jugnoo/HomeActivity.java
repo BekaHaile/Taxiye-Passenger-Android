@@ -2501,6 +2501,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	@Override
     public void onDestroy() {
         try{
+        	
+    		GCMIntentService.clearNotifications(HomeActivity.this);
+    		
 	        Data.locationFetcher.destroy();
 	        AQUtility.cleanCacheAsync(HomeActivity.this);
 	        
@@ -3645,6 +3648,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 											@Override
 											public void run() {
 												if(startUserFreeAPI){
+													Log.i("startUserFreeAPI ===== ", "=="+startUserFreeAPI);
 													checkSessionStateByCustomerAsync(activity);
 												}
 											}
