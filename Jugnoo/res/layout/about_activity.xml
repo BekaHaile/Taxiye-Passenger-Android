@@ -32,7 +32,7 @@
                 android:layout_width="185px"
                 android:layout_height="60px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/jugnoo_logo"
+                android:background="@drawable/jugnoo_text_small"
                 android:tag="mwar" />
         </RelativeLayout>
 

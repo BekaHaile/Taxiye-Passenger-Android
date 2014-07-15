@@ -33,6 +33,8 @@
                         android:layout_above="@+id/driverWaitBtn"
                         android:layout_marginBottom="27px"
                         android:textSize="40px"
+                        
+                        
                             />
            
             

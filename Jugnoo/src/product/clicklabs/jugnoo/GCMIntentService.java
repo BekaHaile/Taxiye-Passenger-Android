@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
@@ -151,53 +152,75 @@ public class GCMIntentService extends IntentService {
 	    }
 
 	  
-	    @SuppressWarnings("deprecation")
 		private void notificationManager(Context context, String message) {
 	    	
-			long when = System.currentTimeMillis();
-			
-			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-			
-			Log.v("message",","+message);
-			
-			Intent notificationIntent = new Intent(context, SplashNewActivity.class);
-			Log.v("notification_message",","+message);
-			
-			Notification notification = new Notification(R.drawable.jugnoo_icon, message, when);
-			String title = "Jugnoo";
-			
-			// set intent so it does not start a new activity
-			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			
-			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-
-			notification.setLatestEventInfo(context, title, message, intent);
-			notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		    notification.defaults |= Notification.DEFAULT_ALL;
-			notificationManager.notify(NOTIFICATION_ID, notification);
-			
+			try {
+				long when = System.currentTimeMillis();
+				
+				NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+				
+				Log.v("message",","+message);
+				
+				Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+				
+				
+				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+				
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+				builder.setAutoCancel(true);
+				builder.setContentTitle("Jugnoo");
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+				builder.setContentText(message);
+				builder.setTicker(message);
+				builder.setDefaults(Notification.DEFAULT_ALL);
+				builder.setWhen(when);
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+				builder.setSmallIcon(R.drawable.notif_icon);
+				builder.setContentIntent(intent);
+				
+				
+				Notification notification = builder.build();
+				notificationManager.notify(NOTIFICATION_ID, notification);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 		}
 
-	    @SuppressWarnings("deprecation")
 		private void notificationManagerResume(Context context, String message) {
 			
-			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+			try {
+				long when = System.currentTimeMillis();
+				
+				NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+				
+				Log.v("message",","+message);
+				
+				Intent notificationIntent = new Intent(context, HomeActivity.class);
+				
+				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+				
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+				builder.setAutoCancel(true);
+				builder.setContentTitle("Jugnoo");
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+				builder.setContentText(message);
+				builder.setTicker(message);
+				builder.setDefaults(Notification.DEFAULT_ALL);
+				builder.setWhen(when);
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+				builder.setSmallIcon(R.drawable.notif_icon);
+				builder.setContentIntent(intent);
+				
+				
+				Notification notification = builder.build();
+				notificationManager.notify(NOTIFICATION_ID, notification);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
-			Log.v("notification_message",","+message);
-			
-			Notification notification = new Notification(R.drawable.jugnoo_icon,
-		            "Jugnoo", System.currentTimeMillis());
-		    notification.setLatestEventInfo(this, "Jugnoo",
-		    		message, PendingIntent.getActivity(this,
-		                    0, new Intent(this, HomeActivity.class)
-		                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-		                                    | Intent.FLAG_ACTIVITY_SINGLE_TOP),
-		                    PendingIntent.FLAG_CANCEL_CURRENT));
-//		    notification.flags |= Notification.FLAG_ONGOING_EVENT;
-		    notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		    notification.defaults |= Notification.DEFAULT_ALL;
-			notificationManager.notify(NOTIFICATION_ID, notification);
 		}
 	    
 	    
