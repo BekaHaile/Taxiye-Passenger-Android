@@ -47,7 +47,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -309,7 +308,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	ArrayList<Location> locations = new ArrayList<Location>();
+	Location lastLocation;
 	
 	ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>(); 
 	
@@ -1299,10 +1298,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				long seconds = elapsedMillis / 1000;
 				double minutes = Math.ceil(((double)seconds) / 60.0);
 				
+				driverScreenMode = DriverScreenMode.D_RIDE_END;
+				
 				new GetAddressEndRide(minutes).execute();
 				
 			}
 		});
+		
+		
+		
 		
 		
 		
@@ -1367,9 +1371,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-		
-		locations = new ArrayList<Location>();
-		
+		lastLocation = null;
 		
 																	// map object initialized
 		if(map != null){
@@ -2226,6 +2228,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	}
 	
+	enum GPSState{
+		GPS_EVENT_FIRST_FIX, GPS_EVENT_SATELLITE_STATUS, GPS_EVENT_STARTED, GPS_EVENT_STOPPED
+	}
+	
+	GPSState gpsState;
+	
 	
 	GpsStatus.Listener gpsStatusListener = new GpsStatus.Listener() {
 		
@@ -2233,30 +2241,31 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		public void onGpsStatusChanged(int event) {
 			
 			
-//			switch(event){
-//				case GpsStatus.GPS_EVENT_FIRST_FIX:
-//					Toast.makeText(getApplicationContext(), "GPS_EVENT_FIRST_FIX "+event, Toast.LENGTH_SHORT).show();
-//					break;
-//					
-//				case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-//					Toast.makeText(getApplicationContext(), "GPS_EVENT_SATELLITE_STATUS "+event, Toast.LENGTH_SHORT).show();
-//					break;
-//					
-//				case GpsStatus.GPS_EVENT_STARTED:
-//					Toast.makeText(getApplicationContext(), "GPS_EVENT_STARTED "+event, Toast.LENGTH_SHORT).show();
-//					break;
-//					
-//				case GpsStatus.GPS_EVENT_STOPPED:
-//					Toast.makeText(getApplicationContext(), "GPS_EVENT_STOPPED "+event, Toast.LENGTH_SHORT).show();
-//					break;
-//			
-//				default:
-//					Toast.makeText(getApplicationContext(), " "+event, Toast.LENGTH_SHORT).show();
-//			
-//			}
+			switch(event){
+				case GpsStatus.GPS_EVENT_FIRST_FIX:
+					gpsState = GPSState.GPS_EVENT_FIRST_FIX;
+					Log.v("GpsStatus","GPS_EVENT_FIRST_FIX");
+					break;
+					
+				case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+					gpsState = GPSState.GPS_EVENT_SATELLITE_STATUS;
+					Log.v("GpsStatus","GPS_EVENT_SATELLITE_STATUS");
+					break;
+					
+				case GpsStatus.GPS_EVENT_STARTED:
+					gpsState = GPSState.GPS_EVENT_STARTED;
+					Log.v("GpsStatus","GPS_EVENT_STARTED");
+					break;
+					
+				case GpsStatus.GPS_EVENT_STOPPED:
+					gpsState = GPSState.GPS_EVENT_STOPPED;
+					Log.v("GpsStatus","GPS_EVENT_STOPPED");
+					break;
 			
+				default:
+					Log.v("GpsStatus","="+event);
 			
-			
+			}
 			
 		}
 	};
@@ -2395,26 +2404,27 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         	}
         	else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
         		
-        		runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						try{
-			        		waitChronometer.stop();
-			        		driverWaitBtn.setText("Start wait");
-			        		driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
-							waitStart = 0;
-		        		} catch(Exception e){
-		        			e.printStackTrace();
-		        		}
-					}
-				});
-        		try{
-        			startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
-        		} catch(Exception e){
-        			e.printStackTrace();
+        		if(waitChronometer.isRunning){
+	        		runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							try{
+				        		waitChronometer.stop();
+				        		driverWaitBtn.setText("Start wait");
+				        		driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
+								waitStart = 0;
+			        		} catch(Exception e){
+			        			e.printStackTrace();
+			        		}
+						}
+					});
+	        		try{
+	        			startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
+	        		} catch(Exception e){
+	        			e.printStackTrace();
+	        		}
         		}
-				
         		
         		editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
         		
@@ -2585,10 +2595,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
 			
 			final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-			Log.e("locations.size()", "="+locations.size());
-			if(locations.size() > 0){
+			if(lastLocation != null){
 				
-				final LatLng lastLatLng = new LatLng(locations.get(locations.size()-1).getLatitude(), locations.get(locations.size()-1).getLongitude());
+				final LatLng lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
 				
 				double displacement = distance(lastLatLng, currentLatLng);
 				Log.e("displacement", "="+displacement);
@@ -2617,7 +2626,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				
 			}
-			else if(locations.size() == 0){
+			else if(lastLocation == null){
 				
 				if(totalDistance == -1){
 					totalDistance = 0;
@@ -2669,11 +2678,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			}
 			
+			
 			map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
 
+			lastLocation = location;
 			
-			
-			locations.add(location);
 			
 			}
 		}
@@ -4349,7 +4358,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 									new DialogPopup().alertPopup(activity, "", "Ride started");
 
-									locations.clear();
+									lastLocation = null;
 									
 									HomeActivity.previousWaitTime = 0;
 									HomeActivity.totalDistance = -1;
@@ -4500,6 +4509,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
+									driverScreenMode = DriverScreenMode.D_IN_RIDE;
 									endRideInv.setVisibility(View.GONE);
 									driverEndRideSlider.setProgress(100);
 									driverEndRideText.setVisibility(View.VISIBLE);
@@ -4517,7 +4527,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									new DialogPopup().alertPopup(activity, "", "Ride ended.");
 
-									locations.clear();
+									lastLocation = null;
 									
 									map.clear();
 									
@@ -4581,6 +4591,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
+								driverScreenMode = DriverScreenMode.D_IN_RIDE;
 								endRideInv.setVisibility(View.GONE);
 								driverEndRideSlider.setProgress(100);
 								driverEndRideText.setVisibility(View.VISIBLE);
@@ -4593,6 +4604,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						@Override
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
+							driverScreenMode = DriverScreenMode.D_IN_RIDE;
 							DialogPopup.dismissLoadingDialog();
 							endRideInv.setVisibility(View.GONE);
 							driverEndRideSlider.setProgress(100);
@@ -4602,6 +4614,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					});
 		}
 		else {
+			driverScreenMode = DriverScreenMode.D_IN_RIDE;
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			endRideInv.setVisibility(View.GONE);
 			driverEndRideSlider.setProgress(100);
@@ -5940,7 +5953,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						startUserFreeAPI = false;
 						try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
 						
-						locations.clear();
+						lastLocation = null;
 						
 						HomeActivity.totalDistance = -1;
 						Database database = new Database(HomeActivity.this);
@@ -6327,7 +6340,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 					@Override
 					public void run() {
-						locations.clear();
+						lastLocation = null;
 						
 						new Thread(new Runnable() {
 							
