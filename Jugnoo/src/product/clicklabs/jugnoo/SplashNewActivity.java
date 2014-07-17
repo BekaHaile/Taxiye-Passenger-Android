@@ -324,12 +324,8 @@ public class SplashNewActivity extends Activity{
 										}
 										else{
 											
-											new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
+											new AccessTokenDataParseAsync(activity, response, accessToken, id).execute();
 											
-											loginDataFetched = true;
-											
-											DialogPopup.showLoadingDialog(activity, "Loading...");
-											DialogPopup.dismissLoadingDialog();
 										}
 									}
 								}  catch (Exception exception) {
@@ -358,6 +354,50 @@ public class SplashNewActivity extends Activity{
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 
+	}
+	
+	
+	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String>{
+		
+		Activity activity;
+		String response, accessToken, id;
+		
+		public AccessTokenDataParseAsync(Activity activity, String response, String accessToken, String id){
+			this.activity = activity;
+			this.response = response;
+			this.accessToken = accessToken;
+			this.id = id;
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "excep";
+			}
+			
+			return "";
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			
+			if(result.equalsIgnoreCase("excep")){
+				new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+			}
+			else{
+
+				loginDataFetched = true;
+				
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.dismissLoadingDialog();
+			}
+			
+		}
+		
 	}
 	
 	

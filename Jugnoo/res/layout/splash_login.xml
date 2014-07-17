@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="35px"
             android:background="@drawable/transparent"
-            android:text="Forgot Password"
+            android:text="Forgot Password?"
             android:textColor="@drawable/white_color_selector"
             android:textSize="36px" 
             

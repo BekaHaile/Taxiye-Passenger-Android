@@ -1,7 +1,12 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -45,15 +50,59 @@ public class JSONParser {
 		
 		int currentUserStatus = userData.getInt("current_user_status");
 		
+		
 		if(currentUserStatus == 1){
+			
 			HomeActivity.userMode = UserMode.DRIVER;
 			
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 			
 			String screenMode = pref.getString(Data.SP_DRIVER_SCREEN_MODE, "");
 			
+			
+			int engagementStatus = -1;
+			
+			//TODO
+			try{
+				if(!"".equalsIgnoreCase(pref.getString(Data.SP_D_ENGAGEMENT_ID, ""))){
+					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+					nameValuePairs.add(new BasicNameValuePair("engage_id", pref.getString(Data.SP_D_ENGAGEMENT_ID, "")));
+					
+					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
+					
+					if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+						Log.e("timeout","=");
+					}
+					else{
+						try{
+							JSONObject jObject = new JSONObject(result);
+							engagementStatus = jObject.getInt("log");
+						} catch(Exception e){
+							e.printStackTrace();
+						}
+					}
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout
+			if(engagementStatus == 1){
+				screenMode = Data.D_START_RIDE;
+			}
+			else if(engagementStatus == 2){
+				screenMode = Data.D_IN_RIDE;
+			}
+			else{
+				screenMode = "";
+			}
+			
+			
 			if("".equalsIgnoreCase(screenMode)){
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
+				clearSPData(context);
 			}
 			else{
 				
@@ -120,10 +169,56 @@ public class JSONParser {
 			
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 			
+			
 			String screenMode = pref.getString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+			
+
+			int engagementStatus = -1;
+			
+			//TODO
+			try{
+				if(!"".equalsIgnoreCase(pref.getString(Data.SP_C_ENGAGEMENT_ID, ""))){
+					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+					nameValuePairs.add(new BasicNameValuePair("engage_id", pref.getString(Data.SP_C_ENGAGEMENT_ID, "")));
+					
+					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
+					
+					if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+						Log.e("timeout","=");
+					}
+					else{
+						try{
+							JSONObject jObject = new JSONObject(result);
+							engagementStatus = jObject.getInt("log");
+						} catch(Exception e){
+							e.printStackTrace();
+						}
+					}
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout
+			if(engagementStatus == 1){
+				screenMode = Data.P_REQUEST_FINAL;
+			}
+			else if(engagementStatus == 2){
+				screenMode = Data.P_IN_RIDE;
+			}
+			else if(engagementStatus == 3){
+				screenMode = Data.P_RIDE_END;
+			}
+			else{
+				screenMode = "";
+			}
+			
 			
 			if("".equalsIgnoreCase(screenMode)){
 				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				clearSPData(context);
 			}
 			else{
 				
@@ -158,11 +253,6 @@ public class JSONParser {
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "0"));
-					HomeActivity.previousWaitTime = Double.parseDouble(pref.getString(Data.SP_WAIT_TIME, "0"));
-					
-					HomeActivity.waitStart = 2;
-					
-					Log.e("Data.SP_WAIT_TIME on login ", "=="+HomeActivity.previousWaitTime);
 					
 					String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
 					String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
@@ -195,6 +285,75 @@ public class JSONParser {
 		
 	}
 	
+	
+	
+	
+	public void clearSPData(final Context context){
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+        	
+        	SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+    		Editor editor = pref.edit();
+        		
+        		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
+        		
+        		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
+        		editor.putString(Data.SP_D_CUSTOMER_ID, "");
+        		editor.putString(Data.SP_D_LATITUDE, "0");
+        		editor.putString(Data.SP_D_LONGITUDE, "0");
+        		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
+        		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
+        		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
+        		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
+        		
+        		
+        		
+        		
+        		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+        		editor.putString(Data.SP_WAIT_TIME, "0");
+        		editor.putString(Data.SP_LAST_LATITUDE, "0");
+        		editor.putString(Data.SP_LAST_LONGITUDE, "0");
+        		
+        		
+        		editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+				editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+				editor.putString(Data.SP_D_NR_USER_ID, "");
+				editor.putString(Data.SP_D_NR_LATITUDE, "");
+				editor.putString(Data.SP_D_NR_LONGITUDE, "");
+        		
+        		
+        		
+        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+        		
+        		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
+        		editor.putString(Data.SP_C_DRIVER_ID, "");
+        		editor.putString(Data.SP_C_LATITUDE, "0");
+        		editor.putString(Data.SP_C_LONGITUDE, "0");
+        		editor.putString(Data.SP_C_DRIVER_NAME, "");
+        		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
+        		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
+        		editor.putString(Data.SP_C_DRIVER_PHONE, "");
+        		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
+        		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
+        		
+        		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
+        		editor.putString(Data.SP_C_TOTAL_FARE, "0");
+        		editor.putString(Data.SP_C_WAIT_TIME, "0");
+        		
+        	
+        	editor.commit();
+    		
+        	
+        	Database database = new Database(context);
+			database.deleteSavedPath();
+			database.close();
+        	
+		
+			}
+		}).start();
+	}
 	
 	
 	
