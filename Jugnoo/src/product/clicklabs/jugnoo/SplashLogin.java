@@ -312,7 +312,6 @@ public class SplashLogin extends Activity{
 																		Log.e("Data.fbUserName","="+Data.fbUserName);
 																		Log.e("Data.userEmail","="+Data.fbUserEmail);
 
-																		//TODO
 																		sendFacebookLoginValues(SplashLogin.this, "");
 //																		new CheckDeviceTokenAsync("", "", 1).execute();
 																		
@@ -394,8 +393,6 @@ public class SplashLogin extends Activity{
 		
 		
 		
-		Data.locationFetcher = new LocationFetcher(SplashLogin.this);
-		
 		
 		
 		try {																						// to get AppVersion, OS version, country code and device name
@@ -437,6 +434,19 @@ public class SplashLogin extends Activity{
 //		}
 		
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if(Data.locationFetcher != null){
+			Data.locationFetcher.destroy();
+			Data.locationFetcher = null;
+		}
+		Data.locationFetcher = new LocationFetcher(SplashLogin.this);
+		
+	}
+	
 	
 	public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
@@ -530,71 +540,6 @@ public class SplashLogin extends Activity{
 	boolean isEmailValid(CharSequence email) {
 		return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 	}
-	
-	
-//	class CheckDeviceTokenAsync extends AsyncTask<String, Integer, String>{
-//		
-//		String emailId, password;
-//		int flag;
-//		public CheckDeviceTokenAsync(String emailId, String password, int flag){
-//			this.emailId = emailId;
-//			this.password = password;
-//			this.flag = flag;
-//		}
-//		
-//		@Override
-//		protected void onPreExecute() {
-//			super.onPreExecute();
-//			
-//			DialogPopup.showLoadingDialog(SplashLogin.this, "Loading...");
-//		}
-//		
-//		@Override
-//		protected String doInBackground(String... params) {
-//			
-//			String msg = "";
-//			
-//			try {
-//				
-//				gcm = GoogleCloudMessaging.getInstance(SplashLogin.this);
-//			    regid = getRegistrationId(SplashLogin.this);
-//			    Data.deviceToken = regid;
-//
-//			    Log.i("deviceToken", Data.deviceToken + "..");
-//			    
-//			    if (regid.isEmpty()) {
-//			    	regid = gcm.register(Data.GOOGLE_PROJECT_ID);
-//	                Data.deviceToken = regid;
-//	                msg = "Device registered, registration ID=" + regid;
-//	                
-//	                setRegistrationId(SplashLogin.this, regid);
-//			    }
-//                
-//                Log.e("msg","="+msg);
-//            } catch (Exception ex) {
-//                msg = "Error :" + ex.getMessage();
-//                Log.e("msg","="+msg);
-//            }
-//			
-//			return null;
-//		}
-//		
-//		@Override
-//		protected void onPostExecute(String result) {
-//			super.onPostExecute(result);
-//			
-//			DialogPopup.dismissLoadingDialog();
-//			
-//			if(flag == 0){
-//				sendLoginValues(SplashLogin.this, emailId, password);
-//			}
-//			else{
-//				sendFacebookLoginValues(SplashLogin.this, "");
-//			}
-//			
-//		}
-//		
-//	}
 	
 	
 	

@@ -1257,6 +1257,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				else{
 					if(waitStart == 1){
+						Log.e("waitChronometer.stop()","in driverWaitBtn on click");
 						waitChronometer.stop();
 						driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
 						driverWaitBtn.setText("Start wait");
@@ -1288,6 +1289,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				GCMIntentService.clearNotifications(HomeActivity.this);
 				driverEndRideText.setVisibility(View.GONE);
+				Log.e("waitChronometer.stop()","in driverEndRideSlider on click");
 				waitChronometer.stop();
 				
 				driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
@@ -1748,7 +1750,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	public void switchDriverScreen(DriverScreenMode mode){
 		if(userMode == UserMode.DRIVER){
 			
-			saveDataOnPause();
+			saveDataOnPause(false);
 			
 		if(mode == DriverScreenMode.D_RIDE_END){
 			mapLayout.setVisibility(View.GONE);
@@ -1937,7 +1939,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	public void switchPassengerScreen(PassengerScreenMode mode){
 		if(userMode == UserMode.PASSENGER){
 		
-			saveDataOnPause();
+			saveDataOnPause(false);
 			
 		if(mode == PassengerScreenMode.P_RIDE_END){
 			mapLayout.setVisibility(View.GONE);
@@ -2241,7 +2243,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	//TODO GPS State
 	GpsStatus.Listener gpsStatusListener = new GpsStatus.Listener() {
 		
 		@Override
@@ -2408,7 +2409,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	public void saveDataOnPause(){
+	public void saveDataOnPause(final boolean stopWait){
 		
 		new Thread(new Runnable() {
 			
@@ -2440,26 +2441,29 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
 					
-					if(waitChronometer.isRunning){
-			    		runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								try{
-					        		waitChronometer.stop();
-					        		driverWaitBtn.setText("Start wait");
-					        		driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
-									waitStart = 0;
-				        		} catch(Exception e){
-				        			e.printStackTrace();
-				        		}
-							}
-						});
-			    		try{
-			    			startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
-			    		} catch(Exception e){
-			    			e.printStackTrace();
-			    		}
+					if(stopWait){
+						if(waitChronometer.isRunning){
+				    		runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									try{
+										Log.e("waitChronometer.stop()","in onPause on click");
+						        		waitChronometer.stop();
+						        		driverWaitBtn.setText("Start wait");
+						        		driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
+										waitStart = 0;
+					        		} catch(Exception e){
+					        			e.printStackTrace();
+					        		}
+								}
+							});
+				    		try{
+				    			startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
+				    		} catch(Exception e){
+				    			e.printStackTrace();
+				    		}
+						}
 					}
 					
 					editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
@@ -2582,7 +2586,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		locationManager.removeUpdates(locationListener);
 		
-		saveDataOnPause();
+		saveDataOnPause(true);
 		
 		super.onPause();
 	}
@@ -2613,7 +2617,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         	
     		GCMIntentService.clearNotifications(HomeActivity.this);
     		
-	        Data.locationFetcher.destroy();
+    		try{
+    			Data.locationFetcher.destroy();
+    		} catch(Exception e){
+    			e.printStackTrace();
+    		}
 	        AQUtility.cleanCacheAsync(HomeActivity.this);
 	        
 	        
@@ -2628,6 +2636,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         
         super.onDestroy();
     }
+	
 	
 	
 	
@@ -2649,10 +2658,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 				if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
 					
-					saveDataOnPause();
+					saveDataOnPause(false);
 					
 					//TODO
-//					if(gpsState == GPSState.GPS_EVENT_FIRST_FIX){
+					if(gpsState == GPSState.GPS_EVENT_FIRST_FIX){
 					
 					final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 					if(lastLocation != null){
@@ -2743,10 +2752,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 					lastLocation = location;
 					
-//					}
-//					else{
-//						buildGpsNotLockedAlert();
-//					}
+					}
+					else{
+						buildGpsNotLockedAlert();
+					}
 				}
 		}
 	};
@@ -3775,8 +3784,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										
 										passengerConnectionLostHandler.postDelayed(passengerCLRunnable, 120000);
 										
-										//TODO
-										
 										
 									}
 									
@@ -3820,10 +3827,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			params.put("access_token", Data.userData.accessToken);
 			params.put("session_id", Data.cSessionId);
+			params.put("engage_id", Data.cEngagementId);
 			
 			Log.i("checkSessionStateByCustomerAsync", "=");
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("session_id", Data.cSessionId);
+			Log.i("engage_id", Data.cEngagementId);
 			
 		
 			AsyncHttpClient client = new AsyncHttpClient();
@@ -3841,13 +3850,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								
 								if(!jObj.isNull("error")){
 									
-									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
-									}
-									else{
 									}
 								}
 								else{
@@ -4596,6 +4602,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									waitStart = 2;
 									waitChronometer.stop();
+									Log.e("waitChronometer.stop()","in endRideAPi on click");
 									
 						        	driverScreenMode = DriverScreenMode.D_RIDE_END;
 									switchDriverScreen(driverScreenMode);
@@ -6155,7 +6162,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						@Override
 						public void run() {
 							DialogPopup.dismissLoadingDialog();
-							//TODO
 							clearSPData();
 							
 							map.clear();
