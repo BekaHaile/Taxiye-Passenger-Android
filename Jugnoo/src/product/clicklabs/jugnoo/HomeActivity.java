@@ -2745,6 +2745,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						
 						
 						
+						
 					}
 					
 					
@@ -3347,6 +3348,26 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        }
 	        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
 	        	cancelRequestBtn.setText("Cancel request in 5s ?");
+	        	
+	        	//TODO
+	        	
+	        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+				Editor editor = pref.edit();
+	        	editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
+					
+					editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
+					editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
+					editor.putString(Data.SP_C_LATITUDE, ""+Data.assignedDriverInfo.latLng.latitude);
+					editor.putString(Data.SP_C_LONGITUDE, ""+Data.assignedDriverInfo.latLng.longitude);
+					editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
+					editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
+					editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
+					editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+					editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
+					editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
+	        	
+					editor.commit();
+	        	
 	        	beforeCancelRequestAsync = new BeforeCancelRequestAsync();
 	        	beforeCancelRequestAsync.execute();
 	        }
@@ -4063,13 +4084,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								else{
 									
 //									{
-//								    "user_data": {
-//							        "user_name": "Tirthankar",
-//							        "phone_no": "+919803879562",
-//							        "user_image": "http://graph.facebook.com/100001398069768/picture?width=160&height=160"
-//							        "user_rating": ""
-//							    }
-//							}
+//								    	"user_data": {
+//							        		"user_name": "Tirthankar",
+//							        		"phone_no": "+919803879562",
+//							        		"user_image": "http://graph.facebook.com/100001398069768/picture?width=160&height=160"
+//							        		"user_rating": ""
+//							    		}
+//									}
 
 									
 									JSONObject userData = jObj.getJSONObject("user_data");
@@ -4081,8 +4102,23 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										e.printStackTrace();
 									}
 									
-									Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, userData.getString("user_name"),
-											userData.getString("user_image"), userData.getString("phone_no"), rating);
+									
+									String userName = userData.getString("user_name");
+									String userImage = userData.getString("user_image");
+									String phoneNo = userData.getString("phone_no");
+									
+									if(userName == null){
+										userName = "";
+									}
+									if(userImage == null){
+										userImage = "http://jugnoo-images.s3.amazonaws.com/user_profile/user.png";
+									}
+									if(phoneNo == null){
+										phoneNo = "";
+									}
+									
+									Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, userName,
+											userImage, userImage, rating);
 									
 									
 									
@@ -4098,8 +4134,26 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									editor.putString(Data.SP_D_NR_USER_ID, "");
 									editor.putString(Data.SP_D_NR_LATITUDE, "");
 									editor.putString(Data.SP_D_NR_LONGITUDE, "");
+									
+									
+									editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_START_RIDE);
+									
+									editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
+									editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
+									
+									editor.putString(Data.SP_D_LATITUDE, ""+Data.dCustLatLng.latitude);
+									editor.putString(Data.SP_D_LONGITUDE, ""+Data.dCustLatLng.longitude);
+									
+									editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
+									editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
+									editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
+									editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
+									
 									editor.commit();
 									
+									
+									
+									//TODO
 									
 									driverConnectionLostHandler = new Handler();
 									driverCLRunnable = new Runnable() {
@@ -5757,8 +5811,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
 									Data.cEngagementId = "";
 									Data.mapTarget = map.getCameraPosition().target;
-									
-									//TODO
 									
 									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 									Editor editor = pref.edit();
