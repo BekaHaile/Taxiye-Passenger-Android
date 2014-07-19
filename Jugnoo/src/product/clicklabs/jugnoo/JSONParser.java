@@ -319,12 +319,6 @@ public class JSONParser {
         		editor.putString(Data.SP_LAST_LONGITUDE, "0");
         		
         		
-        		editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-				editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-				editor.putString(Data.SP_D_NR_USER_ID, "");
-				editor.putString(Data.SP_D_NR_LATITUDE, "");
-				editor.putString(Data.SP_D_NR_LONGITUDE, "");
-        		
         		
         		
         		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
