@@ -361,6 +361,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	boolean bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false, userCanceledDialogShown = false, startUserFreeAPI = false;
 	boolean loggedOut = false, zoomedToMyLocation = false;
 	
+	static boolean appPaused;
+	
 	Handler driverConnectionLostHandler, passengerConnectionLostHandler;
 	Runnable driverCLRunnable, passengerCLRunnable;
 	AlertDialog gpsDialogAlert;
@@ -2374,7 +2376,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	
+	//TODO App paused location changed here
 	LocationListener locationListener = new LocationListener() {
 		
 		@Override
@@ -2402,6 +2404,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		@Override
 		public void onLocationChanged(Location location) {
 			Log.e("locationListener location changed","="+location);
+			if(appPaused){
+				drawLocationChanged(location);
+			}
 		}
 	};
 	
@@ -2455,6 +2460,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	@Override
 	protected void onResume() {
+		
+		appPaused = false;
+		
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         this.mWakeLock.acquire();
@@ -2651,7 +2659,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	protected void onPause() {
 		this.mWakeLock.release();
 		
-		
+		appPaused = true;
 		
 		saveDataOnPause(true);
 		
@@ -2722,12 +2730,26 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	
+	//TODO App resumed Location changes in here
 	OnMyLocationChangeListener myLocationChangeListener = new OnMyLocationChangeListener() {
 		
 		@Override
 		public void onMyLocationChange(Location location) {
 			
+			if(!appPaused){
+				drawLocationChanged(location);
+			}
+			
+		}
+	};
+	
+	
+	
+	public void drawLocationChanged(Location location){
+		
+		
+		try {
+			if(map != null){
 			if(!zoomedToMyLocation){
 				map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
 				zoomedToMyLocation = true;
@@ -2742,7 +2764,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					saveDataOnPause(false);
 					
 					//TODO GPS state check
-//					if(gpsState == GPSState.GPS_EVENT_FIRST_FIX){
+//				if(gpsState == GPSState.GPS_EVENT_FIRST_FIX){
 					
 					final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 					if(lastLocation != null){
@@ -2831,17 +2853,21 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 					
 					map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-		
+
 					lastLocation = location;
 					lastTime = System.currentTimeMillis();
 					
-//					}
-//					else{
-//						buildGpsNotLockedAlert();
-//					}
+//				}
+//				else{
+//					buildGpsNotLockedAlert();
+//				}
 				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	};
+	
+	}
 	
 	
 	
@@ -2964,7 +2990,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 
 	
-	//http://maps.googleapis.com/maps/api/directions/json?origin=30.7342187,76.78088307&destination=30.74571777,76.78635478&sensor=false&mode=driving&alternatives=true
+	//http://maps.googleapis.com/maps/api/directions/json?origin=30.7342187,76.78088307&destination=30.74571777,76.78635478&sensor=false&mode=driving&alternatives=false
 	public String makeURLPath(LatLng source, LatLng destination){
         StringBuilder urlString = new StringBuilder();
         urlString.append("http://maps.googleapis.com/maps/api/directions/json");
