@@ -109,7 +109,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	
 	
-	DrawerLayout drawerLayout;
+	DrawerLayout drawerLayout;																		// views declaration
 	
 	
 	//menu bar 
@@ -303,12 +303,19 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	
+																								// data variables declaration
+	
+	
+	
 	PowerManager.WakeLock mWakeLock;
 	
 	
 	
 	
+	
 	Location lastLocation;
+	long lastTime;
 	
 	ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>(); 
 	
@@ -357,6 +364,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	Handler driverConnectionLostHandler, passengerConnectionLostHandler;
 	Runnable driverCLRunnable, passengerCLRunnable;
 	AlertDialog gpsDialogAlert;
+	
+	
 	
 	
 	@Override
@@ -1374,6 +1383,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		lastLocation = null;
+		lastTime = 0;
 		
 																	// map object initialized
 		if(map != null){
@@ -2762,7 +2772,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							}).start();
 						}
 						else{
-							new CreatePathAsyncTask(lastLatLng, currentLatLng).execute();
+							new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement).execute();
 						}
 						
 					}
@@ -2805,7 +2815,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									}).start();
 								}
 								else{
-									new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng).execute();
+									new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng, displacement).execute();
 								}
 								
 							} catch(Exception e){
@@ -2823,6 +2833,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
 		
 					lastLocation = location;
+					lastTime = System.currentTimeMillis();
 					
 //					}
 //					else{
@@ -2894,19 +2905,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-//	public Bitmap createCarMarkerBitmap(){
-//		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
-//		int width = (int)(70.0f * scale);
-//		int height = (int)(70.0f * scale);
-//		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-//		Canvas canvas = new Canvas(mDotMarkerBitmap);
-//		Drawable shape = getResources().getDrawable(R.drawable.car_android);
-//		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
-//		shape.draw(canvas);
-//		return mDotMarkerBitmap;
-//	}
-	
-	
 	
 	public Bitmap createCarMarkerBitmap(){
 		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
@@ -2966,7 +2964,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 
 	
-	//http://maps.googleapis.com/maps/api/directions/json?origin=36.76,76.78&destination=36.86,76.88&sensor=false&mode=driving&alternatives=true
+	//http://maps.googleapis.com/maps/api/directions/json?origin=30.7342187,76.78088307&destination=30.74571777,76.78635478&sensor=false&mode=driving&alternatives=true
 	public String makeURLPath(LatLng source, LatLng destination){
         StringBuilder urlString = new StringBuilder();
         urlString.append("http://maps.googleapis.com/maps/api/directions/json");
@@ -2980,15 +2978,20 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
                 .append(Double.toString(destination.latitude));
         urlString.append(",");
         urlString.append(Double.toString(destination.longitude));
-        urlString.append("&sensor=false&mode=driving&alternatives=true");
+        urlString.append("&sensor=false&mode=driving&alternatives=false");
         return urlString.toString();
 	}
 
 	
 	class CreatePathAsyncTask extends AsyncTask<Void, Void, String>{
 	    String url;
-	    CreatePathAsyncTask(LatLng source, LatLng destination){
-	        url = makeURLPath(source, destination);
+	    double displacementToCompare;
+	    LatLng source, destination;
+	    CreatePathAsyncTask(LatLng source, LatLng destination, double displacementToCompare){
+	    	this.source = source;
+	    	this.destination = destination;
+	        this.url = makeURLPath(source, destination);
+	        this.displacementToCompare = displacementToCompare;
 	    }
 	    
 	    @Override
@@ -3003,36 +3006,56 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    protected void onPostExecute(String result) {
 	        super.onPostExecute(result);   
 	        if(result!=null){
-	            drawPath(result);
+	            drawPath(result, displacementToCompare, source, destination);
 	        }
 	    }
 	}
 	
 	
-	public void drawPath(String result) {
+	//TODO add check for distance and displacement
+	public void drawPath(String result, double displacementToCompare, LatLng source, LatLng destination) {
 	    try {
-	           final JSONObject json = new JSONObject(result);
-	           JSONArray routeArray = json.getJSONArray("routes");
-	           JSONObject routes = routeArray.getJSONObject(0);
-	           JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
-	           String encodedString = overviewPolylines.getString("points");
-	           List<LatLng> list = decodePoly(encodedString);
-	           
-		    	JSONObject leg0 = json.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
-		    	totalDistance = totalDistance + leg0.getJSONObject("distance").getDouble("value");
-		    	
-		    	 Database database = new Database(HomeActivity.this);
-		    	 
-	           for(int z = 0; z<list.size()-1;z++){
-	                LatLng src= list.get(z);
-	                LatLng dest= list.get(z+1);
-	                map.addPolyline(new PolylineOptions()
-	                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+	    	
+	    	 final JSONObject json = new JSONObject(result);
+	    	
+	    	JSONObject leg0 = json.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
+	    	double distanceOfPath = leg0.getJSONObject("distance").getDouble("value");
+	    	
+	    	if(distanceOfPath <= (displacementToCompare*1.8)){														// distance would be approximately correct
+
+		           JSONArray routeArray = json.getJSONArray("routes");
+		           JSONObject routes = routeArray.getJSONObject(0);
+		           JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
+		           String encodedString = overviewPolylines.getString("points");
+		           List<LatLng> list = decodePoly(encodedString);
+			    	
+			    	totalDistance = totalDistance + distanceOfPath;
+			    	
+			    	 Database database = new Database(HomeActivity.this);
+			    	 
+		           for(int z = 0; z<list.size()-1;z++){
+		                LatLng src= list.get(z);
+		                LatLng dest= list.get(z+1);
+		                map.addPolyline(new PolylineOptions()
+		                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+		                .width(5)
+				        .color(Color.RED).geodesic(true));
+						database.insertPolyLine(src, dest);
+		            }
+		           database.close();
+	    	}
+	    	else{																									// displacement would be correct
+	    		totalDistance = totalDistance + displacementToCompare;
+	    		
+	    		 Database database = new Database(HomeActivity.this);
+	    		 map.addPolyline(new PolylineOptions()
+	                .add(new LatLng(source.latitude, source.longitude), new LatLng(destination.latitude, destination.longitude))
 	                .width(5)
 			        .color(Color.RED).geodesic(true));
-					database.insertPolyLine(src, dest);
-	            }
-	           database.close();
+					database.insertPolyLine(source, destination);
+					database.close();
+	    		
+	    	}
 	           
 	    } 
 	    catch (Exception e) {
@@ -4525,6 +4548,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									new DialogPopup().alertPopup(activity, "", "Ride started");
 
 									lastLocation = null;
+									lastTime = 0;
 									
 									HomeActivity.previousWaitTime = 0;
 									HomeActivity.totalDistance = -1;
@@ -4694,6 +4718,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									new DialogPopup().alertPopup(activity, "", "Ride ended.");
 
 									lastLocation = null;
+									lastTime = 0;
 									
 									map.clear();
 									
@@ -5815,7 +5840,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									editor.putString(Data.SP_LAST_LATITUDE, ""+Data.mapTarget.latitude);
 						    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.mapTarget.longitude);
 						    		editor.commit();
-						    		//TODO save session id
 									
 									stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 									
@@ -6083,6 +6107,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
 						
 						lastLocation = null;
+						lastTime = 0;
 						
 						HomeActivity.totalDistance = -1;
 						Database database = new Database(HomeActivity.this);
@@ -6541,6 +6566,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					@Override
 					public void run() {
 						lastLocation = null;
+						lastTime = 0;
 						
 						clearSPData();
 						
