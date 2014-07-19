@@ -57,6 +57,7 @@ public class Data {
 			
 			SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
 			
+			SP_C_SESSION_ID = "c_session_id",
 			SP_C_ENGAGEMENT_ID = "c_engagement_id",
 			SP_C_DRIVER_ID = "c_driver_id",
 			SP_C_LATITUDE = "c_latitude",

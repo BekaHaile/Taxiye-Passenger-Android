@@ -222,6 +222,7 @@ public class JSONParser {
 			}
 			else{
 				
+				String SP_C_SESSION_ID = pref.getString(Data.SP_C_SESSION_ID, "");
 				String SP_C_ENGAGEMENT_ID = pref.getString(Data.SP_C_ENGAGEMENT_ID, "");
 				String SP_C_DRIVER_ID = pref.getString(Data.SP_C_DRIVER_ID, "");
 				String SP_C_LATITUDE = pref.getString(Data.SP_C_LATITUDE, "0");
@@ -233,6 +234,7 @@ public class JSONParser {
 				String SP_C_DRIVER_DISTANCE = pref.getString(Data.SP_C_DRIVER_DISTANCE, "");
 				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
+				Data.cSessionId = SP_C_SESSION_ID;
 				Data.cEngagementId = SP_C_ENGAGEMENT_ID;
 				Data.cDriverId = SP_C_DRIVER_ID;
 				
@@ -326,7 +328,8 @@ public class JSONParser {
         		
         		
         		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
-        		
+
+        		editor.putString(Data.SP_C_SESSION_ID, "");
         		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
         		editor.putString(Data.SP_C_DRIVER_ID, "");
         		editor.putString(Data.SP_C_LATITUDE, "0");
