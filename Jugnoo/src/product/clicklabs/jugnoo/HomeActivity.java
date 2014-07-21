@@ -2128,6 +2128,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			case P_BEFORE_REQUEST_FINAL:
 				
 				if(map != null){
+					
+					//TODO
+					if(Data.mapTarget == null){
+						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+						String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
+						String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+						Data.mapTarget = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+					}
+					
+					
 					map.clear();
 					MarkerOptions markerOptions = new MarkerOptions();
 					markerOptions.title("pickup location");
@@ -2170,6 +2180,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			case P_REQUEST_FINAL:
 				
 				if(map != null){
+					
+					if(Data.mapTarget == null){
+						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+						String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
+						String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+						Data.mapTarget = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+					}
+					
 					map.clear();
 					MarkerOptions markerOptions = new MarkerOptions();
 					markerOptions.title("pickup location");

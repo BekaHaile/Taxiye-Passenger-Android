@@ -8,7 +8,7 @@
     
     
     
-    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
+    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
     <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> <!-- Dev -->
     
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -23,9 +23,9 @@
 	
 	
 	
+	    <!-- \n\nPeople with autos can offer rides to users who find taxis a bit too expensive. -->
 	
 	<string name="about_1_text">Jugnoo helps you provide a friendly and affordable ride within the Chandigarh tricity area.
-	    \n\nPeople with cars can offer rides to users who find taxis a bit too expensive.
 	    \n\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.\n</string>
 	    
 	<string name="about_2_text">Rate card</string>
