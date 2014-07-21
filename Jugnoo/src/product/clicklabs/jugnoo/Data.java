@@ -92,6 +92,7 @@ public class Data {
 	// Dev staged :   http://54.81.229.172:8000
 	// live 1st:    http://dev.jugnoo.in:3000
 	// live 2nd:    http://dev.jugnoo.in:4000
+	// live 3rd:    http://dev.jugnoo.in:4002
 	public static final String SERVER_URL = "http://54.81.229.172:8000";
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";

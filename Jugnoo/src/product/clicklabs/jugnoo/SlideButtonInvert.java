@@ -30,7 +30,7 @@ public class SlideButtonInvert extends SeekBar {
             } else
                 return false;
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (getProgress() < 20){
+            if (getProgress() < 35){
                 handleSlide();
             }
             else{

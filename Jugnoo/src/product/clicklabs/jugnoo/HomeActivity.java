@@ -968,6 +968,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
+				beforeCancelRequestAsync.cancel(true);
 				cancelCustomerRequestAsync(HomeActivity.this, 1, 0);
 			}
 		});
@@ -1212,6 +1213,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        @Override
 	        public void handleSlide() {
 	        	
+	        	buildAlertMessageNoGps();
+	        	
 	        	startRideInv.setVisibility(View.VISIBLE);
 	        	
 	        	GCMIntentService.clearNotifications(HomeActivity.this);
@@ -1437,6 +1440,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					else if(arg0.getTitle().equalsIgnoreCase("start ride location")){
 						
 						CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, "Start Location", "");
+						map.setInfoWindowAdapter(customIW);
+						
+						return false;
+					}
+					else if(arg0.getTitle().equalsIgnoreCase("driver position")){
+						
+						CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, "Driver Location", "");
 						map.setInfoWindowAdapter(customIW);
 						
 						return false;
@@ -1916,13 +1926,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				waitChronometer.setText(hh + ":" + mm + ":" + ss);
 				
 				
-				map.clear();
+				if(map != null){
+					map.clear();
+				}
 				
 				driverPassengerName.setText(Data.assignedCustomerInfo.name);
 				AQuery aq2 = new AQuery(driverPassengerImage);
 				aq2.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
 				
 			
+				
 				
 				
 				driverInitialLayout.setVisibility(View.GONE);
@@ -2115,6 +2128,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			case P_BEFORE_REQUEST_FINAL:
 				
 				if(map != null){
+					map.clear();
 					MarkerOptions markerOptions = new MarkerOptions();
 					markerOptions.title("pickup location");
 					markerOptions.snippet("");
@@ -2123,13 +2137,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 					pickupLocationMarker = map.addMarker(markerOptions);
 					
+					
 					MarkerOptions markerOptions1 = new MarkerOptions();
-					markerOptions1.title("");
+					markerOptions1.title("driver position");
 					markerOptions1.snippet("");
 					markerOptions1.position(Data.assignedDriverInfo.latLng);
 					markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
 					
-					map.addMarker(markerOptions);
+					map.addMarker(markerOptions1);
 					
 				}
 				
@@ -2155,6 +2170,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			case P_REQUEST_FINAL:
 				
 				if(map != null){
+					map.clear();
 					MarkerOptions markerOptions = new MarkerOptions();
 					markerOptions.title("pickup location");
 					markerOptions.snippet("");
@@ -2164,12 +2180,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					pickupLocationMarker = map.addMarker(markerOptions);
 					
 					MarkerOptions markerOptions1 = new MarkerOptions();
-					markerOptions1.title("");
+					markerOptions1.title("driver position");
 					markerOptions1.snippet("");
 					markerOptions1.position(Data.assignedDriverInfo.latLng);
 					markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
 					
-					map.addMarker(markerOptions);
+					map.addMarker(markerOptions1);
 					
 				}
 				
@@ -2236,6 +2252,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 			case P_IN_RIDE:
+				
+				if(map != null){
+					map.clear();
+				}
 				
 				driverName.setText(Data.assignedDriverInfo.name);
 				
@@ -2376,7 +2396,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	//TODO App paused location changed here
 	LocationListener locationListener = new LocationListener() {
 		
 		@Override
@@ -2415,7 +2434,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	void buildAlertMessageNoGps() {
-		
+		if(!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
 		if(gpsDialogAlert != null && gpsDialogAlert.isShowing()){
 	    }
 		else{
@@ -2435,6 +2454,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		    gpsDialogAlert = null;
 		    gpsDialogAlert = builder.create();
 		    gpsDialogAlert.show();
+		}
 		}
 	}
 	
@@ -2469,7 +2489,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		super.onResume();
 		
 		
-		
+		buildAlertMessageNoGps();
 
 		
 	    
@@ -2580,8 +2600,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			}
 			else if(userMode == UserMode.PASSENGER){
-				
-			    GCMIntentService.clearNotifications(getApplicationContext());
+			    
 				
 				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 				Editor editor = pref.edit();
@@ -2661,6 +2680,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		appPaused = true;
 		
+		GCMIntentService.clearNotifications(getApplicationContext());
+		
 		saveDataOnPause(true);
 		
 		super.onPause();
@@ -2730,7 +2751,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	//TODO App resumed Location changes in here
 	OnMyLocationChangeListener myLocationChangeListener = new OnMyLocationChangeListener() {
 		
 		@Override
@@ -3038,7 +3058,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	//TODO add check for distance and displacement
 	public void drawPath(String result, double displacementToCompare, LatLng source, LatLng destination) {
 	    try {
 	    	

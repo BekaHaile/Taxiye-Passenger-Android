@@ -264,7 +264,7 @@ public class SplashNewActivity extends Activity{
 		if(!"".equalsIgnoreCase(accessToken)){
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
-//				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
 				
 				RequestParams params = new RequestParams();
@@ -321,6 +321,7 @@ public class SplashNewActivity extends Activity{
 											else{
 												new DialogPopup().alertPopup(activity, "", errorMessage);
 											}
+											DialogPopup.dismissLoadingDialog();
 										}
 										else{
 											
@@ -331,9 +332,9 @@ public class SplashNewActivity extends Activity{
 								}  catch (Exception exception) {
 									exception.printStackTrace();
 									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.dismissLoadingDialog();
 								}
 		
-								DialogPopup.dismissLoadingDialog();
 							}
 		
 							@Override
@@ -341,6 +342,7 @@ public class SplashNewActivity extends Activity{
 								Log.e("request fail", arg0.toString());
 								DialogPopup.dismissLoadingDialog();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								DialogPopup.dismissLoadingDialog();
 							}
 						});
 			}
@@ -384,7 +386,7 @@ public class SplashNewActivity extends Activity{
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			
+
 			if(result.equalsIgnoreCase("excep")){
 				new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			}
@@ -392,10 +394,10 @@ public class SplashNewActivity extends Activity{
 
 				loginDataFetched = true;
 				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
-				DialogPopup.dismissLoadingDialog();
+//				DialogPopup.showLoadingDialog(activity, "Loading...");
 			}
-			
+
+			DialogPopup.dismissLoadingDialog();
 		}
 		
 	}
