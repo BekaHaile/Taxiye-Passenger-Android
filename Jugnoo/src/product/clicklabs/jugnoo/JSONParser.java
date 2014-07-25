@@ -209,7 +209,8 @@ public class JSONParser {
 				screenMode = Data.P_IN_RIDE;
 			}
 			else if(engagementStatus == 3){
-				screenMode = Data.P_RIDE_END;
+//				screenMode = Data.P_RIDE_END;
+				screenMode = "";
 			}
 			else{
 				screenMode = "";

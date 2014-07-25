@@ -25,7 +25,7 @@ public class DriverLocationUpdateService extends Service {
 	
 	static int count = 0; 
 	
-	static LocationFetcher locationFetcher;
+	LocationFetcher locationFetcher;
 	
 	SendDriverLocationToServer sendDriverLocationToServer;
 	
@@ -67,14 +67,6 @@ public class DriverLocationUpdateService extends Service {
        
         try{
         	
-        	if(locationFetcher == null){
-        		locationFetcher = new LocationFetcher(this);
-        	}
-        	else if(!locationFetcher.isConnected()){
-        		locationFetcher.destroy();
-        		locationFetcher = null;
-        		locationFetcher = new LocationFetcher(this);
-        	}
         	
         	if(sendDriverLocationToServer != null){
         		sendDriverLocationToServer.cancel(true);
@@ -153,6 +145,13 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected void onPreExecute() {
     		super.onPreExecute();
+    		
+    		if(locationFetcher != null){
+				locationFetcher.destroy();
+				locationFetcher = null;
+			}
+			locationFetcher = new LocationFetcher(DriverLocationUpdateService.this);
+			
     	}
     	
     	
@@ -161,7 +160,7 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		String SERVER_URL = "http://54.81.229.172:8000",
+    		String SERVER_URL = "http://dev.jugnoo.in:4003",
     				GOOGLE_PROJECT_ID = "506849624961", 
     				PROPERTY_REG_ID = "registration_id", 
     				PROPERTY_APP_VERSION = "appVersion";
@@ -298,6 +297,9 @@ public class DriverLocationUpdateService extends Service {
     		count++;
     		noUpdate = false;
         	
+			locationFetcher.destroy();
+			locationFetcher = null;
+    		
         	sendDriverLocationToServer = null;
         	
         	sendDriverLocationToServer = new SendDriverLocationToServer();

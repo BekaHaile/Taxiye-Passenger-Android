@@ -686,12 +686,19 @@ public class SplashLogin extends Activity{
 			btnConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					dialog.dismiss();
-					if(flag == 0){
-						sendFacebookLoginValues(SplashLogin.this, etCode.getText().toString());
+					String code = etCode.getText().toString().trim();
+					if("".equalsIgnoreCase(code)){
+						etCode.requestFocus();
+						etCode.setError("Code can't be empty.");
 					}
 					else{
-						sendSignupValues(SplashLogin.this, enteredEmail, etCode.getText().toString());
+						dialog.dismiss();
+						if(flag == 0){
+							sendFacebookLoginValues(SplashLogin.this, code);
+						}
+						else{
+							sendSignupValues(SplashLogin.this, enteredEmail, code);
+						}
 					}
 				}
 				

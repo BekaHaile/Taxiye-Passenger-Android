@@ -87,12 +87,14 @@ public class Data {
 	
 	
 	
+	
 	// dev review http://107.21.79.63:4001
 	//Dev staged :  "http://54.81.229.172:7000";
 	// Dev staged :   http://54.81.229.172:8000
 	// live 1st:    http://dev.jugnoo.in:3000
 	// live 2nd:    http://dev.jugnoo.in:4000
 	// live 3rd:    http://dev.jugnoo.in:4002
+	// review 3:    http://dev.jugnoo.in:4003
 	public static final String SERVER_URL = "http://54.81.229.172:8000";
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";
@@ -221,29 +223,6 @@ public class Data {
 		 return options;
 	}
 	
-//	
-//	/**
-//	 * Function to register device with Google Cloud Messaging Services and receive Device Token
-//	 * @param context application context
-//	 */
-//	public static void registerForGCM(Context context){
-//		try { // registering GCM services
-//			GCMRegistrar.checkManifest(context);
-//			Data.deviceToken = GCMRegistrar.getRegistrationId(context);
-//			if (Data.deviceToken.equals("")) {
-//				GCMRegistrar.register(context, Data.GOOGLE_PROJECT_ID);
-//				Data.deviceToken = GCMRegistrar.getRegistrationId(context);
-//				Log.i("deviceToken in if", ">" + Data.deviceToken);
-//			} else {
-//				Log.i("GCM", "Already registered");
-//				Log.i("deviceToken....in else", ">" + Data.deviceToken);
-//				Log.i("deviceToken....length", ">"+Data.deviceToken.length());
-//				
-//			}
-//		} catch (Exception e) {
-//			Log.e("exception GCM", ""+e.toString());
-//		}
-//	}
 	
 	
 	

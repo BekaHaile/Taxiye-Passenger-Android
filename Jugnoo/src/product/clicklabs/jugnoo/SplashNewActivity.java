@@ -105,13 +105,13 @@ public class SplashNewActivity extends Activity{
 		AQUtility.cleanCacheAsync(SplashNewActivity.this);
 		
 		
+		
+		
 		gcm = GoogleCloudMessaging.getInstance(this);
 	    regid = getRegistrationId(this);
 	    Data.deviceToken = regid;
 
 	    Log.i("deviceToken", Data.deviceToken + "..");
-	    
-	    
 		
 	}
 	

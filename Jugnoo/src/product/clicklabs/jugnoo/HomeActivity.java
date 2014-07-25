@@ -315,7 +315,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	Location lastLocation;
-	long lastTime;
 	
 	ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>(); 
 	
@@ -973,13 +972,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			}
 		});
 		
-		beforeRequestFinalLayout.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-			}
-		});
+//		beforeRequestFinalLayout.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				
+//			}
+//		});
 		
 		
 		
@@ -1258,7 +1257,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			@Override
 			public void onClick(View v) {
-				if(waitStart == 2){
+				if(waitStart == 2){ 
 					waitChronometer.eclipsedTime =  (long)HomeActivity.previousWaitTime;
 					Log.e("waitChronometer.eclipsedTime on first start","="+waitChronometer.eclipsedTime);
 					waitChronometer.start();
@@ -1388,7 +1387,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		lastLocation = null;
-		lastTime = 0;
 		
 																	// map object initialized
 		if(map != null){
@@ -1522,6 +1520,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				    // Map unsettled
 					  Log.e("onMapUnsettled","=onMapUnsettled");
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+						  
+						  if(getDistanceTimeAddress != null){
+							  getDistanceTimeAddress.cancel(true);
+							  getDistanceTimeAddress = null;
+						  }
+						  
 						  centreInfoRl.setVisibility(View.INVISIBLE);
 						  centreInfoProgress.setVisibility(View.GONE);
 					  }
@@ -1536,7 +1540,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 						  getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
 						  getDistanceTimeAddress.execute();
-						  
 						  Log.e("==","==="+makeURLPath(map.getCameraPosition().target, Data.chandigarhLatLng));
 					  }
 				  }
@@ -1583,6 +1586,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 		
 		switchUserScreen(userMode);
+		
 		if(userMode == UserMode.DRIVER){
 			try{
 			SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -2129,7 +2133,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				if(map != null){
 					
-					//TODO
 					if(Data.mapTarget == null){
 						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 						String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
@@ -2893,7 +2896,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
 
 					lastLocation = location;
-					lastTime = System.currentTimeMillis();
 					
 //				}
 //				else{
@@ -3643,8 +3645,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
             		"latlng=" + curLatitude + "," + curLongitude 
             		+ "&sensor=true"));
             
-            String Status = jsonObj.getString("status");
-            if (Status.equalsIgnoreCase("OK")) {
+            String status = jsonObj.getString("status");
+            if (status.equalsIgnoreCase("OK")) {
                 JSONArray Results = jsonObj.getJSONArray("results");
                 JSONObject zero = Results.getJSONObject(0);
                 fullAddress = zero.getString("formatted_address");
@@ -4534,8 +4536,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		@Override
 		protected String doInBackground(String... params) {
-			if(Data.dCustLatLng != null){
-				fullAddress = getAddress(Data.dCustLatLng.latitude, Data.dCustLatLng.longitude);
+			if(myLocation != null){
+				fullAddress = getAddress(myLocation.getLatitude(), myLocation.getLongitude());
 				return fullAddress;
 			}
 			return "Unnamed";
@@ -4545,7 +4547,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 			DialogPopup.dismissLoadingDialog();
-			driverStartRideAsync(HomeActivity.this, fullAddress);
+			driverStartRideAsync(HomeActivity.this, result);
 		}
 		
 	}
@@ -4611,7 +4613,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									new DialogPopup().alertPopup(activity, "", "Ride started");
 
 									lastLocation = null;
-									lastTime = 0;
 									
 									HomeActivity.previousWaitTime = 0;
 									HomeActivity.totalDistance = -1;
@@ -4688,7 +4689,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 			DialogPopup.dismissLoadingDialog();
-			driverEndRideAsync(HomeActivity.this, waitMinutes, fullAddress);
+			driverEndRideAsync(HomeActivity.this, waitMinutes, result);
 		}
 		
 	}
@@ -4781,7 +4782,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									new DialogPopup().alertPopup(activity, "", "Ride ended.");
 
 									lastLocation = null;
-									lastTime = 0;
 									
 									map.clear();
 									
@@ -5294,112 +5294,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	
-	/**
-	 * ASync for fetching fb friends from server
-	 */
-	public void fetchInviteFriendsAsync1(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-			
-			params.put("fb_access_token", Data.fbAccessToken);
-			params.put("fb_id", Data.fbId);
-
-			Log.i("fb_access_token", "="+Data.fbAccessToken);
-			Log.i("fb_id", "="+Data.fbId);
-			
-		
-			AsyncHttpClient client = new AsyncHttpClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
-			client.post(Data.SERVER_URL + "/invite_friends", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-								}
-								else{
-									
-//									{
-//									    "friends_data": [
-//									        {
-//									            "fb_id": 544920818,
-//									            "fb_name": "Karan Sehgal",
-//									            "flag": 0
-//									        },
-//									        {
-//									            "fb_id": 597631367,
-//									            "fb_name": "Chinmay Agarwal",
-//									            "flag": 1
-//									        }
-//									    ]
-//									}
-									
-									
-									JSONArray friendsData = jObj.getJSONArray("friends_data");
-									
-									Data.friendInfos.clear();
-									
-									if(friendsData.length() > 0){
-										
-										for(int i=0; i<friendsData.length(); i++){
-											JSONObject friend = friendsData.getJSONObject(i);
-											Data.friendInfos.add(new FriendInfo(friend.getString("fb_id"), friend.getString("fb_name"), friend.getInt("flag")));
-										}
-										
-										Collections.sort(Data.friendInfos);
-										
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", "No friends found on Facebook.");
-									}
-									
-									
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-	
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-
-	}
 	
 	
 	/**
@@ -6170,7 +6064,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
 						
 						lastLocation = null;
-						lastTime = 0;
 						
 						HomeActivity.totalDistance = -1;
 						Database database = new Database(HomeActivity.this);
@@ -6629,7 +6522,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					@Override
 					public void run() {
 						lastLocation = null;
-						lastTime = 0;
 						
 						clearSPData();
 						

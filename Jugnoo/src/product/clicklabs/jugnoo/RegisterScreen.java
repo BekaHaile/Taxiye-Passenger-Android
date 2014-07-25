@@ -498,12 +498,19 @@ public class RegisterScreen extends Activity{
 			btnConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					dialog.dismiss();
-					if(facebookLogin){
-						sendFacebookSignupValues(RegisterScreen.this, etCode.getText().toString(), phoneNo, password);
+					String code = etCode.getText().toString().trim();
+					if("".equalsIgnoreCase(code)){
+						etCode.requestFocus();
+						etCode.setError("Code can't be empty.");
 					}
 					else{
-						sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, etCode.getText().toString());
+						dialog.dismiss();
+						if(facebookLogin){
+							sendFacebookSignupValues(RegisterScreen.this, code, phoneNo, password);
+						}
+						else{
+							sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, code);
+						}
 					}
 				}
 				
