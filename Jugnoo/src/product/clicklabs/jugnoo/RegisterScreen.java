@@ -63,6 +63,8 @@ public class RegisterScreen extends Activity{
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 
+		
+		
 
 		firstNameEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			

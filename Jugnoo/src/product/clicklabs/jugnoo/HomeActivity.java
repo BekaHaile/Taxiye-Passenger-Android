@@ -137,6 +137,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	RelativeLayout sosRl;
 	TextView sosText;
 	
+	RelativeLayout languagePrefrencesRl;
+	TextView languagePrefrencesText;
+	
 	RelativeLayout logoutRl;
 	TextView logoutText;
 	
@@ -429,6 +432,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		sosRl = (RelativeLayout) findViewById(R.id.sosRl);
 		sosText = (TextView) findViewById(R.id.sosText); sosText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		languagePrefrencesRl = (RelativeLayout) findViewById(R.id.languagePrefrencesRl);
+		languagePrefrencesText = (TextView) findViewById(R.id.languagePrefrencesText); languagePrefrencesText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		logoutRl = (RelativeLayout) findViewById(R.id.logoutRl);
 		logoutText = (TextView) findViewById(R.id.logoutText); logoutText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -779,6 +785,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				Intent callIntent = new Intent(Intent.ACTION_VIEW);
 		        callIntent.setData(Uri.parse("tel:100"));
 		        startActivity(callIntent);
+			}
+		});
+		
+		
+		languagePrefrencesRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(HomeActivity.this, LanguagePrefrencesActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		

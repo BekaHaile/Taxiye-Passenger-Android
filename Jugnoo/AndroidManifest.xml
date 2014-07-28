@@ -116,6 +116,12 @@
             android:screenOrientation="portrait" >
         </activity>
         
+           <activity
+            android:name="product.clicklabs.jugnoo.LanguagePrefrencesActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        
           
           
         <service

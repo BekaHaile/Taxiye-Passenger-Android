@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">जुगनू</string>
+    
+    
+    <string name="about_1_text">Jugnoo आपको चंडीगढ़ क्षेत्र के भीतर एक अनुकूल और किफायती सवारी दिलवान॓ में मदद करता है.\nदरों सस्ती हैं, और निश्चित रूप से एक अच्छा सौदा है.</string>
+	<string name="about_2_text">सवारी दरें</string>
+	<string name="about_3_text">प॓हल॓ 2 kms: Rs.30\n2 kms. के बाद: Rs. 10/km\nप्रतीक्षा समय: 15 मिनट के बाद 1.5/मिनट.</string>
+	
+
+</resources>

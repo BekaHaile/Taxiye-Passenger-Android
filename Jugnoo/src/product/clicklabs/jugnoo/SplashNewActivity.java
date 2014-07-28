@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidquery.util.AQUtility;
 import com.crashlytics.android.Crashlytics;
@@ -57,6 +59,17 @@ public class SplashNewActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
+		
+		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String languageSelected = preferences.getString(Data.LANGUAGE_SELECTED, "default");
+		if(!"default".equalsIgnoreCase(languageSelected)){
+			Locale locale = new Locale(languageSelected); 
+		    Locale.setDefault(locale);
+		    Configuration config = new Configuration();
+		    config.locale = locale;
+		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+		}
+		
 		setContentView(R.layout.splash_new);
 		
 		loginDataFetched = false;
@@ -72,6 +85,7 @@ public class SplashNewActivity extends Activity{
 		
 		progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
 		progressBar1.setVisibility(View.GONE);
+		
 		
 		
 		

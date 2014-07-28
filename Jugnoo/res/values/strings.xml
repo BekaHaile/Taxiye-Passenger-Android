@@ -20,17 +20,19 @@
 	<string name="fb_app_id">782131025144439</string>
     
 	
+	<string name="language_english_text">English</string>
+	<string name="language_hindi_text">हिंदी</string>
 	
 	
 	
 	    <!-- \n\nPeople with autos can offer rides to users who find taxis a bit too expensive. -->
 	
-	<string name="about_1_text">Jugnoo helps you provide a friendly and affordable ride within the Chandigarh tricity area.
-	    \n\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.\n</string>
-	    
+	<string name="about_1_text">Jugnoo helps you provide a friendly and affordable ride within the Chandigarh tricity area.\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.</string>
 	<string name="about_2_text">Rate card</string>
-	    
 	<string name="about_3_text">First 2 kms: Rs.30\nAfter 2 kms: Rs. 10/km\nWaiting time: Rs.1.5/min after 15 minutes.</string>
+	
+	
+	
 	
 	
 	
