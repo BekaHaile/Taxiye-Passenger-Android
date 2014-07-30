@@ -157,6 +157,7 @@ public class SplashNewActivity extends Activity{
 	}
 	
 	private void registerInBackground() {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 	    new AsyncTask<String, Integer, String>() {
 
 	        @Override
@@ -190,6 +191,10 @@ public class SplashNewActivity extends Activity{
 	        	//=Device registered, registration ID=APA91bHaLnaJLjUGLXDKcW39Gke0eK78tFRe1ByJsj8rmFS2boJ2_HNzvxkS39tfo0z6IahCUPyV49gpHx-2M3WzWmpHv4u4O0cGuYxN-aKuPx1SG4Gy-2WHBg8o3sSP_GtJgfThb3G36miecVxQ1xGafeKMgbV2sO9EP1aaVDyXI3t6bgS7gmQ
 	        }
 	    }.execute(null, null, null);
+		}
+		else{
+			new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+		}
 	}
 	
 	
@@ -245,18 +250,12 @@ public class SplashNewActivity extends Activity{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					
-					if (regid.isEmpty()){
-				        registerInBackground();
-				    }
-				    else{
-				    	accessTokenLogin(SplashNewActivity.this);
-				    }
-				}
-			}, 500);
+			if (regid.isEmpty()){
+		        registerInBackground();
+		    }
+		    else{
+		    	accessTokenLogin(SplashNewActivity.this);
+		    }
 			
 		}
 
@@ -466,7 +465,7 @@ public class SplashNewActivity extends Activity{
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
-			textHead.setText(title);
+//			textHead.setText(title);
 			textMessage.setText(message);
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));

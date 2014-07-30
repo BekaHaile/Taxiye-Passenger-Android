@@ -95,6 +95,10 @@ public class LanguagePrefrencesActivity extends Activity{
 		
 	}
 	
+	void refreshPage(){
+		title.setText(getResources().getString(R.string.select_language));
+	}
+	
 	
 	
 	class ViewHolderLanguage {
@@ -189,6 +193,8 @@ public class LanguagePrefrencesActivity extends Activity{
 				    
 					
 					notifyDataSetChanged();
+					
+					refreshPage();
 				}
 			});
 			

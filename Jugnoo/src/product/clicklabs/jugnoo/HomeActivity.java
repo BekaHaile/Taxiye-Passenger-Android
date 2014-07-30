@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -503,7 +504,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		beforeRequestFinalLayout = (RelativeLayout) findViewById(R.id.beforeRequestFinalLayout);
 
 		cancelRequestBtn = (Button) findViewById(R.id.cancelRequestBtn); cancelRequestBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		cancelRequestBtn.setText("Cancel request in 5s ?");
+		cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + "5s ?");
 
 		assignedDriverText = (TextView) findViewById(R.id.assignedDriverText); assignedDriverText.setTypeface(Data.regularFont(getApplicationContext()));
 		assignedDriverProgress = (ProgressBar) findViewById(R.id.assignedDriverProgress);
@@ -1171,6 +1172,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				 GCMIntentService.clearNotifications(HomeActivity.this);
+				 try{GCMIntentService.requestRemoveHandler.removeCallbacks(GCMIntentService.requestRemoveRunnable);} catch(Exception e){}
 				driverAcceptRideAsync(HomeActivity.this);
 			}
 		});
@@ -2540,7 +2542,70 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    }
 	    
 	    
+	    updateTextViews();
+	    
 	}
+	
+	
+	//TODO Update texts 
+	public void updateTextViews(){
+		Resources resources = getResources();
+		
+		driverModeText.setText(resources.getString(R.string.driver_mode));
+		inviteFriendText.setText(resources.getString(R.string.invite_friends));
+		bookingsText.setText(resources.getString(R.string.rides));
+		aboutText.setText(resources.getString(R.string.about));
+		sosText.setText(resources.getString(R.string.sos));
+		languagePrefrencesText.setText(resources.getString(R.string.language_preferences));
+		logoutText.setText(resources.getString(R.string.logout));
+		
+		
+		
+		
+		
+		
+		inRideRideInProgress.setText(resources.getString(R.string.ride_in_progress));
+		
+		driverNewRideRequestClickText.setText(resources.getString(R.string.click_to_view));
+		
+		driverStartRideText.setText(resources.getString(R.string.slide_to_start_your_ride));
+		
+		driverEndRideText.setText(resources.getString(R.string.slide_to_end_your_ride));
+		
+		reviewReachedDestinationText.setText(resources.getString(R.string.reached_destination));
+		reviewDistanceText.setText(resources.getString(R.string.distance));
+		reviewWaitText.setText(resources.getString(R.string.wait_time));
+		reviewFareText.setText(resources.getString(R.string.fare));
+		
+		if(userMode == UserMode.DRIVER){
+			reviewRatingText.setText(resources.getString(R.string.driver_rating));
+		}
+		else{
+			
+			
+			if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+				requestRideBtn.setText(resources.getString(R.string.request_ride));
+			}
+			else if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+				requestRideBtn.setText(resources.getString(R.string.assigning_driver));
+			}
+			
+			initialCancelRideBtn.setText(resources.getString(R.string.cancel_ride));
+			
+			
+			
+			
+			reviewRatingText.setText(resources.getString(R.string.customer_rating));
+			
+		}
+		
+		
+		
+		
+		
+		
+	}
+	
 	
 	
 	public void saveDataOnPause(final boolean stopWait){
@@ -3484,10 +3549,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
 		 	        
 		 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-	       	 		distanceString = "Nearest driver is " + distance + " away.";
+	       	 		distanceString = getResources().getString(R.string.nearest_driver_is) + distance + getResources().getString(R.string.away);
 			        }
 			        else{
-			        	distanceString = "Could not find nearest driver's distance.";
+			        	distanceString = getResources().getString(R.string.could_not_find_nearest_driver_distance);
 			        }
 		 	        
 		 	       	nearestDriverText.setText(distanceString);
@@ -3497,10 +3562,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        	
 		        	
 		        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-	        	 		distanceString = "Your ride is " + distance + " and will arrive \n in approximately " + duration + ".";
+	        	 		distanceString = "Your ride is " + distance + " away and will arrive in approximately " + duration + ".";
 			        }
 			        else{
-			        	distanceString = "Could not find nearest driver's distance.";
+			        	distanceString = getResources().getString(R.string.could_not_find_nearest_driver_distance);
 			        }
 		        	assignedDriverText.setText(distanceString);
 		        	
@@ -3508,8 +3573,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        
 	        }
 	        else{
-	        	distanceString = "No drivers nearby.";
-	        	nearestDriverText.setText("No drivers nearby.");
+	        	distanceString = getResources().getString(R.string.no_drivers_nearby);
+	        	nearestDriverText.setText(distanceString);
 		        assignedDriverText.setText("");
 	        }
 	        
@@ -3522,7 +3587,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        	startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	        }
 	        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
-	        	cancelRequestBtn.setText("Cancel request in 5s ?");
+	        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + "5s ?");
 	        	
 	        	//TODO driver info saved by customer
 	        	
@@ -3792,7 +3857,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			Log.e("BeforeCancelRequestAsync","==onpre");
-			cancelRequestBtn.setText("Cancel request in 5s ?");
+			cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + "5s ?");
 		}
 		
 		@Override
@@ -3837,7 +3902,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			super.onProgressUpdate(values);
 			try{
 				Log.e("values[0]","="+values[0]);
-				cancelRequestBtn.setText("Cancel request in " + values[0] + "s ?");
+				cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + values[0] + "s ?");
 			} catch(Exception e){
 				e.printStackTrace();
 			}
@@ -4974,7 +5039,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setText("Save to favorite"); textHead.setTypeface(Data.regularFont(getApplicationContext()));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(getApplicationContext()));
 			final EditText favoriteNameEt = (EditText) dialog.findViewById(R.id.favoriteNameEt); favoriteNameEt.setTypeface(Data.regularFont(getApplicationContext()));
 			
 			favoriteNameEt.setText(locationName);
@@ -5640,8 +5705,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
-			textHead.setText("No Drivers Available");
-			textMessage.setText("Currently there are no drivers available. We will look into it");
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
@@ -6241,7 +6304,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								if(getDistanceTimeAddress != null){
 									getDistanceTimeAddress.cancel(true);
 								}
-					        	cancelRequestBtn.setText("Cancel request in 5s ?");
+					        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + "5s ?");
 								
 								getAssignedDriverInfoAsync(HomeActivity.this);
 							}
