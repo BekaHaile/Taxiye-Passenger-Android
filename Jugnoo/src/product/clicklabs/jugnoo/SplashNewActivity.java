@@ -102,8 +102,6 @@ public class SplashNewActivity extends Activity{
 			
 			Data.deviceToken = getRegistrationId(this);
 			
-			
-			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}

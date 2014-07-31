@@ -254,7 +254,7 @@ public class GCMIntentService extends IntentService {
 									};
     	    						 
 									requestRemoveHandler = new Handler();
-									requestRemoveHandler.postDelayed(requestRemoveRunnable, 30000);
+									requestRemoveHandler.postDelayed(requestRemoveRunnable, 60000);
 									
 									
 	    	    					 

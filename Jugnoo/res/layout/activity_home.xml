@@ -70,7 +70,7 @@
                             android:layout_height="95px"
                             android:layout_marginLeft="66px"
                             android:background="#0000"
-                            android:hint="Search Place"
+                            android:hint="@string/search"
                             android:singleLine="true"
                             android:textSize="34px" />
 
@@ -359,7 +359,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="27px"
                         android:background="@drawable/blue_btn_selector"
-                        android:text="Call Driver"
+                        android:text="@string/call_driver"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size" />
 
@@ -558,7 +558,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="27px"
                         android:background="@drawable/blue_btn_selector"
-                        android:text="Accept Ride"
+                        android:text="@string/accept_ride"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size" />
 
@@ -570,7 +570,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="27px"
                         android:background="@drawable/red_btn_selector"
-                        android:text="Cancel Request"
+                        android:text="@string/cancel_request"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size" />
 
@@ -647,7 +647,7 @@
                             android:layout_marginLeft="56px"
                             android:layout_marginTop="10px"
                             android:background="@drawable/blue_btn_selector"
-                            android:text="Call"
+                            android:text="@string/call"
                             android:textColor="@drawable/white_color_selector"
                             android:textSize="36px" />
 
@@ -761,7 +761,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="27px"
                             android:background="@drawable/red_btn_selector"
-                            android:text="Cancel Ride"
+                            android:text="@string/cancel_ride"
                             android:textColor="@drawable/white_color_selector"
                             android:textSize="@dimen/button_text_size" />
                     </RelativeLayout>
@@ -1112,7 +1112,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="35px"
                     android:background="@drawable/blue_btn_selector"
-                    android:text="Submit"
+                    android:text="@string/submit"
                     android:textColor="@drawable/white_color_selector"
                     android:textSize="@dimen/button_text_size" />
             </RelativeLayout>
