@@ -8,6 +8,7 @@ package product.clicklabs.jugnoo;
 public class Log {
 
 	
+	
 	private static final boolean PRINT = true; 												// true for printing and false for not 
 	public Log(){}
 

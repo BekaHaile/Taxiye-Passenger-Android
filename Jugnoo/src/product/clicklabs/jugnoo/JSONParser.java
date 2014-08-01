@@ -32,10 +32,21 @@ public class JSONParser {
 		editor.putString(Data.SP_ID_KEY, Data.userData.id);
 		editor.commit();
 		
-		HomeActivity.userMode = UserMode.PASSENGER;
-		
-		HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-		
+		try{
+			int currentUserStatus = userData.getInt("current_user_status");
+			if(currentUserStatus == 1){
+				HomeActivity.userMode = UserMode.DRIVER;
+				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
+			}
+			else if(currentUserStatus == 2){
+				HomeActivity.userMode = UserMode.PASSENGER;
+				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			HomeActivity.userMode = UserMode.PASSENGER;
+			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+		}
 		
 	}
 	

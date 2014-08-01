@@ -23,21 +23,8 @@ public class DialogPopup {
 	void alertPopup(Activity activity, String title, String message) {
 		try {
 			if("".equalsIgnoreCase(title)){
-				title = activity.getResources().getString(R.string.alert);
+				title = "Alert";
 			}
-			
-			if(Data.SERVER_ERROR_MSG.equalsIgnoreCase(message)){
-				message = activity.getResources().getString(R.string.server_error);
-			}
-			else if(Data.SERVER_NOT_RESOPNDING_MSG.equalsIgnoreCase(message)){
-				message = activity.getResources().getString(R.string.server_not_responding);
-			}
-			else if(Data.CHECK_INTERNET_MSG.equalsIgnoreCase(message)){
-				message = activity.getResources().getString(R.string.check_internet_message);
-			}
-			
-			
-			
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.custom_message_dialog);

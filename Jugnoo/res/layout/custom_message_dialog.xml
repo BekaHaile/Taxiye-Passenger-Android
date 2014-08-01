@@ -70,7 +70,7 @@
                         android:layout_alignParentBottom="true"
                         android:background="@drawable/blue_btn_selector"
                         android:singleLine="true"
-                        android:text="@string/ok"
+                        android:text="OK"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size" 
                 android:layout_gravity="center_horizontal"

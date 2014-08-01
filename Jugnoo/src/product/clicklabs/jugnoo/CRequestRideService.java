@@ -130,7 +130,7 @@ public class CRequestRideService extends Service {
 				Log.i("===========================driverPos","="+driverPos);
 				if(driverPos > 0){
 					try{
-						Thread.sleep(60000);
+						Thread.sleep(30000);
 					} catch(Exception e){
 					}
 				}

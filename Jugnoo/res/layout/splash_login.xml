@@ -50,7 +50,7 @@
                 android:layout_width="620px"
                 android:layout_height="98px"
                 android:background="#0000"
-                android:hint="@string/email_id"
+                android:hint="Email ID"
                 android:singleLine="true"
                 android:textSize="34px"
                 android:textColor="@color/black"
@@ -67,7 +67,7 @@
                 android:layout_width="620px"
                 android:layout_height="98px"
                 android:background="#0000"
-                android:hint="@string/password"
+                android:hint="Password"
                 android:singleLine="true"
                 android:textSize="34px" 
                 android:textColor="@color/black"
@@ -81,7 +81,7 @@
             android:layout_height="99px"
             android:layout_marginTop="45px"
             android:background="@drawable/blue_btn_selector"
-            android:text="@string/sign_in"
+            android:text="Sign In"
             android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size"  />
         
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="35px"
             android:background="@drawable/transparent"
-            android:text="@string/forgot_password"
+            android:text="Forgot Password?"
             android:textColor="@drawable/white_color_selector"
             android:textSize="36px" 
             
@@ -115,7 +115,7 @@
             android:layout_marginRight="35px"
             android:layout_alignParentRight="true"
             android:background="@drawable/transparent"
-            android:text="@string/sign_up"
+            android:text="Sign Up"
             android:textColor="@drawable/white_color_selector"
             android:textSize="36px" 
             
@@ -160,7 +160,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/or"
+            android:text="OR"
             android:textColor="@color/bg_grey_opaque"
             android:textSize="36px" 
             
@@ -187,7 +187,7 @@
             android:layout_height="99px"
             android:layout_marginTop="40px"
             android:background="@drawable/blue_dark_btn_selector"
-            android:text="@string/sign_in_with_facebook"
+            android:text="Sign in with Facebook"
             android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size" />
         

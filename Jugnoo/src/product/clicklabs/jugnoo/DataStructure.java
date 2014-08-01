@@ -147,20 +147,6 @@ class Booking{
 }
 
 
-class LanguageInfo{
-	
-	String name, displayName;
-	boolean selected;
-	
-	public LanguageInfo(String name, String displayName, boolean selected){
-		this.name = name;
-		this.displayName = displayName;
-		this.selected = selected;
-	}
-	
-}
-
-
 enum PassengerScreenMode{
 	P_INITIAL, P_ASSIGNING, P_SEARCH, P_BEFORE_REQUEST_FINAL, P_REQUEST_FINAL, P_IN_RIDE, P_RIDE_END
 }
