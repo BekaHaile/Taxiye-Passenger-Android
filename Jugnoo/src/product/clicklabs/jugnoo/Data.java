@@ -27,7 +27,7 @@ public class Data {
 	public static final String INVALID_ACCESS_TOKEN = "invalid access token";
 	
 	
-	public static final String SHARED_PREF_NAME = "myPref";
+	public static final String SHARED_PREF_NAME = "myPref", SETTINGS_SHARED_PREF_NAME = "settingsPref";
 	public static final String SP_ACCESS_TOKEN_KEY = "access_token", SP_ID_KEY = "session_id",
 			
 			SP_TOTAL_DISTANCE = "total_distance", 
@@ -75,6 +75,10 @@ public class Data {
 			
 			;
 	
+	
+	public static final String LANGUAGE_SELECTED = "language_selected";
+	
+	
 	public static String D_START_RIDE = "D_START_RIDE", D_IN_RIDE = "D_IN_RIDE";
 	public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_REQUEST_FINAL = "P_REQUEST_FINAL";
 	
@@ -95,7 +99,6 @@ public class Data {
 	// live 2nd:    http://dev.jugnoo.in:4000
 	// live 3rd:    http://dev.jugnoo.in:4002
 	// review 3:    http://dev.jugnoo.in:4003
-	// live 4th:    http://dev.jugnoo.in:4004
 	public static final String SERVER_URL = "http://54.81.229.172:8000";
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";

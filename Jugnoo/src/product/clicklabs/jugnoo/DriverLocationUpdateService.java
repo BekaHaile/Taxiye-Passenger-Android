@@ -156,8 +156,6 @@ public class DriverLocationUpdateService extends Service {
     	
     	
     	
-    	
-    	
     	@Override
     	protected String doInBackground(String... params) {
     		
@@ -191,6 +189,7 @@ public class DriverLocationUpdateService extends Service {
 				}
     			
     		}
+    		
     		
     		
     		try{

@@ -63,6 +63,8 @@ public class RegisterScreen extends Activity{
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 
+		
+		
 
 		firstNameEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
@@ -290,7 +292,7 @@ public class RegisterScreen extends Activity{
 							ViewGroup.LayoutParams params_12 = extraTextForScroll
 									.getLayoutParams();
 
-							params_12.height = (int)(370.0f*ASSL.Yscale());
+							params_12.height = (int)(heightDiff);
 
 							extraTextForScroll.setLayoutParams(params_12);
 							extraTextForScroll.requestLayout();
@@ -313,7 +315,7 @@ public class RegisterScreen extends Activity{
 		
 
 		
-		phoneNoEt.setText("+"+GetCountryZipCode());
+//		phoneNoEt.setText("+"+GetCountryZipCode());
 		
 //		Toast.makeText(getApplicationContext(), ""+GetCountryZipCode(), Toast.LENGTH_LONG).show();
 		

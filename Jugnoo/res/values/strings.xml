@@ -20,17 +20,134 @@
 	<string name="fb_app_id">782131025144439</string>
     
 	
+	<string name="language_english_text">English</string>
+	<string name="language_hindi_text">हिंदी</string>
 	
 	
 	
 	    <!-- \n\nPeople with autos can offer rides to users who find taxis a bit too expensive. -->
 	
-	<string name="about_1_text">Jugnoo helps you provide a friendly and affordable ride within the Chandigarh tricity area.
-	    \n\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.\n</string>
-	    
+	<string name="about_1_text">Jugnoo helps you provide a friendly and affordable ride within the Chandigarh tricity area.\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.</string>
 	<string name="about_2_text">Rate card</string>
-	    
 	<string name="about_3_text">First 2 kms: Rs.30\nAfter 2 kms: Rs. 10/km\nWaiting time: Rs.1.5/min after 15 minutes.</string>
+	
+	
+	<string name="email_id">Email ID</string>
+	<string name="password">Password</string>
+	<string name="sign_in">Sign In</string>
+	<string name="forgot_password">Forgot Password?</string>
+	<string name="sign_up">Sign Up</string>
+	<string name="or">OR</string>
+	<string name="sign_in_with_facebook">Sign in with Facebook</string>
+	
+	<string name="save_to_favorite">Save To Favorite</string>
+	<string name="enter_name_for_favorite">Enter Name for Favorite</string>
+	
+	<string name="ok">OK</string>
+	
+	<string name="first_name">First Name</string>
+	<string name="last_name">Last Name</string>
+	<string name="phone_number">Phone number</string>
+	<string name="confirm_password">Confirm Password</string>
+	
+	<string name="confirmation_code">Confirmation Code</string>
+	<string name="check_your_registered_email_phone_number_for_otp">Check your registered email/phone number for OTP</string>
+	<string name="enter_code">Enter Code</string>
+	<string name="done">Done</string>
+	
+	<string name="no_driver_available">No Driver Available</string>
+	<string name="no_driver_available_message">Currently there are no drivers available. We will look into it</string>
+	
+	<string name="logout">Logout</string>
+	<string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+	
+	<string name="cancel">Cancel</string>
+	
+	<string name="select_language">Select Language</string>
+	
+	<string name="enter_email">Enter Email</string>
+	<string name="send_email">Send Email</string>
+	
+	<string name="favorites">Favorites</string>
+	<string name="no_favorite_locations_added">No favorite locations added.</string>
+	
+	<string name="from">From: </string>
+	<string name="to">To: </string>
+	
+	<string name="rides">Rides</string>
+	<string name="no_rides_currently">No rides currently.</string>
+	
+	<string name="update">Update</string>
+	
+	<string name="driver_mode">Driver Mode</string>
+	<string name="invite_friends">Invite Friends</string>
+	<string name="about">About</string>
+	<string name="sos">SOS</string>
+	<string name="language_preferences">Language Preferences</string>
+	
+	<string name="ride_in_progress">Ride in progress...</string>
+	
+	<string name="click_to_view">Click to view</string>
+	
+	<string name="slide_to_start_your_ride">Slide to start your ride</string>
+	
+	<string name="slide_to_end_your_ride">Slide to end your ride</string>
+	
+	<string name="reached_destination">Reached Destination</string>
+	<string name="distance">Distance</string>
+	<string name="wait_time">Wait Time</string>
+	<string name="fare">Fare</string>
+	
+	<string name="driver_rating">Driver Rating</string>
+	<string name="customer_rating">Customer Rating</string>
+	
+	<string name="request_ride">Request Ride</string>
+	<string name="assigning_driver">Assigning driver...</string>
+	
+	<string name="cancel_ride">Cancel Ride</string>
+	
+	<string name="no_drivers_nearby">No drivers nearby.</string>
+	<string name="could_not_find_nearest_driver_distance">Could not find nearest driver\'s distance.</string>
+	<string name="nearest_driver_is">Nearest driver is\ </string>
+	<string name="away"> away.</string>
+	
+	<string name="cancel_request_in">Cancel request in </string>
+	
+	<string name="your_ride_is">Your ride is </string>
+	<string name="away_and_will_arrive"> away and will arrive in approximately </string>
+	
+	<string name="will_arrive_in">Will arrive in </string>
+	
+	<string name="call_driver">Call Driver</string>
+	
+	<string name="you_have">You have </string>
+	<string name="ride_request"> ride request</string>
+	
+	<string name="accept_ride">Accept Ride</string>
+	<string name="cancel_request">Cancel Request</string>
+	
+	<string name="rating"> Rating</string>
+	<string name="call">Call</string>
+	
+	<string name="start_wait">Start wait</string>
+	<string name="stop_wait">Stop wait</string>
+	
+	<string name="submit">Submit</string>
+	
+	<string name="search_results">Search results</string>
+	<string name="search">Search</string>
+	
+	<string name="your_login_session_expired">Your Login session has expired. Please login again.</string>
+	
+	<string name="alert">Alert</string>
+	
+	<string name="start_ride_error">You must be present near the customer pickup location to start ride.</string>
+	
+	
+	<string name="server_error">Server error. Please try again later.</string>
+	<string name="server_not_responding">Oops!! Server not responding. Please try again later.</string>
+	<string name="check_internet_message">Check your internet connection.</string>
+	
 	
 	
 	

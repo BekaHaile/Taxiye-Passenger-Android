@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidquery.util.AQUtility;
 import com.crashlytics.android.Crashlytics;
@@ -57,6 +59,17 @@ public class SplashNewActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
+		
+		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String languageSelected = preferences.getString(Data.LANGUAGE_SELECTED, "default");
+		if(!"default".equalsIgnoreCase(languageSelected)){
+			Locale locale = new Locale(languageSelected); 
+		    Locale.setDefault(locale);
+		    Configuration config = new Configuration();
+		    config.locale = locale;
+		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+		}
+		
 		setContentView(R.layout.splash_new);
 		
 		loginDataFetched = false;
@@ -75,6 +88,7 @@ public class SplashNewActivity extends Activity{
 		
 		
 		
+		
 		try {																						// to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			Data.appVersion = ""+pInfo.versionCode;
@@ -87,8 +101,6 @@ public class SplashNewActivity extends Activity{
 			Log.i("deviceName", Data.deviceName + "..");
 			
 			Data.deviceToken = getRegistrationId(this);
-			
-			
 			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
@@ -143,6 +155,7 @@ public class SplashNewActivity extends Activity{
 	}
 	
 	private void registerInBackground() {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 	    new AsyncTask<String, Integer, String>() {
 
 	        @Override
@@ -176,6 +189,10 @@ public class SplashNewActivity extends Activity{
 	        	//=Device registered, registration ID=APA91bHaLnaJLjUGLXDKcW39Gke0eK78tFRe1ByJsj8rmFS2boJ2_HNzvxkS39tfo0z6IahCUPyV49gpHx-2M3WzWmpHv4u4O0cGuYxN-aKuPx1SG4Gy-2WHBg8o3sSP_GtJgfThb3G36miecVxQ1xGafeKMgbV2sO9EP1aaVDyXI3t6bgS7gmQ
 	        }
 	    }.execute(null, null, null);
+		}
+		else{
+			new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+		}
 	}
 	
 	
@@ -231,18 +248,12 @@ public class SplashNewActivity extends Activity{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					
-					if (regid.isEmpty()){
-				        registerInBackground();
-				    }
-				    else{
-				    	accessTokenLogin(SplashNewActivity.this);
-				    }
-				}
-			}, 500);
+			if (regid.isEmpty()){
+		        registerInBackground();
+		    }
+		    else{
+		    	accessTokenLogin(SplashNewActivity.this);
+		    }
 			
 		}
 
@@ -452,7 +463,7 @@ public class SplashNewActivity extends Activity{
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
-			textHead.setText(title);
+//			textHead.setText(title);
 			textMessage.setText(message);
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
