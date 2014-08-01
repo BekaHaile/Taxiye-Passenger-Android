@@ -102,6 +102,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -353,6 +354,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	Marker pickupLocationMarker, driverLocationMarker;
+	MarkerOptions markerOptionsCustomerPickupLocation;
 	
 	static DriverChangeRideRequest driverGetRequestPush;
 	
@@ -507,7 +509,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		beforeRequestFinalLayout = (RelativeLayout) findViewById(R.id.beforeRequestFinalLayout);
 
 		cancelRequestBtn = (Button) findViewById(R.id.cancelRequestBtn); cancelRequestBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + "5s ?");
+		cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + "5s ?");
 
 		assignedDriverText = (TextView) findViewById(R.id.assignedDriverText); assignedDriverText.setTypeface(Data.regularFont(getApplicationContext()));
 		assignedDriverProgress = (ProgressBar) findViewById(R.id.assignedDriverProgress);
@@ -1237,7 +1239,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        	
 	        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
 	        	
-	        	if(displacement <= 500){
+//	        	if(displacement <= 100){
 	        		buildAlertMessageNoGps();
 		        	
 		        	startRideInv.setVisibility(View.VISIBLE);
@@ -1245,10 +1247,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        	GCMIntentService.clearNotifications(HomeActivity.this);
 		        	driverStartRideText.setVisibility(View.GONE);
 		        	new GetAddressStartRide().execute();
-	        	}
-	        	else{
-	        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
-	        	}
+//	        	}
+//	        	else{
+//	        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
+//	        		startRideInv.setVisibility(View.GONE);
+//	    			driverStartRideSlider.setProgress(0);
+//	    			driverStartRideText.setVisibility(View.VISIBLE);
+//	        	}
 	        }
 	    });
 		
@@ -1870,6 +1875,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey));
 		}
 		
+		
 		switch(mode){
 		
 			case D_INITIAL:
@@ -1881,6 +1887,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
 					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				}
+				
+				cancelCustomerPathUpdateTimer();
 			
 				break;
 				
@@ -1895,6 +1903,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverRequestAcceptLayout.setVisibility(View.VISIBLE);
 				driverEngagedLayout.setVisibility(View.GONE);
 				
+				cancelCustomerPathUpdateTimer();
 				
 			
 				break;
@@ -1907,16 +1916,21 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				}
 				
-				Log.i("map cleared", "D_START_RIDE");
-				map.clear();
+				if(map != null){
+					Log.i("map cleared", "D_START_RIDE");
+					map.clear();
+					
+					markerOptionsCustomerPickupLocation = null;
+					
+					markerOptionsCustomerPickupLocation = new MarkerOptions();
+					markerOptionsCustomerPickupLocation.title(Data.dEngagementId);
+					markerOptionsCustomerPickupLocation.snippet("");
+					markerOptionsCustomerPickupLocation.position(Data.dCustLatLng);
+					markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+					
+					map.addMarker(markerOptionsCustomerPickupLocation);
+				}
 				
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.title(Data.dEngagementId);
-				markerOptions.snippet("");
-				markerOptions.position(Data.dCustLatLng);
-				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
-				
-				map.addMarker(markerOptions);
 				
 				DecimalFormat decimalFormat = new DecimalFormat("#.#");
 				double rateingD = 4;
@@ -1927,7 +1941,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				
 				driverPassengerName.setText(Data.assignedCustomerInfo.name);
-				driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + getResources().getString(R.string.rating));
+				driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+getResources().getString(R.string.rating));
 				AQuery aq = new AQuery(driverPassengerImage);
 				aq.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
 				
@@ -1947,8 +1961,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverInRideMainRl.setVisibility(View.GONE);
 				
 				
-				
-				
+				startCustomerPathUpdateTimer();
 				
 				
 				break;
@@ -1958,6 +1971,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			case D_IN_RIDE:
 				
+				cancelCustomerPathUpdateTimer();
 				
 				//TODO new DriverLocationUpdateService stopping here
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
@@ -2279,10 +2293,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverName.setText(Data.assignedDriverInfo.name);
 				
 				if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-					driverTime.setText(Data.assignedDriverInfo.durationToReach + getResources().getString(R.string.will_arrive_in));
+					driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
     	 		}
     	 		else{
-    	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) + Data.assignedDriverInfo.durationToReach);
+    	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
     	 		}
 				
 				
@@ -2636,10 +2650,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		try{
 		if(Data.assignedDriverInfo != null){
 			if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-				driverTime.setText(Data.assignedDriverInfo.durationToReach + getResources().getString(R.string.will_arrive_in));
+				driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
 	 		}
 	 		else{
-	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) + Data.assignedDriverInfo.durationToReach);
+	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
 	 		}
 		}
 		} catch(Exception e){
@@ -2670,7 +2684,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			} catch(Exception e){
 				e.printStackTrace();
 			}
-			driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + getResources().getString(R.string.rating));
+			driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+getResources().getString(R.string.rating));
 		}
 		
 		driverPassengerCallBtn.setText(getResources().getString(R.string.call));
@@ -3665,7 +3679,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
 		 	        
 		 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-	       	 		distanceString = getResources().getString(R.string.nearest_driver_is) + distance + getResources().getString(R.string.away);
+	       	 		distanceString = getResources().getString(R.string.nearest_driver_is) + " " + distance + " " + getResources().getString(R.string.away);
 			        }
 			        else{
 			        	distanceString = getResources().getString(R.string.could_not_find_nearest_driver_distance);
@@ -3678,13 +3692,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        	
 		        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
 	        	 		if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-	        	 			distanceString = getResources().getString(R.string.your_ride_is) + distance 
-	    	        	 			+ getResources().getString(R.string.away_and_will_arrive) + duration 
+	        	 			distanceString = getResources().getString(R.string.your_ride_is) +" "+ distance +" "
+	    	        	 			+ getResources().getString(R.string.away_and_will_arrive) +" "+ duration +" "
 	    	        	 			+ getResources().getString(R.string.mein_aa_jaegi);
 	        	 		}
 	        	 		else{
-	        	 			distanceString = getResources().getString(R.string.your_ride_is) + distance 
-	        	 			+ getResources().getString(R.string.away_and_will_arrive) + duration + ".";
+	        	 			distanceString = getResources().getString(R.string.your_ride_is) +" "+ distance +" "
+	        	 			+ getResources().getString(R.string.away_and_will_arrive) +" "+ duration + ".";
 	        	 		}
 			        }
 			        else{
@@ -3710,7 +3724,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        	startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	        }
 	        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
-	        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + "5s ?");
+	        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + " " + "5s ?");
 	        	
 	        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 				Editor editor = pref.edit();
@@ -3978,7 +3992,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			Log.e("BeforeCancelRequestAsync","==onpre");
-			cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + "5s ?");
+			cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + "5s ?");
 		}
 		
 		@Override
@@ -4023,7 +4037,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			super.onProgressUpdate(values);
 			try{
 				Log.e("values[0]","="+values[0]);
-				cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + values[0] + "s ?");
+				cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + values[0] + "s ?");
 			} catch(Exception e){
 				e.printStackTrace();
 			}
@@ -6201,73 +6215,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	//TODO
-//	/**
-//	 * ASync for updating assigned driver's location for customer
-//	 */
-//	public void updateAssignedDriverLocationForCustomerAsync(final Activity activity) {
-//		try {
-//			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-//				
-//				
-//				RequestParams params = new RequestParams();
-//				
-//				params.put("access_token", Data.userData.accessToken);
-//				params.put("driver_id", Data.assignedDriverInfo.userId);
-//				
-//				Log.e("get_driver_current_location", "========================================");
-//				Log.i("access_token", Data.userData.accessToken);
-//				Log.i("driver_id", "="+Data.assignedDriverInfo.userId);
-//				
-//			
-//				AsyncHttpClient client = new AsyncHttpClient();
-//				client.setTimeout(Data.SERVER_TIMEOUT);
-//				client.post(Data.SERVER_URL + "/get_driver_current_location", params,
-//						new AsyncHttpResponseHandler() {
-//						private JSONObject jObj;
-//
-//							@Override
-//							public void onSuccess(String response) {
-//								Log.i("Server response", "response = " + response);
-//
-//								try {
-//									jObj = new JSONObject(response);
-//									
-//									if(!jObj.isNull("error")){
-//										
-//										int flag = jObj.getInt("flag");	
-//
-//										String errorMessage = jObj.getString("error");
-//										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-//											HomeActivity.logoutUser(activity);
-//										}
-//										else{
-//											
-//										}
-//									}
-//									else{
-//										
-//										updateAssignedDriverLocationForCustomerAsync(activity);
-//										
-//									}
-//								}  catch (Exception exception) {
-//									exception.printStackTrace();
-//								}
-//
-//								
-//							}
-//
-//							@Override
-//							public void onFailure(Throwable arg0) {
-//								Log.e("request fail", arg0.toString());
-//							}
-//						});
-//			}
-//			else {
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
 	Timer timerDriverLocationUpdater;
 	
@@ -6399,6 +6346,141 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	Timer timerCustomerPathUpdater;
+	TimerTask timerTaskCustomerPathUpdater;
+	
+	
+	public void startCustomerPathUpdateTimer(){
+		
+		try{
+			if(timerCustomerPathUpdater != null){
+				timerCustomerPathUpdater.cancel();
+				timerCustomerPathUpdater.purge();
+				timerCustomerPathUpdater = null;
+			}
+			
+			if(timerTaskCustomerPathUpdater != null){
+				timerTaskCustomerPathUpdater.cancel();
+				timerTaskCustomerPathUpdater = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		try {
+			timerCustomerPathUpdater = new Timer();
+			
+			timerTaskCustomerPathUpdater = new TimerTask() {
+				
+				@Override
+				public void run() {
+					try {
+						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+							//TODO customer path updater
+							if(myLocation != null){
+								if(Data.dCustLatLng != null){
+									
+									LatLng source = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+									String url = makeURLPath(source, Data.dCustLatLng);
+									String result = new SimpleJSONParser().getJSONFromUrl(url);
+									
+									if(result != null){
+										final List<LatLng> list = getLatLngListFromPath(result);
+										
+										runOnUiThread(new Runnable() {
+											
+											@Override
+											public void run() {
+												try {
+													map.clear();
+													
+													if(markerOptionsCustomerPickupLocation == null){
+														markerOptionsCustomerPickupLocation = new MarkerOptions();
+														markerOptionsCustomerPickupLocation.title(Data.dEngagementId);
+														markerOptionsCustomerPickupLocation.snippet("");
+														markerOptionsCustomerPickupLocation.position(Data.dCustLatLng);
+														markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+													}
+													
+													map.addMarker(markerOptionsCustomerPickupLocation);
+													
+													
+													for(int z = 0; z<list.size()-1;z++){
+													    LatLng src= list.get(z);
+													    LatLng dest= list.get(z+1);
+													    map.addPolyline(new PolylineOptions()
+													    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+													    .width(5)
+													    .color(Color.RED).geodesic(true));
+													}
+												} catch (Exception e) {
+													e.printStackTrace();
+												}
+											}
+										});
+							        }
+								}
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			
+			
+			timerCustomerPathUpdater.scheduleAtFixedRate(timerTaskCustomerPathUpdater, 100, 60000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void cancelCustomerPathUpdateTimer(){
+		try{
+			if(timerCustomerPathUpdater != null){
+				timerCustomerPathUpdater.cancel();
+				timerCustomerPathUpdater.purge();
+				timerCustomerPathUpdater = null;
+			}
+			
+			if(timerTaskCustomerPathUpdater != null){
+				timerTaskCustomerPathUpdater.cancel();
+				timerTaskCustomerPathUpdater = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public List<LatLng> getLatLngListFromPath(String result){
+		try {
+	    	 final JSONObject json = new JSONObject(result);
+		     JSONArray routeArray = json.getJSONArray("routes");
+		     JSONObject routes = routeArray.getJSONObject(0);
+		     JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
+		     String encodedString = overviewPolylines.getString("points");
+		     List<LatLng> list = decodePoly(encodedString);
+		     return list;
+	    } 
+	    catch (Exception e) {
+	    	e.printStackTrace();
+	    	return new ArrayList<LatLng>();
+	    }
+	}
+	
 	
 	
 	
@@ -6625,7 +6707,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								if(getDistanceTimeAddress != null){
 									getDistanceTimeAddress.cancel(true);
 								}
-					        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + "5s ?");
+					        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + "5s ?");
 								
 								getAssignedDriverInfoAsync(HomeActivity.this);
 							}
@@ -6672,7 +6754,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 				
-				driverNewRideRequestText.setText(getResources().getString(R.string.you_have)+Data.driverRideRequests.size()+getResources().getString(R.string.ride_request));
+				driverNewRideRequestText.setText(getResources().getString(R.string.you_have)+" "+Data.driverRideRequests.size()+" "+getResources().getString(R.string.ride_request));
 				
 				map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
 				

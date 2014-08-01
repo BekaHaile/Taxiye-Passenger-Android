@@ -60,15 +60,21 @@ public class SplashNewActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
 		
-		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-		String languageSelected = preferences.getString(Data.LANGUAGE_SELECTED, "default");
-		if(!"default".equalsIgnoreCase(languageSelected)){
-			Locale locale = new Locale(languageSelected); 
-		    Locale.setDefault(locale);
-		    Configuration config = new Configuration();
-		    config.locale = locale;
-		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-		}
+//		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+//		String languageSelected = preferences.getString(Data.LANGUAGE_SELECTED, "default");
+//		if(!"default".equalsIgnoreCase(languageSelected)){
+//			Locale locale = new Locale(languageSelected); 
+//		    Locale.setDefault(locale);
+//		    Configuration config = new Configuration();
+//		    config.locale = locale;
+//		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+//		}
+		
+		Locale locale = new Locale("en"); 
+	    Locale.setDefault(locale);
+	    Configuration config = new Configuration();
+	    config.locale = locale;
+	    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 		
 		setContentView(R.layout.splash_new);
 		
