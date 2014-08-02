@@ -26,7 +26,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	private final String TAG = this.getClass().getSimpleName();
 	private LocationClient locationclient;
 	private LocationRequest locationrequest;
-	private static int count = 0;
+	private int count = 0;
 	private Location location; // location
 	double latitude = 30.7500; // latitude default chandigarh latlng
 	double longitude = 76.7800; // longitude
@@ -215,7 +215,6 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			location = locationclient.getLastLocation();
 			if(location != null){
 				latitude = location.getLatitude();
-				Log.e("last location","="+latitude);
 			}
 		}else{
 			latitude = location.getLatitude();

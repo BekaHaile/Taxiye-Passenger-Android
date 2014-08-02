@@ -1232,6 +1232,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		});
 		
 		
+		
 		driverStartRideSlider.setSlideButtonListener(new SlideButtonListener() {  
 	        @Override
 	        public void handleSlide() {
@@ -1239,7 +1240,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        	
 	        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
 	        	
-//	        	if(displacement <= 100){
+	        	if(displacement <= 100){
 	        		buildAlertMessageNoGps();
 		        	
 		        	startRideInv.setVisibility(View.VISIBLE);
@@ -1247,15 +1248,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        	GCMIntentService.clearNotifications(HomeActivity.this);
 		        	driverStartRideText.setVisibility(View.GONE);
 		        	new GetAddressStartRide().execute();
-//	        	}
-//	        	else{
-//	        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
-//	        		startRideInv.setVisibility(View.GONE);
-//	    			driverStartRideSlider.setProgress(0);
-//	    			driverStartRideText.setVisibility(View.VISIBLE);
-//	        	}
+	        	}
+	        	else{
+	        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
+	        		startRideInv.setVisibility(View.GONE);
+	    			driverStartRideSlider.setProgress(0);
+	    			driverStartRideText.setVisibility(View.VISIBLE);
+	        	}
 	        }
 	    });
+		
 		
 		driverCancelRideBtn.setOnClickListener(new View.OnClickListener() {
 			
@@ -2087,6 +2089,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			endRideReviewRl.setVisibility(View.GONE);
 			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey));
 		}
+		
 		
 		
 		
@@ -4426,6 +4429,37 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
+									
+//									response = {"error":"Request timed out","flag":10}
+									
+									DialogPopup.dismissLoadingDialog();
+									
+									int index = -1;
+									for(int i=0; i<Data.driverRideRequests.size(); i++){
+										if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(Data.dEngagementId)){
+											index = i;
+											break;
+										}
+									}
+									if(index != -1){
+										Data.driverRideRequests.remove(index);
+									}
+									
+									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+									Editor editor = pref.edit();
+									editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+									editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+									editor.putString(Data.SP_D_NR_USER_ID, "");
+									editor.putString(Data.SP_D_NR_LATITUDE, "");
+									editor.putString(Data.SP_D_NR_LONGITUDE, "");
+									
+									editor.commit();
+									
+									
+									driverScreenMode = DriverScreenMode.D_INITIAL;
+									showAllRideRequests();
+									userCanceledDialogShown = false;
+									
 								}
 								else{
 									
@@ -4533,6 +4567,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
 							}
 	
 							
@@ -4542,6 +4577,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.dismissLoadingDialog();
 						}
 					});
 		}
@@ -6323,7 +6359,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			};
 			
 			
-			timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 100, 60000);
+			timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 60000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -6415,14 +6451,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 													
 													map.addMarker(markerOptionsCustomerPickupLocation);
 													
-													
 													for(int z = 0; z<list.size()-1;z++){
 													    LatLng src= list.get(z);
 													    LatLng dest= list.get(z+1);
 													    map.addPolyline(new PolylineOptions()
 													    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 													    .width(5)
-													    .color(Color.RED).geodesic(true));
+													    .color(Color.BLUE).geodesic(true));
 													}
 												} catch (Exception e) {
 													e.printStackTrace();
@@ -6440,7 +6475,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			};
 			
 			
-			timerCustomerPathUpdater.scheduleAtFixedRate(timerTaskCustomerPathUpdater, 100, 60000);
+			
+			timerCustomerPathUpdater.scheduleAtFixedRate(timerTaskCustomerPathUpdater, 10, 60000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -6853,6 +6889,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							@Override
 							public void run() {
 								DialogPopup.dismissLoadingDialog();
+								driverScreenMode = DriverScreenMode.D_INITIAL;
 								showAllRideRequests();
 								if(!userCanceledDialogShown){
 									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");

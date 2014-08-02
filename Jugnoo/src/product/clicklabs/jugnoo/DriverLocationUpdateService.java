@@ -135,7 +135,10 @@ public class DriverLocationUpdateService extends Service {
     		sendDriverLocationToServer.cancel(true);
     		sendDriverLocationToServer = null;
     	}
-        locationFetcher.destroy();
+        if(locationFetcher != null){
+        	locationFetcher.destroy();
+        	locationFetcher = null;
+        }
     }
     
     
@@ -150,7 +153,11 @@ public class DriverLocationUpdateService extends Service {
 				locationFetcher.destroy();
 				locationFetcher = null;
 			}
-			locationFetcher = new LocationFetcher(DriverLocationUpdateService.this);
+			
+			
+			if(locationFetcher == null){
+				locationFetcher = new LocationFetcher(DriverLocationUpdateService.this);
+			}
 			
     	}
     	
@@ -196,6 +203,9 @@ public class DriverLocationUpdateService extends Service {
     			
     			if(noUpdate){
 					Log.i("noUpdate","inside");
+					if(locationFetcher != null){
+						lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
+					}
     				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 	    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
@@ -233,7 +243,9 @@ public class DriverLocationUpdateService extends Service {
 
 					Log.i("locationFetcher not null","inside");
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-	    			
+	    			Log.e("currentLatLng = ", "="+currentLatLng);
+	    			Log.e("lastLocation = ", "="+lastLocation);
+	    			Log.e("distance = ", "="+locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng));
 	    			
 	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
 		    			

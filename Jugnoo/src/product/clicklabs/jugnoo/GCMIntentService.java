@@ -13,6 +13,8 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -75,6 +77,11 @@ public class GCMIntentService extends IntentService {
 				
 				Notification notification = builder.build();
 				notificationManager.notify(NOTIFICATION_ID, notification);
+				
+				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+				wl.acquire(15000);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -108,8 +115,14 @@ public class GCMIntentService extends IntentService {
 				builder.setContentIntent(intent);
 				
 				
+				
 				Notification notification = builder.build();
 				notificationManager.notify(NOTIFICATION_ID, notification);
+				
+				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+				wl.acquire(15000);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -198,6 +211,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
 	    	    					 
 	    	    					 if(HomeActivity.driverGetRequestPush != null){
+	    	    						 notificationManagerResume(this, "You have got a new ride request.");
 	    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
 	    	    					 }
 	    	    					 else{
@@ -218,9 +232,10 @@ public class GCMIntentService extends IntentService {
 	    	    						 editor.putString(SP_D_NR_LONGITUDE, ""+longitude);
 	    	    						 editor.commit();
 	    	    						 
+	    	    						 notificationManager(this, "You have got a new ride request.");
 	    	    					 }
 
-    	    						 notificationManagerResume(this, "You have got a new ride request.");
+    	    						 
 	    	    					 
 	    	    					 
     	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);} catch(Exception e){}
