@@ -14,6 +14,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -142,6 +143,24 @@ public class DriverLocationUpdateService extends Service {
     }
     
     
+    double distance(LatLng start, LatLng end) {
+		try {
+			Location location1 = new Location("locationA");
+			location1.setLatitude(start.latitude);
+			location1.setLongitude(start.longitude);
+			Location location2 = new Location("locationA");
+			location2.setLatitude(end.latitude);
+			location2.setLongitude(end.longitude);
+
+			double distance = location1.distanceTo(location2);
+			return distance;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+
+	}
+    
     class SendDriverLocationToServer extends AsyncTask<String, Integer, String>{
     	
     	
@@ -245,9 +264,9 @@ public class DriverLocationUpdateService extends Service {
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
 	    			Log.e("currentLatLng = ", "="+currentLatLng);
 	    			Log.e("lastLocation = ", "="+lastLocation);
-	    			Log.e("distance = ", "="+locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng));
+	    			Log.e("distance = ", "="+distance(DriverLocationUpdateService.this.lastLocation, currentLatLng));
 	    			
-	    			if(locationFetcher.distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
+	    			if(distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
 		    			
 	    				DriverLocationUpdateService.this.lastLocation = currentLatLng;
 	    				

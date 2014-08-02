@@ -8,14 +8,17 @@ import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -45,6 +48,7 @@ import com.facebook.model.GraphUser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.location.LocationClient;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -439,12 +443,60 @@ public class SplashLogin extends Activity{
 	protected void onResume() {
 		super.onResume();
 		
-		if(Data.locationFetcher != null){
-			Data.locationFetcher.destroy();
-			Data.locationFetcher = null;
-		}
 		Data.locationFetcher = new LocationFetcher(SplashLogin.this);
 		
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		if(resp != ConnectionResult.SUCCESS){
+			Log.e("Google Play Service Error ","="+resp);
+			showGooglePlayErrorAlert(SplashLogin.this);
+		}
+		
+	}
+	
+	AlertDialog alertDialog;
+	/**
+	 * Function to show settings alert dialog
+	 * On pressing Settings button will lauch Settings Options
+	 * */
+	public void showGooglePlayErrorAlert(final Activity mContext){
+		try{
+			if(alertDialog != null && alertDialog.isShowing()){
+				alertDialog.dismiss();
+			}
+				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
+		   	 
+		        // Setting Dialog Title
+		        alertDialogPrepare.setTitle("Google Play Services Error");
+		        alertDialogPrepare.setCancelable(false);
+		 
+		        // Setting Dialog Message
+		        alertDialogPrepare.setMessage("Google Play services not found or outdated. Please install Google Play Services?");
+		 
+		        // On pressing Settings button
+		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog,int which) {
+		            	dialog.dismiss();
+		            	Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(Uri.parse("market://details?id=com.google.android.gms"));
+						mContext.startActivity(intent);
+		            }
+		        });
+		 
+		        // on pressing cancel button
+		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		            	dialog.dismiss();
+		            	mContext.finish();
+		            }
+		        });
+		 
+		        alertDialog = alertDialogPrepare.create();
+		        
+		        // Showing Alert Message
+		        alertDialog.show();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	

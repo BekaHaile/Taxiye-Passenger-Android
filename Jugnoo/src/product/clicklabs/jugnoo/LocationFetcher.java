@@ -8,86 +8,50 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.model.LatLng;
+public class LocationFetcher {
 
-public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallbacks,GooglePlayServicesClient.OnConnectionFailedListener,LocationListener {
-
-	private final String TAG = this.getClass().getSimpleName();
-	private LocationClient locationclient;
-	private LocationRequest locationrequest;
-	private int count = 0;
 	private Location location; // location
 	double latitude = 30.7500; // latitude default chandigarh latlng
 	double longitude = 76.7800; // longitude
 	AlertDialog alertDialog;
-//	
+	public MyLocationListener listener;
+	public LocationManager locationManager;
+	public String provider;
+	
 	/**
 	 * Constructor for initializing LocationFetcher class' object
 	 * @param context application context
 	 */
-	public LocationFetcher(Activity context){
-		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
-		if(resp == ConnectionResult.SUCCESS){														// google play services working
-			if(isLocationEnabled(context)){															// location fetching enabled
-				locationclient = new LocationClient(context, this, this);
-				locationclient.connect();
-			}
-			else{																					// location disabled
-				showSettingsAlert(context);
-			}
-		}
-		else{																						// google play services not working
-			Log.e("Google Play Service Error ","="+resp);
-			showGooglePlayErrorAlert(context);
-			//https://play.google.com/store/apps/details?id=com.google.android.gms
-		}
-	}
-	
 	public LocationFetcher(Context context){
-		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
-		if(resp == ConnectionResult.SUCCESS){														// google play services working
-			if(isLocationEnabled(context)){															// location fetching enabled
-				locationclient = new LocationClient(context, this, this);
-				locationclient.connect();
+		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+		listener = new MyLocationListener();
+		if(isLocationEnabled(context)){
+			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+				provider = LocationManager.GPS_PROVIDER;
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, listener);
 			}
-			else{																					// location disabled
+			else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+				provider = LocationManager.NETWORK_PROVIDER;
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 15000, 0, listener);
 			}
 		}
-		else{																						// google play services not working
-			Log.e("Google Play Service Error ","="+resp);
-			//https://play.google.com/store/apps/details?id=com.google.android.gms
+		else{
+			showSettingsAlert(context);
 		}
 	}
+	
 
 	
-	public boolean isConnected(){
-		if(locationclient != null){
-			return locationclient.isConnected();
-		}
-		return false;
-	}
-	
-	double distance(LatLng start, LatLng end) {
+	double distance(Location start, Location end) {
 		try {
-			Location location1 = new Location("locationA");
-			location1.setLatitude(start.latitude);
-			location1.setLongitude(start.longitude);
-			Location location2 = new Location("locationA");
-			location2.setLatitude(end.latitude);
-			location2.setLongitude(end.longitude);
-
-			double distance = location1.distanceTo(location2);
+			double distance = start.distanceTo(end);
 			return distance;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -164,7 +128,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
-	public void showSettingsAlert(final Activity mContext){
+	public void showSettingsAlert(final Context mContext){
 		try{
 			if(alertDialog != null && alertDialog.isShowing()){
 				alertDialog.dismiss();
@@ -212,7 +176,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	public double getLatitude(){
 		try{
 		if(location == null){
-			location = locationclient.getLastLocation();
+			location = locationManager.getLastKnownLocation(provider);
 			if(location != null){
 				latitude = location.getLatitude();
 			}
@@ -231,7 +195,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	public double getLongitude(){
 		try{
 		if(location == null){
-			location =locationclient.getLastLocation();
+			location = locationManager.getLastKnownLocation(provider);
 			if(location != null){
 				longitude = location.getLatitude();
 				Log.e("last location","="+longitude);
@@ -247,82 +211,33 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	}
 	
 	
-	/**
-	 * Get last known location of device
-	 * @return
-	 */
-	public Location getLocation(){
-		try{
-		if(locationclient!=null && locationclient.isConnected()){
-			Location loc =locationclient.getLastLocation();
-			if(loc != null){
-				location = loc;
-				Log.e(TAG, "Last Known Location :" + loc.getLatitude() + "," + loc.getLongitude());
-			}
-			return loc;
-		}} catch(Exception e){e.printStackTrace();}
-		return null;
-	}
-	
 
-
-	/**
-	 * Stop receiving location updates
-	 */
-	public void stop() {
-		try{
-			Log.e("location","stop");
-			if(locationclient!=null){
-				locationclient.removeLocationUpdates(this);
-			}
-		} catch(Exception e){
-			Log.e("e", "="+e.toString());
-		}
-	}
 	
 	public void destroy(){
 		try{
 			Log.e("location","destroy");
-			if(locationclient!=null){
-				locationclient.disconnect();
-			}
+			locationManager.removeUpdates(listener);
 		}catch(Exception e){
 			Log.e("e", "="+e.toString());
 		}
 	}
 
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		Log.e(TAG, "onConnected");
-		locationrequest = LocationRequest.create();
-		locationrequest.setInterval(20000);
-		locationclient.requestLocationUpdates(locationrequest, LocationFetcher.this);
-	}
 
-	@Override
-	public void onDisconnected() {
-		Log.e(TAG, "onDisconnected");
-	}
+	class MyLocationListener implements LocationListener {
 
-	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-		Log.e(TAG, "onConnectionFailed");
-
-	}
-
-	@Override
-	public void onLocationChanged(Location location) {
-		try{
-			if(location!=null){
-				this.location = location;
-//				Log.e(TAG+count, "Location Request :" + location.getLatitude() + "," + location.getLongitude());
-				count ++;
-			}
-		}catch(Exception e){
-			e.printStackTrace();
+		public void onLocationChanged(Location loc) {
+			Log.i("**************************************", "Location changed "+loc);
+			LocationFetcher.this.location = loc;
 		}
 
-	}
+		public void onProviderDisabled(String provider) {
+		}
 
+		public void onProviderEnabled(String provider) {
+		}
+
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+	}
 
 }
