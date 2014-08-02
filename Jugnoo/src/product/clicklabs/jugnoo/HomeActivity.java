@@ -2930,15 +2930,20 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	@Override
 	public void onBackPressed() {
-		if(passengerScreenMode == PassengerScreenMode.P_SEARCH){
-			passengerScreenMode = PassengerScreenMode.P_INITIAL;
-			switchPassengerScreen(passengerScreenMode);
-		}
-		else{
+		if(userMode == UserMode.DRIVER){
 			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			intent.addCategory(Intent.CATEGORY_HOME);
 			startActivity(intent);
+		}
+		else if(userMode == UserMode.PASSENGER){
+			if(passengerScreenMode == PassengerScreenMode.P_SEARCH){
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+			}
+			else{
+				super.onBackPressed();
+			}
 		}
 	}
 	
@@ -3033,7 +3038,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							map.addPolyline(new PolylineOptions()
 					        .add(lastLatLng, currentLatLng)
 					        .width(5)
-					        .color(Color.RED).geodesic(true));
+					        .color(Color.TRANSPARENT).geodesic(true));
 							
 							new Thread(new Runnable() {
 								
@@ -3050,6 +3055,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						else{
 							new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement).execute();
 						}
+						
+						
 						
 					}
 					else if(lastLocation == null){
@@ -3076,7 +3083,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									map.addPolyline(new PolylineOptions()
 							        .add(Data.startRidePreviousLatLng, currentLatLng)
 							        .width(5)
-							        .color(Color.RED).geodesic(true));
+							        .color(Color.TRANSPARENT).geodesic(true));
 									
 									new Thread(new Runnable() {
 										
@@ -3144,7 +3151,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
             map.addPolyline(new PolylineOptions()
             .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
             .width(5)
-    	    .color(Color.RED).geodesic(true));
+    	    .color(Color.TRANSPARENT).geodesic(true));
 		}
 		
 		if(firstLatLng != null){
@@ -3317,7 +3324,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		                map.addPolyline(new PolylineOptions()
 		                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 		                .width(5)
-				        .color(Color.RED).geodesic(true));
+				        .color(Color.TRANSPARENT).geodesic(true));
 						database.insertPolyLine(src, dest);
 		            }
 		           database.close();
@@ -3329,7 +3336,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    		 map.addPolyline(new PolylineOptions()
 	                .add(new LatLng(source.latitude, source.longitude), new LatLng(destination.latitude, destination.longitude))
 	                .width(5)
-			        .color(Color.RED).geodesic(true));
+			        .color(Color.TRANSPARENT).geodesic(true));
 					database.insertPolyLine(source, destination);
 					database.close();
 	    		
@@ -5901,6 +5908,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	
 	/**
 	 * ASync for no drivers from server
 	 */
@@ -5924,6 +5932,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("latitude", "=" + Data.latitude);
 			Log.i("longitude", "=" + Data.longitude);
+			
+			
 			
 			
 			
@@ -6359,7 +6369,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			};
 			
 			
-			timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 60000);
+			timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 30000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -6457,7 +6467,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 													    map.addPolyline(new PolylineOptions()
 													    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 													    .width(5)
-													    .color(Color.BLUE).geodesic(true));
+													    .color(Color.TRANSPARENT).geodesic(true));
 													}
 												} catch (Exception e) {
 													e.printStackTrace();
@@ -6476,7 +6486,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			
 			
-			timerCustomerPathUpdater.scheduleAtFixedRate(timerTaskCustomerPathUpdater, 10, 60000);
+			timerCustomerPathUpdater.scheduleAtFixedRate(timerTaskCustomerPathUpdater, 10, 30000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
