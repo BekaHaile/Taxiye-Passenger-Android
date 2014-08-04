@@ -8,8 +8,8 @@
     
     
     
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
-    <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
+    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
+    <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> <!-- Dev -->
     
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
     
@@ -128,6 +128,8 @@
 	
 	<string name="rating"> Rating</string>
 	<string name="call">Call</string>
+	
+	<string name="ride_time">Ride Time</string>
 	
 	<string name="start_wait">Start wait</string>
 	<string name="stop_wait">Stop wait</string>

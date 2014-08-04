@@ -272,8 +272,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	TextView driverPassengerName;
 	TextView driverPassengerRatingValue;
 	Button driverPassengerCallBtn;
-	ProgressBar driverPassengerImageProgress;
-	ImageView driverPassengerImage;
 	
 	//Start ride layout
 	RelativeLayout driverStartRideMainRl;
@@ -285,8 +283,18 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	//End ride layout
 	RelativeLayout driverInRideMainRl;
+	
+	Button driverEndRideMyLocationBtn;
+	TextView driverIRDistanceText, driverIRDistanceValue, driverIRDistanceKmText;
+	TextView driverIRFareText, driverIRFareRsText, driverIRFareValue;
+	
+	TextView driverRideTimeText;
+	PausableChronometer rideTimeChronometer;
+	
+	RelativeLayout driverWaitRl;
+	TextView driverWaitText;
 	PausableChronometer waitChronometer;
-	Button driverWaitBtn;
+	
 	TextView driverEndRideText;
 	SlideButtonInvert driverEndRideSlider;
 	ImageView endRideInv;
@@ -595,8 +603,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName); driverPassengerName.setTypeface(Data.regularFont(getApplicationContext()));
 		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue); driverPassengerRatingValue.setTypeface(Data.regularFont(getApplicationContext()));
 		driverPassengerCallBtn = (Button) findViewById(R.id.driverPassengerCallBtn); driverPassengerCallBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		driverPassengerImageProgress = (ProgressBar) findViewById(R.id.driverPassengerImageProgress);
-		driverPassengerImage = (ImageView) findViewById(R.id.driverPassengerImage);
 		
 		//Start ride layout
 		driverStartRideMainRl = (RelativeLayout) findViewById(R.id.driverStartRideMainRl);
@@ -612,8 +618,36 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		//End ride layout
 		driverInRideMainRl = (RelativeLayout) findViewById(R.id.driverInRideMainRl);
+		
+		
+//		Button driverEndRideMyLocationBtn;
+//		TextView driverIRDistanceText, driverIRDistanceValue, driverIRDistanceKmText;
+//		TextView driverIRFareText, driverIRFareRsText, driverIRFareValue;
+//		
+//		TextView driverRideTimeText;
+//		PausableChronometer rideTimeChronometer;
+//		
+//		RelativeLayout driverWaitRl;
+//		TextView driverWaitText;
+//		PausableChronometer waitChronometer;
+		
+		driverEndRideMyLocationBtn = (Button) findViewById(R.id.driverEndRideMyLocationBtn);
+		
+		driverIRDistanceText = (TextView) findViewById(R.id.driverIRDistanceText); driverIRDistanceText.setTypeface(Data.regularFont(getApplicationContext()));
+		driverIRDistanceValue = (TextView) findViewById(R.id.driverIRDistanceValue); driverIRDistanceValue.setTypeface(Data.regularFont(getApplicationContext()));
+		driverIRDistanceKmText = (TextView) findViewById(R.id.driverIRDistanceKmText); driverIRDistanceKmText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		driverIRFareText = (TextView) findViewById(R.id.driverIRFareText); driverIRFareText.setTypeface(Data.regularFont(getApplicationContext()));
+		driverIRFareRsText = (TextView) findViewById(R.id.driverIRFareRsText); driverIRFareRsText.setTypeface(Data.regularFont(getApplicationContext()));
+		driverIRFareValue = (TextView) findViewById(R.id.driverIRFareValue); driverIRFareValue.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		driverRideTimeText = (TextView) findViewById(R.id.driverRideTimeText); driverRideTimeText.setTypeface(Data.regularFont(getApplicationContext()));
+		rideTimeChronometer = (PausableChronometer) findViewById(R.id.rideTimeChronometer); rideTimeChronometer.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		
+		driverWaitRl = (RelativeLayout) findViewById(R.id.driverWaitRl);
+		driverWaitText = (TextView) findViewById(R.id.driverWaitText); driverWaitText.setTypeface(Data.regularFont(getApplicationContext()));
 		waitChronometer = (PausableChronometer) findViewById(R.id.waitChronometer); waitChronometer.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		driverWaitBtn = (Button) findViewById(R.id.driverWaitBtn); driverWaitBtn.setTypeface(Data.regularFont(getApplicationContext()));
+
 		driverEndRideText = (TextView) findViewById(R.id.driverEndRideText); driverEndRideText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverEndRideSlider = (SlideButtonInvert) findViewById(R.id.driverEndRideSlider);
 		endRideInv = (ImageView) findViewById(R.id.endRideInv);
@@ -623,6 +657,21 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 //		driverEndRideSlider.setThumbOffset((int)(5.0f * ASSL.Xscale()));
 		
 		
+		
+		rideTimeChronometer.setText("00:00:00");
+		rideTimeChronometer.setOnChronometerTickListener(new OnChronometerTickListener() {
+					@Override
+					public void onChronometerTick(Chronometer cArg) {
+						long time = SystemClock.elapsedRealtime() - cArg.getBase();
+						int h = (int) (time / 3600000);
+						int m = (int) (time - h * 3600000) / 60000;
+						int s = (int) (time - h * 3600000 - m * 60000) / 1000;
+						String hh = h < 10 ? "0" + h : h + "";
+						String mm = m < 10 ? "0" + m : m + "";
+						String ss = s < 10 ? "0" + s : s + "";
+						cArg.setText(hh + ":" + mm + ":" + ss);
+					}
+				});
 		
 		waitChronometer.setText("00:00:00");
 		waitChronometer.setOnChronometerTickListener(new OnChronometerTickListener() {
@@ -638,7 +687,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						cArg.setText(hh + ":" + mm + ":" + ss);
 					}
 				});
-		
 		
 		
 		
@@ -1290,7 +1338,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		// driver in ride layout events 
-		driverWaitBtn.setOnClickListener(new View.OnClickListener() {
+		driverWaitRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -1298,8 +1346,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					waitChronometer.eclipsedTime =  (long)HomeActivity.previousWaitTime;
 					Log.e("waitChronometer.eclipsedTime on first start","="+waitChronometer.eclipsedTime);
 					waitChronometer.start();
-					driverWaitBtn.setBackgroundResource(R.drawable.red_btn_selector);
-					driverWaitBtn.setText(getResources().getString(R.string.stop_wait));
+					driverWaitRl.setBackgroundResource(R.drawable.red_btn_selector);
+					driverWaitText.setText(getResources().getString(R.string.stop_wait));
 					waitStart = 1;
 					
 					startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 1);
@@ -1944,8 +1992,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				driverPassengerName.setText(Data.assignedCustomerInfo.name);
 				driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+getResources().getString(R.string.rating));
-				AQuery aq = new AQuery(driverPassengerImage);
-				aq.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
 				
 				//TODO old DriverLocationUpdateService stopping here
 				//stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
@@ -1994,8 +2040,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				
 				driverPassengerName.setText(Data.assignedCustomerInfo.name);
-				AQuery aq2 = new AQuery(driverPassengerImage);
-				aq2.id(driverPassengerImage).progress(driverPassengerImageProgress).image(Data.assignedCustomerInfo.image, Data.imageOptionsRound());
 				
 			
 				
@@ -2698,7 +2742,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		try {
 			if(waitStart == 2){ 
-				driverWaitBtn.setText(getResources().getString(R.string.stop_wait));
+				driverWaitBtn.setText(getResources().getString(R.string.start_wait));
 			}
 			else{
 				if(waitStart == 1){
@@ -2711,6 +2755,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		driverEndRideText.setText(resources.getString(R.string.slide_to_end_your_ride));
 		
 		

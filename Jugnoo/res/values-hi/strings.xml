@@ -125,6 +125,8 @@
 	<string name="rating"> रेटिंग</string>
 	<string name="call">कॉल</string>
 	
+	<string name="ride_time">सवारी का समय</string>
+	
 	<string name="start_wait">इंतजार शुरू करें</string>
 	<string name="stop_wait">इंतजार समाप्त करें</string>
 	

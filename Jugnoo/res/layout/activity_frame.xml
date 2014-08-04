@@ -2,661 +2,381 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_grey"
-    >
+    android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/menuLayout"
-        android:layout_width="495px"
-        android:layout_height="match_parent" 
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:background="@color/bg_grey"
-        >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-        
-        <RelativeLayout 
-            android:id="@+id/profileRl"
-            android:layout_width="216px"
-            android:layout_height="216px"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="90px"
-            >
-            
-            
-            <Chronometer
+        <RelativeLayout
+            android:id="@+id/driverEngagedLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:splitMotionEvents="false"
+            android:visibility="visible" >
+
+            <RelativeLayout
+                android:id="@+id/driverPassengerInfoRl"
+                android:layout_width="match_parent"
+                android:layout_height="140px"
+                android:background="@color/white_translucent"
+                android:splitMotionEvents="false" >
+
+                <TextView
+                    android:id="@+id/driverPassengerName"
+                    android:layout_width="420px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginTop="20px"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="John Paulo"
+                    android:textColor="@color/bg_grey_opaque"
+                    android:textSize="40px" />
+
+                <RelativeLayout
+                    android:id="@+id/driverPassengerRatingRl"
+                    android:layout_width="420px"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/driverPassengerName"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginTop="10px"
+                    android:splitMotionEvents="false" >
+
+                    <ImageView
+                        android:id="@+id/driverPassengerRatingStar"
+                        android:layout_width="46px"
+                        android:layout_height="46px"
+                        android:background="@drawable/star_empty" />
+
+                    <TextView
+                        android:id="@+id/driverPassengerRatingValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10px"
+                        android:layout_toRightOf="@+id/driverPassengerRatingStar"
+                        android:singleLine="true"
+                        android:text="4.3 Rating"
+                        android:textColor="@color/bg_grey_opaque"
+                        android:textSize="38px" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/driverPassengerCallBtn"
+                    android:layout_width="214px"
+                    android:layout_height="56px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:background="@drawable/blue_btn_selector"
+                    android:text="@string/call"
+                    android:textColor="@drawable/white_color_selector"
+                    android:textSize="36px" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="6px"
+                android:layout_below="@+id/driverPassengerInfoRl"
+                android:background="@drawable/shadow_down" />
+
+            <RelativeLayout
+                android:id="@+id/driverStartRideMainRl"
+                android:layout_width="match_parent"
+                android:layout_height="380px"
+                android:layout_alignParentBottom="true"
+                android:splitMotionEvents="false"
+                android:visibility="gone" >
+
+                <Button
+                    android:id="@+id/driverStartRideMyLocationBtn"
+                    android:layout_width="80px"
+                    android:layout_height="80px"
+                    android:layout_above="@+id/driverStartRideRl"
+                    android:layout_marginBottom="27px"
+                    android:layout_marginLeft="40px"
+                    android:background="@drawable/mylocation_btn_selector"
+                    android:tag="mwar" />
+
+                <RelativeLayout
+                    android:id="@+id/driverStartRideRl"
+                    android:layout_width="648px"
+                    android:layout_height="100px"
+                    android:layout_above="@+id/driverCancelRideBtn"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="27px"
+                    android:background="@drawable/blue_btn_normal"
+                    android:splitMotionEvents="false"
+                    android:tag="mwar" >
+
+                    <TextView
+                        android:id="@+id/driverStartRideText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:tag="mwar"
+                        android:text="@string/slide_to_start_your_ride"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/button_text_size" />
+
+                    <product.clicklabs.jugnoo.SlideButton
+                        android:id="@+id/driverStartRideSlider"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="false"
+                        android:max="100"
+                        android:maxHeight="100px"
+                        android:minHeight="100px"
+                        android:progress="0"
+                        android:progressDrawable="@color/transparent"
+                        android:tag="mwar"
+                        android:thumb="@drawable/start_ride" >
+                    </product.clicklabs.jugnoo.SlideButton>
+
+                    <ImageView
+                        android:id="@+id/startRideInv"
+                        android:layout_width="118px"
+                        android:layout_height="100px"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/start_ride_inv"
+                        android:tag="mwar"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/driverCancelRideBtn"
+                    android:layout_width="648px"
+                    android:layout_height="99px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="27px"
+                    android:background="@drawable/red_btn_selector"
+                    android:text="@string/cancel_ride"
+                    android:textColor="@drawable/white_color_selector"
+                    android:textSize="@dimen/button_text_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/driverInRideMainRl"
+                android:layout_width="match_parent"
+                android:layout_height="520px"
+                android:layout_alignParentBottom="true"
+                android:splitMotionEvents="false"
+                android:visibility="visible" >
+
+                <Button
+                    android:id="@+id/driverEndRideMyLocationBtn"
+                    android:layout_width="80px"
+                    android:layout_height="80px"
+                    android:layout_marginLeft="40px"
+                    android:background="@drawable/mylocation_btn_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="6px"
+                    android:layout_above="@+id/driverInRideInnerRl"
+                    android:background="@drawable/shadow_up" />
+
+                <RelativeLayout
+                    android:id="@+id/driverInRideInnerRl"
+                    android:layout_width="match_parent"
+                    android:layout_height="400px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/white_translucent"
+                    android:splitMotionEvents="false" >
+
+                    <RelativeLayout
+                        android:id="@+id/driverIRDistanceRl"
+                        android:layout_width="310px"
+                        android:layout_height="120px"
+                        android:layout_above="@+id/driverRideTimeRl"
+                        android:layout_marginBottom="20px"
+                        android:layout_marginLeft="40px" >
+
+                        <TextView
+                            android:id="@+id/driverIRDistanceText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10px"
+                            android:text="@string/distance"
+                            android:textColor="@color/black"
+                            android:textSize="30px" />
+
+                        <TextView
+                            android:id="@+id/driverIRDistanceValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/driverIRDistanceText"
+                            android:layout_marginTop="10px"
+                            android:maxWidth="250px"
+                            android:text="100000.00"
+                            android:textColor="@color/black"
+                            android:textSize="50px" />
+
+                        <TextView
+                            android:id="@+id/driverIRDistanceKmText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/driverIRDistanceText"
+                            android:layout_marginLeft="10px"
+                            android:layout_marginTop="30px"
+                            android:layout_toRightOf="@+id/driverIRDistanceValue"
+                            android:text="km"
+                            android:textColor="@color/black"
+                            android:textSize="30px" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/driverIRFareRl"
+                        android:layout_width="310px"
+                        android:layout_height="120px"
+                        android:layout_above="@+id/driverRideTimeRl"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="20px"
+                        android:layout_marginRight="40px" >
+
+                        <TextView
+                            android:id="@+id/driverIRFareText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10px"
+                            android:text="@string/fare"
+                            android:textColor="@color/black"
+                            android:textSize="30px" />
+
+                        <TextView
+                            android:id="@+id/driverIRFareRsText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/driverIRFareText"
+                            android:layout_marginTop="28px"
+                            android:text="Rs"
+                            android:textColor="@color/black"
+                            android:textSize="30px" />
+
+                        <TextView
+                            android:id="@+id/driverIRFareValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/driverIRFareText"
+                            android:layout_marginLeft="40px"
+                            android:layout_marginTop="10px"
+                            android:maxWidth="250px"
+                            android:text="1000000"
+                            android:textColor="@color/black"
+                            android:textSize="50px" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/driverRideTimeRl"
+                        android:layout_width="310px"
+                        android:layout_height="120px"
+                        android:layout_above="@+id/driverEndRideRl"
+                        android:layout_marginBottom="20px"
+                        android:layout_marginLeft="40px"
+                        android:background="@drawable/white_bg_rounded_bordered" >
+
+                        <TextView
+                            android:id="@+id/driverRideTimeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10px"
+                            android:text="@string/ride_time"
+                            android:textColor="@color/black"
+                            android:textSize="30px" />
+
+                        <product.clicklabs.jugnoo.PausableChronometer
                             android:id="@+id/waitChronometer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" 
-                        android:layout_above="@+id/driverWaitBtn"
-                        android:layout_marginBottom="27px"
-                        android:textSize="40px"
-                        
-                        
-                            />
-           
-            
-            
-            
-            
-            <RelativeLayout
-                            android:id="@+id/driverImageRL"
-                            android:layout_width="225px"
-                            android:layout_height="225px"
-                            android:layout_marginLeft="80px"
-                            android:layout_marginTop="22px" 
-                                android:tag="mwar">
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="10px"
+                            android:textColor="@color/black"
+                            android:textSize="50px" />
+                    </RelativeLayout>
 
-                            <ImageView
-                                android:id="@+id/driverImageBg"
-                                android:layout_width="225px"
-                                android:layout_height="225px"
-                                android:background="@drawable/image_border"
-                                android:tag="mwar" 
-                                android:layout_alignParentBottom="true"
-                                />
+                    <RelativeLayout
+                        android:id="@+id/driverWaitRl"
+                        android:layout_width="310px"
+                        android:layout_height="120px"
+                        android:layout_above="@+id/driverEndRideRl"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="20px"
+                        android:layout_marginRight="40px"
+                        android:background="@drawable/blue_btn_selector" >
 
-                            <ProgressBar
-                                android:id="@+id/driverImageProgress"
-                                android:layout_width="60px"
-                                android:layout_height="60px"
-                                android:layout_centerInParent="true" />
-
-                            <ImageView
-                                android:id="@+id/driverImage"
-                                android:layout_width="205px"
-                                android:layout_height="205px"
-                                android:layout_centerInParent="true"
-                                android:background="@drawable/transparent"
-                                android:tag="mwar"
-                                 />
-                            
-                            
-                             <ImageView
-                                android:id="@+id/startRideInv"
-                                android:layout_width="90px"
-                                android:layout_height="76px"
-                                android:layout_alignParentRight="true"
-                                android:src="@drawable/start_ride_inv"
-                                android:tag="mwar" 
-                                />
-                            
-                        </RelativeLayout>
-            
-            
-            
-        
-            <Button 
-                android:id="@+id/setFavoriteBtn"
-                android:layout_width="52px"
-                android:layout_height="52px"
-                android:background="@color/white"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10px"
-                android:layout_centerVertical="true"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:padding="40px"
-                
-                />
-            
-        <ImageView 
-            android:id="@+id/profileBack"
-            android:layout_width="216px"
-            android:layout_height="216px"
-            android:background="@drawable/ring"
-            android:tag="mwar"
-            />
-        
-        
-        
-        <RelativeLayout 
-            android:id="@+id/driverImageRL"
-            android:layout_width="225px"
-            android:layout_height="225px"
-            android:layout_marginLeft="60px"
-            android:layout_marginTop="22px"
-            
-            >
-            
-            
-            <ImageView 
-                android:id="@+id/driverImageBg"
-                android:layout_width="225px"
-                android:layout_height="225px"
-                android:background="@drawable/image_border"
-                android:tag="mwar"
-                />
-            
-            <ProgressBar 
-                android:id="@+id/driverImageProgress"
-                android:layout_width="60px"
-                android:layout_height="60px"
-                android:layout_centerInParent="true"
-                />
-            
-            <ImageView 
-                android:id="@+id/driverImage"
-                android:layout_width="205px"
-                android:layout_height="205px"
-                android:background="@drawable/image_border"
-                android:tag="mwar"
-                android:layout_centerInParent="true"
-                />
-            
-            
-            
-        </RelativeLayout>
-        
-        
-        <RelativeLayout 
-            android:id="@+id/driverPassengerRatingRl"
-            android:layout_width="420px"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="54px"
-            android:layout_marginTop="10px"
-            android:layout_below="@+id/driverPassengerName"
-            >
-            
-            <ImageView 
-                android:id="@+id/driverPassengerRatingStar"
-                android:layout_width="40px"
-                android:layout_height="40px"
-                android:background="@drawable/star_empty"
-                
-                />
-            
-             
-            
-            
-        </RelativeLayout>
-        
-        <Button 
-            android:id="@+id/driverPassengerCallBtn"
-            android:layout_width="214px"
-            android:layout_height="56px"
-            android:layout_above="@+id/driverEngagedBottomRl"
-            android:layout_marginBottom="10px"
-            android:layout_marginLeft="56px"
-            android:background="@drawable/blue_btn_selector"
-            android:text="Call"
-            android:textSize="30px"
-            android:textColor="@drawable/white_color_selector"
-            
-            />
-        
-        
-        
-        <RelativeLayout 
-            android:id="@+id/driverEngagedBottomRl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            
-            
-            
-            >
-            
-            
-            <RelativeLayout 
-                android:id="@+id/driverStartRideRl"
-                android:layout_width="648px"
-                android:layout_height="99px"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="27px"
-                android:layout_centerVertical="true"
-                android:background="@color/blue_btn"
-                
-                >
-                
-                
-                <TextView 
-                    android:id="@+id/driverStartRideText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Slide to start your ride"
-                    android:textColor="@color/white"
-                    android:textSize="38px"
-                    android:gravity="center"
-                    
-                    />
-                
-                
-                
-                
-                <product.clicklabs.jugnoo.SlideButton
-            android:id="@+id/driverStartRideSlider"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="false"
-            android:max="100"
-            android:progressDrawable="@color/transparent"
-            android:thumb="@drawable/start_ride" >
-        </product.clicklabs.jugnoo.SlideButton>
-                
-                
-            </RelativeLayout>
-            
-            
-            
-        </RelativeLayout>
-        
-        
-         <TextView 
-            android:id="@+id/reviewUuserName"
-            android:layout_width="680px"
-            android:layout_height="wrap_content"
-            android:text="John Paulo"
-            android:textSize="30px"
-            android:textColor="@color/white"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:singleLine="true"
-            
-            />
-        
-        
-         <LinearLayout 
-             android:id="@+id/reviewUserRating"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_centerHorizontal="true"
-             android:layout_below="@+id/reviewUserName"
-             android:layout_marginTop="10px"
-             android:orientation="horizontal"
-             >
-             
-             <ImageView 
-                 android:id="@+id/reviewUserStar"
-                 android:layout_width="72px"
-                 android:layout_height="72px"
-                 android:background="@drawable/star_empty"
-                 android:tag="mwar"
-                 />
-             
-              <TextView 
-            android:id="@+id/reviewUserRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3"
-            android:textSize="34px"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:singleLine="true"
-            
-            />
-             
-             
-         </LinearLayout>
-         
-         
-         <RelativeLayout 
-             android:id="@+id/reviewReachedDistanceRl"
-             android:layout_width="match_parent"
-             android:layout_height="180px"
-             android:layout_below="@+id/reviewUserRatingRl"
-             >
-              
-              <TextView 
-            android:id="@+id/reviewReachedDestinationText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reached Destination"
-            android:textSize="40px"
-            android:textColor="@color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10px"
-            android:gravity="center"
-            android:singleLine="true"
-            
-            />
-              
-              
-              <RelativeLayout 
-                  android:id="@+id/reviewDistanceRl"
-                  android:layout_width="359px"
-                  android:layout_height="match_parent"
-                  android:layout_below="@+id/reviewReachedDestinationText"
-                  
-                  >
-                  
-                  
-                   <TextView 
-            android:id="@+id/reviewDistanceText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Distance"
-            android:textSize="40px"
-            android:textColor="@color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20px"
-            android:gravity="center"
-            android:singleLine="true"
-            
-            />
-                   
-                    <TextView 
-            android:id="@+id/reviewDistanceValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4.7 Kms"
-            android:textSize="40px"
-            android:textColor="@color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/reviewDistanceText"
-            android:layout_marginTop="20px"
-            android:gravity="center"
-            android:singleLine="true"
-            
-            />
-                  
-                  
-                    <TextView 
-            android:id="@+id/reviewRatingText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Driver Rating"
-            android:textSize="40px"
-            android:textColor="@color/black"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20px"
-            android:gravity="center"
-            android:singleLine="true"
-            
-            />
-                    
-                  
-                    <LinearLayout 
-                        android:id="@+id/reviewRatingBarRl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        >
-                        
-                        <RatingBar 
-                            android:id="@+id/reviewRatingBar"
+                        <TextView
+                            android:id="@+id/driverWaitText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:numStars="5"
-                            android:rating="2"
-                            android:stepSize="1.0"
-                            
-                             
-                            />
-                        
-                    </LinearLayout>
-                    
-                  
-              </RelativeLayout>
-              
-              
-              
-              
-              <ImageView 
-                  android:layout_width="2px"
-                  android:layout_height="match_parent"
-                  android:background="@color/white"
-                  android:layout_centerHorizontal="true"
-                  />
-              
-              
-              <RelativeLayout 
-                  android:id="@+id/reviewFareRl"
-                  android:layout_width="359px"
-                  android:layout_height="match_parent"
-                  android:layout_below="@+id/reviewReachedDestinationText"
-                  android:layout_alignParentRight="true"
-                  
-                  >
-                  
-                  
-              </RelativeLayout>
-              
-              
-             
-             
-         </RelativeLayout>
-         
-        
-        <RelativeLayout 
-            android:id="@+id/driverCarRL"
-            android:layout_width="225px"
-            android:layout_height="225px"
-            android:layout_marginRight="60px"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="22px"
-            
-            >
-            
-            
-            <ImageView 
-                android:id="@+id/driverCarBg"
-                android:layout_width="225px"
-                android:layout_height="225px"
-                android:background="@drawable/image_border"
-                android:tag="mwar"
-                />
-            
-            <ProgressBar 
-                android:id="@+id/driverCarProgress"
-                android:layout_width="60px"
-                android:layout_height="60px"
-                android:layout_centerInParent="true"
-                />
-            
-            <ImageView 
-                android:id="@+id/driverCarImage"
-                android:layout_width="205px"
-                android:layout_height="205px"
-                android:background="@drawable/image_border"
-                android:tag="mwar"
-                android:layout_centerInParent="true"
-                />
-            
-            
-            
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10px"
+                            android:text="@string/start_wait"
+                            android:textColor="@drawable/white_color_selector"
+                            android:textSize="30px" />
+
+                        <product.clicklabs.jugnoo.PausableChronometer
+                            android:id="@+id/waitChronometer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="10px"
+                            android:textColor="@color/white"
+                            android:textSize="50px" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/driverEndRideRl"
+                        android:layout_width="648px"
+                        android:layout_height="100px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="27px"
+                        android:background="@drawable/red_dark_btn_normal"
+                        android:splitMotionEvents="false"
+                        android:tag="mwar" >
+
+                        <TextView
+                            android:id="@+id/driverEndRideText"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:tag="mwar"
+                            android:text="@string/slide_to_end_your_ride"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/button_text_size" />
+
+                        <product.clicklabs.jugnoo.SlideButtonInvert
+                            android:id="@+id/driverEndRideSlider"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="false"
+                            android:max="100"
+                            android:maxHeight="100px"
+                            android:minHeight="100px"
+                            android:progress="100"
+                            android:progressDrawable="@color/transparent"
+                            android:tag="mwar"
+                            android:thumb="@drawable/end_ride" >
+                        </product.clicklabs.jugnoo.SlideButtonInvert>
+
+                        <ImageView
+                            android:id="@+id/endRideInv"
+                            android:layout_width="118px"
+                            android:layout_height="100px"
+                            android:layout_alignParentLeft="true"
+                            android:src="@drawable/end_ride_inv"
+                            android:tag="mwar"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </RelativeLayout>
         </RelativeLayout>
-        
-         <TextView 
-            android:id="@+id/driverName"
-            android:layout_width="340px"
-            android:layout_height="wrap_content"
-            android:text="John Paulo"
-            android:textSize="30px"
-            android:textColor="@color/white"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10px"
-            android:layout_marginLeft="10px"
-            android:gravity="center"
-            android:singleLine="true"
-            
-            />
-        
-        
-        
-        
-        <ProgressBar 
-            android:id="@+id/profileImgProgress"
-            android:layout_width="60px"
-            android:layout_height="60px"
-            android:layout_centerInParent="true"
-            />
-        
-        
-        <ImageView 
-            android:id="@+id/profileImg"
-            android:layout_width="180px"
-            android:layout_height="180px"
-            android:tag="mwar"
-            android:layout_centerInParent="true"
-            android:layout_above="@+id/centrePin"
-            />
-        
-        
-        </RelativeLayout>
-        
-        
-        
-        <TextView 
-            android:id="@+id/userName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="John Paulo"
-            android:textSize="30px"
-            android:textColor="@color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/profileRl"
-            
-            />
-        
-        
-       
-        
-        
-        
-        <RelativeLayout 
-            android:id="@+id/driverModeRl"
-            android:layout_width="match_parent"
-            android:layout_height="84px"
-            android:layout_marginTop="96px"
-            android:background="@color/transparent"
-            
-            >
-        
-            
-             
-            
-            
-            <TextView 
-            android:id="@+id/driverModeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Driver Mode"
-            android:textSize="34px"
-            android:textColor="@color/white"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="42px"
-            />
-            
-            <ImageView 
-                android:id="@+id/driverModeToggle"
-                android:layout_width="90px"
-                android:layout_height="72px"
-                android:background="@drawable/on"
-                android:tag="mwar"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/driverModeText"
-                android:layout_marginLeft="140px"
-                />
-            
-            <Button 
-                android:id="@+id/myLocationBtn"
-                android:layout_width="72px"
-                android:layout_height="72px"
-                android:background="@drawable/mylocation_btn_selector"
-                android:tag="mwar"
-                android:layout_marginLeft="20px"
-                android:layout_above="@+id/requestRideBtn"
-                android:layout_marginBottom="20px"
-                
-                />
-            
-            
-            
-        </RelativeLayout>
-        
-        <ImageView 
-            android:layout_width="match_parent"
-            android:layout_height="3px"
-            android:background="@drawable/menu_divider"
-            />
-        
-        <RelativeLayout 
-            android:id="@+id/inviteFriendRl"
-            android:layout_width="match_parent"
-            android:layout_height="84px"
-            android:layout_below="@+id/userName"
-            
-            
-            >
-            
-            <TextView 
-            android:id="@+id/inviteFriendText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Invite a Friend"
-            android:textSize="34px"
-            android:textColor="@color/white"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="42px"
-            />
-            
-            
-        </RelativeLayout>
-        
-        <ImageView 
-            android:layout_width="match_parent"
-            android:layout_height="3px"
-            android:background="@drawable/menu_divider"
-            />
-        
-        <RelativeLayout 
-            android:id="@+id/helpRl"
-            android:layout_width="match_parent"
-            android:layout_height="84px"
-            android:layout_below="@+id/userName"
-            
-            
-            >
-            
-            <TextView 
-            android:id="@+id/helpText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Help"
-            android:textSize="34px"
-            android:textColor="@color/white"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="42px"
-            />
-            
-            
-        </RelativeLayout>
-        
-        
-         <ImageView 
-            android:layout_width="match_parent"
-            android:layout_height="3px"
-            android:background="@drawable/menu_divider"
-            />
-         
-         
-          <RelativeLayout 
-            android:id="@+id/aboutRl"
-            android:layout_width="match_parent"
-            android:layout_height="84px"
-            android:layout_below="@+id/userName"
-            
-            
-            >
-            
-            <TextView 
-            android:id="@+id/aboutText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="About"
-            android:textSize="34px"
-            android:textColor="@color/white"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="42px"
-            />
-            
-            
-        </RelativeLayout>
-         
-        
-        
-    </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>
