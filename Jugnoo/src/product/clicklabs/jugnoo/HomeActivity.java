@@ -337,7 +337,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
 	
-	static double totalDistance = -1, totalFare = 0, previousWaitTime = 0;
+	static double totalDistance = -1, totalFare = 0, previousWaitTime = 0, previousRideTime = 0;
+	
 	static String waitTime = "";
 	String fullAddress = "";
 	
@@ -618,18 +619,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		//End ride layout
 		driverInRideMainRl = (RelativeLayout) findViewById(R.id.driverInRideMainRl);
-		
-		
-//		Button driverEndRideMyLocationBtn;
-//		TextView driverIRDistanceText, driverIRDistanceValue, driverIRDistanceKmText;
-//		TextView driverIRFareText, driverIRFareRsText, driverIRFareValue;
-//		
-//		TextView driverRideTimeText;
-//		PausableChronometer rideTimeChronometer;
-//		
-//		RelativeLayout driverWaitRl;
-//		TextView driverWaitText;
-//		PausableChronometer waitChronometer;
 		
 		driverEndRideMyLocationBtn = (Button) findViewById(R.id.driverEndRideMyLocationBtn);
 		
@@ -1346,6 +1335,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					waitChronometer.eclipsedTime =  (long)HomeActivity.previousWaitTime;
 					Log.e("waitChronometer.eclipsedTime on first start","="+waitChronometer.eclipsedTime);
 					waitChronometer.start();
+					rideTimeChronometer.stop();
 					driverWaitRl.setBackgroundResource(R.drawable.red_btn_selector);
 					driverWaitText.setText(getResources().getString(R.string.stop_wait));
 					waitStart = 1;
@@ -1357,16 +1347,18 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					if(waitStart == 1){
 						Log.e("waitChronometer.stop()","in driverWaitBtn on click");
 						waitChronometer.stop();
-						driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
-						driverWaitBtn.setText(getResources().getString(R.string.start_wait));
+						rideTimeChronometer.start();
+						driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
+						driverWaitText.setText(getResources().getString(R.string.start_wait));
 						waitStart = 0;
 						
 						startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
 					}
 					else if(waitStart == 0){
 						waitChronometer.start();
-						driverWaitBtn.setBackgroundResource(R.drawable.red_btn_selector);
-						driverWaitBtn.setText(getResources().getString(R.string.stop_wait));
+						rideTimeChronometer.stop();
+						driverWaitRl.setBackgroundResource(R.drawable.red_btn_selector);
+						driverWaitText.setText(getResources().getString(R.string.stop_wait));
 						waitStart = 1;
 						
 						startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 1);
@@ -1389,9 +1381,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverEndRideText.setVisibility(View.GONE);
 				Log.e("waitChronometer.stop()","in driverEndRideSlider on click");
 				waitChronometer.stop();
+				rideTimeChronometer.stop();
 				
-				driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
-				driverWaitBtn.setText(getResources().getString(R.string.start_wait));
+				driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
+				driverWaitText.setText(getResources().getString(R.string.start_wait));
 				waitStart = 0;
 				
 				long elapsedMillis = waitChronometer.eclipsedTime;
@@ -1821,15 +1814,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			default:
 				
-				if(isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
-				
-				passengerMainLayout.setVisibility(View.VISIBLE);
-				driverMainLayout.setVisibility(View.GONE);
-				
-				favBtn.setVisibility(View.VISIBLE);
-		
 		
 		}
 		
@@ -1940,6 +1924,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				cancelCustomerPathUpdateTimer();
 			
+				
+				
 				break;
 				
 				
@@ -2024,6 +2010,19 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				//TODO new DriverLocationUpdateService stopping here
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
+				long timeR = (long)HomeActivity.previousRideTime;
+				int hR = (int) (timeR / 3600000);
+				int mR = (int) (timeR - hR * 3600000) / 60000;
+				int sR = (int) (timeR - hR * 3600000 - mR * 60000) / 1000;
+				String hhR = hR < 10 ? "0" + hR : hR + "";
+				String mmR = mR < 10 ? "0" + mR : mR + "";
+				String ssR = sR < 10 ? "0" + sR : sR + "";
+				rideTimeChronometer.setText(hhR + ":" + mmR + ":" + ssR);
+				
+				rideTimeChronometer.eclipsedTime = (long)HomeActivity.previousRideTime;
+				rideTimeChronometer.start();
+				
+				
 				long time = (long)HomeActivity.previousWaitTime;
 				int h = (int) (time / 3600000);
 				int m = (int) (time - h * 3600000) / 60000;
@@ -2032,6 +2031,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				String mm = m < 10 ? "0" + m : m + "";
 				String ss = s < 10 ? "0" + s : s + "";
 				waitChronometer.setText(hh + ":" + mm + ":" + ss);
+				
 				
 				
 				if(map != null){
@@ -2516,41 +2516,41 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		@Override
 		public void onGpsStatusChanged(int event) {
 			
-			try{
-				GpsStatus gpsStatus = null;
-				locationManager.getGpsStatus(gpsStatus);
-				Log.e("gpsStatus retrieved=", "="+gpsStatus);
-				Log.e("gpsStatus.getMaxSatellites=", "="+gpsStatus.getMaxSatellites());
-				Log.e("gpsStatus.getTimeToFirstFix=", "="+gpsStatus.getTimeToFirstFix());
-				Log.e("gpsStatus.getSatellites=", "="+gpsStatus.getSatellites());
-			} catch(Exception e){
-			}
-			
-			switch(event){
-				case GpsStatus.GPS_EVENT_FIRST_FIX:
-					gpsState = GPSState.GPS_EVENT_FIRST_FIX;
-					Log.v("GpsStatus","GPS_EVENT_FIRST_FIX");
-					break;
-					
-				case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-					gpsState = GPSState.GPS_EVENT_SATELLITE_STATUS;
-					Log.v("GpsStatus","GPS_EVENT_SATELLITE_STATUS");
-					break;
-					
-				case GpsStatus.GPS_EVENT_STARTED:
-					gpsState = GPSState.GPS_EVENT_STARTED;
-					Log.v("GpsStatus","GPS_EVENT_STARTED");
-					break;
-					
-				case GpsStatus.GPS_EVENT_STOPPED:
-					gpsState = GPSState.GPS_EVENT_STOPPED;
-					Log.v("GpsStatus","GPS_EVENT_STOPPED");
-					break;
-			
-				default:
-					Log.v("GpsStatus","="+event);
-			
-			}
+//			try{
+//				GpsStatus gpsStatus = null;
+//				locationManager.getGpsStatus(gpsStatus);
+////				Log.e("gpsStatus retrieved=", "="+gpsStatus);
+////				Log.e("gpsStatus.getMaxSatellites=", "="+gpsStatus.getMaxSatellites());
+////				Log.e("gpsStatus.getTimeToFirstFix=", "="+gpsStatus.getTimeToFirstFix());
+////				Log.e("gpsStatus.getSatellites=", "="+gpsStatus.getSatellites());
+//			} catch(Exception e){
+//			}
+//			
+//			switch(event){
+//				case GpsStatus.GPS_EVENT_FIRST_FIX:
+//					gpsState = GPSState.GPS_EVENT_FIRST_FIX;
+//					Log.v("GpsStatus","GPS_EVENT_FIRST_FIX");
+//					break;
+//					
+//				case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+//					gpsState = GPSState.GPS_EVENT_SATELLITE_STATUS;
+//					Log.v("GpsStatus","GPS_EVENT_SATELLITE_STATUS");
+//					break;
+//					
+//				case GpsStatus.GPS_EVENT_STARTED:
+//					gpsState = GPSState.GPS_EVENT_STARTED;
+//					Log.v("GpsStatus","GPS_EVENT_STARTED");
+//					break;
+//					
+//				case GpsStatus.GPS_EVENT_STOPPED:
+//					gpsState = GPSState.GPS_EVENT_STOPPED;
+//					Log.v("GpsStatus","GPS_EVENT_STOPPED");
+//					break;
+//			
+//				default:
+//					Log.v("GpsStatus","="+event);
+//			
+//			}
 			
 		}
 	};
@@ -2742,14 +2742,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		try {
 			if(waitStart == 2){ 
-				driverWaitBtn.setText(getResources().getString(R.string.start_wait));
+				driverWaitText.setText(getResources().getString(R.string.start_wait));
 			}
 			else{
 				if(waitStart == 1){
-					driverWaitBtn.setText(getResources().getString(R.string.start_wait));
+					driverWaitText.setText(getResources().getString(R.string.start_wait));
 				}
 				else if(waitStart == 0){
-					driverWaitBtn.setText(getResources().getString(R.string.stop_wait));
+					driverWaitText.setText(getResources().getString(R.string.stop_wait));
 				}
 			}
 		} catch (Exception e) {
@@ -2829,8 +2829,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									try{
 										Log.e("waitChronometer.stop()","in onPause on click");
 						        		waitChronometer.stop();
-						        		driverWaitBtn.setText(getResources().getString(R.string.start_wait));
-						        		driverWaitBtn.setBackgroundResource(R.drawable.blue_btn_selector);
+						        		driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
+						        		driverWaitText.setText(getResources().getString(R.string.start_wait));
 										waitStart = 0;
 					        		} catch(Exception e){
 					        			e.printStackTrace();
@@ -2843,6 +2843,20 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				    			e.printStackTrace();
 				    		}
 						}
+						
+						if(rideTimeChronometer.isRunning){
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									try{
+										rideTimeChronometer.stop();
+									} catch(Exception e){
+					        			e.printStackTrace();
+					        		}
+								}
+							});
+						}
+						
 					}
 					
 					editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
@@ -2860,7 +2874,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
 					editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
 					
-					Log.e("Data.SP_WAIT_TIME", "=="+elapsedMillis);
+					long elapsedRideTime = rideTimeChronometer.eclipsedTime;
+					editor.putString(Data.SP_RIDE_TIME, ""+elapsedRideTime);
+					
+					Log.e("Data.SP_RIDE_TIME", "=="+elapsedRideTime);
 					
 					if(HomeActivity.myLocation != null){
 						editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
@@ -3051,7 +3068,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	};
 	
 	
-	
 	public void drawLocationChanged(Location location){
 		
 		
@@ -3096,6 +3112,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									database.close();
 								}
 							}).start();
+							
+							
+							double totalDistanceInKm = Math.abs(totalDistance/1000.0);
+							driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
+							
 						}
 						else{
 							new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement).execute();
@@ -3115,6 +3136,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							markerOptions.position(currentLatLng);
 							markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
 							map.addMarker(markerOptions);
+							
+							double totalDistanceInKm = Math.abs(totalDistance/1000.0);
+							driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
 						}
 						else{
 							try{
@@ -3141,6 +3165,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 											database.close();
 										}
 									}).start();
+									
+									double totalDistanceInKm = Math.abs(totalDistance/1000.0);
+									driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
+									
 								}
 								else{
 									new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng, displacement).execute();
@@ -3338,6 +3366,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        super.onPostExecute(result);   
 	        if(result!=null){
 	            drawPath(result, displacementToCompare, source, destination);
+	            
+	            double totalDistanceInKm = Math.abs(totalDistance/1000.0);
+				driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
+				
 	        }
 	    }
 	}
@@ -4917,6 +4949,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									lastLocation = null;
 									
 									HomeActivity.previousWaitTime = 0;
+									HomeActivity.previousRideTime = 0;
 									HomeActivity.totalDistance = -1;
 									
 									Database database = new Database(HomeActivity.this);
@@ -5069,6 +5102,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									endRideInv.setVisibility(View.GONE);
 									driverEndRideSlider.setProgress(100);
 									driverEndRideText.setVisibility(View.VISIBLE);
+									rideTimeChronometer.start();
 								}
 								else{
 									
@@ -5089,6 +5123,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									waitStart = 2;
 									waitChronometer.stop();
+									rideTimeChronometer.stop();
 									Log.e("waitChronometer.stop()","in endRideAPi on click");
 									
 									
@@ -5105,6 +5140,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								endRideInv.setVisibility(View.GONE);
 								driverEndRideSlider.setProgress(100);
 								driverEndRideText.setVisibility(View.VISIBLE);
+								rideTimeChronometer.start();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
@@ -5119,6 +5155,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							endRideInv.setVisibility(View.GONE);
 							driverEndRideSlider.setProgress(100);
 							driverEndRideText.setVisibility(View.VISIBLE);
+							rideTimeChronometer.start();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 					});
@@ -5129,6 +5166,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			endRideInv.setVisibility(View.GONE);
 			driverEndRideSlider.setProgress(100);
 			driverEndRideText.setVisibility(View.VISIBLE);
+			rideTimeChronometer.start();
 		}
 
 	}
@@ -6512,7 +6550,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 													    map.addPolyline(new PolylineOptions()
 													    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 													    .width(5)
-													    .color(Color.TRANSPARENT).geodesic(true));
+													    .color(Color.RED).geodesic(true));
 													}
 												} catch (Exception e) {
 													e.printStackTrace();
@@ -7040,6 +7078,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     		
     		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
     		editor.putString(Data.SP_WAIT_TIME, "0");
+    		editor.putString(Data.SP_RIDE_TIME, "0");
     		editor.putString(Data.SP_LAST_LATITUDE, "0");
     		editor.putString(Data.SP_LAST_LONGITUDE, "0");
     		

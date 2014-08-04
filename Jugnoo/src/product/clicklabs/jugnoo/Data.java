@@ -32,6 +32,7 @@ public class Data {
 			
 			SP_TOTAL_DISTANCE = "total_distance", 
 			SP_WAIT_TIME = "wait_time",
+			SP_RIDE_TIME = "ride_time", 
 			SP_LAST_LATITUDE = "last_latitude",
 			SP_LAST_LONGITUDE = "last_longitude",
 			
@@ -45,6 +46,7 @@ public class Data {
 			SP_D_CUSTOMER_IMAGE = "d_customer_image", 
 			SP_D_CUSTOMER_PHONE = "d_customer_phone", 
 			SP_D_CUSTOMER_RATING = "d_customer_rating", 
+			
 			
 			SP_D_NEW_RIDE_REQUEST = "d_new_ride_request",
 			
@@ -101,7 +103,7 @@ public class Data {
 	// review 3:    http://dev.jugnoo.in:4003
 	// live 4th:    http://dev.jugnoo.in:4004
 	
-	public static final String SERVER_URL = "http://54.81.229.172:8000";
+	public static final String SERVER_URL = "http://dev.jugnoo.in:4004";
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Oops!! Server not responding. Please try again later.";
@@ -114,6 +116,7 @@ public class Data {
 	public static final String MAPS_BROWSER_KEY = "AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY";
 	
 	public static final String FACEBOOK_APP_ID = "782131025144439";
+	
 	
 	
 	

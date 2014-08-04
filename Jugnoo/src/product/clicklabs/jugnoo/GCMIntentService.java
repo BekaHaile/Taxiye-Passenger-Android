@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -28,6 +30,7 @@ public class GCMIntentService extends IntentService {
 
     static Handler requestRemoveHandler;
     static Runnable requestRemoveRunnable;
+    
     
     public GCMIntentService() {
         super("GcmIntentService");
@@ -47,7 +50,7 @@ public class GCMIntentService extends IntentService {
 		
 
 	  
-		private void notificationManager(Context context, String message) {
+		private void notificationManager(Context context, String message, boolean ring) {
 	    	
 			try {
 				long when = System.currentTimeMillis();
@@ -68,11 +71,23 @@ public class GCMIntentService extends IntentService {
 				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
-				builder.setDefaults(Notification.DEFAULT_ALL);
+				
+				if(ring){
+					builder.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.telephone_ring));
+					builder.setDefaults(Notification.DEFAULT_VIBRATE);
+					builder.setLights(Color.GREEN, 500, 500);
+				}
+				else{
+					builder.setDefaults(Notification.DEFAULT_ALL);
+				}
+				
 				builder.setWhen(when);
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
 				builder.setSmallIcon(R.drawable.notif_icon);
 				builder.setContentIntent(intent);
+				
+				
+				
 				
 				
 				Notification notification = builder.build();
@@ -88,7 +103,7 @@ public class GCMIntentService extends IntentService {
 			
 		}
 
-		private void notificationManagerResume(Context context, String message) {
+		private void notificationManagerResume(Context context, String message, boolean ring) {
 			
 			try {
 				long when = System.currentTimeMillis();
@@ -108,7 +123,16 @@ public class GCMIntentService extends IntentService {
 				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
-				builder.setDefaults(Notification.DEFAULT_ALL);
+				
+				if(ring){
+					builder.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.telephone_ring));
+					builder.setDefaults(Notification.DEFAULT_VIBRATE);
+					builder.setLights(Color.GREEN, 500, 500);
+				}
+				else{
+					builder.setDefaults(Notification.DEFAULT_ALL);
+				}
+				
 				builder.setWhen(when);
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
 				builder.setSmallIcon(R.drawable.notif_icon);
@@ -211,7 +235,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
 	    	    					 
 	    	    					 if(HomeActivity.driverGetRequestPush != null){
-	    	    						 notificationManagerResume(this, "You have got a new ride request.");
+	    	    						 notificationManagerResume(this, "You have got a new ride request.", true);
 	    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
 	    	    					 }
 	    	    					 else{
@@ -232,7 +256,7 @@ public class GCMIntentService extends IntentService {
 	    	    						 editor.putString(SP_D_NR_LONGITUDE, ""+longitude);
 	    	    						 editor.commit();
 	    	    						 
-	    	    						 notificationManager(this, "You have got a new ride request.");
+	    	    						 notificationManager(this, "You have got a new ride request.", true);
 	    	    					 }
 
     	    						 
@@ -325,7 +349,7 @@ public class GCMIntentService extends IntentService {
 	    	    				 else if(3 == flag){
 
 	    	    					 if (HomeActivity.detectRideStart != null) {
-	    	    						 notificationManagerResume(this, "Your ride has started.");
+	    	    						 notificationManagerResume(this, "Your ride has started.", false);
 	    	    						 HomeActivity.detectRideStart.startRideForCustomer(0);
 	    	    					 }
 	    	    					 else{
@@ -337,7 +361,7 @@ public class GCMIntentService extends IntentService {
 	    	    						 editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
 	    	    						 editor.commit();
 	    	    						 
-	    	    						 notificationManager(this, "Your ride has started.");
+	    	    						 notificationManager(this, "Your ride has started.", false);
 	    	    					 }
 	    	    				 }
 	    	    				 // {"flag": 4,"log":"show"}  customer cancel 5 seconds done show driver start ride option
@@ -357,7 +381,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 Data.waitTime = jObj.getString("wait_time");
 	    	    					 
 	    	    					 if (HomeActivity.customerEndRideInterrupt != null) {
-	    	    						 notificationManagerResume(this, "Your ride has ended.");
+	    	    						 notificationManagerResume(this, "Your ride has ended.", false);
 	    	    						 HomeActivity.customerEndRideInterrupt.customerEndRideInterrupt();
 	    	    					 }
 	    	    					 else{
@@ -378,7 +402,7 @@ public class GCMIntentService extends IntentService {
 	    	    						 
 	    	    						 
 	    	    						 
-	    	    						 notificationManager(this, "Your ride has ended.");
+	    	    						 notificationManager(this, "Your ride has ended.", false);
 	    	    					 }
 	    	    				 }
 	    	    				// flag 6 for driver ride canceled show customer ride canceled by driver  
@@ -391,7 +415,12 @@ public class GCMIntentService extends IntentService {
 	    	    				 // flag 7 for start and stop wait for customer
 	    	    				 else if(7 == flag){
 	    	    					 String message1 = jObj.getString("message");
-	    	    					 notificationManager(this, ""+message1);
+	    	    					 if (HomeActivity.activity == null) {
+		    	    					 notificationManager(this, ""+message1, false);
+	    	    					 }
+	    	    					 else{
+		    	    					 notificationManagerResume(this, ""+message1, false);
+	    	    					 }
 	    	    				 }
 	    	    				 else{
 	    	    					 

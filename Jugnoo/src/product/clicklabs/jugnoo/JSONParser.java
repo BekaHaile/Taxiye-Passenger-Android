@@ -155,10 +155,10 @@ public class JSONParser {
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "0"));
 					HomeActivity.previousWaitTime = Double.parseDouble(pref.getString(Data.SP_WAIT_TIME, "0"));
+					HomeActivity.previousRideTime = Double.parseDouble(pref.getString(Data.SP_RIDE_TIME, "0"));
 					
 					HomeActivity.waitStart = 2;
 					
-					Log.e("Data.SP_WAIT_TIME on login ", "=="+HomeActivity.previousWaitTime);
 					
 					String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
 					String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
@@ -327,6 +327,7 @@ public class JSONParser {
         		
         		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
         		editor.putString(Data.SP_WAIT_TIME, "0");
+        		editor.putString(Data.SP_RIDE_TIME, "0");
         		editor.putString(Data.SP_LAST_LATITUDE, "0");
         		editor.putString(Data.SP_LAST_LONGITUDE, "0");
         		

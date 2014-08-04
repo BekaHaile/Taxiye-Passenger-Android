@@ -182,10 +182,12 @@ public class DriverLocationUpdateService extends Service {
     	
     	
     	
+    	
+    	
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		String SERVER_URL = "http://54.81.229.172:8000",
+    		String SERVER_URL = "http://dev.jugnoo.in:4004",
     				GOOGLE_PROJECT_ID = "506849624961", 
     				PROPERTY_REG_ID = "registration_id", 
     				PROPERTY_APP_VERSION = "appVersion";
@@ -250,7 +252,7 @@ public class DriverLocationUpdateService extends Service {
     			
     			if(count > 0){
 	    			try{
-	    				Thread.sleep(60000);
+	    				Thread.sleep(30000);
 	    			} catch(Exception e){
 	    			}
     			}
@@ -264,9 +266,8 @@ public class DriverLocationUpdateService extends Service {
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
 	    			Log.e("currentLatLng = ", "="+currentLatLng);
 	    			Log.e("lastLocation = ", "="+lastLocation);
-	    			Log.e("distance = ", "="+distance(DriverLocationUpdateService.this.lastLocation, currentLatLng));
 	    			
-	    			if(distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
+//	    			if(distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= 100){
 		    			
 	    				DriverLocationUpdateService.this.lastLocation = currentLatLng;
 	    				
@@ -294,7 +295,7 @@ public class DriverLocationUpdateService extends Service {
 		    			else{
 		    				return result;
 		    			}
-	    			}
+//	    			}
 	    			
 	    		}
     		}

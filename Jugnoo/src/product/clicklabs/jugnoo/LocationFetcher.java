@@ -21,7 +21,7 @@ public class LocationFetcher {
 	double latitude = 30.7500; // latitude default chandigarh latlng
 	double longitude = 76.7800; // longitude
 	AlertDialog alertDialog;
-	public MyLocationListener listener;
+	public MyLocationListener gpsListener, networkListener;
 	public LocationManager locationManager;
 	public String provider;
 	
@@ -31,15 +31,17 @@ public class LocationFetcher {
 	 */
 	public LocationFetcher(Context context){
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-		listener = new MyLocationListener();
+		gpsListener = new MyLocationListener();
+		networkListener = new MyLocationListener();
 		if(isLocationEnabled(context)){
 			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 				provider = LocationManager.GPS_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, listener);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, gpsListener);
 			}
-			else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+			
+			if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 				provider = LocationManager.NETWORK_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 15000, 0, listener);
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, networkListener);
 			}
 		}
 		else{
@@ -176,11 +178,13 @@ public class LocationFetcher {
 	public double getLatitude(){
 		try{
 		if(location == null){
+			Log.e("getLatitude", "location == null");
 			location = locationManager.getLastKnownLocation(provider);
 			if(location != null){
 				latitude = location.getLatitude();
 			}
 		}else{
+			Log.e("getLatitude", "location == not null");
 			latitude = location.getLatitude();
 		}
 		
@@ -215,8 +219,14 @@ public class LocationFetcher {
 	
 	public void destroy(){
 		try{
-			Log.e("location","destroy");
-			locationManager.removeUpdates(listener);
+			Log.e("location","destroy gps");
+			locationManager.removeUpdates(gpsListener);
+		}catch(Exception e){
+			Log.e("e", "="+e.toString());
+		}
+		try{
+			Log.e("location","destroy network");
+			locationManager.removeUpdates(networkListener);
 		}catch(Exception e){
 			Log.e("e", "="+e.toString());
 		}
@@ -226,7 +236,7 @@ public class LocationFetcher {
 	class MyLocationListener implements LocationListener {
 
 		public void onLocationChanged(Location loc) {
-			Log.i("**************************************", "Location changed "+loc);
+			Log.e("**************************************", "Location changed "+loc);
 			LocationFetcher.this.location = loc;
 		}
 
@@ -234,6 +244,7 @@ public class LocationFetcher {
 		}
 
 		public void onProviderEnabled(String provider) {
+			LocationFetcher.this.provider = provider;
 		}
 
 		public void onStatusChanged(String provider, int status, Bundle extras) {
