@@ -338,6 +338,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
 	
 	static double totalDistance = -1, totalFare = 0, previousWaitTime = 0, previousRideTime = 0;
+	static double fareFixed = 30, farePerKm = 10, fareThresholdDistance = 2;
 	
 	static String waitTime = "";
 	String fullAddress = "";
@@ -613,7 +614,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		startRideInv = (ImageView) findViewById(R.id.startRideInv);
 		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 
-		driverStartRideSlider.setThumb(createStartRideThumbDrawable());
+//		driverStartRideSlider.setThumb(createStartRideThumbDrawable());
 //		driverStartRideSlider.setThumbOffset((int)(5.0f * ASSL.Xscale()));
 		
 		
@@ -642,7 +643,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		endRideInv = (ImageView) findViewById(R.id.endRideInv);
 		waitStart = 2;
 
-		driverEndRideSlider.setThumb(createEndRideThumbDrawable());
+//		driverEndRideSlider.setThumb(createEndRideThumbDrawable());
 //		driverEndRideSlider.setThumbOffset((int)(5.0f * ASSL.Xscale()));
 		
 		
@@ -652,6 +653,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					@Override
 					public void onChronometerTick(Chronometer cArg) {
 						long time = SystemClock.elapsedRealtime() - cArg.getBase();
+						rideTimeChronometer.eclipsedTime = time;
 						int h = (int) (time / 3600000);
 						int m = (int) (time - h * 3600000) / 60000;
 						int s = (int) (time - h * 3600000 - m * 60000) / 1000;
@@ -667,6 +669,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					@Override
 					public void onChronometerTick(Chronometer cArg) {
 						long time = SystemClock.elapsedRealtime() - cArg.getBase();
+						waitChronometer.eclipsedTime = time;
 						int h = (int) (time / 3600000);
 						int m = (int) (time - h * 3600000) / 60000;
 						int s = (int) (time - h * 3600000 - m * 60000) / 1000;
@@ -1632,6 +1635,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			driverInitialMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			driverRequestAcceptMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			driverStartRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
+			driverEndRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
+			
 			
 		}
 		
@@ -1698,17 +1703,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, gpsListener);
 
 		
 	    if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-	    	locationManager.addGpsStatusListener(gpsStatusListener);
-	    	map.setMyLocationEnabled(true);
 	    }
 	    else{
-	    	gpsState = GPSState.GPS_OFF;
 	        buildAlertMessageNoGps();
-	        map.setMyLocationEnabled(false);
 	    }
 		
 		
@@ -2062,6 +2063,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 			case D_RIDE_END:
+				
+				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
+					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				}
 				
 				driverInitialLayout.setVisibility(View.GONE);
 				driverRequestAcceptLayout.setVisibility(View.GONE);
@@ -2503,61 +2508,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	}
 	
-	enum GPSState{
-		GPS_EVENT_FIRST_FIX, GPS_EVENT_SATELLITE_STATUS, GPS_EVENT_STARTED, GPS_EVENT_STOPPED, GPS_OFF
-	}
-	
-	static GPSState gpsState = GPSState.GPS_EVENT_STARTED;
 	
 	
 	
-	GpsStatus.Listener gpsStatusListener = new GpsStatus.Listener() {
-		
-		@Override
-		public void onGpsStatusChanged(int event) {
-			
-//			try{
-//				GpsStatus gpsStatus = null;
-//				locationManager.getGpsStatus(gpsStatus);
-////				Log.e("gpsStatus retrieved=", "="+gpsStatus);
-////				Log.e("gpsStatus.getMaxSatellites=", "="+gpsStatus.getMaxSatellites());
-////				Log.e("gpsStatus.getTimeToFirstFix=", "="+gpsStatus.getTimeToFirstFix());
-////				Log.e("gpsStatus.getSatellites=", "="+gpsStatus.getSatellites());
-//			} catch(Exception e){
-//			}
-//			
-//			switch(event){
-//				case GpsStatus.GPS_EVENT_FIRST_FIX:
-//					gpsState = GPSState.GPS_EVENT_FIRST_FIX;
-//					Log.v("GpsStatus","GPS_EVENT_FIRST_FIX");
-//					break;
-//					
-//				case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-//					gpsState = GPSState.GPS_EVENT_SATELLITE_STATUS;
-//					Log.v("GpsStatus","GPS_EVENT_SATELLITE_STATUS");
-//					break;
-//					
-//				case GpsStatus.GPS_EVENT_STARTED:
-//					gpsState = GPSState.GPS_EVENT_STARTED;
-//					Log.v("GpsStatus","GPS_EVENT_STARTED");
-//					break;
-//					
-//				case GpsStatus.GPS_EVENT_STOPPED:
-//					gpsState = GPSState.GPS_EVENT_STOPPED;
-//					Log.v("GpsStatus","GPS_EVENT_STOPPED");
-//					break;
-//			
-//				default:
-//					Log.v("GpsStatus","="+event);
-//			
-//			}
-			
-		}
-	};
 	
 	
 	
-	LocationListener locationListener = new LocationListener() {
+	LocationListener gpsListener = new LocationListener() {
 		
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -2568,17 +2525,39 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		@Override
 		public void onProviderEnabled(String provider) {
 			Log.e("locationListener onProviderEnabled","="+provider);
-			if(map != null){
-				map.setMyLocationEnabled(true);
-			}
 		}
 		
 		@Override
 		public void onProviderDisabled(String provider) {
 			Log.e("locationListener onProviderDisabled","="+provider);
-			if(map != null){
-				map.setMyLocationEnabled(false);
+		}
+		
+		@Override
+		public void onLocationChanged(Location location) {
+			Log.e("locationListener location changed","="+location);
+			if(appPaused){
+				drawLocationChanged(location);
 			}
+		}
+	};
+	
+	
+	LocationListener networkListener = new LocationListener() {
+		
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			Log.e("locationListener onStatusChanged","= provider = "+provider + ", status = "+status+ ", extras = "+extras);
+			
+		}
+		
+		@Override
+		public void onProviderEnabled(String provider) {
+			Log.e("locationListener onProviderEnabled","="+provider);
+		}
+		
+		@Override
+		public void onProviderDisabled(String provider) {
+			Log.e("locationListener onProviderDisabled","="+provider);
 		}
 		
 		@Override
@@ -2642,6 +2621,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	@Override
 	protected void onResume() {
 		
+		if(Data.locationFetcher == null){
+			Data.locationFetcher = new LocationFetcher(HomeActivity.this);
+		}
+		
 		appPaused = false;
 		
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -2681,7 +2664,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		languagePrefrencesText.setText(resources.getString(R.string.language_preferences));
 		logoutText.setText(resources.getString(R.string.logout));
 		
-		searchEt.setHint(getResources().getString(R.string.search));
+		searchEt.setHint(resources.getString(R.string.search));
 		
 		
 		
@@ -2697,17 +2680,17 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		try{
 		if(Data.assignedDriverInfo != null){
 			if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-				driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
+				driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ resources.getString(R.string.will_arrive_in));
 	 		}
 	 		else{
-	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
+	 			driverTime.setText(resources.getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
 	 		}
 		}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		callDriverBtn.setText(getResources().getString(R.string.call_driver));
+		callDriverBtn.setText(resources.getString(R.string.call_driver));
 		
 		inRideRideInProgress.setText(resources.getString(R.string.ride_in_progress));
 		
@@ -2719,8 +2702,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-		driverAcceptRideBtn.setText(getResources().getString(R.string.accept_ride));
-		driverCancelRequestBtn.setText(getResources().getString(R.string.cancel_request));
+		driverAcceptRideBtn.setText(resources.getString(R.string.accept_ride));
+		driverCancelRequestBtn.setText(resources.getString(R.string.cancel_request));
 		
 
 		if(Data.assignedCustomerInfo != null){
@@ -2731,25 +2714,36 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			} catch(Exception e){
 				e.printStackTrace();
 			}
-			driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+getResources().getString(R.string.rating));
+			driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+resources.getString(R.string.rating));
 		}
 		
-		driverPassengerCallBtn.setText(getResources().getString(R.string.call));
+		driverPassengerCallBtn.setText(resources.getString(R.string.call));
 		
 		driverStartRideText.setText(resources.getString(R.string.slide_to_start_your_ride));
-		driverCancelRideBtn.setText(getResources().getString(R.string.cancel_ride));
+		driverCancelRideBtn.setText(resources.getString(R.string.cancel_ride));
+		
+		
+		
+		
+		
+		driverIRDistanceText.setText(resources.getString(R.string.distance));
+		driverIRFareText.setText(resources.getString(R.string.fare));
+		driverRideTimeText.setText(resources.getString(R.string.ride_time));
+		
+		
+		
 		
 		
 		try {
 			if(waitStart == 2){ 
-				driverWaitText.setText(getResources().getString(R.string.start_wait));
+				driverWaitText.setText(resources.getString(R.string.start_wait));
 			}
 			else{
 				if(waitStart == 1){
-					driverWaitText.setText(getResources().getString(R.string.start_wait));
+					driverWaitText.setText(resources.getString(R.string.stop_wait));
 				}
 				else if(waitStart == 0){
-					driverWaitText.setText(getResources().getString(R.string.stop_wait));
+					driverWaitText.setText(resources.getString(R.string.start_wait));
 				}
 			}
 		} catch (Exception e) {
@@ -2768,7 +2762,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		reviewWaitText.setText(resources.getString(R.string.wait_time));
 		reviewFareText.setText(resources.getString(R.string.fare));
 		
-		reviewSubmitBtn.setText(getResources().getString(R.string.submit));
+		reviewSubmitBtn.setText(resources.getString(R.string.submit));
 		
 		
 		
@@ -2873,6 +2867,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			    	
 					editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
 					editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
+					
+					Log.e("Data.SP_WAIT_TIME", "=="+elapsedMillis);
 					
 					long elapsedRideTime = rideTimeChronometer.eclipsedTime;
 					editor.putString(Data.SP_RIDE_TIME, ""+elapsedRideTime);
@@ -3019,11 +3015,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     		
     		try{
     			if(locationManager != null){
-    				if(gpsStatusListener != null){
-    					locationManager.removeGpsStatusListener(gpsStatusListener);
-    				}
-    				if(locationListener != null){
-    					locationManager.removeUpdates(locationListener);
+    				if(gpsListener != null){
+    					locationManager.removeUpdates(gpsListener);
     				}
     			}
     		} catch(Exception e){
@@ -3032,6 +3025,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     		
     		try{
     			Data.locationFetcher.destroy();
+    			Data.locationFetcher = null;
     		} catch(Exception e){
     			e.printStackTrace();
     		}
@@ -3117,6 +3111,18 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 							driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
 							
+							
+							double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
+							if(totalDistanceInKm <= fareThresholdDistance){
+								fare = fareFixed;
+							}
+							else{
+								fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
+							}
+							
+							driverIRFareValue.setText(""+decimalFormat.format(fare));
+							
+							
 						}
 						else{
 							new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement).execute();
@@ -3139,6 +3145,17 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							
 							double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 							driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
+							
+							double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
+							if(totalDistanceInKm <= fareThresholdDistance){
+								fare = fareFixed;
+							}
+							else{
+								fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
+							}
+							
+							driverIRFareValue.setText(""+decimalFormat.format(fare));
+							
 						}
 						else{
 							try{
@@ -3169,6 +3186,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 									driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
 									
+									double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
+									if(totalDistanceInKm <= fareThresholdDistance){
+										fare = fareFixed;
+									}
+									else{
+										fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
+									}
+									
+									driverIRFareValue.setText(""+decimalFormat.format(fare));
 								}
 								else{
 									new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng, displacement).execute();
@@ -3186,7 +3212,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					}
 					
 					
-					map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+//					map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
 
 					lastLocation = location;
 					
@@ -3369,6 +3395,16 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	            
 	            double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 				driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
+				
+				double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
+				if(totalDistanceInKm <= fareThresholdDistance){
+					fare = fareFixed;
+				}
+				else{
+					fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
+				}
+				
+				driverIRFareValue.setText(""+decimalFormat.format(fare));
 				
 	        }
 	    }
@@ -5760,13 +5796,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 							try {
 								jObj = new JSONObject(response);
-
-								String errorMessage = jObj.getString("error");
-								if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-									HomeActivity.logoutUser(activity);
-								}
-								else if(!jObj.isNull("error")){
-									
+								
+								if(!jObj.isNull("error")){
+									String errorMessage = jObj.getString("error");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
 								}
 								else{
 									

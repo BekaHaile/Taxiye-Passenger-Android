@@ -103,7 +103,7 @@ public class Data {
 	// review 3:    http://dev.jugnoo.in:4003
 	// live 4th:    http://dev.jugnoo.in:4004
 	
-	public static final String SERVER_URL = "http://dev.jugnoo.in:4004";
+	public static final String SERVER_URL = "http://54.81.229.172:8000";
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Oops!! Server not responding. Please try again later.";

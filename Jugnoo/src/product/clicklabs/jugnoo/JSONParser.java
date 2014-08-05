@@ -48,6 +48,20 @@ public class JSONParser {
 			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 		}
 		
+		
+		try{
+			HomeActivity.fareFixed = userData.getInt("fare_fixed");
+			HomeActivity.farePerKm = userData.getInt("fare_per_km");
+			HomeActivity.fareThresholdDistance = userData.getInt("fare_threshold_distance");
+		} catch(Exception e){
+			e.printStackTrace();
+			HomeActivity.fareFixed = 30;
+			HomeActivity.farePerKm = 10;
+			HomeActivity.fareThresholdDistance = 2;
+		}
+		
+		
+		
 	}
 	
 	
@@ -56,6 +70,18 @@ public class JSONParser {
 		JSONObject userData = jObj.getJSONObject("user_data");
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
 				userData.getString("user_image"), id);
+		
+		try{
+			HomeActivity.fareFixed = userData.getInt("fare_fixed");
+			HomeActivity.farePerKm = userData.getInt("fare_per_km");
+			HomeActivity.fareThresholdDistance = userData.getInt("fare_threshold_distance");
+		} catch(Exception e){
+			e.printStackTrace();
+			HomeActivity.fareFixed = 30;
+			HomeActivity.farePerKm = 10;
+			HomeActivity.fareThresholdDistance = 2;
+		}
+		
 		
 		//current_user_status = 1 driver or 2 user
 		

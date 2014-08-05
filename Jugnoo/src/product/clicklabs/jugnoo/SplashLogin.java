@@ -443,7 +443,9 @@ public class SplashLogin extends Activity{
 	protected void onResume() {
 		super.onResume();
 		
-		Data.locationFetcher = new LocationFetcher(SplashLogin.this);
+		if(Data.locationFetcher == null){
+			Data.locationFetcher = new LocationFetcher(SplashLogin.this);
+		}
 		
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if(resp != ConnectionResult.SUCCESS){
@@ -452,6 +454,16 @@ public class SplashLogin extends Activity{
 		}
 		
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Data.locationFetcher.destroy();
+		Data.locationFetcher = null;
+		
+	}
+	
+	
 	
 	AlertDialog alertDialog;
 	/**
