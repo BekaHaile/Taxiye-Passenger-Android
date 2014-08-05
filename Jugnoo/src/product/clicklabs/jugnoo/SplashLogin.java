@@ -437,6 +437,10 @@ public class SplashLogin extends Activity{
 //			accessTokenLogin(SplashLogin.this);
 //		}
 		
+		if(Data.locationFetcher == null){
+			Data.locationFetcher = new LocationFetcher(SplashLogin.this);
+		}
+		
 	}
 	
 	@Override
@@ -458,8 +462,12 @@ public class SplashLogin extends Activity{
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Data.locationFetcher.destroy();
-		Data.locationFetcher = null;
+		try{
+			Data.locationFetcher.destroy();
+			Data.locationFetcher = null;
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 		
 	}
 	

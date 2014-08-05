@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -49,10 +50,31 @@ public class JSONParser {
 		}
 		
 		
+//		{
+//		    "user_data": {
+//		        "access_token": "c274d8d70e77850511df24a6255dab48",
+//		        "user_name": "Shankar Bhagwati",
+//		        "user_image": "http://graph.facebook.com/717496164959213/picture?width=160&height=160",
+//		        "id": 1,
+//		        "current_user_status": 1,
+//		        "fare_details": [
+//		            {
+//		                "fare_fixed": 30,
+//		                "fare_per_km": 10,
+//		                "fare_threshold_distance": 2
+//		            }
+//		        ]
+//		    },
+//		    "popup": 0
+//		}
+		
+		
 		try{
-			HomeActivity.fareFixed = userData.getInt("fare_fixed");
-			HomeActivity.farePerKm = userData.getInt("fare_per_km");
-			HomeActivity.fareThresholdDistance = userData.getInt("fare_threshold_distance");
+			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
+			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
+			HomeActivity.fareFixed = fareDetails0.getInt("fare_fixed");
+			HomeActivity.farePerKm = fareDetails0.getInt("fare_per_km");
+			HomeActivity.fareThresholdDistance = fareDetails0.getInt("fare_threshold_distance");
 		} catch(Exception e){
 			e.printStackTrace();
 			HomeActivity.fareFixed = 30;
@@ -65,6 +87,9 @@ public class JSONParser {
 	}
 	
 	
+	
+	
+	
 	public void parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
@@ -72,9 +97,11 @@ public class JSONParser {
 				userData.getString("user_image"), id);
 		
 		try{
-			HomeActivity.fareFixed = userData.getInt("fare_fixed");
-			HomeActivity.farePerKm = userData.getInt("fare_per_km");
-			HomeActivity.fareThresholdDistance = userData.getInt("fare_threshold_distance");
+			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
+			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
+			HomeActivity.fareFixed = fareDetails0.getInt("fare_fixed");
+			HomeActivity.farePerKm = fareDetails0.getInt("fare_per_km");
+			HomeActivity.fareThresholdDistance = fareDetails0.getInt("fare_threshold_distance");
 		} catch(Exception e){
 			e.printStackTrace();
 			HomeActivity.fareFixed = 30;

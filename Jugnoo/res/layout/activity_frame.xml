@@ -99,50 +99,18 @@
                     android:background="@drawable/mylocation_btn_selector"
                     android:tag="mwar" />
 
-                <RelativeLayout
-                    android:id="@+id/driverStartRideRl"
+                <Button
+                    android:id="@+id/driverStartRideBtn"
                     android:layout_width="648px"
-                    android:layout_height="100px"
+                    android:layout_height="99px"
                     android:layout_above="@+id/driverCancelRideBtn"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="27px"
-                    android:background="@drawable/blue_btn_normal"
-                    android:splitMotionEvents="false"
-                    android:tag="mwar" >
-
-                    <TextView
-                        android:id="@+id/driverStartRideText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:tag="mwar"
-                        android:text="@string/slide_to_start_your_ride"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/button_text_size" />
-
-                    <product.clicklabs.jugnoo.SlideButton
-                        android:id="@+id/driverStartRideSlider"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clickable="false"
-                        android:max="100"
-                        android:maxHeight="100px"
-                        android:minHeight="100px"
-                        android:progress="0"
-                        android:progressDrawable="@color/transparent"
-                        android:tag="mwar"
-                        android:thumb="@drawable/start_ride" >
-                    </product.clicklabs.jugnoo.SlideButton>
-
-                    <ImageView
-                        android:id="@+id/startRideInv"
-                        android:layout_width="118px"
-                        android:layout_height="100px"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/start_ride_inv"
-                        android:tag="mwar"
-                        android:visibility="gone" />
-                </RelativeLayout>
+                    android:background="@drawable/blue_btn_selector"
+                    android:text="@string/start_ride"
+                    android:textColor="@drawable/white_color_selector"
+                    android:textSize="@dimen/button_text_size" />
+                
 
                 <Button
                     android:id="@+id/driverCancelRideBtn"
@@ -273,7 +241,7 @@
                         android:id="@+id/driverRideTimeRl"
                         android:layout_width="310px"
                         android:layout_height="120px"
-                        android:layout_above="@+id/driverEndRideRl"
+                        android:layout_above="@+id/driverEndRideBtn"
                         android:layout_marginBottom="20px"
                         android:layout_marginLeft="40px"
                         android:background="@drawable/white_bg_rounded_bordered" >
@@ -303,7 +271,7 @@
                         android:id="@+id/driverWaitRl"
                         android:layout_width="310px"
                         android:layout_height="120px"
-                        android:layout_above="@+id/driverEndRideRl"
+                        android:layout_above="@+id/driverEndRideBtn"
                         android:layout_alignParentRight="true"
                         android:layout_marginBottom="20px"
                         android:layout_marginRight="40px"
@@ -330,50 +298,21 @@
                             android:textSize="50px" />
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/driverEndRideRl"
-                        android:layout_width="648px"
-                        android:layout_height="100px"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="27px"
-                        android:background="@drawable/red_dark_btn_normal"
-                        android:splitMotionEvents="false"
-                        android:tag="mwar" >
-
-                        <TextView
-                            android:id="@+id/driverEndRideText"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:tag="mwar"
-                            android:text="@string/slide_to_end_your_ride"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/button_text_size" />
-
-                        <product.clicklabs.jugnoo.SlideButtonInvert
-                            android:id="@+id/driverEndRideSlider"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:clickable="false"
-                            android:max="100"
-                            android:maxHeight="100px"
-                            android:minHeight="100px"
-                            android:progress="100"
-                            android:progressDrawable="@color/transparent"
-                            android:tag="mwar"
-                            android:thumb="@drawable/end_ride" >
-                        </product.clicklabs.jugnoo.SlideButtonInvert>
-
-                        <ImageView
-                            android:id="@+id/endRideInv"
-                            android:layout_width="118px"
-                            android:layout_height="100px"
-                            android:layout_alignParentLeft="true"
-                            android:src="@drawable/end_ride_inv"
-                            android:tag="mwar"
-                            android:visibility="gone" />
-                    </RelativeLayout>
+                    <Button
+                    android:id="@+id/driverEndRideBtn"
+                    android:layout_width="648px"
+                    android:layout_height="99px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="27px"
+                    android:background="@drawable/red_btn_selector"
+                    android:text="@string/end_ride"
+                    android:textColor="@drawable/white_color_selector"
+                    android:textSize="@dimen/button_text_size" />
+                    
+                    
+                    
+                    
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>

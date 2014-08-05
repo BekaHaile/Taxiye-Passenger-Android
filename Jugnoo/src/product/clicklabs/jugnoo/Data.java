@@ -75,7 +75,11 @@ public class Data {
 			SP_C_TOTAL_FARE = "c_total_fare",
 			SP_C_WAIT_TIME = "c_wait_time"
 			
+			
+			
 			;
+	
+	
 	
 	
 	public static final String LANGUAGE_SELECTED = "language_selected";

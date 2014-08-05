@@ -81,6 +81,7 @@ public class AboutActivity extends Activity{
 //		Jugnoo helps you provide a friendly and affordable ride within the Chandigarh tricity area.
 //	    \nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.\n
 		
+		//First 2 kms: Rs.30\nAfter 2 kms: Rs. 10/km\nWaiting time: Rs.1.5/min after 15 minutes.
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {

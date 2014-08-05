@@ -94,11 +94,13 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.Builder;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -202,6 +204,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	TextView driverName, driverTime;
 	Button callDriverBtn;
 	TextView inRideRideInProgress;
+	Button customerInRideMyLocationBtn;
 	
 	
 	
@@ -275,10 +278,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	//Start ride layout
 	RelativeLayout driverStartRideMainRl;
-	Button driverStartRideMyLocationBtn;
-	TextView driverStartRideText;
-	SlideButton driverStartRideSlider;
-	ImageView startRideInv;
+	Button driverStartRideMyLocationBtn, driverStartRideBtn;
 	Button driverCancelRideBtn;
 	
 	//End ride layout
@@ -295,9 +295,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	TextView driverWaitText;
 	PausableChronometer waitChronometer;
 	
-	TextView driverEndRideText;
-	SlideButtonInvert driverEndRideSlider;
-	ImageView endRideInv;
+	Button driverEndRideBtn;
 	public static int waitStart = 2;
 	
 	
@@ -335,7 +333,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>(); 
 	
 	
-	DecimalFormat decimalFormat = new DecimalFormat("#.##");
+	DecimalFormat decimalFormat = new DecimalFormat("#.#");
 	
 	static double totalDistance = -1, totalFare = 0, previousWaitTime = 0, previousRideTime = 0;
 	static double fareFixed = 30, farePerKm = 10, fareThresholdDistance = 2;
@@ -539,6 +537,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverTime = (TextView) findViewById(R.id.driverTime); driverTime.setTypeface(Data.regularFont(getApplicationContext()));
 		callDriverBtn = (Button) findViewById(R.id.callDriverBtn); callDriverBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress); inRideRideInProgress.setTypeface(Data.regularFont(getApplicationContext()));
+		customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
+		
 		
 		
 		
@@ -609,9 +609,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		//Start ride layout
 		driverStartRideMainRl = (RelativeLayout) findViewById(R.id.driverStartRideMainRl);
 		driverStartRideMyLocationBtn = (Button) findViewById(R.id.driverStartRideMyLocationBtn);
-		driverStartRideText = (TextView) findViewById(R.id.driverStartRideText); driverStartRideText.setTypeface(Data.regularFont(getApplicationContext()));
-		driverStartRideSlider = (SlideButton) findViewById(R.id.driverStartRideSlider);
-		startRideInv = (ImageView) findViewById(R.id.startRideInv);
+		driverStartRideBtn = (Button) findViewById(R.id.driverStartRideBtn); driverStartRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 
 //		driverStartRideSlider.setThumb(createStartRideThumbDrawable());
@@ -638,9 +636,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		driverWaitText = (TextView) findViewById(R.id.driverWaitText); driverWaitText.setTypeface(Data.regularFont(getApplicationContext()));
 		waitChronometer = (PausableChronometer) findViewById(R.id.waitChronometer); waitChronometer.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 
-		driverEndRideText = (TextView) findViewById(R.id.driverEndRideText); driverEndRideText.setTypeface(Data.regularFont(getApplicationContext()));
-		driverEndRideSlider = (SlideButtonInvert) findViewById(R.id.driverEndRideSlider);
-		endRideInv = (ImageView) findViewById(R.id.endRideInv);
+		driverEndRideBtn = (Button) findViewById(R.id.driverEndRideBtn); driverEndRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		waitStart = 2;
 
 //		driverEndRideSlider.setThumb(createEndRideThumbDrawable());
@@ -1272,39 +1268,39 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		});
 		
 		
-		
-		driverStartRideSlider.setSlideButtonListener(new SlideButtonListener() {  
-	        @Override
-	        public void handleSlide() {
-	        	
-	        	
-	        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
-	        	
-	        	if(displacement <= 100){
-	        		buildAlertMessageNoGps();
-		        	
-		        	startRideInv.setVisibility(View.VISIBLE);
-		        	
-		        	GCMIntentService.clearNotifications(HomeActivity.this);
-		        	driverStartRideText.setVisibility(View.GONE);
-		        	new GetAddressStartRide().execute();
-	        	}
-	        	else{
-	        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
-	        		startRideInv.setVisibility(View.GONE);
-	    			driverStartRideSlider.setProgress(0);
-	    			driverStartRideText.setVisibility(View.VISIBLE);
-	        	}
+		//TODO start ride
+		driverStartRideBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				startRidePopup(HomeActivity.this);
+				
+//	        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
+//	        	
+//	        	if(displacement <= 100){
+//	        		buildAlertMessageNoGps();
+//		        	
+//		        	GCMIntentService.clearNotifications(HomeActivity.this);
+//		        	new GetAddressStartRide().execute();
+//	        	}
+//	        	else{
+//	        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
+//	        	}
 	        }
-	    });
+		});
 		
 		
+		
+		//TODO cancel ride
 		driverCancelRideBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				GCMIntentService.clearNotifications(HomeActivity.this);
-				driverRejectRideAsync(HomeActivity.this, 1);
+				cancelRidePopup(HomeActivity.this);
+				
+//				GCMIntentService.clearNotifications(HomeActivity.this);
+//				driverRejectRideAsync(HomeActivity.this, 1);
 			}
 		});
 		
@@ -1372,34 +1368,34 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		});
 		
 		
-		
-		driverEndRideSlider.setSlideButtonListener(new SlideButtonInvertListener() {
+		//TODO end ride
+		driverEndRideBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
-			public void handleSlide() {
+			public void onClick(View v) {
 				
-				endRideInv.setVisibility(View.VISIBLE);
+				endRidePopup(HomeActivity.this);
 				
-				GCMIntentService.clearNotifications(HomeActivity.this);
-				driverEndRideText.setVisibility(View.GONE);
-				Log.e("waitChronometer.stop()","in driverEndRideSlider on click");
-				waitChronometer.stop();
-				rideTimeChronometer.stop();
-				
-				driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
-				driverWaitText.setText(getResources().getString(R.string.start_wait));
-				waitStart = 0;
-				
-				long elapsedMillis = waitChronometer.eclipsedTime;
-				long seconds = elapsedMillis / 1000;
-				double minutes = Math.ceil(((double)seconds) / 60.0);
-				
-				driverScreenMode = DriverScreenMode.D_RIDE_END;
-				
-				new GetAddressEndRide(minutes).execute();
+//				GCMIntentService.clearNotifications(HomeActivity.this);
+//				Log.e("waitChronometer.stop()","in driverEndRideSlider on click");
+//				waitChronometer.stop();
+//				rideTimeChronometer.stop();
+//				
+//				driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
+//				driverWaitText.setText(getResources().getString(R.string.start_wait));
+//				waitStart = 0;
+//				
+//				long elapsedMillis = waitChronometer.eclipsedTime;
+//				long seconds = elapsedMillis / 1000;
+//				double minutes = Math.ceil(((double)seconds) / 60.0);
+//				
+//				driverScreenMode = DriverScreenMode.D_RIDE_END;
+//				
+//				new GetAddressEndRide(minutes).execute();
 				
 			}
 		});
+		
 		
 		
 		
@@ -1636,7 +1632,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			driverRequestAcceptMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			driverStartRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			driverEndRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
-			
+			customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			
 		}
 		
@@ -1692,7 +1688,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			switchDriverScreen(driverScreenMode);
 		}
-		else{
+		else if(userMode == UserMode.PASSENGER){
 			switchPassengerScreen(passengerScreenMode);
 		}
 		
@@ -1988,9 +1984,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.VISIBLE);
 				
-				startRideInv.setVisibility(View.GONE);
-				driverStartRideSlider.setProgress(0);
-				driverStartRideText.setVisibility(View.VISIBLE);
 				
 				driverStartRideMainRl.setVisibility(View.VISIBLE);
 				driverInRideMainRl.setVisibility(View.GONE);
@@ -2051,9 +2044,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.VISIBLE);
 				
-				endRideInv.setVisibility(View.GONE);
-				driverEndRideSlider.setProgress(100);
-				driverEndRideText.setVisibility(View.VISIBLE);
 				
 				driverStartRideMainRl.setVisibility(View.GONE);
 				driverInRideMainRl.setVisibility(View.VISIBLE);
@@ -2719,7 +2709,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		driverPassengerCallBtn.setText(resources.getString(R.string.call));
 		
-		driverStartRideText.setText(resources.getString(R.string.slide_to_start_your_ride));
+		driverStartRideBtn.setText(resources.getString(R.string.start_ride));
 		driverCancelRideBtn.setText(resources.getString(R.string.cancel_ride));
 		
 		
@@ -2750,7 +2740,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			e.printStackTrace();
 		}
 		
-		driverEndRideText.setText(resources.getString(R.string.slide_to_end_your_ride));
+		driverEndRideBtn.setText(resources.getString(R.string.end_ride));
 		
 		
 		
@@ -3212,8 +3202,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					}
 					
 					
+					if(location.getSpeed() >= 5){
+						CameraPosition cameraPosition = new CameraPosition(currentLatLng, map.getCameraPosition().zoom, 
+								map.getCameraPosition().tilt, location.getBearing());
+						map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+					}
+					
+					
 //					map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-
+					
 					lastLocation = location;
 					
 //				}
@@ -4972,9 +4969,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-									startRideInv.setVisibility(View.GONE);
-									driverStartRideSlider.setProgress(0);
-									driverStartRideText.setVisibility(View.VISIBLE);
 								}
 								else{
 									
@@ -5000,9 +4994,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								startRideInv.setVisibility(View.GONE);
-								driverStartRideSlider.setProgress(0);
-								driverStartRideText.setVisibility(View.VISIBLE); 
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
@@ -5013,18 +5004,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						public void onFailure(Throwable arg0) {
 							Log.e("request fail", arg0.toString());
 							DialogPopup.dismissLoadingDialog();
-							startRideInv.setVisibility(View.GONE);
-							driverStartRideSlider.setProgress(0);
-							driverStartRideText.setVisibility(View.VISIBLE);
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 					});
 		}
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			startRideInv.setVisibility(View.GONE);
-			driverStartRideSlider.setProgress(0);
-			driverStartRideText.setVisibility(View.VISIBLE);
 		}
 
 	}
@@ -5135,9 +5120,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									driverScreenMode = DriverScreenMode.D_IN_RIDE;
-									endRideInv.setVisibility(View.GONE);
-									driverEndRideSlider.setProgress(100);
-									driverEndRideText.setVisibility(View.VISIBLE);
 									rideTimeChronometer.start();
 								}
 								else{
@@ -5173,9 +5155,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								driverScreenMode = DriverScreenMode.D_IN_RIDE;
-								endRideInv.setVisibility(View.GONE);
-								driverEndRideSlider.setProgress(100);
-								driverEndRideText.setVisibility(View.VISIBLE);
 								rideTimeChronometer.start();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
@@ -5188,9 +5167,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							Log.e("request fail", arg0.toString());
 							driverScreenMode = DriverScreenMode.D_IN_RIDE;
 							DialogPopup.dismissLoadingDialog();
-							endRideInv.setVisibility(View.GONE);
-							driverEndRideSlider.setProgress(100);
-							driverEndRideText.setVisibility(View.VISIBLE);
 							rideTimeChronometer.start();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
@@ -5199,9 +5175,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		else {
 			driverScreenMode = DriverScreenMode.D_IN_RIDE;
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			endRideInv.setVisibility(View.GONE);
-			driverEndRideSlider.setProgress(100);
-			driverEndRideText.setVisibility(View.VISIBLE);
 			rideTimeChronometer.start();
 		}
 
@@ -6487,7 +6460,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			};
 			
 			
-			timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 30000);
+			timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 15000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -6604,7 +6577,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			
 			
-			timerCustomerPathUpdater.scheduleAtFixedRate(timerTaskCustomerPathUpdater, 10, 30000);
+			timerCustomerPathUpdater.scheduleAtFixedRate(timerTaskCustomerPathUpdater, 10, 15000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -6646,6 +6619,195 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
+	
+	
+	
+	//TODO start ride popup
+	void startRidePopup(final Activity activity) {
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.custom_two_btn_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			
+			textMessage.setText("Are you sure you want to start ride?");
+			
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+
+		        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
+		        	
+		        	if(displacement <= 100){
+		        		buildAlertMessageNoGps();
+			        	
+			        	GCMIntentService.clearNotifications(HomeActivity.this);
+			        	new GetAddressStartRide().execute();
+		        	}
+		        	else{
+		        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
+		        	}
+		        	
+				}
+				
+			});
+			
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+				
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	//TODO end ride popup
+	void endRidePopup(final Activity activity) {
+			try {
+				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.setContentView(R.layout.custom_two_btn_dialog);
+
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, true);
+				
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+				
+				
+				
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+				
+				textMessage.setText("Are you sure you want to end ride?");
+				
+				
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+				
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+
+						GCMIntentService.clearNotifications(HomeActivity.this);
+						Log.e("waitChronometer.stop()","in driverEndRideSlider on click");
+						waitChronometer.stop();
+						rideTimeChronometer.stop();
+						
+						driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
+						driverWaitText.setText(getResources().getString(R.string.start_wait));
+						waitStart = 0;
+						
+						long elapsedMillis = waitChronometer.eclipsedTime;
+						long seconds = elapsedMillis / 1000;
+						double minutes = Math.ceil(((double)seconds) / 60.0);
+						
+						driverScreenMode = DriverScreenMode.D_RIDE_END;
+						
+						new GetAddressEndRide(minutes).execute();
+			        	
+					}
+					
+				});
+				
+				btnCancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+					
+				});
+
+				dialog.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	
+	
+	//TODO cancel ride popup
+		void cancelRidePopup(final Activity activity) {
+				try {
+					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+					dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+					dialog.setContentView(R.layout.custom_two_btn_dialog);
+
+					FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+					new ASSL(activity, frameLayout, 1134, 720, true);
+					
+					WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+					layoutParams.dimAmount = 0.6f;
+					dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+					dialog.setCancelable(false);
+					dialog.setCanceledOnTouchOutside(false);
+					
+					
+					
+					TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+					TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+					
+					textMessage.setText("Are you sure you want to cancel ride?");
+					
+					
+					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+					
+					btnOk.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							dialog.dismiss();
+							
+							GCMIntentService.clearNotifications(HomeActivity.this);
+							driverRejectRideAsync(HomeActivity.this, 1);
+						}
+						
+						
+					});
+					
+					btnCancel.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							dialog.dismiss();
+						}
+						
+					});
+
+					dialog.show();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 	
 	
 	

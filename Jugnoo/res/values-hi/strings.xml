@@ -80,9 +80,9 @@
 	
 	<string name="click_to_view">देखने के लिए क्लिक करें</string>
 	
-	<string name="slide_to_start_your_ride">सवारी शुरू करने के लिए स्लाइड करें</string>
+	<string name="start_ride">सवारी शुरू करें</string>
 	
-	<string name="slide_to_end_your_ride">सवारी समाप्त करने के लिए स्लाइड करें</string>
+	<string name="end_ride">सवारी समाप्त करें</string>
 	
 	
 	<string name="reached_destination">मंज़िल पर पहुंच गऐ</string>

@@ -89,9 +89,9 @@
 	
 	<string name="click_to_view">Click to view</string>
 	
-	<string name="slide_to_start_your_ride">Slide to start your ride</string>
+	<string name="start_ride">Start Ride</string>
 	
-	<string name="slide_to_end_your_ride">Slide to end your ride</string>
+	<string name="end_ride">End Ride</string>
 	
 	<string name="reached_destination">Reached Destination</string>
 	<string name="distance">Distance</string>
