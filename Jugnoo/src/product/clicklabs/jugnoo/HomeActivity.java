@@ -2141,7 +2141,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				cancelDriverLocationUpdateTimer();
 				
 				
-				
 				try{pickupLocationMarker.remove();} catch(Exception e){}
 				try{driverLocationMarker.remove();} catch(Exception e){}
 				
@@ -3109,7 +3108,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							else{
 								fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
 							}
-							
+							fare = Math.ceil(fare);
 							driverIRFareValue.setText(""+decimalFormat.format(fare));
 							
 							
@@ -3143,7 +3142,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							else{
 								fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
 							}
-							
+							fare = Math.ceil(fare);
 							driverIRFareValue.setText(""+decimalFormat.format(fare));
 							
 						}
@@ -3183,7 +3182,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									else{
 										fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
 									}
-									
+									fare = Math.ceil(fare);
 									driverIRFareValue.setText(""+decimalFormat.format(fare));
 								}
 								else{
@@ -3202,9 +3201,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					}
 					
 					
-					if(location.getSpeed() >= 5){
-						CameraPosition cameraPosition = new CameraPosition(currentLatLng, map.getCameraPosition().zoom, 
-								map.getCameraPosition().tilt, location.getBearing());
+					if(location.getSpeed() >= 1 && location.getBearing() != 0){
+						CameraPosition cameraPosition = new CameraPosition(map.getCameraPosition().target, 
+								map.getCameraPosition().zoom, 
+								map.getCameraPosition().tilt,
+								location.getBearing());
 						map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 					}
 					
@@ -3218,6 +3219,19 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 //					buildGpsNotLockedAlert();
 //				}
 				}
+				
+				
+				if(driverScreenMode == DriverScreenMode.D_START_RIDE){
+					if(location.getSpeed() >= 1 && location.getBearing() != 0){
+						CameraPosition cameraPosition = new CameraPosition(map.getCameraPosition().target, 
+								map.getCameraPosition().zoom, 
+								map.getCameraPosition().tilt,
+								location.getBearing());
+						map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+					}
+				}
+				
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3400,7 +3414,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				else{
 					fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
 				}
-				
+				fare = Math.ceil(fare);
 				driverIRFareValue.setText(""+decimalFormat.format(fare));
 				
 	        }
@@ -4838,6 +4852,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										
 //										{"log":"rejected successfully"}
 
+										if(map != null){
+											map.clear();
+										}
+										
 										new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
 										
 										driverScreenMode = DriverScreenMode.D_INITIAL;
@@ -4976,6 +4994,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 									new DialogPopup().alertPopup(activity, "", "Ride started");
 
+									if(map != null){
+										map.clear();
+									}
+									
 									lastLocation = null;
 									
 									HomeActivity.previousWaitTime = 0;
@@ -5137,7 +5159,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 									lastLocation = null;
 									
-									map.clear();
+									if(map != null){
+										map.clear();
+									}
 									
 									waitStart = 2;
 									waitChronometer.stop();
@@ -6388,13 +6412,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 						nameValuePairs.add(new BasicNameValuePair("driver_id", Data.assignedDriverInfo.userId));
 						
+						
 						Log.e("get_driver_current_location", "========================================");
 						Log.i("nameValuePairs", ""+nameValuePairs);
+						Log.i("link", "="+Data.SERVER_URL + "/get_driver_current_location");
 						
 						SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
 						String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_driver_current_location", nameValuePairs);
 						
-						Log.i("result","="+result);
+						Log.e("timerTaskDriverLocationUpdater result","=*****=="+result);
 						
 						if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
 							Log.e("timeout","=");
@@ -6586,6 +6612,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	public void cancelCustomerPathUpdateTimer(){
 		try{
+			
 			if(timerCustomerPathUpdater != null){
 				timerCustomerPathUpdater.cancel();
 				timerCustomerPathUpdater.purge();

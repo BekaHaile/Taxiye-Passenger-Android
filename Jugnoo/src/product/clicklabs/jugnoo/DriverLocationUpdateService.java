@@ -186,10 +186,11 @@ public class DriverLocationUpdateService extends Service {
     	
     	
     	
+    	
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		String SERVER_URL = "http://54.81.229.172:8000",
+    		String SERVER_URL = "http://dev.jugnoo.in:4004",
     				GOOGLE_PROJECT_ID = "506849624961", 
     				PROPERTY_REG_ID = "registration_id", 
     				PROPERTY_APP_VERSION = "appVersion";

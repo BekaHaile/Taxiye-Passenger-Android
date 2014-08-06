@@ -441,6 +441,8 @@ public class SplashLogin extends Activity{
 			Data.locationFetcher = new LocationFetcher(SplashLogin.this);
 		}
 		
+		
+		
 	}
 	
 	@Override

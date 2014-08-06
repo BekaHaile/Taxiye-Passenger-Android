@@ -120,6 +120,8 @@ public class SplashNewActivity extends Activity{
 		animation.setAnimationListener(new ShowAnimListener());
 		jugnooImg.startAnimation(animation);
 		
+		noNetFirstTime = false;
+		
 		AQUtility.cleanCacheAsync(SplashNewActivity.this);
 		
 		
@@ -132,6 +134,39 @@ public class SplashNewActivity extends Activity{
 	    Log.i("deviceToken", Data.deviceToken + "..");
 		
 	}
+	
+	boolean noNetFirstTime = false, noNetSecondTime = false;
+	
+	Handler checkNetHandler = new Handler();
+	Runnable checkNetRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					
+					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+						noNetSecondTime = false;
+						if (regid.isEmpty()){
+					        registerInBackground();
+					    }
+					    else{
+					    	accessTokenLogin(SplashNewActivity.this);
+					    }
+					}
+					else{
+						new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+						noNetSecondTime = true;
+					}
+					
+				}
+			});
+			
+		}
+	};
 	
 	
 	
@@ -254,13 +289,19 @@ public class SplashNewActivity extends Activity{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-			if (regid.isEmpty()){
-		        registerInBackground();
-		    }
-		    else{
-		    	accessTokenLogin(SplashNewActivity.this);
-		    }
-			
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				noNetFirstTime = false;
+				if (regid.isEmpty()){
+			        registerInBackground();
+			    }
+			    else{
+			    	accessTokenLogin(SplashNewActivity.this);
+			    }
+			}
+			else{
+				new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+				noNetFirstTime = true;
+			}
 		}
 
 		@Override
@@ -333,6 +374,9 @@ public class SplashNewActivity extends Activity{
 											}
 											else if(8 == flag){ // {"error":"email not  registered","flag":1}//error
 	//											new DialogPopup().alertPopup(activity, "", errorMessage);
+												noNetFirstTime = false;
+												noNetSecondTime = false;
+												
 												loginFailed = true;
 											}
 											else{
@@ -409,6 +453,9 @@ public class SplashNewActivity extends Activity{
 			}
 			else{
 
+				noNetFirstTime = false;
+				noNetSecondTime = false;
+				
 				loginDataFetched = true;
 				
 //				DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -509,7 +556,15 @@ public class SplashNewActivity extends Activity{
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 		
-		if(hasFocus && loginDataFetched){
+		if(hasFocus && noNetFirstTime){
+			noNetFirstTime = false;
+			checkNetHandler.postDelayed(checkNetRunnable, 4000);
+		}
+		else if(hasFocus && noNetSecondTime){
+			noNetSecondTime = false;
+			finish();
+		}
+		else if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
 			startActivity(new Intent(SplashNewActivity.this, HomeActivity.class));
 			finish();
