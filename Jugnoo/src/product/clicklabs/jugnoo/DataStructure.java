@@ -57,6 +57,14 @@ class DriverInfo{
 		this.phoneNumber = phoneNumber;
 	}
 	
+	@Override
+	public String toString() {
+		return "UserId: " + userId + "\n" +
+				"Name: " + name + "\n" +
+				"PhoneNumber: "+ phoneNumber;
+	}
+	
+	
 }
 
 
@@ -172,4 +180,11 @@ enum UserMode{
 enum DriverScreenMode{
 	D_INITIAL, D_REQUEST_ACCEPT, D_START_RIDE, D_IN_RIDE , D_RIDE_END
 }
+
+
+enum AppMode{
+	NORMAL, DEBUG
+}
+
+
 

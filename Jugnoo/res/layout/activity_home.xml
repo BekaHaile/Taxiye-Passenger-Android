@@ -1198,7 +1198,22 @@
                     android:layout_height="60px"
                     android:layout_centerInParent="true"
                     android:background="@drawable/jugnoo_text_small"
-                    android:tag="mwar" />
+                    android:tag="mwar" 
+                    
+                    
+                    />
+                
+                
+				<Button
+                    android:id="@+id/toggleDebugModeBtn"
+                    android:layout_width="82px"
+                    android:layout_height="82px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="370px"
+                    android:background="@drawable/transparent"
+                    android:longClickable="true"
+                     />
+                
 
                 <TextView
                     android:id="@+id/title"

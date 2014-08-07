@@ -23,6 +23,7 @@
         android:splitMotionEvents="false"
         >
 
+        
         <ImageView
             android:id="@+id/jugnooLogoBig"
             android:layout_width="454px"
@@ -30,7 +31,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="90px"
             android:background="@drawable/jugnoo_text"
-            android:tag="mwar" />
+            android:tag="mwar" 
+            android:longClickable="true"
+            
+            />
 
         <LinearLayout
             android:id="@+id/etLayout"

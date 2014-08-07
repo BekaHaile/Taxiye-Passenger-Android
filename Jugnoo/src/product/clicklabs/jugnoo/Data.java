@@ -80,6 +80,11 @@ public class Data {
 			;
 	
 	
+	public static final String SP_SERVER_LINK = "sp_server_link";
+	
+	
+	
+	
 	
 	
 	public static final String LANGUAGE_SELECTED = "language_selected";
@@ -101,13 +106,19 @@ public class Data {
 	// dev review http://107.21.79.63:4001
 	//Dev staged :  "http://54.81.229.172:7000";
 	// Dev staged :   http://54.81.229.172:8000
+	// Dev Trial :   http://54.81.229.172:8001
 	// live 1st:    http://dev.jugnoo.in:3000
 	// live 2nd:    http://dev.jugnoo.in:4000
 	// live 3rd:    http://dev.jugnoo.in:4002
 	// review 3:    http://dev.jugnoo.in:4003
 	// live 4th:    http://dev.jugnoo.in:4004
 	
-	public static final String SERVER_URL = "http://dev.jugnoo.in:4004";
+	public static final String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
+	
+	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
+	
+	
+	public static String SERVER_URL = "http://54.81.229.172:8001";
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Oops!! Server not responding. Please try again later.";

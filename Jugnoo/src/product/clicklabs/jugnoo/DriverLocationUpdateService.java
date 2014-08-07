@@ -190,8 +190,31 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		String SERVER_URL = "http://dev.jugnoo.in:4004",
-    				GOOGLE_PROJECT_ID = "506849624961", 
+    		
+    		//Toggle live to trial
+    		String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
+    		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
+    		String SERVER_URL = "http://54.81.229.172:8001";
+    		
+    		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
+    		
+    		SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
+    		String link = preferences.getString(SP_SERVER_LINK, TRIAL_SERVER_URL);
+    		
+    		if(link.equalsIgnoreCase(TRIAL_SERVER_URL)){
+    			SERVER_URL = TRIAL_SERVER_URL;
+    		}
+    		else if(link.equalsIgnoreCase(LIVE_SERVER_URL)){
+    			SERVER_URL = LIVE_SERVER_URL;
+    		}
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		String GOOGLE_PROJECT_ID = "506849624961", 
     				PROPERTY_REG_ID = "registration_id", 
     				PROPERTY_APP_VERSION = "appVersion";
     		

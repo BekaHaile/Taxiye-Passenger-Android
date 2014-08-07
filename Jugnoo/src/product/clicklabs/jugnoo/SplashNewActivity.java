@@ -70,6 +70,19 @@ public class SplashNewActivity extends Activity{
 //		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 //		}
 		
+		
+		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
+		
+		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+			Data.SERVER_URL = Data.TRIAL_SERVER_URL;
+		}
+		else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
+			Data.SERVER_URL = Data.LIVE_SERVER_URL;
+		}
+		
+		
+		
 		Locale locale = new Locale("en"); 
 	    Locale.setDefault(locale);
 	    Configuration config = new Configuration();

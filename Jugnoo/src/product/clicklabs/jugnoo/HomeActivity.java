@@ -166,6 +166,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	Button menuBtn, backBtn, favBtn;
 	TextView title;
 	ImageView jugnooLogo;
+	Button toggleDebugModeBtn;
 	
 	
 	
@@ -385,6 +386,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	public static AppMode appMode;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -408,6 +411,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		loggedOut = false;
 		zoomedToMyLocation = false;
 		
+		
+		appMode = AppMode.NORMAL;
 		
 		
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -464,6 +469,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		backBtn = (Button) findViewById(R.id.backBtn);
 		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
 		jugnooLogo = (ImageView) findViewById(R.id.jugnooLogo);
+		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 		favBtn = (Button) findViewById(R.id.favBtn);
 		
 		
@@ -752,6 +758,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		});
 		
 		
+		toggleDebugModeBtn.setOnLongClickListener(new View.OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				changeDebugModePopup(HomeActivity.this);
+				return false;
+			}
+		});
 		
 		
 		
@@ -1525,6 +1539,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						map.setInfoWindowAdapter(customIW);
 						
 						return false;
+					}
+					else if(arg0.getTitle().equalsIgnoreCase("driver shown to customer")){
+						if(appMode == AppMode.DEBUG){
+							String driverId = arg0.getSnippet();
+							debugFunctionGetDriverInfoAsync(HomeActivity.this, driverId);
+						}
+						
+						return true;
 					}
 					else{
 						
@@ -3783,7 +3805,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					for(int i=0; i<Data.driverInfos.size(); i++){
 						DriverInfo driverInfo = Data.driverInfos.get(i);
 						MarkerOptions markerOptions = new MarkerOptions();
-						markerOptions.title(""+driverInfo.userId);
+						markerOptions.title("driver shown to customer");
 						markerOptions.snippet(""+driverInfo.userId);
 						markerOptions.position(driverInfo.latLng);
 						markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
@@ -6375,7 +6397,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	//TODO
 	
 	Timer timerDriverLocationUpdater;
 	
@@ -6550,7 +6571,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				public void run() {
 					try {
 						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-							//TODO customer path updater
+							//customer path updater
 							if(myLocation != null){
 								if(Data.dCustLatLng != null){
 									
@@ -6649,7 +6670,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	//TODO start ride popup
+	//start ride popup
 	void startRidePopup(final Activity activity) {
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -6715,7 +6736,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	//TODO end ride popup
+	//end ride popup
 	void endRidePopup(final Activity activity) {
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -6783,7 +6804,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 	
 	
-	//TODO cancel ride popup
+	//cancel ride popup
 		void cancelRidePopup(final Activity activity) {
 				try {
 					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -6836,6 +6857,190 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 			}
 	
+		
+		
+		
+		//Change debug mode popup
+		void changeDebugModePopup(final Activity activity) {
+			try {
+				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.setContentView(R.layout.custom_two_btn_dialog);
+
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, true);
+				
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+				
+				
+				
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+				
+				
+				if(appMode == AppMode.DEBUG){
+					textMessage.setText("App is in Debug mode.\nChange to:");
+				}
+				else if(appMode == AppMode.NORMAL){
+					textMessage.setText("App is in NORMAL mode.\nChange to:");
+				}
+				
+				
+				
+				
+				
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+				btnOk.setText("NORMAL");
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+				btnCancel.setText("DEBUG");
+				
+				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+				crossbtn.setVisibility(View.VISIBLE);
+				
+				
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						appMode = AppMode.NORMAL;
+						dialog.dismiss();
+					}
+					
+					
+				});
+				
+				btnCancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						appMode = AppMode.DEBUG;
+						dialog.dismiss();
+					}
+					
+				});
+				
+				crossbtn.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+					
+				});
+				
+
+				dialog.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		
+		
+		/**
+		 * ASync for fetching driver info from server Debug functionality
+		 */
+		public void debugFunctionGetDriverInfoAsync(final Activity activity, final String driverId) {
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				
+				RequestParams params = new RequestParams();
+			
+				
+				params.put("access_token", Data.userData.accessToken);
+				params.put("driver_id", driverId);
+
+				Log.i("assigned driver info", "=");
+				
+				Log.i("access_token", "=" + Data.userData.accessToken);
+				Log.i("driver_id", "=" + driverId);
+				
+				
+			
+				AsyncHttpClient client = new AsyncHttpClient();
+				client.setTimeout(Data.SERVER_TIMEOUT);
+				client.post(Data.SERVER_URL + "/driver_details", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+		
+							@Override
+							public void onSuccess(String response) {
+								Log.e("getAssignedDriverInfoAsync Server response", "response = " + response);
+		
+								try {
+									jObj = new JSONObject(response);
+									
+									DialogPopup.dismissLoadingDialog();
+									
+									if(!jObj.isNull("error")){
+										
+										int flag = jObj.getInt("flag");	
+										String errorMessage = jObj.getString("error");
+										
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase(Locale.getDefault()))){
+											HomeActivity.logoutUser(activity);
+										}
+										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+									}
+									else{
+										
+										
+//										{
+//										    "driver_data": {
+//										        "user_name": "Ash Mah",
+//										        "phone_no": "+919780211669",
+//										        "driver_car_image": "",
+//										        "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//										        "latitude": 30.75,
+//										        "longitude": 76.78,
+//										        "rating": "NaN"
+//										    }
+//										}
+										
+										JSONObject driverData = jObj.getJSONObject("driver_data");
+										
+										DriverInfo driverInfo = new DriverInfo(driverId, driverData.getDouble("latitude"), driverData.getDouble("longitude"), 
+												driverData.getString("user_name"), driverData.getString("user_image"), driverData.getString("driver_car_image"), 
+												driverData.getString("phone_no"));
+										
+										
+										new DialogPopup().alertPopup(activity, "Driver Info", ""+driverInfo);
+										
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								}
+		
+								
+							}
+		
+							@Override
+							public void onFailure(Throwable arg0) {
+								Log.e("request fail", arg0.toString());
+								DialogPopup.dismissLoadingDialog();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+
+		}
+		
+		
+		
+		
 	
 	
 	@Override
