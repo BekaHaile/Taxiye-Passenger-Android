@@ -1282,7 +1282,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		});
 		
 		
-		//TODO start ride
 		driverStartRideBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -1306,7 +1305,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-		//TODO cancel ride
 		driverCancelRideBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -1345,7 +1343,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			@Override
 			public void onClick(View v) {
 				if(waitStart == 2){ 
-					waitChronometer.eclipsedTime =  (long)HomeActivity.previousWaitTime;
 					Log.e("waitChronometer.eclipsedTime on first start","="+waitChronometer.eclipsedTime);
 					waitChronometer.start();
 					rideTimeChronometer.stop();
@@ -1382,7 +1379,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		});
 		
 		
-		//TODO end ride
 		driverEndRideBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -1998,8 +1994,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverPassengerName.setText(Data.assignedCustomerInfo.name);
 				driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+getResources().getString(R.string.rating));
 				
-				//TODO old DriverLocationUpdateService stopping here
-				//stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				
 				driverInitialLayout.setVisibility(View.GONE);
@@ -2023,7 +2017,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				cancelCustomerPathUpdateTimer();
 				
-				//TODO new DriverLocationUpdateService stopping here
+				startMapAnimateTimer();
+				
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				long timeR = (long)HomeActivity.previousRideTime;
@@ -2047,6 +2042,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				String mm = m < 10 ? "0" + m : m + "";
 				String ss = s < 10 ? "0" + s : s + "";
 				waitChronometer.setText(hh + ":" + mm + ":" + ss);
+				
+				waitChronometer.eclipsedTime =  (long)HomeActivity.previousWaitTime;
 				
 				
 				
@@ -2075,6 +2072,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 			case D_RIDE_END:
+				
+				cancelMapAnimateTimer();
 				
 				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
 					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
@@ -2428,6 +2427,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				cancelDriverLocationUpdateTimer();
 				
+				startMapAnimateTimer();
 				
 				if(map != null){
 					Log.i("map cleared", "P_IN_RIDE");
@@ -2462,7 +2462,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 			case P_RIDE_END:
 				
-				
+				cancelMapAnimateTimer();
 				
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
@@ -6406,15 +6406,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	public void startDriverLocationUpdateTimer(){
 		
 		try{
+			if(timerTaskDriverLocationUpdater != null){
+				timerTaskDriverLocationUpdater.cancel();
+				timerTaskDriverLocationUpdater = null;
+			}
+			
 			if(timerDriverLocationUpdater != null){
 				timerDriverLocationUpdater.cancel();
 				timerDriverLocationUpdater.purge();
 				timerDriverLocationUpdater = null;
-			}
-			
-			if(timerTaskDriverLocationUpdater != null){
-				timerTaskDriverLocationUpdater.cancel();
-				timerTaskDriverLocationUpdater = null;
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -6516,15 +6516,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	public void cancelDriverLocationUpdateTimer(){
 		try{
+			if(timerTaskDriverLocationUpdater != null){
+				timerTaskDriverLocationUpdater.cancel();
+				timerTaskDriverLocationUpdater = null;
+			}
+			
 			if(timerDriverLocationUpdater != null){
 				timerDriverLocationUpdater.cancel();
 				timerDriverLocationUpdater.purge();
 				timerDriverLocationUpdater = null;
-			}
-			
-			if(timerTaskDriverLocationUpdater != null){
-				timerTaskDriverLocationUpdater.cancel();
-				timerTaskDriverLocationUpdater = null;
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -6548,15 +6548,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	public void startCustomerPathUpdateTimer(){
 		
 		try{
+			if(timerTaskCustomerPathUpdater != null){
+				timerTaskCustomerPathUpdater.cancel();
+				timerTaskCustomerPathUpdater = null;
+			}
+			
 			if(timerCustomerPathUpdater != null){
 				timerCustomerPathUpdater.cancel();
 				timerCustomerPathUpdater.purge();
 				timerCustomerPathUpdater = null;
-			}
-			
-			if(timerTaskCustomerPathUpdater != null){
-				timerTaskCustomerPathUpdater.cancel();
-				timerTaskCustomerPathUpdater = null;
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -6633,21 +6633,111 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	public void cancelCustomerPathUpdateTimer(){
 		try{
+			if(timerTaskCustomerPathUpdater != null){
+				timerTaskCustomerPathUpdater.cancel();
+				timerTaskCustomerPathUpdater = null;
+			}
 			
 			if(timerCustomerPathUpdater != null){
 				timerCustomerPathUpdater.cancel();
 				timerCustomerPathUpdater.purge();
 				timerCustomerPathUpdater = null;
 			}
-			
-			if(timerTaskCustomerPathUpdater != null){
-				timerTaskCustomerPathUpdater.cancel();
-				timerTaskCustomerPathUpdater = null;
-			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	Timer timerMapAnimate;
+	TimerTask timerTaskMapAnimate;
+	
+	
+	public void startMapAnimateTimer() {
+
+		try {
+			if (timerTaskMapAnimate != null) {
+				timerTaskMapAnimate.cancel();
+				timerTaskMapAnimate = null;
+			}
+
+			if (timerMapAnimate != null) {
+				timerMapAnimate.cancel();
+				timerMapAnimate.purge();
+				timerMapAnimate = null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			timerMapAnimate = new Timer();
+
+			timerTaskMapAnimate = new TimerTask() {
+
+				@Override
+				public void run() {
+					try {
+						if (myLocation != null && map != null) {
+
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									CameraPosition cameraPosition = new CameraPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 
+												map.getCameraPosition().zoom, 
+												map.getCameraPosition().tilt,
+												myLocation.getBearing());
+									map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+								}
+							});
+							
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+
+			timerMapAnimate.scheduleAtFixedRate(timerTaskMapAnimate, 30000, 30000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void cancelMapAnimateTimer(){
+		try{
+			if(timerTaskMapAnimate != null){
+				timerTaskMapAnimate.cancel();
+				timerTaskMapAnimate = null;
+			}
+			
+			if(timerMapAnimate != null){
+				timerMapAnimate.cancel();
+				timerMapAnimate.purge();
+				timerMapAnimate = null;
+			}
+			
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 	
 	
 	public List<LatLng> getLatLngListFromPath(String result){
@@ -6883,7 +6973,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 				if(appMode == AppMode.DEBUG){
-					textMessage.setText("App is in Debug mode.\nChange to:");
+					textMessage.setText("App is in DEBUG mode.\nChange to:");
 				}
 				else if(appMode == AppMode.NORMAL){
 					textMessage.setText("App is in NORMAL mode.\nChange to:");

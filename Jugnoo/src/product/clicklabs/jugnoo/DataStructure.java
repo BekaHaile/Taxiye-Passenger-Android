@@ -59,8 +59,7 @@ class DriverInfo{
 	
 	@Override
 	public String toString() {
-		return "UserId: " + userId + "\n" +
-				"Name: " + name + "\n" +
+		return  "Name: " + name + "\n" +
 				"PhoneNumber: "+ phoneNumber;
 	}
 	

@@ -50,6 +50,9 @@ public class JSONParser {
 		}
 		
 		
+		
+		
+		
 //		{
 //		    "user_data": {
 //		        "access_token": "c274d8d70e77850511df24a6255dab48",
@@ -341,14 +344,10 @@ public class JSONParser {
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 					
 				}
+				
 			}
 			
-			
-			
-			
-			
 		}
-		
 		
 	}
 	
