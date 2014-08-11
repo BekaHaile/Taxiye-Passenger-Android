@@ -36,6 +36,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -387,7 +388,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	public static AppMode appMode;
-	
+	public int mapPathColor = Color.RED;
+	public int dToCmapPathColor = Color.RED;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -3104,7 +3106,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							map.addPolyline(new PolylineOptions()
 					        .add(lastLatLng, currentLatLng)
 					        .width(5)
-					        .color(Color.TRANSPARENT).geodesic(true));
+					        .color(mapPathColor).geodesic(true));
 							
 							new Thread(new Runnable() {
 								
@@ -3180,7 +3182,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									map.addPolyline(new PolylineOptions()
 							        .add(Data.startRidePreviousLatLng, currentLatLng)
 							        .width(5)
-							        .color(Color.TRANSPARENT).geodesic(true));
+							        .color(mapPathColor).geodesic(true));
 									
 									new Thread(new Runnable() {
 										
@@ -3283,7 +3285,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
             map.addPolyline(new PolylineOptions()
             .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
             .width(5)
-    	    .color(Color.TRANSPARENT).geodesic(true));
+    	    .color(mapPathColor).geodesic(true));
 		}
 		
 		if(firstLatLng != null){
@@ -3470,7 +3472,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		                map.addPolyline(new PolylineOptions()
 		                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 		                .width(5)
-				        .color(Color.TRANSPARENT).geodesic(true));
+				        .color(mapPathColor).geodesic(true));
 						database.insertPolyLine(src, dest);
 		            }
 		           database.close();
@@ -3482,7 +3484,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    		 map.addPolyline(new PolylineOptions()
 	                .add(new LatLng(source.latitude, source.longitude), new LatLng(destination.latitude, destination.longitude))
 	                .width(5)
-			        .color(Color.TRANSPARENT).geodesic(true));
+			        .color(mapPathColor).geodesic(true));
 					database.insertPolyLine(source, destination);
 					database.close();
 	    		
@@ -6605,7 +6607,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 													    map.addPolyline(new PolylineOptions()
 													    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 													    .width(5)
-													    .color(Color.RED).geodesic(true));
+													    .color(dToCmapPathColor).geodesic(true));
 													}
 												} catch (Exception e) {
 													e.printStackTrace();
@@ -7175,41 +7177,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	@Override
 	public void startRideForCustomer(final int flag) {
-		Log.e("in ","herestartRideForCustomer");
-		
-		if(flag == 0){
-		
-		new Thread(new Runnable() {
+		try {
+			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+			Log.e("in ","herestartRideForCustomer");
 			
-			@Override
-			public void run() {
-				Log.i("in run herestartRideForCustomer class","=");
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						Log.i("in in herestartRideForCustomer  run class","=");
-
-						startUserFreeAPI = false;
-						try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
-						
-						lastLocation = null;
-						
-						HomeActivity.totalDistance = -1;
-						Database database = new Database(HomeActivity.this);
-						database.deleteSavedPath();
-						database.close();
-						
-						
-						passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-						switchPassengerScreen(passengerScreenMode);
-					}
-				});
-			}
-		}).start();
-		}
-		else{
-
+			if(flag == 0){
+			
 			new Thread(new Runnable() {
 				
 				@Override
@@ -7220,17 +7193,51 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						@Override
 						public void run() {
 							Log.i("in in herestartRideForCustomer  run class","=");
-							passengerScreenMode = PassengerScreenMode.P_INITIAL;
-							switchPassengerScreen(passengerScreenMode);
+
 							startUserFreeAPI = false;
 							try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
-							new DialogPopup().alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
+							
+							lastLocation = null;
+							
+							HomeActivity.totalDistance = -1;
+							Database database = new Database(HomeActivity.this);
+							database.deleteSavedPath();
+							database.close();
+							
+							
+							passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+							switchPassengerScreen(passengerScreenMode);
 						}
 					});
 				}
 			}).start();
+			}
+			else{
+
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Log.i("in run herestartRideForCustomer class","=");
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								Log.i("in in herestartRideForCustomer  run class","=");
+								passengerScreenMode = PassengerScreenMode.P_INITIAL;
+								switchPassengerScreen(passengerScreenMode);
+								startUserFreeAPI = false;
+								try{passengerConnectionLostHandler.removeCallbacks(passengerCLRunnable);}catch(Exception e){}
+								new DialogPopup().alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
+							}
+						});
+					}
+				}).start();
+			}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 		
 		
 	}
@@ -7240,11 +7247,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	@Override
 	public void refreshDriverLocations(int count) {
 		
-		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-			getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
-			getDistanceTimeAddress.execute();
+		try {
+			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+				getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+				getDistanceTimeAddress.execute();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 		
 	}
 
@@ -7253,7 +7263,36 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	@Override
 	public void apiStart(final int driverPos) {
 		
-		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+		try {
+			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Log.i("in run class","=");
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								Log.i("apiStart in in run class","=");
+								DialogPopup.showLoadingDialog(HomeActivity.this, "Contacting Driver "+ driverPos +" ...");
+							}
+						});
+					}
+				}).start();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+
+
+
+	@Override
+	public void apiEnd() {
+		try {
 			new Thread(new Runnable() {
 				
 				@Override
@@ -7264,38 +7303,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						@Override
 						public void run() {
 							Log.i("apiStart in in run class","=");
-							DialogPopup.showLoadingDialog(HomeActivity.this, "Contacting Driver "+ driverPos +" ...");
+							DialogPopup.dismissLoadingDialog();
 						}
 					});
 				}
 			}).start();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		
-	}
-
-
-
-
-	@Override
-	public void apiEnd() {
-		
-		
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				Log.i("in run class","=");
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						Log.i("apiStart in in run class","=");
-						DialogPopup.dismissLoadingDialog();
-					}
-				});
-			}
-		}).start();
 	}
 
 	
@@ -7304,66 +7319,72 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	@Override
 	public void requestRideInterrupt(int switchCase) {
 
-		stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-		stopService(new Intent(HomeActivity.this, CRequestRideService.class));
-		
-		Log.e("CRequestRideService ","stoped in home");
-		
-		Log.e("switchCase","="+switchCase);
-		
-		if(switchCase == 0){
+		try {
+			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+			stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+			stopService(new Intent(HomeActivity.this, CRequestRideService.class));
 			
-			new Thread(new Runnable() {
-				
-				
-				@Override
-				public void run() {
-					runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							DialogPopup.dismissLoadingDialog();
-							clearSPData();
-							
-							map.clear();
-							noDriverAvailablePopup(HomeActivity.this);
-							requestRideBtn.setText("Request Ride");
-							passengerScreenMode = PassengerScreenMode.P_INITIAL;
-							switchPassengerScreen(passengerScreenMode);
-						}
-					});
-				}
-			}).start();
+			Log.e("CRequestRideService ","stoped in home");
 			
-		}
-		else if(switchCase == 1){
-			Log.e("customerCancelBeforePushReceive ","="+customerCancelBeforePushReceive);
-			if(!customerCancelBeforePushReceive){
+			Log.e("switchCase","="+switchCase);
+			
+			if(switchCase == 0){
+				
 				new Thread(new Runnable() {
+					
 					
 					@Override
 					public void run() {
-						Log.i("in run class","=");
 						runOnUiThread(new Runnable() {
 							
 							@Override
 							public void run() {
-								Log.i("in in run class","=");
-								requestRideBtn.setText("Request Ride");
 								DialogPopup.dismissLoadingDialog();
+								clearSPData();
 								
-								if(getDistanceTimeAddress != null){
-									getDistanceTimeAddress.cancel(true);
-								}
-					        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + "5s ?");
-								
-								getAssignedDriverInfoAsync(HomeActivity.this);
+								map.clear();
+								noDriverAvailablePopup(HomeActivity.this);
+								requestRideBtn.setText("Request Ride");
+								passengerScreenMode = PassengerScreenMode.P_INITIAL;
+								switchPassengerScreen(passengerScreenMode);
 							}
 						});
 					}
 				}).start();
+				
 			}
-			
+			else if(switchCase == 1){
+				Log.e("customerCancelBeforePushReceive ","="+customerCancelBeforePushReceive);
+				if(!customerCancelBeforePushReceive){
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Log.i("in run class","=");
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									Log.i("in in run class","=");
+									requestRideBtn.setText("Request Ride");
+									DialogPopup.dismissLoadingDialog();
+									
+									if(getDistanceTimeAddress != null){
+										getDistanceTimeAddress.cancel(true);
+									}
+						        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + "5s ?");
+									
+									getAssignedDriverInfoAsync(HomeActivity.this);
+								}
+							});
+						}
+					}).start();
+				}
+				
+			}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 	}
@@ -7371,46 +7392,47 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	public void showAllRideRequests(){
 		
-		if(userMode == UserMode.DRIVER){
-		
-			driverScreenMode = DriverScreenMode.D_INITIAL;
-			switchDriverScreen(driverScreenMode);
+		try {
+			if(userMode == UserMode.DRIVER){
 			
-			map.clear();
-		
-			if(Data.driverRideRequests.size() > 0){
-				driverNewRideRequestRl.setVisibility(View.VISIBLE);
+				driverScreenMode = DriverScreenMode.D_INITIAL;
+				switchDriverScreen(driverScreenMode);
 				
-				LatLng last = map.getCameraPosition().target;
-				
-				for(int i=0; i<Data.driverRideRequests.size(); i++){
-					MarkerOptions markerOptions = new MarkerOptions();
-					markerOptions.title(Data.driverRideRequests.get(i).engagementId);
-					markerOptions.snippet("");
-					markerOptions.position(Data.driverRideRequests.get(i).latLng);
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+				map.clear();
+			
+				if(Data.driverRideRequests.size() > 0){
+					driverNewRideRequestRl.setVisibility(View.VISIBLE);
 					
-					map.addMarker(markerOptions);
+					LatLng last = map.getCameraPosition().target;
 					
-					if(i == Data.driverRideRequests.size()-1){
-						last = Data.driverRideRequests.get(i).latLng;
-						Data.dEngagementId = Data.driverRideRequests.get(i).engagementId;
-						Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
+					for(int i=0; i<Data.driverRideRequests.size(); i++){
+						MarkerOptions markerOptions = new MarkerOptions();
+						markerOptions.title(Data.driverRideRequests.get(i).engagementId);
+						markerOptions.snippet("");
+						markerOptions.position(Data.driverRideRequests.get(i).latLng);
+						markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+						
+						map.addMarker(markerOptions);
+						
+						if(i == Data.driverRideRequests.size()-1){
+							last = Data.driverRideRequests.get(i).latLng;
+							Data.dEngagementId = Data.driverRideRequests.get(i).engagementId;
+							Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
+						}
 					}
+					
+					driverNewRideRequestText.setText(getResources().getString(R.string.you_have)+" "+Data.driverRideRequests.size()+" "+getResources().getString(R.string.ride_request));
+					
+					map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
+					
 				}
-				
-				
-				
-				
-				driverNewRideRequestText.setText(getResources().getString(R.string.you_have)+" "+Data.driverRideRequests.size()+" "+getResources().getString(R.string.ride_request));
-				
-				map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
-				
+				else{
+					driverNewRideRequestRl.setVisibility(View.GONE);
+				}
+			
 			}
-			else{
-				driverNewRideRequestRl.setVisibility(View.GONE);
-			}
-		
+		} catch (NotFoundException e) {
+			e.printStackTrace();
 		}
 		
 		
@@ -7420,122 +7442,128 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	@Override
 	public void changeRideRequest(String dEngagementId, String dCustomerId, final LatLng rideLatLng, boolean add) {
 		
-		Log.i("in home class","Data.dEngagementId = "+Data.dEngagementId + " " + add);
-		
-		if(add){
-			Data.driverRideRequests.add(new DriverRideRequest(dEngagementId, dCustomerId, rideLatLng));
-			new Thread(new Runnable() {
+		try {
+			Log.i("in home class","Data.dEngagementId = "+Data.dEngagementId + " " + add);
+			
+			if(add){
+				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+				Data.driverRideRequests.add(new DriverRideRequest(dEngagementId, dCustomerId, rideLatLng));
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								showAllRideRequests();
+							}
+						});
+					}
+				}).start();
+				}
 				
-				@Override
-				public void run() {
-					runOnUiThread(new Runnable() {
+			}
+			else{
+
+				userPushStart = true;
+				try{driverConnectionLostHandler.removeCallbacks(driverCLRunnable);}catch(Exception e){}
+				
+				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+					int index = -1;
+					for(int i=0; i<Data.driverRideRequests.size(); i++){
+						if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(dEngagementId)){
+							index = i;
+							break;
+						}
+					}
+					
+					if(index != -1){
+						Data.driverRideRequests.remove(index);
+					}
+					
+					
+					
+					
+					new Thread(new Runnable() {
 						
 						@Override
 						public void run() {
-							showAllRideRequests();
-						}
-					});
-				}
-			}).start();
-			
-		}
-		else{
-
-			userPushStart = true;
-			try{driverConnectionLostHandler.removeCallbacks(driverCLRunnable);}catch(Exception e){}
-			
-			if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-				int index = -1;
-				for(int i=0; i<Data.driverRideRequests.size(); i++){
-					if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(dEngagementId)){
-						index = i;
-						break;
-					}
-				}
-				
-				if(index != -1){
-					Data.driverRideRequests.remove(index);
-				}
-				
-				
-				
-				
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								DialogPopup.dismissLoadingDialog();
-								showAllRideRequests();
-							}
-						});
-					}
-				}).start();
-			}
-			else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
-				
-				int index = -1;
-				for(int i=0; i<Data.driverRideRequests.size(); i++){
-					if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(dEngagementId)){
-						index = i;
-						break;
-					}
-				}
-				
-				if(index != -1){
-					Data.driverRideRequests.remove(index);
-				}
-				
-				
-				
-				
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								DialogPopup.dismissLoadingDialog();
-								driverScreenMode = DriverScreenMode.D_INITIAL;
-								showAllRideRequests();
-								if(!userCanceledDialogShown){
-									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									DialogPopup.dismissLoadingDialog();
+									showAllRideRequests();
 								}
-								userCanceledDialogShown = false;
-							}
-						});
-					}
-				}).start();
-				
-				
-				
-			}
-			else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_START_RIDE){
-				new Thread(new Runnable() {
+							});
+						}
+					}).start();
+				}
+				else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
 					
-					@Override
-					public void run() {
-						runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								
-								driverScreenMode = DriverScreenMode.D_INITIAL;
-								switchDriverScreen(driverScreenMode);
-								new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
-								
-							}
-						});
+					int index = -1;
+					for(int i=0; i<Data.driverRideRequests.size(); i++){
+						if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(dEngagementId)){
+							index = i;
+							break;
+						}
 					}
-				}).start();
+					
+					if(index != -1){
+						Data.driverRideRequests.remove(index);
+					}
+					
+					
+					
+					
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									DialogPopup.dismissLoadingDialog();
+									driverScreenMode = DriverScreenMode.D_INITIAL;
+									showAllRideRequests();
+									if(!userCanceledDialogShown){
+										new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+									}
+									userCanceledDialogShown = false;
+								}
+							});
+						}
+					}).start();
+					
+					
+					
+				}
+				else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_START_RIDE){
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									
+									driverScreenMode = DriverScreenMode.D_INITIAL;
+									switchDriverScreen(driverScreenMode);
+									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+									
+								}
+							});
+						}
+					}).start();
+				}
+				
+				
 			}
-			
-			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 	}
@@ -7545,27 +7573,32 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	@Override
 	public void driverStartRideInterrupt() {
-		
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				runOnUiThread(new Runnable() {
+		try {
+			if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
+				new Thread(new Runnable() {
 					
 					@Override
 					public void run() {
-						userPushStart = true;
-						try{driverConnectionLostHandler.removeCallbacks(driverCLRunnable);}catch(Exception e){}
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								userPushStart = true;
+								try{driverConnectionLostHandler.removeCallbacks(driverCLRunnable);}catch(Exception e){}
 
-				        GCMIntentService.clearNotifications(getApplicationContext());
-				        
-						driverScreenMode = DriverScreenMode.D_START_RIDE;
-						switchDriverScreen(driverScreenMode);
-						DialogPopup.dismissLoadingDialog();
+						        GCMIntentService.clearNotifications(getApplicationContext());
+						        
+								driverScreenMode = DriverScreenMode.D_START_RIDE;
+								switchDriverScreen(driverScreenMode);
+								DialogPopup.dismissLoadingDialog();
+							}
+						});
 					}
-				});
+				}).start();
 			}
-		}).start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 	}
@@ -7645,28 +7678,32 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	@Override
 	public void customerEndRideInterrupt() {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				runOnUiThread(new Runnable() {
+		try {
+			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
+				new Thread(new Runnable() {
 					
 					@Override
 					public void run() {
-						lastLocation = null;
-						
-						clearSPData();
-						
-						map.clear();
-						
-						passengerScreenMode = PassengerScreenMode.P_RIDE_END;
-						switchPassengerScreen(passengerScreenMode);
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								lastLocation = null;
+								
+								clearSPData();
+								
+								map.clear();
+								
+								passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+								switchPassengerScreen(passengerScreenMode);
+							}
+						});
 					}
-				});
+				}).start();
 			}
-		}).start();
-		
-		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
