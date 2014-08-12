@@ -74,6 +74,10 @@ public class GCMIntentService extends IntentService {
 				
 				if(ring){
 					builder.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.telephone_ring));
+					
+					long[] pattern = {0, 2000, 4000, 2000, 4000, 2000, 4000, 2000, 4000};
+					builder.setVibrate(pattern);
+					
 					builder.setDefaults(Notification.DEFAULT_VIBRATE);
 					builder.setLights(Color.GREEN, 500, 500);
 				}
@@ -126,7 +130,10 @@ public class GCMIntentService extends IntentService {
 				
 				if(ring){
 					builder.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.telephone_ring));
-					builder.setDefaults(Notification.DEFAULT_VIBRATE);
+					
+					long[] pattern = {0, 2000, 4000, 2000, 4000, 2000, 4000, 2000, 4000};
+					builder.setVibrate(pattern);
+					
 					builder.setLights(Color.GREEN, 500, 500);
 				}
 				else{

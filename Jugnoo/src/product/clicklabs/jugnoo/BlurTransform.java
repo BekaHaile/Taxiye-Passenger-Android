@@ -1,9 +1,22 @@
 package product.clicklabs.jugnoo;
 
+/**
+ * Picasso's(ImageLoaderLibrary) class to crop bitmap in circular shape
+ */
+
 import android.graphics.Bitmap;
+import android.util.Log;
 
-public class BlurImage {
-
+import com.squareup.picasso.Transformation;
+ 
+public class BlurTransform implements Transformation {
+	@Override
+	public Bitmap transform(Bitmap source) {
+		Bitmap dest = fastblur(source, 3);
+		source.recycle();
+		return dest;
+	}
+	
 	
 	public Bitmap fastblur(Bitmap sentBitmap, int radius) {
 
@@ -209,4 +222,9 @@ public class BlurImage {
         return (bitmap);
     }
 	
+ 
+	@Override
+	public String key() {
+		return "blur";
+	}
 }

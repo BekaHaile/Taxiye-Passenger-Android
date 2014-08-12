@@ -194,7 +194,7 @@ public class DriverLocationUpdateService extends Service {
     		//Toggle live to trial
 //    		String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
 //    		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
-    		String SERVER_URL = "http://54.81.229.172:8001";
+    		String SERVER_URL = "http://54.81.229.172:8000";
     		
 //    		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
 //    		

@@ -79,9 +79,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.BitmapAjaxCallback;
-import com.androidquery.util.AQUtility;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.LoggingBehavior;
@@ -110,6 +107,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoTools;
 
 @SuppressLint("DefaultLocale")
 public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt, 
@@ -1764,8 +1763,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		try{
 			
 			userName.setText(Data.userData.userName);
-			AQuery aq = new AQuery(profileImg);
-			aq.id(profileImg).progress(profileImgProgress).image(Data.userData.userImage, Data.imageOptionsFullRound());
+			
+			Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
+			Picasso.with(HomeActivity.this).load(Data.userData.userImage).transform(new CircleTransform()).into(profileImg);
 			
 		} catch(Exception e){
 			e.printStackTrace();
@@ -1837,41 +1837,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	}
 	
 	
-	class LoadBlurImage extends AsyncTask<Bitmap, Integer, String>{
-
-		Bitmap bitmap;
-		String imageLink;
-		
-		public LoadBlurImage(String imageLink){
-			this.imageLink = imageLink;
-		}
-		
-		@Override
-		protected String doInBackground(Bitmap... params) {
-			try{
-				bitmap = params[0];
-				bitmap = new BlurImage().fastblur(bitmap, 3);
-			}
-			catch(Exception e){
-				e.printStackTrace();
-			}
-			return "";
-		}
-		
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			
-			if(bitmap != null){
-				reviewUserImgBlured.setImageBitmap(bitmap);
-			}
-			AQuery aq = new AQuery(reviewUserImage);
-			aq.id(reviewUserImage).progress(reviewUserImgProgress).image(imageLink, Data.imageOptionsFullRound());
-			
-		}
-	}
-	
-	
 	
 	
 	
@@ -1908,15 +1873,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			reviewUserName.setText(Data.assignedCustomerInfo.name);
 			
-			AQuery aquery = new AQuery(reviewUserImgBlured);
-			aquery.id(reviewUserImgBlured).image(Data.assignedCustomerInfo.image, true, true, 0, 0, new BitmapAjaxCallback(){
-
-			        @Override
-			        public void callback(String url, ImageView ivView, Bitmap bmBitmap, com.androidquery.callback.AjaxStatus status){
-			                new LoadBlurImage(Data.assignedCustomerInfo.image).execute(bmBitmap);
-			        }
-			        
-			});
+			Data.assignedCustomerInfo.image = Data.assignedCustomerInfo.image.replace("http://graph.facebook", "https://graph.facebook");
+			Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);
 			
 			
 		}
@@ -2134,16 +2092,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			reviewUserName.setText(Data.assignedDriverInfo.name);
 			
-			AQuery aquery = new AQuery(reviewUserImgBlured);
-			aquery.id(reviewUserImgBlured).image(Data.assignedDriverInfo.image, true, true, 0, 0, new BitmapAjaxCallback(){
-
-			        @Override
-			        public void callback(String url, ImageView ivView, Bitmap bmBitmap, com.androidquery.callback.AjaxStatus status){
-			                new LoadBlurImage(Data.assignedDriverInfo.image).execute(bmBitmap);
-			        }
-			        
-			});
-			
+			Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
+			Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);
 			
 		}
 		else{
@@ -2363,12 +2313,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
     	 		}
 				
+				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
+				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);
 				
-				AQuery aq = new AQuery(driverImage);
-				aq.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
-				
-				AQuery aq1 = new AQuery(driverCarImage);
-				aq1.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
+				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
+				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);
 				
 				
 				initialLayout.setVisibility(View.GONE);
@@ -2438,11 +2387,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				driverName.setText(Data.assignedDriverInfo.name);
 				
-				AQuery aq2 = new AQuery(driverImage);
-				aq2.id(driverImage).progress(driverImageProgress).image(Data.assignedDriverInfo.image, Data.imageOptionsRound());
+				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
+				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);
 				
-				AQuery aq12 = new AQuery(driverCarImage);
-				aq12.id(driverCarImage).progress(driverCarProgress).image(Data.assignedDriverInfo.carImage, Data.imageOptionsRound());
+				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
+				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);
 				
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
@@ -3042,7 +2991,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     		} catch(Exception e){
     			e.printStackTrace();
     		}
-	        AQUtility.cleanCacheAsync(HomeActivity.this);
+	        
+	        PicassoTools.clearCache(Picasso.with(HomeActivity.this));
 	        
 	        
 	        ASSL.closeActivity(drawerLayout);
@@ -5742,7 +5692,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								}
 								else{
 
-									AQUtility.cleanCacheAsync(HomeActivity.this);
+									PicassoTools.clearCache(Picasso.with(HomeActivity.this));
 									
 									try {	
 										Session session = new Session(HomeActivity.this);

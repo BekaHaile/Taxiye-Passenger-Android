@@ -156,12 +156,17 @@ public class RegisterScreen extends Activity{
 					phoneNo = phoneNo.replace(".", "");
 					
 					
-					if(phoneNo.charAt(0) != '+'){
-						if(phoneNo.charAt(0) == '0'){
-							phoneNo = "+" + GetCountryZipCode() + phoneNo.substring(1);
-						}
-						else{
-							phoneNo = "+" + GetCountryZipCode() + phoneNo;
+					if(phoneNo.length() > 2){
+						if(phoneNo.charAt(0) != '+'){
+							if(phoneNo.charAt(0) == '0' && phoneNo.charAt(1) == '0'){
+								phoneNo = "+" + GetCountryZipCode() + phoneNo.substring(2);
+							}
+							else if(phoneNo.charAt(0) == '0'){
+								phoneNo = "+" + GetCountryZipCode() + phoneNo.substring(1);
+							}
+							else{
+								phoneNo = "+" + GetCountryZipCode() + phoneNo;
+							}
 						}
 					}
 					

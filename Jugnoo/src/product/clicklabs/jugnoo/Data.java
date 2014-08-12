@@ -14,7 +14,6 @@ import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.util.Base64;
 
-import com.androidquery.callback.ImageOptions;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -118,7 +117,7 @@ public class Data {
 //	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
 	
-	public static final String SERVER_URL = "http://54.81.229.172:8001";
+	public static final String SERVER_URL = "http://54.81.229.172:8000";
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Oops!! Server not responding. Please try again later.";
@@ -223,29 +222,6 @@ public class Data {
 	}
 	
 	
-	
-	public static ImageOptions imageOptionsRound(){
-		ImageOptions options = new ImageOptions();
-		 options.round = 10;
-		 options.memCache = true;
-		 options.fileCache = true;
-		 return options;
-	}
-	
-	public static ImageOptions imageOptionsFullRound(){
-		ImageOptions options = new ImageOptions();
-		 options.round = 500;
-		 options.memCache = true;
-		 options.fileCache = true;
-		 return options;
-	}
-	
-	public static ImageOptions imageOptions(){
-		ImageOptions options = new ImageOptions();
-		 options.memCache = true;
-		 options.fileCache = true;
-		 return options;
-	}
 	
 	
 	

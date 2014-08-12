@@ -32,14 +32,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.androidquery.util.AQUtility;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoTools;
 
 public class SplashNewActivity extends Activity{
 	
@@ -135,7 +135,6 @@ public class SplashNewActivity extends Activity{
 		
 		noNetFirstTime = false;
 		
-		AQUtility.cleanCacheAsync(SplashNewActivity.this);
 		
 		
 		
@@ -145,6 +144,8 @@ public class SplashNewActivity extends Activity{
 	    Data.deviceToken = regid;
 
 	    Log.i("deviceToken", Data.deviceToken + "..");
+	    
+	    PicassoTools.clearCache(Picasso.with(this));
 		
 	}
 	
