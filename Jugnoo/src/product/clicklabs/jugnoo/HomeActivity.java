@@ -4480,12 +4480,20 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			userCanceledDialogShown = false;
 			userPushStart = false;
 			
-			DialogPopup.showLoadingDialog(activity, "Fetching user data...");
+			DialogPopup.showLoadingDialog(activity, "Fetching customer data...");
 			
 			RequestParams params = new RequestParams();
-		
 			
+			SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+			Editor editor = pref.edit();
+			editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+			editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+			editor.putString(Data.SP_D_NR_USER_ID, "");
+			editor.putString(Data.SP_D_NR_LATITUDE, "");
+			editor.putString(Data.SP_D_NR_LONGITUDE, "");
+			editor.commit();
 			
+			 
 			if(myLocation != null){
 				Data.latitude = myLocation.getLatitude();
 				Data.longitude = myLocation.getLongitude();
@@ -4783,6 +4791,15 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
 				DialogPopup.showLoadingDialog(activity, "Loading...");
+				
+				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+				Editor editor = pref.edit();
+				editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+				editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+				editor.putString(Data.SP_D_NR_USER_ID, "");
+				editor.putString(Data.SP_D_NR_LATITUDE, "");
+				editor.putString(Data.SP_D_NR_LONGITUDE, "");
+				editor.commit();
 				
 				RequestParams params = new RequestParams();
 			
@@ -7389,7 +7406,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 		}
-		
 		
 	}
 	

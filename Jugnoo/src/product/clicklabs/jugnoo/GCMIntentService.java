@@ -234,27 +234,24 @@ public class GCMIntentService extends IntentService {
 	    	    				 //flag 0 for customer ride request to driver show marker on map
 	    	    				 if(0 == flag){
 	    	    					 
-	    	    					 final String engagementId = jObj.getString("engagement_id");
-	    	    					 String userId = jObj.getString("user_id");
-	    	    					 double latitude = jObj.getDouble("latitude");
-	    	    					 double longitude = jObj.getDouble("longitude");
+	    	    					 String SHARED_PREF_NAME = "myPref", 
+    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
+    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
+    	    									SP_D_NR_USER_ID = "d_nr_user_id",
+    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
+    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
 	    	    					 
-	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
+	    	    					 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
 	    	    					 
-	    	    					 if(HomeActivity.driverGetRequestPush != null){
-	    	    						 notificationManagerResume(this, "You have got a new ride request.", true);
-	    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
-	    	    					 }
-	    	    					 else{
+	    	    					 String hasRequest = pref.getString(SP_D_NEW_RIDE_REQUEST, "no");
+	    	    					 
+	    	    					 if(hasRequest.equalsIgnoreCase("no")){
 	    	    						 
-	    	    						 String SHARED_PREF_NAME = "myPref", 
-	    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
-	    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
-	    	    									SP_D_NR_USER_ID = "d_nr_user_id",
-	    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
-	    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
+	    	    						 final String engagementId = jObj.getString("engagement_id");
+		    	    					 String userId = jObj.getString("user_id");
+		    	    					 double latitude = jObj.getDouble("latitude");
+		    	    					 double longitude = jObj.getDouble("longitude");
 	    	    						 
-	    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
 	    	    						 Editor editor = pref.edit();
 	    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "yes");
 	    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, engagementId);
@@ -262,47 +259,51 @@ public class GCMIntentService extends IntentService {
 	    	    						 editor.putString(SP_D_NR_LATITUDE, ""+latitude);
 	    	    						 editor.putString(SP_D_NR_LONGITUDE, ""+longitude);
 	    	    						 editor.commit();
+		    	    					 
+		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
+		    	    					 
+		    	    					 if(HomeActivity.driverGetRequestPush != null){
+		    	    						 notificationManagerResume(this, "You have got a new ride request.", true);
+		    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
+		    	    					 }
+		    	    					 else{
+		    	    						 notificationManager(this, "You have got a new ride request.", true);
+		    	    					 }
+		    	    					 
+		    	    					 
+	    	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);} catch(Exception e){}
 	    	    						 
-	    	    						 notificationManager(this, "You have got a new ride request.", true);
+	    	    						 requestRemoveRunnable = new Runnable() {
+											
+											@Override
+											public void run() {
+												clearNotifications(GCMIntentService.this);
+				    	    					 
+				    	    					 if(HomeActivity.driverGetRequestPush != null){
+				    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
+				    	    					 }
+				    	    					 
+			    	    						 String SHARED_PREF_NAME = "myPref", 
+			    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
+			    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
+			    	    									SP_D_NR_USER_ID = "d_nr_user_id",
+			    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
+			    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
+			    	    						 
+			    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+			    	    						 Editor editor = pref.edit();
+			    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
+			    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
+			    	    						 editor.putString(SP_D_NR_USER_ID, "");
+			    	    						 editor.putString(SP_D_NR_LATITUDE, "");
+			    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
+			    	    						 editor.commit();
+											}
+										};
+	    	    						 
+										requestRemoveHandler = new Handler();
+										requestRemoveHandler.postDelayed(requestRemoveRunnable, 60000);
 	    	    					 }
-
-    	    						 
-	    	    					 
-	    	    					 
-    	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);} catch(Exception e){}
-    	    						 
-    	    						 requestRemoveRunnable = new Runnable() {
-										
-										@Override
-										public void run() {
-											clearNotifications(GCMIntentService.this);
-			    	    					 
-			    	    					 if(HomeActivity.driverGetRequestPush != null){
-			    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
-			    	    					 }
-			    	    					 
-		    	    						 String SHARED_PREF_NAME = "myPref", 
-		    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
-		    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
-		    	    									SP_D_NR_USER_ID = "d_nr_user_id",
-		    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
-		    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
-		    	    						 
-		    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-		    	    						 Editor editor = pref.edit();
-		    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
-		    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
-		    	    						 editor.putString(SP_D_NR_USER_ID, "");
-		    	    						 editor.putString(SP_D_NR_LATITUDE, "");
-		    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
-		    	    						 editor.commit();
-										}
-									};
-    	    						 
-									requestRemoveHandler = new Handler();
-									requestRemoveHandler.postDelayed(requestRemoveRunnable, 60000);
-									
-									
 	    	    					 
 	    	    				 }
 	    	    				 // flag 1 for driver request accepted  show customer cancel for 5 sec and then call driver
