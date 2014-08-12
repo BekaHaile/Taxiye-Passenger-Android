@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -346,6 +348,30 @@ public class RegisterScreen extends Activity{
 			}
 		}
 		return "";
+	}
+	
+	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if(Data.locationFetcher == null){
+			Data.locationFetcher = new LocationFetcher(RegisterScreen.this, 2);
+		}
+		
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		try{
+			Data.locationFetcher.destroy();
+			Data.locationFetcher = null;
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	

@@ -438,10 +438,6 @@ public class SplashLogin extends Activity{
 //			accessTokenLogin(SplashLogin.this);
 //		}
 		
-		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashLogin.this);
-		}
-		
 		
 		jugnooLogoBig = (ImageView) findViewById(R.id.jugnooLogoBig);
 		jugnooLogoBig.setOnLongClickListener(new View.OnLongClickListener() {
@@ -472,7 +468,7 @@ public class SplashLogin extends Activity{
 		super.onResume();
 		
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashLogin.this);
+			Data.locationFetcher = new LocationFetcher(SplashLogin.this, 2);
 		}
 		
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
@@ -1226,6 +1222,52 @@ public class SplashLogin extends Activity{
 //					}
 //				}
 	
+	
+	
+	
+	static AlertDialog locationAlertDialog;
+	/**
+	 * Function to show settings alert dialog
+	 * On pressing Settings button will lauch Settings Options
+	 * */
+	public static void showLocationSettingsAlert(final Context mContext, String provider){
+		try{
+			if(locationAlertDialog != null && locationAlertDialog.isShowing()){
+				locationAlertDialog.dismiss();
+			}
+				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
+		   	 
+		        // Setting Dialog Title
+		        alertDialogPrepare.setTitle("Loaction Settings");
+		        alertDialogPrepare.setCancelable(false);
+		 
+		        // Setting Dialog Message
+		        alertDialogPrepare.setMessage(provider + "Location is not enabled. Do you want to enable it from settings menu?");
+		 
+		        // On pressing Settings button
+		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog,int which) {
+		            	Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+		            	mContext.startActivity(intent);
+		            	dialog.dismiss();
+		            }
+		        });
+		 
+		        // on pressing cancel button
+		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		            dialog.dismiss();
+		            }
+		        });
+		 
+		        locationAlertDialog = alertDialogPrepare.create();
+		        
+		        // Showing Alert Message
+		        locationAlertDialog.show();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	
 	

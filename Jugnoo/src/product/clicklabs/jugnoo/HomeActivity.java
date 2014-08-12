@@ -1718,7 +1718,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, gpsListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, gpsListener);
 
 		
 	    if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -2487,51 +2487,91 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		@Override
 		public void onProviderEnabled(String provider) {
 			Log.e("locationListener onProviderEnabled","="+provider);
+			if(map != null){
+				map.setMyLocationEnabled(true);
+			}
 		}
 		
 		@Override
 		public void onProviderDisabled(String provider) {
 			Log.e("locationListener onProviderDisabled","="+provider);
+			if(map != null){
+				map.setMyLocationEnabled(false);
+			}
 		}
 		
 		@Override
 		public void onLocationChanged(Location location) {
 			Log.e("locationListener location changed","="+location);
 			if(appPaused){
-				drawLocationChanged(location);
+				if(isBetterLocation(location, HomeActivity.myLocation)){
+					drawLocationChanged(location);
+				}
 			}
 		}
+		
 	};
 	
 	
-	LocationListener networkListener = new LocationListener() {
-		
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			Log.e("locationListener onStatusChanged","= provider = "+provider + ", status = "+status+ ", extras = "+extras);
-			
+	/**
+	 * Checks if the new location is accurate enough or not
+	 * @param location latest location
+	 * @param currentBestLocation last accurate location
+	 * @return
+	 */
+	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+		int OLD_LOCATION_THRESHOLD = 1000 * 60 * 2;
+		if (currentBestLocation == null) {
+			// A new location is always better than no location
+			return true;
 		}
-		
-		@Override
-		public void onProviderEnabled(String provider) {
-			Log.e("locationListener onProviderEnabled","="+provider);
+
+		// Check whether the new location fix is newer or older
+		long timeDelta = location.getTime() - currentBestLocation.getTime();
+		boolean isSignificantlyNewer = timeDelta > OLD_LOCATION_THRESHOLD;
+		boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
+		boolean isNewer = timeDelta > 0;
+
+		// If it's been more than two minutes since the current location, use
+		// the new location
+		// because the user has likely moved
+		if (isSignificantlyNewer) {
+			return true;
+			// If the new location is more than two minutes older, it must be
+			// worse
+		} else if (isSignificantlyOlder) {
+			return false;
 		}
-		
-		@Override
-		public void onProviderDisabled(String provider) {
-			Log.e("locationListener onProviderDisabled","="+provider);
+
+		// Check whether the new location fix is more or less accurate
+		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+		boolean isLessAccurate = accuracyDelta > 0;
+		boolean isMoreAccurate = accuracyDelta < 0;
+		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+		// Check if the old and new location are from the same provider
+		boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
+
+		// Determine location quality using a combination of timeliness and
+		// accuracy
+		if (isMoreAccurate) {
+			return true;
+		} else if (isNewer && !isLessAccurate) {
+			return true;
+		} else if (isNewer && !isSignificantlyLessAccurate
+				&& isFromSameProvider) {
+			return true;
 		}
-		
-		@Override
-		public void onLocationChanged(Location location) {
-			Log.e("locationListener location changed","="+location);
-			if(appPaused){
-				drawLocationChanged(location);
-			}
+		return false;
+	}
+
+	/** Checks whether two providers are the same */
+	private boolean isSameProvider(String provider1, String provider2) {
+		if (provider1 == null) {
+			return provider2 == null;
 		}
-	};
-	
-	
+		return provider1.equals(provider2);
+	}
 	
 	
 	
@@ -2582,10 +2622,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	@Override
 	protected void onResume() {
-		
-		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(HomeActivity.this);
-		}
 		
 		appPaused = false;
 		
@@ -2841,15 +2877,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
 			    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
 					}
-					else if(Data.locationFetcher != null){
-						editor.putString(Data.SP_LAST_LATITUDE, ""+Data.locationFetcher.getLatitude());
-			    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.locationFetcher.getLongitude());
-					}
 					else{
 						editor.putString(Data.SP_LAST_LATITUDE, "0");
 			    		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 					}
 					
+				}
+				else{
+					editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
 				}
 				
 				
@@ -2900,10 +2935,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					if(HomeActivity.myLocation != null){
 						editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
 			    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
-					}
-					else if(Data.locationFetcher != null){
-						editor.putString(Data.SP_LAST_LATITUDE, ""+Data.locationFetcher.getLatitude());
-			    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.locationFetcher.getLongitude());
 					}
 					else{
 						editor.putString(Data.SP_LAST_LATITUDE, "0");
@@ -2976,21 +3007,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     		GCMIntentService.clearNotifications(HomeActivity.this);
     		
     		try{
-    			if(locationManager != null){
-    				if(gpsListener != null){
-    					locationManager.removeUpdates(gpsListener);
-    				}
+    			if(locationManager != null && gpsListener != null){
+    				locationManager.removeUpdates(gpsListener);
     			}
     		} catch(Exception e){
     			e.printStackTrace();
     		}
     		
-    		try{
-    			Data.locationFetcher.destroy();
-    			Data.locationFetcher = null;
-    		} catch(Exception e){
-    			e.printStackTrace();
-    		}
 	        
 	        PicassoTools.clearCache(Picasso.with(HomeActivity.this));
 	        
@@ -3018,7 +3041,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		public void onMyLocationChange(Location location) {
 			
 			if(!appPaused){
-				drawLocationChanged(location);
+				if(isBetterLocation(location, HomeActivity.myLocation)){
+					drawLocationChanged(location);
+				}
 			}
 			
 		}
@@ -4478,14 +4503,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			RequestParams params = new RequestParams();
 		
 			
-			if(Data.locationFetcher != null){
-				Data.latitude = Data.locationFetcher.getLatitude();
-				Data.longitude = Data.locationFetcher.getLongitude();
-				
-				if(myLocation != null){
-					Data.latitude = myLocation.getLatitude();
-					Data.longitude = myLocation.getLongitude();
-				}
+			
+			if(myLocation != null){
+				Data.latitude = myLocation.getLatitude();
+				Data.longitude = myLocation.getLongitude();
 			}
 			
 			
@@ -5056,10 +5077,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			RequestParams params = new RequestParams();
 		
-			if(Data.locationFetcher != null){
-				Data.latitude = Data.locationFetcher.getLatitude();
-				Data.longitude = Data.locationFetcher.getLongitude();
+			
+			if(myLocation != null){
+				Data.latitude = myLocation.getLatitude();
+				Data.longitude = myLocation.getLongitude();
 			}
+			
 			
 			DecimalFormat decimalFormatWait = new DecimalFormat("#");
 			
@@ -6010,9 +6033,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			params.put("access_token", Data.userData.accessToken);
 
-			if(Data.locationFetcher != null){
-				Data.latitude = Data.locationFetcher.getLatitude();
-				Data.longitude = Data.locationFetcher.getLongitude();
+			if(myLocation != null){
+				Data.latitude = myLocation.getLatitude();
+				Data.longitude = myLocation.getLongitude();
 			}
 			
 			params.put("latitude", ""+Data.latitude);
