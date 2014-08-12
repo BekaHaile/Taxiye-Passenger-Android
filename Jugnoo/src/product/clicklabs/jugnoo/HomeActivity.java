@@ -1721,11 +1721,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, gpsListener);
 
 		
-	    if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-	    }
-	    else{
-	        buildAlertMessageNoGps();
-	    }
+	    
 		
 		
 	}
@@ -2588,11 +2584,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		                   startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 		               }
 		           })
-		           .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		               public void onClick(final DialogInterface dialog, final int id) {
-		                    dialog.cancel();
-		               }
-		           });
+//		           .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//		               public void onClick(final DialogInterface dialog, final int id) {
+//		                    dialog.cancel();
+//		               }
+//		           })
+		           ;
 		    gpsDialogAlert = null;
 		    gpsDialogAlert = builder.create();
 		    gpsDialogAlert.show();
@@ -2630,11 +2627,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
         this.mWakeLock.acquire();
 		super.onResume();
 		
-		
 		buildAlertMessageNoGps();
-
-		
-	    
 	    
 	    
 	    if(FavoriteActivity.zoomToMap){
@@ -3066,8 +3059,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 					saveDataOnPause(false);
 					
-//				if(gpsState == GPSState.GPS_EVENT_FIRST_FIX){
-					
 					final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 					if(lastLocation != null){
 						
@@ -3115,8 +3106,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						else{
 							new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement).execute();
 						}
-						
-						
 						
 					}
 					else if(lastLocation == null){
@@ -3208,15 +3197,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 					}
 					
-					
-//					map.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-					
 					lastLocation = location;
 					
-//				}
-//				else{
-//					buildGpsNotLockedAlert();
-//				}
 				}
 				
 				

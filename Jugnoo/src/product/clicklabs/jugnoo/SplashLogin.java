@@ -10,6 +10,7 @@ import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -471,10 +473,14 @@ public class SplashLogin extends Activity{
 			Data.locationFetcher = new LocationFetcher(SplashLogin.this, 2);
 		}
 		
+		
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if(resp != ConnectionResult.SUCCESS){
 			Log.e("Google Play Service Error ","="+resp);
 			showGooglePlayErrorAlert(SplashLogin.this);
+		}
+		else{
+			showLocationSettingsAlert(SplashLogin.this);
 		}
 		
 	}
@@ -1230,8 +1236,9 @@ public class SplashLogin extends Activity{
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
-	public static void showLocationSettingsAlert(final Context mContext, String provider){
+	public static void showLocationSettingsAlert(final Context mContext){
 		try{
+			if(!((LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
 			if(locationAlertDialog != null && locationAlertDialog.isShowing()){
 				locationAlertDialog.dismiss();
 			}
@@ -1242,7 +1249,7 @@ public class SplashLogin extends Activity{
 		        alertDialogPrepare.setCancelable(false);
 		 
 		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage(provider + "Location is not enabled. Do you want to enable it from settings menu?");
+		        alertDialogPrepare.setMessage("GPS Location is not enabled. Do you want to enable it from settings menu?");
 		 
 		        // On pressing Settings button
 		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
@@ -1254,18 +1261,52 @@ public class SplashLogin extends Activity{
 		        });
 		 
 		        // on pressing cancel button
-		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int which) {
-		            dialog.dismiss();
-		            }
-		        });
+//		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//		            public void onClick(DialogInterface dialog, int which) {
+//		            dialog.dismiss();
+//		            }
+//		        });
 		 
 		        locationAlertDialog = alertDialogPrepare.create();
 		        
 		        // Showing Alert Message
 		        locationAlertDialog.show();
+			}
 		} catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Checks if location fetching through network is enabled in device or not
+	 * @param context application context
+	 * @return true if network location provider is enabled else false
+	 */
+	public boolean isNetworkLocationEnabled(Context context) {
+		try{
+			ContentResolver contentResolver = context.getContentResolver();
+			boolean netStatus = android.provider.Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.NETWORK_PROVIDER);
+			return netStatus;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if location fetching through gps is enabled in device or not
+	 * @param context application context
+	 * @return true if gps location provider is enabled else false
+	 */
+	public boolean isGPSLocationEnabled(Context context) {
+		try{
+			ContentResolver contentResolver = context.getContentResolver();
+			boolean gpsStatus = android.provider.Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
+			return gpsStatus;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
