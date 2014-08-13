@@ -32,19 +32,40 @@ public class LocationFetcher {
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		this.whichProvider = whichProvider;
 		this.locationChanged = false;
+		Log.e("whichProvider", "="+whichProvider);
 		
 		if(whichProvider == 0){
 			if(isNetworkLocationEnabled(context)){
-				networkListener = new MyLocationListener();
-				provider = LocationManager.NETWORK_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 0, networkListener);
+				Log.e("90812349083jdsfkakdsflkksdnlm,f=-=-=-", "="+locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
+				if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+					networkListener = new MyLocationListener();
+					provider = LocationManager.NETWORK_PROVIDER;
+					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 0, networkListener);
+				}
+				else{
+					if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+						gpsListener = new MyLocationListener();
+						provider = LocationManager.GPS_PROVIDER;
+						locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 0, gpsListener);
+					}
+				}
 			}
+			
 		}
 		else if(whichProvider == 1){
 			if(isGPSLocationEnabled(context)){
-				gpsListener = new MyLocationListener();
-				provider = LocationManager.GPS_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
+				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+					gpsListener = new MyLocationListener();
+					provider = LocationManager.GPS_PROVIDER;
+					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
+				}
+				else{
+					if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+						networkListener = new MyLocationListener();
+						provider = LocationManager.NETWORK_PROVIDER;
+						locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
+					}
+				}
 			}
 		}
 		else if(whichProvider == 2){
@@ -61,7 +82,6 @@ public class LocationFetcher {
 					provider = LocationManager.NETWORK_PROVIDER;
 					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 0, networkListener);
 				}
-				
 			}
 		}
 	}
@@ -206,6 +226,8 @@ public class LocationFetcher {
 			boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
 			boolean isNewer = timeDelta > 0;
 
+			Log.i("timeDelta", "="+timeDelta);
+			
 			// If it's been more than two minutes since the current location, use
 			// the new location
 			// because the user has likely moved
@@ -222,6 +244,8 @@ public class LocationFetcher {
 			boolean isLessAccurate = accuracyDelta > 0;
 			boolean isMoreAccurate = accuracyDelta < 0;
 			boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+			
+			Log.i("accuracyDelta", "="+accuracyDelta);
 
 			// Check if the old and new location are from the same provider
 			boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());

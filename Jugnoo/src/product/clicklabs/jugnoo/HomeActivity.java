@@ -124,6 +124,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	
 	ProgressBar profileImgProgress;
 	ImageView profileImg;
 	TextView userName;
@@ -1761,7 +1762,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			userName.setText(Data.userData.userName);
 			
 			Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
-			Picasso.with(HomeActivity.this).load(Data.userData.userImage).transform(new CircleTransform()).into(profileImg);
+			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).transform(new CircleTransform()).into(profileImg);}catch(Exception e){}
 			
 		} catch(Exception e){
 			e.printStackTrace();
@@ -1860,6 +1861,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			}
 			
 			
+			
 			reviewDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
 			reviewWaitValue.setText(waitTime+" min");
 			reviewFareValue.setText("Rs. "+decimalFormat.format(totalFare));
@@ -1870,7 +1872,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			reviewUserName.setText(Data.assignedCustomerInfo.name);
 			
 			Data.assignedCustomerInfo.image = Data.assignedCustomerInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);
+			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
+			
 			
 			
 		}
@@ -2089,7 +2093,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			reviewUserName.setText(Data.assignedDriverInfo.name);
 			
 			Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);
+			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
 			
 		}
 		else{
@@ -2310,10 +2315,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     	 		}
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
+				
 				
 				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
 				
 				
 				initialLayout.setVisibility(View.GONE);
@@ -2384,10 +2390,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				driverName.setText(Data.assignedDriverInfo.name);
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
 				
 				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				
 				
 				initialLayout.setVisibility(View.GONE);
 				beforeRequestFinalLayout.setVisibility(View.GONE);
@@ -2597,24 +2604,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 	}
 	
-	void buildGpsNotLockedAlert() {
-		
-		if(gpsDialogAlert != null && gpsDialogAlert.isShowing()){
-	    }
-		else{
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		    builder.setMessage("GPS connection is not locked. The app needs a locked GPS connection. Please wait...")
-		           .setCancelable(false)
-		           .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-		               public void onClick(final DialogInterface dialog, final int id) {
-		               }
-		           })
-		           ;
-		    gpsDialogAlert = null;
-		    gpsDialogAlert = builder.create();
-		    gpsDialogAlert.show();
-		}
-	}
 	
 	
 	@Override
