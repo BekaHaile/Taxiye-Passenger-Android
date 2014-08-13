@@ -26,64 +26,42 @@ public class LocationFetcher {
 	/**
 	 * Initialize location fetcher object with selected listeners
 	 * @param context
-	 * @param whichProvider 0 for network, 1 for GPS and 2 for both
+	 * @param whichProvider 0 for network, 1 for GPS, 2 for both
 	 */
 	public LocationFetcher(Context context, int whichProvider){
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-		this.whichProvider = whichProvider;
 		this.locationChanged = false;
-		Log.e("whichProvider", "="+whichProvider);
+		this.whichProvider = whichProvider;
+		this.provider = "no";
 		
 		if(whichProvider == 0){
-			if(isNetworkLocationEnabled(context)){
-				Log.e("90812349083jdsfkakdsflkksdnlm,f=-=-=-", "="+locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
-				if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-					networkListener = new MyLocationListener();
-					provider = LocationManager.NETWORK_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 0, networkListener);
-				}
-				else{
-					if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-						gpsListener = new MyLocationListener();
-						provider = LocationManager.GPS_PROVIDER;
-						locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 0, gpsListener);
-					}
-				}
+			if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+				networkListener = new MyLocationListener();
+				provider = LocationManager.NETWORK_PROVIDER;
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
 			}
-			
 		}
 		else if(whichProvider == 1){
-			if(isGPSLocationEnabled(context)){
-				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-					gpsListener = new MyLocationListener();
-					provider = LocationManager.GPS_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
-				}
-				else{
-					if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-						networkListener = new MyLocationListener();
-						provider = LocationManager.NETWORK_PROVIDER;
-						locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
-					}
-				}
-			}
-		}
-		else if(whichProvider == 2){
-			if(isNetworkLocationEnabled(context) || isGPSLocationEnabled(context)){
+			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 				gpsListener = new MyLocationListener();
-				networkListener = new MyLocationListener();
-				
-				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-					provider = LocationManager.GPS_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
-				}
-				
-				if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-					provider = LocationManager.NETWORK_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 0, networkListener);
-				}
+				provider = LocationManager.GPS_PROVIDER;
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
 			}
 		}
+		else if(whichProvider == 2) {
+			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+				gpsListener = new MyLocationListener();
+				provider = LocationManager.GPS_PROVIDER;
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
+			}
+			if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+				networkListener = new MyLocationListener();
+				provider = LocationManager.NETWORK_PROVIDER;
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
+			}
+		}
+			
+		
 	}
 	
 	
@@ -130,7 +108,9 @@ public class LocationFetcher {
 		try{
 		if(location == null){
 			Log.e("getLatitude", "location == null");
-			location = locationManager.getLastKnownLocation(provider);
+			if(!provider.equalsIgnoreCase("no")){
+				location = locationManager.getLastKnownLocation(provider);
+			}
 			if(location != null){
 				latitude = location.getLatitude();
 			}
@@ -150,7 +130,9 @@ public class LocationFetcher {
 	public double getLongitude(){
 		try{
 		if(location == null){
-			location = locationManager.getLastKnownLocation(provider);
+			if(!provider.equalsIgnoreCase("no")){
+				location = locationManager.getLastKnownLocation(provider);
+			}
 			if(location != null){
 				longitude = location.getLatitude();
 				Log.e("last location","="+longitude);
@@ -194,9 +176,11 @@ public class LocationFetcher {
 				LocationFetcher.this.location = loc;
 				LocationFetcher.this.locationChanged = true;
 			}
+			LocationFetcher.this.provider = loc.getProvider();
 		}
 
 		public void onProviderDisabled(String provider) {
+			LocationFetcher.this.provider = "no";
 		}
 
 		public void onProviderEnabled(String provider) {

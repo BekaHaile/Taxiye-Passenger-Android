@@ -484,6 +484,7 @@ public class SplashLogin extends Activity{
 			showLocationSettingsAlert(SplashLogin.this);
 		}
 		
+		
 	}
 	
 	@Override

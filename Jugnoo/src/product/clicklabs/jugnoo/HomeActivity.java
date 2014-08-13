@@ -1848,7 +1848,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
 			
 			
-			DecimalFormat decimalFormat = new DecimalFormat("#.##");
 			double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 			
 			
@@ -1943,7 +1942,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				
 				
-				DecimalFormat decimalFormat = new DecimalFormat("#.#");
 				double rateingD = 4;
 				try{
 					rateingD = Double.parseDouble(Data.assignedCustomerInfo.rating);
@@ -2071,7 +2069,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			endRideReviewRl.setVisibility(View.VISIBLE);
 			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
 			
-			DecimalFormat decimalFormat = new DecimalFormat("#.##");
 			double totalDistanceInKm = Data.totalDistance;
 			
 			
@@ -2687,7 +2684,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 
 		if(Data.assignedCustomerInfo != null){
-			DecimalFormat decimalFormat = new DecimalFormat("#.#");
 			double rateingD = 4;
 			try{
 				rateingD = Double.parseDouble(Data.assignedCustomerInfo.rating);
@@ -5076,7 +5072,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			waitTime = decimalFormatWait.format(waitMinutes);
 			
-			DecimalFormat decimalFormat = new DecimalFormat("#.##");
 			double totalDistanceInKm = totalDistance/1000.0;
 			
 			params.put("access_token", Data.userData.accessToken);

@@ -64,6 +64,12 @@ public class DriverLocationUpdateService extends Service {
        
         try{
         	
+        	String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_DRIVER_SERVICE = "sp_driver_service";
+        	SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
+        	SharedPreferences.Editor editor = preferences.edit();
+			editor.putString(SP_DRIVER_SERVICE, "on");
+			editor.commit();
+        	
         	if(sendDriverLocationToServer != null){
         		sendDriverLocationToServer.cancel(true);
         		sendDriverLocationToServer = null;
@@ -135,6 +141,12 @@ public class DriverLocationUpdateService extends Service {
         	locationFetcher.destroy();
         	locationFetcher = null;
         }
+        
+        String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_DRIVER_SERVICE = "sp_driver_service";
+    	SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
+    	SharedPreferences.Editor editor = preferences.edit();
+		editor.putString(SP_DRIVER_SERVICE, "off");
+		editor.commit();
     }
     
     
@@ -167,7 +179,6 @@ public class DriverLocationUpdateService extends Service {
 		String SP_DRIVER_SCREEN_MODE = "driver_screen_mode";
     	
     	long serverUpdateTimePeriod = 60000;
-    	long serverUpdateDistance = 500;
     	
     	@Override
     	protected void onPreExecute() {
@@ -176,9 +187,9 @@ public class DriverLocationUpdateService extends Service {
     		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
     		String driverMode = pref.getString(SP_DRIVER_SCREEN_MODE, "");
     		
+    		
     		if(driverMode.equalsIgnoreCase("")){
     			serverUpdateTimePeriod = 60000;
-    	    	serverUpdateDistance = 500;
     			if(locationFetcher == null){
     				locationFetcher = new LocationFetcher(DriverLocationUpdateService.this, 0);
     			}
@@ -192,7 +203,6 @@ public class DriverLocationUpdateService extends Service {
     		}
     		else{
     			serverUpdateTimePeriod = 30000;
-    	    	serverUpdateDistance = 200;
     			if(locationFetcher == null){
     				locationFetcher = new LocationFetcher(DriverLocationUpdateService.this, 1);
     			}
@@ -212,6 +222,12 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
+    		if(count == 0){
+    			try{
+    				Thread.sleep(5000);
+    			} catch(Exception e){
+    			}
+			}
     		
     		//Toggle live to trial
     		String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
@@ -269,26 +285,53 @@ public class DriverLocationUpdateService extends Service {
     			
     			if(noUpdate){
 					Log.i("noUpdate","inside");
-					if(locationFetcher != null && locationFetcher.locationChanged){
-						lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-	    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
-		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude)); //device_token
-		    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-		    			
-		    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
-		    			
-		    			
-		    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-		    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
-		    			
-		    			Log.e("result","="+result);
-		    			
-		    			simpleJSONParser = null;
-		    			nameValuePairs = null;
-	    				
-	    				noUpdate = false;
+					if(locationFetcher != null){
+						if(locationFetcher.locationChanged){
+							lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
+		    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+			    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
+			    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude)); //device_token
+			    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
+			    			
+			    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
+			    			
+			    			
+			    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+			    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
+			    			
+			    			Log.e("result","="+result);
+			    			
+			    			simpleJSONParser = null;
+			    			nameValuePairs = null;
+		    				
+		    				noUpdate = false;
+						}
+						else{
+							try{
+			    				Thread.sleep(5000);
+			    			} catch(Exception e){
+			    			}
+							lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
+		    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+			    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
+			    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude)); //device_token
+			    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
+			    			
+			    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
+			    			
+			    			
+			    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+			    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
+			    			
+			    			Log.e("result","="+result);
+			    			
+			    			simpleJSONParser = null;
+			    			nameValuePairs = null;
+		    				
+		    				noUpdate = false;
+						}
 					}
 				}
     			
@@ -312,7 +355,7 @@ public class DriverLocationUpdateService extends Service {
 	    			Log.e("currentLatLng = ", "="+currentLatLng);
 	    			Log.e("lastLocation = ", "="+lastLocation);
 	    			
-	    			if(distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= serverUpdateDistance){
+//	    			if(distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= serverUpdateDistance){
 		    			
 	    				DriverLocationUpdateService.this.lastLocation = currentLatLng;
 	    				
@@ -342,7 +385,7 @@ public class DriverLocationUpdateService extends Service {
 		    			}
 	    			}
 	    			
-	    		}
+//	    		}
     		}
     		} catch(Exception e){
     			e.printStackTrace();
@@ -374,8 +417,14 @@ public class DriverLocationUpdateService extends Service {
     		count++;
     		noUpdate = false;
         	
-//			locationFetcher.destroy();
-//			locationFetcher = null;
+    		
+    		if(locationFetcher != null){
+    			if(locationFetcher.provider.equalsIgnoreCase("no")){
+    				locationFetcher.destroy();
+    				locationFetcher = null;
+    			}
+    		}
+    		
     		
         	sendDriverLocationToServer = null;
         	
