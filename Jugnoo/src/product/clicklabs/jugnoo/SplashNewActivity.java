@@ -71,15 +71,15 @@ public class SplashNewActivity extends Activity{
 //		}
 		
 		
-//		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-//		String link = preferences.getString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
-//		
-//		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-//			Data.SERVER_URL = Data.TRIAL_SERVER_URL;
-//		}
-//		else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-//			Data.SERVER_URL = Data.LIVE_SERVER_URL;
-//		}
+		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
+		
+		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+			Data.SERVER_URL = Data.TRIAL_SERVER_URL;
+		}
+		else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
+			Data.SERVER_URL = Data.LIVE_SERVER_URL;
+		}
 		
 		
 		

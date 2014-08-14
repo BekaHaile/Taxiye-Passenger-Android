@@ -204,6 +204,7 @@ public class Data {
 			friendInfos = new ArrayList<FriendInfo>();
 			friendInfosDuplicate = new ArrayList<FriendInfo>();
 			userData = null;
+			locationFetcher.destroy();
 			locationFetcher = null;
 			deviceToken = ""; country = ""; deviceName = ""; appVersion = ""; osVersion = "";
 			cEngagementId = ""; cDriverId = "";
