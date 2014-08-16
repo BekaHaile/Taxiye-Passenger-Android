@@ -1193,7 +1193,6 @@ public class SplashLogin extends Activity{
 								dialog.dismiss();
 								
 								
-								
 							}
 							
 							

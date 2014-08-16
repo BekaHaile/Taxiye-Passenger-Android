@@ -388,7 +388,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	public static AppMode appMode;
-	public int mapPathColor = Color.RED;
+	public int mapPathColor = Color.TRANSPARENT;
 	public int dToCmapPathColor = Color.RED;
 	
 	@Override
@@ -1919,7 +1919,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				
 				cancelCustomerPathUpdateTimer();
-			
+				
+				if(map != null){
+					Log.i("map cleared", "D_INITIAL");
+					map.clear();
+				}
 				
 				
 				break;
@@ -6362,6 +6366,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										
 										new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
 
+									
 										
 									}
 								}  catch (Exception exception) {
@@ -6422,78 +6427,82 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				public void run() {
 					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 						
-						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-						nameValuePairs.add(new BasicNameValuePair("driver_id", Data.assignedDriverInfo.userId));
-						
-						
-						Log.e("get_driver_current_location", "========================================");
-						Log.i("nameValuePairs", ""+nameValuePairs);
-						Log.i("link", "="+Data.SERVER_URL + "/get_driver_current_location");
-						
-						SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-						String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_driver_current_location", nameValuePairs);
-						
-						Log.e("timerTaskDriverLocationUpdater result","=*****=="+result);
-						
-						if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
-							Log.e("timeout","=");
-						}
-						else{
-							try {
-								JSONObject jObj = new JSONObject(result);
+						if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
 								
-								if(!jObj.isNull("error")){
+							ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+							nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+							nameValuePairs.add(new BasicNameValuePair("driver_id", Data.assignedDriverInfo.userId));
+							
+							
+							Log.e("get_driver_current_location", "========================================");
+							Log.i("nameValuePairs", ""+nameValuePairs);
+							Log.i("link", "="+Data.SERVER_URL + "/get_driver_current_location");
+							
+							SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+							String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_driver_current_location", nameValuePairs);
+							
+							Log.e("timerTaskDriverLocationUpdater result","=*****=="+result);
+							
+							if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+								Log.e("timeout","=");
+							}
+							else{
+								try {
+									JSONObject jObj = new JSONObject(result);
 									
-									int flag = jObj.getInt("flag");	
-
-									String errorMessage = jObj.getString("error");
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
+									if(!jObj.isNull("error")){
+										
+										int flag = jObj.getInt("flag");	
+	
+										String errorMessage = jObj.getString("error");
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
+										}
+										else{
+											
+										}
 									}
 									else{
 										
-									}
-								}
-								else{
-									
-//								{
-//								    "data": [
-//								        {
-//								            "user_id": 192,
-//								            "current_location_latitude": 30.718788,
-//								            "current_location_longitude": 76.810109
-//								        }
-//								    ]
-//								}
-									
-									JSONArray data = jObj.getJSONArray("data");
-									JSONObject data0 = data.getJSONObject(0);
-									final LatLng driverCurrentLatLng = new LatLng(data0.getDouble("current_location_latitude"),
-											data0.getDouble("current_location_longitude"));
-									
-									if(Data.assignedDriverInfo != null){
-										Data.assignedDriverInfo.latLng = driverCurrentLatLng;
-									}
-									
-									runOnUiThread(new Runnable() {
+	//								{
+	//								    "data": [
+	//								        {
+	//								            "user_id": 192,
+	//								            "current_location_latitude": 30.718788,
+	//								            "current_location_longitude": 76.810109
+	//								        }
+	//								    ]
+	//								}
 										
-										@Override
-										public void run() {
-											try{
-												driverLocationMarker.setPosition(driverCurrentLatLng);
-											} catch(Exception e){
-												e.printStackTrace();
-											}
+										JSONArray data = jObj.getJSONArray("data");
+										JSONObject data0 = data.getJSONObject(0);
+										final LatLng driverCurrentLatLng = new LatLng(data0.getDouble("current_location_latitude"),
+												data0.getDouble("current_location_longitude"));
+										
+										if(Data.assignedDriverInfo != null){
+											Data.assignedDriverInfo.latLng = driverCurrentLatLng;
 										}
-									});
-									
+										
+										runOnUiThread(new Runnable() {
+											
+											@Override
+											public void run() {
+												try{
+													if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+														driverLocationMarker.setPosition(driverCurrentLatLng);
+													}
+												} catch(Exception e){
+													e.printStackTrace();
+												}
+											}
+										});
+										
+									}
+								} catch (JSONException e) {
+									e.printStackTrace();
 								}
-							} catch (JSONException e) {
-								e.printStackTrace();
 							}
 						}
-						
 					}
 					
 				}
@@ -6568,44 +6577,48 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							if(myLocation != null){
 								if(Data.dCustLatLng != null){
 									
-									LatLng source = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-									String url = makeURLPath(source, Data.dCustLatLng);
-									String result = new SimpleJSONParser().getJSONFromUrl(url);
-									
-									if(result != null){
-										final List<LatLng> list = getLatLngListFromPath(result);
+									if(driverScreenMode == DriverScreenMode.D_START_RIDE){
+										LatLng source = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+										String url = makeURLPath(source, Data.dCustLatLng);
+										String result = new SimpleJSONParser().getJSONFromUrl(url);
 										
-										runOnUiThread(new Runnable() {
+										if(result != null){
+											final List<LatLng> list = getLatLngListFromPath(result);
 											
-											@Override
-											public void run() {
-												try {
-													map.clear();
-													
-													if(markerOptionsCustomerPickupLocation == null){
-														markerOptionsCustomerPickupLocation = new MarkerOptions();
-														markerOptionsCustomerPickupLocation.title(Data.dEngagementId);
-														markerOptionsCustomerPickupLocation.snippet("");
-														markerOptionsCustomerPickupLocation.position(Data.dCustLatLng);
-														markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+											runOnUiThread(new Runnable() {
+												
+												@Override
+												public void run() {
+													try {
+														if(driverScreenMode == DriverScreenMode.D_START_RIDE){
+															map.clear();
+															
+															if(markerOptionsCustomerPickupLocation == null){
+																markerOptionsCustomerPickupLocation = new MarkerOptions();
+																markerOptionsCustomerPickupLocation.title(Data.dEngagementId);
+																markerOptionsCustomerPickupLocation.snippet("");
+																markerOptionsCustomerPickupLocation.position(Data.dCustLatLng);
+																markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+															}
+															
+															map.addMarker(markerOptionsCustomerPickupLocation);
+															
+															for(int z = 0; z<list.size()-1;z++){
+															    LatLng src= list.get(z);
+															    LatLng dest= list.get(z+1);
+															    map.addPolyline(new PolylineOptions()
+															    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+															    .width(5)
+															    .color(dToCmapPathColor).geodesic(true));
+															}
+														}
+													} catch (Exception e) {
+														e.printStackTrace();
 													}
-													
-													map.addMarker(markerOptionsCustomerPickupLocation);
-													
-													for(int z = 0; z<list.size()-1;z++){
-													    LatLng src= list.get(z);
-													    LatLng dest= list.get(z+1);
-													    map.addPolyline(new PolylineOptions()
-													    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-													    .width(5)
-													    .color(dToCmapPathColor).geodesic(true));
-													}
-												} catch (Exception e) {
-													e.printStackTrace();
 												}
-											}
-										});
-							        }
+											});
+								        }
+									}
 								}
 							}
 						}
