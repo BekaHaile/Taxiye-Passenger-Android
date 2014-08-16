@@ -1157,7 +1157,7 @@ public class SplashLogin extends Activity{
 						
 						
 						SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-						String link = preferences.getString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
+						String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
 						
 						if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
 							textMessage.setText("Current server is TRIAL.\nChange to:");

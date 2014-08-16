@@ -1203,6 +1203,15 @@
                     
                     />
                 
+                <Button
+                    android:id="@+id/checkServerBtn"
+                    android:layout_width="82px"
+                    android:layout_height="82px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="270px"
+                    android:background="@drawable/transparent"
+                    android:longClickable="true"
+                     />
                 
 				<Button
                     android:id="@+id/toggleDebugModeBtn"

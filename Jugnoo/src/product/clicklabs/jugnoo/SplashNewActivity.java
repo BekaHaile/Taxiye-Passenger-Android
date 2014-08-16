@@ -72,7 +72,7 @@ public class SplashNewActivity extends Activity{
 		
 		
 		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-		String link = preferences.getString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
 		
 		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
 			Data.SERVER_URL = Data.TRIAL_SERVER_URL;
@@ -305,6 +305,7 @@ public class SplashNewActivity extends Activity{
 			
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				noNetFirstTime = false;
+				Log.e("regid.isEmpty()", "+"+regid.isEmpty());
 				if (regid.isEmpty()){
 			        registerInBackground();
 			    }

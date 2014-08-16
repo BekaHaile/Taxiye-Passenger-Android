@@ -167,7 +167,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	Button menuBtn, backBtn, favBtn;
 	TextView title;
 	ImageView jugnooLogo;
-	Button toggleDebugModeBtn;
+	Button checkServerBtn, toggleDebugModeBtn;
 	
 	
 	
@@ -471,6 +471,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		backBtn = (Button) findViewById(R.id.backBtn);
 		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
 		jugnooLogo = (ImageView) findViewById(R.id.jugnooLogo);
+		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 		favBtn = (Button) findViewById(R.id.favBtn);
 		
@@ -759,6 +760,27 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			}
 		});
 		
+		
+		
+		checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+
+				String message = "";
+				
+				if(Data.SERVER_URL.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+					message = "Current server is TRIAL. "+Data.TRIAL_SERVER_URL;
+				}
+				else if(Data.SERVER_URL.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
+					message = "Current server is LIVE. "+Data.LIVE_SERVER_URL;
+				}
+				
+				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+				
+				return false;
+			}
+		});
 		
 		toggleDebugModeBtn.setOnLongClickListener(new View.OnLongClickListener() {
 			
@@ -2959,20 +2981,33 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	@Override
 	public void onBackPressed() {
-		if(userMode == UserMode.DRIVER){
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			startActivity(intent);
-		}
-		else if(userMode == UserMode.PASSENGER){
-			if(passengerScreenMode == PassengerScreenMode.P_SEARCH){
-				passengerScreenMode = PassengerScreenMode.P_INITIAL;
-				switchPassengerScreen(passengerScreenMode);
+		try{
+			if(userMode == UserMode.DRIVER){
+				if(driverScreenMode == DriverScreenMode.D_IN_RIDE || driverScreenMode == DriverScreenMode.D_START_RIDE){
+					Intent intent = new Intent(Intent.ACTION_MAIN);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.addCategory(Intent.CATEGORY_HOME);
+					startActivity(intent);
+				}
+				else{
+					super.onBackPressed();
+				}
+			}
+			else if(userMode == UserMode.PASSENGER){
+				if(passengerScreenMode == PassengerScreenMode.P_SEARCH){
+					passengerScreenMode = PassengerScreenMode.P_INITIAL;
+					switchPassengerScreen(passengerScreenMode);
+				}
+				else{
+					super.onBackPressed();
+				}
 			}
 			else{
 				super.onBackPressed();
 			}
+		} catch(Exception e){
+			e.printStackTrace();
+			super.onBackPressed();
 		}
 	}
 	

@@ -47,6 +47,13 @@ public class LocationFetcher {
 				provider = LocationManager.GPS_PROVIDER;
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
 			}
+			else{
+				if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+					networkListener = new MyLocationListener();
+					provider = LocationManager.NETWORK_PROVIDER;
+					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
+				}
+			}
 		}
 		else if(whichProvider == 2) {
 			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){

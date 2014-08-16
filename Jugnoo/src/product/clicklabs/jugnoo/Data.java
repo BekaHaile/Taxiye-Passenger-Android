@@ -116,8 +116,12 @@ public class Data {
 	
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
+	public static final String DEFAULT_SERVER_URL = TRIAL_SERVER_URL;
 	
-	public static String SERVER_URL = "http://54.81.229.172:8001";
+	
+	public static String SERVER_URL = DEFAULT_SERVER_URL;
+	
+	
 	
 	public static final String SERVER_ERROR_MSG = "Server error. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Oops!! Server not responding. Please try again later.";
@@ -195,6 +199,7 @@ public class Data {
 	
 	
 	
+	
 	public static void clearDataOnLogout(Context context){
 		try{
 			latitude = 30.7500; longitude = 76.7800;
@@ -204,7 +209,6 @@ public class Data {
 			friendInfos = new ArrayList<FriendInfo>();
 			friendInfosDuplicate = new ArrayList<FriendInfo>();
 			userData = null;
-			locationFetcher.destroy();
 			locationFetcher = null;
 			deviceToken = ""; country = ""; deviceName = ""; appVersion = ""; osVersion = "";
 			cEngagementId = ""; cDriverId = "";
