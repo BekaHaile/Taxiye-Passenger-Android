@@ -37,6 +37,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
@@ -1151,6 +1152,24 @@ public class SplashLogin extends Activity{
 						dialog.setCanceledOnTouchOutside(false);
 						
 						
+						frameLayout.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								dialog.dismiss();
+							}
+						});
+						
+						RelativeLayout innerRl = (RelativeLayout) dialog.findViewById(R.id.innerRl);
+						innerRl.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								
+							}
+						});
 						
 						TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
 						TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
@@ -1164,6 +1183,9 @@ public class SplashLogin extends Activity{
 						}
 						else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
 							textMessage.setText("Current server is LIVE.\nChange to:");
+						}
+						else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+							textMessage.setText("Current server is DEV.\nChange to:");
 						}
 						
 						
@@ -1217,6 +1239,14 @@ public class SplashLogin extends Activity{
 						crossbtn.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
+								
+								SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+								SharedPreferences.Editor editor = preferences.edit();
+								editor.putString(Data.SP_SERVER_LINK, Data.DEV_SERVER_URL);
+								editor.commit();
+								
+								Data.SERVER_URL = Data.DEV_SERVER_URL;
+								
 								dialog.dismiss();
 							}
 							

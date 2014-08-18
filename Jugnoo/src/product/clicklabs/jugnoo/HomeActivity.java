@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +47,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
@@ -52,6 +55,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -324,7 +328,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	PowerManager.WakeLock mWakeLock;
 	
 	
 	
@@ -774,6 +777,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				else if(Data.SERVER_URL.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
 					message = "Current server is LIVE. "+Data.LIVE_SERVER_URL;
+				}
+				else if(Data.SERVER_URL.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+					message = "Current server is DEV. "+Data.DEV_SERVER_URL;
 				}
 				
 				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -2530,13 +2536,48 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		public void onLocationChanged(Location location) {
 			Log.e("locationListener location changed","="+location);
 			if(appPaused){
+				writeLogToFile(location.getProvider() + "<>"+location);
 				if(isBetterLocation(location, HomeActivity.myLocation)){
 					drawLocationChanged(location);
 				}
 			}
 		}
 		
+		
 	};
+	
+	
+	static String LOG_FILE = "LOGFILE_Loc";
+	static String APP_NAME = "Jugnoo";
+	
+	static void writeLogToFile(final String response) {
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					String fileName = Environment.getExternalStorageDirectory() + "/" + APP_NAME + "_" + LOG_FILE + ".txt";
+					File gpxfile = new File(fileName);
+					
+					if(!gpxfile.exists()){
+						gpxfile.createNewFile();
+					}
+					
+					FileWriter writer = new FileWriter(gpxfile, true);
+					writer.append("\n" + response);
+					writer.flush();
+					writer.close();
+					
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					Toast.makeText(activity, ""+e1.toString(), Toast.LENGTH_SHORT).show();
+				}
+			}
+		}).start();
+
+	}
+	
 	
 	
 	/**
@@ -2549,7 +2590,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		int OLD_LOCATION_THRESHOLD = 1000 * 60 * 2;
 		if (currentBestLocation == null) {
 			// A new location is always better than no location
-			return true;
+			if(location.getAccuracy() < 100){
+				return true;
+			}
+			else{
+				return false;
+			}
 		}
 
 		// Check whether the new location fix is newer or older
@@ -2558,22 +2604,31 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
 		boolean isNewer = timeDelta > 0;
 
-		// If it's been more than two minutes since the current location, use
-		// the new location
-		// because the user has likely moved
-		if (isSignificantlyNewer) {
-			return true;
-			// If the new location is more than two minutes older, it must be
-			// worse
-		} else if (isSignificantlyOlder) {
-			return false;
-		}
+		Log.i("timeDelta", "="+timeDelta);
+		
+		
 
 		// Check whether the new location fix is more or less accurate
 		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
 		boolean isLessAccurate = accuracyDelta > 0;
 		boolean isMoreAccurate = accuracyDelta < 0;
-		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+		boolean isSignificantlyLessAccurate = accuracyDelta > 100;
+
+		if(location.getAccuracy() > 100){
+			return false;
+		}
+		
+		// If it's been more than two minutes since the current location, use
+		// the new location because the user has likely moved
+		if (isSignificantlyNewer) {
+			return true;
+			// If the new location is more than two minutes older, it must
+			// be worse
+		} else if (isSignificantlyOlder) {
+			return false;
+		}
+		
+		Log.i("accuracyDelta", "="+accuracyDelta);
 
 		// Check if the old and new location are from the same provider
 		boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
@@ -2588,6 +2643,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				&& isFromSameProvider) {
 			return true;
 		}
+		
+		
+		
 		return false;
 	}
 
@@ -2598,6 +2656,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		}
 		return provider1.equals(provider2);
 	}
+	
 	
 	
 	
@@ -2634,9 +2693,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		appPaused = false;
 		
-        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-        this.mWakeLock.acquire();
 		super.onResume();
 		
 		buildAlertMessageNoGps();
@@ -2648,6 +2704,27 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    		map.animateCamera(CameraUpdateFactory.newLatLng(FavoriteActivity.zoomLatLng), 1000, null);
 	    	}
 	    }
+	    
+	    try{
+	    	if(userMode == UserMode.PASSENGER){
+	    		if(locationManager == null){
+	    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+	    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, gpsListener);
+	    		}
+	    	}
+	    	else if(userMode == UserMode.DRIVER){
+	    		if(driverScreenMode != DriverScreenMode.D_IN_RIDE){
+	    			if(locationManager == null){
+		    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, gpsListener);
+		    		}
+	    		}
+	    	}
+	    } catch(Exception e){
+	    	e.printStackTrace();
+	    }
+	    
+	    
 	    
 	    
 	    updateTextViews();
@@ -2968,7 +3045,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	@Override
 	protected void onPause() {
-		this.mWakeLock.release();
 		
 		appPaused = true;
 		
@@ -2977,6 +3053,29 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		saveDataOnPause(true);
 		
 		super.onPause();
+		
+		
+		try{
+			if(userMode == UserMode.PASSENGER){
+				if(locationManager != null && gpsListener != null){
+					locationManager.removeUpdates(gpsListener);
+					gpsListener = null;
+					locationManager = null;
+				}
+			}
+			else if(userMode == UserMode.DRIVER){
+	    		if(driverScreenMode != DriverScreenMode.D_IN_RIDE){
+	    			if(locationManager != null && gpsListener != null){
+						locationManager.removeUpdates(gpsListener);
+						gpsListener = null;
+						locationManager = null;
+					}
+	    		}
+	    	}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
@@ -3026,6 +3125,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     		try{
     			if(locationManager != null && gpsListener != null){
     				locationManager.removeUpdates(gpsListener);
+    				gpsListener = null;
+    				locationManager = null;
     			}
     		} catch(Exception e){
     			e.printStackTrace();
@@ -3058,6 +3159,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		public void onMyLocationChange(Location location) {
 			
 			if(!appPaused){
+				writeLogToFile(location.getProvider() + "<>"+location);
 				if(isBetterLocation(location, HomeActivity.myLocation)){
 					drawLocationChanged(location);
 				}

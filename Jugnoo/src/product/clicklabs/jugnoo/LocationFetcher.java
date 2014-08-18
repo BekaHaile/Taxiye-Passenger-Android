@@ -208,7 +208,12 @@ public class LocationFetcher {
 			int OLD_LOCATION_THRESHOLD = 1000 * 60 * 2;
 			if (currentBestLocation == null) {
 				// A new location is always better than no location
-				return true;
+				if(location.getAccuracy() < 100){
+					return true;
+				}
+				else{
+					return false;
+				}
 			}
 
 			// Check whether the new location fix is newer or older
@@ -219,22 +224,27 @@ public class LocationFetcher {
 
 			Log.i("timeDelta", "="+timeDelta);
 			
-			// If it's been more than two minutes since the current location, use
-			// the new location
-			// because the user has likely moved
-			if (isSignificantlyNewer) {
-				return true;
-				// If the new location is more than two minutes older, it must be
-				// worse
-			} else if (isSignificantlyOlder) {
-				return false;
-			}
+			
 
 			// Check whether the new location fix is more or less accurate
 			int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
 			boolean isLessAccurate = accuracyDelta > 0;
 			boolean isMoreAccurate = accuracyDelta < 0;
-			boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+			boolean isSignificantlyLessAccurate = accuracyDelta > 100;
+
+			if(location.getAccuracy() > 100){
+				return false;
+			}
+			
+			// If it's been more than two minutes since the current location, use
+			// the new location because the user has likely moved
+			if (isSignificantlyNewer) {
+				return true;
+				// If the new location is more than two minutes older, it must
+				// be worse
+			} else if (isSignificantlyOlder) {
+				return false;
+			}
 			
 			Log.i("accuracyDelta", "="+accuracyDelta);
 
@@ -251,6 +261,9 @@ public class LocationFetcher {
 					&& isFromSameProvider) {
 				return true;
 			}
+			
+			
+			
 			return false;
 		}
 

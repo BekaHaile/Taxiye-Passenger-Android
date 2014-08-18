@@ -96,7 +96,7 @@ public class Data {
 	
 	
 	
-	public static final int SERVER_TIMEOUT = 60000;
+	public static final int SERVER_TIMEOUT = 15000;
 
 	
 	
@@ -111,12 +111,15 @@ public class Data {
 	// live 3rd:    http://dev.jugnoo.in:4002
 	// review 3:    http://dev.jugnoo.in:4003
 	// live 4th:    http://dev.jugnoo.in:4004
+	//public static final String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
+	
+	public static final String DEV_SERVER_URL = "http://54.81.229.172:8000";
 	
 	public static final String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
 	
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
-	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 	
 	
 	public static String SERVER_URL = DEFAULT_SERVER_URL;

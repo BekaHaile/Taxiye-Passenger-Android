@@ -80,7 +80,9 @@ public class SplashNewActivity extends Activity{
 		else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
 			Data.SERVER_URL = Data.LIVE_SERVER_URL;
 		}
-		
+		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+			Data.SERVER_URL = Data.DEV_SERVER_URL;
+		}
 		
 		
 		Locale locale = new Locale("en"); 
