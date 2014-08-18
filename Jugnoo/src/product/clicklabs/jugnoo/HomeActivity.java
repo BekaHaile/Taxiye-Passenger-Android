@@ -382,7 +382,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	boolean bookingsFetched = false, customerCancelBeforePushReceive = false, userPushStart = false, userCanceledDialogShown = false, startUserFreeAPI = false;
 	boolean loggedOut = false, zoomedToMyLocation = false;
 	
-	static boolean appPaused;
 	
 	Handler driverConnectionLostHandler, passengerConnectionLostHandler;
 	Runnable driverCLRunnable, passengerCLRunnable;
@@ -393,6 +392,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	public static AppMode appMode;
 	public int mapPathColor = Color.TRANSPARENT;
 	public int dToCmapPathColor = Color.RED;
+	public long locationUpdateTimePeriod = 2000;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -1478,7 +1478,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				int rating = (int)reviewRatingBar.getRating();
 				
 				if(rating > 0){
-					
 					if(userMode == UserMode.DRIVER){
 						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, ""+rating);
 					}
@@ -1488,12 +1487,11 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				}
 				else{
 					if(userMode == UserMode.DRIVER){
-						new DialogPopup().alertPopup(activity, "", "Please rate the customer.");
+						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, "5");
 					}
 					else if(userMode == UserMode.PASSENGER){
-						new DialogPopup().alertPopup(activity, "", "Please rate the driver.");
+						submitReviewAsync(HomeActivity.this, Data.cEngagementId, "1", Data.cDriverId, "5");
 					}
-					
 				}
 			}
 		});
@@ -1513,10 +1511,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			map.getUiSettings().setMyLocationButtonEnabled(false);
 			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getChandigarhLatLng(), 14));
+			//30.7500, 76.7800
 			
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 14));
 			
-			map.setOnMyLocationChangeListener(myLocationChangeListener);
 			
 			// Find ZoomControl view
 			View zoomControls = mapFragment.getView().findViewById(0x1);
@@ -1666,7 +1664,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 						  getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
 						  getDistanceTimeAddress.execute();
-						  Log.e("==","==="+makeURLPath(map.getCameraPosition().target, Data.chandigarhLatLng));
 					  }
 				  }
 				};
@@ -1746,19 +1743,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		getAllFavoriteAsync(HomeActivity.this);
 		
 		
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, gpsListener);
-
 		
+		gpsListener = new CustomLocationListener();
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateTimePeriod, 0, gpsListener);
 	    
 		
 		
 	}
-	
-	
-	
-	
-	
 	
 	
 	
@@ -2508,7 +2500,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	LocationListener gpsListener = new LocationListener() {
+	
+	class CustomLocationListener implements LocationListener{
 		
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -2519,32 +2512,26 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		@Override
 		public void onProviderEnabled(String provider) {
 			Log.e("locationListener onProviderEnabled","="+provider);
-			if(map != null){
-				map.setMyLocationEnabled(true);
-			}
 		}
 		
 		@Override
 		public void onProviderDisabled(String provider) {
 			Log.e("locationListener onProviderDisabled","="+provider);
-			if(map != null){
-				map.setMyLocationEnabled(false);
-			}
 		}
 		
 		@Override
 		public void onLocationChanged(Location location) {
 			Log.e("locationListener location changed","="+location);
-			if(appPaused){
-				writeLogToFile(location.getProvider() + "<>"+location);
-				if(isBetterLocation(location, HomeActivity.myLocation)){
-					drawLocationChanged(location);
-				}
+//			writeLogToFile(location.getProvider() + "<>"+location);
+			if(isBetterLocation(location, HomeActivity.myLocation)){
+				drawLocationChanged(location);
 			}
 		}
 		
-		
-	};
+	}
+	
+	
+	LocationListener gpsListener = new CustomLocationListener();
 	
 	
 	static String LOG_FILE = "LOGFILE_Loc";
@@ -2691,8 +2678,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	@Override
 	protected void onResume() {
 		
-		appPaused = false;
-		
 		super.onResume();
 		
 		buildAlertMessageNoGps();
@@ -2708,15 +2693,17 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    try{
 	    	if(userMode == UserMode.PASSENGER){
 	    		if(locationManager == null){
+	    			gpsListener = new CustomLocationListener();
 	    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, gpsListener);
+	    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateTimePeriod, 0, gpsListener);
 	    		}
 	    	}
 	    	else if(userMode == UserMode.DRIVER){
 	    		if(driverScreenMode != DriverScreenMode.D_IN_RIDE){
 	    			if(locationManager == null){
+		    			gpsListener = new CustomLocationListener();
 		    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, gpsListener);
+		    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateTimePeriod, 0, gpsListener);
 		    		}
 	    		}
 	    	}
@@ -3046,8 +3033,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	@Override
 	protected void onPause() {
 		
-		appPaused = true;
-		
 		GCMIntentService.clearNotifications(getApplicationContext());
 		
 		saveDataOnPause(true);
@@ -3151,22 +3136,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
-	
-	
-	OnMyLocationChangeListener myLocationChangeListener = new OnMyLocationChangeListener() {
-		
-		@Override
-		public void onMyLocationChange(Location location) {
-			
-			if(!appPaused){
-				writeLogToFile(location.getProvider() + "<>"+location);
-				if(isBetterLocation(location, HomeActivity.myLocation)){
-					drawLocationChanged(location);
-				}
-			}
-			
-		}
-	};
 	
 	
 	public void drawLocationChanged(Location location){
@@ -5112,8 +5081,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 //									{"log":"ride_started"}
 
-									new DialogPopup().alertPopup(activity, "", "Ride started");
-
 									if(map != null){
 										map.clear();
 									}
@@ -5275,8 +5242,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										e.printStackTrace();
 										totalFare = 0;
 									}
-									
-									new DialogPopup().alertPopup(activity, "", "Ride ended.");
 
 									lastLocation = null;
 									
@@ -6902,7 +6867,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 		        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
 		        	
-		        	if(displacement <= 100){
+		        	if(displacement <= 300){
 		        		buildAlertMessageNoGps();
 			        	
 			        	GCMIntentService.clearNotifications(HomeActivity.this);

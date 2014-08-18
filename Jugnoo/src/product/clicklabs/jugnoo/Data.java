@@ -119,7 +119,7 @@ public class Data {
 	
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = TRIAL_SERVER_URL;
 	
 	
 	public static String SERVER_URL = DEFAULT_SERVER_URL;
@@ -141,9 +141,8 @@ public class Data {
 	
 	
 	
-	public static double latitude = 30.7500, longitude = 76.7800;
+	public static double latitude, longitude;
 	
-	public static LatLng chandigarhLatLng = new LatLng(30.7500, 76.7800);
 	
 	
 	
@@ -193,20 +192,12 @@ public class Data {
 	
 	
 	
-	public static LatLng getChandigarhLatLng(){
-		if(chandigarhLatLng == null){
-			chandigarhLatLng = new LatLng(30.7500, 76.7800);
-		}
-		return chandigarhLatLng;
-	}
 	
 	
 	
 	
 	public static void clearDataOnLogout(Context context){
 		try{
-			latitude = 30.7500; longitude = 76.7800;
-			chandigarhLatLng = new LatLng(30.7500, 76.7800);
 			driverInfos = new ArrayList<DriverInfo>();
 			favoriteLocations = new ArrayList<FavoriteLocation>();
 			friendInfos = new ArrayList<FriendInfo>();
