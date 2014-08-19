@@ -316,7 +316,7 @@ public class DriverLocationUpdateService extends Service {
 						}
 						else{
 							try{
-			    				Thread.sleep(70000);
+			    				Thread.sleep(60000);
 			    			} catch(Exception e){
 			    			}
 							if(locationFetcher.location != null){
@@ -342,7 +342,7 @@ public class DriverLocationUpdateService extends Service {
 							}
 							else{
 								try{
-				    				Thread.sleep(70000);
+				    				Thread.sleep(30000);
 				    			} catch(Exception e){
 				    			}
 								if(locationFetcher.location != null){

@@ -390,9 +390,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	public static AppMode appMode;
-	public int mapPathColor = Color.TRANSPARENT;
-	public int dToCmapPathColor = Color.RED;
-	public long locationUpdateTimePeriod = 2000;
+	
+	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
+	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
+	
+	public static final long LOCATION_UPDATE_TIME_PERIOD = 10000;
+	public static final double MAX_DISPLACEMENT_THRESHOLD = 200;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -1746,7 +1749,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		gpsListener = new CustomLocationListener();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateTimePeriod, 0, gpsListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
 	    
 		
 		
@@ -2522,7 +2525,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		@Override
 		public void onLocationChanged(Location location) {
 			Log.e("locationListener location changed","="+location);
-//			writeLogToFile(location.getProvider() + "<>"+location);
+			writeLogToFile(location.getProvider() + " <> "+location);
 			if(isBetterLocation(location, HomeActivity.myLocation)){
 				drawLocationChanged(location);
 			}
@@ -2631,8 +2634,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			return true;
 		}
 		
-		
-		
 		return false;
 	}
 
@@ -2695,7 +2696,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    		if(locationManager == null){
 	    			gpsListener = new CustomLocationListener();
 	    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateTimePeriod, 0, gpsListener);
+	    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
 	    		}
 	    	}
 	    	else if(userMode == UserMode.DRIVER){
@@ -2703,7 +2704,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    			if(locationManager == null){
 		    			gpsListener = new CustomLocationListener();
 		    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateTimePeriod, 0, gpsListener);
+		    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
 		    		}
 	    		}
 	    	}
@@ -3035,7 +3036,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		GCMIntentService.clearNotifications(getApplicationContext());
 		
-		saveDataOnPause(true);
+		saveDataOnPause(false);
 		
 		super.onPause();
 		
@@ -3105,6 +3106,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
     public void onDestroy() {
         try{
         	
+        	saveDataOnPause(true);
+        	
     		GCMIntentService.clearNotifications(HomeActivity.this);
     		
     		try{
@@ -3162,12 +3165,13 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 						double displacement = distance(lastLatLng, currentLatLng);
 						Log.e("displacement", "="+displacement);
 						
-						if(displacement < 100){
+						if(displacement < MAX_DISPLACEMENT_THRESHOLD){
+							
 							totalDistance = totalDistance + displacement;
 							map.addPolyline(new PolylineOptions()
 					        .add(lastLatLng, currentLatLng)
 					        .width(5)
-					        .color(mapPathColor).geodesic(true));
+					        .color(MAP_PATH_COLOR).geodesic(true));
 							
 							new Thread(new Runnable() {
 								
@@ -3181,21 +3185,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								}
 							}).start();
 							
-							
-							double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-							driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
-							
-							
-							double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
-							if(totalDistanceInKm <= fareThresholdDistance){
-								fare = fareFixed;
-							}
-							else{
-								fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
-							}
-							fare = Math.ceil(fare);
-							driverIRFareValue.setText(""+decimalFormat.format(fare));
-							
+							updateDistanceFareTexts();
 							
 						}
 						else{
@@ -3214,19 +3204,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 							markerOptions.position(currentLatLng);
 							markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
 							map.addMarker(markerOptions);
-							
-							double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-							driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
-							
-							double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
-							if(totalDistanceInKm <= fareThresholdDistance){
-								fare = fareFixed;
-							}
-							else{
-								fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
-							}
-							fare = Math.ceil(fare);
-							driverIRFareValue.setText(""+decimalFormat.format(fare));
+
+							updateDistanceFareTexts();
 							
 						}
 						else{
@@ -3236,12 +3215,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								double displacement = distance(Data.startRidePreviousLatLng, currentLatLng);
 								Log.e("displacement", "="+displacement);
 								
-								if(displacement < 100){
+								if(displacement < MAX_DISPLACEMENT_THRESHOLD){
 									totalDistance = totalDistance + displacement;
 									map.addPolyline(new PolylineOptions()
 							        .add(Data.startRidePreviousLatLng, currentLatLng)
 							        .width(5)
-							        .color(mapPathColor).geodesic(true));
+							        .color(MAP_PATH_COLOR).geodesic(true));
 									
 									new Thread(new Runnable() {
 										
@@ -3254,19 +3233,9 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 											database.close();
 										}
 									}).start();
+
+									updateDistanceFareTexts();
 									
-									double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-									driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
-									
-									double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
-									if(totalDistanceInKm <= fareThresholdDistance){
-										fare = fareFixed;
-									}
-									else{
-										fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
-									}
-									fare = Math.ceil(fare);
-									driverIRFareValue.setText(""+decimalFormat.format(fare));
 								}
 								else{
 									new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng, displacement).execute();
@@ -3276,8 +3245,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								e.printStackTrace();
 							}
 						}
-						
-						
 						
 						
 						
@@ -3317,6 +3284,23 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	
 	
+	public void updateDistanceFareTexts(){
+		double totalDistanceInKm = Math.abs(totalDistance/1000.0);
+		driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
+		
+		
+		double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
+		if(totalDistanceInKm <= fareThresholdDistance){
+			fare = fareFixed;
+		}
+		else{
+			fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
+		}
+		fare = Math.ceil(fare);
+		driverIRFareValue.setText(""+decimalFormat.format(fare));
+	}
+	
+	
 	
 	public void displayOldPath(){
 		
@@ -3337,7 +3321,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
             map.addPolyline(new PolylineOptions()
             .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
             .width(5)
-    	    .color(mapPathColor).geodesic(true));
+    	    .color(MAP_PATH_COLOR).geodesic(true));
 		}
 		
 		if(firstLatLng != null){
@@ -3349,31 +3333,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			map.addMarker(markerOptions);
 		}
 		
-	}
-	
-	
-	public Drawable createStartRideThumbDrawable(){
-		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
-		int width = (int)(119.0f * scale);
-		int height = (int)(100.0f * scale);
-		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = getResources().getDrawable(R.drawable.start_ride);
-		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
-		shape.draw(canvas);
-		return new BitmapDrawable(getResources(), mDotMarkerBitmap);
-	}
-	
-	public Drawable createEndRideThumbDrawable(){
-		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
-		int width = (int)(119.0f * scale);
-		int height = (int)(100.0f * scale);
-		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = getResources().getDrawable(R.drawable.end_ride);
-		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
-		shape.draw(canvas);
-		return new BitmapDrawable(getResources(), mDotMarkerBitmap);
 	}
 	
 	
@@ -3479,19 +3438,8 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        super.onPostExecute(result);   
 	        if(result!=null){
 	            drawPath(result, displacementToCompare, source, destination);
-	            
-	            double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-				driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
-				
-				double fare = 0;//fareFixed + ((totalDistanceInKm <= fareThresholdDistance) ? (0) : ((totalDistanceInKm - fareThresholdDistance)* farePerKm));
-				if(totalDistanceInKm <= fareThresholdDistance){
-					fare = fareFixed;
-				}
-				else{
-					fare = fareFixed + ((totalDistanceInKm - fareThresholdDistance) * farePerKm);
-				}
-				fare = Math.ceil(fare);
-				driverIRFareValue.setText(""+decimalFormat.format(fare));
+
+				updateDistanceFareTexts();
 				
 	        }
 	    }
@@ -3524,7 +3472,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		                map.addPolyline(new PolylineOptions()
 		                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 		                .width(5)
-				        .color(mapPathColor).geodesic(true));
+				        .color(MAP_PATH_COLOR).geodesic(true));
 						database.insertPolyLine(src, dest);
 		            }
 		           database.close();
@@ -3536,7 +3484,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    		 map.addPolyline(new PolylineOptions()
 	                .add(new LatLng(source.latitude, source.longitude), new LatLng(destination.latitude, destination.longitude))
 	                .width(5)
-			        .color(mapPathColor).geodesic(true));
+			        .color(MAP_PATH_COLOR).geodesic(true));
 					database.insertPolyLine(source, destination);
 					database.close();
 	    		
@@ -6676,7 +6624,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 															    map.addPolyline(new PolylineOptions()
 															    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 															    .width(5)
-															    .color(dToCmapPathColor).geodesic(true));
+															    .color(D_TO_C_MAP_PATH_COLOR).geodesic(true));
 															}
 														}
 													} catch (Exception e) {
@@ -7870,7 +7818,29 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	//Invalid access token
 	
+	public void backgroundThread(){
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// Do background work here
+				
+				
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// Update UI here
+						
+					}
+				});
+				
+				
+			}
+		}).start();
 	
+	}
 	
 	
 }

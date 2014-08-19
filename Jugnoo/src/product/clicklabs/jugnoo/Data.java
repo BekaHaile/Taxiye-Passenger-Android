@@ -96,7 +96,7 @@ public class Data {
 	
 	
 	
-	public static final int SERVER_TIMEOUT = 15000;
+	public static final int SERVER_TIMEOUT = 30000;
 
 	
 	
