@@ -93,6 +93,10 @@ public class SplashNewActivity extends Activity{
 		
 		setContentView(R.layout.splash_new);
 		
+		if(Data.locationFetcher == null){
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 2);
+		}
+		
 		loginDataFetched = false;
 		loginFailed = false;
 		
@@ -150,6 +154,31 @@ public class SplashNewActivity extends Activity{
 	    PicassoTools.clearCache(Picasso.with(this));
 		
 	}
+	
+	
+	@Override
+	protected void onResume() {
+		if(Data.locationFetcher == null){
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 2);
+		}
+		
+		super.onResume();
+	}
+	
+	
+	@Override
+	protected void onPause() {
+		try{
+			Data.locationFetcher.destroy();
+			Data.locationFetcher = null;
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		super.onPause();
+	}
+	
+	
+	
 	
 	boolean noNetFirstTime = false, noNetSecondTime = false;
 	
@@ -474,6 +503,22 @@ public class SplashNewActivity extends Activity{
 				noNetSecondTime = false;
 				
 				loginDataFetched = true;
+				
+				if(Data.locationFetcher != null){
+					if(Data.locationFetcher.location != null){
+						Data.latitude = Data.locationFetcher.getLatitude();
+						Data.longitude = Data.locationFetcher.getLongitude();
+					}
+					else{
+						Data.latitude = 0;
+						Data.longitude = 0;
+					}
+				}
+				else{
+					Data.latitude = 0;
+					Data.longitude = 0;
+				}
+				
 				
 //				DialogPopup.showLoadingDialog(activity, "Loading...");
 			}

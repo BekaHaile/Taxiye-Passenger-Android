@@ -196,12 +196,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	ProgressBar nearestDriverProgress;
 	
 	
-	//Before request final layout
-	RelativeLayout beforeRequestFinalLayout;
-	Button cancelRequestBtn;
-	ProgressBar assignedDriverProgress;
-	TextView assignedDriverText;
-	
 	
 	//Request Final Layout
 	RelativeLayout requestFinalLayout;
@@ -363,7 +357,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	
 	GetDistanceTimeAddress getDistanceTimeAddress;
 	
-	BeforeCancelRequestAsync beforeCancelRequestAsync;
 	
 	
 	Marker pickupLocationMarker, driverLocationMarker;
@@ -528,14 +521,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-		//Before request final layout
-		beforeRequestFinalLayout = (RelativeLayout) findViewById(R.id.beforeRequestFinalLayout);
-
-		cancelRequestBtn = (Button) findViewById(R.id.cancelRequestBtn); cancelRequestBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + "5s ?");
-
-		assignedDriverText = (TextView) findViewById(R.id.assignedDriverText); assignedDriverText.setTypeface(Data.regularFont(getApplicationContext()));
-		assignedDriverProgress = (ProgressBar) findViewById(R.id.assignedDriverProgress);
 		
 		
 		
@@ -1067,25 +1052,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		
 		
-		// customer before final request layout events
-		cancelRequestBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				beforeCancelRequestAsync.cancel(true);
-				cancelCustomerRequestAsync(HomeActivity.this, 1, 0);
-			}
-		});
-		
-//		beforeRequestFinalLayout.setOnClickListener(new View.OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				
-//			}
-//		});
-		
-		
 		
 		
 		
@@ -1516,7 +1482,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			//30.7500, 76.7800
 			
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 14));
+			if(Data.latitude == 0 && Data.longitude == 0){
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 14));
+			}
+			else{
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), 14));
+			}
 			
 			
 			// Find ZoomControl view
@@ -1665,7 +1636,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				    // Map settled
 					  Log.e("onMapSettled","=onMapSettled");
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						  getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+						  getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
 						  getDistanceTimeAddress.execute();
 					  }
 				  }
@@ -2151,11 +2122,10 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					getDistanceTimeAddress = null;
 				}
 				
-				getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+				getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
 				getDistanceTimeAddress.execute();
 				
 				initialLayout.setVisibility(View.VISIBLE);
-				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
@@ -2179,7 +2149,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			case P_ASSIGNING:
 				
 				initialLayout.setVisibility(View.VISIBLE);
-				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
@@ -2214,7 +2183,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			case P_SEARCH:
 
 				initialLayout.setVisibility(View.GONE);
-				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.VISIBLE);
@@ -2230,58 +2198,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				searchListAdapter.notifyDataSetChanged();
 
-				
-				break;
-				
-				
-				
-			case P_BEFORE_REQUEST_FINAL:
-				
-				if(map != null){
-					
-					if(Data.mapTarget == null){
-						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-						String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
-						String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-						Data.mapTarget = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-					}
-					
-					Log.i("map cleared", "BEFORE_REQUEST_FINAL");
-					map.clear();
-					MarkerOptions markerOptions = new MarkerOptions();
-					markerOptions.title("pickup location");
-					markerOptions.snippet("");
-					markerOptions.position(Data.mapTarget);
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
-					
-					pickupLocationMarker = map.addMarker(markerOptions);
-					
-					
-					MarkerOptions markerOptions1 = new MarkerOptions();
-					markerOptions1.title("driver position");
-					markerOptions1.snippet("");
-					markerOptions1.position(Data.assignedDriverInfo.latLng);
-					markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
-					
-					driverLocationMarker = map.addMarker(markerOptions1);
-					Log.i("marker added", "added BEFORE");
-					
-				}
-				
-
-				initialLayout.setVisibility(View.GONE);
-				beforeRequestFinalLayout.setVisibility(View.VISIBLE);
-				requestFinalLayout.setVisibility(View.GONE);
-				centreLocationRl.setVisibility(View.GONE);
-				searchLayout.setVisibility(View.GONE);
-				
-				menuBtn.setVisibility(View.VISIBLE);
-				jugnooLogo.setVisibility(View.VISIBLE);
-				backBtn.setVisibility(View.GONE);
-				title.setVisibility(View.GONE);
-				favBtn.setVisibility(View.GONE);
-
-				
 				
 				break;
 				
@@ -2347,7 +2263,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 				initialLayout.setVisibility(View.GONE);
-				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
@@ -2421,7 +2336,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 				initialLayout.setVisibility(View.GONE);
-				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
@@ -2443,7 +2357,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				cancelMapAnimateTimer();
 				
 				initialLayout.setVisibility(View.GONE);
-				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
@@ -2461,7 +2374,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			default:
 
 				initialLayout.setVisibility(View.VISIBLE);
-				beforeRequestFinalLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.VISIBLE);
@@ -3649,11 +3561,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    
 	    LatLng destination;
 	    
-	    public GetDistanceTimeAddress(LatLng destination){
+	    boolean driverAcceptPushRecieved;
+	    
+	    public GetDistanceTimeAddress(LatLng destination, boolean driverAcceptPushRecieved){
 	    	stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	    	this.distance = "";
 	    	this.duration = "";
 	    	this.destination = destination;
+	    	this.driverAcceptPushRecieved = driverAcceptPushRecieved;
 	    }
 	    
 
@@ -3662,28 +3577,19 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    protected void onPreExecute() {
 	        super.onPreExecute();
 	        Log.e("GetDistanceTimeAddress","working");
-	        
-	        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
-	        	centreInfoRl.setVisibility(View.INVISIBLE);
-				centreInfoProgress.setVisibility(View.VISIBLE);
-	        	nearestDriverProgress.setVisibility(View.VISIBLE);
-	 	        nearestDriverText.setVisibility(View.GONE);
-	        }
-	        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
-	        	centreInfoRl.setVisibility(View.VISIBLE);
-				centreInfoProgress.setVisibility(View.INVISIBLE);
-	        	assignedDriverProgress.setVisibility(View.VISIBLE);
-	        	assignedDriverText.setVisibility(View.GONE);
-	        }
-	        
+	        centreInfoRl.setVisibility(View.INVISIBLE);
+			centreInfoProgress.setVisibility(View.VISIBLE);
+	        nearestDriverProgress.setVisibility(View.VISIBLE);
+	 	    nearestDriverText.setVisibility(View.GONE);
 	    }
+	    
 	    @Override
 	    protected String doInBackground(Void... params) {
 	    	try{
 	    		
 	    		Log.e("","");
 	    		
-	    		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	    		if(!driverAcceptPushRecieved){
 		    		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	    			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 	    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+destination.latitude));
@@ -3724,14 +3630,14 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    		
 	    		}
 	    		
-	    		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	    		if(!driverAcceptPushRecieved){
 	    			fullAddress = getAddress(destination.latitude, destination.longitude);
 	    			Log.e("fullAddress",">"+fullAddress);
 	    		}
 	    		
 	    		LatLng source = null;
 				
-	    		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	    		if(!driverAcceptPushRecieved){
 	    			double minDistance = 999999999;
 		    		for(int i=0; i<Data.driverInfos.size(); i++){
 		    			if(distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
@@ -3740,7 +3646,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		    			}
 		    		}
 	    		}
-	    		else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
+	    		else if(driverAcceptPushRecieved){
 	    			source = Data.assignedDriverInfo.latLng;
 	    		}
 	    		
@@ -3771,7 +3677,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		    		duration = element0.getJSONObject("duration").getString("text");
 		    		
 		    		
-		    		if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
+		    		if(driverAcceptPushRecieved){
 		    			Data.assignedDriverInfo.distanceToReach = distance;
 		    			Data.assignedDriverInfo.durationToReach = duration;
 		    		}
@@ -3790,7 +3696,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	    protected void onPostExecute(String result) {
 	        super.onPostExecute(result);   
 	        
-	        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	        if(!driverAcceptPushRecieved){
 	        	 if(fullAddress != null && !"".equalsIgnoreCase(fullAddress)){
 	 				centreLocationSnippet.setText(fullAddress);
 	 				centreInfoRl.setVisibility(View.VISIBLE);
@@ -3817,15 +3723,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 					
 				}
 	 			
-	 			
     		}
 	        
 	        
 	        nearestDriverProgress.setVisibility(View.GONE);
-	        assignedDriverProgress.setVisibility(View.GONE);
 	        
 	        nearestDriverText.setVisibility(View.VISIBLE);
-	        assignedDriverText.setVisibility(View.VISIBLE);
 	        
 			
 	        String distanceString = "";
@@ -3834,7 +3737,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		        
 		        Log.i("passengerScreenMode","="+passengerScreenMode);
 		        
-		        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+		        if(!driverAcceptPushRecieved){
 		 	        
 		 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
 	       	 		distanceString = getResources().getString(R.string.nearest_driver_is) + " " + distance + " " + getResources().getString(R.string.away);
@@ -3846,43 +3749,24 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		 	       	nearestDriverText.setText(distanceString);
 		 	       
 		        }
-		        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
-		        	
-		        	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-	        	 		if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-	        	 			distanceString = getResources().getString(R.string.your_ride_is) +" "+ distance +" "
-	    	        	 			+ getResources().getString(R.string.away_and_will_arrive) +" "+ duration +" "
-	    	        	 			+ getResources().getString(R.string.mein_aa_jaegi);
-	        	 		}
-	        	 		else{
-	        	 			distanceString = getResources().getString(R.string.your_ride_is) +" "+ distance +" "
-	        	 			+ getResources().getString(R.string.away_and_will_arrive) +" "+ duration + ".";
-	        	 		}
-			        }
-			        else{
-			        	distanceString = getResources().getString(R.string.could_not_find_nearest_driver_distance);
-			        }
-		        	assignedDriverText.setText(distanceString);
+		        else if(driverAcceptPushRecieved){
 		        	
 		        }
-		        
 	        }
 	        else{
 	        	distanceString = getResources().getString(R.string.no_drivers_nearby);
 	        	nearestDriverText.setText(distanceString);
-		        assignedDriverText.setText("");
 	        }
 	        
 	        Log.i("distanceString","="+distanceString);
 	        
 	        
 	        
-	        if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
+	        if(!driverAcceptPushRecieved){
 	        	Data.mapTarget = destination;
 	        	startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	        }
-	        else if(passengerScreenMode == PassengerScreenMode.P_BEFORE_REQUEST_FINAL){
-	        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in) + " " + "5s ?");
+	        else if(driverAcceptPushRecieved){
 	        	
 	        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 				Editor editor = pref.edit();
@@ -3901,8 +3785,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	        	
 					editor.commit();
 	        	
-	        	beforeCancelRequestAsync = new BeforeCancelRequestAsync();
-	        	beforeCancelRequestAsync.execute();
+					cancelCustomerRequestAsync(HomeActivity.this, 2, 1);
 	        }
 	        
 	        Log.e("GetDistanceTimeAddress","stopped");
@@ -4110,13 +3993,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 											driverData.getString("user_name"), driverData.getString("user_image"), driverData.getString("driver_car_image"), 
 											driverData.getString("phone_no"));
 									
-									
-									map.clear();
-									
-									passengerScreenMode = PassengerScreenMode.P_BEFORE_REQUEST_FINAL;
-									switchPassengerScreen(passengerScreenMode);
-									
-									getDistanceTimeAddress = new GetDistanceTimeAddress(Data.mapTarget);
+									getDistanceTimeAddress = new GetDistanceTimeAddress(Data.mapTarget, true);
 									getDistanceTimeAddress.execute();
 									
 									
@@ -4143,74 +4020,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 	}
 	
-	
-	class BeforeCancelRequestAsync extends AsyncTask<String, Integer, String>{
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			Log.e("BeforeCancelRequestAsync","==onpre");
-			cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + "5s ?");
-		}
-		
-		@Override
-		protected String doInBackground(String... params) {
-			publishProgress(5);
-			try{
-				Thread.sleep(1000);
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-			publishProgress(4);
-			try{
-				Thread.sleep(1000);
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-			publishProgress(3);
-			try{
-				Thread.sleep(1000);
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-			publishProgress(2);
-			try{
-				Thread.sleep(1000);
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-			publishProgress(1);
-			try{
-				Thread.sleep(1000);
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-			publishProgress(0);
-			
-			return "";
-		}
-		
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			super.onProgressUpdate(values);
-			try{
-				Log.e("values[0]","="+values[0]);
-				cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + values[0] + "s ?");
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			Log.e("BeforeCancelRequestAsync","==onpost");
-			
-			cancelCustomerRequestAsync(HomeActivity.this, 2, 1);
-			
-		}
-		
-	}
 	
 	
 	
@@ -4284,7 +4093,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 											pickupLocationMarker.remove();
 										}
 										
-										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
 										getDistanceTimeAddress.execute();
 									}
 									else if(switchCase == 1){
@@ -4292,16 +4101,12 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
 										
-										if(beforeCancelRequestAsync != null){
-											beforeCancelRequestAsync.cancel(true);
-											beforeCancelRequestAsync = null;
-										}
 										
 										if(map != null && pickupLocationMarker != null){
 											pickupLocationMarker.remove();
 										}
 										
-										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
 										getDistanceTimeAddress.execute();
 									
 									}
@@ -7268,7 +7073,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		
 		try {
 			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-				getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target);
+				getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
 				getDistanceTimeAddress.execute();
 			}
 		} catch (Exception e) {
@@ -7391,7 +7196,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									if(getDistanceTimeAddress != null){
 										getDistanceTimeAddress.cancel(true);
 									}
-						        	cancelRequestBtn.setText(getResources().getString(R.string.cancel_request_in)  + " " + "5s ?");
 									
 									getAssignedDriverInfoAsync(HomeActivity.this);
 								}

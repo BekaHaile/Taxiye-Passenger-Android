@@ -177,57 +177,7 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/beforeRequestFinalLayout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:splitMotionEvents="false"
-                    android:visibility="gone" >
-
-                    <Button
-                        android:id="@+id/cancelRequestBtn"
-                        android:layout_width="648px"
-                        android:layout_height="99px"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="126px"
-                        android:background="@drawable/red_btn_selector"
-                        android:text="Cancel request in 5s ?"
-                        android:textColor="@drawable/white_color_selector"
-                        android:textSize="@dimen/button_text_size" />
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="6px"
-                        android:layout_above="@+id/assignedDriverRl"
-                        android:background="@drawable/shadow_up" />
-
-                    <RelativeLayout
-                        android:id="@+id/assignedDriverRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="108px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/white_translucent"
-                        android:splitMotionEvents="false" >
-
-                        <ProgressBar
-                            android:id="@+id/assignedDriverProgress"
-                            android:layout_width="60px"
-                            android:layout_height="60px"
-                            android:layout_centerInParent="true" />
-
-                        <TextView
-                            android:id="@+id/assignedDriverText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:gravity="center"
-                            android:maxLines="2"
-                            android:text=" "
-                            android:textColor="@color/black"
-                            android:textSize="30px" />
-                    </RelativeLayout>
-                </RelativeLayout>
+                
 
                 <RelativeLayout
                     android:id="@+id/requestFinalLayout"
