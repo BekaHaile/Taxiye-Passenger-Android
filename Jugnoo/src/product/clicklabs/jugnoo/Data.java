@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import android.graphics.Typeface;
 import android.util.Base64;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.loopj.android.http.AsyncHttpClient;
 
 /**
  * Stores common static data for access for all activities across the application
@@ -74,8 +77,6 @@ public class Data {
 			SP_C_TOTAL_FARE = "c_total_fare",
 			SP_C_WAIT_TIME = "c_wait_time"
 			
-			
-			
 			;
 	
 	
@@ -111,11 +112,12 @@ public class Data {
 	// live 3rd:    http://dev.jugnoo.in:4002
 	// review 3:    http://dev.jugnoo.in:4003
 	// live 4th:    http://dev.jugnoo.in:4004
+	// live 6th:    https://dev.jugnoo.in:4006
 	//public static final String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
 	
 	public static final String DEV_SERVER_URL = "http://54.81.229.172:8000";
 	
-	public static final String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
+	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
 	
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
@@ -257,5 +259,26 @@ public class Data {
 		}
 		return regular;
 	}
+	
+	
+	
+	public static AsyncHttpClient mainClient;
+	
+	public static AsyncHttpClient getClient() {
+		if (mainClient == null) {
+			mainClient = new AsyncHttpClient();
+			try {
+				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+				trustStore.load(null, null);
+				MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+				sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+				mainClient.setSSLSocketFactory(sf);
+			} catch (Exception e) {
+				Log.e("exception in https hostname", "="+e.toString());
+			}
+		}
+		return mainClient;
+	}
+	
 	
 }

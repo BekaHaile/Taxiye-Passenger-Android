@@ -420,7 +420,7 @@ public class RegisterScreen extends Activity{
 			
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/customer_registeration", params,
 					new AsyncHttpResponseHandler() {
@@ -640,7 +640,7 @@ public class RegisterScreen extends Activity{
 			
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/customer_fb_registeration_form", params,
 					new AsyncHttpResponseHandler() {

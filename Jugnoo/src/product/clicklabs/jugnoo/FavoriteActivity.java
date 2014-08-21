@@ -202,7 +202,7 @@ public class FavoriteActivity extends Activity{
 			Log.i("s_no", "="+sNo);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/delete_fav_locations", params,
 					new AsyncHttpResponseHandler() {

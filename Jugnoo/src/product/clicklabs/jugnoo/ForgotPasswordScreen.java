@@ -121,7 +121,7 @@ public class ForgotPasswordScreen extends Activity{
 
 			Log.i("email", "=" + email);
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/forgot_password", params,
 					new AsyncHttpResponseHandler() {

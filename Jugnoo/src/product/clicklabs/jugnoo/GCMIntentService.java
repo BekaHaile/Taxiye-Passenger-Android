@@ -260,11 +260,11 @@ public class GCMIntentService extends IntentService {
 	    	    						 editor.putString(SP_D_NR_LONGITUDE, ""+longitude);
 	    	    						 editor.commit();
 		    	    					 
-		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
+		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
 		    	    					 
-		    	    					 if(HomeActivity.driverGetRequestPush != null){
+		    	    					 if(HomeActivity.appInterruptHandler != null){
 		    	    						 notificationManagerResume(this, "You have got a new ride request.", true);
-		    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
+		    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
 		    	    					 }
 		    	    					 else{
 		    	    						 notificationManager(this, "You have got a new ride request.", true);
@@ -279,8 +279,8 @@ public class GCMIntentService extends IntentService {
 											public void run() {
 												clearNotifications(GCMIntentService.this);
 				    	    					 
-				    	    					 if(HomeActivity.driverGetRequestPush != null){
-				    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
+				    	    					 if(HomeActivity.appInterruptHandler != null){
+				    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
 				    	    					 }
 				    	    					 
 			    	    						 String SHARED_PREF_NAME = "myPref", 
@@ -314,9 +314,9 @@ public class GCMIntentService extends IntentService {
 	    	    					 String engagementId = jObj.getString("engagement_id");
 	    	    					 Data.cEngagementId = engagementId;
 	    	    					 
-	    	    					 if(CRequestRideService.requestRideInterrupt != null){
-	    	    						 CRequestRideService.requestRideInterrupt.apiEnd();
-	    			    				 CRequestRideService.requestRideInterrupt.requestRideInterrupt(1);
+	    	    					 if(HomeActivity.appInterruptHandler != null){
+	    	    						 HomeActivity.appInterruptHandler.apiEnd();
+	    			    				 HomeActivity.appInterruptHandler.requestRideInterrupt(1);
 	    			    			 }
 
 	    	    				 }
@@ -328,12 +328,12 @@ public class GCMIntentService extends IntentService {
 	    	    					 //{"engage_id":"427","flag":2}
 	    	    					 String engagementId = jObj.getString("engage_id");
 	    	    					 
-	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.driverGetRequestPush);
+	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
 	    	    					 
 	    	    					 clearNotifications(this);
 	    	    					 
-	    	    					 if(HomeActivity.driverGetRequestPush != null){
-	    	    						 HomeActivity.driverGetRequestPush.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
+	    	    					 if(HomeActivity.appInterruptHandler != null){
+	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
 	    	    					 }
 	    	    					 
     	    						 String SHARED_PREF_NAME = "myPref", 
@@ -356,9 +356,9 @@ public class GCMIntentService extends IntentService {
 	    	    				// flag 3 for driver ride started show customer ride in progress  
 	    	    				 else if(3 == flag){
 
-	    	    					 if (HomeActivity.detectRideStart != null) {
+	    	    					 if (HomeActivity.appInterruptHandler != null) {
 	    	    						 notificationManagerResume(this, "Your ride has started.", false);
-	    	    						 HomeActivity.detectRideStart.startRideForCustomer(0);
+	    	    						 HomeActivity.appInterruptHandler.startRideForCustomer(0);
 	    	    					 }
 	    	    					 else{
 	    	    						 String SHARED_PREF_NAME = "myPref",
@@ -375,8 +375,8 @@ public class GCMIntentService extends IntentService {
 	    	    				 // {"flag": 4,"log":"show"}  customer cancel 5 seconds done show driver start ride option
 	    	    				 else if(4 == flag){
 	    	    					 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);}catch(Exception e){}
-	    	    					 if (HomeActivity.driverStartRideInterrupt != null) {
-	    	    						 HomeActivity.driverStartRideInterrupt.driverStartRideInterrupt();
+	    	    					 if (HomeActivity.appInterruptHandler != null) {
+	    	    						 HomeActivity.appInterruptHandler.driverStartRideInterrupt();
 	    	    					 }
 	    	    				 }
 	    	    				// {"flag": 5} end ride on customer side show review
@@ -388,9 +388,9 @@ public class GCMIntentService extends IntentService {
 	    	    					 Data.totalFare = jObj.getDouble("fare");
 	    	    					 Data.waitTime = jObj.getString("wait_time");
 	    	    					 
-	    	    					 if (HomeActivity.customerEndRideInterrupt != null) {
+	    	    					 if (HomeActivity.appInterruptHandler != null) {
 	    	    						 notificationManagerResume(this, "Your ride has ended.", false);
-	    	    						 HomeActivity.customerEndRideInterrupt.customerEndRideInterrupt();
+	    	    						 HomeActivity.appInterruptHandler.customerEndRideInterrupt();
 	    	    					 }
 	    	    					 else{
 	    	    						 String SHARED_PREF_NAME = "myPref",
@@ -416,8 +416,8 @@ public class GCMIntentService extends IntentService {
 	    	    				// flag 6 for driver ride canceled show customer ride canceled by driver  
 	    	    				 else if(6 == flag){
 
-	    	    					 if (HomeActivity.detectRideStart != null) {
-	    	    						 HomeActivity.detectRideStart.startRideForCustomer(1);
+	    	    					 if (HomeActivity.appInterruptHandler != null) {
+	    	    						 HomeActivity.appInterruptHandler.startRideForCustomer(1);
 	    	    					 }
 	    	    				 }
 	    	    				 // flag 7 for start and stop wait for customer

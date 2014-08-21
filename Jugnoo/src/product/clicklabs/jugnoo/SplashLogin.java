@@ -1,9 +1,13 @@
 package product.clicklabs.jugnoo;
 
 import java.io.IOException;
+import java.security.KeyStore;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
@@ -161,9 +165,12 @@ public class SplashLogin extends Activity{
 						if(isEmailValid(email)){
 							enteredEmail = email;
 							
+							
 //							new CheckDeviceTokenAsync(email, password, 0).execute();
 							
 							sendLoginValues(SplashLogin.this, email, password);
+							
+//							new SendLoginValuesAsync(SplashLogin.this, email, password).execute();
 						}
 						else{
 							emailEt.requestFocus();
@@ -643,7 +650,6 @@ public class SplashLogin extends Activity{
 	}
 	
 	
-	
 	/**
 	 * ASync for login from server
 	 */
@@ -684,7 +690,8 @@ public class SplashLogin extends Activity{
 			
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
+			
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/email_login", params,
 					new AsyncHttpResponseHandler() {
@@ -883,7 +890,7 @@ public class SplashLogin extends Activity{
 			
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/customer_registeration", params,
 					new AsyncHttpResponseHandler() {
@@ -1003,7 +1010,8 @@ public class SplashLogin extends Activity{
 			
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
+			
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/customer_fb_registeration_form", params,
 					new AsyncHttpResponseHandler() {
@@ -1156,7 +1164,6 @@ public class SplashLogin extends Activity{
 							
 							@Override
 							public void onClick(View v) {
-								// TODO Auto-generated method stub
 								dialog.dismiss();
 							}
 						});
@@ -1166,8 +1173,6 @@ public class SplashLogin extends Activity{
 							
 							@Override
 							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								
 							}
 						});
 						
@@ -1236,17 +1241,10 @@ public class SplashLogin extends Activity{
 							
 						});
 
+						
 						crossbtn.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
-								
-								SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-								SharedPreferences.Editor editor = preferences.edit();
-								editor.putString(Data.SP_SERVER_LINK, Data.DEV_SERVER_URL);
-								editor.commit();
-								
-								Data.SERVER_URL = Data.DEV_SERVER_URL;
-								
 								dialog.dismiss();
 							}
 							

@@ -223,17 +223,10 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
-    		if(count == 0){
-    			try{
-    				Thread.sleep(5000);
-    			} catch(Exception e){
-    			}
-			}
-    		
     		
     		//TODO Toggle live to trial
     		String DEV_SERVER_URL = "http://54.81.229.172:8000";
-    		String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
+    		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
     		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
     		
     		String DEFAULT_SERVER_URL = TRIAL_SERVER_URL;
@@ -256,6 +249,7 @@ public class DriverLocationUpdateService extends Service {
     			SERVER_URL = DEV_SERVER_URL;
     		}
     		
+    		Log.e("link in service = ", "="+link);
     		
     		
     		
@@ -315,10 +309,6 @@ public class DriverLocationUpdateService extends Service {
 		    				noUpdate = false;
 						}
 						else{
-							try{
-			    				Thread.sleep(60000);
-			    			} catch(Exception e){
-			    			}
 							if(locationFetcher.location != null){
 								lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
 			    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -341,10 +331,6 @@ public class DriverLocationUpdateService extends Service {
 			    				noUpdate = false;
 							}
 							else{
-								try{
-				    				Thread.sleep(30000);
-				    			} catch(Exception e){
-				    			}
 								if(locationFetcher.location != null){
 									lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
 				    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -374,6 +360,7 @@ public class DriverLocationUpdateService extends Service {
     			
 
     			
+    			
     			if(count > 0){
 	    			try{
 	    				Thread.sleep(serverUpdateTimePeriod);
@@ -386,6 +373,7 @@ public class DriverLocationUpdateService extends Service {
     			
 	    		if(locationFetcher != null){
 
+	    			Log.e("locationFetcher.location=", "="+locationFetcher.location);
 	    			if(locationFetcher.location != null){
 					Log.i("locationFetcher not null","inside");
 	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());

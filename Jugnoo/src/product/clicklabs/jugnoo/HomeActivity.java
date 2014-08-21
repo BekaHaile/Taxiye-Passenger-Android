@@ -115,8 +115,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
 @SuppressLint("DefaultLocale")
-public class HomeActivity extends FragmentActivity implements DetectRideStart, RefreshDriverLocations, RequestRideInterrupt, 
-DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
+public class HomeActivity extends FragmentActivity implements AppInterruptHandler {
 
 	
 	
@@ -362,13 +361,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 	Marker pickupLocationMarker, driverLocationMarker;
 	MarkerOptions markerOptionsCustomerPickupLocation;
 	
-	static DriverChangeRideRequest driverGetRequestPush;
-	
-	static DriverStartRideInterrupt driverStartRideInterrupt;
-	
-	static CustomerEndRideInterrupt customerEndRideInterrupt;
-	
-	static DetectRideStart detectRideStart;
+	static AppInterruptHandler appInterruptHandler;
 	
 	static Activity activity;
 	
@@ -396,13 +389,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 		setContentView(R.layout.activity_home);
 		
 		
-		HomeActivity.detectRideStart = HomeActivity.this;
-		CUpdateDriverLocationsService.refreshDriverLocations = HomeActivity.this;
-		CRequestRideService.requestRideInterrupt = HomeActivity.this;
-		
-		HomeActivity.driverGetRequestPush = HomeActivity.this;
-		HomeActivity.driverStartRideInterrupt = HomeActivity.this;
-		HomeActivity.customerEndRideInterrupt = HomeActivity.this;
+		HomeActivity.appInterruptHandler = HomeActivity.this;
 		
 		activity = this;
 		
@@ -3826,7 +3813,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 		ignr2 = ignr2.replaceAll(" ", "%20");
 
-		AsyncHttpClient client = new AsyncHttpClient();
+		AsyncHttpClient client = Data.getClient();
 		client.post(ignr2, params, new AsyncHttpResponseHandler() {
 
 			@Override
@@ -3942,7 +3929,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/driver_details", params,
 					new AsyncHttpResponseHandler() {
@@ -4048,7 +4035,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("session_id", "="+Data.cSessionId);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/cancel_the_req", params,
 					new AsyncHttpResponseHandler() {
@@ -4167,7 +4154,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("engage_id", Data.cEngagementId);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/check_session_active_inactive", params,
 					new AsyncHttpResponseHandler() {
@@ -4238,7 +4225,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("flag", "=" + flag);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/switch_to_driver_mode", params,
 					new AsyncHttpResponseHandler() {
@@ -4362,7 +4349,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("longitude", "="+Data.longitude);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/accept_a_ride", params,
 					new AsyncHttpResponseHandler() {
@@ -4525,7 +4512,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										}
 									};
 									
-									driverConnectionLostHandler.postDelayed(driverCLRunnable, 60000);
+									driverConnectionLostHandler.postDelayed(driverCLRunnable, 30000);
 									
 								}
 							}  catch (Exception exception) {
@@ -4573,7 +4560,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("engage_id", "=" + Data.dEngagementId);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/connection_lost_on_user_end", params,
 					new AsyncHttpResponseHandler() {
@@ -4662,7 +4649,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				Log.i("engage_id", "=" + Data.dEngagementId);
 				
 			
-				AsyncHttpClient client = new AsyncHttpClient();
+				AsyncHttpClient client = Data.getClient();
 				client.setTimeout(Data.SERVER_TIMEOUT);
 				client.post(Data.SERVER_URL + "/reject_a_ride", params,
 						new AsyncHttpResponseHandler() {
@@ -4802,7 +4789,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("pickup_location_address", "=" + address);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/start_ride", params,
 					new AsyncHttpResponseHandler() {
@@ -4955,7 +4942,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("drop_location_address", "="+address);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/end_ride", params,
 					new AsyncHttpResponseHandler() {
@@ -5009,6 +4996,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 									
 									
 									clearSPData();
+									
 									
 						        	driverScreenMode = DriverScreenMode.D_RIDE_END;
 									switchDriverScreen(driverScreenMode);
@@ -5069,7 +5057,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("given_rating", givenRating);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/rating", params,
 					new AsyncHttpResponseHandler() {
@@ -5100,11 +5088,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 								else{
 									
 //									{"log":"Rated successfully"}
-
 									
-									
-									
-									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
 
 									if(flag.equalsIgnoreCase("0")){
 										userMode = UserMode.DRIVER;
@@ -5124,7 +5108,6 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 										passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
 									}
-									
 									
 									
 								}
@@ -5243,7 +5226,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("fav_longitude", "="+favLatLng.longitude);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/fav_locations", params,
 					new AsyncHttpResponseHandler() {
@@ -5318,7 +5301,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/get_fav_locations", params,
 					new AsyncHttpResponseHandler() {
@@ -5359,10 +5342,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 													new LatLng(favData.getDouble("fav_latitude"), favData.getDouble("fav_longitude"))));
 											
 										}
-										
 									}
-									
-									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -5525,7 +5505,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("id", "="+Data.userData.id);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/logout", params,
 					new AsyncHttpResponseHandler() {
@@ -5620,7 +5600,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("flag", "="+flag);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/wait_push", params,
 					new AsyncHttpResponseHandler() {
@@ -5736,7 +5716,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/booking_history", params,
 					new AsyncHttpResponseHandler() {
@@ -5892,7 +5872,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/request_now", params,
 					new AsyncHttpResponseHandler() {
@@ -5960,7 +5940,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			
 		
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = Data.getClient();
 			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/request_session_id", params,
 					new AsyncHttpResponseHandler() {
@@ -6155,7 +6135,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				params.put("access_token", Data.userData.accessToken);
 				
 			
-				AsyncHttpClient client = new AsyncHttpClient();
+				AsyncHttpClient client = Data.getClient();
 				client.setTimeout(Data.SERVER_TIMEOUT);
 				client.post(Data.SERVER_URL + "/make_me_driver_request", params,
 						new AsyncHttpResponseHandler() {
@@ -6877,7 +6857,7 @@ DriverChangeRideRequest, DriverStartRideInterrupt, CustomerEndRideInterrupt {
 				
 				
 			
-				AsyncHttpClient client = new AsyncHttpClient();
+				AsyncHttpClient client = Data.getClient();
 				client.setTimeout(Data.SERVER_TIMEOUT);
 				client.post(Data.SERVER_URL + "/driver_details", params,
 						new AsyncHttpResponseHandler() {

@@ -14,8 +14,6 @@ public class CUpdateDriverLocationsService extends Service {
 	
 	GetDriverLocationsFromServer getDriverLocationsFromServer;
 	
-	static RefreshDriverLocations refreshDriverLocations;
-	
 	public CUpdateDriverLocationsService() {
 		Log.e("CUpdateDriverLocationsService"," instance created");
 	}
@@ -122,10 +120,10 @@ public class CUpdateDriverLocationsService extends Service {
     		
     		try{
 	    		Log.e("count","="+count);
-				Log.e("CustomerUpdateDriverLocationsService.refreshDriverLocations=","="+CUpdateDriverLocationsService.refreshDriverLocations);
+				Log.e("CustomerUpdateDriverLocationsService.refreshDriverLocations=","="+HomeActivity.appInterruptHandler);
 				
-				if("refresh".equalsIgnoreCase(result)  && CUpdateDriverLocationsService.refreshDriverLocations != null){
-					CUpdateDriverLocationsService.refreshDriverLocations.refreshDriverLocations(count);
+				if("refresh".equalsIgnoreCase(result)  && HomeActivity.appInterruptHandler != null){
+					HomeActivity.appInterruptHandler.refreshDriverLocations(count);
 				}
 				count++;
 	        	

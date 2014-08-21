@@ -51,7 +51,7 @@
                         android:layout_height="95px"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="34px"
-                        android:background="@drawable/search_bar"
+                        android:background="@drawable/white_bg_rounded_bordered"
                         android:splitMotionEvents="false"
                         android:tag="mwar" >
 

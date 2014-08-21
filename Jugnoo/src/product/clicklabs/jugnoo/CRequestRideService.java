@@ -23,8 +23,6 @@ public class CRequestRideService extends Service {
 	
 	RequestRideAsync requestRideAsync;
 	
-	public static RequestRideInterrupt requestRideInterrupt;
-	
 	public CRequestRideService() {
 		Log.e("CRequestRideService"," instance created");
 		count = 0; 
@@ -98,8 +96,8 @@ public class CRequestRideService extends Service {
         	requestRideAsync.cancel(true);
     		requestRideAsync = null;
     		
-    		if(requestRideInterrupt != null){
-				requestRideInterrupt.apiEnd();
+    		if(HomeActivity.appInterruptHandler != null){
+    			HomeActivity.appInterruptHandler.apiEnd();
 			}
     	}
         System.gc();
@@ -137,8 +135,8 @@ public class CRequestRideService extends Service {
 				
 				if(!stop){
 				
-					if(requestRideInterrupt != null){
-						requestRideInterrupt.apiStart(driverPos+1);
+					if(HomeActivity.appInterruptHandler != null){
+						HomeActivity.appInterruptHandler.apiStart(driverPos+1);
 					}
 					
 					
@@ -243,8 +241,8 @@ public class CRequestRideService extends Service {
 				}
 			}
 			
-			if(requestRideInterrupt != null){
-				requestRideInterrupt.apiEnd();
+			if(HomeActivity.appInterruptHandler != null){
+				HomeActivity.appInterruptHandler.apiEnd();
 			}
 			
 			if(driverPos < Data.driverInfos.size()-1){
@@ -260,8 +258,8 @@ public class CRequestRideService extends Service {
 			else{
 				Log.e("requestRideInterrupt(0) ============ ","requestRideInterrupt(0)");
 				requestRideAsync = null;
-				if(requestRideInterrupt != null){
-					requestRideInterrupt.requestRideInterrupt(0);
+				if(HomeActivity.appInterruptHandler != null){
+					HomeActivity.appInterruptHandler.requestRideInterrupt(0);
 				}
 				
 				stopSelf();

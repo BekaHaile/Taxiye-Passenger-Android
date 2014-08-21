@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -83,6 +84,7 @@ public class SplashNewActivity extends Activity{
 		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
 			Data.SERVER_URL = Data.DEV_SERVER_URL;
 		}
+		
 		
 		
 		Locale locale = new Locale("en"); 
@@ -385,7 +387,7 @@ public class SplashNewActivity extends Activity{
 				Log.i("longitude", ""+Data.longitude);
 				Log.i("app_version", ""+Data.appVersion);
 			
-				AsyncHttpClient client = new AsyncHttpClient();
+				AsyncHttpClient client = Data.getClient();
 				client.setTimeout(Data.SERVER_TIMEOUT);
 				client.post(Data.SERVER_URL + "/access_token", params,
 						new AsyncHttpResponseHandler() {
