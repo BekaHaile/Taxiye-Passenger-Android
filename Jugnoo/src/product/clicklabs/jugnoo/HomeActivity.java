@@ -2423,8 +2423,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		@Override
 		public void onLocationChanged(Location location) {
-			Log.e("locationListener location changed","="+location);
-			writeLogToFile(location.getProvider() + " <> "+location);
+//			writeLogToFile(location.getProvider() + " <> "+location);
 			if(isBetterLocation(location, HomeActivity.myLocation)){
 				drawLocationChanged(location);
 			}
@@ -2493,7 +2492,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
 		boolean isNewer = timeDelta > 0;
 
-		Log.i("timeDelta", "="+timeDelta);
 		
 		
 
@@ -2517,7 +2515,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			return false;
 		}
 		
-		Log.i("accuracyDelta", "="+accuracyDelta);
 
 		// Check if the old and new location are from the same provider
 		boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
@@ -6596,19 +6593,25 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					dialog.dismiss();
+					if(myLocation != null){
+						dialog.dismiss();
 
-		        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
-		        	
-		        	if(displacement <= 300){
-		        		buildAlertMessageNoGps();
+			        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
 			        	
-			        	GCMIntentService.clearNotifications(HomeActivity.this);
-			        	new GetAddressStartRide().execute();
-		        	}
-		        	else{
-		        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
-		        	}
+			        	if(displacement <= 300){
+			        		buildAlertMessageNoGps();
+				        	
+				        	GCMIntentService.clearNotifications(HomeActivity.this);
+				        	new GetAddressStartRide().execute();
+			        	}
+			        	else{
+			        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
+			        	}
+					}
+					else{
+						Toast.makeText(activity, "Waiting for location...", Toast.LENGTH_SHORT).show();
+					}
+					
 		        	
 				}
 				
@@ -6854,6 +6857,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				Log.i("access_token", "=" + Data.userData.accessToken);
 				Log.i("driver_id", "=" + driverId);
+				
 				
 				
 			

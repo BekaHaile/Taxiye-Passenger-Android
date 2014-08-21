@@ -37,24 +37,24 @@ public class LocationFetcher {
 				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
 			}
 			else{
-				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-					gpsListener = new MyLocationListener();
-					provider = LocationManager.GPS_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
-				}
+//				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+//					gpsListener = new MyLocationListener();
+//					provider = LocationManager.GPS_PROVIDER;
+//					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
+//				}
 			}
 		}
 		else if(whichProvider == 1){
 			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 				gpsListener = new MyLocationListener();
 				provider = LocationManager.GPS_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, gpsListener);
 			}
 			else{
 				if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 					networkListener = new MyLocationListener();
 					provider = LocationManager.NETWORK_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
+					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, networkListener);
 				}
 			}
 		}
@@ -62,12 +62,12 @@ public class LocationFetcher {
 			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 				gpsListener = new MyLocationListener();
 				provider = LocationManager.GPS_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, gpsListener);
 			}
 			if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 				networkListener = new MyLocationListener();
 				provider = LocationManager.NETWORK_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networkListener);
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, networkListener);
 			}
 		}
 			

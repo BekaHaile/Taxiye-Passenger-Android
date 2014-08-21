@@ -187,6 +187,7 @@ public class DriverLocationUpdateService extends Service {
     		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
     		String driverMode = pref.getString(SP_DRIVER_SCREEN_MODE, "");
     		
+    		Log.e("driverMode", "="+driverMode);
     		
     		if(driverMode.equalsIgnoreCase("")){
     			serverUpdateTimePeriod = 60000;
@@ -202,7 +203,7 @@ public class DriverLocationUpdateService extends Service {
     			}
     		}
     		else{
-    			serverUpdateTimePeriod = 30000;
+    			serverUpdateTimePeriod = 20000;
     			if(locationFetcher == null){
     				locationFetcher = new LocationFetcher(DriverLocationUpdateService.this, 1);
     			}
@@ -215,6 +216,7 @@ public class DriverLocationUpdateService extends Service {
     			}
     		}
     		
+    		Log.i("serverUpdateTimePeriod", "="+serverUpdateTimePeriod);
 			
     	}
     	
@@ -229,7 +231,7 @@ public class DriverLocationUpdateService extends Service {
     		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
     		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
     		
-    		String DEFAULT_SERVER_URL = TRIAL_SERVER_URL;
+    		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
     		
     		
     		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -248,9 +250,6 @@ public class DriverLocationUpdateService extends Service {
     		else if(link.equalsIgnoreCase(DEV_SERVER_URL)){
     			SERVER_URL = DEV_SERVER_URL;
     		}
-    		
-    		Log.e("link in service = ", "="+link);
-    		
     		
     		
     		
@@ -420,6 +419,7 @@ public class DriverLocationUpdateService extends Service {
     	}
     	
     	
+    	
     	@Override
     	protected void onPostExecute(String result) {
     		super.onPostExecute(result);
@@ -429,19 +429,21 @@ public class DriverLocationUpdateService extends Service {
     				JSONObject jObj = new JSONObject(result);
     				
     				if(!jObj.isNull("error")){
-    					
     					stopSelf();
-    					
     				}
     				
     			} catch(Exception e){
     				e.printStackTrace();
     			}
-    			
+    			count++;
+        		noUpdate = false;
+    		}
+    		else{
+    			count = 0;
+        		noUpdate = true;
     		}
     		
-    		count++;
-    		noUpdate = false;
+    		
         	
     		
     		if(locationFetcher != null){
