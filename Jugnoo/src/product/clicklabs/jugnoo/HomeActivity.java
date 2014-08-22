@@ -2847,11 +2847,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			    		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 					}
 					
+					
 				}
 				else{
 					editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
 				}
 				
+				Log.e("pref.getString(Data.SP_DRIVER_SCREEN_MODE", "="+pref.getString(Data.SP_DRIVER_SCREEN_MODE, ""));
 				
 				editor.commit();
 				
