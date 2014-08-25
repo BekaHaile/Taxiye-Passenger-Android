@@ -116,13 +116,14 @@ public class Data {
 	// live 6th:    https://dev.jugnoo.in:4006
 	//public static final String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
 	
+	
 	public static final String DEV_SERVER_URL = "http://54.81.229.172:8000";
 	
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
 	
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
-	public static final String DEFAULT_SERVER_URL = TRIAL_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 	
 	
 	

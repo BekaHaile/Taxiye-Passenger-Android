@@ -37,6 +37,7 @@ public class Database {																	// class for handling database related a
 	private static final String DLAT = "dlat";
 	private static final String DLNG = "dlng";
 
+	
 	/**
 	 * Creates and opens database for the application use 
 	 * @author shankar
@@ -204,5 +205,6 @@ public class Database {																	// class for handling database related a
 	public void deleteSavedPath(){
 		database.delete(Database.TABLE_PREVIOUS_PATH, null, null);
 	}
+	
 	
 }

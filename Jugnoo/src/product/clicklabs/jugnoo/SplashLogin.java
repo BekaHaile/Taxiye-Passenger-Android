@@ -1,15 +1,20 @@
 package product.clicklabs.jugnoo;
 
 import java.io.IOException;
+import java.security.KeyStore;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +28,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.facebook.LoggingBehavior;
@@ -52,6 +57,7 @@ import com.facebook.model.GraphUser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.location.LocationClient;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -116,6 +122,10 @@ public class SplashLogin extends Activity{
 		Database database = new Database(SplashLogin.this);													// getting already logged in email strings for drop down
 		String[] emails = database.getEmails();
 		database.close();
+		
+		Database2 database2 = new Database2(SplashLogin.this);
+		database2.updateDriverServiceFast("no");
+		database2.close();
 		
 		ArrayAdapter<String> adapter;
 		
@@ -1136,8 +1146,6 @@ public class SplashLogin extends Activity{
 	}
 
 	
-	
-	
 	//TODO debug code confirm popup
 	public void confirmDebugPasswordPopup(final Activity activity){
 
@@ -1223,7 +1231,6 @@ public class SplashLogin extends Activity{
 		}
 	
 	}
-	
 	
 	//TODO change server link popup
 			void changeServerLinkPopup(final Activity activity) {

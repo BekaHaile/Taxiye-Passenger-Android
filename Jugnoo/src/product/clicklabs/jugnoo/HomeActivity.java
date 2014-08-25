@@ -54,7 +54,6 @@ import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.Pair;
@@ -1686,6 +1685,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				double nrLat = Double.parseDouble(pref.getString(Data.SP_D_NR_LATITUDE, ""));
 				double nrLng = Double.parseDouble(pref.getString(Data.SP_D_NR_LONGITUDE, ""));
 				
+				Data.driverRideRequests.clear();
 				Data.driverRideRequests.add(new DriverRideRequest(nrEngagementId, nrUserId, new LatLng(nrLat, nrLng)));
 				showAllRideRequests();
 			}
@@ -1817,6 +1817,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	public void updateDriverServiceFast(String choice){
+		Database2 database = new Database2(HomeActivity.this);
+		database.updateDriverServiceFast(choice);
+		database.close();
+	}
 	
 	
 	public void switchDriverScreen(DriverScreenMode mode){
@@ -1870,6 +1875,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			case D_INITIAL:
 				
+				updateDriverServiceFast("no");
+				
 				driverInitialLayout.setVisibility(View.VISIBLE);
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.GONE);
@@ -1891,6 +1898,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 			case D_REQUEST_ACCEPT:
 				
+				updateDriverServiceFast("no");
+				
 				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
 					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				}
@@ -1907,6 +1916,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 			case D_START_RIDE:
+				
+				updateDriverServiceFast("yes");
 				
 				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
 					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
@@ -1958,6 +1969,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 			case D_IN_RIDE:
+				
+				updateDriverServiceFast("no");
 				
 				cancelCustomerPathUpdateTimer();
 				
@@ -2016,6 +2029,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 			case D_RIDE_END:
+				
+				updateDriverServiceFast("no");
 				
 				cancelMapAnimateTimer();
 				
@@ -2848,13 +2863,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			    		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 					}
 					
-					
 				}
 				else{
 					editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
 				}
 				
-				Log.e("pref.getString(Data.SP_DRIVER_SCREEN_MODE", "="+pref.getString(Data.SP_DRIVER_SCREEN_MODE, ""));
 				
 				editor.commit();
 				
@@ -6759,7 +6772,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			}
 	
-		
 		
 		
 		//TODO debug code confirm popup
