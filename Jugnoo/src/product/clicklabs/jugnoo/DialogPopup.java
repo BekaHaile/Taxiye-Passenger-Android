@@ -7,11 +7,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class DialogPopup {
 
@@ -137,5 +141,8 @@ public class DialogPopup {
 			Log.e("e","="+e);
 		}
 	}
+	
+	
+	
 	
 }

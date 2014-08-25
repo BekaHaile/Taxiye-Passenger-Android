@@ -1,20 +1,15 @@
 package product.clicklabs.jugnoo;
 
 import java.io.IOException;
-import java.security.KeyStore;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +23,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +39,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.facebook.LoggingBehavior;
@@ -57,7 +52,6 @@ import com.facebook.model.GraphUser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.location.LocationClient;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -454,7 +448,7 @@ public class SplashLogin extends Activity{
 			
 			@Override
 			public boolean onLongClick(View v) {
-				changeServerLinkPopup(SplashLogin.this);
+				confirmDebugPasswordPopup(SplashLogin.this);
 //				Toast.makeText(getApplicationContext(), ""+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 				return false;
 			}
@@ -1141,6 +1135,94 @@ public class SplashLogin extends Activity{
 	    return true;
 	}
 
+	
+	
+	
+	//TODO debug code confirm popup
+	public void confirmDebugPasswordPopup(final Activity activity){
+
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.otp_confirm_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(activity));
+			
+			textHead.setText("Confirm Debug Password");
+			textMessage.setText("Please enter password to continue.");
+			
+			
+			final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(activity));
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+			
+			btnConfirm.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					String code = etCode.getText().toString().trim();
+					if("".equalsIgnoreCase(code)){
+						etCode.requestFocus();
+						etCode.setError("Code can't be empty.");
+					}
+					else{
+						if(Data.DEBUG_PASSWORD.equalsIgnoreCase(code)){
+							dialog.dismiss();
+							changeServerLinkPopup(activity);
+						}
+						else{
+							etCode.requestFocus();
+							etCode.setError("Code not matched.");
+						}
+					}
+				}
+				
+			});
+			
+			
+			etCode.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					int result = actionId & EditorInfo.IME_MASK_ACTION;
+					switch (result) {
+						case EditorInfo.IME_ACTION_DONE:
+							btnConfirm.performClick();
+						break;
+
+						case EditorInfo.IME_ACTION_NEXT:
+						break;
+
+						default:
+					}
+					return true;
+				}
+			});
+			
+			crossbtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+				
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+	}
 	
 	
 	//TODO change server link popup

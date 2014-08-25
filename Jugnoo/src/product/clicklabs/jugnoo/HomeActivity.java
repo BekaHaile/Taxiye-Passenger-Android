@@ -54,6 +54,7 @@ import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.Pair;
@@ -767,7 +768,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public boolean onLongClick(View v) {
-				changeDebugModePopup(HomeActivity.this);
+				confirmDebugPasswordPopup(HomeActivity.this);
 				return false;
 			}
 		});
@@ -6760,6 +6761,92 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 		
 		
+		
+		//TODO debug code confirm popup
+		public void confirmDebugPasswordPopup(final Activity activity){
+
+			try {
+				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.setContentView(R.layout.otp_confirm_dialog);
+
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, true);
+				
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+				
+				
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(activity));
+				
+				textHead.setText("Confirm Debug Password");
+				textMessage.setText("Please enter password to continue.");
+				
+				
+				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(activity));
+				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+				
+				btnConfirm.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						String code = etCode.getText().toString().trim();
+						if("".equalsIgnoreCase(code)){
+							etCode.requestFocus();
+							etCode.setError("Code can't be empty.");
+						}
+						else{
+							if(Data.DEBUG_PASSWORD.equalsIgnoreCase(code)){
+								dialog.dismiss();
+								changeDebugModePopup(activity);
+							}
+							else{
+								etCode.requestFocus();
+								etCode.setError("Code not matched.");
+							}
+						}
+					}
+					
+				});
+				
+				
+				etCode.setOnEditorActionListener(new OnEditorActionListener() {
+
+					@Override
+					public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+						int result = actionId & EditorInfo.IME_MASK_ACTION;
+						switch (result) {
+							case EditorInfo.IME_ACTION_DONE:
+								btnConfirm.performClick();
+							break;
+
+							case EditorInfo.IME_ACTION_NEXT:
+							break;
+
+							default:
+						}
+						return true;
+					}
+				});
+				
+				crossbtn.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+					
+				});
+
+				dialog.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+		}
 		
 		//Change debug mode popup
 		void changeDebugModePopup(final Activity activity) {
