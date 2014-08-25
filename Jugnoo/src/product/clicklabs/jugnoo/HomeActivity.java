@@ -1918,7 +1918,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			case D_START_RIDE:
 				
 				updateDriverServiceFast("yes");
-				
+
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
 					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				}

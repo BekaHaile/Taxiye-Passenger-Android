@@ -104,6 +104,9 @@ public class Data {
 	
 	
 	
+	
+	
+	
 	// dev review http://107.21.79.63:4001
 	//Dev staged :  "http://54.81.229.172:7000";
 	// Dev staged :   http://54.81.229.172:8000
@@ -123,7 +126,7 @@ public class Data {
 	
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
-	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 	
 	
 	
