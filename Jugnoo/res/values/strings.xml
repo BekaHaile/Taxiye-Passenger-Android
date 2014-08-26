@@ -8,8 +8,8 @@
     
     
     
-    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
-    <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> <!-- Dev -->
+    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
+    <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
     
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
     
@@ -82,6 +82,7 @@
 	<string name="driver_mode">Driver Mode</string>
 	<string name="invite_friends">Invite Friends</string>
 	<string name="about">About</string>
+	<string name="support">Support</string>
 	<string name="sos">SOS</string>
 	<string name="language_preferences">Language Preferences</string>
 	

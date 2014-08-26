@@ -230,11 +230,6 @@
                                 android:background="@drawable/image_border"
                                 android:tag="mwar" />
 
-                            <ProgressBar
-                                android:id="@+id/driverImageProgress"
-                                android:layout_width="60px"
-                                android:layout_height="60px"
-                                android:layout_centerInParent="true" />
 
                             <ImageView
                                 android:id="@+id/driverImage"
@@ -276,11 +271,6 @@
                                 android:background="@drawable/image_border"
                                 android:tag="mwar" />
 
-                            <ProgressBar
-                                android:id="@+id/driverCarProgress"
-                                android:layout_width="60px"
-                                android:layout_height="60px"
-                                android:layout_centerInParent="true" />
 
                             <ImageView
                                 android:id="@+id/driverCarImage"
@@ -899,11 +889,6 @@
                             android:background="@drawable/ring_white"
                             android:tag="mwar" />
 
-                        <ProgressBar
-                            android:id="@+id/reviewUserImgProgress"
-                            android:layout_width="60px"
-                            android:layout_height="60px"
-                            android:layout_centerInParent="true" />
 
                         <ImageView
                             android:id="@+id/reviewUserImage"
@@ -1240,11 +1225,6 @@
                         android:background="@drawable/ring"
                         android:tag="mwar" />
 
-                    <ProgressBar
-                        android:id="@+id/profileImgProgress"
-                        android:layout_width="60px"
-                        android:layout_height="60px"
-                        android:layout_centerInParent="true" />
 
                     <ImageView
                         android:id="@+id/profileImg"
@@ -1379,6 +1359,29 @@
                         android:textSize="34px" />
                 </RelativeLayout>
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="3px"
+                    android:background="@drawable/menu_divider" />
+
+                <RelativeLayout
+                    android:id="@+id/supportRl"
+                    android:layout_width="match_parent"
+                    android:layout_height="84px"
+                    android:background="@drawable/menu_item_selector"
+                    android:splitMotionEvents="false" >
+
+                    <TextView
+                        android:id="@+id/supportText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="42px"
+                        android:text="@string/support"
+                        android:textColor="@color/white"
+                        android:textSize="34px" />
+                </RelativeLayout>
+                
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="3px"

@@ -180,6 +180,7 @@ public class DriverLocationUpdateService extends Service {
     
     
     
+    
     class SendDriverLocationToServer extends AsyncTask<String, Integer, String>{
     	
     	String GOOGLE_PROJECT_ID = "506849624961", 
@@ -202,7 +203,7 @@ public class DriverLocationUpdateService extends Service {
     		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
     		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
     		
-    		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+    		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
     		
     		
     		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -279,6 +280,9 @@ public class DriverLocationUpdateService extends Service {
     	
     	
     	
+    	
+    	
+    	
     	@Override
     	protected String doInBackground(String... params) {
     		
@@ -303,13 +307,13 @@ public class DriverLocationUpdateService extends Service {
     		
     		try{
     			if(serverUpdateTimePeriod == 20000){
-    				if(count > 0){
-    	    			try{
-    	    				Thread.sleep(serverUpdateTimePeriod);
-    	    			} catch(Exception e){
-    	    			}
-        			}
-    				return "no_empty";
+//    				if(count > 0){
+//    	    			try{
+//    	    				Thread.sleep(serverUpdateTimePeriod);
+//    	    			} catch(Exception e){
+//    	    			}
+//        			}
+//    				return "no_empty";
     			}
     			else{
     			if(noUpdate){
@@ -481,10 +485,11 @@ public class DriverLocationUpdateService extends Service {
     			}
     		}
     		
-    		
-	        sendDriverLocationToServer = null;
-	        sendDriverLocationToServer = new SendDriverLocationToServer();
-	        sendDriverLocationToServer.execute();
+    		if(serverUpdateTimePeriod != 20000){
+		        sendDriverLocationToServer = null;
+		        sendDriverLocationToServer = new SendDriverLocationToServer();
+		        sendDriverLocationToServer.execute();
+    		}
     		
     	}
     	
@@ -642,7 +647,7 @@ public class DriverLocationUpdateService extends Service {
 						nameValuePairs.add(new BasicNameValuePair("longitude", ""+location.getLongitude()));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 						
-						Log.e("nameValuePairs "+count,"="+nameValuePairs);
+						Log.e("nameValuePairs in fast","="+nameValuePairs);
 						
 						SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
 						String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);

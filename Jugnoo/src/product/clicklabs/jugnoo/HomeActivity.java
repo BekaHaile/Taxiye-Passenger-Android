@@ -128,7 +128,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	ProgressBar profileImgProgress;
 	ImageView profileImg;
 	TextView userName;
 	
@@ -144,6 +143,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	RelativeLayout aboutRl;
 	TextView aboutText;
+	
+	RelativeLayout supportRl;
+	TextView supportText;
 	
 	RelativeLayout sosRl;
 	TextView sosText;
@@ -198,7 +200,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	//Request Final Layout
 	RelativeLayout requestFinalLayout;
-	ProgressBar driverImageProgress, driverCarProgress;
 	ImageView driverImage, driverCarImage;
 	TextView driverName, driverTime;
 	Button callDriverBtn;
@@ -304,7 +305,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout endRideReviewRl;
 		
 	ImageView reviewUserImgBlured, reviewUserImage;
-	ProgressBar reviewUserImgProgress;
 	TextView reviewUserName, reviewReachedDestinationText, 
 	reviewDistanceText, reviewDistanceValue, 
 	reviewWaitText, reviewWaitValue,
@@ -420,7 +420,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		profileImgProgress = (ProgressBar) findViewById(R.id.profileImgProgress);
 		profileImg = (ImageView) findViewById(R.id.profileImg);
 		userName = (TextView) findViewById(R.id.userName); userName.setTypeface(Data.regularFont(getApplicationContext()));
 		
@@ -436,6 +435,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		aboutRl = (RelativeLayout) findViewById(R.id.aboutRl);
 		aboutText = (TextView) findViewById(R.id.aboutText); aboutText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		supportRl = (RelativeLayout) findViewById(R.id.supportRl);
+		supportText = (TextView) findViewById(R.id.supportText); supportText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		sosRl = (RelativeLayout) findViewById(R.id.sosRl);
 		sosText = (TextView) findViewById(R.id.sosText); sosText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -515,8 +517,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		//Request Final Layout
 		requestFinalLayout = (RelativeLayout) findViewById(R.id.requestFinalLayout);
 		
-		driverImageProgress = (ProgressBar) findViewById(R.id.driverImageProgress);
-		driverCarProgress = (ProgressBar) findViewById(R.id.driverCarProgress);
 		driverImage = (ImageView) findViewById(R.id.driverImage);
 		driverCarImage = (ImageView) findViewById(R.id.driverCarImage);
 		
@@ -671,7 +671,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		reviewUserImgBlured = (ImageView) findViewById(R.id.reviewUserImgBlured);
 		reviewUserImage = (ImageView) findViewById(R.id.reviewUserImage);
-		reviewUserImgProgress = (ProgressBar) findViewById(R.id.reviewUserImgProgress);
 		
 		reviewUserName = (TextView) findViewById(R.id.reviewUserName); reviewUserName.setTypeface(Data.regularFont(getApplicationContext()));
 		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText); reviewReachedDestinationText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
@@ -837,6 +836,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
+		
+		
+		supportRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//TODO support@jugnoo.in
+				Intent email = new Intent(Intent.ACTION_SEND);
+				email.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@jugnoo.in" });
+				email.putExtra(Intent.EXTRA_SUBJECT, "Jugnoo Support");
+				email.putExtra(Intent.EXTRA_TEXT, "");
+				email.setType("message/rfc822");
+				startActivity(Intent.createChooser(email, "Choose an Email client:"));
+			}
+		});
+		
 		
 		
 		sosRl.setOnClickListener(new View.OnClickListener() {
@@ -1858,8 +1873,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			reviewUserName.setText(Data.assignedCustomerInfo.name);
 			
 			Data.assignedCustomerInfo.image = Data.assignedCustomerInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
-			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
 			
 			
 			
@@ -2259,11 +2274,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     	 		}
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
 				
 				
 				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
 				
 				
 				initialLayout.setVisibility(View.GONE);
@@ -2333,10 +2348,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverName.setText(Data.assignedDriverInfo.name);
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
 				
 				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
 				
 				
 				initialLayout.setVisibility(View.GONE);
@@ -2561,29 +2576,35 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
 	void buildAlertMessageNoGps() {
 		if(!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
-		if(gpsDialogAlert != null && gpsDialogAlert.isShowing()){
-	    }
-		else{
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		    builder.setMessage("The app needs active GPS connection. Do you want to enable it?")
-		           .setCancelable(false)
-		           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		               public void onClick(final DialogInterface dialog, final int id) {
-		                   startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-		               }
-		           })
-//		           .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//		               public void onClick(final DialogInterface dialog, final int id) {
-//		                    dialog.cancel();
-//		               }
-//		           })
-		           ;
-		    gpsDialogAlert = null;
-		    gpsDialogAlert = builder.create();
-		    gpsDialogAlert.show();
+			if(gpsDialogAlert != null && gpsDialogAlert.isShowing()){
+		    }
+			else{
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			    builder.setMessage("The app needs active GPS connection. Enable it from Settings.")
+			           .setCancelable(false)
+			           .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
+			               public void onClick(final DialogInterface dialog, final int id) {
+			                   startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			               }
+			           })
+	//		           .setNegativeButton("No", new DialogInterface.OnClickListener() {
+	//		               public void onClick(final DialogInterface dialog, final int id) {
+	//		                    dialog.cancel();
+	//		               }
+	//		           })
+			           ;
+			    gpsDialogAlert = null;
+			    gpsDialogAlert = builder.create();
+			    gpsDialogAlert.show();
+			}
 		}
+		else{
+			if(gpsDialogAlert != null && gpsDialogAlert.isShowing()){
+				gpsDialogAlert.dismiss();
+		    }
 		}
 	}
 	
@@ -2641,6 +2662,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		inviteFriendText.setText(resources.getString(R.string.invite_friends));
 		bookingsText.setText(resources.getString(R.string.rides));
 		aboutText.setText(resources.getString(R.string.about));
+		supportText.setText(resources.getString(R.string.support));
 		sosText.setText(resources.getString(R.string.sos));
 		languagePrefrencesText.setText(resources.getString(R.string.language_preferences));
 		logoutText.setText(resources.getString(R.string.logout));
@@ -4701,6 +4723,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 										new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
 										
+										stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+										
 										driverScreenMode = DriverScreenMode.D_INITIAL;
 										switchDriverScreen(driverScreenMode);
 										
@@ -4934,7 +4958,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			waitTime = decimalFormatWait.format(waitMinutes);
 			
-			double totalDistanceInKm = totalDistance/1000.0;
+			double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 			
 			params.put("access_token", Data.userData.accessToken);
 			params.put("customer_id", Data.dCustomerId);
@@ -4951,7 +4975,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Log.i("engagement_id", "=" + Data.dEngagementId);
 			Log.i("latitude", "="+Data.latitude);
 			Log.i("longitude", "="+Data.longitude);
-			Log.i("distance_travelled", "="+(totalDistance / 1000.0));
+			Log.i("distance_travelled", "="+decimalFormat.format(totalDistanceInKm));
 			Log.i("wait_time", "="+waitTime);
 			Log.i("drop_location_address", "="+address);
 			

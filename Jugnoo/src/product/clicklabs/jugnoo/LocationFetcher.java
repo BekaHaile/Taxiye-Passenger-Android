@@ -37,11 +37,11 @@ public class LocationFetcher {
 				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
 			}
 			else{
-				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-					gpsListener = new MyLocationListener();
-					provider = LocationManager.GPS_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
-				}
+//				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+//					gpsListener = new MyLocationListener();
+//					provider = LocationManager.GPS_PROVIDER;
+//					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
+//				}
 			}
 		}
 		else if(whichProvider == 1){
