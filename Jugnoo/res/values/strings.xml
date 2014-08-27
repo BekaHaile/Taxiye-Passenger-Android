@@ -80,6 +80,7 @@
 	<string name="update">Update</string>
 	
 	<string name="driver_mode">Driver Mode</string>
+	<string name="driver_type">Driver Type</string>
 	<string name="invite_friends">Invite Friends</string>
 	<string name="about">About</string>
 	<string name="support">Support</string>

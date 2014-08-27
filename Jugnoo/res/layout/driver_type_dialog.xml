@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:orientation="vertical"
+    android:splitMotionEvents="false" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="30px"
+        android:background="@drawable/dialog_background_color"
+        android:splitMotionEvents="false" >
+
+        <LinearLayout
+            android:id="@+id/rl1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60px"
+            android:orientation="vertical"
+            android:paddingBottom="60px"
+            android:splitMotionEvents="false" >
+
+            <TextView
+                android:id="@+id/textHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:text="@string/driver_type"
+                android:textColor="@color/blue_btn"
+                android:textSize="50px" />
+
+            <ListView
+                android:id="@+id/driverTypeList"
+                android:layout_width="match_parent"
+                android:layout_height="250px" 
+                android:layout_marginLeft="40px"
+                android:layout_marginRight="40px"
+                android:layout_marginTop="20px"
+                android:splitMotionEvents="false"
+                android:dividerHeight="0px"
+                android:divider="@color/transparent"
+                
+                >
+            </ListView>
+
+            <Button
+                android:id="@+id/btnConfirm"
+                android:layout_width="247px"
+                android:layout_height="83px"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40px"
+                android:background="@drawable/blue_btn_selector"
+                android:gravity="center"
+                android:text="@string/done"
+                android:textColor="@drawable/white_color_selector"
+                android:textSize="@dimen/button_text_size" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/crossbtn"
+            android:layout_width="62px"
+            android:layout_height="62px"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="1px"
+            android:layout_marginTop="2px"
+            android:background="@drawable/blue_btn_selector"
+            android:singleLine="true"
+            android:tag="mwar"
+            android:text="X"
+            android:textColor="@drawable/white_color_selector"
+            android:textSize="40px" />
+    </RelativeLayout>
+
+</FrameLayout>

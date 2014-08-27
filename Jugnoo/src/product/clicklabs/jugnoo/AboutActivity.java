@@ -36,35 +36,6 @@ public class AboutActivity extends Activity{
 		about3Text = (TextView) findViewById(R.id.about3Text); about3Text.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
-		String s1 = "Jugnoo";
-		String s2 = " आप प्रदान में मदद करता है a friendly and ";
-		String s3 = "affordable";
-		String s4 = " ride within the ";
-		String s5 = "Chandigarh";
-		String s6 = " tricity area.";
-		String s10 = "\nआप एक अनुकूल सवारी के लिए उन्हें मिलता है जब दरें सस्ती है, और निश्चित रूप से एक अच्छा सौदा कर रहे हैं.";
-		
-		
-		
-		
-		Spannable span1 = new SpannableString(s1);
-		span1.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, span1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
-		Spannable span3 = new SpannableString(s3);
-		span3.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, span3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
-		Spannable span5 = new SpannableString(s5);
-		span5.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, span5.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
-		about1Text.setText("");
-		
-		about1Text.append(span1);
-		about1Text.append(s2);
-		about1Text.append(span3);
-		about1Text.append(s4);
-		about1Text.append(span5);
-		about1Text.append(s6);
-		about1Text.append(s10);
 		
 		String str1 = getResources().getString(R.string.about_1_text);
 		

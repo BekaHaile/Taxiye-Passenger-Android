@@ -1289,6 +1289,30 @@
                         android:src="@drawable/on"
                         android:tag="mwar" />
                 </RelativeLayout>
+                
+                 <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="3px"
+                    android:background="@drawable/menu_divider" />
+
+                <RelativeLayout
+                    android:id="@+id/driverTypeRl"
+                    android:layout_width="match_parent"
+                    android:layout_height="84px"
+                    android:background="@drawable/menu_item_selector"
+                    android:splitMotionEvents="false" >
+
+                    <TextView
+                        android:id="@+id/driverTypeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="42px"
+                        android:text="@string/driver_type"
+                        android:textColor="@color/white"
+                        android:textSize="34px" />
+                </RelativeLayout>
+                
 
                 <ImageView
                     android:layout_width="match_parent"

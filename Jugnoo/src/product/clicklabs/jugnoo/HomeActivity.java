@@ -135,6 +135,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView driverModeText;
 	ImageView driverModeToggle;
 	
+	RelativeLayout driverTypeRl;
+	TextView driverTypeText;
+	
 	RelativeLayout inviteFriendRl;
 	TextView inviteFriendText;
 	
@@ -426,6 +429,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverModeRl = (RelativeLayout) findViewById(R.id.driverModeRl);
 		driverModeText = (TextView) findViewById(R.id.driverModeText); driverModeText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverModeToggle = (ImageView) findViewById(R.id.driverModeToggle);
+		
+		driverTypeRl = (RelativeLayout) findViewById(R.id.driverTypeRl);
+		driverTypeText = (TextView) findViewById(R.id.driverTypeText); driverTypeText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		inviteFriendRl = (RelativeLayout) findViewById(R.id.inviteFriendRl);
 		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText); inviteFriendText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -812,6 +818,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		});
 		
 		
+		driverTypeRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//TODO Driver type dialog
+			}
+		});
+		
 		
 		inviteFriendRl.setOnClickListener(new View.OnClickListener() {
 			
@@ -842,7 +856,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				//TODO support@jugnoo.in
 				Intent email = new Intent(Intent.ACTION_SEND);
 				email.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@jugnoo.in" });
 				email.putExtra(Intent.EXTRA_SUBJECT, "Jugnoo Support");
@@ -2659,6 +2672,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Resources resources = getResources();
 		
 		driverModeText.setText(resources.getString(R.string.driver_mode));
+		driverTypeText.setText(resources.getString(R.string.driver_type));
 		inviteFriendText.setText(resources.getString(R.string.invite_friends));
 		bookingsText.setText(resources.getString(R.string.rides));
 		aboutText.setText(resources.getString(R.string.about));
