@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="580px"
-    android:layout_height="wrap_content"
+    android:layout_width="720px"
+    android:layout_height="110px"
     android:orientation="vertical"
         android:splitMotionEvents="false"
      >
@@ -19,9 +19,9 @@
 
         <TextView
             android:id="@+id/driverTypeName"
-            android:layout_width="460px"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Driver Type"
+            android:text="Driver type"
             android:textColor="@color/bg_grey_opaque"
             android:textSize="36px"
             android:layout_centerVertical="true"
@@ -38,7 +38,14 @@
             android:src="@drawable/check_off"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10px"
+            android:layout_marginRight="20px"
+            />
+        
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/favorite_div"
+            android:layout_alignParentBottom="true"
             />
         
     </RelativeLayout>

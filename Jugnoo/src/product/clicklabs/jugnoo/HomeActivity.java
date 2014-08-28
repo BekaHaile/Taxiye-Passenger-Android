@@ -103,6 +103,7 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -803,17 +804,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				
 				Log.e("userMode","="+userMode);
-				
-				
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 					changeDriverModeAsync(HomeActivity.this, 0);
 				}
 				else if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 					changeDriverModeAsync(HomeActivity.this, 1);
 				}
-				
 			}
 		});
 		
@@ -823,7 +820,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				//TODO Driver type dialog
-				new DialogPopup().driverListPopup(HomeActivity.this);
+				startActivity(new Intent(HomeActivity.this, DriverTypeActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
@@ -3749,14 +3747,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	 				Log.i("map cleared", "GetDistanceTImeAddress");
 					map.clear();
 					for(int i=0; i<Data.driverInfos.size(); i++){
-						DriverInfo driverInfo = Data.driverInfos.get(i);
-						MarkerOptions markerOptions = new MarkerOptions();
-						markerOptions.title("driver shown to customer");
-						markerOptions.snippet(""+driverInfo.userId);
-						markerOptions.position(driverInfo.latLng);
-						markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
-						
-						map.addMarker(markerOptions);
+						addDriverMarkerForCustomer(Data.driverInfos.get(i));
 					}
 					
 				}
@@ -3834,6 +3825,25 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    
 	}
 	
+	
+	
+	public void addDriverMarkerForCustomer(DriverInfo driverInfo){
+		MarkerOptions markerOptions = new MarkerOptions();
+		markerOptions.title("driver shown to customer");
+		markerOptions.snippet(""+driverInfo.userId);
+		markerOptions.position(driverInfo.latLng);
+		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
+		
+		map.addMarker(markerOptions);
+		
+		CircleOptions circleOptions = new CircleOptions();
+		circleOptions.center(driverInfo.latLng);
+		circleOptions.fillColor(Color.argb(20, 0, 0, 255));
+		circleOptions.radius(5000);
+		circleOptions.strokeWidth(0);
+		map.addCircle(circleOptions);
+		
+	}
 	
 
 	
