@@ -168,6 +168,22 @@ class LanguageInfo{
 }
 
 
+class DriverType{
+	
+	String driverTypeId, driverTypeName;
+	boolean selected;
+	
+	public DriverType(String driverTypeId, String driverTypeName){
+		this.driverTypeId = driverTypeId;
+		this.driverTypeName = driverTypeName;
+		this.selected = false;
+	}
+	
+}
+
+
+
+
 enum PassengerScreenMode{
 	P_INITIAL, P_ASSIGNING, P_SEARCH, P_REQUEST_FINAL, P_IN_RIDE, P_RIDE_END
 }

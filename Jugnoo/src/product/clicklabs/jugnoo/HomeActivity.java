@@ -823,6 +823,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				//TODO Driver type dialog
+				new DialogPopup().driverListPopup(HomeActivity.this);
 			}
 		});
 		
@@ -6813,7 +6814,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 		
 		
-		//TODO debug code confirm popup
 		public void confirmDebugPasswordPopup(final Activity activity){
 
 			try {
@@ -7078,6 +7078,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		}
 		
+		
+		
+		
+
 		
 		
 		
