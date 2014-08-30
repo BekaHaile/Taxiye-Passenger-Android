@@ -21,8 +21,10 @@ import rmn.androidscreenlibrary.ASSL;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
@@ -135,6 +137,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout driverModeRl;
 	TextView driverModeText;
 	ImageView driverModeToggle;
+	
+	RelativeLayout jugnooONRl;
+	TextView jugnooONText;
+	ImageView jugnooONToggle;
 	
 	RelativeLayout driverTypeRl;
 	TextView driverTypeText;
@@ -355,7 +361,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	static UserMode userMode;
 	
+	static JugnooDriverMode jugnooDriverMode;
+	static ExceptionalDriver exceptionalDriver;
+	
 	static DriverScreenMode driverScreenMode;
+	
+	
 	
 	
 	GetDistanceTimeAddress getDistanceTimeAddress;
@@ -386,6 +397,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final long LOCATION_UPDATE_TIME_PERIOD = 10000;
 	public static final double MAX_DISPLACEMENT_THRESHOLD = 200;
+	public static final long SERVICE_RESTART_TIMER = 4 * 60 * 1000;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -430,6 +443,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverModeRl = (RelativeLayout) findViewById(R.id.driverModeRl);
 		driverModeText = (TextView) findViewById(R.id.driverModeText); driverModeText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverModeToggle = (ImageView) findViewById(R.id.driverModeToggle);
+		
+		jugnooONRl = (RelativeLayout) findViewById(R.id.jugnooONRl);
+		jugnooONText = (TextView) findViewById(R.id.jugnooONText); jugnooONText.setTypeface(Data.regularFont(getApplicationContext()));
+		jugnooONToggle = (ImageView) findViewById(R.id.jugnooONToggle);
 		
 		driverTypeRl = (RelativeLayout) findViewById(R.id.driverTypeRl);
 		driverTypeText = (TextView) findViewById(R.id.driverTypeText); driverTypeText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -815,13 +832,32 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		});
 		
 		
+		//TODO jugnoo off
+		jugnooONToggle.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.e("userMode","="+userMode);
+				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+					if(jugnooDriverMode == JugnooDriverMode.ON){
+						jugnooDriverMode = JugnooDriverMode.OFF;
+						changeJugnooON(jugnooDriverMode);
+					}
+					else{
+						jugnooDriverMode = JugnooDriverMode.ON;
+						changeJugnooON(jugnooDriverMode);
+					}
+				}
+			}
+		});
+		
+		
 		driverTypeRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				//TODO Driver type dialog
-				startActivity(new Intent(HomeActivity.this, DriverTypeActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//				startActivity(new Intent(HomeActivity.this, DriverTypeActivity.class));
+//				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
@@ -905,7 +941,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				if(passengerScreenMode == PassengerScreenMode.P_INITIAL || driverScreenMode == DriverScreenMode.D_INITIAL){
-					GCMIntentService.clearNotifications(HomeActivity.this);
 					logoutPopup(HomeActivity.this);
 				}
 				else{
@@ -1739,6 +1774,118 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    
 		
 		
+		Database2 database2 = new Database2(HomeActivity.this);
+		String jugnooOn = database2.getJugnooOn();
+		database2.close();
+		
+		if("on".equalsIgnoreCase(jugnooOn)){
+			jugnooDriverMode = JugnooDriverMode.ON;
+		}
+		else{
+			jugnooDriverMode = JugnooDriverMode.OFF;
+		}
+		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+			changeJugnooON(jugnooDriverMode);
+		}
+		
+		
+		changeExceptionalDriverUI();
+		
+	}
+	
+	
+	Handler jugnooDriverOnHandler;
+	Runnable jugnooDriverOnRunnable;
+	
+	public void changeJugnooON(JugnooDriverMode mode){
+		
+		try{
+			if(jugnooDriverOnHandler != null && jugnooDriverOnRunnable != null){
+				jugnooDriverOnHandler.removeCallbacks(jugnooDriverOnRunnable);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		Database2 database2 = new Database2(HomeActivity.this);
+		
+		if(mode == JugnooDriverMode.ON){
+			jugnooDriverMode = JugnooDriverMode.ON;
+			jugnooONToggle.setImageResource(R.drawable.on);
+			database2.updateJugnooOn("on");
+			
+			if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
+				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+			}
+			
+			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
+			restartService.setPackage(getPackageName());
+			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
+			AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+			alarmService.cancel(restartServicePI);
+			
+		}
+		else{
+			jugnooDriverMode = JugnooDriverMode.OFF;
+			jugnooONToggle.setImageResource(R.drawable.off);
+			database2.updateJugnooOn("off");
+			
+			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+			
+			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
+			restartService.setPackage(getPackageName());
+			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
+			AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+			alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + SERVICE_RESTART_TIMER, restartServicePI);
+			
+			
+			jugnooDriverOnHandler = null;
+			jugnooDriverOnRunnable = null;
+			
+			jugnooDriverOnHandler = new Handler();
+			jugnooDriverOnRunnable = new Runnable() {
+				
+				@Override
+				public void run() {
+					changeJugnooONUI(JugnooDriverMode.ON);
+				}
+			};
+			jugnooDriverOnHandler.postDelayed(jugnooDriverOnRunnable, SERVICE_RESTART_TIMER);
+			
+		}
+		
+		database2.close();
+		
+		
+	}
+	
+	
+	public void changeExceptionalDriverUI(){
+		
+		if(exceptionalDriver == ExceptionalDriver.YES){
+			jugnooONRl.setVisibility(View.VISIBLE);
+			driverModeRl.setVisibility(View.GONE);
+			logoutRl.setVisibility(View.GONE);
+		}
+		else{
+			jugnooONRl.setVisibility(View.GONE);
+			driverModeRl.setVisibility(View.VISIBLE);
+			logoutRl.setVisibility(View.VISIBLE);
+		}
+		
+	}
+	
+	
+	
+	public void changeJugnooONUI(JugnooDriverMode mode){
+		if(mode == JugnooDriverMode.ON){
+			jugnooDriverMode = JugnooDriverMode.ON;
+			jugnooONToggle.setImageResource(R.drawable.on);
+		}
+		else{
+			jugnooDriverMode = JugnooDriverMode.OFF;
+			jugnooONToggle.setImageResource(R.drawable.off);
+		}
 	}
 	
 	
@@ -1812,7 +1959,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverMainLayout.setVisibility(View.VISIBLE);
 				
 				favBtn.setVisibility(View.GONE);
-				
 				
 				break;
 			
@@ -2671,6 +2817,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Resources resources = getResources();
 		
 		driverModeText.setText(resources.getString(R.string.driver_mode));
+		jugnooONText.setText(resources.getString(R.string.jugnoo_on));
 		driverTypeText.setText(resources.getString(R.string.driver_type));
 		inviteFriendText.setText(resources.getString(R.string.invite_friends));
 		bookingsText.setText(resources.getString(R.string.rides));
@@ -4313,6 +4460,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									else if(1 == flag){
 										makeMeDriverPopup(activity, errorMessage);
 									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
 								}
 								else{
 									
@@ -4344,6 +4494,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									
 									showAllRideRequests();
+									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -5587,6 +5738,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
 									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
 //									
 //									int flag = jObj.getInt("flag");	
 //									String errorMessage = jObj.getString("error");
@@ -5611,7 +5765,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										Log.v("Logout", "Error"+e);	
 									}
 									
-									
+									GCMIntentService.clearNotifications(HomeActivity.this);
 									
 									Data.clearDataOnLogout(HomeActivity.this);
 									

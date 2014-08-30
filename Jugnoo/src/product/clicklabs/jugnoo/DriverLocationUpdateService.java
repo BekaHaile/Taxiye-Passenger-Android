@@ -42,7 +42,7 @@ public class DriverLocationUpdateService extends Service {
 	public DriverLocationUpdateService() {
 		Log.e("DriverLocationUpdateService"," instance created");
 		
-		lastLocation = new LatLng(30.7900, 76.7800);
+		lastLocation = new LatLng(0, 0);
 		stop = false;
 		noUpdate = true;
 		count = 0; 
@@ -67,6 +67,13 @@ public class DriverLocationUpdateService extends Service {
     	//For time consuming an long tasks you can launch a new thread here...
        
         try{
+        	
+        	Log.i("Driver location update started", "=======");
+        	
+        	Database2 database2 = new Database2(this);
+        	database2.updateJugnooOn("on");
+        	database2.close();
+        	
         	
         	String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_DRIVER_SERVICE = "sp_driver_service";
         	SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
@@ -106,16 +113,22 @@ public class DriverLocationUpdateService extends Service {
     
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-    	Log.e("onTaskRemoved","="+rootIntent);
-        Intent restartService = new Intent(getApplicationContext(),
-                this.getClass());
-        restartService.setPackage(getPackageName());
-        PendingIntent restartServicePI = PendingIntent.getService(
-                getApplicationContext(), 1, restartService,
-                PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() +1000, restartServicePI);
-
+    	try {
+    		Database2 database2 = new Database2(this);
+    		String jugnooOn = database2.getJugnooOn();
+    		database2.close();
+    		Log.e("onTaskRemoved jugnooOn =","="+jugnooOn);
+    		if("on".equalsIgnoreCase(jugnooOn)){
+    			Log.e("onTaskRemoved","="+rootIntent);
+    			Intent restartService = new Intent(getApplicationContext(), this.getClass());
+    			restartService.setPackage(getPackageName());
+    			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
+    			AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+    			alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() +1000, restartServicePI);
+    		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
     
     
@@ -203,7 +216,7 @@ public class DriverLocationUpdateService extends Service {
     		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
     		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
     		
-    		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+    		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
     		
     		
     		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -407,10 +420,10 @@ public class DriverLocationUpdateService extends Service {
 
 	    			Log.e("locationFetcher.location=", "="+locationFetcher.location);
 	    			if(locationFetcher.location != null){
-					Log.i("locationFetcher not null","inside");
-	    			LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-	    			Log.e("currentLatLng = ", "="+currentLatLng);
-	    			Log.e("lastLocation = ", "="+lastLocation);
+	    				Log.i("locationFetcher not null","inside");
+	    				LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
+	    				Log.e("currentLatLng = ", "="+currentLatLng);
+	    				Log.e("lastLocation = ", "="+lastLocation);
 	    			
 //	    			if(distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= serverUpdateDistance){
 		    			

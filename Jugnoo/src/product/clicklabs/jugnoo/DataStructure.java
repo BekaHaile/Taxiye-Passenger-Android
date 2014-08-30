@@ -192,6 +192,10 @@ enum UserMode{
 	PASSENGER, DRIVER
 }
 
+enum JugnooDriverMode{
+	ON, OFF
+}
+
 enum DriverScreenMode{
 	D_INITIAL, D_REQUEST_ACCEPT, D_START_RIDE, D_IN_RIDE , D_RIDE_END
 }
@@ -201,5 +205,8 @@ enum AppMode{
 	NORMAL, DEBUG
 }
 
+enum ExceptionalDriver{
+	YES, NO
+}
 
 

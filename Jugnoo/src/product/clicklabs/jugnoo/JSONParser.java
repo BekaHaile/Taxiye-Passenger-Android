@@ -51,8 +51,6 @@ public class JSONParser {
 		
 		
 		
-		
-		
 //		{
 //		    "user_data": {
 //		        "access_token": "c274d8d70e77850511df24a6255dab48",
@@ -84,7 +82,6 @@ public class JSONParser {
 			HomeActivity.farePerKm = 10;
 			HomeActivity.fareThresholdDistance = 2;
 		}
-		
 		
 		
 	}
@@ -228,6 +225,7 @@ public class JSONParser {
 				
 			}
 			
+			fetchExceptionalDriver(accessToken);
 			
 		}
 		else{
@@ -349,9 +347,49 @@ public class JSONParser {
 			
 		}
 		
+		
+		
+		
+		
 	}
 	
 	
+	
+	
+	public void fetchExceptionalDriver(String accessToken){
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+		
+		SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+		String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/exceptional_user", nameValuePairs);
+		
+		try{
+			//{"exceptional_user":1} show Jugnoo ON
+			//{"exceptional_user":0} show driver mode ON
+			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+				Log.e("timeout","=");
+				HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+			}
+			else{
+				try{
+					JSONObject jObject = new JSONObject(result);
+					int excepInt = jObject.getInt("exceptional_user");
+					if(1 == excepInt){
+						HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
+					}
+					else{
+						HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+					HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	
 	public void clearSPData(final Context context){

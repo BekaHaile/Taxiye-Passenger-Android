@@ -71,6 +71,7 @@
 	
 	
 	<string name="driver_mode">चालक मोड</string>
+	<string name="jugnoo_on">जुगनू चालू</string>
 	<string name="driver_type">चालक के प्रकार</string>
 	<string name="ride_type">सवारी के प्रकार</string>
 	<string name="invite_friends">मित्रों को आमंत्रित करें</string>

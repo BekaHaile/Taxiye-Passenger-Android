@@ -23,6 +23,8 @@ public class Database2 {																	// class for handling database related 
 	private static final String TABLE_DRIVER_SERVICE_FAST = "table_driver_service_fast";
 	private static final String FAST = "fast";
 	
+	private static final String TABLE_JUGNOO_ON = "table_jugnoo_on";
+	private static final String JUGNOO_ON = "jugnoo_on";
 	
 	/**
 	 * Creates and opens database for the application use 
@@ -37,22 +39,33 @@ public class Database2 {																	// class for handling database related 
 
 		@Override
 		public void onCreate(SQLiteDatabase database) {
-			/****************************************** CREATING ALL THE TABLES *****************************************************/
-			database.execSQL(" CREATE TABLE " + TABLE_DRIVER_SERVICE_FAST + " ("
-					+ FAST + " TEXT" + ");");
-			
+			Database2.createAllTables(database);
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 			onCreate(database);
 		}
+		
 
 	}
 
+	
+	public static void createAllTables(SQLiteDatabase database){
+		/****************************************** CREATING ALL THE TABLES *****************************************************/
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_FAST + " ("
+				+ FAST + " TEXT" + ");");
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_JUGNOO_ON + " ("
+				+ JUGNOO_ON + " TEXT" + ");");
+	}
+	
+	
+	
 	public Database2(Context context) {
 		dbHelper = new DbHelper(context);
 		database = dbHelper.getWritableDatabase();
+		createAllTables(database);
 	}
 
 	public void close() {
@@ -104,6 +117,57 @@ public class Database2 {																	// class for handling database related 
 	
 	
 	
+	public String getJugnooOn() {
+		try {
+			String[] columns = new String[] { Database2.JUGNOO_ON };
+			Cursor cursor = database.query(Database2.TABLE_JUGNOO_ON, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				String choice = cursor.getString(cursor.getColumnIndex(Database2.JUGNOO_ON));
+				return choice;
+			} else {
+				return "on";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "e="+e.toString();
+		}
+	}
+	
+	
+	
+	public void updateJugnooOn(String choice) {
+		try {
+			String[] columns = new String[] { Database2.JUGNOO_ON };
+			Cursor cursor = database.query(Database2.TABLE_JUGNOO_ON, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				deleteJugnooOn();
+				insertJugnooOn(choice);
+			} else {
+				insertJugnooOn(choice);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertJugnooOn(String choice){
+		try{
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.JUGNOO_ON, choice);
+			database.insert(Database2.TABLE_JUGNOO_ON, null, contentValues);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
+	}
+	
+	public void deleteJugnooOn(){
+		try{
+			database.delete(Database2.TABLE_JUGNOO_ON, null, null);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
+	}
 	
 	
 }
