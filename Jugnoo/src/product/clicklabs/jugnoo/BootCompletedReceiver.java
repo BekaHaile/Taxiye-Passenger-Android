@@ -14,13 +14,19 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent arg1) {
         Log.w(TAG, "starting service...");
         
-        String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_DRIVER_SERVICE = "sp_driver_service";
-    	SharedPreferences preferences = context.getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
-    	String driverService = preferences.getString(SP_DRIVER_SERVICE, "off");
-    	
-    	if("on".equalsIgnoreCase(driverService)){
+        Database2 database2 = new Database2(context);
+        String serviceRestartOnReboot = database2.getDriverServiceRestartOnReboot();
+        
+    	if("yes".equalsIgnoreCase(serviceRestartOnReboot)){
     		context.startService(new Intent(context, DriverLocationUpdateService.class));
     	}
+    	else{
+    		String jugnooOn = database2.getJugnooOn();
+    		if("on".equalsIgnoreCase(jugnooOn)){
+    			context.startService(new Intent(context, DriverLocationUpdateService.class));
+    		}
+    	}
     	
+    	database2.close();
     }
 }

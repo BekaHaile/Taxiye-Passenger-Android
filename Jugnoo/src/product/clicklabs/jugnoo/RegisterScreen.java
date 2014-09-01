@@ -362,7 +362,7 @@ public class RegisterScreen extends Activity{
 		super.onResume();
 		
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(RegisterScreen.this, 2);
+			Data.locationFetcher = new LocationFetcher(RegisterScreen.this, 1000);
 		}
 		
 	}

@@ -71,15 +71,12 @@ public class DriverLocationUpdateService extends Service {
         	Log.i("Driver location update started", "=======");
         	
         	Database2 database2 = new Database2(this);
+        	
+            database2.updateDriverServiceRestartOnReboot("yes");
+            
         	database2.updateJugnooOn("on");
-        	database2.close();
         	
-        	
-        	String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_DRIVER_SERVICE = "sp_driver_service";
-        	SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
-        	SharedPreferences.Editor editor = preferences.edit();
-			editor.putString(SP_DRIVER_SERVICE, "on");
-			editor.commit();
+            database2.close();
         	
         	if(sendDriverLocationToServer != null){
         		sendDriverLocationToServer.cancel(true);
@@ -163,11 +160,10 @@ public class DriverLocationUpdateService extends Service {
 			gpsLocationFetcher = null;
 		}
         
-        String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_DRIVER_SERVICE = "sp_driver_service";
-    	SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
-    	SharedPreferences.Editor editor = preferences.edit();
-		editor.putString(SP_DRIVER_SERVICE, "off");
-		editor.commit();
+        Database2 database2 = new Database2(DriverLocationUpdateService.this);
+        database2.updateDriverServiceRestartOnReboot("no");
+        database2.close();    
+        
     }
     
     
@@ -257,14 +253,10 @@ public class DriverLocationUpdateService extends Service {
     		if(fast.equalsIgnoreCase("no")){
     			serverUpdateTimePeriod = 60000;
     			if(locationFetcher == null){
-    				locationFetcher = new LocationFetcher(DriverLocationUpdateService.this, 0);
+    				locationFetcher = new LocationFetcher(DriverLocationUpdateService.this, 30000);
     			}
     			else{
-    				if(locationFetcher.whichProvider != 0){
-    					locationFetcher.destroy();
-    					locationFetcher = null;
-    					locationFetcher = new LocationFetcher(DriverLocationUpdateService.this, 0);
-    				}
+    				
     			}
     			
     			if(gpsLocationFetcher != null){
@@ -299,6 +291,10 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected String doInBackground(String... params) {
     		
+    		try{
+				Thread.sleep(1000);
+			} catch(Exception e){
+			}
     		
     		if("".equalsIgnoreCase(deviceToken)){
     			
@@ -491,12 +487,6 @@ public class DriverLocationUpdateService extends Service {
     		
         	
     		
-    		if(locationFetcher != null){
-    			if(locationFetcher.provider.equalsIgnoreCase("no")){
-    				locationFetcher.destroy();
-    				locationFetcher = null;
-    			}
-    		}
     		
     		if(serverUpdateTimePeriod != 20000){
 		        sendDriverLocationToServer = null;

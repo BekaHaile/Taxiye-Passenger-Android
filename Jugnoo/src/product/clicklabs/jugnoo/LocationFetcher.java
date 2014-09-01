@@ -1,113 +1,223 @@
 package product.clicklabs.jugnoo;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 
-public class LocationFetcher {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.LatLng;
 
+public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallbacks,GooglePlayServicesClient.OnConnectionFailedListener,LocationListener {
+
+	
+	private final String TAG = this.getClass().getSimpleName();
+	private LocationClient locationclient;
+	private LocationRequest locationrequest;
 	public Location location; // location
+	private AlertDialog alertDialog;
 	
-	public MyLocationListener gpsListener, networkListener;
+	private long requestInterval;
+	private Context context;
 	
-	public LocationManager locationManager;
-	public int whichProvider;
-	public String provider;
+	private String LOCATION_SP = "location_sp",
+			LOCATION_LAT = "location_lat",
+			LOCATION_LNG = "location_lng";
+	
 	
 	/**
-	 * Initialize location fetcher object with selected listeners
-	 * @param context
-	 * @param whichProvider 0 for network, 1 for GPS, 2 for both
+	 * Constructor for initializing LocationFetcher class' object
+	 * @param context application context
 	 */
-	public LocationFetcher(Context context, int whichProvider){
-		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-		this.whichProvider = whichProvider;
-		this.provider = "no";
-		
-		if(whichProvider == 0){
-			if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-				networkListener = new MyLocationListener();
-				provider = LocationManager.NETWORK_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, networkListener);
+	public LocationFetcher(Context context, long requestInterval){
+		this.context = context;
+		this.requestInterval = requestInterval;
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+		if(resp == ConnectionResult.SUCCESS){														// google play services working
+			if(isLocationEnabled(context)){															// location fetching enabled
+				locationclient = new LocationClient(context, this, this);
+				locationclient.connect();
 			}
-			else{
-				if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-					gpsListener = new MyLocationListener();
-					provider = LocationManager.GPS_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, gpsListener);
-				}
+			else{																					// location disabled
+//				showSettingsAlert(context);
 			}
 		}
-		else if(whichProvider == 1){
-			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-				gpsListener = new MyLocationListener();
-				provider = LocationManager.GPS_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, gpsListener);
-			}
-			else{
-				if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-					networkListener = new MyLocationListener();
-					provider = LocationManager.NETWORK_PROVIDER;
-					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, networkListener);
-				}
-			}
+		else{																						// google play services not working
+			Log.e("Google Play Service Error ","="+resp);
+//			showGooglePlayErrorAlert(context);
+			//https://play.google.com/store/apps/details?id=com.google.android.gms
 		}
-		else if(whichProvider == 2) {
-			if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-				gpsListener = new MyLocationListener();
-				provider = LocationManager.GPS_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, gpsListener);
-			}
-			if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-				networkListener = new MyLocationListener();
-				provider = LocationManager.NETWORK_PROVIDER;
-				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, networkListener);
-			}
-		}
-			
-		
-		
 	}
 	
 	
+	public void saveLatLngToSP(double latitude, double longitude){
+		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString(LOCATION_LAT, ""+latitude);
+		editor.putString(LOCATION_LNG, ""+longitude);
+		editor.commit();
+	}
 	
-	/**
-	 * Checks if location fetching through network is enabled in device or not
-	 * @param context application context
-	 * @return true if network location provider is enabled else false
-	 */
-	public boolean isNetworkLocationEnabled(Context context) {
-		try{
-			ContentResolver contentResolver = context.getContentResolver();
-			boolean netStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.NETWORK_PROVIDER);
-			return netStatus;
-		} catch(Exception e){
+	
+	public double getSavedLatFromSP(){
+		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
+		String latitude = preferences.getString(LOCATION_LAT, ""+ 0);
+		return Double.parseDouble(latitude);
+	}
+	
+	public double getSavedLngFromSP(){
+		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
+		String longitude = preferences.getString(LOCATION_LNG, ""+0);
+		return Double.parseDouble(longitude);
+	}
+	
+	
+	public boolean isConnected(){
+		if(locationclient != null){
+			return locationclient.isConnected();
+		}
+		return false;
+	}
+	
+	double distance(LatLng start, LatLng end) {
+		try {
+			Location location1 = new Location("locationA");
+			location1.setLatitude(start.latitude);
+			location1.setLongitude(start.longitude);
+			Location location2 = new Location("locationA");
+			location2.setLatitude(end.latitude);
+			location2.setLongitude(end.longitude);
+
+			double distance = location1.distanceTo(location2);
+			return distance;
+		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
 		}
+		return 0;
+
 	}
 	
 	/**
-	 * Checks if location fetching through gps is enabled in device or not
+	 * Checks if location fetching is enabled in device or not
 	 * @param context application context
-	 * @return true if gps location provider is enabled else false
+	 * @return true if any location provider is enabled else false
 	 */
-	public boolean isGPSLocationEnabled(Context context) {
+	public boolean isLocationEnabled(Context context) {
 		try{
 			ContentResolver contentResolver = context.getContentResolver();
 			boolean gpsStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
-			return gpsStatus;
+			boolean netStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.NETWORK_PROVIDER);
+			return gpsStatus || netStatus;
 		} catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}
 	}
+	
+	
+	
+	/**
+	 * Function to show settings alert dialog
+	 * On pressing Settings button will lauch Settings Options
+	 * */
+	public void showGooglePlayErrorAlert(final Activity mContext){
+		try{
+			if(alertDialog != null && alertDialog.isShowing()){
+				alertDialog.dismiss();
+			}
+				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
+		   	 
+		        // Setting Dialog Title
+		        alertDialogPrepare.setTitle("Google Play Services Error");
+		        alertDialogPrepare.setCancelable(false);
+		 
+		        // Setting Dialog Message
+		        alertDialogPrepare.setMessage("Google Play services not found or outdated. Install Google Play Services?");
+		 
+		        // On pressing Settings button
+		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog,int which) {
+		            	dialog.dismiss();
+		            	Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(Uri.parse("market://details?id=com.google.android.gms"));
+						mContext.startActivity(intent);
+		            }
+		        });
+		 
+		        // on pressing cancel button
+		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		            	dialog.dismiss();
+		            	mContext.finish();
+		            }
+		        });
+		 
+		        alertDialog = alertDialogPrepare.create();
+		        
+		        // Showing Alert Message
+		        alertDialog.show();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Function to show settings alert dialog
+	 * On pressing Settings button will lauch Settings Options
+	 * */
+	public void showSettingsAlert(final Activity mContext){
+		try{
+			if(alertDialog != null && alertDialog.isShowing()){
+				alertDialog.dismiss();
+			}
+				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
+		   	 
+		        // Setting Dialog Title
+		        alertDialogPrepare.setTitle("Loaction Settings");
+		        alertDialogPrepare.setCancelable(false);
+		 
+		        // Setting Dialog Message
+		        alertDialogPrepare.setMessage("Location is not enabled. Do you want to go to settings menu?");
+		 
+		        // On pressing Settings button
+		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog,int which) {
+		            	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+		            	mContext.startActivity(intent);
+		            	dialog.dismiss();
+		            }
+		        });
+		 
+		        // on pressing cancel button
+		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		            dialog.dismiss();
+		            }
+		        });
+		 
+		        alertDialog = alertDialogPrepare.create();
+		        
+		        // Showing Alert Message
+		        alertDialog.show();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 	
@@ -120,10 +230,8 @@ public class LocationFetcher {
 			if(location != null){
 				return location.getLatitude();
 			}
-		} catch(Exception e){
-			Log.e("e","="+e.toString());
-		}
-		return 0;
+		} catch(Exception e){Log.e("e","="+e.toString());}
+		return getSavedLatFromSP();
 	}
 	
 	/**
@@ -134,136 +242,58 @@ public class LocationFetcher {
 			if(location != null){
 				return location.getLongitude();
 			}
-		} catch(Exception e){
-			Log.e("e","="+e.toString());
-		}
-		return 0;
+		} catch(Exception e){Log.e("e","="+e.toString());}
+		return getSavedLngFromSP();
 	}
 	
 	
 
+	
 	
 	public void destroy(){
 		try{
-			Log.e("location","destroy gps");
-			locationManager.removeUpdates(gpsListener);
+			Log.e("location","destroy");
+			if(locationclient!=null){
+				locationclient.removeLocationUpdates(this);
+				locationclient.disconnect();
+			}
 		}catch(Exception e){
 			Log.e("e", "="+e.toString());
 		}
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		Log.e(TAG, "onConnected");
+		locationrequest = LocationRequest.create();
+		locationrequest.setInterval(requestInterval);
+		locationclient.requestLocationUpdates(locationrequest, LocationFetcher.this);
+	}
+
+	@Override
+	public void onDisconnected() {
+		Log.e(TAG, "onDisconnected");
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		Log.e(TAG, "onConnectionFailed");
+
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
 		try{
-			Log.e("location","destroy network");
-			locationManager.removeUpdates(networkListener);
+			if(location!=null){
+				this.location = location;
+				saveLatLngToSP(location.getLatitude(), location.getLongitude());
+				Log.e("**************"+TAG, "Location Request :" + location);
+			}
 		}catch(Exception e){
-			Log.e("e", "="+e.toString());
+			e.printStackTrace();
 		}
+
 	}
 
-	
-	
 
-	class MyLocationListener implements LocationListener {
-
-		public void onLocationChanged(Location loc) {
-			if(isBetterLocation(loc, LocationFetcher.this.location)){
-				Log.e("**************************************", "Location changed "+loc);
-				LocationFetcher.this.location = loc;
-				LocationFetcher.this.provider = loc.getProvider();
-			}
-		}
-
-		public void onProviderDisabled(String provider) {
-			LocationFetcher.this.provider = "no";
-		}
-
-		public void onProviderEnabled(String provider) {
-			LocationFetcher.this.provider = provider;
-		}
-
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-		
-		
-		/**
-		 * Checks if the new location is accurate enough or not
-		 * @param location latest location
-		 * @param currentBestLocation last accurate location
-		 * @return
-		 */
-		protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-			int OLD_LOCATION_THRESHOLD = 1000 * 60 * 2;
-			if (currentBestLocation == null) {
-				// A new location is always better than no location
-				if(location.getAccuracy() < 100){
-					return true;
-				}
-				else{
-					return false;
-				}
-			}
-
-			// Check whether the new location fix is newer or older
-			long timeDelta = location.getTime() - currentBestLocation.getTime();
-			boolean isSignificantlyNewer = timeDelta > OLD_LOCATION_THRESHOLD;
-			boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
-			boolean isNewer = timeDelta > 0;
-
-//			Log.i("timeDelta", "="+timeDelta);
-			
-			
-
-			// Check whether the new location fix is more or less accurate
-			int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-			boolean isLessAccurate = accuracyDelta > 0;
-			boolean isMoreAccurate = accuracyDelta < 0;
-			boolean isSignificantlyLessAccurate = accuracyDelta > 100;
-
-			if(location.getAccuracy() > 100){
-				return false;
-			}
-			
-			// If it's been more than two minutes since the current location, use
-			// the new location because the user has likely moved
-			if (isSignificantlyNewer) {
-				return true;
-				// If the new location is more than two minutes older, it must
-				// be worse
-			} else if (isSignificantlyOlder) {
-				return false;
-			}
-			
-//			Log.i("accuracyDelta", "="+accuracyDelta);
-
-			// Check if the old and new location are from the same provider
-			boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
-
-			// Determine location quality using a combination of timeliness and
-			// accuracy
-			if (isMoreAccurate) {
-				return true;
-			} else if (isNewer && !isLessAccurate) {
-				return true;
-			} else if (isNewer && !isSignificantlyLessAccurate
-					&& isFromSameProvider) {
-				return true;
-			}
-			
-			
-			
-			return false;
-		}
-
-		/** Checks whether two providers are the same */
-		private boolean isSameProvider(String provider1, String provider2) {
-			if (provider1 == null) {
-				return provider2 == null;
-			}
-			return provider1.equals(provider2);
-		}
-		
-	}
-
-	
-	
-	
-	
 }

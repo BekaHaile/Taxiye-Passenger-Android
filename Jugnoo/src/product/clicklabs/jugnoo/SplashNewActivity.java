@@ -1,9 +1,15 @@
 package product.clicklabs.jugnoo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.DriverLocationUpdateService.GPSLocationFetcher;
+import product.clicklabs.jugnoo.DriverLocationUpdateService.GPSLocationFetcher.MyLocationListener;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -14,6 +20,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -96,7 +105,7 @@ public class SplashNewActivity extends Activity{
 		setContentView(R.layout.splash_new);
 		
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 2);
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
 		}
 		
 		loginDataFetched = false;
@@ -161,7 +170,7 @@ public class SplashNewActivity extends Activity{
 	@Override
 	protected void onResume() {
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 2);
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
 		}
 		
 		super.onResume();
@@ -336,20 +345,33 @@ public class SplashNewActivity extends Activity{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				noNetFirstTime = false;
-				Log.e("regid.isEmpty()", "+"+regid.isEmpty());
-				if (regid.isEmpty()){
-			        registerInBackground();
-			    }
-			    else{
-			    	accessTokenLogin(SplashNewActivity.this);
-			    }
-			}
-			else{
-				new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
-				noNetFirstTime = true;
-			}
+			new Handler().postDelayed(new Runnable() {
+				
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+								noNetFirstTime = false;
+								Log.e("regid.isEmpty()", "+"+regid.isEmpty());
+								if (regid.isEmpty()){
+							        registerInBackground();
+							    }
+							    else{
+							    	accessTokenLogin(SplashNewActivity.this);
+							    }
+							}
+							else{
+								new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+								noNetFirstTime = true;
+							}
+						}
+					});
+				}
+			}, 2000);
+			
+			
 		}
 
 		@Override
@@ -372,6 +394,10 @@ public class SplashNewActivity extends Activity{
 				
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
+				if(Data.locationFetcher != null){
+					Data.latitude = Data.locationFetcher.getLatitude();
+					Data.longitude = Data.locationFetcher.getLongitude();
+				}
 				
 				RequestParams params = new RequestParams();
 				params.put("access_token", accessToken);
@@ -381,6 +407,8 @@ public class SplashNewActivity extends Activity{
 				params.put("app_version", ""+Data.appVersion);
 				params.put("device_type", "0");
 
+				new SingleLocationSender(SplashNewActivity.this, accessToken, Data.deviceToken, Data.SERVER_URL);
+				
 				Log.i("accessToken", "=" + accessToken);
 				Log.i("device_token", Data.deviceToken);
 				Log.i("latitude", ""+Data.latitude);
@@ -505,21 +533,6 @@ public class SplashNewActivity extends Activity{
 				noNetSecondTime = false;
 				
 				loginDataFetched = true;
-				
-				if(Data.locationFetcher != null){
-					if(Data.locationFetcher.location != null){
-						Data.latitude = Data.locationFetcher.getLatitude();
-						Data.longitude = Data.locationFetcher.getLongitude();
-					}
-					else{
-						Data.latitude = 0;
-						Data.longitude = 0;
-					}
-				}
-				else{
-					Data.latitude = 0;
-					Data.longitude = 0;
-				}
 				
 				
 //				DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -649,5 +662,84 @@ public class SplashNewActivity extends Activity{
         ASSL.closeActivity(relative);
         System.gc();
 	}
+	
+	
+    class SingleLocationSender {
+
+    	public SingleLocationListener listener;
+    	public LocationManager locationManager;
+    	public Location location;
+    	public String accessToken, deviceToken, SERVER_URL;
+    	
+    	/**
+    	 * Initialize location fetcher object with selected listeners
+    	 * @param context
+    	 */
+		public SingleLocationSender(Context context, String accessToken, String deviceToken, String SERVER_URL) {
+			this.accessToken = accessToken;
+			this.deviceToken = deviceToken;
+			this.SERVER_URL = SERVER_URL;
+			locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+			if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+				listener = new SingleLocationListener();
+				locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, listener, null);
+			}
+		}
+    	
+    	public void destroy(){
+    		try{
+    			locationManager.removeUpdates(listener);
+    		}catch(Exception e){
+    		}
+    	}
+
+    	
+
+    	class SingleLocationListener implements LocationListener {
+
+    		public void onLocationChanged(Location loc) {
+    			Log.e("************************************** custom", "Location changed "+loc);
+    			SingleLocationSender.this.location = loc;
+    			sendLocationToServer(location);
+    		}
+
+    		public void onProviderDisabled(String provider) {
+    		}
+
+    		public void onProviderEnabled(String provider) {
+    		}
+
+    		public void onStatusChanged(String provider, int status, Bundle extras) {
+    		}
+    	
+    	public void sendLocationToServer(final Location location){
+    		new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+						nameValuePairs.add(new BasicNameValuePair("latitude", ""+location.getLatitude()));
+						nameValuePairs.add(new BasicNameValuePair("longitude", ""+location.getLongitude()));
+						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
+						
+						Log.e("nameValuePairs in fast","="+nameValuePairs);
+						
+						SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+						String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
+						
+						Log.e("SingleLocationListener    result","="+result);
+						
+						simpleJSONParser = null;
+						nameValuePairs = null;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+    	}
+    }
+    }
+	
 	
 }

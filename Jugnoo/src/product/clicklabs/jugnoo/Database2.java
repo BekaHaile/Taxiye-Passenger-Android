@@ -19,12 +19,18 @@ public class Database2 {																	// class for handling database related 
 
 	SQLiteDatabase database;
 
+	private static final String TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT = "table_driver_service_restart_on_reboot";
+	private static final String DRIVER_SERVICE_RESTART_ON_REBOOT = "driver_service_restart_on_reboot";
 	
 	private static final String TABLE_DRIVER_SERVICE_FAST = "table_driver_service_fast";
 	private static final String FAST = "fast";
 	
 	private static final String TABLE_JUGNOO_ON = "table_jugnoo_on";
 	private static final String JUGNOO_ON = "jugnoo_on";
+	
+	private static final String TABLE_JUGNOO_RESTART_TIME = "table_jugnoo_restart_time";
+	private static final String JUGNOO_RESTART_TIME = "jugnoo_restart_time";
+	
 	
 	/**
 	 * Creates and opens database for the application use 
@@ -53,6 +59,9 @@ public class Database2 {																	// class for handling database related 
 	
 	public static void createAllTables(SQLiteDatabase database){
 		/****************************************** CREATING ALL THE TABLES *****************************************************/
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT + " ("
+				+ DRIVER_SERVICE_RESTART_ON_REBOOT + " TEXT" + ");");
+		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_FAST + " ("
 				+ FAST + " TEXT" + ");");
 		
@@ -72,6 +81,57 @@ public class Database2 {																	// class for handling database related 
 		dbHelper.close();
 		System.gc();
 	}
+	
+	
+	public String getDriverServiceRestartOnReboot() {
+		try {
+			String[] columns = new String[] { Database2.DRIVER_SERVICE_RESTART_ON_REBOOT };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				String choice = cursor.getString(cursor.getColumnIndex(Database2.DRIVER_SERVICE_RESTART_ON_REBOOT));
+				return choice;
+			} else {
+				return "yes";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "yes";
+		}
+	}
+	
+	public void updateDriverServiceRestartOnReboot(String choice) {
+		String[] columns = new String[] { Database2.DRIVER_SERVICE_RESTART_ON_REBOOT };
+		Cursor cursor = database.query(Database2.TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT, columns, null, null, null, null, null);
+		if (cursor.getCount() > 0) {
+			deleteDriverServiceRestartOnReboot();
+			insertDriverServiceRestartOnReboot(choice);
+		} else {
+			insertDriverServiceRestartOnReboot(choice);
+		}
+	}
+	
+	public void insertDriverServiceRestartOnReboot(String choice){
+		try{
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.DRIVER_SERVICE_RESTART_ON_REBOOT, choice);
+			database.insert(Database2.TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT, null, contentValues);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
+	}
+	
+	public void deleteDriverServiceRestartOnReboot(){
+		try{
+			database.delete(Database2.TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT, null, null);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
+	}
+	
+	
+	
+	
 	
 	
 	public String getDriverServiceFast() {

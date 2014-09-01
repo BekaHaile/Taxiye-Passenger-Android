@@ -397,7 +397,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final long LOCATION_UPDATE_TIME_PERIOD = 10000;
 	public static final double MAX_DISPLACEMENT_THRESHOLD = 200;
-	public static final long SERVICE_RESTART_TIMER = 4 * 60 * 1000;
+	public static final long SERVICE_RESTART_TIMER = 10 * 60 * 1000;
 	
 	
 	@Override
@@ -1361,6 +1361,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 //				GCMIntentService.clearNotifications(HomeActivity.this);
 //				driverRejectRideAsync(HomeActivity.this, 1);
+				
 			}
 		});
 		
