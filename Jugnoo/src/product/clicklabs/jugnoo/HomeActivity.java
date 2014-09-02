@@ -1853,6 +1853,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			};
 			jugnooDriverOnHandler.postDelayed(jugnooDriverOnRunnable, SERVICE_RESTART_TIMER);
 			
+			database2.updateDriverServiceRestartOnReboot("yes");
+			
 		}
 		
 		database2.close();
@@ -3984,16 +3986,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		map.addMarker(markerOptions);
 		
-		CircleOptions circleOptions = new CircleOptions();
-		circleOptions.center(driverInfo.latLng);
-		circleOptions.fillColor(Color.argb(20, 0, 0, 255));
-		circleOptions.radius(5000);
-		circleOptions.strokeWidth(0);
-		map.addCircle(circleOptions);
+//		CircleOptions circleOptions = new CircleOptions();
+//		circleOptions.center(driverInfo.latLng);
+//		circleOptions.fillColor(Color.argb(20, 0, 0, 255));
+//		circleOptions.radius(5000);
+//		circleOptions.strokeWidth(0);
+//		map.addCircle(circleOptions);
 		
 	}
 	
 
+	
 	
 	
 	

@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.Settings;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -287,7 +288,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			if(location!=null){
 				this.location = location;
 				saveLatLngToSP(location.getLatitude(), location.getLongitude());
-				Log.e("**************"+TAG, "Location Request :" + location);
+				Log.e("**************"+TAG + " = " + System.currentTimeMillis(), "Location Request :" + location);
 			}
 		}catch(Exception e){
 			e.printStackTrace();

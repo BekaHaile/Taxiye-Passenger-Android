@@ -21,10 +21,10 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     		context.startService(new Intent(context, DriverLocationUpdateService.class));
     	}
     	else{
-    		String jugnooOn = database2.getJugnooOn();
-    		if("on".equalsIgnoreCase(jugnooOn)){
-    			context.startService(new Intent(context, DriverLocationUpdateService.class));
-    		}
+//    		String jugnooOn = database2.getJugnooOn();
+//    		if("off".equalsIgnoreCase(jugnooOn)){
+//    			context.startService(new Intent(context, DriverLocationUpdateService.class));
+//    		}
     	}
     	
     	database2.close();

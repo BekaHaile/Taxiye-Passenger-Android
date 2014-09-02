@@ -20,6 +20,8 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -203,9 +205,23 @@ public class DriverLocationUpdateService extends Service {
     	
     	long serverUpdateTimePeriod = 60000;
     	
+    	PowerManager powerManager;
+    	WakeLock wakeLock;
+    	
+    	public SendDriverLocationToServer(){
+    		powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+			wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag");
+    	}
+    	
+    	
     	@Override
     	protected void onPreExecute() {
     		super.onPreExecute();
+    		
+    		if ((wakeLock != null) &&           // we have a WakeLock
+    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
+    			wakeLock.acquire();
+    		}
     		
     		//TODO Toggle live to trial
     		String DEV_SERVER_URL = "http://54.81.229.172:8000";
@@ -281,6 +297,8 @@ public class DriverLocationUpdateService extends Service {
     		
     		Log.i("serverUpdateTimePeriod", "="+serverUpdateTimePeriod);
 			
+    		wakeLock.release();
+    		
     	}
     	
     	
@@ -298,6 +316,11 @@ public class DriverLocationUpdateService extends Service {
     		
     		if("".equalsIgnoreCase(deviceToken)){
     			
+    			if ((wakeLock != null) &&           // we have a WakeLock
+        			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
+        			wakeLock.acquire();
+        		}
+    			
     			try {
 					GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(DriverLocationUpdateService.this);
 					String regid = gcm.register(GOOGLE_PROJECT_ID);
@@ -311,6 +334,7 @@ public class DriverLocationUpdateService extends Service {
 					e.printStackTrace();
 				}
     			
+    			wakeLock.release();
     		}
     		
     		
@@ -329,6 +353,12 @@ public class DriverLocationUpdateService extends Service {
 					Log.i("noUpdate","inside");
 					if(locationFetcher != null){
 						if(locationFetcher.location != null){
+							
+							if ((wakeLock != null) &&           // we have a WakeLock
+				    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
+				    			wakeLock.acquire();
+				    		}
+							
 							lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
 		    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 			    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
@@ -348,52 +378,8 @@ public class DriverLocationUpdateService extends Service {
 			    			nameValuePairs = null;
 		    				
 		    				noUpdate = false;
-						}
-						else{
-							if(locationFetcher.location != null){
-								lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-			    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-				    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
-				    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude)); //device_token
-				    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-				    			
-				    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
-				    			
-				    			
-				    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-				    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
-				    			
-				    			Log.e("result","="+result);
-				    			
-				    			simpleJSONParser = null;
-				    			nameValuePairs = null;
-			    				
-			    				noUpdate = false;
-							}
-							else{
-								if(locationFetcher.location != null){
-									lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-				    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-					    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
-					    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude)); //device_token
-					    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-					    			
-					    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
-					    			
-					    			
-					    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-					    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
-					    			
-					    			Log.e("result","="+result);
-					    			
-					    			simpleJSONParser = null;
-					    			nameValuePairs = null;
-				    				
-				    				noUpdate = false;
-								}
-							}
+		    				
+		    				wakeLock.release();
 						}
 					}
 				}
@@ -416,6 +402,15 @@ public class DriverLocationUpdateService extends Service {
 
 	    			Log.e("locationFetcher.location=", "="+locationFetcher.location);
 	    			if(locationFetcher.location != null){
+	    				
+	    				if ((wakeLock != null) &&           // we have a WakeLock
+			    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
+			    			wakeLock.acquire();
+			    		}
+	    				else{
+	    					Log.d("wakeLock", "already acquired");
+	    				}
+	    				
 	    				Log.i("locationFetcher not null","inside");
 	    				LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
 	    				Log.e("currentLatLng = ", "="+currentLatLng);
@@ -449,6 +444,7 @@ public class DriverLocationUpdateService extends Service {
 		    			else{
 		    				return result;
 		    			}
+		    			wakeLock.release();
 	    			}
 	    			}
 	    			
@@ -457,6 +453,9 @@ public class DriverLocationUpdateService extends Service {
     		}
     		} catch(Exception e){
     			e.printStackTrace();
+    			if(wakeLock.isHeld()){
+    				wakeLock.release();
+    			}
     		}
     		return "";
     	}
@@ -466,6 +465,11 @@ public class DriverLocationUpdateService extends Service {
     	@Override
     	protected void onPostExecute(String result) {
     		super.onPostExecute(result);
+    		
+    		if ((wakeLock != null) &&           // we have a WakeLock
+    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
+    			wakeLock.acquire();
+    		}
     		
     		if(!"".equalsIgnoreCase(result)){
     			try{
@@ -485,7 +489,7 @@ public class DriverLocationUpdateService extends Service {
     		}
     		
     		
-        	
+    		wakeLock.release();
     		
     		
     		if(serverUpdateTimePeriod != 20000){
@@ -510,6 +514,9 @@ public class DriverLocationUpdateService extends Service {
     	public Location location;
     	public String accessToken, deviceToken, SERVER_URL;
     	
+    	PowerManager powerManager;
+    	WakeLock wakeLock;
+    	
     	/**
     	 * Initialize location fetcher object with selected listeners
     	 * @param context
@@ -528,6 +535,8 @@ public class DriverLocationUpdateService extends Service {
 					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 15000, 0, networkListener);
 				}
 			}
+			powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+			wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
 		}
     	
     	public void destroy(){
@@ -644,6 +653,12 @@ public class DriverLocationUpdateService extends Service {
 				@Override
 				public void run() {
 					try {
+						
+						if ((wakeLock != null) &&           // we have a WakeLock
+			    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
+			    			wakeLock.acquire();
+			    		}
+						
 						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 						nameValuePairs.add(new BasicNameValuePair("latitude", ""+location.getLatitude()));
@@ -659,8 +674,14 @@ public class DriverLocationUpdateService extends Service {
 						
 						simpleJSONParser = null;
 						nameValuePairs = null;
+						
+						wakeLock.release();
+						
 					} catch (Exception e) {
 						e.printStackTrace();
+						if(wakeLock.isHeld()){
+		    				wakeLock.release();
+		    			}
 					}
 				}
 			}).start();
