@@ -141,8 +141,6 @@ public class SimpleJSONParser {
 
             sb.append("\n\nCONTENT:\n\n").append(out.toString()); 
 
-            Log.i("response", out.toString());
-
             return out.toString();
             
         } catch (Exception e) {

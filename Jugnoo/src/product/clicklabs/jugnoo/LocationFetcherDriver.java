@@ -24,7 +24,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.model.LatLng;
 
-public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallbacks,GooglePlayServicesClient.OnConnectionFailedListener,LocationListener {
+public class LocationFetcherDriver implements GooglePlayServicesClient.ConnectionCallbacks,GooglePlayServicesClient.OnConnectionFailedListener,LocationListener {
 
 	
 	private final String TAG = this.getClass().getSimpleName();
@@ -36,18 +36,18 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	private long requestInterval;
 	private Context context;
 	
-	private String LOCATION_SP = "location_sp",
+	private String LOCATION_SP = "location_sp_driver",
 			LOCATION_LAT = "location_lat",
 			LOCATION_LNG = "location_lng";
 	
-	private static final int LOCATION_PI = 6978;
+	private static final int LOCATION_PI_ID = 6978;
 	
 	
 	/**
 	 * Constructor for initializing LocationFetcher class' object
 	 * @param context application context
 	 */
-	public LocationFetcher(Context context, long requestInterval){
+	public LocationFetcherDriver(Context context, long requestInterval){
 		this.context = context;
 		this.requestInterval = requestInterval;
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
@@ -277,12 +277,12 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		locationrequest.setInterval(requestInterval);
 		locationrequest.setFastestInterval(requestInterval);
 		
-//		Intent intent = new Intent(context, LocationReceiver.class);
-//		PendingIntent locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//		locationclient.requestLocationUpdates(locationrequest, locationIntent);
+		Intent intent = new Intent(context, LocationReceiver.class);
+		PendingIntent locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		locationclient.requestLocationUpdates(locationrequest, locationIntent);
 		
 		
-		locationclient.requestLocationUpdates(locationrequest, LocationFetcher.this);
+//		locationclient.requestLocationUpdates(locationrequest, LocationFetcherDriver.this);
 	}
 
 	@Override
@@ -302,7 +302,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			if(location!=null){
 				this.location = location;
 				saveLatLngToSP(location.getLatitude(), location.getLongitude());
-				Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
+//				Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
 			}
 		}catch(Exception e){
 			e.printStackTrace();

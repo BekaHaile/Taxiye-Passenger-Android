@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -17,36 +16,41 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationUpdateService extends Service {
 	
 	static int count = 0; 
 	
-	LocationFetcher locationFetcher;
+	LocationFetcherDriver locationFetcherDriver;
 	GPSLocationFetcher gpsLocationFetcher;
 	
-	SendDriverLocationToServer sendDriverLocationToServer;
-	
-	boolean stop = false;
 	
 	LatLng lastLocation;
-	boolean noUpdate = true;
+	
+	
+	String GOOGLE_PROJECT_ID = "506849624961", 
+			PROPERTY_REG_ID = "registration_id", 
+			PROPERTY_APP_VERSION = "appVersion";
+	
+	String SHARED_PREF_NAME = "myPref";
+	String SP_ACCESS_TOKEN_KEY = "access_token";
+	
+	String accessToken = "", deviceToken = "", SERVER_URL = "";
+	
+	long serverUpdateTimePeriod = 60000;
+	
 	
 	public DriverLocationUpdateService() {
 		Log.e("DriverLocationUpdateService"," instance created");
 		
 		lastLocation = new LatLng(0, 0);
-		stop = false;
-		noUpdate = true;
 		count = 0; 
 		
 	}
@@ -73,21 +77,81 @@ public class DriverLocationUpdateService extends Service {
         	Log.i("Driver location update started", "=======");
         	
         	Database2 database2 = new Database2(this);
-        	
             database2.updateDriverServiceRestartOnReboot("yes");
-            
         	database2.updateJugnooOn("on");
         	
+        	
+        	
+        	//TODO Toggle live to trial
+    		String DEV_SERVER_URL = "http://54.81.229.172:8000";
+    		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
+    		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
+    		
+    		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+    		
+    		
+    		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
+    		
+    		SERVER_URL = DEFAULT_SERVER_URL;
+    		
+    		SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
+    		String link = preferences.getString(SP_SERVER_LINK, DEFAULT_SERVER_URL);
+    		
+    		if(link.equalsIgnoreCase(TRIAL_SERVER_URL)){
+    			SERVER_URL = TRIAL_SERVER_URL;
+    		}
+    		else if(link.equalsIgnoreCase(LIVE_SERVER_URL)){
+    			SERVER_URL = LIVE_SERVER_URL;
+    		}
+    		else if(link.equalsIgnoreCase(DEV_SERVER_URL)){
+    			SERVER_URL = DEV_SERVER_URL;
+    		}
+    		
+    		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+    		accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
+    		
+    		deviceToken = DriverLocationUpdateService.this.getSharedPreferences(SplashLogin.class.getSimpleName(), 
+    				Context.MODE_PRIVATE).getString("registration_id", "");
+        	
+    		database2.insertDriverLocData(accessToken, deviceToken, SERVER_URL);
+    		database2.close();
+    		
+    		
+    		
+    		
+    		database2 = new Database2(this);
+    		
+    		String fast = database2.getDriverServiceFast();
+    		
+    		Log.e("fast", "="+fast);
+    		
+    		if(fast.equalsIgnoreCase("no")){
+    			serverUpdateTimePeriod = 60000;
+    			if(locationFetcherDriver != null){
+    				locationFetcherDriver.destroy();
+    				locationFetcherDriver = null;
+    			}
+    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+    			if(gpsLocationFetcher != null){
+    				gpsLocationFetcher.destroy();
+    				gpsLocationFetcher = null;
+    			}
+    		}
+    		else{
+    			serverUpdateTimePeriod = 15000;
+    			if(locationFetcherDriver != null){
+    				locationFetcherDriver.destroy();
+    				locationFetcherDriver = null;
+    			}
+    			if(gpsLocationFetcher != null){
+    				gpsLocationFetcher.destroy();
+    				gpsLocationFetcher = null;
+    			}
+    			gpsLocationFetcher = new GPSLocationFetcher(DriverLocationUpdateService.this, accessToken, deviceToken, SERVER_URL, serverUpdateTimePeriod);
+    		}
+        	
+    		
             database2.close();
-        	
-        	if(sendDriverLocationToServer != null){
-        		sendDriverLocationToServer.cancel(true);
-        		sendDriverLocationToServer = null;
-        	}
-        	
-        	sendDriverLocationToServer = new SendDriverLocationToServer();
-        	sendDriverLocationToServer.execute();
-        	
         	
         } catch(Exception e){
         	e.printStackTrace();
@@ -147,15 +211,10 @@ public class DriverLocationUpdateService extends Service {
  
     @Override
     public void onDestroy() {
-    	stop = true;
     	Log.e("DriverLocationUpdateService onDestroy","=");
-        if(sendDriverLocationToServer != null){
-    		sendDriverLocationToServer.cancel(true);
-    		sendDriverLocationToServer = null;
-    	}
-        if(locationFetcher != null){
-        	locationFetcher.destroy();
-        	locationFetcher = null;
+        if(locationFetcherDriver != null){
+        	locationFetcherDriver.destroy();
+        	locationFetcherDriver = null;
         }
         if(gpsLocationFetcher != null){
 			gpsLocationFetcher.destroy();
@@ -192,316 +251,6 @@ public class DriverLocationUpdateService extends Service {
     
     
     
-    class SendDriverLocationToServer extends AsyncTask<String, Integer, String>{
-    	
-    	String GOOGLE_PROJECT_ID = "506849624961", 
-				PROPERTY_REG_ID = "registration_id", 
-				PROPERTY_APP_VERSION = "appVersion";
-		
-		String SHARED_PREF_NAME = "myPref";
-		String SP_ACCESS_TOKEN_KEY = "access_token";
-		
-		String accessToken = "", deviceToken = "", SERVER_URL = "";
-    	
-    	long serverUpdateTimePeriod = 60000;
-    	
-    	PowerManager powerManager;
-    	WakeLock wakeLock;
-    	
-    	public SendDriverLocationToServer(){
-    		powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag");
-    	}
-    	
-    	
-    	@Override
-    	protected void onPreExecute() {
-    		super.onPreExecute();
-    		
-    		if ((wakeLock != null) &&           // we have a WakeLock
-    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
-    			wakeLock.acquire();
-    		}
-    		
-    		//TODO Toggle live to trial
-    		String DEV_SERVER_URL = "http://54.81.229.172:8000";
-    		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
-    		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
-    		
-    		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
-    		
-    		
-    		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
-    		
-    		SERVER_URL = DEFAULT_SERVER_URL;
-    		
-    		SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
-    		String link = preferences.getString(SP_SERVER_LINK, DEFAULT_SERVER_URL);
-    		
-    		if(link.equalsIgnoreCase(TRIAL_SERVER_URL)){
-    			SERVER_URL = TRIAL_SERVER_URL;
-    		}
-    		else if(link.equalsIgnoreCase(LIVE_SERVER_URL)){
-    			SERVER_URL = LIVE_SERVER_URL;
-    		}
-    		else if(link.equalsIgnoreCase(DEV_SERVER_URL)){
-    			SERVER_URL = DEV_SERVER_URL;
-    		}
-    		
-    		
-    		
-    		
-    		
-    		
-    		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-    		accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
-    		
-    		deviceToken = DriverLocationUpdateService.this.getSharedPreferences(SplashLogin.class.getSimpleName(), 
-    				Context.MODE_PRIVATE).getString("registration_id", "");
-    		
-    		
-    		Database2 database2 = new Database2(DriverLocationUpdateService.this);
-    		String fast = database2.getDriverServiceFast();
-    		database2.close();
-    		
-    		Log.e("fast", "="+fast);
-    		
-    		if(fast.equalsIgnoreCase("no")){
-    			serverUpdateTimePeriod = 60000;
-    			if(locationFetcher == null){
-    				locationFetcher = new LocationFetcher(DriverLocationUpdateService.this, 30000);
-    			}
-    			else{
-    				
-    			}
-    			
-    			if(gpsLocationFetcher != null){
-    				gpsLocationFetcher.destroy();
-    				gpsLocationFetcher = null;
-    			}
-    			
-    		}
-    		else{
-    			serverUpdateTimePeriod = 20000;
-    			if(locationFetcher != null){
-    				locationFetcher.destroy();
-    				locationFetcher = null;
-    			}
-    			
-    			
-    			if(gpsLocationFetcher == null){
-    				gpsLocationFetcher = new GPSLocationFetcher(DriverLocationUpdateService.this, accessToken, deviceToken, SERVER_URL);
-    			}
-    			
-    		}
-    		
-    		Log.i("serverUpdateTimePeriod", "="+serverUpdateTimePeriod);
-			
-    		wakeLock.release();
-    		
-    	}
-    	
-    	
-    	
-    	
-    	
-    	
-    	@Override
-    	protected String doInBackground(String... params) {
-    		
-    		try{
-				Thread.sleep(1000);
-			} catch(Exception e){
-			}
-    		
-    		if("".equalsIgnoreCase(deviceToken)){
-    			
-    			if ((wakeLock != null) &&           // we have a WakeLock
-        			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
-        			wakeLock.acquire();
-        		}
-    			
-    			try {
-					GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(DriverLocationUpdateService.this);
-					String regid = gcm.register(GOOGLE_PROJECT_ID);
-					deviceToken = regid;
-					final SharedPreferences prefs = getSharedPreferences(SplashLogin.class.getSimpleName(), Context.MODE_PRIVATE);
-					SharedPreferences.Editor editor = prefs.edit();
-					editor.putString(PROPERTY_REG_ID, regid);
-					editor.putInt(PROPERTY_APP_VERSION, getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
-					editor.commit();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-    			
-    			wakeLock.release();
-    		}
-    		
-    		
-    		try{
-    			if(serverUpdateTimePeriod == 20000){
-//    				if(count > 0){
-//    	    			try{
-//    	    				Thread.sleep(serverUpdateTimePeriod);
-//    	    			} catch(Exception e){
-//    	    			}
-//        			}
-//    				return "no_empty";
-    			}
-    			else{
-    			if(noUpdate){
-					Log.i("noUpdate","inside");
-					if(locationFetcher != null){
-						if(locationFetcher.location != null){
-							
-							if ((wakeLock != null) &&           // we have a WakeLock
-				    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
-				    			wakeLock.acquire();
-				    		}
-							
-							lastLocation = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-		    				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-			    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+lastLocation.latitude));
-			    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+lastLocation.longitude)); //device_token
-			    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-			    			
-			    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
-			    			
-			    			
-			    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-			    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
-			    			
-			    			Log.e("result","="+result);
-			    			
-			    			simpleJSONParser = null;
-			    			nameValuePairs = null;
-		    				
-		    				noUpdate = false;
-		    				
-		    				wakeLock.release();
-						}
-					}
-				}
-    			
-    			
-
-    			
-    			
-    			if(count > 0){
-	    			try{
-	    				Thread.sleep(serverUpdateTimePeriod);
-	    			} catch(Exception e){
-	    			}
-    			}
-    			
-				
-    			if(!stop){
-    			
-	    		if(locationFetcher != null){
-
-	    			Log.e("locationFetcher.location=", "="+locationFetcher.location);
-	    			if(locationFetcher.location != null){
-	    				
-	    				if ((wakeLock != null) &&           // we have a WakeLock
-			    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
-			    			wakeLock.acquire();
-			    		}
-	    				else{
-	    					Log.d("wakeLock", "already acquired");
-	    				}
-	    				
-	    				Log.i("locationFetcher not null","inside");
-	    				LatLng currentLatLng = new LatLng(locationFetcher.getLatitude(), locationFetcher.getLongitude());
-	    				Log.e("currentLatLng = ", "="+currentLatLng);
-	    				Log.e("lastLocation = ", "="+lastLocation);
-	    			
-//	    			if(distance(DriverLocationUpdateService.this.lastLocation, currentLatLng) >= serverUpdateDistance){
-		    			
-	    				DriverLocationUpdateService.this.lastLocation = currentLatLng;
-	    				
-		    			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		    			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+currentLatLng.latitude));
-		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+currentLatLng.longitude));
-		    			nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-		    			
-		    			Log.e("nameValuePairs "+count,"="+nameValuePairs);
-		    			
-		    			
-		    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-		    			String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
-		    			
-		    			Log.e("result","="+result);
-		    			
-		    			simpleJSONParser = null;
-		    			nameValuePairs = null;
-		    			currentLatLng = null;
-		    			
-		    			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
-		    				
-		    			}
-		    			else{
-		    				return result;
-		    			}
-		    			wakeLock.release();
-	    			}
-	    			}
-	    			
-//	    		}
-    		}
-    		}
-    		} catch(Exception e){
-    			e.printStackTrace();
-    			if(wakeLock.isHeld()){
-    				wakeLock.release();
-    			}
-    		}
-    		return "";
-    	}
-    	
-    	
-    	
-    	@Override
-    	protected void onPostExecute(String result) {
-    		super.onPostExecute(result);
-    		
-    		if ((wakeLock != null) &&           // we have a WakeLock
-    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
-    			wakeLock.acquire();
-    		}
-    		
-    		if(!"".equalsIgnoreCase(result)){
-    			try{
-    				JSONObject jObj = new JSONObject(result);
-    				if(!jObj.isNull("error")){
-    					stopSelf();
-    				}
-    			} catch(Exception e){
-    				e.printStackTrace();
-    			}
-    			count++;
-        		noUpdate = false;
-    		}
-    		else{
-    			count = 0;
-        		noUpdate = true;
-    		}
-    		
-    		
-    		wakeLock.release();
-    		
-    		
-    		if(serverUpdateTimePeriod != 20000){
-		        sendDriverLocationToServer = null;
-		        sendDriverLocationToServer = new SendDriverLocationToServer();
-		        sendDriverLocationToServer.execute();
-    		}
-    		
-    	}
-    	
-    	
-    }
     
     
     
@@ -521,18 +270,18 @@ public class DriverLocationUpdateService extends Service {
     	 * Initialize location fetcher object with selected listeners
     	 * @param context
     	 */
-		public GPSLocationFetcher(Context context, String accessToken, String deviceToken, String SERVER_URL) {
+		public GPSLocationFetcher(Context context, String accessToken, String deviceToken, String SERVER_URL, long updatePeriod) {
 			this.accessToken = accessToken;
 			this.deviceToken = deviceToken;
 			this.SERVER_URL = SERVER_URL;
 			locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 			if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 				gpsListener = new MyLocationListener();
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, gpsListener);
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updatePeriod, 0, gpsListener);
 			} else {
 				if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 					networkListener = new MyLocationListener();
-					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 15000, 0, networkListener);
+					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updatePeriod, 0, networkListener);
 				}
 			}
 			powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);

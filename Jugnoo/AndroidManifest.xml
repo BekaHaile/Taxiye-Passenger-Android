@@ -51,6 +51,7 @@
         
         >
         
+        <receiver android:name=".LocationReceiver" />
         
         <receiver
             android:name="product.clicklabs.jugnoo.GcmBroadcastReceiver"

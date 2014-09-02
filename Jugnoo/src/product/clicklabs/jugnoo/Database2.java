@@ -28,8 +28,10 @@ public class Database2 {																	// class for handling database related 
 	private static final String TABLE_JUGNOO_ON = "table_jugnoo_on";
 	private static final String JUGNOO_ON = "jugnoo_on";
 	
-	private static final String TABLE_JUGNOO_RESTART_TIME = "table_jugnoo_restart_time";
-	private static final String JUGNOO_RESTART_TIME = "jugnoo_restart_time";
+	private static final String TABLE_DRIVER_LOC_DATA = "table_driver_loc_data";
+	private static final String DLD_ACCESS_TOKEN = "dld_access_token";
+	private static final String DLD_DEVICE_TOKEN = "dld_device_token";
+	private static final String DLD_SERVER_URL = "dld_server_url";
 	
 	
 	/**
@@ -67,6 +69,12 @@ public class Database2 {																	// class for handling database related 
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_JUGNOO_ON + " ("
 				+ JUGNOO_ON + " TEXT" + ");");
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_LOC_DATA + " ("
+				+ DLD_ACCESS_TOKEN + " TEXT, " 
+				+ DLD_DEVICE_TOKEN + " TEXT, " 
+				+ DLD_SERVER_URL + " TEXT" 
+				+ ");");
 	}
 	
 	
@@ -229,5 +237,53 @@ public class Database2 {																	// class for handling database related 
 		}
 	}
 	
+	
+	
+	
+	public void insertDriverLocData(String accessToken, String deviceToken, String serverUrl){
+		try{
+			deleteDriverLocData();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.DLD_ACCESS_TOKEN, accessToken);
+			contentValues.put(Database2.DLD_DEVICE_TOKEN, deviceToken);
+			contentValues.put(Database2.DLD_SERVER_URL, serverUrl);
+			database.insert(Database2.TABLE_DRIVER_LOC_DATA, null, contentValues);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
+	}
+	
+	public void deleteDriverLocData(){
+		try{
+			database.delete(Database2.TABLE_DRIVER_LOC_DATA, null, null);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
+	}
+	
+	
+	public String getDLDAccessToken() {
+		String[] columns = new String[] { Database2.DLD_ACCESS_TOKEN };
+		Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
+		cursor.moveToFirst();
+		String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_ACCESS_TOKEN));
+		return choice;
+	}
+	
+	public String getDLDDeviceToken() {
+		String[] columns = new String[] { Database2.DLD_DEVICE_TOKEN };
+		Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
+		cursor.moveToFirst();
+		String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_DEVICE_TOKEN));
+		return choice;
+	}
+	
+	public String getDLDServerUrl() {
+		String[] columns = new String[] { Database2.DLD_SERVER_URL };
+		Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
+		cursor.moveToFirst();
+		String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_SERVER_URL));
+		return choice;
+	}
 	
 }

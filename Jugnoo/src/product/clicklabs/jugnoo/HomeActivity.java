@@ -1068,7 +1068,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				customerCancelBeforePushReceive = true;
-				cancelCustomerRequestAsync(HomeActivity.this, 0, 0);
+				if(!Data.cEngagementId.equalsIgnoreCase("")){
+					cancelCustomerRequestAsync(HomeActivity.this, 0, 0);
+				}
 			}
 		});
 		
@@ -2057,6 +2059,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.GONE);
 				
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
 					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				}
@@ -2210,7 +2213,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				updateDriverServiceFast("no");
 				
 				cancelMapAnimateTimer();
-				
+
 				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
 					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				}
