@@ -103,7 +103,6 @@ public class DriverTypeActivity extends Activity{
 	
 	
 	public void onClickWhatsApp(String text) {
-
 		try {
 			Intent waIntent = new Intent(Intent.ACTION_SEND);
 			waIntent.setType("text/plain");
@@ -117,7 +116,6 @@ public class DriverTypeActivity extends Activity{
 			Toast.makeText(this, "WhatsApp not Installed", Toast.LENGTH_SHORT)
 					.show();
 		}
-
 	}
 	
 	

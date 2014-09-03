@@ -23,8 +23,9 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	private LocationClient locationclient;
 	private LocationRequest locationrequest;
 	public Location location; // location
+	private PendingIntent locationIntent;
 	
-	private long requestInterval;
+	private long requestInterval, fastestInterval;
 	private Context context;
 	
 	private static final int LOCATION_PI_ID = 6978;
@@ -34,9 +35,10 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	 * Constructor for initializing LocationFetcher class' object
 	 * @param context application context
 	 */
-	public LocationFetcherDriver(Context context, long requestInterval){
+	public LocationFetcherDriver(Context context, long requestInterval, long fastestInterval){
 		this.context = context;
 		this.requestInterval = requestInterval;
+		this.fastestInterval = fastestInterval;
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 		if(resp == ConnectionResult.SUCCESS){														// google play services working
 			if(isLocationEnabled(context)){															// location fetching enabled
@@ -86,6 +88,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 		try{
 			Log.e("location","destroy");
 			if(locationclient!=null){
+				locationIntent.cancel();
 				locationclient.disconnect();
 			}
 		}catch(Exception e){
@@ -99,11 +102,11 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 		
 		locationrequest = LocationRequest.create();
 		locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-		locationrequest.setFastestInterval(requestInterval/2);
+		locationrequest.setFastestInterval(fastestInterval);
 		locationrequest.setInterval(requestInterval);
 		
 		Intent intent = new Intent(context, LocationReceiver.class);
-		PendingIntent locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		locationclient.requestLocationUpdates(locationrequest, locationIntent);
 	}
 
