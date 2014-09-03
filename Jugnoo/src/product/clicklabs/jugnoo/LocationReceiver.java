@@ -24,7 +24,7 @@ public class LocationReceiver extends BroadcastReceiver {
 		wakeLock.acquire();
     	
         Location location = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
-        
+        Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
         Database2 database2 = new Database2(context);
         String accessToken = database2.getDLDAccessToken();
         String deviceToken = database2.getDLDDeviceToken();
@@ -32,7 +32,7 @@ public class LocationReceiver extends BroadcastReceiver {
         database2.close();
         
         sendLocationToServer(location, accessToken, deviceToken, serverUrl);
-        Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
+        
         
         wakeLock.release();
     }
@@ -49,12 +49,13 @@ public class LocationReceiver extends BroadcastReceiver {
 					nameValuePairs.add(new BasicNameValuePair("longitude", ""+location.getLongitude()));
 					nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 					
-					Log.e("nameValuePairs in fast","="+nameValuePairs);
+					Log.e("nameValuePairs in location pi reciever","="+nameValuePairs);
 					
 					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
 					String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/update_driver_location", nameValuePairs);
 					
 					Log.e("result","="+result);
+					Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + result);
 					
 					simpleJSONParser = null;
 					nameValuePairs = null;

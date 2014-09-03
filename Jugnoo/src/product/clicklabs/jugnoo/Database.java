@@ -52,19 +52,7 @@ public class Database {																	// class for handling database related a
 		@Override
 		public void onCreate(SQLiteDatabase database) {
 			/****************************************** CREATING ALL THE TABLES *****************************************************/
-
-			// table_email_suggestions
-			database.execSQL(" CREATE TABLE " + TABLE_EMAILS + " ("
-					+ EMAIL + " TEXT NOT NULL" + ");");
-
-			// table_previous_latlng
-			database.execSQL(" CREATE TABLE " + TABLE_PREVIOUS_PATH + " (" 
-					+ SLAT + " REAL NOT NULL" + ","
-					+ SLNG + " REAL NOT NULL" + ","
-					+ DLAT + " REAL NOT NULL" + ","
-					+ DLNG + " REAL NOT NULL" + ""
-					+ ");");
-
+			createAllTables(database);
 		}
 
 		@Override
@@ -73,10 +61,26 @@ public class Database {																	// class for handling database related a
 		}
 
 	}
+	
+	public static void createAllTables(SQLiteDatabase database){
+		// table_email_suggestions
+					database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_EMAILS + " ("
+							+ EMAIL + " TEXT NOT NULL" + ");");
+
+					// table_previous_latlng
+					database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_PREVIOUS_PATH + " (" 
+							+ SLAT + " REAL NOT NULL" + ","
+							+ SLNG + " REAL NOT NULL" + ","
+							+ DLAT + " REAL NOT NULL" + ","
+							+ DLNG + " REAL NOT NULL" + ""
+							+ ");");
+	}
+	
 
 	public Database(Context context) {
 		dbHelper = new DbHelper(context);
 		database = dbHelper.getWritableDatabase();
+		createAllTables(database);
 	}
 
 	public void close() {

@@ -40,8 +40,6 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			LOCATION_LAT = "location_lat",
 			LOCATION_LNG = "location_lng";
 	
-	private static final int LOCATION_PI = 6978;
-	
 	
 	/**
 	 * Constructor for initializing LocationFetcher class' object
@@ -274,13 +272,8 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		
 		locationrequest = LocationRequest.create();
 		locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-		locationrequest.setInterval(requestInterval);
 		locationrequest.setFastestInterval(requestInterval);
-		
-//		Intent intent = new Intent(context, LocationReceiver.class);
-//		PendingIntent locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//		locationclient.requestLocationUpdates(locationrequest, locationIntent);
-		
+		locationrequest.setInterval(requestInterval);
 		
 		locationclient.requestLocationUpdates(locationrequest, LocationFetcher.this);
 	}
@@ -302,7 +295,6 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			if(location!=null){
 				this.location = location;
 				saveLatLngToSP(location.getLatitude(), location.getLongitude());
-				Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
 			}
 		}catch(Exception e){
 			e.printStackTrace();

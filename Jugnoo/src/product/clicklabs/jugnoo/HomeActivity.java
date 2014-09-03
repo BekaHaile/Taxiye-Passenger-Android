@@ -837,7 +837,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				Log.e("userMode","="+userMode);
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 					if(jugnooDriverMode == JugnooDriverMode.ON){
 						jugnooDriverMode = JugnooDriverMode.OFF;
@@ -1835,6 +1834,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 			
+			
+			
 			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
 			restartService.setPackage(getPackageName());
 			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
@@ -1857,11 +1858,41 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			database2.updateDriverServiceRestartOnReboot("yes");
 			
+			sendNullLocationToServerForDriver();
+			
 		}
 		
 		database2.close();
 		
 		
+	}
+	
+	
+	public void sendNullLocationToServerForDriver(){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+					nameValuePairs.add(new BasicNameValuePair("latitude", "0"));
+					nameValuePairs.add(new BasicNameValuePair("longitude", "0"));
+					nameValuePairs.add(new BasicNameValuePair("device_token", Data.deviceToken));
+					
+					Log.e("nameValuePairs in sending null loc","="+nameValuePairs);
+					
+					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/update_driver_location", nameValuePairs);
+					
+					Log.e("result ","="+result);
+					
+					simpleJSONParser = null;
+					nameValuePairs = null;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 	
 	
@@ -2097,6 +2128,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			case D_START_RIDE:
 				
 				updateDriverServiceFast("yes");
+				
+				changeJugnooON(JugnooDriverMode.ON);
 
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
@@ -2818,7 +2851,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	//TODO Update texts 
 	public void updateTextViews(){
 		Resources resources = getResources();
 		
