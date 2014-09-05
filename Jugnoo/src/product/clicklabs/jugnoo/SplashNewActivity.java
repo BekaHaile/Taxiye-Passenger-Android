@@ -8,8 +8,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.DriverLocationUpdateService.GPSLocationFetcher;
-import product.clicklabs.jugnoo.DriverLocationUpdateService.GPSLocationFetcher.MyLocationListener;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;

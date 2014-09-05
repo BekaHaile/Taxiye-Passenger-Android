@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -21,6 +23,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -87,7 +90,7 @@ public class DriverLocationUpdateService extends Service {
     		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
     		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
     		
-    		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+    		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
     		
     		
     		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -131,7 +134,7 @@ public class DriverLocationUpdateService extends Service {
     				locationFetcherDriver.destroy();
     				locationFetcherDriver = null;
     			}
-    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod, 40000);
+    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod, 45000);
     			if(gpsLocationFetcher != null){
     				gpsLocationFetcher.destroy();
     				gpsLocationFetcher = null;
@@ -152,6 +155,8 @@ public class DriverLocationUpdateService extends Service {
         	
     		
             database2.close();
+            
+            startCheckIfDriverTimer();
         	
         } catch(Exception e){
         	e.printStackTrace();
@@ -225,6 +230,7 @@ public class DriverLocationUpdateService extends Service {
         database2.updateDriverServiceRestartOnReboot("no");
         database2.close();    
         
+        cancelCheckIfDriverTimer();
     }
     
     
@@ -250,159 +256,221 @@ public class DriverLocationUpdateService extends Service {
     
     
     
-    
-    
-    
-    
-    
-    
-    class GPSLocationFetcher {
-
-    	public MyLocationListener gpsListener, networkListener;
-    	public LocationManager locationManager;
-    	public Location location;
-    	public String accessToken, deviceToken, SERVER_URL;
-    	
-    	PowerManager powerManager;
-    	WakeLock wakeLock;
-    	
-    	/**
-    	 * Initialize location fetcher object with selected listeners
-    	 * @param context
-    	 */
-		public GPSLocationFetcher(Context context, String accessToken, String deviceToken, String SERVER_URL, long updatePeriod) {
-			this.accessToken = accessToken;
-			this.deviceToken = deviceToken;
-			this.SERVER_URL = SERVER_URL;
-			locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-			if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-				gpsListener = new MyLocationListener();
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updatePeriod, 0, gpsListener);
-			} else {
-				if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-					networkListener = new MyLocationListener();
-					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updatePeriod, 0, networkListener);
-				}
-			}
-			powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
-		}
-    	
-    	public void destroy(){
-    		try{
-    			locationManager.removeUpdates(gpsListener);
-    		}catch(Exception e){
-    		}
-    		try{
-    			locationManager.removeUpdates(networkListener);
-    		}catch(Exception e){
-    		}
-    	}
-
-    	
-
-    	class MyLocationListener implements LocationListener {
-
-    		public void onLocationChanged(Location loc) {
-    			if(isBetterLocation(loc, GPSLocationFetcher.this.location)){
-    				Log.e("************************************** custom", "Location changed "+loc);
-    				GPSLocationFetcher.this.location = loc;
-    				sendLocationToServer(location);
-    			}
-    		}
-
-    		public void onProviderDisabled(String provider) {
-    		}
-
-    		public void onProviderEnabled(String provider) {
-    		}
-
-    		public void onStatusChanged(String provider, int status, Bundle extras) {
-    		}
-    		
-    		
-    		/**
-    		 * Checks if the new location is accurate enough or not
-    		 * @param location latest location
-    		 * @param currentBestLocation last accurate location
-    		 * @return
-    		 */
-    		protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-    			int OLD_LOCATION_THRESHOLD = 1000 * 60 * 2;
-    			if (currentBestLocation == null) {
-    				// A new location is always better than no location
-    				if(location.getAccuracy() < 100){
-    					return true;
-    				}
-    				else{
-    					return false;
-    				}
-    			}
-
-    			// Check whether the new location fix is newer or older
-    			long timeDelta = location.getTime() - currentBestLocation.getTime();
-    			boolean isSignificantlyNewer = timeDelta > OLD_LOCATION_THRESHOLD;
-    			boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
-    			boolean isNewer = timeDelta > 0;
-    			
-
-    			// Check whether the new location fix is more or less accurate
-    			int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-    			boolean isLessAccurate = accuracyDelta > 0;
-    			boolean isMoreAccurate = accuracyDelta < 0;
-    			boolean isSignificantlyLessAccurate = accuracyDelta > 100;
-
-    			if(location.getAccuracy() > 100){
-    				return false;
-    			}
-    			
-    			// If it's been more than two minutes since the current location, use
-    			// the new location because the user has likely moved
-    			if (isSignificantlyNewer) {
-    				return true;
-    				// If the new location is more than two minutes older, it must
-    				// be worse
-    			} else if (isSignificantlyOlder) {
-    				return false;
-    			}
-
-    			// Check if the old and new location are from the same provider
-    			boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
-
-    			// Determine location quality using a combination of timeliness and
-    			// accuracy
-    			if (isMoreAccurate) {
-    				return true;
-    			} else if (isNewer && !isLessAccurate) {
-    				return true;
-    			} else if (isNewer && !isSignificantlyLessAccurate
-    					&& isFromSameProvider) {
-    				return true;
-    			}
-    			
-    			
-    			
-    			return false;
-    		}
-
-    		/** Checks whether two providers are the same */
-    		private boolean isSameProvider(String provider1, String provider2) {
-    			if (provider1 == null) {
-    				return provider2 == null;
-    			}
-    			return provider1.equals(provider2);
-    		}
-    		
-    	}
-
-    	
-    	
-    	public void sendLocationToServer(final Location location){
-    		new Thread(new Runnable() {
+	Timer timerCheckIfDriver;
+	TimerTask timerTaskCheckIfDriver;
+	
+	public void startCheckIfDriverTimer(){
+		cancelCheckIfDriverTimer();
+		try {
+			timerCheckIfDriver = new Timer();
+			timerTaskCheckIfDriver = new TimerTask() {
 				@Override
 				public void run() {
-					try {
+					
+					Database2 database2 = new Database2(DriverLocationUpdateService.this);
+					String userMode = database2.getUserMode();
+					database2.close();
+					
+					Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
+					
+					if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 						
+					}
+					else{
+						stopSelf();
+					}
+					
+				}
+			};
+			timerCheckIfDriver.scheduleAtFixedRate(timerTaskCheckIfDriver, 10, 120000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void cancelCheckIfDriverTimer(){
+		try{
+			if(timerTaskCheckIfDriver != null){
+				timerTaskCheckIfDriver.cancel();
+				timerTaskCheckIfDriver = null;
+			}
+			if(timerCheckIfDriver != null){
+				timerCheckIfDriver.cancel();
+				timerCheckIfDriver.purge();
+				timerCheckIfDriver = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+    
+    
+    
+    
+    
+    	
+    
+    
+}
+
+
+
+class GPSLocationFetcher {
+
+	public MyLocationListener gpsListener, networkListener;
+	public LocationManager locationManager;
+	public Location location;
+	public String accessToken, deviceToken, SERVER_URL;
+	public Context context;
+	
+	PowerManager powerManager;
+	WakeLock wakeLock;
+	
+	/**
+	 * Initialize location fetcher object with selected listeners
+	 * @param context
+	 */
+	public GPSLocationFetcher(Context context, String accessToken, String deviceToken, String SERVER_URL, long updatePeriod) {
+		this.context = context;
+		this.accessToken = accessToken;
+		this.deviceToken = deviceToken;
+		this.SERVER_URL = SERVER_URL;
+		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			gpsListener = new MyLocationListener();
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updatePeriod, 0, gpsListener);
+		} else {
+			if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+				networkListener = new MyLocationListener();
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updatePeriod, 0, networkListener);
+			}
+		}
+		powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
+	}
+	
+	public void destroy(){
+		try{
+			locationManager.removeUpdates(gpsListener);
+		}catch(Exception e){
+		}
+		try{
+			locationManager.removeUpdates(networkListener);
+		}catch(Exception e){
+		}
+	}
+
+	
+
+	class MyLocationListener implements LocationListener {
+
+		public void onLocationChanged(Location loc) {
+			if(isBetterLocation(loc, GPSLocationFetcher.this.location)){
+				Log.e("************************************** custom", "Location changed "+loc);
+				GPSLocationFetcher.this.location = loc;
+				sendLocationToServer(location);
+			}
+		}
+
+		public void onProviderDisabled(String provider) {
+		}
+
+		public void onProviderEnabled(String provider) {
+		}
+
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+		
+		
+		/**
+		 * Checks if the new location is accurate enough or not
+		 * @param location latest location
+		 * @param currentBestLocation last accurate location
+		 * @return
+		 */
+		protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+			int OLD_LOCATION_THRESHOLD = 1000 * 60 * 2;
+			if (currentBestLocation == null) {
+				// A new location is always better than no location
+				if(location.getAccuracy() < 100){
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+
+			// Check whether the new location fix is newer or older
+			long timeDelta = location.getTime() - currentBestLocation.getTime();
+			boolean isSignificantlyNewer = timeDelta > OLD_LOCATION_THRESHOLD;
+			boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
+			boolean isNewer = timeDelta > 0;
+			
+
+			// Check whether the new location fix is more or less accurate
+			int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+			boolean isLessAccurate = accuracyDelta > 0;
+			boolean isMoreAccurate = accuracyDelta < 0;
+			boolean isSignificantlyLessAccurate = accuracyDelta > 100;
+
+			if(location.getAccuracy() > 100){
+				return false;
+			}
+			
+			// If it's been more than two minutes since the current location, use
+			// the new location because the user has likely moved
+			if (isSignificantlyNewer) {
+				return true;
+				// If the new location is more than two minutes older, it must
+				// be worse
+			} else if (isSignificantlyOlder) {
+				return false;
+			}
+
+			// Check if the old and new location are from the same provider
+			boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
+
+			// Determine location quality using a combination of timeliness and
+			// accuracy
+			if (isMoreAccurate) {
+				return true;
+			} else if (isNewer && !isLessAccurate) {
+				return true;
+			} else if (isNewer && !isSignificantlyLessAccurate
+					&& isFromSameProvider) {
+				return true;
+			}
+			
+			
+			
+			return false;
+		}
+
+		/** Checks whether two providers are the same */
+		private boolean isSameProvider(String provider1, String provider2) {
+			if (provider1 == null) {
+				return provider2 == null;
+			}
+			return provider1.equals(provider2);
+		}
+		
+	}
+
+	
+	
+	public void sendLocationToServer(final Location location){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					
+					Database2 database2 = new Database2(context);
+					String userMode = database2.getUserMode();
+					database2.close();
+					
+					Log.e("DriverLocationUpdateService userMode in PI ", "=="+userMode);
+					
+					if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 						if ((wakeLock != null) &&           // we have a WakeLock
 			    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
 			    			wakeLock.acquire();
@@ -425,18 +493,15 @@ public class DriverLocationUpdateService extends Service {
 						nameValuePairs = null;
 						
 						wakeLock.release();
-						
-					} catch (Exception e) {
-						e.printStackTrace();
-						if(wakeLock.isHeld()){
-		    				wakeLock.release();
-		    			}
 					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					if(wakeLock.isHeld()){
+	    				wakeLock.release();
+	    			}
 				}
-			}).start();
-    	}
-    }
-    	
-    
-    
+			}
+		}).start();
+	}
 }

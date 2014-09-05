@@ -400,7 +400,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final double MAX_DISPLACEMENT_THRESHOLD = 200;
 	public static final long SERVICE_RESTART_TIMER = 12 * 60 * 60 * 1000;
 	
-	public static final long DRIVER_FILTER_DISTANCE = 3000;
+	public static final long DRIVER_FILTER_DISTANCE = 2000;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -1988,6 +1988,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			getDistanceTimeAddress = null;
 		}
 		
+		Database2 database2 = new Database2(HomeActivity.this);
 		
 		switch(mode){
 		
@@ -1999,6 +2000,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				if(isServiceRunning(HomeActivity.this, CUpdateDriverLocationsService.class.getName())){
 					stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 				}
+				
+				database2.updateUserMode(Database2.UM_DRIVER);
 				
 				passengerMainLayout.setVisibility(View.GONE);
 				driverMainLayout.setVisibility(View.VISIBLE);
@@ -2016,6 +2019,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				}
 				
+				database2.updateUserMode(Database2.UM_PASSENGER);
+				
 				passengerMainLayout.setVisibility(View.VISIBLE);
 				driverMainLayout.setVisibility(View.GONE);
 				
@@ -2027,9 +2032,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 			default:
-				
+				database2.updateUserMode(Database2.UM_PASSENGER);
 		
 		}
+		
+		database2.close();
 		
 	}
 	
@@ -3805,7 +3812,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
-	        Log.e("GetDistanceTimeAddress","working");
 	        centreInfoRl.setVisibility(View.INVISIBLE);
 			centreInfoProgress.setVisibility(View.VISIBLE);
 	        nearestDriverProgress.setVisibility(View.VISIBLE);
@@ -3861,7 +3867,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    		
 	    		if(!driverAcceptPushRecieved){
 	    			fullAddress = getAddress(destination.latitude, destination.longitude);
-	    			Log.e("fullAddress",">"+fullAddress);
 	    		}
 	    		
 	    		LatLng source = null;
@@ -3884,10 +3889,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    			return "error";
 	    		}
 	    		
-	    		Log.e("source","="+source);
 	    			
 	    		this.url = makeURL(source, destination);
-	    		Log.e("url","="+url);
 	    		
 		    	SimpleJSONParser jParser = new SimpleJSONParser();
 		    	
@@ -3937,7 +3940,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	 			
 	 			
 	 			if(map != null){
-	 				Log.i("map cleared", "GetDistanceTImeAddress");
 					map.clear();
 					for(int i=0; i<Data.driverInfos.size(); i++){
 						addDriverMarkerForCustomer(Data.driverInfos.get(i));
@@ -3980,7 +3982,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        	nearestDriverText.setText(distanceString);
 	        }
 	        
-	        Log.i("distanceString","="+distanceString);
 	        
 	        
 	        
@@ -4010,7 +4011,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					cancelCustomerRequestAsync(HomeActivity.this, 2, 1);
 	        }
 	        
-	        Log.e("GetDistanceTimeAddress","stopped");
 	        
 	    }
 	    

@@ -33,6 +33,10 @@ public class Database2 {																	// class for handling database related 
 	private static final String DLD_DEVICE_TOKEN = "dld_device_token";
 	private static final String DLD_SERVER_URL = "dld_server_url";
 	
+	private static final String TABLE_USER_MODE = "table_user_mode";
+	private static final String USER_MODE = "user_mode";
+	public static final String UM_DRIVER = "driver";
+	public static final String UM_PASSENGER = "passenger";
 	
 	/**
 	 * Creates and opens database for the application use 
@@ -75,6 +79,10 @@ public class Database2 {																	// class for handling database related 
 				+ DLD_DEVICE_TOKEN + " TEXT, " 
 				+ DLD_SERVER_URL + " TEXT" 
 				+ ");");
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_USER_MODE + " ("
+				+ USER_MODE + " TEXT" + ");");
+		
 	}
 	
 	
@@ -109,14 +117,8 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	public void updateDriverServiceRestartOnReboot(String choice) {
-		String[] columns = new String[] { Database2.DRIVER_SERVICE_RESTART_ON_REBOOT };
-		Cursor cursor = database.query(Database2.TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT, columns, null, null, null, null, null);
-		if (cursor.getCount() > 0) {
-			deleteDriverServiceRestartOnReboot();
-			insertDriverServiceRestartOnReboot(choice);
-		} else {
-			insertDriverServiceRestartOnReboot(choice);
-		}
+		deleteDriverServiceRestartOnReboot();
+		insertDriverServiceRestartOnReboot(choice);
 	}
 	
 	public void insertDriverServiceRestartOnReboot(String choice){
@@ -155,14 +157,8 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	public void updateDriverServiceFast(String choice) {
-		String[] columns = new String[] { Database2.FAST };
-		Cursor cursor = database.query(Database2.TABLE_DRIVER_SERVICE_FAST, columns, null, null, null, null, null);
-		if (cursor.getCount() > 0) {
-			deleteDriverServiceFast();
-			insertDriverServiceFast(choice);
-		} else {
-			insertDriverServiceFast(choice);
-		}
+		deleteDriverServiceFast();
+		insertDriverServiceFast(choice);
 	}
 	
 	public void insertDriverServiceFast(String choice){
@@ -206,14 +202,8 @@ public class Database2 {																	// class for handling database related 
 	
 	public void updateJugnooOn(String choice) {
 		try {
-			String[] columns = new String[] { Database2.JUGNOO_ON };
-			Cursor cursor = database.query(Database2.TABLE_JUGNOO_ON, columns, null, null, null, null, null);
-			if (cursor.getCount() > 0) {
-				deleteJugnooOn();
-				insertJugnooOn(choice);
-			} else {
-				insertJugnooOn(choice);
-			}
+			deleteJugnooOn();
+			insertJugnooOn(choice);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -285,5 +275,58 @@ public class Database2 {																	// class for handling database related 
 		String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_SERVER_URL));
 		return choice;
 	}
+	
+	
+	
+	
+	
+	
+	
+	public String getUserMode() {
+		try {
+			String[] columns = new String[] { Database2.USER_MODE };
+			Cursor cursor = database.query(Database2.TABLE_USER_MODE, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				String userMode = cursor.getString(cursor.getColumnIndex(Database2.USER_MODE));
+				return userMode;
+			} else {
+				return Database2.UM_PASSENGER;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Database2.UM_PASSENGER;
+		}
+	}
+	
+	
+	
+	public void updateUserMode(String userMode) {
+		try {
+			deleteUserMode();
+			insertUserMode(userMode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertUserMode(String userMode){
+		try{
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.USER_MODE, userMode);
+			database.insert(Database2.TABLE_USER_MODE, null, contentValues);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
+	}
+	
+	public void deleteUserMode(){
+		try{
+			database.delete(Database2.TABLE_USER_MODE, null, null);
+		} catch(Exception e){
+			Log.e("e","="+e);
+		}
+	}
+	
 	
 }

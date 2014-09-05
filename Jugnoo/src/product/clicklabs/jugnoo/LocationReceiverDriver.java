@@ -11,30 +11,42 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.Log;
 
 import com.google.android.gms.location.LocationClient;
 
-public class LocationReceiver extends BroadcastReceiver {
+public class LocationReceiverDriver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
     	try {
-			PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-			WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
-			wakeLock.acquire();
-			
-			Location location = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
-//        	Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
-			Database2 database2 = new Database2(context);
-			String accessToken = database2.getDLDAccessToken();
-			String deviceToken = database2.getDLDDeviceToken();
-			String serverUrl = database2.getDLDServerUrl();
+    		
+    		Database2 database2 = new Database2(context);
+			String userMode = database2.getUserMode();
 			database2.close();
 			
-			sendLocationToServer(location, accessToken, deviceToken, serverUrl);
+			Log.e("DriverLocationUpdateService userMode in PI ", "=="+userMode);
 			
+			if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
+				PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
+				wakeLock.acquire();
+				
+				Location location = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
+//	        	Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
+				database2 = new Database2(context);
+				String accessToken = database2.getDLDAccessToken();
+				String deviceToken = database2.getDLDDeviceToken();
+				String serverUrl = database2.getDLDServerUrl();
+				database2.close();
+				
+				sendLocationToServer(location, accessToken, deviceToken, serverUrl);
+				
+				
+				wakeLock.release();
+			}
+    		
 			
-			wakeLock.release();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

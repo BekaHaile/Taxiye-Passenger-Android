@@ -15,7 +15,6 @@ public class CUpdateDriverLocationsService extends Service {
 	GetDriverLocationsFromServer getDriverLocationsFromServer;
 	
 	public CUpdateDriverLocationsService() {
-		Log.e("CUpdateDriverLocationsService"," instance created");
 	}
 
 	@Override
@@ -92,7 +91,6 @@ public class CUpdateDriverLocationsService extends Service {
     	@Override
     	protected void onPreExecute() {
     		super.onPreExecute();
-    		 Log.e("GetDriverLocationsFromServer","working");
     	}
     	
     	
@@ -119,8 +117,6 @@ public class CUpdateDriverLocationsService extends Service {
     		super.onPostExecute(result);
     		
     		try{
-	    		Log.e("count","="+count);
-				Log.e("CustomerUpdateDriverLocationsService.refreshDriverLocations=","="+HomeActivity.appInterruptHandler);
 				
 				if("refresh".equalsIgnoreCase(result)  && HomeActivity.appInterruptHandler != null){
 					HomeActivity.appInterruptHandler.refreshDriverLocations(count);
@@ -131,7 +127,6 @@ public class CUpdateDriverLocationsService extends Service {
 	        	
 	        	getDriverLocationsFromServer = new GetDriverLocationsFromServer();
 	        	getDriverLocationsFromServer.execute();
-	        	Log.e("GetDriverLocationsFromServer","stopped");
     		} catch(Exception e){
     			e.printStackTrace();
     		}
