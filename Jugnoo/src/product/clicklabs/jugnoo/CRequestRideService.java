@@ -140,8 +140,6 @@ public class CRequestRideService extends Service {
 					}
 					
 					
-					Data.latitude = pickupLatLng.latitude;
-					Data.longitude = pickupLatLng.longitude;
 		
 				
 					String currentDriverId = "";
@@ -172,8 +170,8 @@ public class CRequestRideService extends Service {
 					nameValuePairs.add(new BasicNameValuePair("pre_user_id", previousDriverId));
 					nameValuePairs.add(new BasicNameValuePair("pre_engage_id", Data.cEngagementId));
 					nameValuePairs.add(new BasicNameValuePair("flag", ""+flag));
-					nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+Data.latitude));
-					nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + Data.longitude));
+					nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+pickupLatLng.latitude));
+					nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + pickupLatLng.longitude));
 					nameValuePairs.add(new BasicNameValuePair("session_id", Data.cSessionId));
 					
 					

@@ -136,6 +136,11 @@ class DriverRideRequest{
 		this.latLng = latLng;
 	}
 	
+	@Override
+	public String toString() {
+		return engagementId + " " + customerId + " " + latLng;
+	}
+	
 }
 
 class Booking{
