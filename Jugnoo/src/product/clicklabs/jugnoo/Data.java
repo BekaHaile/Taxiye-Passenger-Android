@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -25,6 +24,8 @@ import com.loopj.android.http.AsyncHttpClient;
  *
  */
 public class Data {
+	
+	public static String FLURRY_KEY = "H8Y94ND8GPQTKKG5R2VY";
 	
 	public static final String INVALID_ACCESS_TOKEN = "invalid access token";
 	
@@ -98,7 +99,7 @@ public class Data {
 	
 	
 	
-	public static final int SERVER_TIMEOUT = 30000;
+	public static final int SERVER_TIMEOUT = 15000;
 
 	
 	
@@ -121,12 +122,11 @@ public class Data {
 	
 	
 	public static final String DEV_SERVER_URL = "http://54.81.229.172:8000";
-	
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
-	
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+	
 	
 	
 	

@@ -18,23 +18,26 @@ public class LocationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-    	PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-    	WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
-		wakeLock.acquire();
-    	
-        Location location = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
-        Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
-        Database2 database2 = new Database2(context);
-        String accessToken = database2.getDLDAccessToken();
-        String deviceToken = database2.getDLDDeviceToken();
-        String serverUrl = database2.getDLDServerUrl();
-        database2.close();
-        
-        sendLocationToServer(location, accessToken, deviceToken, serverUrl);
-        
-        
-        wakeLock.release();
+    	try {
+			PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
+			wakeLock.acquire();
+			
+			Location location = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
+//        	Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + location);
+			Database2 database2 = new Database2(context);
+			String accessToken = database2.getDLDAccessToken();
+			String deviceToken = database2.getDLDDeviceToken();
+			String serverUrl = database2.getDLDServerUrl();
+			database2.close();
+			
+			sendLocationToServer(location, accessToken, deviceToken, serverUrl);
+			
+			
+			wakeLock.release();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
     
     public void sendLocationToServer(final Location location, final String accessToken, final String deviceToken, final String serverUrl){
@@ -55,7 +58,7 @@ public class LocationReceiver extends BroadcastReceiver {
 					String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/update_driver_location", nameValuePairs);
 					
 					Log.e("result","="+result);
-					Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + result);
+//					Log.writeLogToFile(""+DateOperations.getCurrentTime() + "<>" + result);
 					
 					simpleJSONParser = null;
 					nameValuePairs = null;

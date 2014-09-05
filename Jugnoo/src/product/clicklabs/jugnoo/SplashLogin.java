@@ -1,20 +1,17 @@
 package product.clicklabs.jugnoo;
 
 import java.io.IOException;
-import java.security.KeyStore;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,7 +40,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.facebook.LoggingBehavior;
@@ -54,10 +50,10 @@ import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.model.GraphUser;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.location.LocationClient;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -1175,6 +1171,11 @@ public class SplashLogin extends Activity{
 		super.onWindowFocusChanged(hasFocus);
 		
 		if(hasFocus && loginDataFetched){
+			
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("username", Data.userData.userName);
+			FlurryAgent.logEvent("App Login", articleParams);
+			
 			loginDataFetched = false;
 			startActivity(new Intent(SplashLogin.this, HomeActivity.class));
 			finish();
@@ -1474,6 +1475,20 @@ public class SplashLogin extends Activity{
 		
         ASSL.closeActivity(relative);
         System.gc();
+	}
+	
+	// *****************************Used for flurry work***************//
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+		FlurryAgent.onEvent("Application started");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
 	}
 	
 }

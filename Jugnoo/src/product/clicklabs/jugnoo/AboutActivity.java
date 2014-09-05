@@ -1,16 +1,17 @@
 package product.clicklabs.jugnoo;
 
+import java.text.DecimalFormat;
+
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.flurry.android.FlurryAgent;
 
 public class AboutActivity extends Activity{
 	
@@ -47,12 +48,20 @@ public class AboutActivity extends Activity{
 		
 		String str4 = getResources().getString(R.string.about_3_text);
 		
-		about3Text.setText(str4);
-		
-//		Jugnoo helps you provide a friendly and affordable ride within the Chandigarh tricity area.
-//	    \nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.\n
-		
 		//First 2 kms: Rs.30\nAfter 2 kms: Rs. 10/km\nWaiting time: Rs.1.5/min after 15 minutes.
+		
+		try{
+			DecimalFormat decimalFormat = new DecimalFormat("#");
+			String str = "First "+decimalFormat.format(HomeActivity.fareThresholdDistance)+" kms: Rs."+decimalFormat.format(HomeActivity.fareFixed)+"\nAfter "
+			+decimalFormat.format(HomeActivity.fareThresholdDistance)+" kms:" + " Rs. "+decimalFormat.format(HomeActivity.farePerKm)+"/km\nWaiting time: Rs.1.5/min after 15 minutes.";
+			about3Text.setText(str);
+		} catch(Exception e){
+			e.printStackTrace();
+			about3Text.setText(str4);
+		}
+		
+		
+		
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
@@ -82,4 +91,5 @@ public class AboutActivity extends Activity{
         System.gc();
 	}
 	
+
 }

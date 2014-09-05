@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import com.flurry.android.FlurryAgent;
+
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -171,5 +173,6 @@ public class BookingActivity extends Activity{
         ASSL.closeActivity(relative);
         System.gc();
 	}
+	
 	
 }

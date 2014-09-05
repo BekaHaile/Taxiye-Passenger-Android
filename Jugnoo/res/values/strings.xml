@@ -8,8 +8,8 @@
     
     
     
-    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
-    <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> <!-- Dev -->
+    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
+    <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
     
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
     
@@ -56,7 +56,7 @@
 	<string name="done">Done</string>
 	
 	<string name="no_driver_available">No Driver Available</string>
-	<string name="no_driver_available_message">Currently there are no drivers available. We will look into it</string>
+	<string name="no_driver_available_message">Currently there are no drivers available nearby within 3km. We will look into it</string>
 	
 	<string name="logout">Logout</string>
 	<string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>

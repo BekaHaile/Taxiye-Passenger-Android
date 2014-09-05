@@ -98,6 +98,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.Builder;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -399,6 +400,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final double MAX_DISPLACEMENT_THRESHOLD = 200;
 	public static final long SERVICE_RESTART_TIMER = 12 * 60 * 60 * 1000;
 	
+	public static final long DRIVER_FILTER_DISTANCE = 3000;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -837,6 +839,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
+				Log.e("hellondsmhfajk.", "userMode = "+userMode + " driverScreenMode = "+driverScreenMode);
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 					if(jugnooDriverMode == JugnooDriverMode.ON){
 						jugnooDriverMode = JugnooDriverMode.OFF;
@@ -1028,24 +1031,29 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 							if(Data.driverInfos.size() > 0){
 								
-								getSessionIdAsync(HomeActivity.this);
+								//TODO filter drivers
+								ArrayList<DriverInfo> arrayList = new ArrayList<DriverInfo>();
 								
-//								requestRideBtn.setText("Assigning driver...");
-//								
-//								passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-//								Data.cEngagementId = "";
-//								Data.mapTarget = map.getCameraPosition().target;
-//								
-//								stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-//								
-//								switchPassengerScreen(passengerScreenMode);
-//								
-//								startService(new Intent(HomeActivity.this, CRequestRideService.class));
-//
-//								customerCancelBeforePushReceive = false;
+								Data.mapTarget = map.getCameraPosition().target;
 								
+								for(int i=0; i<Data.driverInfos.size(); i++){
+									DriverInfo driverInfo = Data.driverInfos.get(i);
+									if(distance(Data.mapTarget, driverInfo.latLng) <= DRIVER_FILTER_DISTANCE){
+										arrayList.add(driverInfo);
+									}
+								}
+								
+								Data.driverInfos.clear();
+								Data.driverInfos.addAll(arrayList);
 								
 								
+								
+								if(Data.driverInfos.size() > 0){
+									getSessionIdAsync(HomeActivity.this);
+								}
+								else{
+									noDriverAvailablePopup(HomeActivity.this);
+								}
 							}
 							else{
 								noDriverAvailablePopup(HomeActivity.this);
@@ -1778,7 +1786,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		Database2 database2 = new Database2(HomeActivity.this);
 		String jugnooOn = database2.getJugnooOn();
-		database2.close();
+		
 		
 		if("on".equalsIgnoreCase(jugnooOn)){
 			jugnooDriverMode = JugnooDriverMode.ON;
@@ -1790,9 +1798,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			changeJugnooON(jugnooDriverMode);
 		}
 		
-		
 		changeExceptionalDriverUI();
 		
+		database2.insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
+		database2.close();
 	}
 	
 	
@@ -2688,7 +2697,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 				} catch (Exception e1) {
 					e1.printStackTrace();
-					Toast.makeText(activity, ""+e1.toString(), Toast.LENGTH_SHORT).show();
 				}
 			}
 		}).start();
@@ -6294,12 +6302,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    	Log.e("values","="+values);
 		    	Log.e("error","="+error);
 		        if (error != null){
-		            if (error instanceof FacebookOperationCanceledException){
-		                Toast.makeText(HomeActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();
-		            }
-		            else{
-		                Toast.makeText(HomeActivity.this,"Network Error",Toast.LENGTH_SHORT).show();
-		            }
+		        	Toast.makeText(HomeActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();
 		        }
 		        else{
 
@@ -7975,6 +7978,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		}).start();
 	
+	}
+	
+	
+	// *****************************Used for flurry work***************//
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+		FlurryAgent.onEvent("HomeActivity started");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
 	}
 	
 	
