@@ -49,7 +49,7 @@ import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
-public class SplashNewActivity extends Activity{
+public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	LinearLayout relative;
@@ -102,9 +102,6 @@ public class SplashNewActivity extends Activity{
 		
 		setContentView(R.layout.splash_new);
 		
-		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
-		}
 		
 		loginDataFetched = false;
 		loginFailed = false;
@@ -168,7 +165,7 @@ public class SplashNewActivity extends Activity{
 	@Override
 	protected void onResume() {
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
 		
 		super.onResume();
@@ -738,6 +735,12 @@ public class SplashNewActivity extends Activity{
     	}
     }
     }
+
+
+	@Override
+	public void locationChanged(Location location, int priority) {
+		
+	}
 	
 	
 }

@@ -119,7 +119,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
 @SuppressLint("DefaultLocale")
-public class HomeActivity extends FragmentActivity implements AppInterruptHandler {
+public class HomeActivity extends FragmentActivity implements AppInterruptHandler, LocationUpdate {
 
 	
 	
@@ -389,6 +389,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	Runnable driverCLRunnable, passengerCLRunnable;
 	AlertDialog gpsDialogAlert;
 	
+	LocationFetcher lowPowerLF, highAccuracyLF;
+	
+	
 	
 	
 	public static AppMode appMode;
@@ -401,6 +404,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final long SERVICE_RESTART_TIMER = 12 * 60 * 60 * 1000;
 	
 	public static final long DRIVER_FILTER_DISTANCE = 2000;
+	
+	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -2317,6 +2323,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void switchPassengerScreen(PassengerScreenMode mode){
 		if(userMode == UserMode.PASSENGER){
+			
+			initializeFusedLocationFetchers();
 		
 			saveDataOnPause(false);
 			
@@ -2697,7 +2705,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		@Override
 		public void onLocationChanged(Location location) {
-//			writeLogToFile(location.getProvider() + " <> "+location);
 			if(isBetterLocation(location, HomeActivity.myLocation)){
 				drawLocationChanged(location);
 			}
@@ -2855,8 +2862,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	protected void onResume() {
 		
 		super.onResume();
-		
-		buildAlertMessageNoGps();
 	    
 	    
 	    if(FavoriteActivity.zoomToMap){
@@ -2885,7 +2890,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    	e.printStackTrace();
 	    }
 	    
-	    
+	    initializeFusedLocationFetchers();
 	    
 	    
 	    updateTextViews();
@@ -3237,6 +3242,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 		
+		destroyFusedLocationFetchers();
+		
 	}
 	
 	
@@ -3295,6 +3302,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     			e.printStackTrace();
     		}
     		
+    		destroyFusedLocationFetchers();
 	        
 	        PicassoTools.clearCache(Picasso.with(HomeActivity.this));
 	        
@@ -7347,22 +7355,27 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 		
-		if(hasFocus && loggedOut){
-			loggedOut = false;
-			
-			stopService(new Intent(HomeActivity.this, CRequestRideService.class));
-	        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-	        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-			
-			startActivity(new Intent(HomeActivity.this, SplashLogin.class));
-			finish();
-			overridePendingTransition(R.anim.left_in, R.anim.left_out);
-		}
-		else if(hasFocus && bookingsFetched){
-			bookingsFetched = false;
-			drawerLayout.closeDrawer(menuLayout);
-			startActivity(new Intent(HomeActivity.this, BookingActivity.class));
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		if(hasFocus){
+			if(loggedOut){
+				loggedOut = false;
+				
+				stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+		        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+		        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				
+				startActivity(new Intent(HomeActivity.this, SplashLogin.class));
+				finish();
+				overridePendingTransition(R.anim.left_in, R.anim.left_out);
+			}
+			else if(bookingsFetched){
+				bookingsFetched = false;
+				drawerLayout.closeDrawer(menuLayout);
+				startActivity(new Intent(HomeActivity.this, BookingActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+			else{
+				buildAlertMessageNoGps();
+			}
 		}
 	}
 	
@@ -7953,6 +7966,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try{
 			
 			new FBLogoutNoIntent(cont).execute();
+			SharedPreferences pref = cont.getSharedPreferences("myPref", 0);
+			Editor editor = pref.edit();
+			editor.clear();
+			editor.commit();
+			Data.clearDataOnLogout(cont);
 			
 		AlertDialog.Builder builder = new AlertDialog.Builder(cont);
 		builder.setMessage(cont.getResources().getString(R.string.your_login_session_expired)).setTitle(cont.getResources().getString(R.string.alert));
@@ -7961,26 +7979,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     	try {
-                			
-                			
-                			SharedPreferences pref = cont.getSharedPreferences(
-                					"myPref", 0);
-                			Editor editor = pref.edit();
-
-                			editor.clear();
-                			editor.commit();
-                			
-                			
                 			dialog.dismiss();
-                			
-                			Data.clearDataOnLogout(cont);
-
                 			cont.startActivity(new Intent(cont, SplashLogin.class));
                 			cont.finish();
                 			cont.overridePendingTransition(
                 					R.anim.left_in,
                 					R.anim.left_out);
-
                 		} catch (Exception e) {
                 			Log.i("excption logout",
                 					e.toString());
@@ -8034,6 +8038,67 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	protected void onStop() {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
+	}
+
+	
+	
+	
+	public void initializeFusedLocationFetchers(){
+		destroyFusedLocationFetchers();
+		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+			if(myLocation == null){
+				lowPowerLF = new LocationFetcher(HomeActivity.this, 10000, 0);
+				highAccuracyLF = new LocationFetcher(HomeActivity.this, 60000, 2);
+			}
+			else{
+				highAccuracyLF = new LocationFetcher(HomeActivity.this, 60000, 2);
+			}
+		}
+	}
+	
+	
+	public void destroyFusedLocationFetchers(){
+		destroyLowPowerFusedLocationFetcher();
+		destroyHighAccuracyFusedLocationFetcher();
+	}
+	
+	public void destroyLowPowerFusedLocationFetcher(){
+		try{
+			if(lowPowerLF != null){
+				lowPowerLF.destroy();
+				lowPowerLF = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void destroyHighAccuracyFusedLocationFetcher(){
+		try{
+			if(highAccuracyLF != null){
+				highAccuracyLF.destroy();
+				highAccuracyLF = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+
+	@Override
+	public void locationChanged(Location location, int priority) {
+		Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
+		if(priority == 0){
+			if(location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK){
+				drawLocationChanged(location);
+			}
+		}
+		else if(priority == 2){
+			if(location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK){
+				destroyLowPowerFusedLocationFetcher();
+				drawLocationChanged(location);
+			}
+		}
+		
 	}
 	
 	

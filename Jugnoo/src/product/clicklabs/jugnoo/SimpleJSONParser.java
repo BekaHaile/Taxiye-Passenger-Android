@@ -47,6 +47,7 @@ import android.os.Environment;
 public class SimpleJSONParser {
 
 	static String SERVER_TIMEOUT = "SERVER_TIMEOUT";
+	static int TIMEOUT_CONNECTION = 5000, TIMEOUT_SOCKET = 5000;
 
 	// constructor
 	public SimpleJSONParser() {
@@ -150,12 +151,6 @@ public class SimpleJSONParser {
     }
 	
 
-}
-
-
-
-
-
 
 /**
  * Taken from: http://janis.peisenieks.lv/en/76/english-making-an-ssl-connection-via-android/
@@ -246,19 +241,25 @@ class DataLoader {
             throws ClientProtocolException, IOException,
             NoSuchAlgorithmException, KeyManagementException,
             URISyntaxException, KeyStoreException, UnrecoverableKeyException {
+    	
         SSLContext ctx = SSLContext.getInstance("TLS");
         ctx.init(null, new TrustManager[] { new CustomX509TrustManager() },
                 new SecureRandom());
 
-        HttpClient client = new DefaultHttpClient();
+        //Added timeout
+        HttpParams httpParameters = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParameters, SimpleJSONParser.TIMEOUT_CONNECTION);
+        HttpConnectionParams.setSoTimeout(httpParameters, TIMEOUT_SOCKET);
+        
+        HttpClient client = new DefaultHttpClient(httpParameters);
 
         SSLSocketFactory ssf = new CustomSSLSocketFactory(ctx);
         ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         ClientConnectionManager ccm = client.getConnectionManager();
         SchemeRegistry sr = ccm.getSchemeRegistry();
         sr.register(new Scheme("https", ssf, 443));
-        DefaultHttpClient sslClient = new DefaultHttpClient(ccm,
-                client.getParams());
+        
+        DefaultHttpClient sslClient = new DefaultHttpClient(ccm, client.getParams());
 
         HttpPost post = new HttpPost(new URI(url));
         post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -269,6 +270,14 @@ class DataLoader {
     }
 
 }
+
+	
+}
+
+
+
+
+
 
 
 

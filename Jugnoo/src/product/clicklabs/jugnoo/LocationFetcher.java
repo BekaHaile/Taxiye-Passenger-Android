@@ -1,20 +1,12 @@
 package product.clicklabs.jugnoo;
 
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -22,32 +14,30 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.model.LatLng;
 
 public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallbacks,GooglePlayServicesClient.OnConnectionFailedListener,LocationListener {
-
 	
 	private final String TAG = this.getClass().getSimpleName();
 	private LocationClient locationclient;
 	private LocationRequest locationrequest;
-	public Location location; // location
-	private AlertDialog alertDialog;
+	private Location location;
 	
 	private long requestInterval;
+	private LocationUpdate locationUpdate;
 	private Context context;
+	
 	
 	private String LOCATION_SP = "location_sp",
 			LOCATION_LAT = "location_lat",
 			LOCATION_LNG = "location_lng";
 	
+	public int priority;
 	
-	/**
-	 * Constructor for initializing LocationFetcher class' object
-	 * @param context application context
-	 */
-	public LocationFetcher(Context context, long requestInterval){
-		this.context = context;
+	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval, int priority){
+		this.locationUpdate = locationUpdate;
+		this.context = (Context) locationUpdate;
 		this.requestInterval = requestInterval;
+		this.priority = priority;
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 		if(resp == ConnectionResult.SUCCESS){														// google play services working
 			if(isLocationEnabled(context)){															// location fetching enabled
@@ -55,13 +45,10 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 				locationclient.connect();
 			}
 			else{																					// location disabled
-//				showSettingsAlert(context);
 			}
 		}
 		else{																						// google play services not working
 			Log.e("Google Play Service Error ","="+resp);
-//			showGooglePlayErrorAlert(context);
-			//https://play.google.com/store/apps/details?id=com.google.android.gms
 		}
 	}
 	
@@ -89,30 +76,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	}
 	
 	
-	public boolean isConnected(){
-		if(locationclient != null){
-			return locationclient.isConnected();
-		}
-		return false;
-	}
 	
-	double distance(LatLng start, LatLng end) {
-		try {
-			Location location1 = new Location("locationA");
-			location1.setLatitude(start.latitude);
-			location1.setLongitude(start.longitude);
-			Location location2 = new Location("locationA");
-			location2.setLatitude(end.latitude);
-			location2.setLongitude(end.longitude);
-
-			double distance = location1.distanceTo(location2);
-			return distance;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-
-	}
 	
 	/**
 	 * Checks if location fetching is enabled in device or not
@@ -131,95 +95,6 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		}
 	}
 	
-	
-	
-	/**
-	 * Function to show settings alert dialog
-	 * On pressing Settings button will lauch Settings Options
-	 * */
-	public void showGooglePlayErrorAlert(final Activity mContext){
-		try{
-			if(alertDialog != null && alertDialog.isShowing()){
-				alertDialog.dismiss();
-			}
-				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
-		   	 
-		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Google Play Services Error");
-		        alertDialogPrepare.setCancelable(false);
-		 
-		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Google Play services not found or outdated. Install Google Play Services?");
-		 
-		        // On pressing Settings button
-		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog,int which) {
-		            	dialog.dismiss();
-		            	Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setData(Uri.parse("market://details?id=com.google.android.gms"));
-						mContext.startActivity(intent);
-		            }
-		        });
-		 
-		        // on pressing cancel button
-		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int which) {
-		            	dialog.dismiss();
-		            	mContext.finish();
-		            }
-		        });
-		 
-		        alertDialog = alertDialogPrepare.create();
-		        
-		        // Showing Alert Message
-		        alertDialog.show();
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Function to show settings alert dialog
-	 * On pressing Settings button will lauch Settings Options
-	 * */
-	public void showSettingsAlert(final Activity mContext){
-		try{
-			if(alertDialog != null && alertDialog.isShowing()){
-				alertDialog.dismiss();
-			}
-				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
-		   	 
-		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Loaction Settings");
-		        alertDialogPrepare.setCancelable(false);
-		 
-		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Location is not enabled. Do you want to go to settings menu?");
-		 
-		        // On pressing Settings button
-		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog,int which) {
-		            	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-		            	mContext.startActivity(intent);
-		            	dialog.dismiss();
-		            }
-		        });
-		 
-		        // on pressing cancel button
-		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int which) {
-		            dialog.dismiss();
-		            }
-		        });
-		 
-		        alertDialog = alertDialogPrepare.create();
-		        
-		        // Showing Alert Message
-		        alertDialog.show();
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 	
 	
 	
@@ -271,7 +146,17 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		Log.e(TAG, "onConnected");
 		
 		locationrequest = LocationRequest.create();
-		locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+		
+		if(priority == 0){
+			locationrequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+		}
+		else if(priority == 1){
+			locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+		}
+		else if(priority == 2){
+			locationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		}
+		
 		locationrequest.setFastestInterval(requestInterval);
 		locationrequest.setInterval(requestInterval);
 		
@@ -294,6 +179,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		try{
 			if(location!=null){
 				this.location = location;
+				locationUpdate.locationChanged(location, priority);
 				saveLatLngToSP(location.getLatitude(), location.getLongitude());
 			}
 		}catch(Exception e){

@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -35,7 +36,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class RegisterScreen extends Activity{
+public class RegisterScreen extends Activity implements LocationUpdate{
 	
 	EditText firstNameEt, lastNameEt, emailIdEt, phoneNoEt, passwordEt, confirmPasswordEt;
 	Button signUpBtn;
@@ -362,7 +363,7 @@ public class RegisterScreen extends Activity{
 		super.onResume();
 		
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(RegisterScreen.this, 1000);
+			Data.locationFetcher = new LocationFetcher(RegisterScreen.this, 1000, 1);
 		}
 		
 	}
@@ -842,6 +843,13 @@ public class RegisterScreen extends Activity{
         ASSL.closeActivity(relative);
         
         System.gc();
+	}
+
+
+	@Override
+	public void locationChanged(Location location, int priority) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

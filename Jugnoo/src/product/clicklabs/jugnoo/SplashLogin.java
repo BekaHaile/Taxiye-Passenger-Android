@@ -21,6 +21,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -58,7 +59,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class SplashLogin extends Activity{
+public class SplashLogin extends Activity implements LocationUpdate{
 	
 	AutoCompleteTextView emailEt;
 	EditText passwordEt;
@@ -479,7 +480,7 @@ public class SplashLogin extends Activity{
 		super.onResume();
 		
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashLogin.this, 1000);
+			Data.locationFetcher = new LocationFetcher(SplashLogin.this, 1000, 1);
 		}
 		
 		
@@ -1489,6 +1490,11 @@ public class SplashLogin extends Activity{
 	protected void onStop() {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
+	}
+
+	@Override
+	public void locationChanged(Location location, int priority) {
+		
 	}
 	
 }
