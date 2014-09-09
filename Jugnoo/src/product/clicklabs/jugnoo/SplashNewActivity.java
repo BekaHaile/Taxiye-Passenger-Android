@@ -186,6 +186,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
+	
 	boolean noNetFirstTime = false, noNetSecondTime = false;
 	
 	Handler checkNetHandler = new Handler();
@@ -653,6 +654,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onDestroy() {
+		try{
+			if(Data.locationFetcher != null){
+				Data.locationFetcher.destroy();
+				Data.locationFetcher = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();

@@ -370,13 +370,17 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onPause() {
-		super.onPause();
 		try{
-			Data.locationFetcher.destroy();
-			Data.locationFetcher = null;
+			if(Data.locationFetcher != null){
+				Data.locationFetcher.destroy();
+				Data.locationFetcher = null;
+			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		
+		super.onPause();
+		
 		
 	}
 	
@@ -838,6 +842,14 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onDestroy() {
+		try{
+		if(Data.locationFetcher != null){
+			Data.locationFetcher.destroy();
+			Data.locationFetcher = null;
+		}
+	} catch(Exception e){
+		e.printStackTrace();
+	}
 		super.onDestroy();
         
         ASSL.closeActivity(relative);

@@ -841,7 +841,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		});
 		
 		
-		//TODO jugnoo off
 		jugnooONToggle.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -1039,7 +1038,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							if(myLocation != null){
 								if(Data.driverInfos.size() > 0){
 									
-									//TODO filter drivers
 									ArrayList<DriverInfo> arrayList = new ArrayList<DriverInfo>();
 									
 //									Data.mapTarget = map.getCameraPosition().target;
@@ -3218,8 +3216,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		saveDataOnPause(false);
 		
-		super.onPause();
-		
 		
 		try{
 			if(userMode == UserMode.PASSENGER){
@@ -3243,6 +3239,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		
 		destroyFusedLocationFetchers();
+		
+		super.onPause();
 		
 	}
 	
@@ -3339,8 +3337,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			HomeActivity.myLocation = location;
-			
-			//TODO
 			
 			
 				if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
@@ -3877,7 +3873,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    						double latitude = dataI.getDouble("latitude");
 	    						double longitude = dataI.getDouble("longitude");
 	    							
-	    						Data.driverInfos.add(new DriverInfo(userId, latitude, longitude));
+	    						String userName = "", phoneNo = "", driverCarImage = "", userImage = "";
+	    						try{
+	    							userName = dataI.getString("user_name");
+	    							userImage = dataI.getString("user_image");
+	    							driverCarImage = dataI.getString("driver_car_image");
+	    							phoneNo = dataI.getString("phone_no");
+	    						} catch(Exception e){
+	    							e.printStackTrace();
+	    						}
+	    						
+	    						Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo));
 	    					}
 	    				}
 	    				catch(Exception e){
@@ -3886,6 +3892,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    			}
 	    		
 	    		}
+	    		
 	    		
 	    		if(!driverAcceptPushRecieved){
 	    			myAddress = getAddress(destination.latitude, destination.longitude);
@@ -8047,11 +8054,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		destroyFusedLocationFetchers();
 		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 			if(myLocation == null){
-				lowPowerLF = new LocationFetcher(HomeActivity.this, 10000, 0);
-				highAccuracyLF = new LocationFetcher(HomeActivity.this, 60000, 2);
+				if(lowPowerLF == null){
+					lowPowerLF = new LocationFetcher(HomeActivity.this, 10000, 0);
+				}
+				if(highAccuracyLF == null){
+					highAccuracyLF = new LocationFetcher(HomeActivity.this, 60000, 2);
+				}
 			}
 			else{
-				highAccuracyLF = new LocationFetcher(HomeActivity.this, 60000, 2);
+				if(highAccuracyLF == null){
+					highAccuracyLF = new LocationFetcher(HomeActivity.this, 60000, 2);
+				}
 			}
 		}
 	}
@@ -8064,6 +8077,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void destroyLowPowerFusedLocationFetcher(){
 		try{
+			Log.e("lowPowerLF destroy *****************************************", "="+lowPowerLF);
 			if(lowPowerLF != null){
 				lowPowerLF.destroy();
 				lowPowerLF = null;
@@ -8074,6 +8088,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	public void destroyHighAccuracyFusedLocationFetcher(){
 		try{
+			Log.e("highAccuracyLF destroy **************************************", "="+highAccuracyLF);
 			if(highAccuracyLF != null){
 				highAccuracyLF.destroy();
 				highAccuracyLF = null;
@@ -8086,15 +8101,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void locationChanged(Location location, int priority) {
-		Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
+		
 		if(priority == 0){
 			if(location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK){
+				Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
 				drawLocationChanged(location);
 			}
 		}
 		else if(priority == 2){
+			destroyLowPowerFusedLocationFetcher();
 			if(location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK){
-				destroyLowPowerFusedLocationFetcher();
+				Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
 				drawLocationChanged(location);
 			}
 		}
