@@ -4185,6 +4185,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             if (status.equalsIgnoreCase("OK")) {
                 JSONArray Results = jsonObj.getJSONArray("results");
                 JSONObject zero = Results.getJSONObject(0);
+                
+                String streetNumber = "", subLocality = "", locality = "", country = "", postalCode = "";
+                
+                if(zero.has("address_components")){
+                	JSONArray addressComponents = zero.getJSONArray("address_components");
+                	for(int i=0; i<addressComponents.length(); i++){
+                		
+                	}
+                }
+                else{
+                	
+                }
                 fullAddress = zero.getString("formatted_address");
                 Log.e("Results.length() ==","="+Results.length());
             }
