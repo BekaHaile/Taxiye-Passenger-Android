@@ -363,7 +363,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	static UserMode userMode;
 	
 	static JugnooDriverMode jugnooDriverMode;
-	static ExceptionalDriver exceptionalDriver;
+	static ExceptionalDriver exceptionalDriver = ExceptionalDriver.NO;
 	
 	static DriverScreenMode driverScreenMode;
 	
@@ -3156,6 +3156,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
 					editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
 					editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+					editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
 					editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
 					editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
 					
@@ -3173,6 +3174,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
 					editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
 					editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+					editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
 					editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
 					editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
 					
@@ -3873,17 +3875,34 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    						double latitude = dataI.getDouble("latitude");
 	    						double longitude = dataI.getDouble("longitude");
 	    							
-	    						String userName = "", phoneNo = "", driverCarImage = "", userImage = "";
+//	    						{
+//	    						    "data": [
+//	    						        {
+//	    						            "user_name": "Chaman Laal",
+//	    						            "phone_no": "+919780298413",
+//	    						            "user_image": "http://graph.facebook.com/1411907995761545/picture?width=160&height=160",
+//	    						            "driver_car_image": "",
+//	    						            "latitude": 30.71882,
+//	    						            "longitude": 76.810148,
+//	    						            "user_id": 208,
+//	    						            "distance": 2620,
+//	    						            "rating": 5
+//	    						        }
+//	    						    ]
+//	    						}
+	    						
+	    						String userName = "", phoneNo = "", driverCarImage = "", userImage = "", rating = "4";
 	    						try{
 	    							userName = dataI.getString("user_name");
 	    							userImage = dataI.getString("user_image");
 	    							driverCarImage = dataI.getString("driver_car_image");
 	    							phoneNo = dataI.getString("phone_no");
+	    							rating = dataI.getString("rating");
 	    						} catch(Exception e){
 	    							e.printStackTrace();
 	    						}
 	    						
-	    						Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo));
+	    						Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating));
 	    					}
 	    				}
 	    				catch(Exception e){
@@ -4034,6 +4053,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
 					editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
 					editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+					editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
 					editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
 					editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
 	        	
@@ -4172,8 +4192,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     	String fullAddress = "Unnamed";
 
         try {
-
-        	
         	Log.i("curLatitude ",">"+curLatitude);
         	Log.i("curLongitude ",">"+curLongitude);
         	
@@ -4186,18 +4204,106 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 JSONArray Results = jsonObj.getJSONArray("results");
                 JSONObject zero = Results.getJSONObject(0);
                 
-                String streetNumber = "", subLocality = "", locality = "", country = "", postalCode = "";
+                String streetNumber = "", route = "", subLocality2 = "", subLocality1 = "", locality = "", administrativeArea2 = "", 
+                		administrativeArea1 = "", country = "", postalCode = "";
                 
                 if(zero.has("address_components")){
-                	JSONArray addressComponents = zero.getJSONArray("address_components");
-                	for(int i=0; i<addressComponents.length(); i++){
+                	try {
                 		
-                	}
+                		ArrayList<String> selectedAddressComponentsArr = new ArrayList<String>();
+						JSONArray addressComponents = zero.getJSONArray("address_components");
+						
+						for(int i=0; i<addressComponents.length(); i++){
+							
+							JSONObject iObj = addressComponents.getJSONObject(i);
+							JSONArray jArr = iObj.getJSONArray("types");
+							
+							ArrayList<String> addressTypes = new ArrayList<String>();
+							for(int j=0; j<jArr.length(); j++){
+								addressTypes.add(jArr.getString(j));
+							}
+							
+							if("".equalsIgnoreCase(streetNumber) && addressTypes.contains("street_number")){
+								streetNumber = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(streetNumber) && !selectedAddressComponentsArr.contains(streetNumber)){
+									selectedAddressComponentsArr.add(streetNumber);
+								}
+							}
+							if("".equalsIgnoreCase(route) && addressTypes.contains("route")){
+								route = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(route) && !selectedAddressComponentsArr.contains(route)){
+									selectedAddressComponentsArr.add(route);
+								}
+							}
+							if("".equalsIgnoreCase(subLocality2) && addressTypes.contains("sublocality_level_2")){
+								subLocality2 = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(subLocality2) && !selectedAddressComponentsArr.contains(subLocality2)){
+									selectedAddressComponentsArr.add(subLocality2);
+								}
+							}
+							if("".equalsIgnoreCase(subLocality1) && addressTypes.contains("sublocality_level_1")){
+								subLocality1 = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(subLocality1) && !selectedAddressComponentsArr.contains(subLocality1)){
+									selectedAddressComponentsArr.add(subLocality1);
+								}
+							}
+							if("".equalsIgnoreCase(locality) && addressTypes.contains("locality")){
+								locality = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(locality) && !selectedAddressComponentsArr.contains(locality)){
+									selectedAddressComponentsArr.add(locality);
+								}
+							}
+							if("".equalsIgnoreCase(administrativeArea2) && addressTypes.contains("administrative_area_level_2")){
+								administrativeArea2 = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(administrativeArea2) && !selectedAddressComponentsArr.contains(administrativeArea2)){
+									selectedAddressComponentsArr.add(administrativeArea2);
+								}
+							}
+							if("".equalsIgnoreCase(administrativeArea1) && addressTypes.contains("administrative_area_level_1")){
+								administrativeArea1 = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(administrativeArea1) && !selectedAddressComponentsArr.contains(administrativeArea1)){
+									selectedAddressComponentsArr.add(administrativeArea1);
+								}
+							}
+							if("".equalsIgnoreCase(country) && addressTypes.contains("country")){
+								country = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(country) && !selectedAddressComponentsArr.contains(country)){
+									selectedAddressComponentsArr.add(country);
+								}
+							}
+							if("".equalsIgnoreCase(postalCode) && addressTypes.contains("postal_code")){
+								postalCode = iObj.getString("long_name");
+								if(!"".equalsIgnoreCase(postalCode) && !selectedAddressComponentsArr.contains(postalCode)){
+									selectedAddressComponentsArr.add(postalCode);
+								}
+							}
+						}
+						
+						fullAddress = "";
+						Log.e("selectedAddressComponentsArr in getAddress = ", "="+selectedAddressComponentsArr);
+						if(selectedAddressComponentsArr.size() > 0){
+							for(int i=0; i<selectedAddressComponentsArr.size(); i++){
+								if(i<selectedAddressComponentsArr.size()-1){
+									fullAddress = fullAddress + selectedAddressComponentsArr.get(i) + ", ";
+								}
+								else{
+									fullAddress = fullAddress + selectedAddressComponentsArr.get(i);
+								}
+							}
+						}
+						else{
+							fullAddress = zero.getString("formatted_address");
+						}
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						fullAddress = zero.getString("formatted_address");
+					}
                 }
                 else{
-                	
+                	fullAddress = zero.getString("formatted_address");
                 }
-                fullAddress = zero.getString("formatted_address");
+                
                 Log.e("Results.length() ==","="+Results.length());
             }
 
@@ -4221,7 +4327,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();
-		
 			
 			params.put("access_token", Data.userData.accessToken);
 			params.put("driver_id", Data.cDriverId);
@@ -4282,7 +4387,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, driverData.getDouble("latitude"), driverData.getDouble("longitude"), 
 											driverData.getString("user_name"), driverData.getString("user_image"), driverData.getString("driver_car_image"), 
-											driverData.getString("phone_no"));
+											driverData.getString("phone_no"), driverData.getString("rating"));
 									
 //									getDistanceTimeAddress = new GetDistanceTimeAddress(Data.mapTarget, true);
 //									getDistanceTimeAddress.execute();
@@ -4723,7 +4828,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									editor.putString(Data.SP_D_NR_USER_ID, "");
 									editor.putString(Data.SP_D_NR_LATITUDE, "");
 									editor.putString(Data.SP_D_NR_LONGITUDE, "");
-									
 									editor.commit();
 									
 									
@@ -4855,8 +4959,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
-
 	}
+	
+	
 	
 	
 	/**
@@ -7320,7 +7425,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 										DriverInfo driverInfo = new DriverInfo(driverId, driverData.getDouble("latitude"), driverData.getDouble("longitude"), 
 												driverData.getString("user_name"), driverData.getString("user_image"), driverData.getString("driver_car_image"), 
-												driverData.getString("phone_no"));
+												driverData.getString("phone_no"), driverData.getString("rating"));
 										
 										
 										new DialogPopup().alertPopup(activity, "Driver Info", ""+driverInfo);
@@ -7883,6 +7988,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
     		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
     		editor.putString(Data.SP_C_DRIVER_PHONE, "");
+			editor.putString(Data.SP_C_DRIVER_RATING, "");
     		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
     		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
     		

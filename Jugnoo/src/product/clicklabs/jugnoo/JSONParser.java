@@ -152,7 +152,7 @@ public class JSONParser {
 				e.printStackTrace();
 			}
 			
-			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout
+			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout, 7 for nullified by chrone
 			if(engagementStatus == 1){
 				screenMode = Data.D_START_RIDE;
 			}
@@ -189,8 +189,6 @@ public class JSONParser {
 					
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
 					
-					
-					
 				}
 				else if(Data.D_IN_RIDE.equalsIgnoreCase(screenMode)){
 					
@@ -206,11 +204,12 @@ public class JSONParser {
 					
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
 					
-					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "0"));
+					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
 					HomeActivity.previousWaitTime = Double.parseDouble(pref.getString(Data.SP_WAIT_TIME, "0"));
 					HomeActivity.previousRideTime = Double.parseDouble(pref.getString(Data.SP_RIDE_TIME, "0"));
 					
 					HomeActivity.waitStart = 2;
+					
 					
 					
 					String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
@@ -297,6 +296,7 @@ public class JSONParser {
 				String SP_C_DRIVER_IMAGE = pref.getString(Data.SP_C_DRIVER_IMAGE, "");
 				String SP_C_DRIVER_CAR_IMAGE = pref.getString(Data.SP_C_DRIVER_CAR_IMAGE, "");
 				String SP_C_DRIVER_PHONE = pref.getString(Data.SP_C_DRIVER_PHONE, "");
+				String SP_C_DRIVER_RATING = pref.getString(Data.SP_C_DRIVER_RATING, "");
 				String SP_C_DRIVER_DISTANCE = pref.getString(Data.SP_C_DRIVER_DISTANCE, "");
 				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
@@ -308,7 +308,7 @@ public class JSONParser {
 				double longitude = Double.parseDouble(SP_C_LONGITUDE);
 				
 				Data.assignedDriverInfo = new DriverInfo(SP_C_DRIVER_ID, latitude, longitude, SP_C_DRIVER_NAME, 
-						SP_C_DRIVER_IMAGE, SP_C_DRIVER_CAR_IMAGE, SP_C_DRIVER_PHONE);
+						SP_C_DRIVER_IMAGE, SP_C_DRIVER_CAR_IMAGE, SP_C_DRIVER_PHONE, SP_C_DRIVER_RATING);
 				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
 				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
 				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;
@@ -320,7 +320,7 @@ public class JSONParser {
 				else if(Data.P_IN_RIDE.equalsIgnoreCase(screenMode)){
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
 					
-					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "0"));
+					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
 					
 					String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
 					String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
@@ -435,6 +435,7 @@ public class JSONParser {
         		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
         		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
         		editor.putString(Data.SP_C_DRIVER_PHONE, "");
+				editor.putString(Data.SP_C_DRIVER_RATING, "");
         		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
         		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
         		

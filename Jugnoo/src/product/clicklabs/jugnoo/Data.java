@@ -72,6 +72,7 @@ public class Data {
 			SP_C_DRIVER_IMAGE = "c_driver_image",
 			SP_C_DRIVER_CAR_IMAGE = "c_driver_car_image",
 			SP_C_DRIVER_PHONE = "c_driver_phone",
+			SP_C_DRIVER_RATING = "c_driver_rating",
 			SP_C_DRIVER_DISTANCE = "c_driver_distance",
 			SP_C_DRIVER_DURATION = "c_driver_duration",
 			
@@ -244,8 +245,7 @@ public class Data {
 			for (Signature signature : info.signatures) {
 				MessageDigest md = MessageDigest.getInstance("SHA");
 				md.update(signature.toByteArray());
-				Log.e("KeyHash:",
-						","
+				Log.e("KeyHash:", ","
 								+ Base64.encodeToString(md.digest(),
 										Base64.DEFAULT));
 			}
