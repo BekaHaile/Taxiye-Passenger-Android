@@ -1,9 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
@@ -13,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -27,11 +22,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -490,7 +482,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									Database database22 = new Database(RegisterScreen.this);
 									database22.insertEmail(emailId);
 									database22.close();
-									fetchExceptionalDriver(activity);
+									loginDataFetched = true;
+									
+									DialogPopup.dismissLoadingDialog();
 									
 								}
 								}
@@ -524,58 +518,58 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	/**
 	 * ASync for fetchExceptionalDriver from server
 	 */
-	public void fetchExceptionalDriver(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-
-			Log.i("access_token", "="+Data.userData.accessToken);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
-			client.post(Data.SERVER_URL + "/exceptional_user", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								int excepInt = jObj.getInt("exceptional_user");
-								if(1 == excepInt){
-									HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
-								}
-								else{
-									HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-							}
-	
-							loginDataFetched = true;
-							
-							DialogPopup.dismissLoadingDialog();
-						}
-	
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-							loginDataFetched = true;
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			DialogPopup.dismissLoadingDialog();
-		}
-	}
+//	public void fetchExceptionalDriver(final Activity activity) {
+//		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+//			
+//			
+//			RequestParams params = new RequestParams();
+//			params.put("access_token", Data.userData.accessToken);
+//
+//			Log.i("access_token", "="+Data.userData.accessToken);
+//			
+//		
+//			AsyncHttpClient client = Data.getClient();
+//			client.setTimeout(Data.SERVER_TIMEOUT);
+//			client.post(Data.SERVER_URL + "/exceptional_user", params,
+//					new AsyncHttpResponseHandler() {
+//					private JSONObject jObj;
+//	
+//						@Override
+//						public void onSuccess(String response) {
+//							Log.v("Server response", "response = " + response);
+//							try {
+//								jObj = new JSONObject(response);
+//								int excepInt = jObj.getInt("exceptional_user");
+//								if(1 == excepInt){
+//									HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
+//								}
+//								else{
+//									HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+//								}
+//							}  catch (Exception exception) {
+//								exception.printStackTrace();
+//								HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+//							}
+//	
+//							loginDataFetched = true;
+//							
+//							DialogPopup.dismissLoadingDialog();
+//						}
+//	
+//						@Override
+//						public void onFailure(Throwable arg0) {
+//							Log.e("request fail", arg0.toString());
+//							DialogPopup.dismissLoadingDialog();
+//							HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+//							loginDataFetched = true;
+//						}
+//					});
+//		}
+//		else {
+//			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+//			DialogPopup.dismissLoadingDialog();
+//		}
+//	}
 	
 	
 	
@@ -769,7 +763,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								else{
 									
 									new JSONParser().parseLoginData(activity, response);
-									fetchExceptionalDriver(activity);
+									loginDataFetched = true;
+									
+									DialogPopup.dismissLoadingDialog();
 									
 								}
 								}
