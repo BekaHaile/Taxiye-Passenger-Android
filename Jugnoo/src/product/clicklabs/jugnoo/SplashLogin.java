@@ -1022,6 +1022,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			Log.i("os_version", "="+Data.osVersion);
 			Log.i("device_name", "="+Data.deviceName);
 			Log.i("device_type", "="+"0");
+			Log.i("Server link", "="+Data.SERVER_URL + "/customer_fb_registeration_form");
 			
 			
 		

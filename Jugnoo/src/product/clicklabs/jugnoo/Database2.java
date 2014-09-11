@@ -253,27 +253,42 @@ public class Database2 {																	// class for handling database related 
 	
 	
 	public String getDLDAccessToken() {
-		String[] columns = new String[] { Database2.DLD_ACCESS_TOKEN };
-		Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
-		cursor.moveToFirst();
-		String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_ACCESS_TOKEN));
-		return choice;
+		try {
+			String[] columns = new String[] { Database2.DLD_ACCESS_TOKEN };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
+			cursor.moveToFirst();
+			String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_ACCESS_TOKEN));
+			return choice;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	public String getDLDDeviceToken() {
-		String[] columns = new String[] { Database2.DLD_DEVICE_TOKEN };
-		Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
-		cursor.moveToFirst();
-		String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_DEVICE_TOKEN));
-		return choice;
+		try {
+			String[] columns = new String[] { Database2.DLD_DEVICE_TOKEN };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
+			cursor.moveToFirst();
+			String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_DEVICE_TOKEN));
+			return choice;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	public String getDLDServerUrl() {
-		String[] columns = new String[] { Database2.DLD_SERVER_URL };
-		Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
-		cursor.moveToFirst();
-		String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_SERVER_URL));
-		return choice;
+		try {
+			String[] columns = new String[] { Database2.DLD_SERVER_URL };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_LOC_DATA, columns, null, null, null, null, null);
+			cursor.moveToFirst();
+			String choice = cursor.getString(cursor.getColumnIndex(Database2.DLD_SERVER_URL));
+			return choice;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	

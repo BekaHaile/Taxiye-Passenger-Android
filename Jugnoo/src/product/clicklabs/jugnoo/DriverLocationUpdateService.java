@@ -78,51 +78,9 @@ public class DriverLocationUpdateService extends Service {
         try{
         	
         	Log.i("Driver location update started", "=======");
-        	
-        	Database2 database2 = new Database2(this);
-            database2.updateDriverServiceRestartOnReboot("yes");
-        	database2.updateJugnooOn("on");
-        	
-        	
-        	
-        	//TODO Toggle live to trial
-    		String DEV_SERVER_URL = "http://54.81.229.172:8000";
-    		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
-    		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
+        	updateServerData();
     		
-    		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
-    		
-    		
-    		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
-    		
-    		SERVER_URL = DEFAULT_SERVER_URL;
-    		
-    		SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
-    		String link = preferences.getString(SP_SERVER_LINK, DEFAULT_SERVER_URL);
-    		
-    		if(link.equalsIgnoreCase(TRIAL_SERVER_URL)){
-    			SERVER_URL = TRIAL_SERVER_URL;
-    		}
-    		else if(link.equalsIgnoreCase(LIVE_SERVER_URL)){
-    			SERVER_URL = LIVE_SERVER_URL;
-    		}
-    		else if(link.equalsIgnoreCase(DEV_SERVER_URL)){
-    			SERVER_URL = DEV_SERVER_URL;
-    		}
-    		
-    		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-    		accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
-    		
-    		deviceToken = DriverLocationUpdateService.this.getSharedPreferences(SplashLogin.class.getSimpleName(), 
-    				Context.MODE_PRIVATE).getString("registration_id", "");
-        	
-    		database2.insertDriverLocData(accessToken, deviceToken, SERVER_URL);
-    		database2.close();
-    		
-    		
-    		
-    		
-    		database2 = new Database2(this);
+    		Database2 database2 = new Database2(this);
     		
     		String fast = database2.getDriverServiceFast();
     		
@@ -163,6 +121,48 @@ public class DriverLocationUpdateService extends Service {
         }
         
     }
+    
+    
+    public void updateServerData(){
+    	Database2 database2 = new Database2(this);
+        database2.updateDriverServiceRestartOnReboot("yes");
+    	database2.updateJugnooOn("on");
+    	
+    	//TODO Toggle live to trial
+		String DEV_SERVER_URL = "http://54.81.229.172:8000";
+		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
+		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
+		
+		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+		
+		
+		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
+		
+		SERVER_URL = DEFAULT_SERVER_URL;
+		
+		SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
+		String link = preferences.getString(SP_SERVER_LINK, DEFAULT_SERVER_URL);
+		
+		if(link.equalsIgnoreCase(TRIAL_SERVER_URL)){
+			SERVER_URL = TRIAL_SERVER_URL;
+		}
+		else if(link.equalsIgnoreCase(LIVE_SERVER_URL)){
+			SERVER_URL = LIVE_SERVER_URL;
+		}
+		else if(link.equalsIgnoreCase(DEV_SERVER_URL)){
+			SERVER_URL = DEV_SERVER_URL;
+		}
+		
+		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+		accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
+		
+		deviceToken = DriverLocationUpdateService.this.getSharedPreferences(SplashLogin.class.getSimpleName(), 
+				Context.MODE_PRIVATE).getString("registration_id", "");
+    	
+		database2.insertDriverLocData(accessToken, deviceToken, SERVER_URL);
+		database2.close();
+    }
+    
     
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -267,17 +267,29 @@ public class DriverLocationUpdateService extends Service {
 				@Override
 				public void run() {
 					
-					Database2 database2 = new Database2(DriverLocationUpdateService.this);
-					String userMode = database2.getUserMode();
-					database2.close();
-					
-					Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
-					
-					if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
+					try {
+						Database2 database2 = new Database2(DriverLocationUpdateService.this);
 						
-					}
-					else{
-						stopSelf();
+						String accessToken = database2.getDLDAccessToken();
+						if("".equalsIgnoreCase(accessToken)){
+							database2.close();
+							updateServerData();
+							database2 = new Database2(DriverLocationUpdateService.this);
+						}
+						
+						String userMode = database2.getUserMode();
+						database2.close();
+						
+						Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
+						
+						if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
+							
+						}
+						else{
+							stopSelf();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 					
 				}

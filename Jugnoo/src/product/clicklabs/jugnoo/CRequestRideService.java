@@ -193,6 +193,7 @@ public class CRequestRideService extends Service {
 					
 					simpleJSONParser = null;
 					nameValuePairs = null;
+					
 					return result;
 				}
 				else{

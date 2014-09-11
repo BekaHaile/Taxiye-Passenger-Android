@@ -38,12 +38,17 @@ public class JSONParser {
 				HomeActivity.userMode = UserMode.DRIVER;
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
 				
-				int excepInt = userData.getInt("exceptional_user");
-				if(1 == excepInt){
-					HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
-				}
-				else{
+				try {
+					int excepInt = userData.getInt("exceptional_driver");
+					if(1 == excepInt){
+						HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
+					}
+					else{
+						HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+					}
+				} catch (Exception e) {
 					HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+					e.printStackTrace();
 				}
 			}
 			else if(currentUserStatus == 2){
@@ -127,7 +132,7 @@ public class JSONParser {
 		if(currentUserStatus == 1){
 			
 			try{
-				int excepInt = userData.getInt("exceptional_user");
+				int excepInt = userData.getInt("exceptional_driver");
 				if(1 == excepInt){
 					HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
 				}
@@ -150,10 +155,9 @@ public class JSONParser {
 			
 			//TODO
 			try{
-				if(!"".equalsIgnoreCase(pref.getString(Data.SP_D_ENGAGEMENT_ID, ""))){
+//				if(!"".equalsIgnoreCase(pref.getString(Data.SP_D_ENGAGEMENT_ID, ""))){
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-					nameValuePairs.add(new BasicNameValuePair("engage_id", pref.getString(Data.SP_D_ENGAGEMENT_ID, "")));
 					
 					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
 					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
@@ -165,11 +169,28 @@ public class JSONParser {
 						try{
 							JSONObject jObject = new JSONObject(result);
 							engagementStatus = jObject.getInt("log");
+							
+							if((1 == engagementStatus) || (2 == engagementStatus)){
+								String engagementId = jObject.getString("engagement_id");
+								String userId = jObject.getString("user_id");
+								String latitude = jObject.getString("latitude");
+								String longitude = jObject.getString("longitude");
+								String customerName = jObject.getString("customer_name");
+								String customerImage = jObject.getString("customer_image");
+								String customerPhone = jObject.getString("customer_phone");
+								String customerRating = jObject.getString("customer_raitng");
+								
+								
+							}
+							else{
+								
+							}
+							
 						} catch(Exception e){
 							e.printStackTrace();
 						}
 					}
-				}
+//				}
 			} catch(Exception e){
 				e.printStackTrace();
 			}
@@ -279,6 +300,28 @@ public class JSONParser {
 						try{
 							JSONObject jObject = new JSONObject(result);
 							engagementStatus = jObject.getInt("log");
+							
+							if((1 == engagementStatus) || (2 == engagementStatus)){
+								String engagementId = jObject.getString("engagement_id");
+								String sessionId = jObject.getString("session_id");
+								String userId = jObject.getString("user_id");
+								String latitude = jObject.getString("latitude");
+								String longitude = jObject.getString("longitude");
+								String driverName = jObject.getString("driver_name");
+								String driverImage = jObject.getString("driver_image");
+								String driverCarImage = jObject.getString("driver_car_image");
+								String driverPhone = jObject.getString("driver_phone");
+								String driverRating = jObject.getString("driver_raitng");
+								
+								if(2 == engagementStatus){
+									String pickupLatitude = jObject.getString("pickup_latitude");
+									String pickupLongitude = jObject.getString("pickup_longitude");
+								}
+							}
+							else{
+								
+							}
+							
 						} catch(Exception e){
 							e.printStackTrace();
 						}
@@ -385,11 +428,11 @@ public class JSONParser {
 //		nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 //		
 //		SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-//		String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/exceptional_user", nameValuePairs);
+//		String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/exceptional_driver", nameValuePairs);
 //		
 //		try{
-//			//{"exceptional_user":1} show Jugnoo ON
-//			//{"exceptional_user":0} show driver mode ON
+//			//{"exceptional_driver":1} show Jugnoo ON
+//			//{"exceptional_driver":0} show driver mode ON
 //			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
 //				Log.e("timeout","=");
 //				HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
@@ -397,7 +440,7 @@ public class JSONParser {
 //			else{
 //				try{
 //					JSONObject jObject = new JSONObject(result);
-//					int excepInt = jObject.getInt("exceptional_user");
+//					int excepInt = jObject.getInt("exceptional_driver");
 //					if(1 == excepInt){
 //						HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
 //					}

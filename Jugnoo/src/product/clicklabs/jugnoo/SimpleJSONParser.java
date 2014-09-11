@@ -47,7 +47,7 @@ import android.os.Environment;
 public class SimpleJSONParser {
 
 	static String SERVER_TIMEOUT = "SERVER_TIMEOUT";
-	static int TIMEOUT_CONNECTION = 5000, TIMEOUT_SOCKET = 5000;
+	static int TIMEOUT_CONNECTION = 15000, TIMEOUT_SOCKET = 15000;
 
 	// constructor
 	public SimpleJSONParser() {

@@ -29,6 +29,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -44,6 +45,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -99,6 +101,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.LatLngBoundsCreator;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -1284,9 +1288,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				 GCMIntentService.clearNotifications(HomeActivity.this);
-				 try{GCMIntentService.requestRemoveHandler.removeCallbacks(GCMIntentService.requestRemoveRunnable);} catch(Exception e){}
-				driverAcceptRideAsync(HomeActivity.this);
+				if(getBatteryPercentage() >= 10){
+					 GCMIntentService.clearNotifications(HomeActivity.this);
+					 try{GCMIntentService.requestRemoveHandler.removeCallbacks(GCMIntentService.requestRemoveRunnable);} catch(Exception e){}
+					driverAcceptRideAsync(HomeActivity.this);
+				}
+				else{
+					new DialogPopup().alertPopup(HomeActivity.this, "", "Battery Level must be greater than 10% to accept the ride. Plugin to a power source to continue.");
+				}
 			}
 		});
 		
@@ -1345,7 +1354,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				
-				startRidePopup(HomeActivity.this);
+				if(getBatteryPercentage() >= 10){
+					startRidePopup(HomeActivity.this);
+				}
+				else{
+					new DialogPopup().alertPopup(HomeActivity.this, "", "Battery Level must be greater than 10% to start the ride. Plugin to a power source to continue.");
+				}
 				
 //	        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
 //	        	
@@ -1656,8 +1670,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
 							switchDriverScreen(driverScreenMode);
 						}
-						
-						
 						
 						
 						
@@ -3985,6 +3997,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						addCurrentLocationAddressMarker(myAddress, destination);
 					}
 					
+					try {
+						if(Data.driverInfos.size() > 0){
+							LatLng source = Data.driverInfos.get(0).latLng;
+							LatLng bound0 = new LatLng(source.latitude-0.05, destination.longitude-0.05);
+						    LatLng bound1 = new LatLng(source.latitude-0.05, source.longitude+0.05);
+						    LatLng bound2 = new LatLng(destination.latitude+0.05, destination.longitude-0.05);
+						    LatLng bound3 = new LatLng(destination.latitude-0.05, source.longitude+0.05);
+						    LatLngBounds bounds = new LatLngBounds.Builder().include(bound0).include(bound1).include(bound2).include(bound3).build();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
 				}
 	 			
     		}
@@ -4021,6 +4046,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        	distanceString = getResources().getString(R.string.no_drivers_nearby);
 	        	nearestDriverText.setText(distanceString);
 	        }
+	        
 	        
 	        
 	        
@@ -4177,6 +4203,30 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	public float getBatteryPercentage(){
+		try {
+			IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+			Intent batteryStatus = registerReceiver(null, ifilter);
+			int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+			int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+			float batteryPct = (level / (float)scale)*100;
+			
+			// Are we charging / charged?
+			int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+			boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+			                     status == BatteryManager.BATTERY_STATUS_FULL;
+			if(isCharging){
+				return 70;
+			}
+			else{
+				return batteryPct;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 70;
+		}
+	}
+	
 	
 	String getAddress(double curLatitude, double curLongitude) {
     	String fullAddress = "Unnamed";
@@ -4215,55 +4265,55 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							
 							if("".equalsIgnoreCase(streetNumber) && addressTypes.contains("street_number")){
 								streetNumber = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(streetNumber) && !selectedAddressComponentsArr.contains(streetNumber)){
+								if(!"".equalsIgnoreCase(streetNumber) && !selectedAddressComponentsArr.toString().contains(streetNumber)){
 									selectedAddressComponentsArr.add(streetNumber);
 								}
 							}
 							if("".equalsIgnoreCase(route) && addressTypes.contains("route")){
 								route = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(route) && !selectedAddressComponentsArr.contains(route)){
+								if(!"".equalsIgnoreCase(route) && !selectedAddressComponentsArr.toString().contains(route)){
 									selectedAddressComponentsArr.add(route);
 								}
 							}
 							if("".equalsIgnoreCase(subLocality2) && addressTypes.contains("sublocality_level_2")){
 								subLocality2 = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(subLocality2) && !selectedAddressComponentsArr.contains(subLocality2)){
+								if(!"".equalsIgnoreCase(subLocality2) && !selectedAddressComponentsArr.toString().contains(subLocality2)){
 									selectedAddressComponentsArr.add(subLocality2);
 								}
 							}
 							if("".equalsIgnoreCase(subLocality1) && addressTypes.contains("sublocality_level_1")){
 								subLocality1 = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(subLocality1) && !selectedAddressComponentsArr.contains(subLocality1)){
+								if(!"".equalsIgnoreCase(subLocality1) && !selectedAddressComponentsArr.toString().contains(subLocality1)){
 									selectedAddressComponentsArr.add(subLocality1);
 								}
 							}
 							if("".equalsIgnoreCase(locality) && addressTypes.contains("locality")){
 								locality = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(locality) && !selectedAddressComponentsArr.contains(locality)){
+								if(!"".equalsIgnoreCase(locality) && !selectedAddressComponentsArr.toString().contains(locality)){
 									selectedAddressComponentsArr.add(locality);
 								}
 							}
 							if("".equalsIgnoreCase(administrativeArea2) && addressTypes.contains("administrative_area_level_2")){
 								administrativeArea2 = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(administrativeArea2) && !selectedAddressComponentsArr.contains(administrativeArea2)){
+								if(!"".equalsIgnoreCase(administrativeArea2) && !selectedAddressComponentsArr.toString().contains(administrativeArea2)){
 									selectedAddressComponentsArr.add(administrativeArea2);
 								}
 							}
 							if("".equalsIgnoreCase(administrativeArea1) && addressTypes.contains("administrative_area_level_1")){
 								administrativeArea1 = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(administrativeArea1) && !selectedAddressComponentsArr.contains(administrativeArea1)){
+								if(!"".equalsIgnoreCase(administrativeArea1) && !selectedAddressComponentsArr.toString().contains(administrativeArea1)){
 									selectedAddressComponentsArr.add(administrativeArea1);
 								}
 							}
 							if("".equalsIgnoreCase(country) && addressTypes.contains("country")){
 								country = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(country) && !selectedAddressComponentsArr.contains(country)){
+								if(!"".equalsIgnoreCase(country) && !selectedAddressComponentsArr.toString().contains(country)){
 									selectedAddressComponentsArr.add(country);
 								}
 							}
 							if("".equalsIgnoreCase(postalCode) && addressTypes.contains("postal_code")){
 								postalCode = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(postalCode) && !selectedAddressComponentsArr.contains(postalCode)){
+								if(!"".equalsIgnoreCase(postalCode) && !selectedAddressComponentsArr.toString().contains(postalCode)){
 									selectedAddressComponentsArr.add(postalCode);
 								}
 							}

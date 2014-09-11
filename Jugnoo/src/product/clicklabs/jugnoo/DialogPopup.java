@@ -105,25 +105,31 @@ public class DialogPopup {
 	 * @param msg string message to show in dialog
 	 */
 	public static void showLoadingDialog(Context context, String message) {
-		if(isDialogShowing()){
-			dismissLoadingDialog();
+		try {
+			if(isDialogShowing()){
+				dismissLoadingDialog();
+			}
+			progressDialog = new ProgressDialog(context, android.R.style.Theme_Translucent_NoTitleBar);
+			progressDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			progressDialog.show();
+			WindowManager.LayoutParams layoutParams = progressDialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			progressDialog.setCancelable(false);
+			progressDialog.setContentView(R.layout.loading_box);
+			
+			FrameLayout frameLayout = (FrameLayout) progressDialog.findViewById(R.id.rv);
+			new ASSL((Activity)context, frameLayout, 1184, 720, true);
+			
+			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.regularFont(context));
+			messageText.setText(message); 
+			messageText.setMinimumWidth((int)(250.0 * ASSL.Xscale()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			if(isDialogShowing()){
+				dismissLoadingDialog();
+			}
 		}
-		progressDialog = new ProgressDialog(context, android.R.style.Theme_Translucent_NoTitleBar);
-		progressDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-		progressDialog.show();
-		WindowManager.LayoutParams layoutParams = progressDialog.getWindow().getAttributes();
-		layoutParams.dimAmount = 0.6f;
-		progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-		progressDialog.setCancelable(false);
-		progressDialog.setContentView(R.layout.loading_box);
-		
-		FrameLayout frameLayout = (FrameLayout) progressDialog.findViewById(R.id.rv);
-		new ASSL((Activity)context, frameLayout, 1184, 720, true);
-		
-		TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.regularFont(context));
-		messageText.setText(message); 
-		messageText.setMinimumWidth((int)(250.0 * ASSL.Xscale()));
-		
 		
 	}
 	
