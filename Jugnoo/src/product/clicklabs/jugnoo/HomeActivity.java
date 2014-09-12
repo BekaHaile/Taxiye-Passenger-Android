@@ -3999,12 +3999,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 					try {
 						if(Data.driverInfos.size() > 0){
+							double margin = 0.07;
 							LatLng source = Data.driverInfos.get(0).latLng;
-							LatLng bound0 = new LatLng(source.latitude-0.05, destination.longitude-0.05);
-						    LatLng bound1 = new LatLng(source.latitude-0.05, source.longitude+0.05);
-						    LatLng bound2 = new LatLng(destination.latitude+0.05, destination.longitude-0.05);
-						    LatLng bound3 = new LatLng(destination.latitude-0.05, source.longitude+0.05);
+							LatLng bound0 = new LatLng(source.latitude-margin, destination.longitude-margin);
+						    LatLng bound1 = new LatLng(source.latitude-margin, source.longitude+margin);
+						    LatLng bound2 = new LatLng(destination.latitude+margin, destination.longitude-margin);
+						    LatLng bound3 = new LatLng(destination.latitude-margin, source.longitude+margin);
 						    LatLngBounds bounds = new LatLngBounds.Builder().include(bound0).include(bound1).include(bound2).include(bound3).build();
+						    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0), 1000, null);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -8163,6 +8165,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		} catch(Exception e){e.printStackTrace();}
 		
 	}
+	
 	
 	//Invalid access token
 	
