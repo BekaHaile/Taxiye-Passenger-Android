@@ -110,6 +110,7 @@ public class JSONParser {
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
 				userData.getString("user_image"), id);
 		
+		
 		try{
 			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
 			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
@@ -127,10 +128,7 @@ public class JSONParser {
 		//current_user_status = 1 driver or 2 user
 		
 		int currentUserStatus = userData.getInt("current_user_status");
-		
-		
 		if(currentUserStatus == 1){
-			
 			try{
 				int excepInt = userData.getInt("exceptional_driver");
 				if(1 == excepInt){
@@ -143,6 +141,18 @@ public class JSONParser {
 				e.printStackTrace();
 				HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 			}
+		}
+		
+		
+		getUserStatus(context, accessToken, currentUserStatus);
+		
+	}
+	
+	
+	
+	public static void getUserStatus(Context context, String accessToken, int currentUserStatus){
+		
+		if(currentUserStatus == 1){ // for driver
 			
 			HomeActivity.userMode = UserMode.DRIVER;
 			
@@ -161,23 +171,44 @@ public class JSONParser {
 					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
 					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
 					
+					Log.e("result of = user_status", "="+result);
 					if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
-						Log.e("timeout","=");
+						
 					}
 					else{
 						try{
-							JSONObject jObject = new JSONObject(result);
-							engagementStatus = jObject.getInt("log");
+							JSONObject jObject1 = new JSONObject(result);
+//							{
+//							    "last_engagement_info": [
+//							        {
+//							            "user_id": 207,
+//							            "pickup_latitude": 30.718836,
+//							            "pickup_longitude": 76.810133,
+//							            "engagement_id": 2522,
+//							            "status": 4,
+//							            "user_name": "Shankar Bhagwati",
+//							            "phone_no": "+919780298413",
+//							            "user_image": "http://graph.facebook.com/717496164959213/picture?width=160&height=160",
+//							            "rating": 4.833333333333333
+//							        }
+//							    ]
+//							}
+							
+							
+							JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
+							JSONObject jObject = lastEngInfoArr.getJSONObject(0);
+							
+							engagementStatus = jObject.getInt("status");
 							
 							if((1 == engagementStatus) || (2 == engagementStatus)){
 								engagementId = jObject.getString("engagement_id");
 								userId = jObject.getString("user_id");
-								latitude = jObject.getString("latitude");
-								longitude = jObject.getString("longitude");
-								customerName = jObject.getString("customer_name");
-								customerImage = jObject.getString("customer_image");
-								customerPhone = jObject.getString("customer_phone");
-								customerRating = jObject.getString("customer_raitng");
+								latitude = jObject.getString("pickup_latitude");
+								longitude = jObject.getString("pickup_longitude");
+								customerName = jObject.getString("user_name");
+								customerImage = jObject.getString("user_image");
+								customerPhone = jObject.getString("phone_no");
+								customerRating = jObject.getString("rating");
 							}
 							else{
 								
@@ -210,7 +241,6 @@ public class JSONParser {
 			else{
 				
 				if(Data.D_START_RIDE.equalsIgnoreCase(screenMode)){
-					
 					HomeActivity.driverScreenMode = DriverScreenMode.D_START_RIDE;
 					
 					Data.dEngagementId = engagementId;
@@ -274,7 +304,7 @@ public class JSONParser {
 			
 			
 		}
-		else{
+		else{ // for customer
 			
 			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 			
@@ -296,35 +326,56 @@ public class JSONParser {
 			try{
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-					nameValuePairs.add(new BasicNameValuePair("engage_id", pref.getString(Data.SP_C_ENGAGEMENT_ID, "")));
 					
 					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
 					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
 					
+					Log.e("result of = user_status", "="+result);
 					if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
-						Log.e("timeout","=");
+						
 					}
 					else{
 						try{
-							JSONObject jObject = new JSONObject(result);
-							engagementStatus = jObject.getInt("log");
+							JSONObject jObject1 = new JSONObject(result);
+							
+//							{
+//							    "last_engagement_info": [
+//							        {
+//							            "driver_id": 208,
+//							            "pickup_latitude": 30.718836,
+//							            "pickup_longitude": 76.810133,
+//							            "engagement_id": 2522,
+//							            "status": 4,
+//							            "session_id": 641,
+//							            "user_name": "Chaman Laal",
+//							            "phone_no": "+919780298413",
+//							            "user_image": "http://graph.facebook.com/1411907995761545/picture?width=160&height=160",
+//							            "driver_car_image": "",
+//							            "current_location_latitude": 0,
+//							            "current_location_longitude": 0,
+//							            "rating": 5
+//							        }
+//							    ]
+//							}
+							
+							JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
+							JSONObject jObject = lastEngInfoArr.getJSONObject(0);
+
+							engagementStatus = jObject.getInt("status");
 							
 							if((1 == engagementStatus) || (2 == engagementStatus)){
 								engagementId = jObject.getString("engagement_id");
 								sessionId = jObject.getString("session_id");
-								userId = jObject.getString("user_id");
-								latitude = jObject.getString("latitude");
-								longitude = jObject.getString("longitude");
-								driverName = jObject.getString("driver_name");
-								driverImage = jObject.getString("driver_image");
+								userId = jObject.getString("driver_id");
+								latitude = jObject.getString("current_location_latitude");
+								longitude = jObject.getString("current_location_longitude");
+								driverName = jObject.getString("user_name");
+								driverImage = jObject.getString("user_image");
 								driverCarImage = jObject.getString("driver_car_image");
-								driverPhone = jObject.getString("driver_phone");
-								driverRating = jObject.getString("driver_raitng");
-								
-								if(2 == engagementStatus){
-									pickupLatitude = jObject.getString("pickup_latitude");
-									pickupLongitude = jObject.getString("pickup_longitude");
-								}
+								driverPhone = jObject.getString("phone_no");
+								driverRating = jObject.getString("rating");
+								pickupLatitude = jObject.getString("pickup_latitude");
+								pickupLongitude = jObject.getString("pickup_longitude");
 							}
 							else{
 								
@@ -411,12 +462,7 @@ public class JSONParser {
 				}
 				
 			}
-			
 		}
-		
-		
-		
-		
 		
 	}
 	
@@ -425,7 +471,7 @@ public class JSONParser {
 	
 	
 	
-	public void clearSPData(final Context context){
+	public static void clearSPData(final Context context){
 		new Thread(new Runnable() {
 			
 			@Override

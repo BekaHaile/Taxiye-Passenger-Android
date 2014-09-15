@@ -1512,7 +1512,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	}
 
 	@Override
-	public void locationChanged(Location location, int priority) {
+	public void onLocationChanged(Location location, int priority) {
 		
 	}
 	

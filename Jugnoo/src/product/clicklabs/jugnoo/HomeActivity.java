@@ -342,9 +342,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	static double fareFixed = 30, farePerKm = 10, fareThresholdDistance = 2;
 	
 	static String waitTime = "";
-	String myAddress = "";
 	
-	boolean dontCallRefreshDriver = false;
 	
 	static Location myLocation;
 	
@@ -417,7 +415,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		userCanceledDialogShown = false;
 		loggedOut = false;
 		zoomedToMyLocation = false;
-		dontCallRefreshDriver = false;
 		
 		
 		appMode = AppMode.NORMAL;
@@ -1586,6 +1583,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			
 			
+//			map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+//				
+//				@Override
+//				public void onMyLocationChange(Location arg0) {
+//					myLocation = arg0;
+//				}
+//			});
+			
 			map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 				
 				@Override
@@ -1602,17 +1607,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						
 						CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, arg0.getSnippet(), "");
 						map.setInfoWindowAdapter(customIW);
-						dontCallRefreshDriver = true;
 						
-						new Handler().postDelayed(new Runnable() {
-							
-							@Override
-							public void run() {
-								dontCallRefreshDriver = false;
-							}
-						}, 4000);
-						
-						return false;
+						return true;
 					}
 					
 					else if(arg0.getTitle().equalsIgnoreCase("start ride location")){
@@ -1726,10 +1722,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					  Log.e("onMapSettled","=onMapSettled");
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 						  if(myLocation != null){
-							  if(!dontCallRefreshDriver){
-								  getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
-								  getDistanceTimeAddress.execute();
-							  }
+							  getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
+							  getDistanceTimeAddress.execute();
 						  }
 //						  getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
 //						  getDistanceTimeAddress.execute();
@@ -2086,6 +2080,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void switchDriverScreen(DriverScreenMode mode){
 		if(userMode == UserMode.DRIVER){
+			
+			initializeFusedLocationFetchers();
 			
 			saveDataOnPause(false);
 			
@@ -3442,7 +3438,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 					
 					lastLocation = location;
-					
 				}
 				
 				
@@ -3835,10 +3830,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
-//	        centreInfoRl.setVisibility(View.INVISIBLE);
-//			centreInfoProgress.setVisibility(View.VISIBLE);
 	        nearestDriverProgress.setVisibility(View.VISIBLE);
 	        nearestDriverText.setVisibility(View.GONE);
+	        
+	        addCurrentLocationAddressMarker(destination);
 	    }
 	    
 	    @Override
@@ -3876,22 +3871,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    						String userId = dataI.getString("user_id");
 	    						double latitude = dataI.getDouble("latitude");
 	    						double longitude = dataI.getDouble("longitude");
-	    							
-//	    						{
-//	    						    "data": [
-//	    						        {
-//	    						            "user_name": "Chaman Laal",
-//	    						            "phone_no": "+919780298413",
-//	    						            "user_image": "http://graph.facebook.com/1411907995761545/picture?width=160&height=160",
-//	    						            "driver_car_image": "",
-//	    						            "latitude": 30.71882,
-//	    						            "longitude": 76.810148,
-//	    						            "user_id": 208,
-//	    						            "distance": 2620,
-//	    						            "rating": 5
-//	    						        }
-//	    						    ]
-//	    						}
 	    						
 	    						String userName = "", phoneNo = "", driverCarImage = "", userImage = "", rating = "4";
 	    						try{
@@ -3915,9 +3894,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    		}
 	    		
 	    		
-	    		if(!driverAcceptPushRecieved){
-	    			myAddress = getAddress(destination.latitude, destination.longitude);
-	    		}
 	    		
 	    		LatLng source = null;
 				
@@ -3977,41 +3953,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    protected void onPostExecute(String result) {
 	        super.onPostExecute(result);   
 	        if(!driverAcceptPushRecieved){
-	        	 if(myAddress != null && !"".equalsIgnoreCase(myAddress)){
-//	 				centreLocationSnippet.setText(fullAddress);
-//	 				centreInfoRl.setVisibility(View.VISIBLE);
-	 			}
-	 			else{
-//	 				centreInfoRl.setVisibility(View.INVISIBLE);
-	 			}
-//	 			centreInfoProgress.setVisibility(View.GONE);
-	 			
 	 			
 	 			if(map != null){
 					map.clear();
+					addCurrentLocationAddressMarker(destination);
 					for(int i=0; i<Data.driverInfos.size(); i++){
 						addDriverMarkerForCustomer(Data.driverInfos.get(i));
 					}
 					
-					if(myAddress != null && !"".equalsIgnoreCase(myAddress)){
-						addCurrentLocationAddressMarker(myAddress, destination);
-					}
-					
 					try {
 						if(Data.driverInfos.size() > 0){
-							double margin = 0.07;
 							LatLng source = Data.driverInfos.get(0).latLng;
-							LatLng bound0 = new LatLng(source.latitude-margin, destination.longitude-margin);
-						    LatLng bound1 = new LatLng(source.latitude-margin, source.longitude+margin);
-						    LatLng bound2 = new LatLng(destination.latitude+margin, destination.longitude-margin);
-						    LatLng bound3 = new LatLng(destination.latitude-margin, source.longitude+margin);
-						    LatLngBounds bounds = new LatLngBounds.Builder().include(bound0).include(bound1).include(bound2).include(bound3).build();
-						    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0), 1000, null);
+							LatLng bound0 = new LatLng(source.latitude, source.longitude);
+						    LatLng bound1 = new LatLng(destination.latitude, destination.longitude);
+						    LatLngBounds bounds = new LatLngBounds.Builder().include(bound0).include(bound1).build();
+						    
+						    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200), 1000, null);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
 				}
 	 			
     		}
@@ -4107,10 +4068,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 
-	public void addCurrentLocationAddressMarker(String address, LatLng latLng){
+	public void addCurrentLocationAddressMarker(LatLng latLng){
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions.title("customer_current_location");
-		markerOptions.snippet(""+address);
+		markerOptions.snippet("");
 		markerOptions.position(latLng);
 		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
 		map.addMarker(markerOptions);
@@ -5209,31 +5170,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public class GetAddressStartRide extends AsyncTask<String, Integer, String>{
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-		}
-		
-		@Override
-		protected String doInBackground(String... params) {
-			if(myLocation != null){
-				String address = getAddress(myLocation.getLatitude(), myLocation.getLongitude());
-				return address;
-			}
-			return "Unnamed";
-		}
-		
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			DialogPopup.dismissLoadingDialog();
-			driverStartRideAsync(HomeActivity.this, result);
-		}
-		
-	}
+//	public class GetAddressStartRide extends AsyncTask<String, Integer, String>{
+//		
+//		@Override
+//		protected void onPreExecute() {
+//			super.onPreExecute();
+//			DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+//		}
+//		
+//		@Override
+//		protected String doInBackground(String... params) {
+//			if(myLocation != null){
+//				String address = getAddress(myLocation.getLatitude(), myLocation.getLongitude());
+//				return address;
+//			}
+//			return "Unnamed";
+//		}
+//		
+//		@Override
+//		protected void onPostExecute(String result) {
+//			super.onPostExecute(result);
+//			DialogPopup.dismissLoadingDialog();
+//			driverStartRideAsync(HomeActivity.this, result);
+//		}
+//		
+//	}
 	
 	
 	/**
@@ -5336,37 +5297,37 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public class GetAddressEndRide extends AsyncTask<String, Integer, String>{
-		
-		double waitMinutes;
-		
-		public GetAddressEndRide(double waitMinutes){
-			this.waitMinutes = waitMinutes;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-		}
-		
-		@Override
-		protected String doInBackground(String... params) {
-			if(myLocation != null){
-				String address = getAddress(myLocation.getLatitude(), myLocation.getLongitude());
-				return address;
-			}
-			return "Unnamed";
-		}
-		
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			DialogPopup.dismissLoadingDialog();
-			driverEndRideAsync(HomeActivity.this, waitMinutes, result);
-		}
-		
-	}
+//	public class GetAddressEndRide extends AsyncTask<String, Integer, String>{
+//		
+//		double waitMinutes;
+//		
+//		public GetAddressEndRide(double waitMinutes){
+//			this.waitMinutes = waitMinutes;
+//		}
+//		
+//		@Override
+//		protected void onPreExecute() {
+//			super.onPreExecute();
+//			DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+//		}
+//		
+//		@Override
+//		protected String doInBackground(String... params) {
+//			if(myLocation != null){
+//				String address = getAddress(myLocation.getLatitude(), myLocation.getLongitude());
+//				return address;
+//			}
+//			return "Unnamed";
+//		}
+//		
+//		@Override
+//		protected void onPostExecute(String result) {
+//			super.onPostExecute(result);
+//			DialogPopup.dismissLoadingDialog();
+//			driverEndRideAsync(HomeActivity.this, waitMinutes, result);
+//		}
+//		
+//	}
 	
 	/**
 	 * ASync for start ride in  driver mode from server
@@ -6358,8 +6319,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								jObj = new JSONObject(response);
 								
 								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
 
 									String errorMessage = jObj.getString("error");
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
@@ -6427,8 +6386,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if(!jObj.isNull("error")){
 									
-									new DialogPopup().alertPopup(activity, "", "Connection could not be established. Please try after some time.");
-									
 									//{"error": 'Some parameter missing',"flag":0}//ERROR
 									//{"error":"Invalid access token","flag":1}//ERROR
 
@@ -6440,7 +6397,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "",errorMessage);
+										new DialogPopup().alertPopup(activity, "", "Connection could not be established. Please try after some time.");
 									}
 								}
 								else{
@@ -6618,7 +6575,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									if(!jObj.isNull("error")){
 										
-										int flag = jObj.getInt("flag");	
 
 										String errorMessage = jObj.getString("error");
 										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
@@ -6719,8 +6675,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									JSONObject jObj = new JSONObject(result);
 									
 									if(!jObj.isNull("error")){
-										
-										int flag = jObj.getInt("flag");	
 	
 										String errorMessage = jObj.getString("error");
 										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
@@ -7036,7 +6990,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	//start ride popup
 	void startRidePopup(final Activity activity) {
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -7074,17 +7027,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			        	if(displacement <= 300){
 			        		buildAlertMessageNoGps();
 				        	
-				        	GCMIntentService.clearNotifications(HomeActivity.this);
-				        	new GetAddressStartRide().execute();
+				        	GCMIntentService.clearNotifications(activity);
+				        	driverStartRideAsync(activity, "Unnamed");
 			        	}
 			        	else{
-			        		new DialogPopup().alertPopup(HomeActivity.this, "", "You must be present near the customer pickup location to start ride.");
+			        		new DialogPopup().alertPopup(activity, "", "You must be present near the customer pickup location to start ride.");
 			        	}
 					}
 					else{
 						Toast.makeText(activity, "Waiting for location...", Toast.LENGTH_SHORT).show();
 					}
-					
 		        	
 				}
 				
@@ -7108,7 +7060,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	//end ride popup
 	void endRidePopup(final Activity activity) {
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -7155,8 +7106,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						
 						driverScreenMode = DriverScreenMode.D_RIDE_END;
 						
-						new GetAddressEndRide(minutes).execute();
-			        	
+			        	driverEndRideAsync(activity, minutes, "Unnamed");
+						
 					}
 					
 				});
@@ -7176,7 +7127,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	
 	
-	//cancel ride popup
 		void cancelRidePopup(final Activity activity) {
 				try {
 					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -7316,7 +7266,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		}
 		
-		//Change debug mode popup
 		void changeDebugModePopup(final Activity activity) {
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -8211,21 +8160,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void initializeFusedLocationFetchers(){
+	public void initializeFusedLocationFetchers() {
 		destroyFusedLocationFetchers();
-		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-			if(myLocation == null){
-				if(lowPowerLF == null){
-					lowPowerLF = new LocationFetcher(HomeActivity.this, 10000, 0);
-				}
-				if(highAccuracyLF == null){
-					highAccuracyLF = new LocationFetcher(HomeActivity.this, 60000, 2);
-				}
+		if (myLocation == null) {
+			if (lowPowerLF == null) {
+				lowPowerLF = new LocationFetcher(HomeActivity.this, 10000, 0);
 			}
-			else{
-				if(highAccuracyLF == null){
-					highAccuracyLF = new LocationFetcher(HomeActivity.this, 60000, 2);
-				}
+			if (highAccuracyLF == null) {
+				highAccuracyLF = new LocationFetcher(HomeActivity.this, 10000, 2);
+			}
+		} 
+		else {
+			if (highAccuracyLF == null) {
+				highAccuracyLF = new LocationFetcher(HomeActivity.this, 10000, 2);
 			}
 		}
 	}
@@ -8261,7 +8208,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 
 	@Override
-	public void locationChanged(Location location, int priority) {
+	public void onLocationChanged(Location location, int priority) {
 		
 		if(priority == 0){
 			if(location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK){

@@ -855,7 +855,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 
 
 	@Override
-	public void locationChanged(Location location, int priority) {
+	public void onLocationChanged(Location location, int priority) {
 		// TODO Auto-generated method stub
 		
 	}
