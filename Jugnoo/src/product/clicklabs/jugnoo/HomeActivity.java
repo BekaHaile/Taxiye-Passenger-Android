@@ -4030,8 +4030,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		        
 		        if(!driverAcceptPushRecieved){
 		 	        
-		 	       if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-	       	 		distanceString = getResources().getString(R.string.nearest_driver_is) + " " + distance + " " + getResources().getString(R.string.away);
+		 	       	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+		 	       		distanceString = getResources().getString(R.string.nearest_driver_is) + " " + distance + " " + getResources().getString(R.string.away);
 			        }
 			        else{
 			        	distanceString = getResources().getString(R.string.could_not_find_nearest_driver_distance);

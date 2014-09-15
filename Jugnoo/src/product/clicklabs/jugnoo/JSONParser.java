@@ -150,12 +150,11 @@ public class JSONParser {
 			
 			String screenMode = pref.getString(Data.SP_DRIVER_SCREEN_MODE, "");
 			
-			
 			int engagementStatus = -1;
+			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "";
 			
 			//TODO
 			try{
-//				if(!"".equalsIgnoreCase(pref.getString(Data.SP_D_ENGAGEMENT_ID, ""))){
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 					
@@ -171,16 +170,14 @@ public class JSONParser {
 							engagementStatus = jObject.getInt("log");
 							
 							if((1 == engagementStatus) || (2 == engagementStatus)){
-								String engagementId = jObject.getString("engagement_id");
-								String userId = jObject.getString("user_id");
-								String latitude = jObject.getString("latitude");
-								String longitude = jObject.getString("longitude");
-								String customerName = jObject.getString("customer_name");
-								String customerImage = jObject.getString("customer_image");
-								String customerPhone = jObject.getString("customer_phone");
-								String customerRating = jObject.getString("customer_raitng");
-								
-								
+								engagementId = jObject.getString("engagement_id");
+								userId = jObject.getString("user_id");
+								latitude = jObject.getString("latitude");
+								longitude = jObject.getString("longitude");
+								customerName = jObject.getString("customer_name");
+								customerImage = jObject.getString("customer_image");
+								customerPhone = jObject.getString("customer_phone");
+								customerRating = jObject.getString("customer_raitng");
 							}
 							else{
 								
@@ -190,7 +187,6 @@ public class JSONParser {
 							e.printStackTrace();
 						}
 					}
-//				}
 			} catch(Exception e){
 				e.printStackTrace();
 			}
@@ -217,33 +213,38 @@ public class JSONParser {
 					
 					HomeActivity.driverScreenMode = DriverScreenMode.D_START_RIDE;
 					
-					Data.dEngagementId = pref.getString(Data.SP_D_ENGAGEMENT_ID, "");
-					Data.dCustomerId = pref.getString(Data.SP_D_CUSTOMER_ID, "");
+					Data.dEngagementId = engagementId;
+					Data.dCustomerId = userId;
 					
-					String lat = pref.getString(Data.SP_D_LATITUDE, "0");
-					String lng = pref.getString(Data.SP_D_LONGITUDE, "0");
+					String lat = latitude;
+					String lng = longitude;
 					
 					Data.dCustLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
 					
-					String name = pref.getString(Data.SP_D_CUSTOMER_NAME, "");
-					String image = pref.getString(Data.SP_D_CUSTOMER_IMAGE, "");
-					String phone = pref.getString(Data.SP_D_CUSTOMER_PHONE, "");
-					String rating = pref.getString(Data.SP_D_CUSTOMER_RATING, "");
+					String name = customerName;
+					String image = customerImage;
+					String phone = customerPhone;
+					String rating = customerRating;
 					
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
-					
 				}
 				else if(Data.D_IN_RIDE.equalsIgnoreCase(screenMode)){
 					
 					HomeActivity.driverScreenMode = DriverScreenMode.D_IN_RIDE;
 					
-					Data.dEngagementId = pref.getString(Data.SP_D_ENGAGEMENT_ID, "");
-					Data.dCustomerId = pref.getString(Data.SP_D_CUSTOMER_ID, "");
+					Data.dEngagementId = engagementId;
+					Data.dCustomerId = userId;
 					
-					String name = pref.getString(Data.SP_D_CUSTOMER_NAME, "");
-					String image = pref.getString(Data.SP_D_CUSTOMER_IMAGE, "");
-					String phone = pref.getString(Data.SP_D_CUSTOMER_PHONE, "");
-					String rating = pref.getString(Data.SP_D_CUSTOMER_RATING, "");
+					String lat = latitude;
+					String lng = longitude;
+					
+					Data.dCustLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+					
+					String name = customerName;
+					String image = customerImage;
+					String phone = customerPhone;
+					String rating = customerRating;
+					
 					
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
 					
@@ -253,12 +254,16 @@ public class JSONParser {
 					
 					HomeActivity.waitStart = 2;
 					
-					
-					
-					String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
-					String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-					
-					Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+					if(-1 == HomeActivity.totalDistance){
+						Data.startRidePreviousLatLng = Data.dCustLatLng;
+						HomeActivity.totalDistance = 0;
+					}
+					else{
+						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
+						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+						
+						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
+					}
 					
 				}
 				else{
@@ -282,10 +287,13 @@ public class JSONParser {
 			
 
 			int engagementStatus = -1;
+			String engagementId = "", sessionId = "",  userId = "", latitude = "", longitude = "", 
+					driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", 
+					pickupLatitude = "", pickupLongitude = "";
+			
 			
 			//TODO
 			try{
-				if(!"".equalsIgnoreCase(pref.getString(Data.SP_C_ENGAGEMENT_ID, ""))){
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 					nameValuePairs.add(new BasicNameValuePair("engage_id", pref.getString(Data.SP_C_ENGAGEMENT_ID, "")));
@@ -302,20 +310,20 @@ public class JSONParser {
 							engagementStatus = jObject.getInt("log");
 							
 							if((1 == engagementStatus) || (2 == engagementStatus)){
-								String engagementId = jObject.getString("engagement_id");
-								String sessionId = jObject.getString("session_id");
-								String userId = jObject.getString("user_id");
-								String latitude = jObject.getString("latitude");
-								String longitude = jObject.getString("longitude");
-								String driverName = jObject.getString("driver_name");
-								String driverImage = jObject.getString("driver_image");
-								String driverCarImage = jObject.getString("driver_car_image");
-								String driverPhone = jObject.getString("driver_phone");
-								String driverRating = jObject.getString("driver_raitng");
+								engagementId = jObject.getString("engagement_id");
+								sessionId = jObject.getString("session_id");
+								userId = jObject.getString("user_id");
+								latitude = jObject.getString("latitude");
+								longitude = jObject.getString("longitude");
+								driverName = jObject.getString("driver_name");
+								driverImage = jObject.getString("driver_image");
+								driverCarImage = jObject.getString("driver_car_image");
+								driverPhone = jObject.getString("driver_phone");
+								driverRating = jObject.getString("driver_raitng");
 								
 								if(2 == engagementStatus){
-									String pickupLatitude = jObject.getString("pickup_latitude");
-									String pickupLongitude = jObject.getString("pickup_longitude");
+									pickupLatitude = jObject.getString("pickup_latitude");
+									pickupLongitude = jObject.getString("pickup_longitude");
 								}
 							}
 							else{
@@ -325,13 +333,11 @@ public class JSONParser {
 						} catch(Exception e){
 							e.printStackTrace();
 						}
-					}
 				}
 			} catch(Exception e){
 				e.printStackTrace();
 			}
 			
-			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout
 			if(engagementStatus == 1){
 				screenMode = Data.P_REQUEST_FINAL;
 			}
@@ -339,7 +345,6 @@ public class JSONParser {
 				screenMode = Data.P_IN_RIDE;
 			}
 			else if(engagementStatus == 3){
-//				screenMode = Data.P_RIDE_END;
 				screenMode = "";
 			}
 			else{
@@ -353,28 +358,18 @@ public class JSONParser {
 			}
 			else{
 				
-				String SP_C_SESSION_ID = pref.getString(Data.SP_C_SESSION_ID, "");
-				String SP_C_ENGAGEMENT_ID = pref.getString(Data.SP_C_ENGAGEMENT_ID, "");
-				String SP_C_DRIVER_ID = pref.getString(Data.SP_C_DRIVER_ID, "");
-				String SP_C_LATITUDE = pref.getString(Data.SP_C_LATITUDE, "0");
-				String SP_C_LONGITUDE = pref.getString(Data.SP_C_LONGITUDE, "0");
-				String SP_C_DRIVER_NAME = pref.getString(Data.SP_C_DRIVER_NAME, "");
-				String SP_C_DRIVER_IMAGE = pref.getString(Data.SP_C_DRIVER_IMAGE, "");
-				String SP_C_DRIVER_CAR_IMAGE = pref.getString(Data.SP_C_DRIVER_CAR_IMAGE, "");
-				String SP_C_DRIVER_PHONE = pref.getString(Data.SP_C_DRIVER_PHONE, "");
-				String SP_C_DRIVER_RATING = pref.getString(Data.SP_C_DRIVER_RATING, "");
+				Data.cSessionId = sessionId;
+				Data.cEngagementId = engagementId;
+				Data.cDriverId = userId;
+				
+				double dLatitude = Double.parseDouble(latitude);
+				double dLongitude = Double.parseDouble(longitude);
+				
 				String SP_C_DRIVER_DISTANCE = pref.getString(Data.SP_C_DRIVER_DISTANCE, "");
 				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
-				Data.cSessionId = SP_C_SESSION_ID;
-				Data.cEngagementId = SP_C_ENGAGEMENT_ID;
-				Data.cDriverId = SP_C_DRIVER_ID;
-				
-				double latitude = Double.parseDouble(SP_C_LATITUDE);
-				double longitude = Double.parseDouble(SP_C_LONGITUDE);
-				
-				Data.assignedDriverInfo = new DriverInfo(SP_C_DRIVER_ID, latitude, longitude, SP_C_DRIVER_NAME, 
-						SP_C_DRIVER_IMAGE, SP_C_DRIVER_CAR_IMAGE, SP_C_DRIVER_PHONE, SP_C_DRIVER_RATING);
+				Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName, 
+						driverImage, driverCarImage, driverPhone, driverRating);
 				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
 				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
 				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;
@@ -388,10 +383,16 @@ public class JSONParser {
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
 					
-					String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
-					String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-					
-					Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+					if(-1 == HomeActivity.totalDistance){
+						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude));
+						HomeActivity.totalDistance = 0;
+					}
+					else{
+						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
+						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+						
+						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
+					}
 					
 				}
 				else if(Data.P_RIDE_END.equalsIgnoreCase(screenMode)){
@@ -422,40 +423,6 @@ public class JSONParser {
 	
 	
 	
-//	public void fetchExceptionalDriver(String accessToken){
-//
-//		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//		nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-//		
-//		SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
-//		String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/exceptional_driver", nameValuePairs);
-//		
-//		try{
-//			//{"exceptional_driver":1} show Jugnoo ON
-//			//{"exceptional_driver":0} show driver mode ON
-//			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
-//				Log.e("timeout","=");
-//				HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-//			}
-//			else{
-//				try{
-//					JSONObject jObject = new JSONObject(result);
-//					int excepInt = jObject.getInt("exceptional_driver");
-//					if(1 == excepInt){
-//						HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
-//					}
-//					else{
-//						HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-//					}
-//				} catch(Exception e){
-//					e.printStackTrace();
-//					HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-//				}
-//			}
-//		} catch(Exception e){
-//			e.printStackTrace();
-//		}
-//	}
 	
 	
 	public void clearSPData(final Context context){
@@ -464,8 +431,8 @@ public class JSONParser {
 			@Override
 			public void run() {
         	
-        	SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-    		Editor editor = pref.edit();
+	        	SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+	    		Editor editor = pref.edit();
         		
         		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
         		
@@ -510,12 +477,12 @@ public class JSONParser {
         		editor.putString(Data.SP_C_WAIT_TIME, "0");
         		
         	
-        	editor.commit();
-    		
-        	
-        	Database database = new Database(context);
-			database.deleteSavedPath();
-			database.close();
+	        	editor.commit();
+	    		
+	        	
+	        	Database database = new Database(context);
+				database.deleteSavedPath();
+				database.close();
         	
 		
 			}
