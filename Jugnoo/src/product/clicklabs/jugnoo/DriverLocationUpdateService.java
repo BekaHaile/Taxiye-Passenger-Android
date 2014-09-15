@@ -269,14 +269,14 @@ public class DriverLocationUpdateService extends Service {
 					
 					try {
 						Database2 database2 = new Database2(DriverLocationUpdateService.this);
-						
 						String accessToken = database2.getDLDAccessToken();
+						database2.close();
+						
 						if("".equalsIgnoreCase(accessToken)){
-							database2.close();
 							updateServerData();
-							database2 = new Database2(DriverLocationUpdateService.this);
 						}
 						
+						database2 = new Database2(DriverLocationUpdateService.this);
 						String userMode = database2.getUserMode();
 						database2.close();
 						

@@ -72,7 +72,6 @@ public class Data {
 			SP_C_DRIVER_IMAGE = "c_driver_image",
 			SP_C_DRIVER_CAR_IMAGE = "c_driver_car_image",
 			SP_C_DRIVER_PHONE = "c_driver_phone",
-			SP_C_DRIVER_RATING = "c_driver_rating",
 			SP_C_DRIVER_DISTANCE = "c_driver_distance",
 			SP_C_DRIVER_DURATION = "c_driver_duration",
 			
@@ -126,7 +125,7 @@ public class Data {
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 	
 	
 	
@@ -245,7 +244,8 @@ public class Data {
 			for (Signature signature : info.signatures) {
 				MessageDigest md = MessageDigest.getInstance("SHA");
 				md.update(signature.toByteArray());
-				Log.e("KeyHash:", ","
+				Log.e("KeyHash:",
+						","
 								+ Base64.encodeToString(md.digest(),
 										Base64.DEFAULT));
 			}

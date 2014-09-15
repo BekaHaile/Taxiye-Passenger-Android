@@ -40,9 +40,8 @@ public class LocationReceiverDriver extends BroadcastReceiver {
 				String serverUrl = database2.getDLDServerUrl();
 				database2.close();
 				
-				if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
-					sendLocationToServer(location, accessToken, deviceToken, serverUrl);
-				}
+				sendLocationToServer(location, accessToken, deviceToken, serverUrl);
+				
 				
 				wakeLock.release();
 			}

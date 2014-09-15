@@ -38,7 +38,7 @@ class FavoriteLocation{
 
 class DriverInfo{
 	
-	String userId, name, image, carImage, phoneNumber, rating;
+	String userId, name, image, carImage, phoneNumber;
 	LatLng latLng;
 	
 	String distanceToReach, durationToReach;
@@ -48,14 +48,13 @@ class DriverInfo{
 		this.latLng = new LatLng(latitude, longitude);
 	}
 	
-	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber, String rating){
+	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
 		this.image = image;
 		this.carImage = carImage;
 		this.phoneNumber = phoneNumber;
-		this.rating = rating;
 	}
 	
 	@Override
