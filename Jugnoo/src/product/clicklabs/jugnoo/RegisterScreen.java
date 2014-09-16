@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import org.apache.http.Header;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
@@ -425,13 +426,22 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/customer_registeration", params,
 					new AsyncHttpResponseHandler() {
 					private JSONObject jObj;
-	
+
 						@Override
-						public void onSuccess(String response) {
+						public void onFailure(int arg0, Header[] arg1,
+								byte[] arg2, Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(int arg0, Header[] arg1,
+								byte[] arg2) {
+							String response = new String(arg2);
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -482,7 +492,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									Database database22 = new Database(RegisterScreen.this);
 									database22.insertEmail(emailId);
 									database22.close();
-									fetchExceptionalDriver(activity);
+									loginDataFetched = true;
+									
+									DialogPopup.dismissLoadingDialog();
 									
 								}
 								}
@@ -497,13 +509,6 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	
 							
 						}
-	
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
 					});
 		}
 		else {
@@ -516,58 +521,58 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	/**
 	 * ASync for fetchExceptionalDriver from server
 	 */
-	public void fetchExceptionalDriver(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-
-			Log.i("access_token", "="+Data.userData.accessToken);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
-			client.post(Data.SERVER_URL + "/exceptional_user", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								int excepInt = jObj.getInt("exceptional_user");
-								if(1 == excepInt){
-									HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
-								}
-								else{
-									HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-							}
-	
-							loginDataFetched = true;
-							
-							DialogPopup.dismissLoadingDialog();
-						}
-	
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-							loginDataFetched = true;
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			DialogPopup.dismissLoadingDialog();
-		}
-	}
+//	public void fetchExceptionalDriver(final Activity activity) {
+//		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+//			
+//			
+//			RequestParams params = new RequestParams();
+//			params.put("access_token", Data.userData.accessToken);
+//
+//			Log.i("access_token", "="+Data.userData.accessToken);
+//			
+//		
+//			AsyncHttpClient client = Data.getClient();
+//			client.setTimeout(Data.SERVER_TIMEOUT);
+//			client.post(Data.SERVER_URL + "/exceptional_user", params,
+//					new AsyncHttpResponseHandler() {
+//					private JSONObject jObj;
+//	
+//						@Override
+//						public void onSuccess(String response) {
+//							Log.v("Server response", "response = " + response);
+//							try {
+//								jObj = new JSONObject(response);
+//								int excepInt = jObj.getInt("exceptional_user");
+//								if(1 == excepInt){
+//									HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
+//								}
+//								else{
+//									HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+//								}
+//							}  catch (Exception exception) {
+//								exception.printStackTrace();
+//								HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+//							}
+//	
+//							loginDataFetched = true;
+//							
+//							DialogPopup.dismissLoadingDialog();
+//						}
+//	
+//						@Override
+//						public void onFailure(Throwable arg0) {
+//							Log.e("request fail", arg0.toString());
+//							DialogPopup.dismissLoadingDialog();
+//							HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+//							loginDataFetched = true;
+//						}
+//					});
+//		}
+//		else {
+//			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+//			DialogPopup.dismissLoadingDialog();
+//		}
+//	}
 	
 	
 	
@@ -708,13 +713,22 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/customer_fb_registeration_form", params,
 					new AsyncHttpResponseHandler() {
 					private JSONObject jObj;
-	
+
 						@Override
-						public void onSuccess(String response) {
+						public void onFailure(int arg0, Header[] arg1,
+								byte[] arg2, Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(int arg0, Header[] arg1,
+								byte[] arg2) {
+							String response = new String(arg2);
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -730,7 +744,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 //									{"error": 'Some parameter missing',"flag":0} //error
 //									{"error": 'Not An Authenticated User!',"flag":1}
 //									{"error": 'Please enter otp',"flag":2}  
-//							{"error": 'Please enter details',"flag":3}
+//									{"error": 'Please enter details',"flag":3}
 //								{"error": 'Message sending failed',"flag":4}
 //								{"error": 'User not registered',"flag":5}
 //								{"error": 'Incorrect verification code',"flag":6}
@@ -761,7 +775,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								else{
 									
 									new JSONParser().parseLoginData(activity, response);
-									fetchExceptionalDriver(activity);
+									loginDataFetched = true;
+									
+									DialogPopup.dismissLoadingDialog();
 									
 								}
 								}
@@ -775,13 +791,6 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 							}
 	
 							
-						}
-	
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 					});
 		}
@@ -834,6 +843,14 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onDestroy() {
+		try{
+		if(Data.locationFetcher != null){
+			Data.locationFetcher.destroy();
+			Data.locationFetcher = null;
+		}
+	} catch(Exception e){
+		e.printStackTrace();
+	}
 		super.onDestroy();
         
         ASSL.closeActivity(relative);

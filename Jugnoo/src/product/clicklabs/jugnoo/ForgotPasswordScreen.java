@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import org.apache.http.Header;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
@@ -122,14 +123,14 @@ public class ForgotPasswordScreen extends Activity{
 			Log.i("email", "=" + email);
 		
 			AsyncHttpClient client = Data.getClient();
-			client.setTimeout(Data.SERVER_TIMEOUT);
 			client.post(Data.SERVER_URL + "/forgot_password", params,
 					new AsyncHttpResponseHandler() {
 					private JSONObject jObj;
-	
-						@SuppressWarnings("unused")
+
 						@Override
-						public void onSuccess(String response) {
+						public void onSuccess(int arg0, Header[] arg1,
+								byte[] arg2) {
+							String response = new String(arg2);
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -156,13 +157,16 @@ public class ForgotPasswordScreen extends Activity{
 	
 							DialogPopup.dismissLoadingDialog();
 						}
-	
+						
+
 						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
+						public void onFailure(int arg0, Header[] arg1,
+								byte[] arg2, Throwable arg3) {
+							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
+						
 					});
 		}
 		else {

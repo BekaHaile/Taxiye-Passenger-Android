@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -13,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -162,6 +165,10 @@ public class CRequestRideService extends Service {
 						flag = 1;
 					}
 					
+					if(driverPos >= 0 && driverPos < Data.driverInfos.size()){
+						Data.assignedDriverInfo = Data.driverInfos.get(driverPos);
+					}
+					
 					
 					
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -173,6 +180,7 @@ public class CRequestRideService extends Service {
 					nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+pickupLatLng.latitude));
 					nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + pickupLatLng.longitude));
 					nameValuePairs.add(new BasicNameValuePair("session_id", Data.cSessionId));
+					
 					
 					
 					Log.i("access_token", "=" + Data.userData.accessToken);
@@ -192,6 +200,7 @@ public class CRequestRideService extends Service {
 					
 					simpleJSONParser = null;
 					nameValuePairs = null;
+					
 					return result;
 				}
 				else{
@@ -267,6 +276,49 @@ public class CRequestRideService extends Service {
 			Log.e("RequestRideAsync","stopped");
 		}
 		
+	}
+    
+    
+    
+    Timer timerCheckIfEngagementActive;
+	TimerTask timerTaskCheckIfEngagementActive;
+	
+	public void startCheckIfEngagementActiveTimer(){
+		cancelCheckIfEngagementActiveTimer();
+		try {
+			timerCheckIfEngagementActive = new Timer();
+			timerTaskCheckIfEngagementActive = new TimerTask() {
+				@Override
+				public void run() {
+					
+					try {
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				}
+			};
+			timerCheckIfEngagementActive.scheduleAtFixedRate(timerTaskCheckIfEngagementActive, 0, 10000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void cancelCheckIfEngagementActiveTimer(){
+		try{
+			if(timerTaskCheckIfEngagementActive != null){
+				timerTaskCheckIfEngagementActive.cancel();
+				timerTaskCheckIfEngagementActive = null;
+			}
+			if(timerCheckIfEngagementActive != null){
+				timerCheckIfEngagementActive.cancel();
+				timerCheckIfEngagementActive.purge();
+				timerCheckIfEngagementActive = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
     
     
