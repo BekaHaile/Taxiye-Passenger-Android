@@ -38,7 +38,7 @@ class FavoriteLocation{
 
 class DriverInfo{
 	
-	String userId, name, image, carImage, phoneNumber;
+	String userId, name, image, carImage, phoneNumber, rating;
 	LatLng latLng;
 	
 	String distanceToReach, durationToReach;
@@ -48,19 +48,34 @@ class DriverInfo{
 		this.latLng = new LatLng(latitude, longitude);
 	}
 	
-	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber){
+	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber, String rating){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
 		this.image = image;
 		this.carImage = carImage;
 		this.phoneNumber = phoneNumber;
+		this.rating = rating;
 	}
 	
 	@Override
 	public String toString() {
 		return  "Name: " + name + "\n" +
 				"PhoneNumber: "+ phoneNumber;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		try{
+			if(((DriverInfo)o).userId.equalsIgnoreCase(this.userId)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch(Exception e){
+			return false;
+		}
 	}
 	
 	
