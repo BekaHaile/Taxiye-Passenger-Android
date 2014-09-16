@@ -186,7 +186,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
-	
 	boolean noNetFirstTime = false, noNetSecondTime = false;
 	
 	Handler checkNetHandler = new Handler();
@@ -551,6 +550,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				SplashNewActivity.appUpdatePopup(title, text, activity);
 				return true;
 			} catch(Exception e){
+				e.printStackTrace();
 				return false;
 			}
 		}
@@ -747,6 +747,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
+		// TODO Auto-generated method stub
 		
 	}
 	
