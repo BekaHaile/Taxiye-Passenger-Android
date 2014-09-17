@@ -125,6 +125,7 @@ public class CRequestRideService extends Service {
 		}
 		
 		
+		
 		@Override
 		protected String doInBackground(String... params) {
 			try{
@@ -173,13 +174,13 @@ public class CRequestRideService extends Service {
 					
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+					nameValuePairs.add(new BasicNameValuePair("session_id", Data.cSessionId));
 					nameValuePairs.add(new BasicNameValuePair("user_id", currentDriverId));
+					nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+pickupLatLng.latitude));
+					nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + pickupLatLng.longitude));
 					nameValuePairs.add(new BasicNameValuePair("pre_user_id", previousDriverId));
 					nameValuePairs.add(new BasicNameValuePair("pre_engage_id", Data.cEngagementId));
 					nameValuePairs.add(new BasicNameValuePair("flag", ""+flag));
-					nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+pickupLatLng.latitude));
-					nameValuePairs.add(new BasicNameValuePair("pickup_longitude", "" + pickupLatLng.longitude));
-					nameValuePairs.add(new BasicNameValuePair("session_id", Data.cSessionId));
 					
 					
 					
@@ -227,14 +228,37 @@ public class CRequestRideService extends Service {
 					JSONObject jObj = new JSONObject(result);
 					
 					if(!jObj.isNull("error")){
-						int flag = jObj.getInt("flag");	
-						if(0 == flag){ // {"error": "some parameter missing","flag":0}//error
-						}
-						else if(1 == flag){ // {{"error": 'Invalid access token',"flag":1}//error
-						}
-						else if(2 == flag){ // {"error": "driver not available now","flag":2}
+						String errorMessage = jObj.getString("error");
+						
+//						Engagement already made
+						if("Engagement already made".equalsIgnoreCase(errorMessage)){
+							HomeActivity.appInterruptHandler.apiInterrupted();
+							requestRideAsync = null;
+							stopSelf();
 						}
 						else{
+							if(HomeActivity.appInterruptHandler != null){
+								HomeActivity.appInterruptHandler.apiEnd();
+							}
+							
+							if(driverPos < Data.driverInfos.size()-1){
+								requestRideAsync = null;
+								requestRideAsync = new RequestRideAsync(driverPos+1, pickupLatLng);
+								requestRideAsync.execute();
+							}
+							else if(driverPos == Data.driverInfos.size()-1){
+								requestRideAsync = null;
+								requestRideAsync = new RequestRideAsync(driverPos+1, pickupLatLng);
+								requestRideAsync.execute();
+							}
+							else{
+								Log.e("requestRideInterrupt(0) ============ ","requestRideInterrupt(0)");
+								requestRideAsync = null;
+								if(HomeActivity.appInterruptHandler != null){
+									HomeActivity.appInterruptHandler.requestRideInterrupt(0);
+								}
+								stopSelf();
+							}
 						}
 					}
 					else{
@@ -242,36 +266,40 @@ public class CRequestRideService extends Service {
 						Data.cEngagementId = jObj.getString("engagement_id");
 						Data.cDriverId = jObj.getString("driver_id");
 						
+						try{
+							Data.cSessionId = jObj.getString("session_id");
+						} catch(Exception e){
+						}
+						
+
+						if(HomeActivity.appInterruptHandler != null){
+							HomeActivity.appInterruptHandler.apiEnd();
+						}
+						
+						if(driverPos < Data.driverInfos.size()-1){
+							requestRideAsync = null;
+							requestRideAsync = new RequestRideAsync(driverPos+1, pickupLatLng);
+							requestRideAsync.execute();
+						}
+						else if(driverPos == Data.driverInfos.size()-1){
+							requestRideAsync = null;
+							requestRideAsync = new RequestRideAsync(driverPos+1, pickupLatLng);
+							requestRideAsync.execute();
+						}
+						else{
+							Log.e("requestRideInterrupt(0) ============ ","requestRideInterrupt(0)");
+							requestRideAsync = null;
+							if(HomeActivity.appInterruptHandler != null){
+								HomeActivity.appInterruptHandler.requestRideInterrupt(0);
+							}
+							stopSelf();
+						}
+					
 					}
 				} catch(Exception e){
 					e.printStackTrace();
 				}
 			}
-			
-			if(HomeActivity.appInterruptHandler != null){
-				HomeActivity.appInterruptHandler.apiEnd();
-			}
-			
-			if(driverPos < Data.driverInfos.size()-1){
-				requestRideAsync = null;
-				requestRideAsync = new RequestRideAsync(driverPos+1, pickupLatLng);
-				requestRideAsync.execute();
-			}
-			else if(driverPos == Data.driverInfos.size()-1){
-				requestRideAsync = null;
-				requestRideAsync = new RequestRideAsync(driverPos+1, pickupLatLng);
-				requestRideAsync.execute();
-			}
-			else{
-				Log.e("requestRideInterrupt(0) ============ ","requestRideInterrupt(0)");
-				requestRideAsync = null;
-				if(HomeActivity.appInterruptHandler != null){
-					HomeActivity.appInterruptHandler.requestRideInterrupt(0);
-				}
-				
-				stopSelf();
-			}
-			
 			
 			Log.e("RequestRideAsync","stopped");
 		}
