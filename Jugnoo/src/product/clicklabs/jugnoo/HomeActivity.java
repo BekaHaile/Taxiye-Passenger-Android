@@ -4053,10 +4053,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        	startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	        }
 	        else if(driverAcceptPushRecieved){
-	        	
-	        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-				Editor editor = pref.edit();
-	        	editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
+	        	if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+	        		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+	        		Editor editor = pref.edit();
+	        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
 					
 					editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
 					editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
@@ -4079,6 +4079,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 					passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
 					switchPassengerScreen(passengerScreenMode);
+	        	}
 	        }
 	        
 	    }
@@ -7670,11 +7671,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void apiInterrupted() {
 		try {
+			Log.e("in run apiInterrupted class","=");
 			new Thread(new Runnable() {
 				
 				@Override
 				public void run() {
-					Log.i("in run class","=");
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -7764,7 +7765,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									if(getDistanceTimeAddress != null){
 										getDistanceTimeAddress.cancel(true);
 									}
-									
 									
 									if(myLocation != null){
 										getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), true);
