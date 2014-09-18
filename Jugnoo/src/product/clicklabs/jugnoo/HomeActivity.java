@@ -1050,7 +1050,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									
 									if(Data.driverInfos.size() > 0){
-										//TODO 
 										Data.cSessionId = "";
 										
 										requestRideBtn.setText("Assigning driver...");
@@ -1800,6 +1799,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		if(userMode == null){
 			userMode = UserMode.PASSENGER;
+		}
+		
+		if(passengerScreenMode == null){
+			passengerScreenMode = PassengerScreenMode.P_INITIAL;
+		}
+		
+		if(driverScreenMode == null){
+			driverScreenMode = DriverScreenMode.D_INITIAL;
 		}
 		
 		if(userMode == UserMode.DRIVER){
@@ -4072,9 +4079,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        	
 					editor.commit();
 	        	
-					//TODO
-//					cancelCustomerRequestAsync(HomeActivity.this, 2, 1);
-					
 					map.clear();
 
 					passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
@@ -4696,7 +4700,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("flag", "=" + flag);
 			
-		
+		//TODO
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/switch_to_driver_mode", params,
 					new AsyncHttpResponseHandler() {
@@ -4747,6 +4751,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									Data.driverRideRequests.clear();
 									
 									if(flag == 1){
+										
+										try {
+											int excepInt = jObj.getInt("exceptional_driver");
+											if(1 == excepInt){
+												HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
+											}
+											else{
+												HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+											}
+										} catch (Exception e) {
+											HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+											e.printStackTrace();
+										}
+										
+										changeExceptionalDriverUI();
+										
 										userMode = UserMode.DRIVER;
 										driverModeToggle.setImageResource(R.drawable.on);
 										

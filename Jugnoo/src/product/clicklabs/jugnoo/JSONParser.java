@@ -20,6 +20,7 @@ public class JSONParser {
 	}
 	
 	public void parseLoginData(Context context, String response) throws Exception{
+		Log.e("login response =", "="+response);
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
@@ -104,6 +105,7 @@ public class JSONParser {
 	
 	
 	public void parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
+		Log.e("login response =", "="+response);
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
@@ -140,6 +142,9 @@ public class JSONParser {
 				e.printStackTrace();
 				HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 			}
+		}
+		else{
+			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 		}
 		
 		
@@ -304,8 +309,6 @@ public class JSONParser {
 			
 		}
 		else{ // for customer
-			
-			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 			
 			HomeActivity.userMode = UserMode.PASSENGER;
 			
