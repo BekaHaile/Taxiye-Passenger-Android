@@ -1177,9 +1177,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/fav_btn_selector"
-                    android:tag="mwar" 
+                    android:tag="mwar"
                     android:visibility="gone"
-                    />
+                     />
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>

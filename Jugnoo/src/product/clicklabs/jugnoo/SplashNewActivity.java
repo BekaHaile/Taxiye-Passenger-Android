@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
@@ -182,6 +183,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 		super.onPause();
 	}
+	
 	
 	
 	
@@ -411,13 +413,23 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				Log.i("app_version", ""+Data.appVersion);
 			
 				AsyncHttpClient client = Data.getClient();
-				client.setTimeout(Data.SERVER_TIMEOUT);
 				client.post(Data.SERVER_URL + "/access_token", params,
 						new AsyncHttpResponseHandler() {
 						private JSONObject jObj;
-		
+
 							@Override
-							public void onSuccess(String response) {
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								DialogPopup.dismissLoadingDialog();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								DialogPopup.dismissLoadingDialog();
+							}
+
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								String response = new String(arg2);
 								Log.v("Server response", "response = " + response);
 		
 								try {
@@ -467,14 +479,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 									DialogPopup.dismissLoadingDialog();
 								}
 		
-							}
-		
-							@Override
-							public void onFailure(Throwable arg0) {
-								Log.e("request fail", arg0.toString());
-								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-								DialogPopup.dismissLoadingDialog();
 							}
 						});
 			}
@@ -550,7 +554,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				SplashNewActivity.appUpdatePopup(title, text, activity);
 				return true;
 			} catch(Exception e){
-				e.printStackTrace();
 				return false;
 			}
 		}
@@ -747,7 +750,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		// TODO Auto-generated method stub
 		
 	}
 	
