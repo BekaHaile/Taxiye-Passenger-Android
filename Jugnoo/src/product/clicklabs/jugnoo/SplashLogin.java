@@ -414,7 +414,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 		try {																						// to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			Data.appVersion = ""+pInfo.versionCode;
+			Data.appVersion = pInfo.versionCode;
 			Log.i("appVersion", Data.appVersion + "..");
 			Data.osVersion = android.os.Build.VERSION.RELEASE;
 			Log.i("osVersion", Data.osVersion + "..");
@@ -706,6 +706,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
+						
 
 						@Override
 						public void onSuccess(int arg0, Header[] arg1,

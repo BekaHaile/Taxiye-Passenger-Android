@@ -173,7 +173,8 @@ public class Data {
 	public static LocationFetcher locationFetcher;
 	
 
-	public static String deviceToken = "", country = "", deviceName = "", appVersion = "", osVersion = "";
+	public static String deviceToken = "", country = "", deviceName = "", osVersion = "";
+	public static int appVersion;
 	
 	
 	
@@ -215,7 +216,7 @@ public class Data {
 			friendInfosDuplicate = new ArrayList<FriendInfo>();
 			userData = null;
 			locationFetcher = null;
-			deviceToken = ""; country = ""; deviceName = ""; appVersion = ""; osVersion = "";
+			deviceToken = ""; country = ""; deviceName = ""; appVersion = 0; osVersion = "";
 			cEngagementId = ""; cDriverId = "";
 			assignedDriverInfo = null;
 			mapTarget = null;

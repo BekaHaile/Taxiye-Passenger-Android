@@ -123,7 +123,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		try {																						// to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			Data.appVersion = ""+pInfo.versionCode;
+			Data.appVersion = pInfo.versionCode;
 			Log.i("appVersion", Data.appVersion + "..");
 			Data.osVersion = android.os.Build.VERSION.RELEASE;
 			Log.i("osVersion", Data.osVersion + "..");
@@ -544,15 +544,33 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	public static boolean checkIfUpdate(JSONObject jObj, Activity activity) throws Exception{
-		
+		Log.e("popup jObj", "="+jObj);
+//		"popup": {
+//	        "title": "Update Version",
+//	        "text": "Update app with new version!",
+//	        "cur_version": 116,			// could be used for local check
+//	        "is_force": 1				// 1 for forced, 0 for not forced
+//	}
 		if(!jObj.isNull("popup")){
 			try{
 				JSONObject jupdatePopupInfo = jObj.getJSONObject("popup"); 
 				String title = jupdatePopupInfo.getString("title");
 				String text = jupdatePopupInfo.getString("text");
+				int currentVersion = jupdatePopupInfo.getInt("cur_version");
+				int isForce = jupdatePopupInfo.getInt("is_force");
 				
-				SplashNewActivity.appUpdatePopup(title, text, activity);
-				return true;
+				if(Data.appVersion >= currentVersion){
+					return false;
+				}
+				else{
+					SplashNewActivity.appUpdatePopup(title, text, isForce, activity);
+					if(isForce == 1){
+						return true;
+					}
+					else{
+						return false;
+					}
+				}
 			} catch(Exception e){
 				return false;
 			}
@@ -568,7 +586,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	/**
 	 * Displays appUpdatePopup dialog
 	 */
-	public static void appUpdatePopup(String title, String message, final Activity activity) {
+	public static void appUpdatePopup(String title, String message, final int isForced, final Activity activity) {
 		try {
 
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -601,7 +619,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					activity.finish();
+					if(isForced == 1){
+						activity.finish();
+					}
 				}
 			});
 			

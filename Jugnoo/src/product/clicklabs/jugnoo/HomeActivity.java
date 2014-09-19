@@ -6226,10 +6226,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Log.i("latitude", "=" + Data.latitude);
 			Log.i("longitude", "=" + Data.longitude);
 			
-			
-			
-			
-			
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/request_now", params,
