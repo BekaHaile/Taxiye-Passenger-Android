@@ -21,7 +21,5 @@ public interface AppInterruptHandler {
 	
 	public void apiEnd();
 	
-	public void apiInterrupted();
-	
 	
 }

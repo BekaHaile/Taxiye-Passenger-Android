@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import com.flurry.android.FlurryAgent;
+
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -55,6 +57,8 @@ public class BookingActivity extends Activity{
 		});
 		
 		
+		
+		
 		updateBookingList();
 		
 	}
@@ -104,7 +108,10 @@ public class BookingActivity extends Activity{
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
+
+			
 			if (convertView == null) {
+				
 				holder = new ViewHolderBooking();
 				convertView = mInflater.inflate(R.layout.booking_list_item, null);
 				
@@ -123,6 +130,7 @@ public class BookingActivity extends Activity{
 				
 				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
 				ASSL.DoMagic(holder.relative);
+				
 				
 				convertView.setTag(holder);
 			} else {
