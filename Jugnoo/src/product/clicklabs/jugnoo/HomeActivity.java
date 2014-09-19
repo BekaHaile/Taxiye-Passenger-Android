@@ -2733,9 +2733,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		@Override
 		public void onLocationChanged(Location location) {
-			if(isBetterLocation(location, HomeActivity.myLocation)){
-				drawLocationChanged(location);
-			}
+			Log.e("gps location = ", "="+location);
+			drawLocationChanged(location);
 		}
 		
 	}
@@ -2773,82 +2772,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}).start();
 
 	}
-	
-	
-	
-	/**
-	 * Checks if the new location is accurate enough or not
-	 * @param location latest location
-	 * @param currentBestLocation last accurate location
-	 * @return
-	 */
-	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-		int OLD_LOCATION_THRESHOLD = 1000 * 60 * 2;
-		if (currentBestLocation == null) {
-			// A new location is always better than no location
-			if(location.getAccuracy() < 100){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
 
-		// Check whether the new location fix is newer or older
-		long timeDelta = location.getTime() - currentBestLocation.getTime();
-		boolean isSignificantlyNewer = timeDelta > OLD_LOCATION_THRESHOLD;
-		boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
-		boolean isNewer = timeDelta > 0;
-
-		
-		
-
-		// Check whether the new location fix is more or less accurate
-		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-		boolean isLessAccurate = accuracyDelta > 0;
-		boolean isMoreAccurate = accuracyDelta < 0;
-		boolean isSignificantlyLessAccurate = accuracyDelta > 100;
-
-		if(location.getAccuracy() > 100){
-			return false;
-		}
-		
-		// If it's been more than two minutes since the current location, use
-		// the new location because the user has likely moved
-		if (isSignificantlyNewer) {
-			return true;
-			// If the new location is more than two minutes older, it must
-			// be worse
-		} else if (isSignificantlyOlder) {
-			return false;
-		}
-		
-
-		// Check if the old and new location are from the same provider
-		boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
-
-		// Determine location quality using a combination of timeliness and
-		// accuracy
-		if (isMoreAccurate) {
-			return true;
-		} else if (isNewer && !isLessAccurate) {
-			return true;
-		} else if (isNewer && !isSignificantlyLessAccurate
-				&& isFromSameProvider) {
-			return true;
-		}
-		
-		return false;
-	}
-
-	/** Checks whether two providers are the same */
-	private boolean isSameProvider(String provider1, String provider2) {
-		if (provider1 == null) {
-			return provider2 == null;
-		}
-		return provider1.equals(provider2);
-	}
-	
 	
 	
 	
@@ -7928,7 +7852,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void initializeFusedLocationFetchers() {
 		destroyFusedLocationFetchers();
-		if(driverScreenMode == DriverScreenMode.D_INITIAL || passengerScreenMode == PassengerScreenMode.P_INITIAL){
+		if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_INITIAL)) 
+				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
 			if (myLocation == null) {
 				if (lowPowerLF == null) {
 					lowPowerLF = new LocationFetcher(HomeActivity.this, 10000, 0);
@@ -7977,41 +7902,42 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		
-		if(priority == 0){
-			if(location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK){
-				Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
-				if(map != null){
-					if(!zoomedToMyLocation){
-						map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-						zoomedToMyLocation = true;
-						if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-							getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
-							getDistanceTimeAddress.execute();
+		if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_INITIAL)) 
+				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
+			if(priority == 0){
+				if(location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK){
+					Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
+					if(map != null){
+						if(!zoomedToMyLocation){
+							map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+							zoomedToMyLocation = true;
+							if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+								getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
+								getDistanceTimeAddress.execute();
+							}
 						}
+						HomeActivity.myLocation = location;
 					}
-					HomeActivity.myLocation = location;
+				}
+			}
+			else if(priority == 2){
+				destroyLowPowerFusedLocationFetcher();
+				if(location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK){
+					Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
+					if(map != null){
+						if(!zoomedToMyLocation){
+							map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+							zoomedToMyLocation = true;
+							if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+								getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
+								getDistanceTimeAddress.execute();
+							}
+						}
+						HomeActivity.myLocation = location;
+					}
 				}
 			}
 		}
-		else if(priority == 2){
-			destroyLowPowerFusedLocationFetcher();
-			if(location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK){
-				Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
-				if(map != null){
-					if(!zoomedToMyLocation){
-						map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-						zoomedToMyLocation = true;
-						if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-							getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
-							getDistanceTimeAddress.execute();
-						}
-					}
-					HomeActivity.myLocation = location;
-				}
-			}
-		}
-		
 	}
 	
 	

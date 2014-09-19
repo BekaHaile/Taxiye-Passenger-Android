@@ -119,14 +119,15 @@ public class Data {
 	// review 3:    http://dev.jugnoo.in:4003
 	// live 4th:    http://dev.jugnoo.in:4004
 	// live 6th:    https://dev.jugnoo.in:4006
+	// live 8th:    https://dev.jugnoo.in:4008
 	//public static final String LIVE_SERVER_URL = "http://dev.jugnoo.in:4004";
 	
 	
 	public static final String DEV_SERVER_URL = "http://54.81.229.172:8000";
-	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4006";
+	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4008";
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 	
 	
 	
@@ -273,9 +274,9 @@ public class Data {
 	
 	public static AsyncHttpClient mainClient;
 	
-	public static final int SOCKET_TIMEOUT = 5000;
+	public static final int SOCKET_TIMEOUT = 10000;
 	public static final int CONNECTION_TIMEOUT = 10000;
-	public static final int MAX_RETRIES = 5;
+	public static final int MAX_RETRIES = 1;
 	public static final int RETRY_TIMEOUT = 1000;
 	
 	public static AsyncHttpClient getClient() {

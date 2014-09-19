@@ -43,6 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.facebook.LoggingBehavior;
 import com.facebook.Request;
@@ -990,7 +991,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			RequestParams params = new RequestParams();
 		
 			if(Data.locationFetcher != null){
-				Data.latitude = Data.locationFetcher.getLatitude();
+				Data.latitude = Data.locationFetcher.getLatitude(); 
 				Data.longitude = Data.locationFetcher.getLongitude();
 			}
 
@@ -1011,6 +1012,8 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			params.put("otp", otp);
 			params.put("ph_no", "");
 			params.put("password", "");
+			
+			
 			
 
 			Log.i("user_fb_id", "="+Data.fbId);

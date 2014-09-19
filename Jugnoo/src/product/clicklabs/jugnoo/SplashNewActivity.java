@@ -83,6 +83,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
 		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
 		
+		Data.SERVER_URL = Data.DEFAULT_SERVER_URL;
+		
 		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
 			Data.SERVER_URL = Data.TRIAL_SERVER_URL;
 		}
@@ -544,7 +546,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	public static boolean checkIfUpdate(JSONObject jObj, Activity activity) throws Exception{
-		Log.e("popup jObj", "="+jObj);
 //		"popup": {
 //	        "title": "Update Version",
 //	        "text": "Update app with new version!",
@@ -578,7 +579,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		else{
 			return false;
 		}
-		
 	}
 	
 	
