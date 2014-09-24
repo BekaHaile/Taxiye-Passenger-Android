@@ -1,18 +1,16 @@
 package product.clicklabs.jugnoo;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.IBinder;
 
 public class CUpdateDriverLocationsService extends Service {
-	
-	static int count = 0; 
-	
-	GetDriverLocationsFromServer getDriverLocationsFromServer;
 	
 	public CUpdateDriverLocationsService() {
 	}
@@ -32,13 +30,7 @@ public class CUpdateDriverLocationsService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         try{
-        	if(getDriverLocationsFromServer != null){
-        		getDriverLocationsFromServer.cancel(true);
-        		getDriverLocationsFromServer = null;
-        	}
-        	
-        	getDriverLocationsFromServer = new GetDriverLocationsFromServer();
-        	getDriverLocationsFromServer.execute();
+        	startTimerUpdateDrivers();
         	
         	
         } catch(Exception e){
@@ -77,63 +69,54 @@ public class CUpdateDriverLocationsService extends Service {
  
     @Override
     public void onDestroy() {
-        if(getDriverLocationsFromServer != null){
-    		getDriverLocationsFromServer.cancel(true);
-    		getDriverLocationsFromServer = null;
-    	}
+    	cancelTimerUpdateDrivers();
         System.gc();
     }
     
     
-    class GetDriverLocationsFromServer extends AsyncTask<String, Integer, String>{
-    	
-    	
-    	@Override
-    	protected void onPreExecute() {
-    		super.onPreExecute();
-    	}
-    	
-    	
-    	@Override
-    	protected String doInBackground(String... params) {
-    		
-    		try{
-
-    			if(count > 0){
-    				try {
-						Thread.sleep(60000);
+    
+    
+    Timer timerUpdateDrivers;
+	TimerTask timerTaskUpdateDrivers;
+	
+	public void startTimerUpdateDrivers(){
+		cancelTimerUpdateDrivers();
+		try {
+			timerUpdateDrivers = new Timer();
+			timerTaskUpdateDrivers = new TimerTask() {
+				@Override
+				public void run() {
+					try {
+						Log.e("timerUpdateDrivers", "inside timerUpdateDrivers ***********************");
+						if(HomeActivity.appInterruptHandler != null){
+							HomeActivity.appInterruptHandler.refreshDriverLocations();
+						}
 					} catch (Exception e) {
+						e.printStackTrace();
 					}
-    			}
-    		} catch(Exception e){
-    			e.printStackTrace();
-    		}
-    		return "refresh";
-    	}
-    	
-    	
-    	@Override
-    	protected void onPostExecute(String result) {
-    		super.onPostExecute(result);
-    		
-    		try{
-				
-				if("refresh".equalsIgnoreCase(result)  && HomeActivity.appInterruptHandler != null){
-					HomeActivity.appInterruptHandler.refreshDriverLocations(count);
 				}
-				count++;
-	        	
-	        	getDriverLocationsFromServer = null;
-	        	
-	        	getDriverLocationsFromServer = new GetDriverLocationsFromServer();
-	        	getDriverLocationsFromServer.execute();
-    		} catch(Exception e){
-    			e.printStackTrace();
-    		}
-    	}
-    	
-    	
-    }
+			};
+			timerUpdateDrivers.scheduleAtFixedRate(timerTaskUpdateDrivers, 0, 60000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void cancelTimerUpdateDrivers(){
+		try{
+			if(timerTaskUpdateDrivers != null){
+				timerTaskUpdateDrivers.cancel();
+				timerTaskUpdateDrivers = null;
+			}
+			if(timerUpdateDrivers != null){
+				timerUpdateDrivers.cancel();
+				timerUpdateDrivers.purge();
+				timerUpdateDrivers = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
     
     
 }

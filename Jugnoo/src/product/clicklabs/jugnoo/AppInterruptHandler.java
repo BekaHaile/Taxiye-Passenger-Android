@@ -12,7 +12,7 @@ public interface AppInterruptHandler {
 	
 	public void driverStartRideInterrupt();
 	
-	public void refreshDriverLocations(int count);
+	public void refreshDriverLocations();
 	
 	
 	public void requestRideInterrupt(int switchCase);

@@ -399,7 +399,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final double MAX_DISPLACEMENT_THRESHOLD = 200;
 	public static final long SERVICE_RESTART_TIMER = 12 * 60 * 60 * 1000;
 	
-	public static final long DRIVER_FILTER_DISTANCE = 2000;
+	public static final long DRIVER_FILTER_DISTANCE = 2100;
 	
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;
 	
@@ -1036,7 +1036,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									ArrayList<DriverInfo> arrayList = new ArrayList<DriverInfo>();
 									
-//									Data.mapTarget = map.getCameraPosition().target;
 									Data.mapTarget = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 									
 									for(int i=0; i<Data.driverInfos.size(); i++){
@@ -1076,9 +1075,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										switchPassengerScreen(passengerScreenMode);
 
 										customerCancelBeforePushReceive = false;
-										
-										
-//										getSessionIdAsync(HomeActivity.this);
 										
 									}
 									else{
@@ -1172,14 +1168,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		        startActivity(callIntent);
 			}
 		});
-		
-//		requestFinalLayout.setOnClickListener(new View.OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				
-//			}
-//		});
 		
 		
 		
@@ -2135,6 +2123,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			saveDataOnPause(false);
 			
 		if(mode == DriverScreenMode.D_RIDE_END){
+			startAutomaticReviewHandler();
 			mapLayout.setVisibility(View.GONE);
 			endRideReviewRl.setVisibility(View.VISIBLE);
 			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -2170,6 +2159,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 		}
 		else{
+			stopAutomaticReviewhandler();
 			mapLayout.setVisibility(View.VISIBLE);
 			endRideReviewRl.setVisibility(View.GONE);
 			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey));
@@ -2378,6 +2368,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			saveDataOnPause(false);
 			
 		if(mode == PassengerScreenMode.P_RIDE_END){
+			startAutomaticReviewHandler();
 			mapLayout.setVisibility(View.GONE);
 			endRideReviewRl.setVisibility(View.VISIBLE);
 			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -2408,6 +2399,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 		}
 		else{
+			stopAutomaticReviewhandler();
 			mapLayout.setVisibility(View.VISIBLE);
 			endRideReviewRl.setVisibility(View.GONE);
 			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey));
@@ -2461,7 +2453,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				title.setVisibility(View.GONE);
 //				favBtn.setVisibility(View.VISIBLE);
 
-				startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				if(!isServiceRunning(HomeActivity.this, CUpdateDriverLocationsService.class.getName())){
+					startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				}
 				
 				break;
 				
@@ -3782,7 +3776,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    boolean driverAcceptPushRecieved;
 	    
 	    public GetDistanceTimeAddress(LatLng destination, boolean driverAcceptPushRecieved){
-	    	stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	    	this.distance = "";
 	    	this.duration = "";
 	    	this.destination = destination;
@@ -3844,6 +3837,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    							driverCarImage = dataI.getString("driver_car_image");
 	    							phoneNo = dataI.getString("phone_no");
 	    							rating = dataI.getString("rating");
+	    							
+	    							Log.e("dataI","="+dataI);
 	    						} catch(Exception e){
 	    							e.printStackTrace();
 	    						}
@@ -3991,7 +3986,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        
 	        if(!driverAcceptPushRecieved){
 	        	Data.mapTarget = destination;
-	        	startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	        }
 	        else if(driverAcceptPushRecieved){
 	        	if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
@@ -4046,7 +4040,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 	}
 	
-	//TODO
 	public void addCurrentLocationAddressMarker(LatLng latLng){
 		try {
 			if(currentLocationMarker != null){
@@ -7223,19 +7216,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
 	@Override
-	public void refreshDriverLocations(int count) {
-		
-		try {
-			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-				if(myLocation != null){
-					getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
-					getDistanceTimeAddress.execute();
+	public void refreshDriverLocations() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+						if(myLocation != null){
+							getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
+							getDistanceTimeAddress.execute();
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		});
 	}
 
 
@@ -7831,6 +7827,56 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}).start();
 	
 	}
+	
+	
+	public Handler automaticReviewHandler;
+	public Runnable automaticReviewRunnable;
+	
+	public void startAutomaticReviewHandler(){
+		try {
+			stopAutomaticReviewhandler();
+			automaticReviewHandler = new Handler();
+			automaticReviewRunnable = new Runnable() {
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_RIDE_END){
+								GCMIntentService.clearNotifications(HomeActivity.this);
+								submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, "5");
+							}
+							else if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_RIDE_END){
+								GCMIntentService.clearNotifications(HomeActivity.this);
+								submitReviewAsync(HomeActivity.this, Data.cEngagementId, "1", Data.cDriverId, "5");
+							}
+						}
+					});
+				}
+			};
+			
+			automaticReviewHandler.postDelayed(automaticReviewRunnable, 5 * 60 * 1000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void stopAutomaticReviewhandler(){
+		try {
+			if(automaticReviewHandler != null && automaticReviewRunnable != null){
+				automaticReviewHandler.removeCallbacks(automaticReviewRunnable);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		automaticReviewHandler = null;
+		automaticReviewRunnable = null;
+	}
+	
+	
+	
+	
+	
 	
 	
 	// *****************************Used for flurry work***************//
