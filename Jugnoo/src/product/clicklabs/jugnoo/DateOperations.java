@@ -42,7 +42,7 @@ public class DateOperations {
 
 
 	/**
-	 * Converts date string from 2014-01-12 00:00 to 12 Jan, 2014
+	 * Converts date string from 2014-01-12 00:00 to 12 Jan, 2014 12:00 AM
 	 * @param dateTime 
 	 * @return
 	 */
@@ -94,8 +94,28 @@ public class DateOperations {
 		}
 		
 		
+		String time = dateTime.split(" ")[1];
 		
-		String finalDate = ""+ day + " " + month + ", " + year; 
+		String hour = time.split(":")[0];
+		String min = time.split(":")[1];
+		
+		String amOrpm = Integer.parseInt(hour)>=12?"PM":"AM";
+		String newHour = "";
+		
+		if(Integer.parseInt(hour)==0){
+			newHour = "12";
+		}
+		else if(Integer.parseInt(hour)<=12){
+			newHour = hour;
+		}
+		else{
+			newHour = ""+(Integer.parseInt(hour) - 12);
+		}
+		
+		String finalTime = ""+ newHour + ":" + min + " " + amOrpm; 
+		
+		
+		String finalDate = ""+ day + " " + month + ", " + year + " " + finalTime; 
 		
 		return finalDate;
 		}

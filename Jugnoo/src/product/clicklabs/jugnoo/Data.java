@@ -161,7 +161,7 @@ public class Data {
 	
 	public static ArrayList<FavoriteLocation> favoriteLocations = new ArrayList<FavoriteLocation>();
 	
-	public static ArrayList<Booking> bookings = new ArrayList<Booking>();
+	public static ArrayList<RideInfo> rides = new ArrayList<RideInfo>();
 	
 	public static ArrayList<FriendInfo> friendInfos = new ArrayList<FriendInfo>();
 	public static ArrayList<FriendInfo> friendInfosDuplicate = new ArrayList<FriendInfo>();

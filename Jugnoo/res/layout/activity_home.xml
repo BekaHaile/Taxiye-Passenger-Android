@@ -548,16 +548,17 @@
             <RelativeLayout
                 android:id="@+id/driverPassengerInfoRl"
                 android:layout_width="match_parent"
-                android:layout_height="140px"
+                android:layout_height="110px"
                 android:background="@color/white_translucent"
                 android:splitMotionEvents="false" >
 
                 <TextView
                     android:id="@+id/driverPassengerName"
-                    android:layout_width="420px"
+                    android:layout_width="400px"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40px"
                     android:layout_marginTop="20px"
+                    android:layout_centerVertical="true"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:text="John Paulo"
@@ -571,13 +572,16 @@
                     android:layout_below="@+id/driverPassengerName"
                     android:layout_marginLeft="40px"
                     android:layout_marginTop="10px"
-                    android:splitMotionEvents="false" >
+                    android:splitMotionEvents="false" 
+                    android:visibility="gone"
+                    >
 
                     <ImageView
                         android:id="@+id/driverPassengerRatingStar"
                         android:layout_width="46px"
                         android:layout_height="46px"
-                        android:background="@drawable/star_empty" />
+                        android:background="@drawable/star_empty"
+                         />
 
                     <TextView
                         android:id="@+id/driverPassengerRatingValue"
@@ -589,7 +593,8 @@
                         android:singleLine="true"
                         android:text="4.3 Rating"
                         android:textColor="@color/bg_grey_opaque"
-                        android:textSize="38px" />
+                        android:textSize="38px" 
+                        />
                 </RelativeLayout>
 
                 <Button
@@ -719,7 +724,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/driverIRDistanceText"
                             android:layout_marginLeft="10px"
-                            android:layout_marginTop="30px"
+                            android:layout_marginTop="25px"
                             android:layout_toRightOf="@+id/driverIRDistanceValue"
                             android:text="km"
                             android:textColor="@color/black"
@@ -749,7 +754,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/driverIRFareText"
-                            android:layout_marginTop="28px"
+                            android:layout_marginTop="25px"
                             android:text="Rs"
                             android:textColor="@color/black"
                             android:textSize="30px" />

@@ -39,6 +39,7 @@
                 android:textSize="50px" 
                 android:paddingLeft="20px"
                 android:paddingRight="20px"
+                android:visibility="gone"
                 
                 />
 		 

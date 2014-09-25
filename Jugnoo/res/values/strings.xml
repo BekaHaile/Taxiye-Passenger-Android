@@ -77,6 +77,10 @@
 	<string name="rides">Rides</string>
 	<string name="no_rides_currently">No rides currently.</string>
 	
+	<string name="history">History</string>
+	<string name="missed">Missed</string>
+	<string name="no_missed_rides_currently">No missed rides currently.</string>
+	
 	<string name="update">Update</string>
 	
 	<string name="driver_mode">Driver Mode</string>

@@ -21,7 +21,8 @@
                         android:layout_marginLeft="42px"
                         android:text="@string/driver_mode"
                         android:textColor="@color/white"
-                        android:textSize="34px" />
+                        android:textSize="34px" 
+                        />
 
                     <ImageView
                         android:id="@+id/driverModeToggle"

@@ -373,8 +373,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	static Activity activity;
 	
-	boolean bookingsFetched = false, 
-			customerCancelBeforePushReceive = false, 
+	boolean customerCancelBeforePushReceive = false, 
 			userCanceledDialogShown = false;
 	boolean loggedOut = false, 
 			zoomedToMyLocation = false;
@@ -414,7 +413,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		activity = this;
 		
-		bookingsFetched = false;
 		customerCancelBeforePushReceive = false;
 		userCanceledDialogShown = false;
 		loggedOut = false;
@@ -621,6 +619,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName); driverPassengerName.setTypeface(Data.regularFont(getApplicationContext()));
 		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue); driverPassengerRatingValue.setTypeface(Data.regularFont(getApplicationContext()));
 		driverPassengerCallBtn = (Button) findViewById(R.id.driverPassengerCallBtn); driverPassengerCallBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		driverPassengerRatingValue.setVisibility(View.GONE);
 		
 		//Start ride layout
 		driverStartRideMainRl = (RelativeLayout) findViewById(R.id.driverStartRideMainRl);
@@ -931,7 +931,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				getBookingsAsync(HomeActivity.this);
+				if(userMode == UserMode.DRIVER){
+					startActivity(new Intent(HomeActivity.this, DriverHistoryActivity.class));
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
+				else if(userMode == UserMode.PASSENGER){
+					startActivity(new Intent(HomeActivity.this, BookingActivity.class));
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
 			}
 		});
 		
@@ -2968,10 +2975,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		if(userMode == UserMode.DRIVER){
-			reviewRatingText.setText(resources.getString(R.string.driver_rating));
+			reviewRatingText.setText(resources.getString(R.string.customer_rating));
 		}
 		else{
-			reviewRatingText.setText(resources.getString(R.string.customer_rating));
+			reviewRatingText.setText(resources.getString(R.string.driver_rating));
 		}
 		
 		
@@ -3285,14 +3292,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		try {
 			if(map != null){
-			if(!zoomedToMyLocation){
-				map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-				zoomedToMyLocation = true;
-				if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-					getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
-					getDistanceTimeAddress.execute();
-				}
-			}
+				zoomToCurrentLocationAtFirstLocationFix(location);
 			
 			HomeActivity.myLocation = location;
 			
@@ -5963,112 +5963,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	
-	
-	
-	/**
-	 * ASync for get bookings from server
-	 */
-	public void getBookingsAsync(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-			
-			params.put("access_token", Data.userData.accessToken);
-
-			if(userMode == UserMode.DRIVER){
-				params.put("current_mode", "1");
-				Log.i("current_mode", "1");
-			}
-			else{
-				params.put("current_mode", "0");
-				Log.i("current_mode", "0");
-			}
-			
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/booking_history", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String error = jObj.getString("error");
-
-									String errorMessage = jObj.getString("error");
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", error);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", error);
-									}
-								}
-								else{
-									
-									JSONArray bookingData = jObj.getJSONArray("booking_data");
-									
-									Data.bookings.clear();
-									
-									if(bookingData.length() > 0){
-										
-										for(int i=0; i<bookingData.length(); i++){
-											JSONObject booData = bookingData.getJSONObject(i);
-											
-											Data.bookings.add(new Booking(booData.getString("id"), booData.getString("from"),
-													booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
-													booData.getString("time")));
-											
-										}
-										
-									}
-									
-									bookingsFetched = true;
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-							
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-
-	}
-	
-	
-	
-	
 	void noDriverAvailablePopup(final Activity activity){
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -7135,12 +7029,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				finish();
 				overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
-			else if(bookingsFetched){
-				bookingsFetched = false;
-				drawerLayout.closeDrawer(menuLayout);
-				startActivity(new Intent(HomeActivity.this, BookingActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-			}
 			else{
 				buildAlertMessageNoGps();
 			}
@@ -7953,36 +7841,37 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			if(priority == 0){
 				if(location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK){
 					Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
-					if(map != null){
-						if(!zoomedToMyLocation){
-							map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-							zoomedToMyLocation = true;
-							if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-								getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
-								getDistanceTimeAddress.execute();
-							}
-						}
-						HomeActivity.myLocation = location;
-					}
+					zoomToCurrentLocationAtFirstLocationFix(location);
+					HomeActivity.myLocation = location;
 				}
 			}
 			else if(priority == 2){
 				destroyLowPowerFusedLocationFetcher();
 				if(location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK){
 					Log.i("locationChanged interface ", "location = " + location + ", priority =  " + priority);
-					if(map != null){
-						if(!zoomedToMyLocation){
-							map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-							zoomedToMyLocation = true;
-							if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-								getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
-								getDistanceTimeAddress.execute();
-							}
-						}
-						HomeActivity.myLocation = location;
-					}
+					zoomToCurrentLocationAtFirstLocationFix(location);
+					HomeActivity.myLocation = location;
 				}
 			}
+		}
+	}
+	
+	
+	public void zoomToCurrentLocationAtFirstLocationFix(Location location){
+		try {
+			if(map != null){
+				if(!zoomedToMyLocation){
+					map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+					zoomedToMyLocation = true;
+					if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
+						getDistanceTimeAddress.execute();
+					}
+				}
+				HomeActivity.myLocation = location;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

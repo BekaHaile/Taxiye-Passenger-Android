@@ -78,6 +78,8 @@ public class DialogPopup {
 			textHead.setText(title);
 			textMessage.setText(message);
 			
+			textHead.setVisibility(View.GONE);
+			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {

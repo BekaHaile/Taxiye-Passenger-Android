@@ -158,11 +158,11 @@ class DriverRideRequest{
 	
 }
 
-class Booking{
+class RideInfo{
 	
 	String id, fromLocation, toLocation, fare, distance, time;
 	
-	public Booking(String id, String fromLocation, String toLocation, String fare, String distance, String time){
+	public RideInfo(String id, String fromLocation, String toLocation, String fare, String distance, String time){
 		this.id = id;
 		this.fromLocation = fromLocation;
 		this.toLocation = toLocation;
@@ -171,6 +171,15 @@ class Booking{
 		this.time = time;
 	}
 	
+}
+
+class MissedRideInfo{
+	String engagementId, pickupLocationAddress, timestamp;
+	public MissedRideInfo(String engagementId, String pickupLocationAddress, String timestamp){
+		this.engagementId = engagementId;
+		this.pickupLocationAddress = pickupLocationAddress;
+		this.timestamp = timestamp;
+	}
 }
 
 

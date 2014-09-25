@@ -26,8 +26,8 @@
         
         
         <LinearLayout 
-            android:id="@+id/fromRl"
-            android:layout_width="540px"
+            android:id="@+id/relativeLayoutMissedRideFrom"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20px"
         android:splitMotionEvents="false"
@@ -37,7 +37,7 @@
        
 
         <TextView
-            android:id="@+id/fromText"
+            android:id="@+id/textViewMissedRideFrom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/from"
@@ -48,49 +48,14 @@
              />
         
         <TextView
-            android:id="@+id/fromValue"
+            android:id="@+id/textViewMissedRideFromValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Elante shjksfjkrhldehkfthlrtewterwtrwtywery"
             android:textColor="@color/bg_grey_opaque"
             android:textSize="36px"
             android:layout_marginLeft="5px"
-             />
-        
-        
-         </LinearLayout>
-         
-        
-        <LinearLayout 
-            android:id="@+id/toRl"
-            android:layout_width="540px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10px"
-        android:splitMotionEvents="false"
-            >
-            
-            
-       
-
-        <TextView
-            android:id="@+id/toText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/to"
-            android:textColor="@color/bg_grey_opaque"
-            android:textSize="36px"
-            android:layout_marginLeft="20px"
-            android:singleLine="true"
-             />
-        
-        <TextView
-            android:id="@+id/toValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Elante shjksfjkrhldehkfthlrtewterwtrwtywery"
-            android:textColor="@color/bg_grey_opaque"
-            android:textSize="36px"
-            android:layout_marginLeft="50px"
+            android:layout_marginRight="20px"
              />
         
         
@@ -99,7 +64,7 @@
         
         
         <LinearLayout 
-            android:id="@+id/distTimeRl"
+            android:id="@+id/relativeLayoutMissedRideTime"
             android:layout_width="540px"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
@@ -107,27 +72,6 @@
             android:gravity="center_vertical"
         android:splitMotionEvents="false"
             >
-            
-            
-       <ImageView 
-           android:layout_width="30px"
-           android:layout_height="30px"
-           android:src="@drawable/location"
-           android:tag="mwar"
-            android:layout_marginLeft="10px"
-           />
-            
-
-        <TextView
-            android:id="@+id/distanceValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5.6 Km"
-            android:textColor="@color/bg_grey_opaque"
-            android:textSize="30px"
-            android:layout_marginLeft="5px"
-            android:singleLine="true"
-             />
         
         
         <ImageView 
@@ -135,12 +79,12 @@
            android:layout_height="30px"
            android:src="@drawable/time"
            android:tag="mwar"
-            android:layout_marginLeft="30px"
+            android:layout_marginLeft="20px"
            />
         
         
         <TextView
-            android:id="@+id/timeValue"
+            android:id="@+id/textViewMissedRideTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3 June, 2014"
@@ -163,22 +107,6 @@
         
         
     </LinearLayout>
-    
-    
-    
-    <TextView
-            android:id="@+id/fareValue"
-            android:layout_width="170px"
-            android:layout_height="wrap_content"
-            android:text="Rs. 2500"
-            android:textColor="@color/blue_btn"
-            android:gravity="center_vertical|right"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20px"
-            android:textSize="36px"
-            android:layout_marginLeft="0px"
-             />
     
     
     </RelativeLayout>
