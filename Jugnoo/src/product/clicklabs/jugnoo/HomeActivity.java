@@ -315,6 +315,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	reviewWaitText, reviewWaitValue,
 	reviewFareText, reviewFareValue, 
 	reviewRatingText;
+	LinearLayout reviewRatingBarRl, endRideInfoRl;
+	TextView jugnooRideOverText, takeFareText;
 	RatingBar reviewRatingBar;
 	Button reviewSubmitBtn;
 	
@@ -363,6 +365,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	GetDistanceTimeAddress getDistanceTimeAddress;
+	
 	
 	
 	
@@ -711,6 +714,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		reviewFareValue = (TextView) findViewById(R.id.reviewFareValue); reviewFareValue.setTypeface(Data.regularFont(getApplicationContext()));
 		reviewRatingText = (TextView) findViewById(R.id.reviewRatingText); reviewRatingText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 		
+		reviewRatingBarRl = (LinearLayout) findViewById(R.id.reviewRatingBarRl);
+		endRideInfoRl = (LinearLayout) findViewById(R.id.endRideInfoRl);
+		jugnooRideOverText = (TextView) findViewById(R.id.jugnooRideOverText); 
+		jugnooRideOverText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		takeFareText = (TextView) findViewById(R.id.takeFareText); 
+		takeFareText.setTypeface(Data.regularFont(getApplicationContext()));
 		reviewRatingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
 		reviewSubmitBtn = (Button) findViewById(R.id.reviewSubmitBtn); reviewSubmitBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
@@ -2162,6 +2171,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
 			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
 			
+			reviewSubmitBtn.setText("OK");
+			
+			reviewRatingBarRl.setVisibility(View.GONE);
+			endRideInfoRl.setVisibility(View.VISIBLE);
+			
 			
 			
 		}
@@ -2403,6 +2417,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
 			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
 			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
+			
+			reviewSubmitBtn.setText("Submit");
+			
+			reviewRatingBarRl.setVisibility(View.VISIBLE);
+			endRideInfoRl.setVisibility(View.GONE);
 			
 		}
 		else{

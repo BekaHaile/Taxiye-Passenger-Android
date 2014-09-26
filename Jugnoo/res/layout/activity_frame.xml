@@ -3,37 +3,48 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-    
+
     <RelativeLayout
-                    android:id="@+id/driverModeRl"
-                    android:layout_width="match_parent"
-                    android:layout_height="84px"
-                    android:layout_marginTop="40px"
-                    android:background="@drawable/transparent"
-                    android:splitMotionEvents="false" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:splitMotionEvents="false" >
 
-                    <TextView
-                        android:id="@+id/driverModeText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="42px"
-                        android:text="@string/driver_mode"
-                        android:textColor="@color/white"
-                        android:textSize="34px" 
-                        />
+        <LinearLayout
+            android:id="@+id/endRideInfoRl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/reviewSubmitBtn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10px"
+            android:orientation="vertical"
+            android:splitMotionEvents="false" >
 
-                    <ImageView
-                        android:id="@+id/driverModeToggle"
-                        android:layout_width="90px"
-                        android:layout_height="72px"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="20px"
-                        android:src="@drawable/on"
-                        android:tag="mwar" />
-                </RelativeLayout>
-    
+            <TextView
+                android:id="@+id/jugnooRideOverText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="The Jugnoo ride is over."
+                android:textColor="@color/black"
+                android:textSize="40px" 
+                />
+
+            <TextView
+                android:id="@+id/takeFareText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="40px"
+                android:layout_marginTop="10px"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:gravity="center"
+                android:text="Please take the fare as shown above from the customer."
+                android:textColor="@color/black"
+                android:textSize="40px" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>

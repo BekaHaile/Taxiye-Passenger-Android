@@ -1062,28 +1062,32 @@
                     android:layout_below="@+id/upLayout"
                     android:background="@drawable/shadow_down" />
 
-                <TextView
-                    android:id="@+id/reviewRatingText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/reviewRatingBarRl"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20px"
-                    android:layout_marginTop="120px"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="Driver Rating"
-                    android:textColor="@color/black"
-                    android:textSize="40px" />
+                
 
-                <LinearLayout
+                        <LinearLayout
                     android:id="@+id/reviewRatingBarRl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/reviewSubmitBtn"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="10px"
-                    android:splitMotionEvents="false" >
+                    android:splitMotionEvents="false"
+                    android:orientation="vertical"
+                     >
+                    
+                    <TextView
+	                    android:id="@+id/reviewRatingText"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_above="@+id/reviewRatingBarRl"
+	                    android:layout_gravity="center_horizontal"
+	                    android:layout_marginBottom="20px"
+	                    android:gravity="center"
+	                    android:singleLine="true"
+	                    android:text="Driver Rating"
+	                    android:textColor="@color/black"
+	                    android:textSize="40px" />
+                    
 
                     <RatingBar
                         android:id="@+id/reviewRatingBar"
@@ -1092,8 +1096,48 @@
                         android:layout_height="wrap_content"
                         android:numStars="5"
                         android:rating="1"
-                        android:stepSize="1.0" />
+                        android:stepSize="1.0"
+                        
+                         />
                 </LinearLayout>
+                
+                        <LinearLayout
+            android:id="@+id/endRideInfoRl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/reviewSubmitBtn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20px"
+            android:orientation="vertical"
+            android:splitMotionEvents="false" >
+
+            <TextView
+                android:id="@+id/jugnooRideOverText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="The Jugnoo ride is over."
+                android:textColor="@color/black"
+                android:textSize="40px" 
+                />
+
+            <TextView
+                android:id="@+id/takeFareText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="40px"
+                android:layout_marginTop="10px"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:gravity="center"
+                android:text="Please take the fare as shown above from the customer."
+                android:textColor="@color/black"
+                android:textSize="40px" />
+        </LinearLayout>
+                        
 
                 <Button
                     android:id="@+id/reviewSubmitBtn"

@@ -104,6 +104,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 		}
 	}
 
+	
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected");
