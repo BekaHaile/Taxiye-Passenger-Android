@@ -279,7 +279,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	TextView driverPassengerName;
 	TextView driverPassengerRatingValue;
-	Button driverPassengerCallBtn;
+	RelativeLayout driverPassengerCallRl;
+	TextView driverPassengerCallText;
 	
 	//Start ride layout
 	RelativeLayout driverStartRideMainRl;
@@ -404,6 +405,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final long DRIVER_FILTER_DISTANCE = 2100;
 	
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;
+	
+	public static final long AUTO_RATE_DELAY = 5 * 60 * 1000;
 	
 	
 	@Override
@@ -621,7 +624,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName); driverPassengerName.setTypeface(Data.regularFont(getApplicationContext()));
 		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue); driverPassengerRatingValue.setTypeface(Data.regularFont(getApplicationContext()));
-		driverPassengerCallBtn = (Button) findViewById(R.id.driverPassengerCallBtn); driverPassengerCallBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		driverPassengerCallRl = (RelativeLayout) findViewById(R.id.driverPassengerCallRl);
+		driverPassengerCallText = (TextView) findViewById(R.id.driverPassengerCallText); driverPassengerCallText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		driverPassengerRatingValue.setVisibility(View.GONE);
 		
@@ -1369,7 +1373,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		// driver start ride layout events
-		driverPassengerCallBtn.setOnClickListener(new View.OnClickListener() {
+		driverPassengerCallRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -2896,6 +2900,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		
+		
 		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
 			requestRideBtn.setText(resources.getString(R.string.request_ride));
 		}
@@ -2944,7 +2950,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+resources.getString(R.string.rating));
 		}
 		
-		driverPassengerCallBtn.setText(resources.getString(R.string.call));
+		driverPassengerCallText.setText(resources.getString(R.string.call));
 		
 		driverStartRideBtn.setText(resources.getString(R.string.start_ride));
 		driverCancelRideBtn.setText(resources.getString(R.string.cancel_ride));
@@ -3638,6 +3644,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    	e.printStackTrace();
 	    }
 	} 
+	
 	
 	
 	private List<LatLng> decodePoly(String encoded) {
@@ -6161,7 +6168,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.app_update_dialog);
+			dialog.setContentView(R.layout.custom_two_btn_dialog);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -7762,7 +7769,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			};
 			
-			automaticReviewHandler.postDelayed(automaticReviewRunnable, 5 * 60 * 1000);
+			automaticReviewHandler.postDelayed(automaticReviewRunnable, AUTO_RATE_DELAY);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -7809,15 +7816,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
 			if (myLocation == null) {
 				if (lowPowerLF == null) {
-					lowPowerLF = new LocationFetcher(HomeActivity.this, 10000, 0);
+					lowPowerLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 0);
 				}
 				if (highAccuracyLF == null) {
-					highAccuracyLF = new LocationFetcher(HomeActivity.this, 10000, 2);
+					highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 2);
 				}
 			} 
 			else {
 				if (highAccuracyLF == null) {
-					highAccuracyLF = new LocationFetcher(HomeActivity.this, 10000, 2);
+					highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 2);
 				}
 			}
 		}
