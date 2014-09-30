@@ -38,9 +38,13 @@ public class AboutActivity extends Activity{
 		
 		
 		
-		String str1 = getResources().getString(R.string.about_1_text);
+		String str1 = getResources().getString(R.string.about_1_text) + "\nTo call a Jugnoo press the blue button on the map screen.";
 		
 		about1Text.setText(str1);
+		
+		
+		//To call a Jugnoo press the blue button on the map screen
+		
 		
 		String str3 = getResources().getString(R.string.about_2_text);
 		
@@ -49,10 +53,10 @@ public class AboutActivity extends Activity{
 		String str4 = getResources().getString(R.string.about_3_text);
 		
 		//First 2 kms: Rs.30\nAfter 2 kms: Rs. 10/km\nWaiting time: Rs.1.5/min after 15 minutes.
-		
+		//Operation Hours: 7 am - 9 pm currently
 		try{
 			DecimalFormat decimalFormat = new DecimalFormat("#");
-			String str = "First "+decimalFormat.format(HomeActivity.fareThresholdDistance)+" kms: Rs."+decimalFormat.format(HomeActivity.fareFixed)+"\nAfter "
+			String str = "Operation Hours: 7 am - 9 pm currently \nFirst "+decimalFormat.format(HomeActivity.fareThresholdDistance)+" kms: Rs."+decimalFormat.format(HomeActivity.fareFixed)+"\nAfter "
 			+decimalFormat.format(HomeActivity.fareThresholdDistance)+" kms:" + " Rs. "+decimalFormat.format(HomeActivity.farePerKm)+"/km\nWaiting time: Rs.1.5/min after 15 minutes.";
 			about3Text.setText(str);
 		} catch(Exception e){

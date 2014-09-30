@@ -232,7 +232,7 @@ public class DriverMissedRidesFragment extends Fragment {
 									JSONArray missedRidesData = jObj.getJSONArray("missed_rides");
 									missedRideInfos.clear();
 									if(missedRidesData.length() > 0){
-										for(int i=0; i<missedRidesData.length(); i++){
+										for(int i=missedRidesData.length()-1; i>=0; i--){
 											JSONObject rideData = missedRidesData.getJSONObject(i);
 											missedRideInfos.add(new MissedRideInfo(rideData.getString("engagement_id"),
 													rideData.getString("pickup_location_address"),

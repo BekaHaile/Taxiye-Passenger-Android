@@ -755,7 +755,13 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
-			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
+//			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
+			if(Data.termsAgreed == 1){
+				startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
+			}
+			else{
+				startActivity(new Intent(RegisterScreen.this, TermsConditionsActivity.class));
+			}
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
 		}

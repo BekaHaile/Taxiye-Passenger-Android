@@ -23,14 +23,31 @@ public class JSONParser {
 		Log.e("login response =", "="+response);
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
+		
+		
+		
+		
+		try{
+			Data.termsAgreed = userData.getInt("terms_agreed");
+		} catch(Exception e){
+			e.printStackTrace();
+			Data.termsAgreed = 0;
+		}
+		
 		Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("id"));
 		
-		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-		Editor editor = pref.edit();
-		editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-		editor.putString(Data.SP_ID_KEY, Data.userData.id);
-		editor.commit();
+		
+		
+		if(Data.termsAgreed == 1){
+			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+			Editor editor = pref.edit();
+			editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
+			editor.putString(Data.SP_ID_KEY, Data.userData.id);
+			editor.commit();
+		}
+		
+		
 		
 		try{
 			int currentUserStatus = userData.getInt("current_user_status");
@@ -96,6 +113,7 @@ public class JSONParser {
 			HomeActivity.farePerKm = 10;
 			HomeActivity.fareThresholdDistance = 2;
 		}
+		
 		
 		
 	}
