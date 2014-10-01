@@ -47,7 +47,6 @@ public class DateOperations {
 	 * @return
 	 */
 	public String convertDate(String dateTime){
-		Log.e("dateTime", "="+dateTime);
 		try{
 		String date = dateTime.split(" ")[0];
 		

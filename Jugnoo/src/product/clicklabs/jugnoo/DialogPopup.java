@@ -1,44 +1,35 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
-import product.clicklabs.jugnoo.LanguagePrefrencesActivity.ViewHolderLanguage;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.text.method.ScrollingMovementMethod;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 public class DialogPopup {
 
+	static Dialog dialog;
+	
 	public DialogPopup(){
-		
 	}
 	
 	
 	void alertPopup(Activity activity, String title, String message) {
 		try {
+			try{
+				if(dialog != null && dialog.isShowing()){
+					dialog.dismiss();
+				}
+			}catch(Exception e){
+				
+			}
 			if("".equalsIgnoreCase(title)){
 				title = activity.getResources().getString(R.string.alert);
 			}
@@ -55,7 +46,7 @@ public class DialogPopup {
 			
 			
 			
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.custom_message_dialog);
 
@@ -162,13 +153,6 @@ public class DialogPopup {
 			Log.e("e","="+e);
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }

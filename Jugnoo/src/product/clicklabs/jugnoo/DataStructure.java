@@ -174,11 +174,13 @@ class RideInfo{
 }
 
 class MissedRideInfo{
-	String engagementId, pickupLocationAddress, timestamp;
-	public MissedRideInfo(String engagementId, String pickupLocationAddress, String timestamp){
+	String engagementId, pickupLocationAddress, timestamp, customerName, customerDistance;
+	public MissedRideInfo(String engagementId, String pickupLocationAddress, String timestamp, String customerName, String customerDistance){
 		this.engagementId = engagementId;
 		this.pickupLocationAddress = pickupLocationAddress;
 		this.timestamp = timestamp;
+		this.customerName = customerName;
+		this.customerDistance = customerDistance;
 	}
 }
 

@@ -72,7 +72,6 @@ public class DriverHistoryActivity extends FragmentActivity{
 			@Override
 			public void onClick(View v) {
 				viewPagerDriverHistory.setCurrentItem(0, true);
-				switchTabs(0);
 			}
 		});
 		
@@ -81,13 +80,27 @@ public class DriverHistoryActivity extends FragmentActivity{
 			@Override
 			public void onClick(View v) {
 				viewPagerDriverHistory.setCurrentItem(1, true);
-				switchTabs(1);
 			}
 		});
 		
 		viewPagerDriverHistory.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int arg0) {
+//				try {
+//					switch(arg0){
+//						case 0:
+//							((DriverRidesFragment) driverHistoryTabsAdapter.getItem(arg0)).getRidesAsync(DriverHistoryActivity.this);
+//							break;
+//						
+//						case 1:
+//							((DriverMissedRidesFragment) driverHistoryTabsAdapter.getItem(arg0)).getMissedRidesAsync(DriverHistoryActivity.this);
+//							break;
+//						
+//						default:
+//					}
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 				switchTabs(arg0);
 			}
 			@Override
@@ -98,6 +111,7 @@ public class DriverHistoryActivity extends FragmentActivity{
 			}
 		});
 		
+		viewPagerDriverHistory.setCurrentItem(0, true);
 		switchTabs(0);
 	}
 	

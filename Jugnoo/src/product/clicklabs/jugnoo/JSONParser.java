@@ -31,7 +31,7 @@ public class JSONParser {
 			Data.termsAgreed = userData.getInt("terms_agreed");
 		} catch(Exception e){
 			e.printStackTrace();
-			Data.termsAgreed = 0;
+			Data.termsAgreed = 1;
 		}
 		
 		Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 

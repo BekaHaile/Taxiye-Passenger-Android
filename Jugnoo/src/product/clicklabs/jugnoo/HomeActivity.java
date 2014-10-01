@@ -402,7 +402,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final double MAX_DISPLACEMENT_THRESHOLD = 200;
 	public static final long SERVICE_RESTART_TIMER = 12 * 60 * 60 * 1000;
 	
-	public static final long DRIVER_FILTER_DISTANCE = 2100;
+	public static final long DRIVER_FILTER_DISTANCE = 2600;
 	
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;
 	
@@ -898,9 +898,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-//				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
-//				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				startActivity(new Intent(HomeActivity.this, TermsConditionsActivity.class));
+				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});

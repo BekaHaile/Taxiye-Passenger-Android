@@ -99,7 +99,8 @@ public class DriverMissedRidesFragment extends Fragment {
 	}
 
 	class ViewHolderDriverMissedRides {
-		TextView textViewMissedRideFrom, textViewMissedRideFromValue, textViewMissedRideTime;
+		TextView textViewMissedRideFrom, textViewMissedRideFromValue, textViewMissedRideTime, textViewMissedRideCustomerName, textViewMissedRideCustomerNameValue,
+				textViewMissedRideCustomerDistance, textViewMissedRideCustomerDistanceValue;
 		LinearLayout relative;
 		int id;
 	}
@@ -136,7 +137,16 @@ public class DriverMissedRidesFragment extends Fragment {
 				
 				holder.textViewMissedRideFrom = (TextView) convertView.findViewById(R.id.textViewMissedRideFrom); holder.textViewMissedRideFrom.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
 				holder.textViewMissedRideFromValue = (TextView) convertView.findViewById(R.id.textViewMissedRideFromValue); holder.textViewMissedRideFromValue.setTypeface(Data.regularFont(getActivity()));
+				
 				holder.textViewMissedRideTime = (TextView) convertView.findViewById(R.id.textViewMissedRideTime); holder.textViewMissedRideTime.setTypeface(Data.regularFont(getActivity()));
+				
+				holder.textViewMissedRideCustomerName = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerName); holder.textViewMissedRideCustomerName.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
+				holder.textViewMissedRideCustomerNameValue = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerNameValue); holder.textViewMissedRideCustomerNameValue.setTypeface(Data.regularFont(getActivity()));
+				
+				holder.textViewMissedRideCustomerDistance = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerDistance); holder.textViewMissedRideCustomerDistance.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
+				holder.textViewMissedRideCustomerDistanceValue = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerDistanceValue); holder.textViewMissedRideCustomerDistanceValue.setTypeface(Data.regularFont(getActivity()));
+				
+				
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
@@ -161,6 +171,9 @@ public class DriverMissedRidesFragment extends Fragment {
 			holder.textViewMissedRideFromValue.setText(missedRideInfo.pickupLocationAddress);
 			holder.textViewMissedRideTime.setText(dateOperations.convertDate(dateOperations.utcToLocal(missedRideInfo.timestamp)));
 			
+			holder.textViewMissedRideCustomerNameValue.setText(missedRideInfo.customerName);
+			holder.textViewMissedRideCustomerDistanceValue.setText(missedRideInfo.customerDistance+" km");
+			
 			return convertView;
 		}
 	}
@@ -171,86 +184,95 @@ public class DriverMissedRidesFragment extends Fragment {
 	 * ASync for get rides from server
 	 */
 	public void getMissedRidesAsync(final Activity activity) {
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
-			progressBarMissedRides.setVisibility(View.VISIBLE);
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-		
-			//booking_history
+		if(fetchMissedRidesClient == null){
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				progressBarMissedRides.setVisibility(View.VISIBLE);
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
 			
-			fetchMissedRidesClient = Data.getClient();
-			fetchMissedRidesClient.post(Data.SERVER_URL + "/get_missed_rides", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							progressBarMissedRides.setVisibility(View.GONE);
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								if(!jObj.isNull("error")){
-									int flag = jObj.getInt("flag");	
-									String error = jObj.getString("error");
-									String errorMessage = jObj.getString("error");
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", error);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", error);
-									}
-								}
-								else{
-									
-//									{
-//									    "missed_rides": [
-//									        {
-//									            "engagement_id": 2512,
-//									            "pickup_location_address": "1097, Madhya Marg, 28B, Sector 28, Chandigarh 160102, India",
-//									            "timestamp": "2014-09-09T11:10:23.000Z"
-//									        },
-//									        {
-//									            "engagement_id": 2513,
-//									            "pickup_location_address": "1097, Madhya Marg, 28B, Sector 28, Chandigarh 160102, India",
-//									            "timestamp": "2014-09-09T11:12:37.000Z"
-//									        }
-//									    ]
-//									}
-									
-									JSONArray missedRidesData = jObj.getJSONArray("missed_rides");
-									missedRideInfos.clear();
-									if(missedRidesData.length() > 0){
-										for(int i=missedRidesData.length()-1; i>=0; i--){
-											JSONObject rideData = missedRidesData.getJSONObject(i);
-											missedRideInfos.add(new MissedRideInfo(rideData.getString("engagement_id"),
-													rideData.getString("pickup_location_address"),
-													rideData.getString("timestamp")));
+				//booking_history
+				
+				fetchMissedRidesClient = Data.getClient();
+				fetchMissedRidesClient.post(Data.SERVER_URL + "/get_missed_rides", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+	
+							@Override
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								progressBarMissedRides.setVisibility(View.GONE);
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+	
+							
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								String response = new String(arg2);
+								Log.e("Server response", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									if(!jObj.isNull("error")){
+										int flag = jObj.getInt("flag");	
+										String error = jObj.getString("error");
+										String errorMessage = jObj.getString("error");
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
+										}
+										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+											new DialogPopup().alertPopup(activity, "", error);
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", error);
 										}
 									}
+									else{
+										
+	//									{
+	//									    "missed_rides": [
+	//									         {
+//							            			"engagement_id": 250,
+//							            			"pickup_location_address": "1604, Sector 18D, Chandigarh 160018, India",
+//							            			"timestamp": "2014-07-30 05:51:42",
+//							            			"user_name": "Shankar Bhagwati",
+//							            			"distance": 0.42
+//							        			}
+	//									    ]
+	//									}
+										
+										JSONArray missedRidesData = jObj.getJSONArray("missed_rides");
+										missedRideInfos.clear();
+										if(missedRidesData.length() > 0){
+											for(int i=missedRidesData.length()-1; i>=0; i--){
+												JSONObject rideData = missedRidesData.getJSONObject(i);
+												missedRideInfos.add(new MissedRideInfo(rideData.getString("engagement_id"),
+														rideData.getString("pickup_location_address"),
+														rideData.getString("timestamp"),
+														rideData.getString("user_name"),
+														rideData.getString("distance")));
+											}
+										}
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								updateListData();
+								progressBarMissedRides.setVisibility(View.GONE);
 							}
-							updateListData();
-							progressBarMissedRides.setVisibility(View.GONE);
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+							
+							@Override
+							public void onFinish() {
+								fetchMissedRidesClient = null;
+								super.onFinish();
+							}
+							
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
 		}
 
 	}

@@ -181,71 +181,82 @@ public class DriverRidesFragment extends Fragment {
 	 * ASync for get rides from server
 	 */
 	public void getRidesAsync(final Activity activity) {
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
-			progressBarRides.setVisibility(View.VISIBLE);
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("current_mode", "1");
-		
-			//booking_history
+		if(fetchRidesClient == null){
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				progressBarRides.setVisibility(View.VISIBLE);
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("current_mode", "1");
 			
-			fetchRidesClient = Data.getClient();
-			fetchRidesClient.post(Data.SERVER_URL + "/booking_history", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							progressBarRides.setVisibility(View.GONE);
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								if(!jObj.isNull("error")){
-									int flag = jObj.getInt("flag");	
-									String error = jObj.getString("error");
-									String errorMessage = jObj.getString("error");
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", error);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", error);
-									}
-								}
-								else{
-									JSONArray bookingData = jObj.getJSONArray("booking_data");
-									Data.rides.clear();
-									if(bookingData.length() > 0){
-										for(int i=0; i<bookingData.length(); i++){
-											JSONObject booData = bookingData.getJSONObject(i);
-											Data.rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
-													booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
-													booData.getString("time")));
+				//booking_history
+				
+				fetchRidesClient = Data.getClient();
+				fetchRidesClient.post(Data.SERVER_URL + "/booking_history", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+	
+							@Override
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								progressBarRides.setVisibility(View.GONE);
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+	
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								String response = new String(arg2);
+								Log.v("Server response", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									if(!jObj.isNull("error")){
+										int flag = jObj.getInt("flag");	
+										String error = jObj.getString("error");
+										String errorMessage = jObj.getString("error");
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
+										}
+										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+											new DialogPopup().alertPopup(activity, "", error);
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", error);
 										}
 									}
+									else{
+										JSONArray bookingData = jObj.getJSONArray("booking_data");
+										Data.rides.clear();
+										if(bookingData.length() > 0){
+											for(int i=0; i<bookingData.length(); i++){
+												JSONObject booData = bookingData.getJSONObject(i);
+												Data.rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
+														booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
+														booData.getString("time")));
+											}
+										}
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								updateListData();
+								progressBarRides.setVisibility(View.GONE);
 							}
-							updateListData();
-							progressBarRides.setVisibility(View.GONE);
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+							
+							@Override
+							public void onFinish() {
+								fetchRidesClient = null;
+								super.onFinish();
+							}
+							
+							
+							
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
 		}
 
 	}

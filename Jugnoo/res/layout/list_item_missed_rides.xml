@@ -26,10 +26,48 @@
         
         
         <LinearLayout 
-            android:id="@+id/relativeLayoutMissedRideFrom"
+            android:id="@+id/relativeLayoutMissedRideCustomerName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20px"
+        android:splitMotionEvents="false"
+            >
+            
+            
+       
+
+        <TextView
+            android:id="@+id/textViewMissedRideCustomerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer name: "
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px"
+            android:layout_marginLeft="20px"
+            android:singleLine="true"
+             />
+        
+        <TextView
+            android:id="@+id/textViewMissedRideCustomerNameValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elante"
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="20px"
+             />
+        
+        
+         </LinearLayout>
+        
+        
+        
+        <LinearLayout 
+            android:id="@+id/relativeLayoutMissedRideFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
         android:splitMotionEvents="false"
             >
             
@@ -61,6 +99,46 @@
         
          </LinearLayout>
          
+        
+        
+         
+        
+        <LinearLayout 
+            android:id="@+id/relativeLayoutMissedRideCustomerDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+        android:splitMotionEvents="false"
+            >
+            
+            
+       
+
+        <TextView
+            android:id="@+id/textViewMissedRideCustomerDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Away from you: "
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px"
+            android:layout_marginLeft="20px"
+            android:singleLine="true"
+             />
+        
+        <TextView
+            android:id="@+id/textViewMissedRideCustomerDistanceValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elante"
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px"
+            android:layout_marginLeft="5px"
+            android:layout_marginRight="20px"
+             />
+        
+        
+         </LinearLayout>
+        
         
         
         <LinearLayout 
