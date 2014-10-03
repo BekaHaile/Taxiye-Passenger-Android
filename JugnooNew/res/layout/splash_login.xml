@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:background="@color/bg_grey_opaque"
+    android:orientation="vertical"
+        android:splitMotionEvents="false" >
+
+    
+    <ScrollView 
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:splitMotionEvents="false"
+        >
+    <LinearLayout
+        android:id="@+id/mainLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" 
+        android:splitMotionEvents="false"
+        >
+
+        
+        <ImageView
+            android:id="@+id/jugnooLogoBig"
+            android:layout_width="454px"
+            android:layout_height="148px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90px"
+            android:background="@drawable/jugnoo_text"
+            android:tag="mwar" 
+            android:longClickable="true"
+            
+            />
+
+        <LinearLayout
+            android:id="@+id/etLayout"
+            android:layout_width="648px"
+            android:layout_height="198px"
+            android:layout_below="@+id/jugnooLogoBig"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100px"
+            android:background="@drawable/white_bg_rounded"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+        android:splitMotionEvents="false"
+         >
+
+            <AutoCompleteTextView
+                android:id="@+id/emailEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="@string/email_id"
+                android:singleLine="true"
+                android:textSize="34px"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                 />
+
+            <ImageView
+                android:layout_width="648px"
+                android:layout_height="2px"
+                android:background="#E7E7E7" />
+
+            <EditText
+                android:id="@+id/passwordEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="@string/password"
+                android:singleLine="true"
+                android:textSize="34px" 
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/signInBtn"
+            android:layout_width="648px"
+            android:layout_height="99px"
+            android:layout_marginTop="45px"
+            android:background="@drawable/blue_btn_selector"
+            android:text="@string/sign_in"
+            android:textColor="@drawable/white_color_selector"
+                        android:textSize="@dimen/button_text_size"  />
+        
+        
+        
+        <RelativeLayout 
+            android:id="@+id/forgotSignupRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18px"
+            
+            >
+            
+            <Button
+            android:id="@+id/forgotPasswordBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35px"
+            android:background="@drawable/transparent"
+            android:text="@string/forgot_password"
+            android:textColor="@drawable/white_color_selector"
+            android:textSize="36px" 
+            
+            />
+            
+            
+             <Button
+            android:id="@+id/signupBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="35px"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/transparent"
+            android:text="@string/sign_up"
+            android:textColor="@drawable/white_color_selector"
+            android:textSize="36px" 
+            
+            />
+            
+            
+        </RelativeLayout>
+        
+        
+        <RelativeLayout 
+            android:id="@+id/orDivRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+        android:splitMotionEvents="false"
+            
+            >
+             
+            
+             <ImageView 
+            android:layout_width="248px"
+            android:layout_height="3px"
+            android:background="@drawable/divider_small"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="36px"
+            />
+            
+             
+             
+            
+            <ImageView 
+                android:id="@+id/orBg"
+                android:layout_width="126px"
+                android:layout_height="126px"
+                android:layout_centerInParent="true"
+                android:background="@drawable/or_bordered_circle"
+                android:tag="mwar"
+                />
+            
+            <TextView
+            android:id="@+id/orText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/or"
+            android:textColor="@color/bg_grey_opaque"
+            android:textSize="36px" 
+            
+            />
+            
+            
+            
+             <ImageView 
+            android:layout_width="248px"
+            android:layout_height="3px"
+            android:background="@drawable/divider_small"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="36px"
+            />
+            
+            
+        </RelativeLayout>
+        
+        
+        <Button
+            android:id="@+id/facebookSignInBtn"
+            android:layout_width="648px"
+            android:layout_height="99px"
+            android:layout_marginTop="40px"
+            android:background="@drawable/blue_dark_btn_selector"
+            android:text="@string/sign_in_with_facebook"
+            android:textColor="@drawable/white_color_selector"
+                        android:textSize="@dimen/button_text_size" />
+        
+        
+        <TextView
+                android:id="@+id/extraTextForScroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48px"
+                android:textColor="@color/white"
+                android:text="      "
+                android:textSize="34px"
+                
+                />
+        
+    </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

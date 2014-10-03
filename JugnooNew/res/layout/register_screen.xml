@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:background="@color/bg_grey_opaque"
+    android:orientation="vertical"
+        android:splitMotionEvents="false" >
+
+    <ScrollView 
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:splitMotionEvents="false"
+        >
+    
+    <LinearLayout
+        android:id="@+id/mainLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:splitMotionEvents="false" >
+
+        <ImageView
+            android:id="@+id/jugnooLogoBig"
+            android:layout_width="454px"
+            android:layout_height="148px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90px"
+            android:background="@drawable/jugnoo_text"
+            android:tag="mwar" />
+
+        <LinearLayout
+            android:id="@+id/etLayout"
+            android:layout_width="648px"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/jugnooLogoBig"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100px"
+            android:background="@drawable/white_bg_rounded"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" 
+        android:splitMotionEvents="false">
+
+            <EditText
+                android:id="@+id/firstNameEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="@string/first_name"
+                android:singleLine="true"
+                android:textSize="34px"
+                android:textColor="@color/black"
+                android:capitalize="words"
+                 />
+
+            <ImageView
+                android:layout_width="648px"
+                android:layout_height="2px"
+                android:background="#E7E7E7" />
+
+            <EditText
+                android:id="@+id/lastNameEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="@string/last_name"
+                android:singleLine="true"
+                android:textSize="34px" 
+                android:textColor="@color/black"
+                android:capitalize="words"
+                 />
+            
+            
+            <ImageView
+                android:layout_width="648px"
+                android:layout_height="2px"
+                android:background="#E7E7E7" />
+
+            <EditText
+                android:id="@+id/emailIdEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="@string/email_id"
+                android:singleLine="true"
+                android:textSize="34px"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                  />
+            
+            
+            <ImageView
+                android:layout_width="648px"
+                android:layout_height="2px"
+                android:background="#E7E7E7" />
+
+            <EditText
+                android:id="@+id/phoneNoEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="@string/phone_number"
+                android:singleLine="true"
+                android:textSize="34px" 
+                android:textColor="@color/black"
+                android:inputType="phone"
+                android:maxLength="14"
+                 />
+            
+            <ImageView
+                android:layout_width="648px"
+                android:layout_height="2px"
+                android:background="#E7E7E7" />
+
+            <EditText
+                android:id="@+id/passwordEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="@string/password"
+                android:singleLine="true"
+                android:textSize="34px" 
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                 />
+            
+            
+            <ImageView
+                android:layout_width="648px"
+                android:layout_height="2px"
+                android:background="#E7E7E7" />
+
+            <EditText
+                android:id="@+id/confirmPasswordEt"
+                android:layout_width="620px"
+                android:layout_height="98px"
+                android:background="#0000"
+                android:hint="@string/confirm_password"
+                android:singleLine="true"
+                android:textSize="34px" 
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                 />
+            
+            
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/signUpBtn"
+            android:layout_width="648px"
+            android:layout_height="99px"
+            android:layout_marginTop="45px"
+            android:background="@drawable/blue_btn_selector"
+            android:text="@string/sign_up"
+            android:textColor="@drawable/white_color_selector"
+                        android:textSize="@dimen/button_text_size" 
+        android:splitMotionEvents="false" />
+        
+        
+        
+        <TextView
+                android:id="@+id/extraTextForScroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28px"
+                android:textColor="@color/white"
+                android:text="      "
+                android:textSize="34px"
+                
+                />
+        
+    </LinearLayout>
+    </ScrollView>
+    
+
+</LinearLayout>
