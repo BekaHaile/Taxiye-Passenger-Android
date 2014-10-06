@@ -255,7 +255,7 @@ public class CRequestRideService extends Service {
 								Log.e("requestRideInterrupt(0) ============ ","requestRideInterrupt(0)");
 								requestRideAsync = null;
 								if(HomeActivity.appInterruptHandler != null){
-									HomeActivity.appInterruptHandler.requestRideInterrupt(0, jObj);
+//									HomeActivity.appInterruptHandler.requestRideInterrupt(0, jObj);
 								}
 								stopSelf();
 							}
@@ -290,7 +290,7 @@ public class CRequestRideService extends Service {
 							Log.e("requestRideInterrupt(0) ============ ","requestRideInterrupt(0)");
 							requestRideAsync = null;
 							if(HomeActivity.appInterruptHandler != null){
-								HomeActivity.appInterruptHandler.requestRideInterrupt(0, jObj);
+//								HomeActivity.appInterruptHandler.requestRideInterrupt(0, jObj);
 							}
 							stopSelf();
 						}

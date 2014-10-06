@@ -129,7 +129,7 @@ public class DriverLocationUpdateService extends Service {
     	database2.updateJugnooOn("on");
     	
     	//TODO Toggle live to trial
-		String DEV_SERVER_URL = "http://54.81.229.172:8000";
+		String DEV_SERVER_URL = "https://54.81.229.172:8012";
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4010";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 		

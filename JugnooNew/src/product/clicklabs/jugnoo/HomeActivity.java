@@ -1096,7 +1096,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				customerCancelBeforePushReceive = true;
 				if(!Data.cEngagementId.equalsIgnoreCase("")){
-					cancelCustomerRequestAsync(HomeActivity.this, 0, 0);
+					cancelCustomerRequestAsync(HomeActivity.this);
 				}
 			}
 		});
@@ -4309,7 +4309,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	/**
 	 * ASync for cancelCustomerRequestAsync from server
 	 */
-	public void cancelCustomerRequestAsync(final Activity activity, final int switchCase, int flag) {
+	public void cancelCustomerRequestAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -4318,20 +4318,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("driver_id", Data.cDriverId);
-			params.put("engage_id", Data.cEngagementId);
-			params.put("flag", ""+flag);
 			params.put("session_id", Data.cSessionId);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("driver_id", "=" + Data.cDriverId);
-			Log.i("engage_id", Data.cEngagementId);
-			Log.i("flag", ""+flag);
 			Log.i("session_id", "="+Data.cSessionId);
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/cancel_the_req", params,
+			client.post(Data.SERVER_URL + "/cancel_the_request", params,
 					new AsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -4355,14 +4349,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if(!jObj.isNull("error")){
 									
-									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
@@ -4371,51 +4361,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 								}
 								else{
+									stopService(new Intent(HomeActivity.this, CRequestRideService.class));
+									passengerScreenMode = PassengerScreenMode.P_INITIAL;
+									switchPassengerScreen(passengerScreenMode);
 									
-//									{"log":"cancelled sucessfully"}//result
-
-									if(switchCase == 0){
-										stopService(new Intent(HomeActivity.this, CRequestRideService.class));
-										passengerScreenMode = PassengerScreenMode.P_INITIAL;
-										switchPassengerScreen(passengerScreenMode);
-										
-										
-										if(map != null && pickupLocationMarker != null){
-											pickupLocationMarker.remove();
-										}
-										
-//										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
-//										getDistanceTimeAddress.execute();
-										if(myLocation != null){
-											getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
-											getDistanceTimeAddress.execute();
-										}
+									if(map != null && pickupLocationMarker != null){
+										pickupLocationMarker.remove();
 									}
-									else if(switchCase == 1){
 										
-										passengerScreenMode = PassengerScreenMode.P_INITIAL;
-										switchPassengerScreen(passengerScreenMode);
-										
-										
-										if(map != null && pickupLocationMarker != null){
-											pickupLocationMarker.remove();
-										}
-										
-//										getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
-//										getDistanceTimeAddress.execute();
-										if(myLocation != null){
-											getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
-											getDistanceTimeAddress.execute();
-										}
-									
-									}
-									else{
-										
-										map.clear();
-
-										passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-										switchPassengerScreen(passengerScreenMode);
-										
+									if(myLocation != null){
+										getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
+										getDistanceTimeAddress.execute();
 									}
 									
 								}
@@ -4437,78 +4393,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	
-	/**
-	 * ASync for checking Session State on customer side from server
-	 */
-	public void checkSessionStateByCustomerAsync(final Activity activity) {
-
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			RequestParams params = new RequestParams();
-		
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("session_id", Data.cSessionId);
-			params.put("engage_id", Data.cEngagementId);
-			
-			Log.i("checkSessionStateByCustomerAsync", "=");
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("session_id", Data.cSessionId);
-			Log.i("engage_id", Data.cEngagementId);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/check_session_active_inactive", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							}
-
-						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
-							Log.e("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-								}
-								else{
-									
-//									{"log": "Session is active"}
-//									{"log": "Session is inactive"}
-									
-									String logMessage = jObj.getString("log");
-									if(logMessage.equalsIgnoreCase("Session is inactive")){
-										passengerScreenMode = PassengerScreenMode.P_INITIAL;
-										switchPassengerScreen(passengerScreenMode);
-										new DialogPopup().alertPopup(HomeActivity.this, "", "Connection from Driver was lost. The ride has been canceled.");
-									}
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-							}
-	
-						}
-					});
-		}
-
-		
-	}
 	
 	
 	
@@ -4661,8 +4545,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("user_id", Data.dCustomerId);
-			params.put("engage_id", Data.dEngagementId);
+			params.put("customer_id", Data.dCustomerId);
+			params.put("engagement_id", Data.dEngagementId);
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
 
@@ -4675,7 +4559,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/accept_a_ride", params,
+			client.post(Data.SERVER_URL + "/accept_a_request", params,
 					new AsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -4704,124 +4588,93 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
 									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else if(11 == flag){
-										userCanceledDialogShown = true;
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									
 //									response = {"error":"Request timed out","flag":10}
-									
 									DialogPopup.dismissLoadingDialog();
 									
-									int index = -1;
-									for(int i=0; i<Data.driverRideRequests.size(); i++){
-										if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(Data.dEngagementId)){
-											index = i;
-											break;
-										}
-									}
-									if(index != -1){
-										Data.driverRideRequests.remove(index);
-									}
+									reduceRideRequest(Data.dEngagementId);
 									
-									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-									Editor editor = pref.edit();
-									editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-									editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-									editor.putString(Data.SP_D_NR_USER_ID, "");
-									editor.putString(Data.SP_D_NR_LATITUDE, "");
-									editor.putString(Data.SP_D_NR_LONGITUDE, "");
-									editor.commit();
-									
-									
-									driverScreenMode = DriverScreenMode.D_INITIAL;
-									showAllRideRequests();
 									userCanceledDialogShown = false;
 									
 								}
 								else{
 									
-//									{
-//								    	"user_data": {
-//							        		"user_name": "Tirthankar",
-//							        		"phone_no": "+919803879562",
-//							        		"user_image": "http://graph.facebook.com/100001398069768/picture?width=160&height=160"
-//							        		"user_rating": ""
-//							    		}
-//									}
-
-									
-									JSONObject userData = jObj.getJSONObject("user_data");
-									
-									String rating = "4";
-									try{
-										rating = userData.getString("user_rating");
-									} catch(Exception e){
-										e.printStackTrace();
+									if(jObj.has("flag")){
+										try{
+											int flag = jObj.getInt("flag");
+											String logMessage = jObj.getString("log");
+											new DialogPopup().alertPopup(activity, ""+logMessage, Data.SERVER_ERROR_MSG);
+											reduceRideRequest(Data.dEngagementId);
+										} catch(Exception e){
+											e.printStackTrace();
+										}
 									}
-									
-									
-									String userName = userData.getString("user_name");
-									String userImage = userData.getString("user_image");
-									String phoneNo = userData.getString("phone_no");
-									
-									if(userName == null){
-										userName = "";
+									else{
+//										{
+//											Òuser_dataÓ: {
+//										            "user_name": result_customer[0].user_name,
+//										            "phone_no": result_customer[0].phone_no,
+//										            "user_image": result_customer[0].user_image,
+//										            "user_rating": rating};
+										
+										JSONObject userData = jObj.getJSONObject("user_data");
+										
+										String userName = userData.getString("user_name");
+										String userImage = userData.getString("user_image");
+										String phoneNo = userData.getString("phone_no");
+										String rating = "4";
+										try{
+											rating = userData.getString("user_rating");
+										} catch(Exception e){
+											e.printStackTrace();
+										}
+										if(userName == null){
+											userName = "";
+										}
+										if(userImage == null){
+											userImage = "http://jugnoo-images.s3.amazonaws.com/user_profile/user.png";
+										}
+										if(phoneNo == null){
+											phoneNo = "";
+										}
+										
+										Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, userName,
+												userImage, phoneNo, rating);
+										
+										Data.driverRideRequests.clear();
+										
+										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+										Editor editor = pref.edit();
+										editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+										editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+										editor.putString(Data.SP_D_NR_USER_ID, "");
+										editor.putString(Data.SP_D_NR_LATITUDE, "");
+										editor.putString(Data.SP_D_NR_LONGITUDE, "");
+										
+										editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_START_RIDE);
+										
+										editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
+										editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
+										
+										editor.putString(Data.SP_D_LATITUDE, ""+Data.dCustLatLng.latitude);
+										editor.putString(Data.SP_D_LONGITUDE, ""+Data.dCustLatLng.longitude);
+										
+										editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
+										editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
+										editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
+										editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
+										
+										editor.commit();
+	
+								        GCMIntentService.clearNotifications(getApplicationContext());
+								        
+										driverScreenMode = DriverScreenMode.D_START_RIDE;
+										switchDriverScreen(driverScreenMode);
+										DialogPopup.dismissLoadingDialog();
 									}
-									if(userImage == null){
-										userImage = "http://jugnoo-images.s3.amazonaws.com/user_profile/user.png";
-									}
-									if(phoneNo == null){
-										phoneNo = "";
-									}
-									
-									Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, userName,
-											userImage, phoneNo, rating);
-									
-									
-									
-									
-									
-									
-									Data.driverRideRequests.clear();
-									
-									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-									Editor editor = pref.edit();
-									editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-									editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-									editor.putString(Data.SP_D_NR_USER_ID, "");
-									editor.putString(Data.SP_D_NR_LATITUDE, "");
-									editor.putString(Data.SP_D_NR_LONGITUDE, "");
-									
-									
-									editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_START_RIDE);
-									
-									editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
-									editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
-									
-									editor.putString(Data.SP_D_LATITUDE, ""+Data.dCustLatLng.latitude);
-									editor.putString(Data.SP_D_LONGITUDE, ""+Data.dCustLatLng.longitude);
-									
-									editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
-									editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
-									editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
-									editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
-									
-									editor.commit();
-									
-
-							        GCMIntentService.clearNotifications(getApplicationContext());
-							        
-									driverScreenMode = DriverScreenMode.D_START_RIDE;
-									switchDriverScreen(driverScreenMode);
-									DialogPopup.dismissLoadingDialog();
-									
 									
 								}
 							}  catch (Exception exception) {
@@ -4842,83 +4695,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	/**
-	 * ASync for connection lost on customer side from server
-	 */
-	public void connectionLostAsync(final Activity activity) {
-
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-		
-			
-			params.put("access_token", Data.userData.accessToken);
-//			params.put("user_id", Data.dCustomerId);
-			params.put("engage_id", Data.dEngagementId);
-			
-			Log.i("access_token", "=" + Data.userData.accessToken);
-//			Log.i("user_id", "=" + Data.dCustomerId);
-			Log.i("engage_id", "=" + Data.dEngagementId);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/connection_lost_on_user_end", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-						}
-
-						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-									}
-									else{
-									}
-								}
-								else{
-									
-//									{"log":"rejected successfully"}
-
-									new DialogPopup().alertPopup(activity, "", "Connection from user was lost. The ride has been canceled.");
-									
-									driverScreenMode = DriverScreenMode.D_INITIAL;
-									switchDriverScreen(driverScreenMode);
-									
-									showAllRideRequests();
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-					});
+	public void reduceRideRequest(String engagementId){
+		int index = -1;
+		for(int i=0; i<Data.driverRideRequests.size(); i++){
+			if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(engagementId)){
+				index = i;
+				break;
+			}
 		}
-
+		if(index != -1){
+			Data.driverRideRequests.remove(index);
+		}
 		
+		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		Editor editor = pref.edit();
+		editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
+		editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
+		editor.putString(Data.SP_D_NR_USER_ID, "");
+		editor.putString(Data.SP_D_NR_LATITUDE, "");
+		editor.putString(Data.SP_D_NR_LONGITUDE, "");
+		editor.commit();
+		
+		showAllRideRequests();
 	}
 	
 	
@@ -4945,17 +4743,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 				
 				params.put("access_token", Data.userData.accessToken);
-				params.put("user_id", Data.dCustomerId);
-				params.put("engage_id", Data.dEngagementId);
-				params.put("flag", ""+flag);
+				params.put("customer_id", Data.dCustomerId);
+				params.put("engagement_id", Data.dEngagementId);
 
 				Log.i("access_token", "=" + Data.userData.accessToken);
-				Log.i("user_id", "=" + Data.dCustomerId);
-				Log.i("engage_id", "=" + Data.dEngagementId);
+				Log.i("customer_id", "=" + Data.dCustomerId);
+				Log.i("engagement_id", "=" + Data.dEngagementId);
 				
 			
 				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/reject_a_ride", params,
+				client.post(Data.SERVER_URL + "/reject_a_request", params,
 						new AsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
@@ -4978,57 +4775,34 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									if(!jObj.isNull("error")){
 										
-										int flag = jObj.getInt("flag");	
 										String errorMessage = jObj.getString("error");
 										
 										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 											HomeActivity.logoutUser(activity);
-										}
-										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 										else{
 											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 									}
 									else{
-										
 //										{"log":"rejected successfully"}
-
+										
+										try {
+											int flag = jObj.getInt("flag");
+											if(ApiResponseFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
+												String log = jObj.getString("log");
+												new DialogPopup().alertPopup(activity, ""+log, Data.SERVER_ERROR_MSG);
+											}
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+										
 										if(map != null){
 											map.clear();
 										}
-										
-//										new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
-										
 										stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 										
-										driverScreenMode = DriverScreenMode.D_INITIAL;
-										switchDriverScreen(driverScreenMode);
-										
-										
-										int index = -1;
-										for(int i=0; i<Data.driverRideRequests.size(); i++){
-											if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(Data.dEngagementId)){
-												index = i;
-												break;
-											}
-										}
-										
-										if(index != -1){
-											Data.driverRideRequests.remove(index);
-										}
-										
-										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-										Editor editor = pref.edit();
-										editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-										editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-										editor.putString(Data.SP_D_NR_USER_ID, "");
-										editor.putString(Data.SP_D_NR_LATITUDE, "");
-										editor.putString(Data.SP_D_NR_LONGITUDE, "");
-										editor.commit();
-										
-										showAllRideRequests();
+										reduceRideRequest(Data.dEngagementId);
 										
 									}
 								}  catch (Exception exception) {
@@ -5063,14 +4837,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("customer_id", Data.dCustomerId);
 			params.put("engagement_id", Data.dEngagementId);
+			params.put("customer_id", Data.dCustomerId);
 			params.put("pickup_latitude", ""+pickupLatitude);
 			params.put("pickup_longitude", ""+pickupLongitude);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("customer_id", "=" + Data.dCustomerId);
 			Log.i("engagement_id", "=" + Data.dEngagementId);
+			Log.i("customer_id", "=" + Data.dCustomerId);
 			Log.i("pickup_latitude", "=" + pickupLatitude);
 			Log.i("pickup_longitude", "=" + pickupLongitude);
 			
@@ -5100,14 +4874,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if(!jObj.isNull("error")){
 									
-									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
@@ -5177,17 +4947,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("customer_id", Data.dCustomerId);
 			params.put("engagement_id", Data.dEngagementId);
-			
+			params.put("customer_id", Data.dCustomerId);
 			params.put("latitude", ""+dropLatitude);
 			params.put("longitude", ""+dropLongitude);
 			params.put("distance_travelled", decimalFormat.format(totalDistanceInKm));
 			params.put("wait_time", waitTime);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("customer_id", "=" + Data.dCustomerId);
 			Log.i("engagement_id", "=" + Data.dEngagementId);
+			Log.i("customer_id", "=" + Data.dCustomerId);
 			Log.i("latitude", "="+dropLatitude);
 			Log.i("longitude", "="+dropLongitude);
 			Log.i("distance_travelled", "="+decimalFormat.format(totalDistanceInKm));
@@ -5220,14 +4989,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if(!jObj.isNull("error")){
 									
-									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
@@ -5859,23 +5624,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	/**
 	 * ASync for start or end wait from server
 	 */
-	public void startEndWaitAsync(final Activity activity, String userId, int flag) {
+	public void startEndWaitAsync(final Activity activity, String customerId, int flag) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("user_id", userId);
+			params.put("customer_id", customerId);
 			params.put("flag", ""+flag);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("user_id", "="+userId);
+			Log.i("customer_id", "="+customerId);
 			Log.i("flag", "="+flag);
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/wait_push", params,
+			client.post(Data.SERVER_URL + "/start_end_wait", params,
 					new AsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -7193,7 +6958,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	// 0 = not found   1 = accept
 	@Override
-	public void requestRideInterrupt(int switchCase, JSONObject jObj) {
+	public void rideRequestAcceptedInterrupt(JSONObject jObj) {
 
 		try {
 			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
@@ -7202,29 +6967,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				Log.e("CRequestRideService ","stoped in home");
 				
-				Log.e("switchCase","="+switchCase);
-				
-				if(switchCase == 0){
-					runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							DialogPopup.dismissLoadingDialog();
-							clearSPData();
-							
-							map.clear();
-							noDriverAvailablePopup(HomeActivity.this);
-							passengerScreenMode = PassengerScreenMode.P_INITIAL;
-							switchPassengerScreen(passengerScreenMode);
-						}
-					});
-					
-				}
-				else if(switchCase == 1){
-					Log.e("customerCancelBeforePushReceive ","="+customerCancelBeforePushReceive);
-					if(!customerCancelBeforePushReceive){
-						fetchAcceptedDriverInfoAndChangeState(jObj);
-					}
+				Log.e("customerCancelBeforePushReceive ","="+customerCancelBeforePushReceive);
+				if(!customerCancelBeforePushReceive){
+					fetchAcceptedDriverInfoAndChangeState(jObj);
 				}
 			}
 		} catch (Exception e) {
@@ -7236,11 +6981,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj){
 		try {
-			//TODO
-			final String log = jObj.getString("log");
 			
 			Data.cSessionId = jObj.getString("session_id");
 			Data.cEngagementId = jObj.getString("engagement_id");
+			
 			Data.cDriverId = jObj.getString("driver_id");
 			String userName = jObj.getString("user_name");
 			String driverPhone = jObj.getString("phone_no");
@@ -7259,7 +7003,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void run() {
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-					new DialogPopup().alertPopup(HomeActivity.this, "", ""+log);
+					new DialogPopup().alertPopup(HomeActivity.this, "", "Your request has been accepted");
 					if(getDistanceTimeAddress != null){
 						getDistanceTimeAddress.cancel(true);
 					}
@@ -7326,7 +7070,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 
 	@Override
-	public void changeRideRequest(String dEngagementId, String dCustomerId, final LatLng rideLatLng, boolean add) {
+	public void changeRideRequest(String dEngagementId, String dCustomerId, final LatLng rideLatLng, boolean add, final boolean acceptedByOtherDriver) {
 		
 		try {
 			Log.i("in home class","Data.dEngagementId = "+Data.dEngagementId + " " + add);
@@ -7384,7 +7128,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							driverScreenMode = DriverScreenMode.D_INITIAL;
 							showAllRideRequests();
 							if(!userCanceledDialogShown){
-								new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+								if(acceptedByOtherDriver){
+									new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
+								}
+								else{
+									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+								}
 							}
 							userCanceledDialogShown = false;
 						}
@@ -7893,13 +7642,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								else{
 									int flag = jObj.getInt("flag");
 									
-									if(RequestRideApiFlags.ASSIGNING_DRIVER.getOrdinal() == flag){
+									if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
 										final String log = jObj.getString("log");
 										Data.cSessionId = jObj.getString("session_id");
 										menuBtn.post(new Runnable() {
 											@Override
 											public void run() {
-												if(HomeActivity.passengerScreenMode != PassengerScreenMode.P_ASSIGNING){
+												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL){
 													new DialogPopup().alertPopup(HomeActivity.this, "", ""+log);
 													HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
 													switchPassengerScreen(passengerScreenMode);
@@ -7907,19 +7656,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											}
 										});
 									}
-									else if(RequestRideApiFlags.RIDE_ACCEPTED.getOrdinal() == flag){
-										if(HomeActivity.passengerScreenMode != PassengerScreenMode.P_REQUEST_FINAL){
+									else if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
+										if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
 											fetchAcceptedDriverInfoAndChangeState(jObj);
 										}
 									}
-									else if(RequestRideApiFlags.NO_DRIVERS_FOUND.getOrdinal() == flag){
+									else if(ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag){
 										final String log = jObj.getString("log");
 										menuBtn.post(new Runnable() {
 											@Override
 											public void run() {
-												new DialogPopup().alertPopup(HomeActivity.this, "", ""+log);
-												HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-												switchPassengerScreen(passengerScreenMode);
+												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+													new DialogPopup().alertPopup(HomeActivity.this, "", ""+log);
+													HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+													switchPassengerScreen(passengerScreenMode);
+												}
 											}
 										});
 										cancelTimerRequestRide();
@@ -7955,6 +7706,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+
+	@Override
+	public void onNoDriversAvailablePushRecieved(final String logMessage) {
+		menuBtn.post(new Runnable() {
+			@Override
+			public void run() {
+				new DialogPopup().alertPopup(HomeActivity.this, "", ""+logMessage);
+				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+			}
+		});
+		cancelTimerRequestRide();
+		
 	}
 
 	

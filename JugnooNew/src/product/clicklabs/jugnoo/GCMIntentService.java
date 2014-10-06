@@ -231,8 +231,7 @@ public class GCMIntentService extends IntentService {
 	    	    				 
 	    	    				 int flag = jObj.getInt("flag");
 	    	    				 
-	    	    				 //flag 0 for customer ride request to driver show marker on map
-	    	    				 if(PushFlags.RIDE_REQUEST_RECEIVED_TO_DRIVER.getOrdinal() == flag){
+	    	    				 if(PushFlags.REQUEST.getOrdinal() == flag){
 	    	    					 
 	    	    					 String SHARED_PREF_NAME = "myPref", 
     	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
@@ -264,7 +263,7 @@ public class GCMIntentService extends IntentService {
 		    	    					 
 		    	    					 if(HomeActivity.appInterruptHandler != null){
 		    	    						 notificationManagerResume(this, "You have got a new ride request.", true);
-		    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true);
+		    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true, false);
 		    	    					 }
 		    	    					 else{
 		    	    						 notificationManager(this, "You have got a new ride request.", true);
@@ -280,7 +279,7 @@ public class GCMIntentService extends IntentService {
 												clearNotifications(GCMIntentService.this);
 				    	    					 
 				    	    					 if(HomeActivity.appInterruptHandler != null){
-				    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
+				    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, false);
 				    	    					 }
 				    	    					 
 			    	    						 String SHARED_PREF_NAME = "myPref", 
@@ -306,34 +305,24 @@ public class GCMIntentService extends IntentService {
 	    	    					 }
 	    	    					 
 	    	    				 }
-	    	    				 // flag 1 for driver request accepted  show customer cancel for 5 sec and then call driver
-	    	    				 else if(PushFlags.DRIVER_REQUEST_ACCEPTED_TO_CUSTOMER.getOrdinal() == flag){
-//	    	    					 String driverId = jObj.getString("driver_id");
-//	    	    					 Data.cDriverId = driverId;
-//	    	    					 
-//	    	    					 String engagementId = jObj.getString("engagement_id");
-//	    	    					 Data.cEngagementId = engagementId;
-	    	    					 
+	    	    				 else if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
 	    	    					 if(HomeActivity.appInterruptHandler != null){
 	    	    						 HomeActivity.appInterruptHandler.apiEnd();
-	    			    				 HomeActivity.appInterruptHandler.requestRideInterrupt(1, jObj);
+	    			    				 HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
 	    			    			 }
-
 	    	    				 }
-	    	    				// flag 2 for driver request canceled customer cancels the ride and show driver the popups
-	    	    				 else if(PushFlags.CUSTOMER_CANCELED_REQUEST_TO_DRIVER.getOrdinal() == flag){
+	    	    				 else if(PushFlags.REQUEST_CANCELLED.getOrdinal() == flag){
 
     	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);}catch(Exception e){}
     	    						 
-	    	    					 //{"engage_id":"427","flag":2}
-	    	    					 String engagementId = jObj.getString("engage_id");
+	    	    					 String engagementId = jObj.getString("engagement_id");
 	    	    					 
 	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
 	    	    					 
 	    	    					 clearNotifications(this);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false);
+	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, false);
 	    	    					 }
 	    	    					 
     	    						 String SHARED_PREF_NAME = "myPref", 
@@ -353,8 +342,37 @@ public class GCMIntentService extends IntentService {
     	    						 editor.commit();
 	    	    					 
 	    	    				 }
-	    	    				// flag 3 for driver ride started show customer ride in progress  
-	    	    				 else if(PushFlags.START_RIDE_TO_CUSTOMER.getOrdinal() == flag){
+	    	    				 else if(PushFlags.RIDE_ACCEPTED_BY_OTHER_DRIVER.getOrdinal() == flag){
+
+    	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);}catch(Exception e){}
+    	    						 
+	    	    					 String engagementId = jObj.getString("engagement_id");
+	    	    					 
+	    	    					 
+	    	    					 clearNotifications(this);
+	    	    					 
+	    	    					 if(HomeActivity.appInterruptHandler != null){
+	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, true);
+	    	    					 }
+	    	    					 
+    	    						 String SHARED_PREF_NAME = "myPref", 
+    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
+    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
+    	    									SP_D_NR_USER_ID = "d_nr_user_id",
+    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
+    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
+    	    						 
+    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+    	    						 Editor editor = pref.edit();
+    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
+    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
+    	    						 editor.putString(SP_D_NR_USER_ID, "");
+    	    						 editor.putString(SP_D_NR_LATITUDE, "");
+    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
+    	    						 editor.commit();
+	    	    					 
+	    	    				 }
+	    	    				 else if(PushFlags.RIDE_STARTED.getOrdinal() == flag){
 
 	    	    					 if (HomeActivity.appInterruptHandler != null) {
 	    	    						 notificationManagerResume(this, "Your ride has started.", false);
@@ -372,15 +390,7 @@ public class GCMIntentService extends IntentService {
 	    	    						 notificationManager(this, "Your ride has started.", false);
 	    	    					 }
 	    	    				 }
-	    	    				 // {"flag": 4,"log":"show"}  customer cancel 5 seconds done show driver start ride option
-	    	    				 else if(PushFlags.SHOW_DRIVER_START_RIDE_OPTIONS.getOrdinal() == flag){
-	    	    					 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);}catch(Exception e){}
-	    	    					 if (HomeActivity.appInterruptHandler != null) {
-	    	    						 HomeActivity.appInterruptHandler.driverStartRideInterrupt();
-	    	    					 }
-	    	    				 }
-	    	    				// {"flag": 5} end ride on customer side show review
-	    	    				 else if(PushFlags.END_RIDE_TO_CUSTOMER.getOrdinal() == flag){
+	    	    				 else if(PushFlags.RIDE_ENDED.getOrdinal() == flag){
 
 //	    	    					 {"flag": 5, "fare": fare, "distance_travelled": distance_travelled}
 	    	    					 
@@ -413,21 +423,24 @@ public class GCMIntentService extends IntentService {
 	    	    						 notificationManager(this, "Your ride has ended.", false);
 	    	    					 }
 	    	    				 }
-	    	    				// flag 6 for driver ride canceled show customer ride canceled by driver  
-	    	    				 else if(PushFlags.DRIVER_CANCELS_REQUEST_TO_CUSTOMER.getOrdinal() == flag){
-
-	    	    					 if (HomeActivity.appInterruptHandler != null) {
-	    	    						 HomeActivity.appInterruptHandler.startRideForCustomer(1);
-	    	    					 }
-	    	    				 }
-	    	    				 // flag 7 for start and stop wait for customer
-	    	    				 else if(PushFlags.START_STOP_WAIT_TO_CUSTOMER.getOrdinal() == flag){
+//	    	    				 else if(PushFlags.DRIVER_CANCELS_REQUEST_TO_CUSTOMER.getOrdinal() == flag){
+//	    	    					 if (HomeActivity.appInterruptHandler != null) {
+//	    	    						 HomeActivity.appInterruptHandler.startRideForCustomer(1);
+//	    	    					 }
+//	    	    				 }
+	    	    				 else if(PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag){
 	    	    					 String message1 = jObj.getString("message");
 	    	    					 if (HomeActivity.activity == null) {
 		    	    					 notificationManager(this, ""+message1, false);
 	    	    					 }
 	    	    					 else{
 		    	    					 notificationManagerResume(this, ""+message1, false);
+	    	    					 }
+	    	    				 }
+	    	    				 else if(PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag){
+	    	    					 String log = jObj.getString("log");
+	    	    					 if (HomeActivity.appInterruptHandler != null) {
+	    	    						 HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
 	    	    					 }
 	    	    				 }
 	    	    				 

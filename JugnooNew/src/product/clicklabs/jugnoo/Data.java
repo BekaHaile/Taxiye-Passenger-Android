@@ -111,8 +111,11 @@ public class Data {
 	
 	// dev review http://107.21.79.63:4001
 	//Dev staged :  "http://54.81.229.172:7000";
+	
 	// Dev staged :   http://54.81.229.172:8000
+	
 	// Dev Trial :   http://54.81.229.172:8001
+	
 	// live 1st:    http://dev.jugnoo.in:3000
 	// live 2nd:    http://dev.jugnoo.in:4000
 	// live 3rd:    http://dev.jugnoo.in:4002
@@ -122,9 +125,11 @@ public class Data {
 	// live 8th:    https://dev.jugnoo.in:4008
 	// live 10th:    https://dev.jugnoo.in:4010
 	
+	// Dev new dispatcher :   https://54.81.229.172:8012
 	
 	
-	public static final String DEV_SERVER_URL = "http://54.81.229.172:8000";
+	
+	public static final String DEV_SERVER_URL = "https://54.81.229.172:8012";
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4010";
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
