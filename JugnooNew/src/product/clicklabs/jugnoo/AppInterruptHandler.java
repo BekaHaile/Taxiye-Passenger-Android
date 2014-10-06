@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import org.json.JSONObject;
 import com.google.android.gms.maps.model.LatLng;
 
 public interface AppInterruptHandler {
@@ -15,14 +16,12 @@ public interface AppInterruptHandler {
 	public void refreshDriverLocations();
 	
 	
-	public void requestRideInterrupt(int switchCase);
+	public void requestRideInterrupt(int switchCase, JSONObject jObj);
 	
 	public void apiStart(final int driverPos);
 	
 	public void apiEnd();
 	
 	public void apiInterrupted();
-	
-	public void onNoDriversAvailablePushRecieved(String logMessage);
 	
 }

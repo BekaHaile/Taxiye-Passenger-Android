@@ -307,16 +307,16 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    				 }
 	    	    				 // flag 1 for driver request accepted  show customer cancel for 5 sec and then call driver
-	    	    				 else if(PushFlags.DRIVER_ACCEPTED_REQUEST_TO_CUSTOMER.getOrdinal() == flag){
-	    	    					 String driverId = jObj.getString("driver_id");
-	    	    					 Data.cDriverId = driverId;
-	    	    					 
-	    	    					 String engagementId = jObj.getString("engagement_id");
-	    	    					 Data.cEngagementId = engagementId;
+	    	    				 else if(PushFlags.DRIVER_REQUEST_ACCEPTED_TO_CUSTOMER.getOrdinal() == flag){
+//	    	    					 String driverId = jObj.getString("driver_id");
+//	    	    					 Data.cDriverId = driverId;
+//	    	    					 
+//	    	    					 String engagementId = jObj.getString("engagement_id");
+//	    	    					 Data.cEngagementId = engagementId;
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
 	    	    						 HomeActivity.appInterruptHandler.apiEnd();
-	    			    				 HomeActivity.appInterruptHandler.requestRideInterrupt(1);
+	    			    				 HomeActivity.appInterruptHandler.requestRideInterrupt(1, jObj);
 	    			    			 }
 
 	    	    				 }
@@ -428,12 +428,6 @@ public class GCMIntentService extends IntentService {
 	    	    					 }
 	    	    					 else{
 		    	    					 notificationManagerResume(this, ""+message1, false);
-	    	    					 }
-	    	    				 }
-	    	    				 else if(PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag){
-	    	    					 String log = jObj.getString("log");
-	    	    					 if (HomeActivity.appInterruptHandler != null) {
-	    	    						 HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
 	    	    					 }
 	    	    				 }
 	    	    				 
