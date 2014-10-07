@@ -419,7 +419,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			Log.i("appVersion", Data.appVersion + "..");
 			Data.osVersion = android.os.Build.VERSION.RELEASE;
 			Log.i("osVersion", Data.osVersion + "..");
-			Data.country = getApplicationContext().getResources().getConfiguration().locale.getDisplayCountry(Locale.getDefault());
+			Data.country = getApplicationContext().getResources().getConfiguration().locale.getCountry();
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
@@ -660,7 +660,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	 */
 	public void sendLoginValues(final Activity activity, final String emailId, final String password) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();

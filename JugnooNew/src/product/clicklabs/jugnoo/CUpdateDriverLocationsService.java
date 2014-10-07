@@ -87,7 +87,6 @@ public class CUpdateDriverLocationsService extends Service {
 				@Override
 				public void run() {
 					try {
-						Log.e("timerUpdateDrivers", "inside timerUpdateDrivers ***********************");
 						if(HomeActivity.appInterruptHandler != null){
 							HomeActivity.appInterruptHandler.refreshDriverLocations();
 						}

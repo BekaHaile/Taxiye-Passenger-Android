@@ -142,18 +142,35 @@ class UserData{
 
 class DriverRideRequest{
 	
-	String engagementId, customerId;
+	String engagementId, customerId, startTime, address;
 	LatLng latLng;
 	
-	public DriverRideRequest(String engagementId, String customerId, LatLng latLng){
+	public DriverRideRequest(String engagementId, String customerId, LatLng latLng, String startTime, String address){
 		this.engagementId = engagementId;
 		this.customerId = customerId;
 		this.latLng = latLng;
+		this.startTime = startTime;
+		this.address = address;
 	}
 	
 	@Override
 	public String toString() {
-		return engagementId + " " + customerId + " " + latLng;
+		return engagementId + " " + customerId + " " + latLng + " " + startTime;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		try{
+			if(((DriverRideRequest)o).engagementId.equalsIgnoreCase(engagementId)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return super.equals(o);
 	}
 	
 }
@@ -271,6 +288,7 @@ enum ApiResponseFlags {
 		return ordinal;
 	}
 }
+
 
 
 enum PushFlags {

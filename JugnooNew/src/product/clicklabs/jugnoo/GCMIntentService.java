@@ -246,10 +246,21 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    					 if(hasRequest.equalsIgnoreCase("no")){
 	    	    						 
+//	    	    						 {
+//	    	    							 "engagement_id": engagement_id, 
+//	    	    							 "user_id": data.customer_id, 
+//	    	    							 "flag": g_enum_notificationFlags.REQUEST,
+//	    	    							 "latitude": data.pickup_latitude, 
+//	    	    							 "longitude": data.pickup_longitude, 
+//	    	    							 "address": pickup_address
+//	    	    							 "start_time": date}
+	    	    						 
 	    	    						 final String engagementId = jObj.getString("engagement_id");
 		    	    					 String userId = jObj.getString("user_id");
 		    	    					 double latitude = jObj.getDouble("latitude");
 		    	    					 double longitude = jObj.getDouble("longitude");
+		    	    					 String startTime = jObj.getString("start_time");
+		    	    					 String address = jObj.getString("address");
 	    	    						 
 	    	    						 Editor editor = pref.edit();
 	    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "yes");
@@ -423,11 +434,11 @@ public class GCMIntentService extends IntentService {
 	    	    						 notificationManager(this, "Your ride has ended.", false);
 	    	    					 }
 	    	    				 }
-//	    	    				 else if(PushFlags.DRIVER_CANCELS_REQUEST_TO_CUSTOMER.getOrdinal() == flag){
-//	    	    					 if (HomeActivity.appInterruptHandler != null) {
-//	    	    						 HomeActivity.appInterruptHandler.startRideForCustomer(1);
-//	    	    					 }
-//	    	    				 }
+	    	    				 else if(PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag){
+	    	    					 if (HomeActivity.appInterruptHandler != null) {
+	    	    						 HomeActivity.appInterruptHandler.startRideForCustomer(1);
+	    	    					 }
+	    	    				 }
 	    	    				 else if(PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag){
 	    	    					 String message1 = jObj.getString("message");
 	    	    					 if (HomeActivity.activity == null) {
