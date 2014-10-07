@@ -1792,24 +1792,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		if(userMode == UserMode.DRIVER){
 			switchDriverScreen(driverScreenMode);
-			try{
-			SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			String newRideRequest = pref.getString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-			
-			if("yes".equalsIgnoreCase(newRideRequest)){
-				
-				String nrEngagementId = pref.getString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-				String nrUserId = pref.getString(Data.SP_D_NR_USER_ID, "");
-				double nrLat = Double.parseDouble(pref.getString(Data.SP_D_NR_LATITUDE, ""));
-				double nrLng = Double.parseDouble(pref.getString(Data.SP_D_NR_LONGITUDE, ""));
-				
-				Data.driverRideRequests.clear();
-				Data.driverRideRequests.add(new DriverRideRequest(nrEngagementId, nrUserId, new LatLng(nrLat, nrLng), "", ""));
-				
-				showAllRideRequests();
-			}
-			} catch(Exception e){
-			}
+			showAllDriverRequests(HomeActivity.this);
 		}
 		else if(userMode == UserMode.PASSENGER){
 			switchPassengerScreen(passengerScreenMode);
@@ -4453,12 +4436,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 								else{
 									
-//									{"log": "Welcome to driver mode."}//success
-									
-									map.clear();
-									
-									Data.driverRideRequests.clear();
-									
 									if(flag == 1){
 										
 										try {
@@ -4483,6 +4460,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 										driverScreenMode = DriverScreenMode.D_INITIAL;
 										switchDriverScreen(driverScreenMode);
+										
+										showAllDriverRequests(activity);
 									}
 									else{
 										userMode = UserMode.PASSENGER;
@@ -4493,9 +4472,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
 									}
-									
-									
-									showAllRideRequests();
 									
 								}
 							}  catch (Exception exception) {
@@ -4513,6 +4489,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	public void deleteAllDriverRequests(final Activity activity){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Database2 database2 = new Database2(activity);
+				database2.deleteAllDriverRequests();
+				database2.close();
+			}
+		}).start();
+	}
+	
+	
+	public void deleteParticularDriverRequest(final Activity activity, final String engagementId){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Database2 database2 = new Database2(activity);
+				database2.deleteDriverRequest(engagementId);
+				database2.close();
+			}
+		}).start();
+	}
+	
+	
+	
 	/**
 	 * ASync for change driver mode from server
 	 */
@@ -4524,16 +4525,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			DialogPopup.showLoadingDialog(activity, "Fetching customer data...");
 			
 			RequestParams params = new RequestParams();
-			
-			SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			Editor editor = pref.edit();
-			editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-			editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-			editor.putString(Data.SP_D_NR_USER_ID, "");
-			editor.putString(Data.SP_D_NR_LATITUDE, "");
-			editor.putString(Data.SP_D_NR_LONGITUDE, "");
-			editor.commit();
-			
 			 
 			if(myLocation != null){
 				Data.latitude = myLocation.getLatitude();
@@ -4592,7 +4583,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //									response = {"error":"Request timed out","flag":10}
 									DialogPopup.dismissLoadingDialog();
 									
-									reduceRideRequest(Data.dEngagementId);
+									reduceRideRequest(activity, Data.dEngagementId);
 									
 									userCanceledDialogShown = false;
 									
@@ -4604,7 +4595,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											int flag = jObj.getInt("flag");
 											String logMessage = jObj.getString("log");
 											new DialogPopup().alertPopup(activity, ""+logMessage, Data.SERVER_ERROR_MSG);
-											reduceRideRequest(Data.dEngagementId);
+											reduceRideRequest(activity, Data.dEngagementId);
 										} catch(Exception e){
 											e.printStackTrace();
 										}
@@ -4645,12 +4636,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 										Editor editor = pref.edit();
-										editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-										editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-										editor.putString(Data.SP_D_NR_USER_ID, "");
-										editor.putString(Data.SP_D_NR_LATITUDE, "");
-										editor.putString(Data.SP_D_NR_LONGITUDE, "");
-										
 										editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_START_RIDE);
 										
 										editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
@@ -4671,6 +4656,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										driverScreenMode = DriverScreenMode.D_START_RIDE;
 										switchDriverScreen(driverScreenMode);
 										DialogPopup.dismissLoadingDialog();
+										
+										deleteAllDriverRequests(activity);
+										
 									}
 									
 								}
@@ -4692,34 +4680,29 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void reduceRideRequest(String engagementId){
-		int index = -1;
-		
-		for(int i=0; i<Data.driverRideRequests.size(); i++){
-			if(Data.driverRideRequests.get(i).engagementId.equalsIgnoreCase(engagementId)){
-				index = i;
-				break;
-			}
-		}
-		if(index != -1){
-			Data.driverRideRequests.remove(index);
-		}
-		
-		
-		
-		
-		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-		Editor editor = pref.edit();
-		editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-		editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-		editor.putString(Data.SP_D_NR_USER_ID, "");
-		editor.putString(Data.SP_D_NR_LATITUDE, "");
-		editor.putString(Data.SP_D_NR_LONGITUDE, "");
-		editor.commit();
-		
-		showAllRideRequests();
+	public void reduceRideRequest(Activity activity, String engagementId){
+		deleteParticularDriverRequest(activity, engagementId);
+		showAllDriverRequests(activity);
 	}
 	
+	
+	public void showAllDriverRequests(final Activity activity){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Database2 database2 = new Database2(activity);
+				Data.driverRideRequests.clear();
+				Data.driverRideRequests.addAll(database2.getAllDriverRequests());
+				database2.close();
+				menuBtn.post(new Runnable() {
+					@Override
+					public void run() {
+						showAllRideRequests();
+					}
+				});
+			}
+		}).start();
+	}
 	
 	
 	/**
@@ -4730,15 +4713,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
 				DialogPopup.showLoadingDialog(activity, "Loading...");
-				
-				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-				Editor editor = pref.edit();
-				editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-				editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-				editor.putString(Data.SP_D_NR_USER_ID, "");
-				editor.putString(Data.SP_D_NR_LATITUDE, "");
-				editor.putString(Data.SP_D_NR_LONGITUDE, "");
-				editor.commit();
 				
 				RequestParams params = new RequestParams();
 			
@@ -4803,7 +4777,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										}
 										stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 										
-										reduceRideRequest(Data.dEngagementId);
+										reduceRideRequest(activity, Data.dEngagementId);
 										
 									}
 								}  catch (Exception exception) {
@@ -4937,15 +4911,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
-				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-				Editor editor = pref.edit();
-				editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-				editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-				editor.putString(Data.SP_D_NR_USER_ID, "");
-				editor.putString(Data.SP_D_NR_LATITUDE, "");
-				editor.putString(Data.SP_D_NR_LONGITUDE, "");
-				editor.commit();
-				
 				RequestParams params = new RequestParams();
 			
 				
@@ -5008,8 +4973,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											map.clear();
 										}
 										stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-										
-										reduceRideRequest(Data.dEngagementId);
 										
 									}
 								}  catch (Exception exception) {
@@ -7301,12 +7264,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		editor.putString(Data.SP_LAST_LATITUDE, "0");
     		editor.putString(Data.SP_LAST_LONGITUDE, "0");
     		
-    		
-    		editor.putString(Data.SP_D_NEW_RIDE_REQUEST, "no");
-			editor.putString(Data.SP_D_NR_ENGAGEMENT_ID, "");
-			editor.putString(Data.SP_D_NR_USER_ID, "");
-			editor.putString(Data.SP_D_NR_LATITUDE, "");
-			editor.putString(Data.SP_D_NR_LONGITUDE, "");
     		
     		
     		

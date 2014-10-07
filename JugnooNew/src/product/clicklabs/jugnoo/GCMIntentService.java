@@ -232,22 +232,8 @@ public class GCMIntentService extends IntentService {
 	    	    				 int flag = jObj.getInt("flag");
 	    	    				 
 	    	    				 if(PushFlags.REQUEST.getOrdinal() == flag){
-	    	    					 
-	    	    					 String SHARED_PREF_NAME = "myPref", 
-    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
-    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
-    	    									SP_D_NR_USER_ID = "d_nr_user_id",
-    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
-    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
-	    	    					 
-	    	    					 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-	    	    					 
-	    	    					 String hasRequest = pref.getString(SP_D_NEW_RIDE_REQUEST, "no");
-	    	    					 
-	    	    					 if(hasRequest.equalsIgnoreCase("no")){
 	    	    						 
-//	    	    						 {
-//	    	    							 "engagement_id": engagement_id, 
+//	    	    						 {   "engagement_id": engagement_id, 
 //	    	    							 "user_id": data.customer_id, 
 //	    	    							 "flag": g_enum_notificationFlags.REQUEST,
 //	    	    							 "latitude": data.pickup_latitude, 
@@ -255,6 +241,8 @@ public class GCMIntentService extends IntentService {
 //	    	    							 "address": pickup_address
 //	    	    							 "start_time": date}
 	    	    						 
+	    	    					 
+	    	    					 
 	    	    						 final String engagementId = jObj.getString("engagement_id");
 		    	    					 String userId = jObj.getString("user_id");
 		    	    					 double latitude = jObj.getDouble("latitude");
@@ -262,13 +250,9 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 	    	    						 
-	    	    						 Editor editor = pref.edit();
-	    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "yes");
-	    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, engagementId);
-	    	    						 editor.putString(SP_D_NR_USER_ID, userId);
-	    	    						 editor.putString(SP_D_NR_LATITUDE, ""+latitude);
-	    	    						 editor.putString(SP_D_NR_LONGITUDE, ""+longitude);
-	    	    						 editor.commit();
+		    	    					 Database2 database2 = new Database2(this);
+		    	    					 database2.insertDriverRequest(engagementId, userId, ""+latitude, ""+longitude, startTime, address);
+		    	    					 database2.close();
 		    	    					 
 		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
 		    	    					 
@@ -313,7 +297,6 @@ public class GCMIntentService extends IntentService {
 	    	    						 
 										requestRemoveHandler = new Handler();
 										requestRemoveHandler.postDelayed(requestRemoveRunnable, 60000);
-	    	    					 }
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
@@ -364,6 +347,35 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
 	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, true);
+	    	    					 }
+	    	    					 
+    	    						 String SHARED_PREF_NAME = "myPref", 
+    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
+    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
+    	    									SP_D_NR_USER_ID = "d_nr_user_id",
+    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
+    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
+    	    						 
+    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+    	    						 Editor editor = pref.edit();
+    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
+    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
+    	    						 editor.putString(SP_D_NR_USER_ID, "");
+    	    						 editor.putString(SP_D_NR_LATITUDE, "");
+    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
+    	    						 editor.commit();
+	    	    					 
+	    	    				 }
+	    	    				 else if(PushFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
+
+    	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);}catch(Exception e){}
+    	    						 
+	    	    					 String engagementId = jObj.getString("engagement_id");
+	    	    					 
+	    	    					 clearNotifications(this);
+	    	    					 
+	    	    					 if(HomeActivity.appInterruptHandler != null){
+	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, false);
 	    	    					 }
 	    	    					 
     	    						 String SHARED_PREF_NAME = "myPref", 

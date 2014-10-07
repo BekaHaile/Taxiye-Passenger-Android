@@ -376,7 +376,7 @@ public class Database2 {																	// class for handling database related 
 	
 	
 	
-	public ArrayList<DriverRideRequest> getALlDriverRequests() {
+	public ArrayList<DriverRideRequest> getAllDriverRequests() {
 		ArrayList<DriverRideRequest> arrayList = new ArrayList<DriverRideRequest>();
 		try {
 			String[] columns = new String[] { Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID, Database2.TABLE_DRIVER_REQUESTS_USER_ID, 

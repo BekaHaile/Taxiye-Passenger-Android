@@ -52,13 +52,6 @@ public class Data {
 			SP_D_CUSTOMER_RATING = "d_customer_rating", 
 			
 			
-			SP_D_NEW_RIDE_REQUEST = "d_new_ride_request",
-			
-			SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
-			SP_D_NR_USER_ID = "d_nr_user_id",
-			SP_D_NR_LATITUDE = "d_nr_latitude",
-			SP_D_NR_LONGITUDE = "d_nr_longitude",
-			
 			
 			
 			SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
