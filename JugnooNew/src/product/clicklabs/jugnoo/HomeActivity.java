@@ -7639,8 +7639,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				public void run() {
 					try {
 						Log.i("request_ride time ", "s = "+System.currentTimeMillis() + ", e = "+(requestRideStartTime + requestRideLifeTime));
+						Log.e("request_ride time diff", "="+((System.currentTimeMillis() - (requestRideStartTime + requestRideLifeTime))/1000));
 						if(System.currentTimeMillis() >= (requestRideStartTime + requestRideLifeTime)){
 							cancelTimerRequestRide();
+							menuBtn.post(new Runnable() {
+								@Override
+								public void run() {
+									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+										noDriverAvailablePopup(HomeActivity.this);
+										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+										switchPassengerScreen(passengerScreenMode);
+									}
+								}
+							});
 						}
 						else{
 							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelBeforePushReceive){
@@ -7725,9 +7736,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 				}
 			};
-			requestRideLifeTime = (3 * 60 * 1000);
+			requestRideLifeTime = (1 * 60 * 1000);
 			requestRideStartTime = System.currentTimeMillis();
-			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, 30000);
+			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, 20000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
