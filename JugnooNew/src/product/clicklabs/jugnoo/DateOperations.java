@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -125,11 +126,27 @@ public class DateOperations {
 	}
 	
 	
-	public static String getCurrentTime() {
+	public String getCurrentTime() {
 	    long foo = System.currentTimeMillis();
 	    Date date = new Date(foo);
 	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    return formatter.format(date);
+	}
+	
+	
+	public long getTimeDifference(String time1, String time2){
+		try {
+			Log.e("time1", "="+time1);
+			Log.e("time2", "="+time2);
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(time1);
+			Date date2 = format.parse(time2);
+			long millis = Math.abs(date1.getTime() - date2.getTime());
+			return millis;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return 60000;
 	}
 	
 	

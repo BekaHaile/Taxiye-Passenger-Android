@@ -13,12 +13,14 @@
             android:id="@+id/driverPassengerCallRl"
             android:layout_width="250px"
             android:layout_height="70px"
-            android:background="@drawable/blue_btn_selector"
+            android:background="@drawable/accept_back_btn_selector"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="40px"
                     
             >
+            
+            
             
             <ImageView 
                 android:id="@+id/driverCallIcon"

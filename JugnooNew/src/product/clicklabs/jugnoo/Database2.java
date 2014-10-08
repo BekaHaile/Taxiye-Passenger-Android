@@ -422,12 +422,13 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	
-	public void deleteDriverRequest(String engagementId){
+	public int deleteDriverRequest(String engagementId){
 		try{
-			database.delete(Database2.TABLE_DRIVER_REQUESTS, Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID + "=?", new String[]{engagementId});
+			return database.delete(Database2.TABLE_DRIVER_REQUESTS, Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID + "=?", new String[]{engagementId});
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		return 0;
 	}
 	
 	public void deleteAllDriverRequests(){

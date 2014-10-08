@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.json.JSONObject;
 
 import android.app.IntentService;
@@ -25,12 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class GCMIntentService extends IntentService {
 	
 	public static final int NOTIFICATION_ID = 1;
-//    private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
-
-    static Handler requestRemoveHandler;
-    static Runnable requestRemoveRunnable;
-    
     
     public GCMIntentService() {
         super("GcmIntentService");
@@ -240,159 +238,72 @@ public class GCMIntentService extends IntentService {
 //	    	    							 "longitude": data.pickup_longitude, 
 //	    	    							 "address": pickup_address
 //	    	    							 "start_time": date}
-	    	    						 
 	    	    					 
-	    	    					 
-	    	    						 final String engagementId = jObj.getString("engagement_id");
+	    	    						 String engagementId = jObj.getString("engagement_id");
 		    	    					 String userId = jObj.getString("user_id");
 		    	    					 double latitude = jObj.getDouble("latitude");
 		    	    					 double longitude = jObj.getDouble("longitude");
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
-	    	    						 
-		    	    					 Database2 database2 = new Database2(this);
-		    	    					 database2.insertDriverRequest(engagementId, userId, ""+latitude, ""+longitude, startTime, address);
-		    	    					 database2.close();
+		    	    					 
+		    	    					 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, startTime, address);
 		    	    					 
 		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
 		    	    					 
 		    	    					 if(HomeActivity.appInterruptHandler != null){
 		    	    						 notificationManagerResume(this, "You have got a new ride request.", true);
-		    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, userId, new LatLng(latitude, longitude), true, false);
+		    	    						 HomeActivity.appInterruptHandler.onNewRideRequest();
 		    	    					 }
 		    	    					 else{
 		    	    						 notificationManager(this, "You have got a new ride request.", true);
 		    	    					 }
 		    	    					 
-		    	    					 
-	    	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);} catch(Exception e){}
-	    	    						 
-	    	    						 requestRemoveRunnable = new Runnable() {
-											
-											@Override
-											public void run() {
-												clearNotifications(GCMIntentService.this);
-				    	    					 
-				    	    					 if(HomeActivity.appInterruptHandler != null){
-				    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, false);
-				    	    					 }
-				    	    					 
-			    	    						 String SHARED_PREF_NAME = "myPref", 
-			    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
-			    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
-			    	    									SP_D_NR_USER_ID = "d_nr_user_id",
-			    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
-			    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
-			    	    						 
-			    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-			    	    						 Editor editor = pref.edit();
-			    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
-			    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
-			    	    						 editor.putString(SP_D_NR_USER_ID, "");
-			    	    						 editor.putString(SP_D_NR_LATITUDE, "");
-			    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
-			    	    						 editor.commit();
-											}
-										};
-	    	    						 
-										requestRemoveHandler = new Handler();
-										requestRemoveHandler.postDelayed(requestRemoveRunnable, 60000);
+		    	    					 RequestTimeoutTimerTask requestTimeoutTimerTask = new RequestTimeoutTimerTask(this, engagementId);
+		    	    					 requestTimeoutTimerTask.startTimer(0, 30000, 60000);
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.apiEnd();
 	    			    				 HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
 	    			    			 }
 	    	    				 }
 	    	    				 else if(PushFlags.REQUEST_CANCELLED.getOrdinal() == flag){
-
-    	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);}catch(Exception e){}
     	    						 
 	    	    					 String engagementId = jObj.getString("engagement_id");
-	    	    					 
-	    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
-	    	    					 
 	    	    					 clearNotifications(this);
+	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, false);
+	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(false);
 	    	    					 }
 	    	    					 
-    	    						 String SHARED_PREF_NAME = "myPref", 
-    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
-    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
-    	    									SP_D_NR_USER_ID = "d_nr_user_id",
-    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
-    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
-    	    						 
-    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-    	    						 Editor editor = pref.edit();
-    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
-    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
-    	    						 editor.putString(SP_D_NR_USER_ID, "");
-    	    						 editor.putString(SP_D_NR_LATITUDE, "");
-    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
-    	    						 editor.commit();
+	    	    					
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED_BY_OTHER_DRIVER.getOrdinal() == flag){
-
-    	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);}catch(Exception e){}
     	    						 
 	    	    					 String engagementId = jObj.getString("engagement_id");
-	    	    					 
-	    	    					 
 	    	    					 clearNotifications(this);
+	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, true);
+	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(true);
 	    	    					 }
 	    	    					 
-    	    						 String SHARED_PREF_NAME = "myPref", 
-    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
-    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
-    	    									SP_D_NR_USER_ID = "d_nr_user_id",
-    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
-    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
-    	    						 
-    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-    	    						 Editor editor = pref.edit();
-    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
-    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
-    	    						 editor.putString(SP_D_NR_USER_ID, "");
-    	    						 editor.putString(SP_D_NR_LATITUDE, "");
-    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
-    	    						 editor.commit();
+	    	    					 
 	    	    					 
 	    	    				 }
-	    	    				 else if(PushFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
-
-    	    						 try{requestRemoveHandler.removeCallbacks(requestRemoveRunnable);}catch(Exception e){}
+	    	    				else if(PushFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
     	    						 
 	    	    					 String engagementId = jObj.getString("engagement_id");
-	    	    					 
 	    	    					 clearNotifications(this);
+	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.changeRideRequest(engagementId, "", new LatLng(0, 0), false, false);
+	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout();
 	    	    					 }
 	    	    					 
-    	    						 String SHARED_PREF_NAME = "myPref", 
-    	    								 SP_D_NEW_RIDE_REQUEST = "d_new_ride_request", 
-    	    								 SP_D_NR_ENGAGEMENT_ID = "d_nr_engagement_id",
-    	    									SP_D_NR_USER_ID = "d_nr_user_id",
-    	    									SP_D_NR_LATITUDE = "d_nr_latitude",
-    	    									SP_D_NR_LONGITUDE = "d_nr_longitude";
-    	    						 
-    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-    	    						 Editor editor = pref.edit();
-    	    						 editor.putString(SP_D_NEW_RIDE_REQUEST, "no");
-    	    						 editor.putString(SP_D_NR_ENGAGEMENT_ID, "");
-    	    						 editor.putString(SP_D_NR_USER_ID, "");
-    	    						 editor.putString(SP_D_NR_LATITUDE, "");
-    	    						 editor.putString(SP_D_NR_LONGITUDE, "");
-    	    						 editor.commit();
+	    	    					
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_STARTED.getOrdinal() == flag){
@@ -490,5 +401,96 @@ public class GCMIntentService extends IntentService {
 	        GcmBroadcastReceiver.completeWakefulIntent(intent);
 	    }
 
-
+	    
+	    
+	    
+	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
+	    		String startTime, String address){
+	    	try {
+				Database2 database2 = new Database2(context);
+				 database2.insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
+				 database2.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    }
+	    
+	    public int deleteDriverRideRequest(Context context, String engagementId){
+	    	try {
+				Database2 database2 = new Database2(context);
+				int count = database2.deleteDriverRequest(engagementId);
+				database2.close();
+				return count;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    	return 0;
+	    }
+	    
+	    class RequestTimeoutTimerTask{
+	    	
+	    	public Timer timer;
+	    	public TimerTask timerTask;
+	    	public Context context;
+	    	
+	    	public String engagementId;
+	    	
+	    	public long startTime, lifeTime;
+	    	
+	    	public RequestTimeoutTimerTask(Context context, String engagementId){
+	    		this.context = context;
+	    		this.engagementId = engagementId;
+	    	}
+	    	
+	    	public void startTimer(long delay, long period, long lifeTime){
+	    		stopTimer();
+	    		this.startTime = System.currentTimeMillis();
+	    		this.lifeTime = lifeTime;
+	    		timer = new Timer();
+	    		timerTask = new TimerTask() {
+	    			@Override
+	    			public void run() {
+	    				Log.e("RequestTimeoutTimerTask", "="+System.currentTimeMillis() + " " + (RequestTimeoutTimerTask.this.startTime + RequestTimeoutTimerTask.this.lifeTime));
+		    			if(System.currentTimeMillis() >= (RequestTimeoutTimerTask.this.startTime + RequestTimeoutTimerTask.this.lifeTime)){
+		    				int count = deleteDriverRideRequest(context, engagementId);
+		    				if(count > 0){
+		    					if(HomeActivity.appInterruptHandler != null){
+			    					HomeActivity.appInterruptHandler.onRideRequestTimeout();
+			    				}
+		    					clearNotifications(context);
+		    				}
+		    				stopTimer();
+		    			}
+	    			}
+	    		};
+	    		timer.scheduleAtFixedRate(timerTask, delay, period);
+	    	}
+	    	
+	    	public void stopTimer(){
+	    		try{
+	    			Log.e("RequestTimeoutTimerTask","stopTimer");
+	    			startTime = 0;
+	    			lifeTime = 0;
+	    			if(timerTask != null){
+	    				timerTask.cancel();
+	    				timerTask = null;
+	    			}
+	    			if(timer != null){
+	    				timer.cancel();
+	    				timer.purge();
+	    				timer = null;
+	    			}
+	    		} catch(Exception e){
+	    			e.printStackTrace();
+	    		}
+	    	}
+	    	
+	    	
+	    }
+	    
 }
+
+
+
+
+

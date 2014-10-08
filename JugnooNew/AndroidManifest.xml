@@ -157,11 +157,6 @@
             android:enabled="true"
             android:exported="true" >
         </service>
-        <service
-            android:name="product.clicklabs.jugnoo.CRequestRideService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
         
         <receiver android:name=".BootCompletedReceiver" >
     		<intent-filter>
