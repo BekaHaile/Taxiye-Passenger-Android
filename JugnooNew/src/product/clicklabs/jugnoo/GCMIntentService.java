@@ -249,10 +249,11 @@ public class GCMIntentService extends IntentService {
 		    	    					 String address = jObj.getString("address");
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
-		    	    					 long endTimeMillis = startTimeMillis + 60000;
+
+		    	    					 startTime = new DateOperations().getSixtySecAfterCurrentTime();
 		    	    					 
 		    	    					 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, 
-		    	    							 ""+startTimeMillis, ""+endTimeMillis, address);
+		    	    							 startTime, address);
 		    	    					 
 		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
 		    	    					 
@@ -411,10 +412,10 @@ public class GCMIntentService extends IntentService {
 	    
 	    
 	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
-	    		String startTime, String endTime, String address){
+	    		String startTime, String address){
 	    	try {
 				Database2 database2 = new Database2(context);
-				 database2.insertDriverRequest(engagementId, userId, latitude, longitude, startTime, endTime, address);
+				 database2.insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
 				 database2.close();
 			} catch (Exception e) {
 				e.printStackTrace();

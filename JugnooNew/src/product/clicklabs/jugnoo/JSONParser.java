@@ -191,7 +191,7 @@ public class JSONParser {
 					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 					
 					HttpRequester simpleJSONParser = new HttpRequester();
-					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
+					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_current_user_status", nameValuePairs);
 					
 					Log.e("result of = user_status", "="+result);
 					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
@@ -200,21 +200,22 @@ public class JSONParser {
 					else{
 						try{
 							JSONObject jObject1 = new JSONObject(result);
+							
+
+//							"flag": constants.responseFlags.ENGAGEMENT_DATA,
+//							"last_engagement_info":[
 //							{
-//							    "last_engagement_info": [
-//							        {
-//							            "user_id": 207,
-//							            "pickup_latitude": 30.718836,
-//							            "pickup_longitude": 76.810133,
-//							            "engagement_id": 2522,
-//							            "status": 4,
-//							            "user_name": "Shankar Bhagwati",
-//							            "phone_no": "+919780298413",
-//							            "user_image": "http://graph.facebook.com/717496164959213/picture?width=160&height=160",
-//							            "rating": 4.833333333333333
-//							        }
-//							    ]
+//							“user_id“,
+//							“pickup_latitude“,
+//							“pickup_longitude“,
+//							“engagement_id“,
+//							“status“,
+//							“user_name“,
+//							“phone_no“,
+//							“user_image“,
+//							“rating“
 //							}
+//							]
 							
 							
 							JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
@@ -348,7 +349,7 @@ public class JSONParser {
 					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 					
 					HttpRequester simpleJSONParser = new HttpRequester();
-					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
+					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_current_user_status", nameValuePairs);
 					
 					Log.e("result of = user_status", "="+result);
 					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
@@ -358,25 +359,26 @@ public class JSONParser {
 						try{
 							JSONObject jObject1 = new JSONObject(result);
 							
+//							"flag": constants.responseFlags.ENGAGEMENT_DATA, 
+//							"last_engagement_info":[
 //							{
-//							    "last_engagement_info": [
-//							        {
-//							            "driver_id": 208,
-//							            "pickup_latitude": 30.718836,
-//							            "pickup_longitude": 76.810133,
-//							            "engagement_id": 2522,
-//							            "status": 4,
-//							            "session_id": 641,
-//							            "user_name": "Chaman Laal",
-//							            "phone_no": "+919780298413",
-//							            "user_image": "http://graph.facebook.com/1411907995761545/picture?width=160&height=160",
-//							            "driver_car_image": "",
-//							            "current_location_latitude": 0,
-//							            "current_location_longitude": 0,
-//							            "rating": 5
-//							        }
-//							    ]
-//							}
+//								“driver_id”, 
+//								“pickup_latitude”, 
+//								“pickup_longitude”, 
+//								“engagement_id”, 
+//								“status”, 
+//								“session_id”,
+//								“user_name”, 
+//								“phone_no”, 
+//								“user_image”, 
+//								“driver_car_image”, 
+//								“current_location_latitude”, 
+//								“current_location_longitude”, 
+//								“rating”
+//								}
+//							]
+
+							
 							
 							JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
 							JSONObject jObject = lastEngInfoArr.getJSONObject(0);

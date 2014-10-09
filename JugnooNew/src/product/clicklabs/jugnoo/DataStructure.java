@@ -142,16 +142,14 @@ class UserData{
 
 class DriverRideRequest{
 	
-	String engagementId, customerId, address;
-	long startTime, endTime;
+	String engagementId, customerId, address, startTime;
 	LatLng latLng;
 	
-	public DriverRideRequest(String engagementId, String customerId, LatLng latLng, long startTime, long endTime, String address){
+	public DriverRideRequest(String engagementId, String customerId, LatLng latLng, String startTime, String address){
 		this.engagementId = engagementId;
 		this.customerId = customerId;
 		this.latLng = latLng;
 		this.startTime = startTime;
-		this.endTime = endTime;
 		this.address = address;
 	}
 	

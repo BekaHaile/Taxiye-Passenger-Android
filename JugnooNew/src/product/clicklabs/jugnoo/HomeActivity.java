@@ -1,7 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +45,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
@@ -1752,7 +1749,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 						  if(myLocation != null){
 							  if(!dontCallRefreshDriver){
-								  getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
+								  getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+										  myLocation.getLongitude()), false);
 								  getDistanceTimeAddress.execute();
 							  }
 						  }
@@ -2434,7 +2432,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //				getDistanceTimeAddress.execute();
 				
 				if(myLocation != null){
-					getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
+					getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+							myLocation.getLongitude()), false);
 					getDistanceTimeAddress.execute();
 				}
 				
@@ -2805,7 +2804,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 			  if(myLocation != null){
 				  if(!dontCallRefreshDriver){
-					  getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
+					  getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+							  myLocation.getLongitude()), false);
 					  getDistanceTimeAddress.execute();
 				  }
 			  }
@@ -3806,7 +3806,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			holder.textViewRequestAddress.setText(driverRideRequest.address);
 			
 			
-			long timeDiff = driverRideRequest.endTime - driverRideRequest.startTime;
+			long timeDiff = getDateOperations().getTimeDifference(getDateOperations().getCurrentTime(), driverRideRequest.startTime);
 			long timeDiffInSec = timeDiff / 1000;
 			holder.textViewRequestTime.setText(""+timeDiffInSec + " sec left");
 			
@@ -3912,10 +3912,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				public void run() {
 					
 					if(driverAcceptPushRecieved){
-			        	if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-							switchPassengerScreen(passengerScreenMode);
-			        	}
+						passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+						switchPassengerScreen(passengerScreenMode);
 			        }
 					
 					nearestDriverProgress.setVisibility(View.VISIBLE);
@@ -4136,6 +4134,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
 
 						editor.commit();
+						
+						passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+						switchPassengerScreen(passengerScreenMode);
 					}
 				}
 			});
@@ -4498,7 +4499,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 										
 									if(myLocation != null){
-										getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
+										getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+												myLocation.getLongitude()), false);
 										getDistanceTimeAddress.execute();
 									}
 									
@@ -5107,6 +5109,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 									else{
 //										{"log":"rejected successfully"}
+//										response = {"log":"Ride cancelled successfully","flag":109}
 										
 										try {
 											int flag = jObj.getInt("flag");
@@ -5122,6 +5125,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											map.clear();
 										}
 										stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+										
+										reduceRideRequest(activity, Data.dEngagementId);
 										
 									}
 								}  catch (Exception exception) {
@@ -7042,7 +7047,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				try {
 					if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 						if(myLocation != null){
-							getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), false);
+							getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+									myLocation.getLongitude()), false);
 							getDistanceTimeAddress.execute();
 						}
 					}
@@ -7060,7 +7066,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void rideRequestAcceptedInterrupt(JSONObject jObj) {
 
 		try {
-			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+			if(userMode == UserMode.PASSENGER){
 				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 				
 				Log.e("CRequestRideService ","stoped in home");
@@ -7080,6 +7086,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj){
 		try {
 			cancelTimerRequestRide();
+			passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
 //			{
 //	            "user_name": "Shankar Bhagwati",
 //	            "session_id": 798,
@@ -7116,7 +7123,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						getDistanceTimeAddress.cancel(true);
 					}
 					if(myLocation != null){
-						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), true);
+						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+								myLocation.getLongitude()), true);
 						getDistanceTimeAddress.execute();
 					}
 				}
@@ -7597,7 +7605,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
 					zoomedToMyLocation = true;
 					if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), location.getLongitude()), false);
+						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), 
+								location.getLongitude()), false);
 						getDistanceTimeAddress.execute();
 					}
 				}
@@ -7802,6 +7811,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onNoDriversAvailablePushRecieved(final String logMessage) {
 		cancelTimerRequestRide();
+		HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 		menuBtn.post(new Runnable() {
 			@Override
 			public void run() {

@@ -49,7 +49,6 @@ public class Database2 {																	// class for handling database related 
 	public static final String TABLE_DRIVER_REQUESTS_LATITUDE = "latitude";
 	public static final String TABLE_DRIVER_REQUESTS_LONGITUDE = "longitude";
 	public static final String TABLE_DRIVER_REQUESTS_START_TIME = "start_time";
-	public static final String TABLE_DRIVER_REQUESTS_END_TIME = "end_time";
 	public static final String TABLE_DRIVER_REQUESTS_ADDRESS = "address";
 	
 	
@@ -105,7 +104,6 @@ public class Database2 {																	// class for handling database related 
 				+ TABLE_DRIVER_REQUESTS_LATITUDE + " TEXT, " 
 				+ TABLE_DRIVER_REQUESTS_LONGITUDE + " TEXT, " 
 				+ TABLE_DRIVER_REQUESTS_START_TIME + " TEXT, " 
-				+ TABLE_DRIVER_REQUESTS_END_TIME + " TEXT, " 
 				+ TABLE_DRIVER_REQUESTS_ADDRESS + " TEXT" 
 				+ ");");
 		
@@ -383,8 +381,7 @@ public class Database2 {																	// class for handling database related 
 		try {
 			String[] columns = new String[] { Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID, Database2.TABLE_DRIVER_REQUESTS_USER_ID, 
 					Database2.TABLE_DRIVER_REQUESTS_LATITUDE, Database2.TABLE_DRIVER_REQUESTS_LONGITUDE, 
-					Database2.TABLE_DRIVER_REQUESTS_START_TIME, Database2.TABLE_DRIVER_REQUESTS_END_TIME, 
-					Database2.TABLE_DRIVER_REQUESTS_ADDRESS };
+					Database2.TABLE_DRIVER_REQUESTS_START_TIME, Database2.TABLE_DRIVER_REQUESTS_ADDRESS };
 			Cursor cursor = database.query(Database2.TABLE_DRIVER_REQUESTS, columns, null, null, null, null, null);
 			
 			int in0 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID);
@@ -392,16 +389,14 @@ public class Database2 {																	// class for handling database related 
 			int in2 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_LATITUDE);
 			int in3 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_LONGITUDE);
 			int in4 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_START_TIME);
-			int in5 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_END_TIME);
-			int in6 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_ADDRESS);
+			int in5 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_ADDRESS);
 			
 			for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
 				arrayList.add(new DriverRideRequest(cursor.getString(in0), 
 						cursor.getString(in1), 
 						new LatLng(Double.parseDouble(cursor.getString(in2)), Double.parseDouble(cursor.getString(in3))), 
-						Long.parseLong(cursor.getString(in4)), 
-						Long.parseLong(cursor.getString(in5)),
-						cursor.getString(in6)));
+						cursor.getString(in4), 
+						cursor.getString(in5)));
 			}
 			
 		} catch (Exception e) {
@@ -411,8 +406,7 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	
-	public void insertDriverRequest(String engagementId, String userId, String latitude, String longitude, String startTime, 
-			String endTime, String address){
+	public void insertDriverRequest(String engagementId, String userId, String latitude, String longitude, String startTime, String address){
 		try{
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID, engagementId);
@@ -420,7 +414,6 @@ public class Database2 {																	// class for handling database related 
 			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_LATITUDE, latitude);
 			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_LONGITUDE, longitude);
 			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_START_TIME, startTime);
-			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_END_TIME, endTime);
 			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_ADDRESS, address);
 			database.insert(Database2.TABLE_DRIVER_REQUESTS, null, contentValues);
 		} catch(Exception e){
