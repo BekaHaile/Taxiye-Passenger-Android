@@ -5847,7 +5847,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void startEndWaitAsync(final Activity activity, String customerId, int flag) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
-			
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
@@ -7246,11 +7245,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	@Override
 	public void onRideRequestTimeout() {
-		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+		if(userMode == UserMode.DRIVER){
 			menuBtn.post(new Runnable() {
 				@Override
 				public void run() {
-					getAndShowAllDriverRequests(HomeActivity.this);
+					new DialogPopup().alertPopup(HomeActivity.this, "", "Request has timed out.");
+					if(driverScreenMode != DriverScreenMode.D_INITIAL){
+						driverScreenMode = DriverScreenMode.D_INITIAL;
+						switchDriverScreen(driverScreenMode);
+					}
+					else{
+						getAndShowAllDriverRequests(HomeActivity.this);
+					}
 				}
 			});
 		}
@@ -7725,11 +7731,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
 												final String log = jObj.getString("log");
 												final String start_time = jObj.getString("start_time");
-												
-												serverRequestStartTime = new DateOperations().getMilliseconds(start_time);
-												serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
 												if(executionTime == -1){
-													executionTime = serverRequestStartTime;
+													serverRequestStartTime = new DateOperations().getMilliseconds(start_time);
+													serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
+													long stopTime = System.currentTimeMillis();
+												    long elapsedTime = stopTime - startTime;
+													executionTime = serverRequestStartTime + elapsedTime;
 												}
 												
 												Data.cSessionId = jObj.getString("session_id");
@@ -7780,7 +7787,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 				}
 			};
-			requestRideLifeTime = (3 * 60 * 1000);
+			requestRideLifeTime = ((2 * 60 * 1000) + (1 * 60 * 1000));
 			serverRequestStartTime = 0;
 			serverRequestEndTime = 0;
 			executionTime = -1;
