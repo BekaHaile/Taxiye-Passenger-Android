@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.model.LatLng;
@@ -239,6 +240,7 @@ public class GCMIntentService extends IntentService {
 //	    	    							 "address": pickup_address
 //	    	    							 "start_time": date}
 	    	    					 
+	    	    					 
 	    	    						 String engagementId = jObj.getString("engagement_id");
 		    	    					 String userId = jObj.getString("user_id");
 		    	    					 double latitude = jObj.getDouble("latitude");
@@ -246,9 +248,11 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 startTime = new DateOperations().getSixtySecAfterCurrentTime();
+		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
+		    	    					 long endTimeMillis = startTimeMillis + 60000;
 		    	    					 
-		    	    					 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, startTime, address);
+		    	    					 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, 
+		    	    							 ""+startTimeMillis, ""+endTimeMillis, address);
 		    	    					 
 		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
 		    	    					 
@@ -261,7 +265,7 @@ public class GCMIntentService extends IntentService {
 		    	    					 }
 		    	    					 
 		    	    					 RequestTimeoutTimerTask requestTimeoutTimerTask = new RequestTimeoutTimerTask(this, engagementId);
-		    	    					 requestTimeoutTimerTask.startTimer(0, 30000, 60000);
+		    	    					 requestTimeoutTimerTask.startTimer(0, 20000, startTimeMillis, 60000);
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
@@ -407,10 +411,10 @@ public class GCMIntentService extends IntentService {
 	    
 	    
 	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
-	    		String startTime, String address){
+	    		String startTime, String endTime, String address){
 	    	try {
 				Database2 database2 = new Database2(context);
-				 database2.insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
+				 database2.insertDriverRequest(engagementId, userId, latitude, longitude, startTime, endTime, address);
 				 database2.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -437,23 +441,33 @@ public class GCMIntentService extends IntentService {
 	    	
 	    	public String engagementId;
 	    	
-	    	public long startTime, lifeTime;
+	    	public long startTime, lifeTime, endTime, period, executionTime;
 	    	
 	    	public RequestTimeoutTimerTask(Context context, String engagementId){
 	    		this.context = context;
 	    		this.engagementId = engagementId;
 	    	}
 	    	
-	    	public void startTimer(long delay, long period, long lifeTime){
+	    	public void startTimer(long delay, long period, long startTime, long lifeTime){
 	    		stopTimer();
-	    		this.startTime = System.currentTimeMillis();
+	    		
+	    		this.startTime = startTime;
 	    		this.lifeTime = lifeTime;
+	    		this.endTime = startTime + lifeTime;
+	    		this.period = period;
+	    		this.executionTime = -1;
+	    		
 	    		timer = new Timer();
 	    		timerTask = new TimerTask() {
 	    			@Override
 	    			public void run() {
-	    				Log.e("RequestTimeoutTimerTask", "="+System.currentTimeMillis() + " " + (RequestTimeoutTimerTask.this.startTime + RequestTimeoutTimerTask.this.lifeTime));
-		    			if(System.currentTimeMillis() >= (RequestTimeoutTimerTask.this.startTime + RequestTimeoutTimerTask.this.lifeTime)){
+	    				long start = System.currentTimeMillis();
+	    				
+	    				if(executionTime == -1){
+							executionTime = RequestTimeoutTimerTask.this.startTime;
+						}
+	    				
+		    			if(executionTime >= RequestTimeoutTimerTask.this.endTime){
 		    				int count = deleteDriverRideRequest(context, engagementId);
 		    				if(count > 0){
 		    					if(HomeActivity.appInterruptHandler != null){
@@ -463,6 +477,17 @@ public class GCMIntentService extends IntentService {
 		    				}
 		    				stopTimer();
 		    			}
+		    			long stop = System.currentTimeMillis();
+					    long elapsedTime = stop - start;
+					    if(executionTime != -1){
+					    	if(elapsedTime >= RequestTimeoutTimerTask.this.period){
+					    		executionTime = executionTime + elapsedTime;
+					    	}
+					    	else{
+					    		executionTime = executionTime + RequestTimeoutTimerTask.this.period;
+					    	}
+					    }
+					    Log.i("RequestTimeoutTimerTask execution", "="+(RequestTimeoutTimerTask.this.endTime - executionTime));
 	    			}
 	    		};
 	    		timer.scheduleAtFixedRate(timerTask, delay, period);

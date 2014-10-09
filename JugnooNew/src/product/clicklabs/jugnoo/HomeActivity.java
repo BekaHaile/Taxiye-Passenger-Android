@@ -3806,7 +3806,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			holder.textViewRequestAddress.setText(driverRideRequest.address);
 			
 			
-			long timeDiff = getDateOperations().getTimeDifference(getDateOperations().getCurrentTime(), driverRideRequest.startTime);
+			long timeDiff = driverRideRequest.endTime - driverRideRequest.startTime;
 			long timeDiffInSec = timeDiff / 1000;
 			holder.textViewRequestTime.setText(""+timeDiffInSec + " sec left");
 			
@@ -3910,6 +3910,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				@Override
 				public void run() {
+					
+					if(driverAcceptPushRecieved){
+			        	if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+							switchPassengerScreen(passengerScreenMode);
+			        	}
+			        }
+					
 					nearestDriverProgress.setVisibility(View.VISIBLE);
 			        nearestDriverText.setVisibility(View.GONE);
 			        dontCallRefreshDriver = false;
@@ -4110,32 +4118,25 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			        if(!driverAcceptPushRecieved){
 			        	Data.pickupLatLng = destination;
 			        }
-			        else if(driverAcceptPushRecieved){
-			        	if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-			        		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			        		Editor editor = pref.edit();
-			        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
-							
-							editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
-							editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
-							editor.putString(Data.SP_C_LATITUDE, ""+Data.assignedDriverInfo.latLng.latitude);
-							editor.putString(Data.SP_C_LONGITUDE, ""+Data.assignedDriverInfo.latLng.longitude);
-							editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
-							editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
-							editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
-							editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
-							editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
-							editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
-							editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
-			        	
-							editor.commit();
-			        	
-							map.clear();
+			        else if (driverAcceptPushRecieved) {
+						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+						Editor editor = pref.edit();
+						editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
 
-							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-							switchPassengerScreen(passengerScreenMode);
-			        	}
-			        }
+						editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
+						editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
+						editor.putString(Data.SP_C_LATITUDE, "" + Data.assignedDriverInfo.latLng.latitude);
+						editor.putString(Data.SP_C_LONGITUDE, "" + Data.assignedDriverInfo.latLng.longitude);
+						editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
+						editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
+						editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
+						editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+						editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
+						editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
+						editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
+
+						editor.commit();
+					}
 				}
 			});
 	        
@@ -7078,7 +7079,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj){
 		try {
-			
+			cancelTimerRequestRide();
 //			{
 //	            "user_name": "Shankar Bhagwati",
 //	            "session_id": 798,
@@ -7120,7 +7121,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 				}
 			});
-			cancelTimerRequestRide();
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -7637,7 +7638,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	//TODO new Request ride timerTask
     Timer timerRequestRide;
 	TimerTask timerTaskRequestRide;
-	long requestRideStartTime, requestRideLifeTime;
+	long requestRideLifeTime;
+	long serverRequestStartTime = 0;
+	long serverRequestEndTime = 0;
+	long executionTime = -1;
+	long requestPeriod = 20000;
 	
 	public void startTimerRequestRide(){
 		cancelTimerRequestRide();
@@ -7646,10 +7651,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			timerTaskRequestRide = new TimerTask() {
 				@Override
 				public void run() {
+					
+					long startTime = System.currentTimeMillis();
+					
 					try {
-						Log.i("request_ride time ", "s = "+System.currentTimeMillis() + ", e = "+(requestRideStartTime + requestRideLifeTime));
-						Log.e("request_ride time diff", "="+((System.currentTimeMillis() - (requestRideStartTime + requestRideLifeTime))/1000));
-						if(System.currentTimeMillis() >= (requestRideStartTime + requestRideLifeTime)){
+						Log.e("request_ride execution", "="+(serverRequestEndTime - executionTime));
+						if(executionTime >= serverRequestEndTime){
 							cancelTimerRequestRide();
 							menuBtn.post(new Runnable() {
 								@Override
@@ -7676,8 +7683,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								nameValuePairs.add(new BasicNameValuePair("longitude", "" + Data.pickupLatLng.longitude));
 								
 								String response = new HttpRequester().getJSONFromUrlParams(Data.SERVER_URL+"/request_ride", nameValuePairs);
-								
-								
 								
 								Log.i("response of request_ride", "="+response);
 								
@@ -7707,8 +7712,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										else{
 											int flag = jObj.getInt("flag");
 											
+											
 											if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
 												final String log = jObj.getString("log");
+												final String start_time = jObj.getString("start_time");
+												
+												serverRequestStartTime = new DateOperations().getMilliseconds(start_time);
+												serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
+												if(executionTime == -1){
+													executionTime = serverRequestStartTime;
+												}
+												
 												Data.cSessionId = jObj.getString("session_id");
 											}
 											else if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
@@ -7742,13 +7756,27 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
+					long stopTime = System.currentTimeMillis();
+				    long elapsedTime = stopTime - startTime;
+				    
+				    if(executionTime != -1){
+				    	if(elapsedTime >= requestPeriod){
+				    		executionTime = executionTime + elapsedTime;
+				    	}
+				    	else{
+				    		executionTime = executionTime + requestPeriod;
+				    	}
+				    }
+				    Log.i("request_ride execution", "="+(serverRequestEndTime - executionTime));
 					
 				}
 			};
 			requestRideLifeTime = (3 * 60 * 1000);
-			requestRideStartTime = System.currentTimeMillis();
-			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, 20000);
+			serverRequestStartTime = 0;
+			serverRequestEndTime = 0;
+			executionTime = -1;
+			requestPeriod = 20000;
+			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, requestPeriod);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -7756,7 +7784,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void cancelTimerRequestRide(){
 		try{
-			requestRideStartTime = 0;
 			if(timerTaskRequestRide != null){
 				timerTaskRequestRide.cancel();
 				timerTaskRequestRide = null;
@@ -7774,6 +7801,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void onNoDriversAvailablePushRecieved(final String logMessage) {
+		cancelTimerRequestRide();
 		menuBtn.post(new Runnable() {
 			@Override
 			public void run() {
@@ -7782,7 +7810,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				switchPassengerScreen(passengerScreenMode);
 			}
 		});
-		cancelTimerRequestRide();
 	}
 
 	

@@ -156,5 +156,18 @@ public class DateOperations {
 		return 60000;
 	}
 	
+	public long getMilliseconds(String time1){
+		try {
+			Log.e("time1", "="+time1);
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(time1);
+			long millis = date1.getTime();
+			return millis;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return 60000;
+	}
+	
 	
 }
