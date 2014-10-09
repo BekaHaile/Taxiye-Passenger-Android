@@ -206,7 +206,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout requestFinalLayout;
 	ImageView driverImage, driverCarImage;
 	TextView driverName, driverTime;
-	Button callDriverBtn;
+	Button callDriverBtn, cancelRideBtn;
 	TextView inRideRideInProgress;
 	Button customerInRideMyLocationBtn;
 	
@@ -383,7 +383,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			userCanceledDialogShown = false;
 	boolean loggedOut = false, 
 			zoomedToMyLocation = false;
-	boolean dontCallRefreshDriver = false, driverRequestBack = false;
+	boolean dontCallRefreshDriver = false;
 	
 	
 	AlertDialog gpsDialogAlert;
@@ -427,7 +427,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		loggedOut = false;
 		zoomedToMyLocation = false;
 		dontCallRefreshDriver = false;
-		driverRequestBack = false;
 		
 		
 		appMode = AppMode.NORMAL;
@@ -561,6 +560,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverName = (TextView) findViewById(R.id.driverName); driverName.setTypeface(Data.regularFont(getApplicationContext()));
 		driverTime = (TextView) findViewById(R.id.driverTime); driverTime.setTypeface(Data.regularFont(getApplicationContext()));
 		callDriverBtn = (Button) findViewById(R.id.callDriverBtn); callDriverBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		cancelRideBtn = (Button) findViewById(R.id.cancelRideBtn); cancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress); inRideRideInProgress.setTypeface(Data.regularFont(getApplicationContext()));
 		customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
 		
@@ -602,6 +602,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		
 		// Driver main layout 
 		driverMainLayout = (RelativeLayout) findViewById(R.id.driverMainLayout);
 		
@@ -613,6 +614,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverNewRideRequestText = (TextView) findViewById(R.id.driverNewRideRequestText); driverNewRideRequestText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText); driverNewRideRequestClickText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverInitialMyLocationBtn = (Button) findViewById(R.id.driverInitialMyLocationBtn);
+		
+		driverNewRideRequestRl.setVisibility(View.GONE);
+		driverRideRequestsList.setVisibility(View.GONE);
 		
 		driverRequestListAdapter = new DriverRequestListAdapter();
 		driverRideRequestsList.setAdapter(driverRequestListAdapter);
@@ -1174,7 +1178,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
+		cancelRideBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				customerCancelBeforePushReceive = true;
+				cancelCustomerRequestAsync(HomeActivity.this);
+			}
+		});
 		
 		
 		
@@ -1268,8 +1279,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				driverNewRideRequestRl.setVisibility(View.GONE);
 				driverRideRequestsList.setVisibility(View.VISIBLE);
-				driverRequestListAdapter.notifyDataSetChanged();
-				driverRequestBack = false;
 			}
 		});
 		
@@ -1299,8 +1308,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				driverRequestBack = true;
 				driverScreenMode = DriverScreenMode.D_INITIAL;
 				switchDriverScreen(driverScreenMode);
 			}
@@ -3799,9 +3806,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			holder.textViewRequestAddress.setText(driverRideRequest.address);
 			
 			
-			long timeDiff = getDateOperations().getTimeDifference(getDateOperations().getCurrentTime(), getDateOperations().utcToLocal(driverRideRequest.startTime));
+			long timeDiff = getDateOperations().getTimeDifference(getDateOperations().getCurrentTime(), driverRideRequest.startTime);
 			long timeDiffInSec = timeDiff / 1000;
-			holder.textViewRequestTime.setText(""+timeDiffInSec + " sec ago");
+			holder.textViewRequestTime.setText(""+timeDiffInSec + " sec left");
 			
 			if(myLocation != null){
 				holder.textViewRequestDistance.setVisibility(View.VISIBLE);
@@ -3825,19 +3832,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 				@Override
 				public void onClick(View v) {
-					holder = (ViewHolderDriverRequest) v.getTag();
-					
-					DriverRideRequest driverRideRequest = Data.driverRideRequests.get(holder.id);
-					
-					Data.dEngagementId = driverRideRequest.engagementId;
-					Data.dCustomerId = driverRideRequest.customerId;
-					Data.dCustLatLng = driverRideRequest.latLng;
-					
-					driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
-					switchDriverScreen(driverScreenMode);
-					
-					
-					map.animateCamera(CameraUpdateFactory.newLatLng(driverRideRequest.latLng), 1000, null);
+					try {
+						holder = (ViewHolderDriverRequest) v.getTag();
+						
+						DriverRideRequest driverRideRequest = Data.driverRideRequests.get(holder.id);
+						
+						Data.dEngagementId = driverRideRequest.engagementId;
+						Data.dCustomerId = driverRideRequest.customerId;
+						Data.dCustLatLng = driverRideRequest.latLng;
+						
+						driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
+						switchDriverScreen(driverScreenMode);
+						
+						
+						map.animateCamera(CameraUpdateFactory.newLatLng(driverRideRequest.latLng), 1000, null);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					
 				}
 			});
@@ -7125,8 +7136,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				map.clear();
 			
 				if(Data.driverRideRequests.size() > 0){
-					driverNewRideRequestRl.setVisibility(View.VISIBLE);
-					driverRideRequestsList.setVisibility(View.GONE);
+					
+					driverRequestListAdapter.notifyDataSetChanged();
+					
+					if(driverNewRideRequestRl.getVisibility() == View.GONE && driverRideRequestsList.getVisibility() == View.GONE){
+						driverNewRideRequestRl.setVisibility(View.VISIBLE);
+						driverRideRequestsList.setVisibility(View.GONE);
+					}
 					
 					LatLng last = map.getCameraPosition().target;
 					
@@ -7139,18 +7155,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						
 						map.addMarker(markerOptions);
 						
-//						if(i == Data.driverRideRequests.size()-1){
-//							last = Data.driverRideRequests.get(i).latLng;
-//							Data.dEngagementId = Data.driverRideRequests.get(i).engagementId;
-//							Data.dCustomerId = Data.driverRideRequests.get(i).customerId;
-//						}
 					}
 					
 					driverNewRideRequestText.setText(getResources().getString(R.string.you_have)+" "+Data.driverRideRequests.size()+" "+getResources().getString(R.string.ride_request));
 					
 					map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
 					
-					driverRequestListAdapter.notifyDataSetChanged();
 				}
 				else{
 					driverNewRideRequestRl.setVisibility(View.GONE);
@@ -7196,7 +7206,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							DialogPopup.dismissLoadingDialog();
 							driverScreenMode = DriverScreenMode.D_INITIAL;
 							switchDriverScreen(driverScreenMode);
-							getAndShowAllDriverRequests(HomeActivity.this);
 							if(!userCanceledDialogShown){
 								if(acceptedByOtherDriver){
 									new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
@@ -7734,9 +7743,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						e.printStackTrace();
 					}
 					
+					
 				}
 			};
-			requestRideLifeTime = (1 * 60 * 1000);
+			requestRideLifeTime = (3 * 60 * 1000);
 			requestRideStartTime = System.currentTimeMillis();
 			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, 20000);
 		} catch (Exception e) {

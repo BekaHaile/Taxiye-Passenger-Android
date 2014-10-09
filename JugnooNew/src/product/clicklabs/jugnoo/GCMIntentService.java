@@ -246,6 +246,8 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
+		    	    					 startTime = new DateOperations().getSixtySecAfterCurrentTime();
+		    	    					 
 		    	    					 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, startTime, address);
 		    	    					 
 		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);

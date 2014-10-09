@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -301,20 +301,34 @@
                         android:layout_width="match_parent"
                         android:layout_height="6px"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="146px"
+                        android:layout_marginBottom="272px"
                         android:background="@drawable/shadow_down" />
 
                     <Button
                         android:id="@+id/callDriverBtn"
                         android:layout_width="648px"
                         android:layout_height="99px"
-                        android:layout_alignParentBottom="true"
+                        android:layout_above="@+id/cancelRideBtn"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="27px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="@string/call_driver"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size" />
+                    
+                    <Button
+                        android:id="@+id/cancelRideBtn"
+                        android:layout_width="648px"
+                        android:layout_height="99px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="27px"
+                        android:background="@drawable/red_btn_selector"
+                        android:text="@string/cancel_ride"
+                        android:textColor="@drawable/white_color_selector"
+                        android:textSize="@dimen/button_text_size"
+                        />
+                    
 
                     <TextView
                         android:id="@+id/inRideRideInProgress"
@@ -444,7 +458,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"

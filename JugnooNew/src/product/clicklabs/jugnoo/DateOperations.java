@@ -133,6 +133,13 @@ public class DateOperations {
 	    return formatter.format(date);
 	}
 	
+	public String getSixtySecAfterCurrentTime() {
+	    long foo = System.currentTimeMillis() + 60000;
+	    Date date = new Date(foo);
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    return formatter.format(date);
+	}
+	
 	
 	public long getTimeDifference(String time1, String time2){
 		try {
