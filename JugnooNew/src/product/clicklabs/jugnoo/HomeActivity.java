@@ -203,7 +203,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout requestFinalLayout;
 	ImageView driverImage, driverCarImage;
 	TextView driverName, driverTime;
-	Button callDriverBtn, cancelRideBtn;
+	Button callDriverBtn;
 	TextView inRideRideInProgress;
 	Button customerInRideMyLocationBtn;
 	
@@ -384,6 +384,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	AlertDialog gpsDialogAlert;
+	Dialog noDriversDialog;
 	
 	LocationFetcher lowPowerLF, highAccuracyLF;
 	
@@ -557,7 +558,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverName = (TextView) findViewById(R.id.driverName); driverName.setTypeface(Data.regularFont(getApplicationContext()));
 		driverTime = (TextView) findViewById(R.id.driverTime); driverTime.setTypeface(Data.regularFont(getApplicationContext()));
 		callDriverBtn = (Button) findViewById(R.id.callDriverBtn); callDriverBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		cancelRideBtn = (Button) findViewById(R.id.cancelRideBtn); cancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress); inRideRideInProgress.setTypeface(Data.regularFont(getApplicationContext()));
 		customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
 		
@@ -1172,17 +1172,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
-		
-		
-		
-		cancelRideBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				customerCancelBeforePushReceive = true;
-				cancelCustomerRequestAsync(HomeActivity.this);
-			}
-		});
 		
 		
 		
@@ -3938,6 +3927,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
 	    			simpleJSONParser = null;
 	    			nameValuePairs = null;
+	    			Log.e("result of /find_a_driver", "="+result);
 	    			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 	    			}
 	    			else{
@@ -4807,7 +4797,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										switchDriverScreen(driverScreenMode);
 										DialogPopup.dismissLoadingDialog();
 										
-										deleteAllDriverRequests(activity);
+										deleteParticularDriverRequest(activity, Data.dEngagementId);
 										
 									}
 									
@@ -4922,6 +4912,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
+										
 										
 										if(map != null){
 											map.clear();
@@ -5951,49 +5942,56 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	void noDriverAvailablePopup(final Activity activity){
 		try {
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.no_driver_dialog);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
-			
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-			
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
-
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
-			
-			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
-			crossbtn.setVisibility(View.GONE);
-			
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-					noDriverAsync(activity);
-				}
-			});
-			
-			crossbtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-					noDriverAsync(activity);
-				}
+			if(noDriversDialog != null && noDriversDialog.isShowing()){
 				
-			});
-
-			dialog.show();
+			}
+			else{
+				noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				noDriversDialog.setContentView(R.layout.no_driver_dialog);
+	
+				FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, true);
+				
+				WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				noDriversDialog.setCancelable(false);
+				noDriversDialog.setCanceledOnTouchOutside(false);
+				
+				
+				TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+				TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+	
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+				
+				
+				Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+				Button crossbtn = (Button) noDriversDialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+				crossbtn.setVisibility(View.GONE);
+				
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						noDriversDialog.dismiss();
+						noDriverAsync(activity);
+						noDriversDialog = null;
+					}
+				});
+				
+				crossbtn.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						noDriversDialog.dismiss();
+						noDriverAsync(activity);
+						noDriversDialog = null;
+					}
+					
+				});
+	
+				noDriversDialog.show();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -7069,7 +7067,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 				
 				Log.e("CRequestRideService ","stoped in home");
-				
+				cancelTimerRequestRide();
 				Log.e("customerCancelBeforePushReceive ","="+customerCancelBeforePushReceive);
 				if(!customerCancelBeforePushReceive){
 					fetchAcceptedDriverInfoAndChangeState(jObj);
@@ -7249,8 +7247,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			menuBtn.post(new Runnable() {
 				@Override
 				public void run() {
-					new DialogPopup().alertPopup(HomeActivity.this, "", "Request has timed out.");
 					if(driverScreenMode != DriverScreenMode.D_INITIAL){
+						new DialogPopup().alertPopup(HomeActivity.this, "", "Request has timed out.");
 						driverScreenMode = DriverScreenMode.D_INITIAL;
 						switchDriverScreen(driverScreenMode);
 					}
@@ -7697,6 +7695,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								nameValuePairs.add(new BasicNameValuePair("latitude", ""+Data.pickupLatLng.latitude));
 								nameValuePairs.add(new BasicNameValuePair("longitude", "" + Data.pickupLatLng.longitude));
 								
+								if("".equalsIgnoreCase(Data.cSessionId)){
+									nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "0"));
+								}
+								else{
+									nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "1"));
+								}
+								
+								
 								String response = new HttpRequester().getJSONFromUrlParams(Data.SERVER_URL+"/request_ride", nameValuePairs);
 								
 								Log.i("response of request_ride", "="+response);
@@ -7818,15 +7824,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onNoDriversAvailablePushRecieved(final String logMessage) {
 		cancelTimerRequestRide();
-		HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-		menuBtn.post(new Runnable() {
-			@Override
-			public void run() {
-				noDriverAvailablePopup(HomeActivity.this);
-				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-				switchPassengerScreen(passengerScreenMode);
-			}
-		});
+		if(HomeActivity.passengerScreenMode != PassengerScreenMode.P_INITIAL){
+			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			menuBtn.post(new Runnable() {
+				@Override
+				public void run() {
+					noDriverAvailablePopup(HomeActivity.this);
+					HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+					switchPassengerScreen(passengerScreenMode);
+				}
+			});
+		}
 	}
 
 	
