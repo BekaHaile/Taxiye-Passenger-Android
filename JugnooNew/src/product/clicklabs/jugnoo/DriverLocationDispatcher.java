@@ -30,22 +30,23 @@ public class DriverLocationDispatcher {
 				
 				if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
 					LatLng latLng = database2.getDriverCurrentLocation();
-					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-					nameValuePairs.add(new BasicNameValuePair("latitude", "" + latLng.latitude));
-					nameValuePairs.add(new BasicNameValuePair("longitude", "" + latLng.longitude));
-					nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-		
-					Log.e("nameValuePairs in location DLD", "=" + nameValuePairs);
-		
-					HttpRequester simpleJSONParser = new HttpRequester();
-					String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
-		
-					Log.e("result in DLD", "=" + result);
-					Log.writeLogToFile(new DateOperations().getCurrentTime()+" "+latLng);
-		
-					simpleJSONParser = null;
-					nameValuePairs = null;
+					if(latLng.latitude != 0 && latLng.longitude != 0){
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+						nameValuePairs.add(new BasicNameValuePair("latitude", "" + latLng.latitude));
+						nameValuePairs.add(new BasicNameValuePair("longitude", "" + latLng.longitude));
+						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
+			
+						Log.e("nameValuePairs in location DLD", "=" + nameValuePairs);
+			
+						HttpRequester simpleJSONParser = new HttpRequester();
+						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
+									
+						Log.e("result in DLD", "=" + result);
+			
+						simpleJSONParser = null;
+						nameValuePairs = null;
+					}
 				}
 				
 				wakeLock.release();

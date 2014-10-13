@@ -115,6 +115,8 @@ public class DriverLocationUpdateService extends Service {
     		
             database2.close();
             
+            setupLocationUpdateAlarm();
+            
             startCheckIfDriverTimer();
         	
         } catch(Exception e){
@@ -231,6 +233,8 @@ public class DriverLocationUpdateService extends Service {
         database2.updateDriverServiceRestartOnReboot("no");
         database2.close();    
         
+        cancelLocationUpdateAlarm();
+        
         cancelCheckIfDriverTimer();
     }
     
@@ -262,15 +266,11 @@ public class DriverLocationUpdateService extends Service {
 	
 	public void startCheckIfDriverTimer(){
 		cancelCheckIfDriverTimer();
-		
-		setupLocationUpdateAlarm();
-		
 		try {
 			timerCheckIfDriver = new Timer();
 			timerTaskCheckIfDriver = new TimerTask() {
 				@Override
 				public void run() {
-					Log.writeLogToFile(""+new DateOperations().getCurrentTime());
 					Database2 database2 = new Database2(DriverLocationUpdateService.this);
 					try {
 						String accessToken = database2.getDLDAccessToken();
@@ -310,7 +310,6 @@ public class DriverLocationUpdateService extends Service {
 	
 	public void cancelCheckIfDriverTimer(){
 		try{
-			cancelLocationUpdateAlarm();
 			if(timerTaskCheckIfDriver != null){
 				timerTaskCheckIfDriver.cancel();
 				timerTaskCheckIfDriver = null;
@@ -329,7 +328,9 @@ public class DriverLocationUpdateService extends Service {
 	
 	
 	private static int DRIVER_LOCATION_PI_REQUEST_CODE = 111;
-	private final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
+	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
+	private static final long ALARM_REPEAT_INTERVAL = 60000;
+	
 	
 	public void setupLocationUpdateAlarm(){
 	    // check task is scheduled or not
@@ -347,7 +348,7 @@ public class DriverLocationUpdateService extends Service {
 			calendar.setTimeInMillis(System.currentTimeMillis());
 	        
 	        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-	        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), serverUpdateTimePeriod, pendingIntent);
+	        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), ALARM_REPEAT_INTERVAL, pendingIntent);
 	    }
 
 	}

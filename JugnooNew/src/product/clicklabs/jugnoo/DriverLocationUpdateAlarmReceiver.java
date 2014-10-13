@@ -6,7 +6,7 @@ import android.content.Intent;
 
 public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 
-	private final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
+	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
 	
 	@Override
 	public void onReceive(final Context context, Intent intent) {
