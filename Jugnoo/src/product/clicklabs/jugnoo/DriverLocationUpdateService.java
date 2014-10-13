@@ -126,6 +126,7 @@ public class DriverLocationUpdateService extends Service {
     }
     
     
+    
     public void updateServerData(){
     	Database2 database2 = new Database2(this);
         database2.updateDriverServiceRestartOnReboot("yes");
