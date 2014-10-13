@@ -7824,15 +7824,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onNoDriversAvailablePushRecieved(final String logMessage) {
 		cancelTimerRequestRide();
-		HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-		menuBtn.post(new Runnable() {
-			@Override
-			public void run() {
-				noDriverAvailablePopup(HomeActivity.this);
-				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-				switchPassengerScreen(passengerScreenMode);
-			}
-		});
+		if(HomeActivity.passengerScreenMode != PassengerScreenMode.P_INITIAL){
+			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			menuBtn.post(new Runnable() {
+				@Override
+				public void run() {
+					noDriverAvailablePopup(HomeActivity.this);
+					HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+					switchPassengerScreen(passengerScreenMode);
+				}
+			});
+		}
 	}
 
 	

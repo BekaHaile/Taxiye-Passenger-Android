@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -37,6 +39,11 @@ public class Database2 {																	// class for handling database related 
 	private static final String USER_MODE = "user_mode";
 	public static final String UM_DRIVER = "driver";
 	public static final String UM_PASSENGER = "passenger";
+	
+	private static final String TABLE_DRIVER_CURRENT_LOCATION = "table_driver_current_location";
+	private static final String DRIVER_CURRENT_LATITUDE = "driver_current_latitude";
+	public static final String DRIVER_CURRENT_LONGITUDE = "driver_current_longitude";
+	
 	
 	/**
 	 * Creates and opens database for the application use 
@@ -82,6 +89,12 @@ public class Database2 {																	// class for handling database related 
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_USER_MODE + " ("
 				+ USER_MODE + " TEXT" + ");");
+		
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_CURRENT_LOCATION + " ("
+				+ DRIVER_CURRENT_LATITUDE + " TEXT, " 
+				+ DRIVER_CURRENT_LONGITUDE + " TEXT" 
+				+ ");");
 		
 	}
 	
@@ -341,6 +354,54 @@ public class Database2 {																	// class for handling database related 
 		} catch(Exception e){
 			Log.e("e","="+e);
 		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	public LatLng getDriverCurrentLocation() {
+		LatLng latLng = new LatLng(0, 0);
+		try {
+			String[] columns = new String[] { Database2.DRIVER_CURRENT_LATITUDE, Database2.DRIVER_CURRENT_LONGITUDE };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_CURRENT_LOCATION, columns, null, null, null, null, null);
+			
+			int in0 = cursor.getColumnIndex(Database2.DRIVER_CURRENT_LATITUDE);
+			int in1 = cursor.getColumnIndex(Database2.DRIVER_CURRENT_LONGITUDE);
+			
+			if(cursor.getCount() > 0){
+				cursor.moveToFirst();
+				latLng = new LatLng(Double.parseDouble(cursor.getString(in0)), Double.parseDouble(cursor.getString(in1)));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return latLng;
+	}
+	
+	
+	public void insertDriverCurrentLocation(LatLng latLng){
+		try{
+			deleteDriverCurrentLocation();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.DRIVER_CURRENT_LATITUDE, ""+latLng.latitude);
+			contentValues.put(Database2.DRIVER_CURRENT_LONGITUDE, ""+latLng.longitude);
+			database.insert(Database2.TABLE_DRIVER_CURRENT_LOCATION, null, contentValues);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public int deleteDriverCurrentLocation(){
+		try{
+			return database.delete(Database2.TABLE_DRIVER_CURRENT_LOCATION, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 	
