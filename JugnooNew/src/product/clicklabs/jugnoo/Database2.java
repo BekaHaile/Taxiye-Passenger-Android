@@ -460,6 +460,7 @@ public class Database2 {																	// class for handling database related 
 	
 	
 	
+	
 	public LatLng getDriverCurrentLocation() {
 		LatLng latLng = new LatLng(0, 0);
 		try {
@@ -482,6 +483,7 @@ public class Database2 {																	// class for handling database related 
 	
 	public void insertDriverCurrentLocation(LatLng latLng){
 		try{
+			deleteDriverCurrentLocation();
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(Database2.DRIVER_CURRENT_LATITUDE, ""+latLng.latitude);
 			contentValues.put(Database2.DRIVER_CURRENT_LONGITUDE, ""+latLng.longitude);

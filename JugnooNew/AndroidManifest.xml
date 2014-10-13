@@ -164,6 +164,15 @@
     		</intent-filter>
 		</receiver>
 
+        
+        <receiver android:name="product.clicklabs.jugnoo.DriverLocationUpdateAlarmReceiver" >
+            <intent-filter>
+                <action android:name="product.clicklabs.jugnoo.SEND_LOCATION" />
+            </intent-filter>
+        </receiver>
+        
+        
+        
         <!--
        <activity
             android:name="product.clicklabs.jugnoo.HomeActivity"

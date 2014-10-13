@@ -1,12 +1,14 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlarmManager;
@@ -19,12 +21,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -193,7 +193,7 @@ public class DriverLocationUpdateService extends Service {
     			restartService.setPackage(getPackageName());
     			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
     			AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-    			alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() +1000, restartServicePI);
+    			alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, restartServicePI);
     		}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -262,11 +262,15 @@ public class DriverLocationUpdateService extends Service {
 	
 	public void startCheckIfDriverTimer(){
 		cancelCheckIfDriverTimer();
+		
+		setupLocationUpdateAlarm();
+		
 		try {
 			timerCheckIfDriver = new Timer();
 			timerTaskCheckIfDriver = new TimerTask() {
 				@Override
 				public void run() {
+					Log.writeLogToFile(""+new DateOperations().getCurrentTime());
 					Database2 database2 = new Database2(DriverLocationUpdateService.this);
 					try {
 						String accessToken = database2.getDLDAccessToken();
@@ -283,7 +287,7 @@ public class DriverLocationUpdateService extends Service {
 						Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
 						
 						if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
-							new DriverLocationDispatcher().sendLocationToServer(DriverLocationUpdateService.this);
+							
 						}
 						else{
 							stopSelf();
@@ -306,6 +310,7 @@ public class DriverLocationUpdateService extends Service {
 	
 	public void cancelCheckIfDriverTimer(){
 		try{
+			cancelLocationUpdateAlarm();
 			if(timerTaskCheckIfDriver != null){
 				timerTaskCheckIfDriver.cancel();
 				timerTaskCheckIfDriver = null;
@@ -320,6 +325,43 @@ public class DriverLocationUpdateService extends Service {
 		}
 	}
     
+	
+	
+	
+	private static int DRIVER_LOCATION_PI_REQUEST_CODE = 111;
+	private final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
+	
+	public void setupLocationUpdateAlarm(){
+	    // check task is scheduled or not
+	    boolean alarmUp = (PendingIntent.getBroadcast(this, DRIVER_LOCATION_PI_REQUEST_CODE, 
+	    		new Intent(this, DriverLocationUpdateAlarmReceiver.class).setAction(SEND_LOCATION), 
+	    		PendingIntent.FLAG_NO_CREATE) != null);
+	    Log.e("alarmUp", "="+alarmUp);
+	    if (!alarmUp) {
+	        Intent intent = new Intent(this, DriverLocationUpdateAlarmReceiver.class);
+	        intent.setAction(SEND_LOCATION);
+	        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, DRIVER_LOCATION_PI_REQUEST_CODE, 
+	        		intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+	        Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(System.currentTimeMillis());
+	        
+	        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+	        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), serverUpdateTimePeriod, pendingIntent);
+	    }
+
+	}
+	
+	public void cancelLocationUpdateAlarm(){
+		Intent intent = new Intent(this, DriverLocationUpdateAlarmReceiver.class);
+		intent.setAction(SEND_LOCATION);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, DRIVER_LOCATION_PI_REQUEST_CODE, 
+        		intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		AlarmManager alarmManager = (AlarmManager) this.getSystemService(Activity.ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
+		pendingIntent.cancel();
+	}
+	
     
 }
 

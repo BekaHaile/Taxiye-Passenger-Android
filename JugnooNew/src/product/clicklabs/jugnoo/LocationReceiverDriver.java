@@ -16,6 +16,7 @@ public class LocationReceiverDriver extends BroadcastReceiver {
     	Database2 database2 = new Database2(context);
     	database2.insertDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
     	database2.close();
+    	Log.e("DriverLocationUpdateService location in pi reciever ", "=="+location);
     	
 //    	new Thread(new Runnable() {
 //			@Override

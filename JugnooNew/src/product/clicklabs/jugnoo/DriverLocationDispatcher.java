@@ -42,6 +42,7 @@ public class DriverLocationDispatcher {
 					String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 		
 					Log.e("result in DLD", "=" + result);
+					Log.writeLogToFile(new DateOperations().getCurrentTime()+" "+latLng);
 		
 					simpleJSONParser = null;
 					nameValuePairs = null;
