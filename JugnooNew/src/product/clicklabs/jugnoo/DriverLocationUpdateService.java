@@ -19,6 +19,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -266,9 +267,8 @@ public class DriverLocationUpdateService extends Service {
 			timerTaskCheckIfDriver = new TimerTask() {
 				@Override
 				public void run() {
-					
+					Database2 database2 = new Database2(DriverLocationUpdateService.this);
 					try {
-						Database2 database2 = new Database2(DriverLocationUpdateService.this);
 						String accessToken = database2.getDLDAccessToken();
 						database2.close();
 						
@@ -283,18 +283,22 @@ public class DriverLocationUpdateService extends Service {
 						Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
 						
 						if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
-							
+							new DriverLocationDispatcher().sendLocationToServer(DriverLocationUpdateService.this);
 						}
 						else{
 							stopSelf();
 						}
-					} catch (Exception e) {
+					} 
+					catch (Exception e) {
 						e.printStackTrace();
+					}
+					finally{
+						database2.close();
 					}
 					
 				}
 			};
-			timerCheckIfDriver.scheduleAtFixedRate(timerTaskCheckIfDriver, 10, 120000);
+			timerCheckIfDriver.scheduleAtFixedRate(timerTaskCheckIfDriver, 1000, 60000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -315,12 +319,6 @@ public class DriverLocationUpdateService extends Service {
 			e.printStackTrace();
 		}
 	}
-    
-    
-    
-    
-    
-    	
     
     
 }
