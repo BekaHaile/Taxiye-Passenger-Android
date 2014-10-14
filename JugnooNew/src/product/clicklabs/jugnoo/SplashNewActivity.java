@@ -44,6 +44,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -727,6 +728,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
     			Log.e("************************************** custom", "Location changed "+loc);
     			SingleLocationSender.this.location = loc;
     			sendLocationToServer(location);
+    			Database2 database2 = new Database2(SplashNewActivity.this);
+		    	database2.insertDriverCurrentLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
+		    	database2.close();
     		}
 
     		public void onProviderDisabled(String provider) {
@@ -769,8 +773,15 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 
 	@Override
-	public void onLocationChanged(Location location, int priority) {
-		
+	public void onLocationChanged(final Location location, int priority) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Database2 database2 = new Database2(SplashNewActivity.this);
+		    	database2.insertDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+		    	database2.close();
+			}
+		}).start();
 	}
 	
 	

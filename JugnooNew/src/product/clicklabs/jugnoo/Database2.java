@@ -57,6 +57,10 @@ public class Database2 {																	// class for handling database related 
 	public static final String DRIVER_CURRENT_LONGITUDE = "driver_current_longitude";
 	
 	
+	private static final String TABLE_DRIVER_LAST_LOCATION_TIME = "table_driver_last_location_time";
+	private static final String LAST_LOCATION_TIME = "last_location_time";
+	
+	
 	/**
 	 * Creates and opens database for the application use 
 	 * @author shankar
@@ -114,6 +118,10 @@ public class Database2 {																	// class for handling database related 
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_CURRENT_LOCATION + " ("
 				+ DRIVER_CURRENT_LATITUDE + " TEXT, " 
 				+ DRIVER_CURRENT_LONGITUDE + " TEXT" 
+				+ ");");
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_LAST_LOCATION_TIME + " ("
+				+ LAST_LOCATION_TIME + " TEXT" 
 				+ ");");
 		
 	}
@@ -497,6 +505,63 @@ public class Database2 {																	// class for handling database related 
 	public int deleteDriverCurrentLocation(){
 		try{
 			return database.delete(Database2.TABLE_DRIVER_CURRENT_LOCATION, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public long getDriverLastLocationTime() {
+		long lastTimeInMillis = 0;
+		try {
+			String[] columns = new String[] { Database2.LAST_LOCATION_TIME };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_LAST_LOCATION_TIME, columns, null, null, null, null, null);
+			
+			int in0 = cursor.getColumnIndex(Database2.LAST_LOCATION_TIME);
+			
+			if(cursor.getCount() > 0){
+				cursor.moveToFirst();
+				lastTimeInMillis = Long.parseLong(cursor.getString(in0));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lastTimeInMillis;
+	}
+	
+	
+	public void updateDriverLastLocationTime(){
+		try{
+			long timeInMillis = System.currentTimeMillis();
+			deleteDriverLastLocationTime();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.LAST_LOCATION_TIME, ""+timeInMillis);
+			database.insert(Database2.TABLE_DRIVER_LAST_LOCATION_TIME, null, contentValues);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public int deleteDriverLastLocationTime(){
+		try{
+			return database.delete(Database2.TABLE_DRIVER_LAST_LOCATION_TIME, null, null);
 		} catch(Exception e){
 			e.printStackTrace();
 		}

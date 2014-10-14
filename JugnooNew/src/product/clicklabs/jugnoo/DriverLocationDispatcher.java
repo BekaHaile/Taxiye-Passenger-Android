@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.PowerManager;
@@ -44,6 +45,19 @@ public class DriverLocationDispatcher {
 									
 						Log.e("result in DLD", "=" + result);
 			
+						try{
+							//{"log":"Updated"}
+							JSONObject jObj = new JSONObject(result);
+							if(jObj.has("log")){
+								String log = jObj.getString("log");
+								if("Updated".equalsIgnoreCase(log)){
+									database2.updateDriverLastLocationTime();
+								}
+							}
+						} catch(Exception e){
+							e.printStackTrace();
+						}
+						
 						simpleJSONParser = null;
 						nameValuePairs = null;
 					}

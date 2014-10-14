@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -421,6 +422,11 @@ class GPSLocationFetcher {
 			if(isBetterLocation(loc, GPSLocationFetcher.this.location)){
 				Log.e("************************************** custom", "Location changed "+loc);
 				GPSLocationFetcher.this.location = loc;
+				
+				Database2 database2 = new Database2(context);
+		    	database2.insertDriverCurrentLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
+		    	database2.close();
+				
 				sendLocationToServer(location);
 			}
 		}
@@ -515,9 +521,8 @@ class GPSLocationFetcher {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				Database2 database2 = new Database2(context);
 				try {
-					
-					Database2 database2 = new Database2(context);
 					String userMode = database2.getUserMode();
 					database2.close();
 					
@@ -542,6 +547,24 @@ class GPSLocationFetcher {
 						
 						Log.e("result","="+result);
 						
+						try{
+							//{"log":"Updated"}
+							JSONObject jObj = new JSONObject(result);
+							if(jObj.has("log")){
+								String log = jObj.getString("log");
+								if("Updated".equalsIgnoreCase(log)){
+									database2 = new Database2(context);
+									database2.updateDriverLastLocationTime();
+									database2.close();
+								}
+							}
+						} catch(Exception e){
+							e.printStackTrace();
+						}
+						finally{
+							database2.close();
+						}
+						
 						simpleJSONParser = null;
 						nameValuePairs = null;
 						
@@ -553,6 +576,9 @@ class GPSLocationFetcher {
 					if(wakeLock.isHeld()){
 	    				wakeLock.release();
 	    			}
+				}
+				finally{
+					database2.close();
 				}
 			}
 		}).start();
