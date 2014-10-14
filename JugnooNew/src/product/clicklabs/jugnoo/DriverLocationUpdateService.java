@@ -88,6 +88,8 @@ public class DriverLocationUpdateService extends Service {
     		
     		Log.e("fast", "="+fast);
     		
+    		
+    		
     		if(fast.equalsIgnoreCase("no")){
     			serverUpdateTimePeriod = 60000;
     			if(locationFetcherDriver != null){
