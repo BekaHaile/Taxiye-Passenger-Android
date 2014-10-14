@@ -3830,6 +3830,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						Data.dCustomerId = driverRideRequest.customerId;
 						Data.dCustLatLng = driverRideRequest.latLng;
 						
+						Toast.makeText(getApplicationContext(), ""+Data.dEngagementId + " " + Data.dCustomerId, Toast.LENGTH_SHORT).show();
+						
 						driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
 						switchDriverScreen(driverScreenMode);
 						
@@ -7115,7 +7117,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			menuBtn.post(new Runnable() {
 				@Override
 				public void run() {
-					new DialogPopup().alertPopup(HomeActivity.this, "", "Your request has been accepted");
 					if(getDistanceTimeAddress != null){
 						getDistanceTimeAddress.cancel(true);
 					}
@@ -7243,16 +7244,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	@Override
 	public void onRideRequestTimeout() {
-		if(userMode == UserMode.DRIVER){
+		if(userMode == UserMode.DRIVER ){
 			menuBtn.post(new Runnable() {
 				@Override
 				public void run() {
-					if(driverScreenMode != DriverScreenMode.D_INITIAL){
-						new DialogPopup().alertPopup(HomeActivity.this, "", "Request has timed out.");
+					if(driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
 						driverScreenMode = DriverScreenMode.D_INITIAL;
 						switchDriverScreen(driverScreenMode);
 					}
-					else{
+					else if(driverScreenMode == DriverScreenMode.D_INITIAL){
 						getAndShowAllDriverRequests(HomeActivity.this);
 					}
 				}

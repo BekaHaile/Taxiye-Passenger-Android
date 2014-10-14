@@ -126,9 +126,9 @@ public class Data {
 	
 	public static final String DEV_SERVER_URL = "http://54.81.229.172:8000";
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4010";
-	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
+	public static final String TRIAL_SERVER_URL = "https://54.81.229.172:8004";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = TRIAL_SERVER_URL;
 	
 	
 	

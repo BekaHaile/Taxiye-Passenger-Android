@@ -57,6 +57,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -1471,7 +1472,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		
+		new DriverLocationDispatcher().saveLocationToDatabase(SplashLogin.this, location);
 	}
 	
 }

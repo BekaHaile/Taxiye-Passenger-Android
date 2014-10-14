@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -302,7 +303,7 @@ public class DriverLocationUpdateService extends Service {
 					
 				}
 			};
-			timerCheckIfDriver.scheduleAtFixedRate(timerTaskCheckIfDriver, 1000, 60000);
+			timerCheckIfDriver.scheduleAtFixedRate(timerTaskCheckIfDriver, 1000, 3 * 60000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -329,7 +330,7 @@ public class DriverLocationUpdateService extends Service {
 	
 	private static int DRIVER_LOCATION_PI_REQUEST_CODE = 111;
 	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
-	private static final long ALARM_REPEAT_INTERVAL = 60000;
+	private static final long ALARM_REPEAT_INTERVAL = 3 * 60000;
 	
 	
 	public void setupLocationUpdateAlarm(){
@@ -338,7 +339,11 @@ public class DriverLocationUpdateService extends Service {
 	    		new Intent(this, DriverLocationUpdateAlarmReceiver.class).setAction(SEND_LOCATION), 
 	    		PendingIntent.FLAG_NO_CREATE) != null);
 	    Log.e("alarmUp", "="+alarmUp);
-	    if (!alarmUp) {
+	    
+	    if(alarmUp){
+	    	cancelLocationUpdateAlarm();
+	    }
+	    
 	        Intent intent = new Intent(this, DriverLocationUpdateAlarmReceiver.class);
 	        intent.setAction(SEND_LOCATION);
 	        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, DRIVER_LOCATION_PI_REQUEST_CODE, 
@@ -349,7 +354,6 @@ public class DriverLocationUpdateService extends Service {
 	        
 	        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 	        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), ALARM_REPEAT_INTERVAL, pendingIntent);
-	    }
 
 	}
 	
@@ -421,6 +425,9 @@ class GPSLocationFetcher {
 			if(isBetterLocation(loc, GPSLocationFetcher.this.location)){
 				Log.e("************************************** custom", "Location changed "+loc);
 				GPSLocationFetcher.this.location = loc;
+				
+				new DriverLocationDispatcher().saveLocationToDatabase(context, loc);
+				
 				sendLocationToServer(location);
 			}
 		}
@@ -515,9 +522,8 @@ class GPSLocationFetcher {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				Database2 database2 = new Database2(context);
 				try {
-					
-					Database2 database2 = new Database2(context);
 					String userMode = database2.getUserMode();
 					database2.close();
 					
@@ -542,6 +548,24 @@ class GPSLocationFetcher {
 						
 						Log.e("result","="+result);
 						
+						try{
+							//{"log":"Updated"}
+							JSONObject jObj = new JSONObject(result);
+							if(jObj.has("log")){
+								String log = jObj.getString("log");
+								if("Updated".equalsIgnoreCase(log)){
+									database2 = new Database2(context);
+									database2.updateDriverLastLocationTime();
+									database2.close();
+								}
+							}
+						} catch(Exception e){
+							e.printStackTrace();
+						}
+						finally{
+							database2.close();
+						}
+						
 						simpleJSONParser = null;
 						nameValuePairs = null;
 						
@@ -553,6 +577,9 @@ class GPSLocationFetcher {
 					if(wakeLock.isHeld()){
 	    				wakeLock.release();
 	    			}
+				}
+				finally{
+					database2.close();
 				}
 			}
 		}).start();

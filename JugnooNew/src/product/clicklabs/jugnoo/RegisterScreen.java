@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -821,7 +822,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	@Override
 	public void onLocationChanged(Location location, int priority) {
 		// TODO Auto-generated method stub
-		
+		new DriverLocationDispatcher().saveLocationToDatabase(RegisterScreen.this, location);
 	}
 	
 }
