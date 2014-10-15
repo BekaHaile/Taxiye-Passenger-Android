@@ -26,7 +26,6 @@ public class JSONParser {
 		
 		
 		
-		
 		try{
 			Data.termsAgreed = userData.getInt("terms_agreed");
 		} catch(Exception e){
@@ -172,7 +171,7 @@ public class JSONParser {
 	
 	
 	
-	public static void getUserStatus(Context context, String accessToken, int currentUserStatus){
+	public void getUserStatus(Context context, String accessToken, int currentUserStatus){
 		
 		if(currentUserStatus == 1){ // for driver
 			
@@ -180,7 +179,7 @@ public class JSONParser {
 			
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 			
-			String screenMode = pref.getString(Data.SP_DRIVER_SCREEN_MODE, "");
+			String screenMode = "";
 			
 			int engagementStatus = -1;
 			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "";
@@ -202,6 +201,23 @@ public class JSONParser {
 							JSONObject jObject1 = new JSONObject(result);
 							
 
+							
+//							{
+//								"flag": constants.responseFlags.ACTIVE_REQUESTS,
+//								"active_requests":[
+//									{
+//								“engagement_id”, 
+//								“user_id”, 
+//								“pickup_latitude”, 
+//								“pickup_longitude”, 
+//								“pickup_location_address”, 
+//								“current_time”
+//								}
+//								]};
+							
+							
+							
+//							{
 //							"flag": constants.responseFlags.ENGAGEMENT_DATA,
 //							"last_engagement_info":[
 //							{
@@ -218,38 +234,72 @@ public class JSONParser {
 //							]
 							
 							
-							JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
-							JSONObject jObject = lastEngInfoArr.getJSONObject(0);
 							
-							engagementStatus = jObject.getInt("status");
+							int flag = jObject1.getInt("flag");
 							
-							if((1 == engagementStatus) || (2 == engagementStatus)){
-								engagementId = jObject.getString("engagement_id");
-								userId = jObject.getString("user_id");
-								latitude = jObject.getString("pickup_latitude");
-								longitude = jObject.getString("pickup_longitude");
-								customerName = jObject.getString("user_name");
-								customerImage = jObject.getString("user_image");
-								customerPhone = jObject.getString("phone_no");
-								customerRating = jObject.getString("rating");
-							}
-							else{
+							if(ApiResponseFlags.ACTIVE_REQUESTS.getOrdinal() == flag){
 								
+								JSONArray jActiveRequests = jObject1.getJSONArray("active_requests");
+								
+								Database2 database2 = new Database2(context);
+								database2.deleteAllDriverRequests();
+								for(int i=0; i<jActiveRequests.length(); i++){
+									
+									JSONObject jActiveRequest = jActiveRequests.getJSONObject(i);
+									
+									 String requestEngagementId = jActiveRequest.getString("engagement_id");
+	    	    					 String requestUserId = jActiveRequest.getString("user_id");
+	    	    					 double requestLatitude = jActiveRequest.getDouble("pickup_latitude");
+	    	    					 double requestLongitude = jActiveRequest.getDouble("pickup_longitude");
+	    	    					 String requestAddress = jActiveRequest.getString("pickup_location_address");
+	    	    					 String requestStartTime = new DateOperations().getSixtySecAfterCurrentTime();
+	    	    					 
+	    	    					 database2.insertDriverRequest(requestEngagementId, requestUserId, 
+	    	    							 ""+requestLatitude, ""+requestLongitude, requestStartTime, requestAddress);
+	    	    					 
+	    	    					 Log.i("inserter in db", "insertDriverRequest = "+requestEngagementId);
+								}
+								
+								database2.close();
+								
+							}
+							else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
+								JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
+								JSONObject jObject = lastEngInfoArr.getJSONObject(0);
+								
+								engagementStatus = jObject.getInt("status");
+								
+								if((EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus) || 
+										(EngagementStatus.STARTED.getOrdinal() == engagementStatus)){
+									engagementId = jObject.getString("engagement_id");
+									userId = jObject.getString("user_id");
+									latitude = jObject.getString("pickup_latitude");
+									longitude = jObject.getString("pickup_longitude");
+									customerName = jObject.getString("user_name");
+									customerImage = jObject.getString("user_image");
+									customerPhone = jObject.getString("phone_no");
+									customerRating = jObject.getString("rating");
+								}
+								else{
+									
+								}
 							}
 							
 						} catch(Exception e){
 							e.printStackTrace();
+							engagementStatus = -1;
 						}
 					}
 			} catch(Exception e){
 				e.printStackTrace();
+				engagementStatus = -1;
 			}
 			
 			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout, 7 for nullified by chrone
-			if(engagementStatus == 1){
+			if(EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus){
 				screenMode = Data.D_START_RIDE;
 			}
-			else if(engagementStatus == 2){
+			else if(EngagementStatus.STARTED.getOrdinal() == engagementStatus){
 				screenMode = Data.D_IN_RIDE;
 			}
 			else{
@@ -334,7 +384,7 @@ public class JSONParser {
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 			
 			
-			String screenMode = pref.getString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+			String screenMode = "";
 			
 
 			int engagementStatus = -1;
@@ -359,6 +409,14 @@ public class JSONParser {
 						try{
 							JSONObject jObject1 = new JSONObject(result);
 							
+//							response = {
+//									"log": "Assigning driver", 
+//									"flag": constants.responseFlags.ASSIGNING_DRIVERS,
+//									"session_id": 2020
+//							};
+
+							
+							
 //							"flag": constants.responseFlags.ENGAGEMENT_DATA, 
 //							"last_engagement_info":[
 //							{
@@ -379,45 +437,57 @@ public class JSONParser {
 //							]
 
 							
+							int flag = jObject1.getInt("flag");
 							
-							JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
-							JSONObject jObject = lastEngInfoArr.getJSONObject(0);
-
-							engagementStatus = jObject.getInt("status");
-							
-							if((1 == engagementStatus) || (2 == engagementStatus)){
-								engagementId = jObject.getString("engagement_id");
-								sessionId = jObject.getString("session_id");
-								userId = jObject.getString("driver_id");
-								latitude = jObject.getString("current_location_latitude");
-								longitude = jObject.getString("current_location_longitude");
-								driverName = jObject.getString("user_name");
-								driverImage = jObject.getString("user_image");
-								driverCarImage = jObject.getString("driver_car_image");
-								driverPhone = jObject.getString("phone_no");
-								driverRating = jObject.getString("rating");
-								pickupLatitude = jObject.getString("pickup_latitude");
-								pickupLongitude = jObject.getString("pickup_longitude");
+							if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
+								sessionId = jObject1.getString("session_id");
+								engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
 							}
-							else{
+							else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
+								JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
+								JSONObject jObject = lastEngInfoArr.getJSONObject(0);
+
+								engagementStatus = jObject.getInt("status");
 								
+								if((1 == engagementStatus) || (2 == engagementStatus)){
+									engagementId = jObject.getString("engagement_id");
+									sessionId = jObject.getString("session_id");
+									userId = jObject.getString("driver_id");
+									latitude = jObject.getString("current_location_latitude");
+									longitude = jObject.getString("current_location_longitude");
+									driverName = jObject.getString("user_name");
+									driverImage = jObject.getString("user_image");
+									driverCarImage = jObject.getString("driver_car_image");
+									driverPhone = jObject.getString("phone_no");
+									driverRating = jObject.getString("rating");
+									pickupLatitude = jObject.getString("pickup_latitude");
+									pickupLongitude = jObject.getString("pickup_longitude");
+								}
+								else{
+									
+								}
 							}
 							
 						} catch(Exception e){
 							e.printStackTrace();
+							engagementStatus = -1;
 						}
 				}
 			} catch(Exception e){
 				e.printStackTrace();
+				engagementStatus = -1;
 			}
 			
-			if(engagementStatus == 1){
+			if(EngagementStatus.REQUESTED.getOrdinal() == engagementStatus){
+				screenMode = Data.P_ASSIGNING;
+			}
+			else if(EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus){
 				screenMode = Data.P_REQUEST_FINAL;
 			}
-			else if(engagementStatus == 2){
+			else if(EngagementStatus.STARTED.getOrdinal() == engagementStatus){
 				screenMode = Data.P_IN_RIDE;
 			}
-			else if(engagementStatus == 3){
+			else if(EngagementStatus.ENDED.getOrdinal() == engagementStatus){
 				screenMode = "";
 			}
 			else{
@@ -429,11 +499,19 @@ public class JSONParser {
 				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 				clearSPData(context);
 			}
+			else if(Data.P_ASSIGNING.equalsIgnoreCase(screenMode)){
+				HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+				Data.cSessionId = sessionId;
+				
+				clearSPData(context);
+			}
 			else{
 				
 				Data.cSessionId = sessionId;
 				Data.cEngagementId = engagementId;
 				Data.cDriverId = userId;
+				
+				Data.pickupLatLng = new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude));
 				
 				double dLatitude = Double.parseDouble(latitude);
 				double dLongitude = Double.parseDouble(longitude);
@@ -457,7 +535,7 @@ public class JSONParser {
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
 					
 					if(-1 == HomeActivity.totalDistance){
-						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude));
+						Data.startRidePreviousLatLng = Data.pickupLatLng;
 						HomeActivity.totalDistance = 0;
 					}
 					else{

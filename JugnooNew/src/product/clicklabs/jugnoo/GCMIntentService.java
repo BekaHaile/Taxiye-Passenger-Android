@@ -281,7 +281,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(false);
+	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, false);
 	    	    					 }
 	    	    					 
 	    	    					
@@ -294,7 +294,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(true);
+	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, true);
 	    	    					 }
 	    	    					 
 	    	    					 
@@ -307,7 +307,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout();
+	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 	    	    					 }
 	    	    					 
 	    	    					
@@ -472,7 +472,7 @@ public class GCMIntentService extends IntentService {
 		    				int count = deleteDriverRideRequest(context, engagementId);
 		    				if(count > 0){
 		    					if(HomeActivity.appInterruptHandler != null){
-			    					HomeActivity.appInterruptHandler.onRideRequestTimeout();
+			    					HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 			    				}
 		    					clearNotifications(context);
 		    				}

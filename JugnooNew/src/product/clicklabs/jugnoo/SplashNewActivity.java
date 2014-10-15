@@ -725,7 +725,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
     	class SingleLocationListener implements LocationListener {
 
     		public void onLocationChanged(Location loc) {
-    			Log.e("************************************** custom", "Location changed "+loc);
+//    			Log.e("************************************** custom", "Location changed "+loc);
     			SingleLocationSender.this.location = loc;
     			sendLocationToServer(location);
     			new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, loc);
@@ -751,12 +751,12 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 						nameValuePairs.add(new BasicNameValuePair("longitude", ""+location.getLongitude()));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 						
-						Log.e("nameValuePairs in fast","="+nameValuePairs);
+//						Log.e("nameValuePairs in fast","="+nameValuePairs);
 						
 						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
 						
-						Log.e("SingleLocationListener    result","="+result);
+//						Log.e("SingleLocationListener    result","="+result);
 						
 						simpleJSONParser = null;
 						nameValuePairs = null;

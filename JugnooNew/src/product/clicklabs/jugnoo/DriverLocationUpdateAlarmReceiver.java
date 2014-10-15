@@ -21,9 +21,9 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 			
 			long currentTime = System.currentTimeMillis();
 			
-			Log.i("lastTime", "="+lastTime);
-			Log.i("currentTime", "="+currentTime);
-			Log.e("currentTime - lastTime", "="+(currentTime - lastTime));
+//			Log.i("lastTime", "="+lastTime);
+//			Log.i("currentTime", "="+currentTime);
+//			Log.e("currentTime - lastTime", "="+(currentTime - lastTime));
 			
 			if(currentTime >= (lastTime + MAX_TIME_BEFORE_LOCATION_UPDATE)){
 				new Thread(new Runnable() {

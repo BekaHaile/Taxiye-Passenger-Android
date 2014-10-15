@@ -87,7 +87,8 @@ public class Data {
 	
 	
 	public static String D_START_RIDE = "D_START_RIDE", D_IN_RIDE = "D_IN_RIDE";
-	public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_REQUEST_FINAL = "P_REQUEST_FINAL";
+	public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_REQUEST_FINAL = "P_REQUEST_FINAL", 
+			P_ASSIGNING = "P_ASSIGNING";
 	
 	public static LatLng startRidePreviousLatLng;
 	

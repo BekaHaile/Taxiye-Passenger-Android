@@ -19,7 +19,7 @@ public class DriverLocationDispatcher {
 		Database2 database2 = new Database2(context);
 		try {
 			String userMode = database2.getUserMode();
-			Log.e("DriverLocationUpdateService userMode in DLD ", "=="+userMode);
+//			Log.e("DriverLocationUpdateService userMode in DLD ", "=="+userMode);
 			
 			if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 				PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -39,12 +39,12 @@ public class DriverLocationDispatcher {
 						nameValuePairs.add(new BasicNameValuePair("longitude", "" + latLng.longitude));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 			
-						Log.e("nameValuePairs in location DLD", "=" + nameValuePairs);
+//						Log.e("nameValuePairs in location DLD", "=" + nameValuePairs);
 			
 						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
-						Log.e("result in DLD", "=" + result);
+//						Log.e("result in DLD", "=" + result);
 			
 						try{
 							//{"log":"Updated"}

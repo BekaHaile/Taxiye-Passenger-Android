@@ -287,7 +287,7 @@ public class DriverLocationUpdateService extends Service {
 						String userMode = database2.getUserMode();
 						database2.close();
 						
-						Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
+//						Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
 						
 						if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 							
@@ -425,7 +425,7 @@ class GPSLocationFetcher {
 
 		public void onLocationChanged(Location loc) {
 			if(isBetterLocation(loc, GPSLocationFetcher.this.location)){
-				Log.e("************************************** custom", "Location changed "+loc);
+//				Log.e("************************************** custom", "Location changed "+loc);
 				GPSLocationFetcher.this.location = loc;
 				
 				new DriverLocationDispatcher().saveLocationToDatabase(context, loc);
@@ -529,7 +529,7 @@ class GPSLocationFetcher {
 					String userMode = database2.getUserMode();
 					database2.close();
 					
-					Log.e("DriverLocationUpdateService userMode in PI ", "=="+userMode);
+//					Log.e("DriverLocationUpdateService userMode in PI ", "=="+userMode);
 					
 					if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 						if ((wakeLock != null) &&           // we have a WakeLock
@@ -543,7 +543,7 @@ class GPSLocationFetcher {
 						nameValuePairs.add(new BasicNameValuePair("longitude", ""+location.getLongitude()));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 						
-						Log.e("nameValuePairs in fast","="+nameValuePairs);
+//						Log.e("nameValuePairs in fast","="+nameValuePairs);
 						
 						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
