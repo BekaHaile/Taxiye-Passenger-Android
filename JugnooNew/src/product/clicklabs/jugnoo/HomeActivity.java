@@ -116,6 +116,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	DrawerLayout drawerLayout;																		// views declaration
 	
 	
+	
 	//menu bar 
 	LinearLayout menuLayout;
 	
@@ -4705,7 +4706,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onSuccess(int arg0, Header[] arg1,
 								byte[] arg2) {
 							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
+							Log.v("accept ride api Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
@@ -4737,10 +4738,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											int flag = jObj.getInt("flag");
 											String logMessage = jObj.getString("log");
 											new DialogPopup().alertPopup(activity, "", ""+logMessage);
-											reduceRideRequest(activity, Data.dEngagementId);
+											
 										} catch(Exception e){
 											e.printStackTrace();
 										}
+										reduceRideRequest(activity, Data.dEngagementId);
 									}
 									else{
 //										{
@@ -4797,19 +4799,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								        
 										driverScreenMode = DriverScreenMode.D_START_RIDE;
 										switchDriverScreen(driverScreenMode);
-										DialogPopup.dismissLoadingDialog();
 										
 										deleteParticularDriverRequest(activity, Data.dEngagementId);
 										
 									}
 									
+									
+									DialogPopup.dismissLoadingDialog();
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
-	
+							
+							DialogPopup.dismissLoadingDialog();
 							
 						}
 					});
