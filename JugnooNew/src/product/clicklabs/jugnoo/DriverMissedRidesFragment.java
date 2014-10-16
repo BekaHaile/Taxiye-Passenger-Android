@@ -210,7 +210,7 @@ public class DriverMissedRidesFragment extends Fragment {
 							public void onSuccess(int arg0, Header[] arg1,
 									byte[] arg2) {
 								String response = new String(arg2);
-								Log.e("Server response", "response = " + response);
+								Log.d("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
 									if(!jObj.isNull("error")){

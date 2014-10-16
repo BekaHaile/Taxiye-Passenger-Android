@@ -41,7 +41,7 @@ class DriverInfo{
 	String userId, name, image, carImage, phoneNumber, rating;
 	LatLng latLng;
 	
-	String distanceToReach, durationToReach;
+	String distanceToReach = "0", durationToReach = "";
 	
 	public DriverInfo(String userId, double latitude, double longitude){
 		this.userId = userId;

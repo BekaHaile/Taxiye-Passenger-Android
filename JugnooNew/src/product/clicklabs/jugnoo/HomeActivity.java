@@ -392,9 +392,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
+	
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
+	public static final int MAP_PATH_COLOR = Color.RED;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600;
@@ -407,7 +409,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;
 	
-	public static final long AUTO_RATE_DELAY = 5 * 60 * 1000;
+	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000;
 	
 	public static final String REQUEST_RIDE_BTN_NORMAL_TEXT = "Call an auto", REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT = "Assigning driver...";
 	
@@ -843,6 +845,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		
 		// menu events\
 		driverModeToggle.setOnClickListener(new View.OnClickListener() {
 			
@@ -973,7 +976,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				if(passengerScreenMode == PassengerScreenMode.P_INITIAL || driverScreenMode == DriverScreenMode.D_INITIAL){
+				if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_INITIAL)) 
+						|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
 					logoutPopup(HomeActivity.this);
 				}
 				else{
@@ -1825,6 +1829,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				startTimerRequestRide();
 			}
+			else if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+				switchPassengerScreen(passengerScreenMode);
+			}
 			else{
 				switchPassengerScreen(passengerScreenMode);
 			}
@@ -2150,8 +2157,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			reviewUserName.setText(Data.assignedCustomerInfo.name);
 			
 			Data.assignedCustomerInfo.image = Data.assignedCustomerInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
-			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
 			
 			reviewSubmitBtn.setText("OK");
 			
@@ -2400,8 +2407,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			reviewUserName.setText(Data.assignedDriverInfo.name);
 			
 			Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
-			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
 			
 			reviewSubmitBtn.setText("OK");
 			
@@ -2579,19 +2586,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 				driverName.setText(Data.assignedDriverInfo.name);
 				
-				if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-					driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
-    	 		}
-    	 		else{
-    	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
-    	 		}
+				if("".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach)){
+					driverTime.setText("");
+				}
+				else{
+					if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
+						driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
+	    	 		}
+	    	 		else{
+	    	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
+	    	 		}
+				}
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
 				
 				
 				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
 				
 				
 				initialLayout.setVisibility(View.GONE);
@@ -2639,10 +2651,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverName.setText(Data.assignedDriverInfo.name);
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
 				
 				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
 				
 				
 				initialLayout.setVisibility(View.GONE);
@@ -3270,9 +3282,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		}
     		
     		destroyFusedLocationFetchers();
-	        
-	        PicassoTools.clearCache(Picasso.with(HomeActivity.this));
-	        
 	        
 	        ASSL.closeActivity(drawerLayout);
 	        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
@@ -7350,7 +7359,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		editor.putString(Data.SP_C_DRIVER_PHONE, "");
 			editor.putString(Data.SP_C_DRIVER_RATING, "");
     		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-    		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
+    		editor.putString(Data.SP_C_DRIVER_DURATION, "");
     		
     		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
     		editor.putString(Data.SP_C_TOTAL_FARE, "0");
@@ -7443,6 +7452,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			new FBLogoutNoIntent(cont).execute();
 			
+			PicassoTools.clearCache(Picasso.with(cont));
+			
 			cont.runOnUiThread(new Runnable() {
 				
 				@Override
@@ -7534,7 +7545,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			};
 			
-			automaticReviewHandler.postDelayed(automaticReviewRunnable, AUTO_RATE_DELAY);
+			automaticReviewHandler.postDelayed(automaticReviewRunnable, AUTO_RATING_DELAY);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -7677,25 +7688,39 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	 * @param location location changed in listeners
 	 */
 	public void updatePickupLocation(Location location){
-		if((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)){
-			if(Data.pickupLatLng.latitude == 0 && Data.pickupLatLng.longitude == 0){
-				Data.pickupLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-				Editor editor = pref.edit();
-				editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
-				editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-				editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
-	    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
-	    		editor.commit();
-	    		
-	    		if(getDistanceTimeAddress != null){
-					getDistanceTimeAddress.cancel(true);
-					getDistanceTimeAddress = null;
+		if(userMode == UserMode.PASSENGER){
+			if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+				if(Data.pickupLatLng.latitude == 0 && Data.pickupLatLng.longitude == 0){
+					Data.pickupLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+					SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+					Editor editor = pref.edit();
+					editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
+					editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+					editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
+		    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
+		    		editor.commit();
+		    		
+		    		if(getDistanceTimeAddress != null){
+						getDistanceTimeAddress.cancel(true);
+						getDistanceTimeAddress = null;
+					}
+					if(myLocation != null){
+						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+								myLocation.getLongitude()), false);
+						getDistanceTimeAddress.execute();
+					}
 				}
-				if(myLocation != null){
-					getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-							myLocation.getLongitude()), false);
-					getDistanceTimeAddress.execute();
+			}
+			else if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+				if("".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach)){
+					if(getDistanceTimeAddress != null){
+						getDistanceTimeAddress.cancel(true);
+					}
+					if(myLocation != null){
+						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+								myLocation.getLongitude()), true);
+						getDistanceTimeAddress.execute();
+					}
 				}
 			}
 		}

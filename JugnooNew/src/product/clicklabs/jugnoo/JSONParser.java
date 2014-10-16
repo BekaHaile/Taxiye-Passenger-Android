@@ -20,7 +20,6 @@ public class JSONParser {
 	}
 	
 	public void parseLoginData(Context context, String response) throws Exception{
-		Log.e("login response =", "="+response);
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		
@@ -122,7 +121,6 @@ public class JSONParser {
 	
 	
 	public void parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
-		Log.e("login response =", "="+response);
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
@@ -516,7 +514,7 @@ public class JSONParser {
 				double dLatitude = Double.parseDouble(latitude);
 				double dLongitude = Double.parseDouble(longitude);
 				
-				String SP_C_DRIVER_DISTANCE = pref.getString(Data.SP_C_DRIVER_DISTANCE, "");
+				String SP_C_DRIVER_DISTANCE = pref.getString(Data.SP_C_DRIVER_DISTANCE, "0");
 				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
 				Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName, 
@@ -524,6 +522,8 @@ public class JSONParser {
 				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
 				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
 				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;
+				
+				Log.e("Data.assignedDriverInfo.durationToReach in get_current_user_status", "="+Data.assignedDriverInfo.durationToReach);
 				
 				
 				if(Data.P_REQUEST_FINAL.equalsIgnoreCase(screenMode)){
@@ -616,7 +616,7 @@ public class JSONParser {
         		editor.putString(Data.SP_C_DRIVER_PHONE, "");
 				editor.putString(Data.SP_C_DRIVER_RATING, "");
         		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-        		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
+        		editor.putString(Data.SP_C_DRIVER_DURATION, "");
         		
         		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
         		editor.putString(Data.SP_C_TOTAL_FARE, "0");

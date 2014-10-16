@@ -161,8 +161,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 	    Log.i("deviceToken", Data.deviceToken + "..");
 	    
-	    PicassoTools.clearCache(Picasso.with(this));
-		
 	}
 	
 	
