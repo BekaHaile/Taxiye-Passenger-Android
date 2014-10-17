@@ -131,7 +131,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="27px"
                         android:background="@drawable/red_btn_selector"
-                        android:text="@string/cancel_ride"
+                        android:text="@string/cancel_request"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size"
                         android:visibility="gone" />
@@ -548,7 +548,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="27px"
                         android:background="@drawable/red_btn_selector"
-                        android:text="@string/cancel_request"
+                        android:text="@string/cancel_ride"
                         android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size" />
 

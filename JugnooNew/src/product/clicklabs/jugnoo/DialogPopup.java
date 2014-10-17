@@ -34,7 +34,6 @@ public class DialogPopup {
 				title = activity.getResources().getString(R.string.alert);
 			}
 			
-			
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.custom_message_dialog);

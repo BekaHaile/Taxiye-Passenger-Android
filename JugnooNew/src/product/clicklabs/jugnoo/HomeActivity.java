@@ -1798,7 +1798,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		switchUserScreen(userMode);
 		
 		
-		//TODO automatically start request ride timertask
 		
 		if(userMode == UserMode.PASSENGER){
 			if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
@@ -3286,6 +3285,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        ASSL.closeActivity(drawerLayout);
 	        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 	        
+	        appInterruptHandler = null;
+	        
 	        System.gc();
         }catch(Exception e){
         	e.printStackTrace();
@@ -4494,7 +4495,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							customerCancelBeforePushReceive = false;
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							//TODO here
+							handleConnectionLost();
 						}
 
 						@Override
@@ -4736,13 +4739,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(int arg0, Header[] arg1,
 								byte[] arg2, Throwable arg3) {
 							Log.e("request fail", arg3.toString());
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							DialogPopup.dismissLoadingDialog();
+							//TODO here
+							handleConnectionLost();
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
+						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) 
+						{
 							String response = new String(arg2);
 							Log.v("accept ride api Server response", "response = " + response);
 	
@@ -5023,12 +5028,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								byte[] arg2, Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							//TODO here
+							handleConnectionLost();
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
+						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) 
+						{
 							String response = new String(arg2);
 							Log.v("Server response", "response = " + response);
 	
@@ -5121,7 +5128,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									byte[] arg2, Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								//TODO here
+								handleConnectionLost();
 							}
 
 							@Override
@@ -7827,6 +7836,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if(response.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 									Log.e("timeout","=");
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+										}
+									});
 								}
 								else{
 									try{
@@ -7950,8 +7965,57 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	
 	
+
 	
-	
+	public void handleConnectionLost() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if(Data.userData != null){
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+						}
+					});
+					int currentUserStatus = 0;
+					if(UserMode.DRIVER == userMode){
+						currentUserStatus = 1;
+					}
+					else if(UserMode.PASSENGER == userMode){
+						currentUserStatus = 2;
+					}
+					if(currentUserStatus != 0){
+						String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
+						if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp)){
+							String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
+							if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp1)){
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										new DialogPopup().alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+									}
+								});
+							}
+						}
+					}
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							DialogPopup.dismissLoadingDialog();
+							if(UserMode.DRIVER == userMode){
+								switchDriverScreen(driverScreenMode);
+							}
+							else if(UserMode.PASSENGER == userMode){
+								switchPassengerScreen(passengerScreenMode);
+							}
+						}
+					});
+				}
+				//TODO refresh application on connection lost
+			}
+		}).start();
+	}
 	
 	
 	

@@ -24,4 +24,5 @@ public interface AppInterruptHandler {
 	
 	public void customerEndRideInterrupt();
 	
+	
 }

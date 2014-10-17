@@ -169,7 +169,9 @@ public class JSONParser {
 	
 	
 	
-	public void getUserStatus(Context context, String accessToken, int currentUserStatus){
+	public String getUserStatus(Context context, String accessToken, int currentUserStatus){
+		
+		String returnResponse = "";
 		
 		if(currentUserStatus == 1){ // for driver
 			
@@ -192,7 +194,7 @@ public class JSONParser {
 					
 					Log.e("result of = user_status", "="+result);
 					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
-						
+						returnResponse = HttpRequester.SERVER_TIMEOUT;
 					}
 					else{
 						try{
@@ -401,7 +403,7 @@ public class JSONParser {
 					
 					Log.e("result of = user_status", "="+result);
 					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
-						
+						returnResponse = HttpRequester.SERVER_TIMEOUT;
 					}
 					else{
 						try{
@@ -564,6 +566,7 @@ public class JSONParser {
 			}
 		}
 		
+		return returnResponse;
 	}
 	
 	
