@@ -48,8 +48,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoTools;
 
 public class SplashNewActivity extends Activity implements LocationUpdate{
 	

@@ -2016,7 +2016,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			userName.setText(Data.userData.userName);
 			
 			Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).transform(new CircleTransform()).into(profileImg);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(profileImg);}catch(Exception e){}
 			
 		} catch(Exception e){
 			e.printStackTrace();
@@ -2139,8 +2139,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			reviewUserName.setText(Data.assignedCustomerInfo.name);
 			
 			Data.assignedCustomerInfo.image = Data.assignedCustomerInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
-			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
 			
 			reviewSubmitBtn.setText("OK");
 			
@@ -2389,8 +2389,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			reviewUserName.setText(Data.assignedDriverInfo.name);
 			
 			Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
-			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
 			
 			reviewSubmitBtn.setText("OK");
 			
@@ -2581,11 +2581,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
 				
 				
 				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
 				
 				
 				initialLayout.setVisibility(View.GONE);
@@ -2633,10 +2633,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverName.setText(Data.assignedDriverInfo.name);
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
 				
 				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
 				
 				
 				initialLayout.setVisibility(View.GONE);
