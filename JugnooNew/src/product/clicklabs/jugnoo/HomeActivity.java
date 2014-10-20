@@ -377,7 +377,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	static Activity activity;
 	
-	boolean customerCancelBeforePushReceive = false, 
+	boolean customerCancelPressed = false, 
 			userCanceledDialogShown = false;
 	boolean loggedOut = false, 
 			zoomedToMyLocation = false;
@@ -423,8 +423,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		activity = this;
 		
-		customerCancelBeforePushReceive = false;
+		customerCancelPressed = false;
 		userCanceledDialogShown = false;
+		
 		loggedOut = false;
 		zoomedToMyLocation = false;
 		dontCallRefreshDriver = false;
@@ -1068,27 +1069,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 								if(myLocation != null){
 									if(Data.driverInfos.size() > 0){
-										Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-										Data.cSessionId = "";
-										Data.cEngagementId = "";
-										
-										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-										Editor editor = pref.edit();
-										editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
-										editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-										editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
-							    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
-							    		editor.commit();
-							  
-										
-							    		stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-							    		
-							    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-										switchPassengerScreen(passengerScreenMode);
-							    		
-										customerCancelBeforePushReceive = false;
-										
-										startTimerRequestRide();
+										callAnAutoPopup(HomeActivity.this);
 									}
 									else{
 										noDriverAvailablePopup(HomeActivity.this);
@@ -1114,7 +1095,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				customerCancelBeforePushReceive = true;
+				customerCancelPressed = true;
 				cancelCustomerRequestAsync(HomeActivity.this);
 			}
 		});
@@ -1824,7 +1805,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
 				switchPassengerScreen(passengerScreenMode);
 	    		
-				customerCancelBeforePushReceive = false;
+				customerCancelPressed = false;
 				
 				startTimerRequestRide();
 			}
@@ -4494,9 +4475,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								byte[] arg2, Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							customerCancelBeforePushReceive = false;
+							customerCancelPressed = false;
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							//TODO here
 							handleConnectionLost();
 						}
 
@@ -4519,7 +4499,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-									customerCancelBeforePushReceive = false;
+									customerCancelPressed = false;
 									
 								}
 								else{
@@ -4541,7 +4521,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								customerCancelBeforePushReceive = false;
+								customerCancelPressed = false;
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
@@ -4551,7 +4531,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			customerCancelBeforePushReceive = false;
+			customerCancelPressed = false;
 		}
 
 	}
@@ -4741,7 +4721,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							Log.e("request fail", arg3.toString());
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							DialogPopup.dismissLoadingDialog();
-							//TODO here
 							handleConnectionLost();
 						}
 
@@ -5029,7 +5008,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							//TODO here
 							handleConnectionLost();
 						}
 
@@ -5129,7 +5107,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
 //								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-								//TODO here
 								handleConnectionLost();
 							}
 
@@ -6638,6 +6615,91 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
+	
+	
+	
+	
+	void callAnAutoPopup(final Activity activity) {
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.custom_two_btn_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			textHead.setVisibility(View.VISIBLE);
+			textHead.setText("Chalo Jugnoo Se");
+			textMessage.setText("Do you want to call an auto?");
+			
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			
+			btnOk.setText("Now");
+			btnCancel.setText("Later");
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+
+					Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+					Data.cSessionId = "";
+					Data.cEngagementId = "";
+					
+					SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+					Editor editor = pref.edit();
+					editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
+					editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+					editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
+		    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
+		    		editor.commit();
+		  
+					
+		    		stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+		    		
+		    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+					switchPassengerScreen(passengerScreenMode);
+		    		
+					customerCancelPressed = false;
+					
+					startTimerRequestRide();
+				}
+				
+			});
+			
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+				
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	void startRidePopup(final Activity activity) {
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -7121,8 +7183,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
 				
 				cancelTimerRequestRide();
-				Log.e("customerCancelBeforePushReceive ","="+customerCancelBeforePushReceive);
-				if(!customerCancelBeforePushReceive){
+				Log.e("customerCancelBeforePushReceive ","="+customerCancelPressed);
+				if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 					fetchAcceptedDriverInfoAndChangeState(jObj);
 				}
 			}
@@ -7131,6 +7193,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		
 	}
+	
 	
 	
 	public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj){
@@ -7758,7 +7821,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //		}
 	}
 	
-	
+//	SELECT * FROM `tb_updated_user_location` WHERE `user_id`=231 and `location_updated_timestamp` >= '2014-10-18' and `location_updated_timestamp` < '2014-10-20'
 	
 	
 	//TODO new Request ride timerTask
@@ -7794,7 +7857,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
-									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 										noDriverAvailablePopup(HomeActivity.this);
 										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
@@ -7803,7 +7866,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							});
 						}
 						else{
-							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelBeforePushReceive){
+							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 								runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
@@ -7875,7 +7938,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												Data.cSessionId = jObj.getString("session_id");
 											}
 											else if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
-												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 													cancelTimerRequestRide();
 													fetchAcceptedDriverInfoAndChangeState(jObj);
 												}
@@ -7887,7 +7950,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												runOnUiThread(new Runnable() {
 													@Override
 													public void run() {
-														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 															noDriverAvailablePopup(HomeActivity.this);
 															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 															switchPassengerScreen(passengerScreenMode);
@@ -7950,7 +8013,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onNoDriversAvailablePushRecieved(final String logMessage) {
 		cancelTimerRequestRide();
-		if(HomeActivity.passengerScreenMode != PassengerScreenMode.P_INITIAL){
+		if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			runOnUiThread(new Runnable() {
 				@Override
