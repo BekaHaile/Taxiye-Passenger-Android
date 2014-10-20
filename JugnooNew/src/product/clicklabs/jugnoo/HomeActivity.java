@@ -1291,6 +1291,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				if(getBatteryPercentage() >= 10){
 					 GCMIntentService.clearNotifications(HomeActivity.this);
+					 GCMIntentService.stopRing();
 					driverAcceptRideAsync(HomeActivity.this);
 				}
 				else{
@@ -1305,6 +1306,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				GCMIntentService.clearNotifications(HomeActivity.this);
+				GCMIntentService.stopRing();
 				driverRejectRequestAsync(HomeActivity.this);
 			}
 		});
@@ -3174,6 +3176,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	protected void onPause() {
 		
 		GCMIntentService.clearNotifications(getApplicationContext());
+		GCMIntentService.stopRing();
 		
 		saveDataOnPause(false);
 		
@@ -7314,7 +7317,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void onCancelRideRequest(final String engagementId, final boolean acceptedByOtherDriver) {
-		
+		GCMIntentService.stopRing();
 		try {
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 					runOnUiThread(new Runnable() {
@@ -7365,6 +7368,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	@Override
 	public void onRideRequestTimeout(final String engagementId) {
+		GCMIntentService.stopRing();
 		if(userMode == UserMode.DRIVER ){
 			runOnUiThread(new Runnable() {
 				@Override
