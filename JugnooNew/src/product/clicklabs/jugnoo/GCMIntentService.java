@@ -410,12 +410,22 @@ public class GCMIntentService extends IntentService {
 				stopRing();
 				vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 				if(vibrator.hasVibrator()){
-					long[] pattern = {0, 1350, 3900, 1350, 3900, 1350, 3900, 1350, 3900, 1350, 3900, 1350, 3900 };
+					long[] pattern = {0, 1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900 };
 					vibrator.vibrate(pattern, -1);
 				}
 				AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 //				am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-				am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamVolume(AudioManager.STREAM_MUSIC), 0);
+				am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 				mediaPlayer = MediaPlayer.create(context, R.raw.telephone_ring);
 				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				    @Override

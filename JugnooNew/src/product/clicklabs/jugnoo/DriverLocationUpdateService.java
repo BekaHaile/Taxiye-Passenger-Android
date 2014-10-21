@@ -136,7 +136,7 @@ public class DriverLocationUpdateService extends Service {
     	
     	//TODO Toggle live to trial
 		String DEV_SERVER_URL = "https://54.81.229.172:8012";
-		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4010";
+		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 		
 		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
@@ -332,7 +332,7 @@ public class DriverLocationUpdateService extends Service {
 	
 	private static int DRIVER_LOCATION_PI_REQUEST_CODE = 111;
 	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
-	private static final long ALARM_REPEAT_INTERVAL = 3 * 60000;
+	private static final long ALARM_REPEAT_INTERVAL = 1 * 60000;
 	
 	
 	public void setupLocationUpdateAlarm(){
@@ -350,12 +350,9 @@ public class DriverLocationUpdateService extends Service {
 	        intent.setAction(SEND_LOCATION);
 	        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, DRIVER_LOCATION_PI_REQUEST_CODE, 
 	        		intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-	        Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
 	        
 	        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-	        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), ALARM_REPEAT_INTERVAL, pendingIntent);
+	        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), ALARM_REPEAT_INTERVAL, pendingIntent);
 
 	}
 	
