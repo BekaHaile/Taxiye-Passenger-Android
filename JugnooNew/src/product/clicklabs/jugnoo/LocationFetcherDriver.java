@@ -111,8 +111,9 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 		
 		locationrequest = LocationRequest.create();
 		locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-		locationrequest.setFastestInterval(fastestInterval);
 		locationrequest.setInterval(requestInterval);
+		locationrequest.setFastestInterval(requestInterval);
+		
 		
 		Intent intent = new Intent(context, LocationReceiverDriver.class);
 		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
