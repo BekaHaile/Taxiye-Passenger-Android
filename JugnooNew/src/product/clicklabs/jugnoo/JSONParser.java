@@ -120,7 +120,7 @@ public class JSONParser {
 	
 	
 	
-	public void parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
+	public String parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
@@ -163,7 +163,9 @@ public class JSONParser {
 		}
 		
 		
-		getUserStatus(context, accessToken, currentUserStatus);
+		String resp = getUserStatus(context, accessToken, currentUserStatus);
+		
+		return resp;
 		
 	}
 	
@@ -195,11 +197,17 @@ public class JSONParser {
 					Log.e("result of = user_status", "="+result);
 					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 						returnResponse = HttpRequester.SERVER_TIMEOUT;
+						return returnResponse;
 					}
 					else{
 						try{
 							JSONObject jObject1 = new JSONObject(result);
 							
+							if(jObject1.has("error")){
+								returnResponse = HttpRequester.SERVER_TIMEOUT;
+								return returnResponse;
+							}
+							else{
 
 							
 //							{
@@ -235,54 +243,56 @@ public class JSONParser {
 							
 							
 							
-							int flag = jObject1.getInt("flag");
+								int flag = jObject1.getInt("flag");
+								
+								if(ApiResponseFlags.ACTIVE_REQUESTS.getOrdinal() == flag){
+									
+									JSONArray jActiveRequests = jObject1.getJSONArray("active_requests");
+									
+									Database2 database2 = new Database2(context);
+									database2.deleteAllDriverRequests();
+									for(int i=0; i<jActiveRequests.length(); i++){
+										
+										JSONObject jActiveRequest = jActiveRequests.getJSONObject(i);
+										
+										 String requestEngagementId = jActiveRequest.getString("engagement_id");
+		    	    					 String requestUserId = jActiveRequest.getString("user_id");
+		    	    					 double requestLatitude = jActiveRequest.getDouble("pickup_latitude");
+		    	    					 double requestLongitude = jActiveRequest.getDouble("pickup_longitude");
+		    	    					 String requestAddress = jActiveRequest.getString("pickup_location_address");
+		    	    					 String requestStartTime = new DateOperations().getSixtySecAfterCurrentTime();
+		    	    					 
+		    	    					 database2.insertDriverRequest(requestEngagementId, requestUserId, 
+		    	    							 ""+requestLatitude, ""+requestLongitude, requestStartTime, requestAddress);
+		    	    					 
+		    	    					 Log.i("inserter in db", "insertDriverRequest = "+requestEngagementId);
+									}
+									
+									database2.close();
+									
+								}
+								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
+									JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
+									JSONObject jObject = lastEngInfoArr.getJSONObject(0);
+									
+									engagementStatus = jObject.getInt("status");
+									
+									if((EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus) || 
+											(EngagementStatus.STARTED.getOrdinal() == engagementStatus)){
+										engagementId = jObject.getString("engagement_id");
+										userId = jObject.getString("user_id");
+										latitude = jObject.getString("pickup_latitude");
+										longitude = jObject.getString("pickup_longitude");
+										customerName = jObject.getString("user_name");
+										customerImage = jObject.getString("user_image");
+										customerPhone = jObject.getString("phone_no");
+										customerRating = jObject.getString("rating");
+									}
+									else{
+										
+									}
+								}
 							
-							if(ApiResponseFlags.ACTIVE_REQUESTS.getOrdinal() == flag){
-								
-								JSONArray jActiveRequests = jObject1.getJSONArray("active_requests");
-								
-								Database2 database2 = new Database2(context);
-								database2.deleteAllDriverRequests();
-								for(int i=0; i<jActiveRequests.length(); i++){
-									
-									JSONObject jActiveRequest = jActiveRequests.getJSONObject(i);
-									
-									 String requestEngagementId = jActiveRequest.getString("engagement_id");
-	    	    					 String requestUserId = jActiveRequest.getString("user_id");
-	    	    					 double requestLatitude = jActiveRequest.getDouble("pickup_latitude");
-	    	    					 double requestLongitude = jActiveRequest.getDouble("pickup_longitude");
-	    	    					 String requestAddress = jActiveRequest.getString("pickup_location_address");
-	    	    					 String requestStartTime = new DateOperations().getSixtySecAfterCurrentTime();
-	    	    					 
-	    	    					 database2.insertDriverRequest(requestEngagementId, requestUserId, 
-	    	    							 ""+requestLatitude, ""+requestLongitude, requestStartTime, requestAddress);
-	    	    					 
-	    	    					 Log.i("inserter in db", "insertDriverRequest = "+requestEngagementId);
-								}
-								
-								database2.close();
-								
-							}
-							else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
-								JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
-								JSONObject jObject = lastEngInfoArr.getJSONObject(0);
-								
-								engagementStatus = jObject.getInt("status");
-								
-								if((EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus) || 
-										(EngagementStatus.STARTED.getOrdinal() == engagementStatus)){
-									engagementId = jObject.getString("engagement_id");
-									userId = jObject.getString("user_id");
-									latitude = jObject.getString("pickup_latitude");
-									longitude = jObject.getString("pickup_longitude");
-									customerName = jObject.getString("user_name");
-									customerImage = jObject.getString("user_image");
-									customerPhone = jObject.getString("phone_no");
-									customerRating = jObject.getString("rating");
-								}
-								else{
-									
-								}
 							}
 							
 						} catch(Exception e){
@@ -293,6 +303,8 @@ public class JSONParser {
 			} catch(Exception e){
 				e.printStackTrace();
 				engagementStatus = -1;
+				returnResponse = HttpRequester.SERVER_TIMEOUT;
+				return returnResponse;
 			}
 			
 			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout, 7 for nullified by chrone
@@ -404,10 +416,18 @@ public class JSONParser {
 					Log.e("result of = user_status", "="+result);
 					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 						returnResponse = HttpRequester.SERVER_TIMEOUT;
+						return returnResponse;
 					}
 					else{
 						try{
 							JSONObject jObject1 = new JSONObject(result);
+							
+							if(jObject1.has("error")){
+								returnResponse = HttpRequester.SERVER_TIMEOUT;
+								return returnResponse;
+							}
+							else{
+							
 							
 //							response = {
 //									"log": "Assigning driver", 
@@ -437,36 +457,39 @@ public class JSONParser {
 //							]
 
 							
-							int flag = jObject1.getInt("flag");
-							
-							if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
-								sessionId = jObject1.getString("session_id");
-								engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
-							}
-							else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
-								JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
-								JSONObject jObject = lastEngInfoArr.getJSONObject(0);
-
-								engagementStatus = jObject.getInt("status");
+								int flag = jObject1.getInt("flag");
 								
-								if((1 == engagementStatus) || (2 == engagementStatus)){
-									engagementId = jObject.getString("engagement_id");
-									sessionId = jObject.getString("session_id");
-									userId = jObject.getString("driver_id");
-									latitude = jObject.getString("current_location_latitude");
-									longitude = jObject.getString("current_location_longitude");
-									driverName = jObject.getString("user_name");
-									driverImage = jObject.getString("user_image");
-									driverCarImage = jObject.getString("driver_car_image");
-									driverPhone = jObject.getString("phone_no");
-									driverRating = jObject.getString("rating");
-									pickupLatitude = jObject.getString("pickup_latitude");
-									pickupLongitude = jObject.getString("pickup_longitude");
+								if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
+									sessionId = jObject1.getString("session_id");
+									engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
 								}
-								else{
+								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
+									JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
+									JSONObject jObject = lastEngInfoArr.getJSONObject(0);
+	
+									engagementStatus = jObject.getInt("status");
 									
+									if((1 == engagementStatus) || (2 == engagementStatus)){
+										engagementId = jObject.getString("engagement_id");
+										sessionId = jObject.getString("session_id");
+										userId = jObject.getString("driver_id");
+										latitude = jObject.getString("current_location_latitude");
+										longitude = jObject.getString("current_location_longitude");
+										driverName = jObject.getString("user_name");
+										driverImage = jObject.getString("user_image");
+										driverCarImage = jObject.getString("driver_car_image");
+										driverPhone = jObject.getString("phone_no");
+										driverRating = jObject.getString("rating");
+										pickupLatitude = jObject.getString("pickup_latitude");
+										pickupLongitude = jObject.getString("pickup_longitude");
+									}
+									else{
+										
+									}
 								}
+							
 							}
+							
 							
 						} catch(Exception e){
 							e.printStackTrace();
@@ -476,6 +499,8 @@ public class JSONParser {
 			} catch(Exception e){
 				e.printStackTrace();
 				engagementStatus = -1;
+				returnResponse = HttpRequester.SERVER_TIMEOUT;
+				return returnResponse;
 			}
 			
 			if(EngagementStatus.REQUESTED.getOrdinal() == engagementStatus){

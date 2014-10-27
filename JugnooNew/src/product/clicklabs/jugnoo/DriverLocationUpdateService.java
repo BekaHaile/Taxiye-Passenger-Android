@@ -136,10 +136,10 @@ public class DriverLocationUpdateService extends Service {
     	
     	//TODO Toggle live to trial
 		String DEV_SERVER_URL = "https://54.81.229.172:8012";
-		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
+		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4013";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 		
-		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 		
 		
 		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -165,6 +165,8 @@ public class DriverLocationUpdateService extends Service {
 		deviceToken = DriverLocationUpdateService.this.getSharedPreferences(SplashLogin.class.getSimpleName(), 
 				Context.MODE_PRIVATE).getString("registration_id", "");
     	
+		Log.e("SERVER_URL in updateService","="+SERVER_URL);
+		
 		database2.insertDriverLocData(accessToken, deviceToken, SERVER_URL);
 		database2.close();
     }
@@ -332,7 +334,7 @@ public class DriverLocationUpdateService extends Service {
 	
 	private static int DRIVER_LOCATION_PI_REQUEST_CODE = 111;
 	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
-	private static final long ALARM_REPEAT_INTERVAL = 1 * 60000;
+	private static final long ALARM_REPEAT_INTERVAL = 3 * 60000;
 	
 	
 	public void setupLocationUpdateAlarm(){

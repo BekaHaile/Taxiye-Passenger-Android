@@ -1802,7 +1802,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    		editor.commit();
 	  
 				
-	    		stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+	    		cancelTimerUpdateDrivers();
 	    		
 	    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
 				switchPassengerScreen(passengerScreenMode);
@@ -2046,9 +2046,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		switch(mode){
 		
 			case DRIVER:
-				if(isServiceRunning(HomeActivity.this, CUpdateDriverLocationsService.class.getName())){
-					stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-				}
+				cancelTimerUpdateDrivers();
 				
 				database2.updateUserMode(Database2.UM_DRIVER);
 				
@@ -2459,9 +2457,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				title.setVisibility(View.GONE);
 //				favBtn.setVisibility(View.VISIBLE);
 
-				if(!isServiceRunning(HomeActivity.this, CUpdateDriverLocationsService.class.getName())){
-					startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-				}
+				startTimerUpdateDrivers();
 				
 				break;
 				
@@ -2497,7 +2493,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				title.setVisibility(View.GONE);
 //				favBtn.setVisibility(View.VISIBLE);
 
-				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				cancelTimerUpdateDrivers();
 				
 				break;
 				
@@ -3176,7 +3172,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	protected void onPause() {
 		
 		GCMIntentService.clearNotifications(getApplicationContext());
-		GCMIntentService.stopRing();
 		
 		saveDataOnPause(false);
 		
@@ -3267,7 +3262,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		destroyFusedLocationFetchers();
 	        
 	        ASSL.closeActivity(drawerLayout);
-	        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+	        cancelTimerUpdateDrivers();
 	        
 	        appInterruptHandler = null;
 	        
@@ -6511,6 +6506,54 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+
+	
+	
+    Timer timerUpdateDrivers;
+	TimerTask timerTaskUpdateDrivers;
+	
+	public void startTimerUpdateDrivers(){
+		cancelTimerUpdateDrivers();
+		try {
+			timerUpdateDrivers = new Timer();
+			timerTaskUpdateDrivers = new TimerTask() {
+				@Override
+				public void run() {
+					try {
+						if(HomeActivity.appInterruptHandler != null){
+							HomeActivity.appInterruptHandler.refreshDriverLocations();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			timerUpdateDrivers.scheduleAtFixedRate(timerTaskUpdateDrivers, 0, 60000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void cancelTimerUpdateDrivers(){
+		try{
+			if(timerTaskUpdateDrivers != null){
+				timerTaskUpdateDrivers.cancel();
+				timerTaskUpdateDrivers = null;
+			}
+			if(timerUpdateDrivers != null){
+				timerUpdateDrivers.cancel();
+				timerUpdateDrivers.purge();
+				timerUpdateDrivers = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
 	
 	
 	
@@ -6670,8 +6713,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
 		    		editor.commit();
 		  
-					
-		    		stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+		    		cancelTimerUpdateDrivers();
 		    		
 		    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
 					switchPassengerScreen(passengerScreenMode);
@@ -7088,7 +7130,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			if(loggedOut){
 				loggedOut = false;
 				
-		        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				cancelTimerUpdateDrivers();
 		        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				startActivity(new Intent(HomeActivity.this, SplashLogin.class));
@@ -7183,7 +7225,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		try {
 			if(userMode == UserMode.PASSENGER){
-				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				cancelTimerUpdateDrivers();
 				
 				cancelTimerRequestRide();
 				Log.e("customerCancelBeforePushReceive ","="+customerCancelPressed);
