@@ -88,6 +88,8 @@ public class DriverLocationUpdateService extends Service {
     		
     		Log.e("fast", "="+fast);
     		
+    		
+    		
     		if(fast.equalsIgnoreCase("no")){
     			serverUpdateTimePeriod = 60000;
     			if(locationFetcherDriver != null){
@@ -110,7 +112,7 @@ public class DriverLocationUpdateService extends Service {
     				gpsLocationFetcher.destroy();
     				gpsLocationFetcher = null;
     			}
-    			gpsLocationFetcher = new GPSLocationFetcher(DriverLocationUpdateService.this, accessToken, deviceToken, SERVER_URL, serverUpdateTimePeriod);
+    			gpsLocationFetcher = new GPSLocationFetcher(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     		}
         	
     		
@@ -134,10 +136,10 @@ public class DriverLocationUpdateService extends Service {
     	
     	//TODO Toggle live to trial
 		String DEV_SERVER_URL = "https://54.81.229.172:8012";
-		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4010";
+		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4013";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 		
-		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 		
 		
 		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -163,6 +165,8 @@ public class DriverLocationUpdateService extends Service {
 		deviceToken = DriverLocationUpdateService.this.getSharedPreferences(SplashLogin.class.getSimpleName(), 
 				Context.MODE_PRIVATE).getString("registration_id", "");
     	
+		Log.e("SERVER_URL in updateService","="+SERVER_URL);
+		
 		database2.insertDriverLocData(accessToken, deviceToken, SERVER_URL);
 		database2.close();
     }
@@ -285,7 +289,7 @@ public class DriverLocationUpdateService extends Service {
 						String userMode = database2.getUserMode();
 						database2.close();
 						
-						Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
+//						Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
 						
 						if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 							
@@ -303,7 +307,7 @@ public class DriverLocationUpdateService extends Service {
 					
 				}
 			};
-			timerCheckIfDriver.scheduleAtFixedRate(timerTaskCheckIfDriver, 1000, 60000);
+			timerCheckIfDriver.scheduleAtFixedRate(timerTaskCheckIfDriver, 1000, 3 * 60000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -330,7 +334,7 @@ public class DriverLocationUpdateService extends Service {
 	
 	private static int DRIVER_LOCATION_PI_REQUEST_CODE = 111;
 	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
-	private static final long ALARM_REPEAT_INTERVAL = 60000;
+	private static final long ALARM_REPEAT_INTERVAL = 3 * 60000;
 	
 	
 	public void setupLocationUpdateAlarm(){
@@ -339,18 +343,18 @@ public class DriverLocationUpdateService extends Service {
 	    		new Intent(this, DriverLocationUpdateAlarmReceiver.class).setAction(SEND_LOCATION), 
 	    		PendingIntent.FLAG_NO_CREATE) != null);
 	    Log.e("alarmUp", "="+alarmUp);
-	    if (!alarmUp) {
+	    
+	    if(alarmUp){
+	    	cancelLocationUpdateAlarm();
+	    }
+	    
 	        Intent intent = new Intent(this, DriverLocationUpdateAlarmReceiver.class);
 	        intent.setAction(SEND_LOCATION);
 	        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, DRIVER_LOCATION_PI_REQUEST_CODE, 
 	        		intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-	        Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
 	        
 	        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-	        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), ALARM_REPEAT_INTERVAL, pendingIntent);
-	    }
+	        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), ALARM_REPEAT_INTERVAL, pendingIntent);
 
 	}
 	
@@ -373,22 +377,14 @@ class GPSLocationFetcher {
 
 	public MyLocationListener gpsListener, networkListener;
 	public LocationManager locationManager;
-	public Location location;
-	public String accessToken, deviceToken, SERVER_URL;
 	public Context context;
-	
-	PowerManager powerManager;
-	WakeLock wakeLock;
 	
 	/**
 	 * Initialize location fetcher object with selected listeners
 	 * @param context
 	 */
-	public GPSLocationFetcher(Context context, String accessToken, String deviceToken, String SERVER_URL, long updatePeriod) {
+	public GPSLocationFetcher(Context context, long updatePeriod) {
 		this.context = context;
-		this.accessToken = accessToken;
-		this.deviceToken = deviceToken;
-		this.SERVER_URL = SERVER_URL;
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			gpsListener = new MyLocationListener();
@@ -399,8 +395,6 @@ class GPSLocationFetcher {
 				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updatePeriod, 0, networkListener);
 			}
 		}
-		powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-		wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
 	}
 	
 	public void destroy(){
@@ -418,17 +412,18 @@ class GPSLocationFetcher {
 
 	class MyLocationListener implements LocationListener {
 
-		public void onLocationChanged(Location loc) {
-			if(isBetterLocation(loc, GPSLocationFetcher.this.location)){
-				Log.e("************************************** custom", "Location changed "+loc);
-				GPSLocationFetcher.this.location = loc;
-				
-				Database2 database2 = new Database2(context);
-		    	database2.insertDriverCurrentLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
-		    	database2.close();
-				
-				sendLocationToServer(location);
-			}
+		public void onLocationChanged(final Location loc) {
+			
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Database2 database2 = new Database2(context);
+			    	database2.updateDriverCurrentLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
+			    	database2.close();
+			    	Log.e("DriverLocationUpdateService location in GPS only fast ", "=="+loc);
+					new DriverLocationDispatcher().sendLocationToServer(context, "GPSReciever");
+				}
+			}).start();
 		}
 
 		public void onProviderDisabled(String provider) {
@@ -439,148 +434,8 @@ class GPSLocationFetcher {
 
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
-		
-		
-		/**
-		 * Checks if the new location is accurate enough or not
-		 * @param location latest location
-		 * @param currentBestLocation last accurate location
-		 * @return
-		 */
-		protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-			int OLD_LOCATION_THRESHOLD = 1000 * 60 * 2;
-			if (currentBestLocation == null) {
-				// A new location is always better than no location
-				if(location.getAccuracy() < 100){
-					return true;
-				}
-				else{
-					return false;
-				}
-			}
-
-			// Check whether the new location fix is newer or older
-			long timeDelta = location.getTime() - currentBestLocation.getTime();
-			boolean isSignificantlyNewer = timeDelta > OLD_LOCATION_THRESHOLD;
-			boolean isSignificantlyOlder = timeDelta < -OLD_LOCATION_THRESHOLD;
-			boolean isNewer = timeDelta > 0;
-			
-
-			// Check whether the new location fix is more or less accurate
-			int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-			boolean isLessAccurate = accuracyDelta > 0;
-			boolean isMoreAccurate = accuracyDelta < 0;
-			boolean isSignificantlyLessAccurate = accuracyDelta > 100;
-
-			if(location.getAccuracy() > 100){
-				return false;
-			}
-			
-			// If it's been more than two minutes since the current location, use
-			// the new location because the user has likely moved
-			if (isSignificantlyNewer) {
-				return true;
-				// If the new location is more than two minutes older, it must
-				// be worse
-			} else if (isSignificantlyOlder) {
-				return false;
-			}
-
-			// Check if the old and new location are from the same provider
-			boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
-
-			// Determine location quality using a combination of timeliness and
-			// accuracy
-			if (isMoreAccurate) {
-				return true;
-			} else if (isNewer && !isLessAccurate) {
-				return true;
-			} else if (isNewer && !isSignificantlyLessAccurate
-					&& isFromSameProvider) {
-				return true;
-			}
-			
-			
-			
-			return false;
-		}
-
-		/** Checks whether two providers are the same */
-		private boolean isSameProvider(String provider1, String provider2) {
-			if (provider1 == null) {
-				return provider2 == null;
-			}
-			return provider1.equals(provider2);
-		}
-		
 	}
 
 	
 	
-	public void sendLocationToServer(final Location location){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Database2 database2 = new Database2(context);
-				try {
-					String userMode = database2.getUserMode();
-					database2.close();
-					
-					Log.e("DriverLocationUpdateService userMode in PI ", "=="+userMode);
-					
-					if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
-						if ((wakeLock != null) &&           // we have a WakeLock
-			    			    (wakeLock.isHeld() == false)) {  // but we don't hold it 
-			    			wakeLock.acquire();
-			    		}
-						
-						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-						nameValuePairs.add(new BasicNameValuePair("latitude", ""+location.getLatitude()));
-						nameValuePairs.add(new BasicNameValuePair("longitude", ""+location.getLongitude()));
-						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-						
-						Log.e("nameValuePairs in fast","="+nameValuePairs);
-						
-						HttpRequester simpleJSONParser = new HttpRequester();
-						String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
-						
-						Log.e("result","="+result);
-						
-						try{
-							//{"log":"Updated"}
-							JSONObject jObj = new JSONObject(result);
-							if(jObj.has("log")){
-								String log = jObj.getString("log");
-								if("Updated".equalsIgnoreCase(log)){
-									database2 = new Database2(context);
-									database2.updateDriverLastLocationTime();
-									database2.close();
-								}
-							}
-						} catch(Exception e){
-							e.printStackTrace();
-						}
-						finally{
-							database2.close();
-						}
-						
-						simpleJSONParser = null;
-						nameValuePairs = null;
-						
-						wakeLock.release();
-					}
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					if(wakeLock.isHeld()){
-	    				wakeLock.release();
-	    			}
-				}
-				finally{
-					database2.close();
-				}
-			}
-		}).start();
-	}
 }

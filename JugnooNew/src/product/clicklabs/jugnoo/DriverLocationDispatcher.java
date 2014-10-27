@@ -7,6 +7,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
@@ -14,11 +15,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationDispatcher {
 
-	public void sendLocationToServer(Context context){
+	public void sendLocationToServer(Context context, final String filePrefix){
 		Database2 database2 = new Database2(context);
 		try {
 			String userMode = database2.getUserMode();
-			Log.e("DriverLocationUpdateService userMode in DLD ", "=="+userMode);
 			
 			if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 				PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -38,12 +38,12 @@ public class DriverLocationDispatcher {
 						nameValuePairs.add(new BasicNameValuePair("longitude", "" + latLng.longitude));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 			
-						Log.e("nameValuePairs in location DLD", "=" + nameValuePairs);
+//						Log.e("nameValuePairs in location DLD", "=" + nameValuePairs);
 			
 						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
-						Log.e("result in DLD", "=" + result);
+//						Log.e("result in DLD", "=" + result);
 			
 						try{
 							//{"log":"Updated"}
@@ -52,6 +52,7 @@ public class DriverLocationDispatcher {
 								String log = jObj.getString("log");
 								if("Updated".equalsIgnoreCase(log)){
 									database2.updateDriverLastLocationTime();
+//									Log.writeLogToFile(filePrefix, "To Server "+new DateOperations().getCurrentTime()+" = "+result);
 								}
 							}
 						} catch(Exception e){
@@ -77,4 +78,19 @@ public class DriverLocationDispatcher {
     	}
 	}
 
+	
+	
+	
+	public void saveLocationToDatabase(final Context context, final Location location){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Database2 database2 = new Database2(context);
+		    	database2.updateDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+		    	database2.close();
+			}
+		}).start();
+	}
+	
+	
 }

@@ -822,9 +822,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	@Override
 	public void onLocationChanged(Location location, int priority) {
 		// TODO Auto-generated method stub
-		Database2 database2 = new Database2(RegisterScreen.this);
-    	database2.insertDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-    	database2.close();
+		new DriverLocationDispatcher().saveLocationToDatabase(RegisterScreen.this, location);
 	}
 	
 }

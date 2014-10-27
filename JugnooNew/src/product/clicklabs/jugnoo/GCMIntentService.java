@@ -15,16 +15,17 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.maps.model.LatLng;
 
 public class GCMIntentService extends IntentService {
 	
@@ -72,12 +73,7 @@ public class GCMIntentService extends IntentService {
 				builder.setTicker(message);
 				
 				if(ring){
-					builder.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.telephone_ring));
-					
-					long[] pattern = {0, 2000, 4000, 2000, 4000, 2000, 4000, 2000, 4000};
-					builder.setVibrate(pattern);
-					
-					builder.setDefaults(Notification.DEFAULT_VIBRATE);
+					startRing(context);
 					builder.setLights(Color.GREEN, 500, 500);
 				}
 				else{
@@ -128,11 +124,7 @@ public class GCMIntentService extends IntentService {
 				builder.setTicker(message);
 				
 				if(ring){
-					builder.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.telephone_ring));
-					
-					long[] pattern = {0, 2000, 4000, 2000, 4000, 2000, 4000, 2000, 4000};
-					builder.setVibrate(pattern);
-					
+					startRing(context);
 					builder.setLights(Color.GREEN, 500, 500);
 				}
 				else{
@@ -281,7 +273,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(false);
+	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, false);
 	    	    					 }
 	    	    					 
 	    	    					
@@ -294,7 +286,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(true);
+	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, true);
 	    	    					 }
 	    	    					 
 	    	    					 
@@ -307,7 +299,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout();
+	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 	    	    					 }
 	    	    					 
 	    	    					
@@ -410,6 +402,67 @@ public class GCMIntentService extends IntentService {
 
 	    
 	    
+	    public static MediaPlayer mediaPlayer;
+	    public static Vibrator vibrator;
+	    
+		public static void startRing(Context context){
+			try {
+				stopRing();
+				vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+				if(vibrator.hasVibrator()){
+					long[] pattern = {0, 1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900 };
+					vibrator.vibrate(pattern, -1);
+				}
+				AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+//				am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+				am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+				mediaPlayer = MediaPlayer.create(context, R.raw.telephone_ring);
+				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+				    @Override
+				    public void onCompletion(MediaPlayer mp) {
+						mediaPlayer.stop();
+				    	mediaPlayer.reset();
+				    	mediaPlayer.release();
+				    	vibrator.cancel();
+				    }
+				});
+				mediaPlayer.start();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		public static void stopRing(){
+			try {
+				if(vibrator != null){
+					vibrator.cancel();
+				}
+				if(mediaPlayer != null && mediaPlayer.isPlaying()){
+					mediaPlayer.stop();
+					mediaPlayer.reset();
+					mediaPlayer.release();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally{
+				vibrator = null;
+				mediaPlayer = null;
+			}
+		}
+
+	    
+	    
 	    
 	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
 	    		String startTime, String address){
@@ -472,7 +525,7 @@ public class GCMIntentService extends IntentService {
 		    				int count = deleteDriverRideRequest(context, engagementId);
 		    				if(count > 0){
 		    					if(HomeActivity.appInterruptHandler != null){
-			    					HomeActivity.appInterruptHandler.onRideRequestTimeout();
+			    					HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 			    				}
 		    					clearNotifications(context);
 		    				}

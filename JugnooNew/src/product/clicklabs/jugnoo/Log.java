@@ -21,7 +21,7 @@ public class Log {
 		if(PRINT){
 			android.util.Log.i(tag, message);
 			if(WRITE_TO_FILE){
-				writeLogToFile(tag + "<>" + message);
+				writeLogToFile(APP_NAME, tag + "<>" + message);
 			}
 		}
 	}
@@ -30,7 +30,7 @@ public class Log {
 		if(PRINT){
 			android.util.Log.d(tag, message);
 			if(WRITE_TO_FILE){
-				writeLogToFile(tag + "<>" + message);
+				writeLogToFile(APP_NAME, tag + "<>" + message);
 			}
 		}
 	}
@@ -39,7 +39,7 @@ public class Log {
 		if(PRINT){
 			android.util.Log.e(tag, message);
 			if(WRITE_TO_FILE){
-				writeLogToFile(tag + "<>" + message);
+				writeLogToFile(APP_NAME, tag + "<>" + message);
 			}
 		}
 	}
@@ -48,7 +48,7 @@ public class Log {
 		if(PRINT){
 			android.util.Log.v(tag, message);
 			if(WRITE_TO_FILE){
-				writeLogToFile(tag + "<>" + message);
+				writeLogToFile(APP_NAME, tag + "<>" + message);
 			}
 		}
 	}
@@ -57,7 +57,7 @@ public class Log {
 		if(PRINT){
 			android.util.Log.w(tag, message);
 			if(WRITE_TO_FILE){
-				writeLogToFile(tag + "<>" + message);
+				writeLogToFile(APP_NAME, tag + "<>" + message);
 			}
 		}
 	}
@@ -67,14 +67,14 @@ public class Log {
 	static String LOG_FILE = "LOGFILE";
 	static String APP_NAME = "Jugnoo";
 	
-	static void writeLogToFile(final String response) {
+	static void writeLogToFile(final String filePrefix, final String response) {
 
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					String fileName = Environment.getExternalStorageDirectory() + "/" + APP_NAME + "_" + LOG_FILE + ".txt";
+					String fileName = Environment.getExternalStorageDirectory() + "/" + filePrefix + "_" + LOG_FILE + ".txt";
 					File gpxfile = new File(fileName);
 					
 					if(!gpxfile.exists()){

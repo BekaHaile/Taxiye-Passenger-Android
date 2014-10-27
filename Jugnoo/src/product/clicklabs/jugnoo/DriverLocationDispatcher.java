@@ -39,7 +39,7 @@ public class DriverLocationDispatcher {
 			
 						Log.e("nameValuePairs in location DLD", "=" + nameValuePairs);
 			
-						SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
 						Log.e("result in DLD", "=" + result);

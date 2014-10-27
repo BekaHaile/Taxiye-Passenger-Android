@@ -41,7 +41,7 @@ class DriverInfo{
 	String userId, name, image, carImage, phoneNumber, rating;
 	LatLng latLng;
 	
-	String distanceToReach, durationToReach;
+	String distanceToReach = "0", durationToReach = "";
 	
 	public DriverInfo(String userId, double latitude, double longitude){
 		this.userId = userId;
@@ -260,22 +260,28 @@ enum ExceptionalDriver{
 
 
 
+
 enum ApiResponseFlags {
 	
 	PARAMETER_MISSING(100),
 	INVALID_ACCESS_TOKEN(101),
 	ERROR_IN_EXECUTION(102),
-	ASSIGNING_DRIVERS(105), 
+	ASSIGNING_DRIVERS(105),
 	NO_DRIVERS_AVAILABLE(106),
 	RIDE_ACCEPTED(107),
 	RIDE_ACCEPTED_BY_OTHER_DRIVER(108),
-	REQUEST_REJECTED(109),
-	REQUEST_TIMEOUT(110),
-	REQUEST_CANCELLED(111),
-	SESSION_TIMEOUT(112),
-	RIDE_STARTED(113),
-	RIDE_ENDED(114),
-	WAITING(115)
+	RIDE_CANCELLED_BY_DRIVER(109),
+	REQUEST_REJECTED(110),
+	REQUEST_TIMEOUT(111),
+	REQUEST_CANCELLED(112),
+	SESSION_TIMEOUT(113),
+	RIDE_STARTED(114),
+	RIDE_ENDED(115),
+	WAITING(116),
+	USER_OFFLINE(130),
+	NO_ACTIVE_SESSION(131),
+	ENGAGEMENT_DATA(132),
+	ACTIVE_REQUESTS(133)
 	;
 
 	private int ordinal;
@@ -288,6 +294,52 @@ enum ApiResponseFlags {
 		return ordinal;
 	}
 }
+
+
+
+
+
+
+enum EngagementStatus {
+	
+	REQUESTED(0),
+	// request has been sent
+	ACCEPTED(1),
+	// request has been accepted by the driver
+	STARTED(2),
+	// ride has started
+	ENDED(3),
+	// ride has ended
+	REJECTED_BY_DRIVER(4),
+	// request rejected by driver
+	CANCELLED_BY_CUSTOMER(5),
+	 // request cancelled by customer
+	TIMEOUT(6),
+	// request timed out
+	ACCEPTED_BY_OTHER_DRIVER(7),
+	// request was accepted by another driver
+	ACCEPTED_THEN_REJECTED(8),
+	// request was accepted and then rejected
+	CLOSED(9),
+	// request was closed when the driver accepted other request
+	CANCELLED_ACCEPTED_REQUEST(10);
+	// request was cancelled after it was accepted by a driver
+
+	
+	
+	private int ordinal;
+
+	private EngagementStatus(int ordinal) {
+		this.ordinal = ordinal;
+	}
+
+	public int getOrdinal() {
+		return ordinal;
+	}
+}
+
+
+
 
 
 

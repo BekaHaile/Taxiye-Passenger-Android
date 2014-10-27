@@ -190,11 +190,11 @@ public class JSONParser {
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 					
-					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+					HttpRequester simpleJSONParser = new HttpRequester();
 					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
 					
 					Log.e("result of = user_status", "="+result);
-					if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 						
 					}
 					else{
@@ -347,11 +347,11 @@ public class JSONParser {
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 					
-					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+					HttpRequester simpleJSONParser = new HttpRequester();
 					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/user_status", nameValuePairs);
 					
 					Log.e("result of = user_status", "="+result);
-					if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 						
 					}
 					else{

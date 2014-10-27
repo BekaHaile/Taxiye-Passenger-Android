@@ -116,6 +116,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	DrawerLayout drawerLayout;																		// views declaration
 	
 	
+	
 	//menu bar 
 	LinearLayout menuLayout;
 	
@@ -376,7 +377,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	static Activity activity;
 	
-	boolean customerCancelBeforePushReceive = false, 
+	boolean customerCancelPressed = false, 
 			userCanceledDialogShown = false;
 	boolean loggedOut = false, 
 			zoomedToMyLocation = false;
@@ -391,9 +392,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
+	
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
+	public static final int MAP_PATH_COLOR = Color.RED;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600;
@@ -406,7 +409,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;
 	
-	public static final long AUTO_RATE_DELAY = 5 * 60 * 1000;
+	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000;
 	
 	public static final String REQUEST_RIDE_BTN_NORMAL_TEXT = "Call an auto", REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT = "Assigning driver...";
 	
@@ -420,8 +423,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		activity = this;
 		
-		customerCancelBeforePushReceive = false;
+		customerCancelPressed = false;
 		userCanceledDialogShown = false;
+		
 		loggedOut = false;
 		zoomedToMyLocation = false;
 		dontCallRefreshDriver = false;
@@ -842,6 +846,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		
 		// menu events\
 		driverModeToggle.setOnClickListener(new View.OnClickListener() {
 			
@@ -972,7 +977,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				if(passengerScreenMode == PassengerScreenMode.P_INITIAL || driverScreenMode == DriverScreenMode.D_INITIAL){
+				if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_INITIAL)) 
+						|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
 					logoutPopup(HomeActivity.this);
 				}
 				else{
@@ -1063,27 +1069,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 								if(myLocation != null){
 									if(Data.driverInfos.size() > 0){
-										Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-										Data.cSessionId = "";
-										Data.cEngagementId = "";
-										
-										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-										Editor editor = pref.edit();
-										editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
-										editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-										editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
-							    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
-							    		editor.commit();
-							  
-										
-							    		stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-							    		
-							    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-										switchPassengerScreen(passengerScreenMode);
-							    		
-										customerCancelBeforePushReceive = false;
-										
-										startTimerRequestRide();
+										callAnAutoPopup(HomeActivity.this);
 									}
 									else{
 										noDriverAvailablePopup(HomeActivity.this);
@@ -1109,7 +1095,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				customerCancelBeforePushReceive = true;
+				customerCancelPressed = true;
 				cancelCustomerRequestAsync(HomeActivity.this);
 			}
 		});
@@ -1305,6 +1291,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				if(getBatteryPercentage() >= 10){
 					 GCMIntentService.clearNotifications(HomeActivity.this);
+					 GCMIntentService.stopRing();
 					driverAcceptRideAsync(HomeActivity.this);
 				}
 				else{
@@ -1319,6 +1306,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				GCMIntentService.clearNotifications(HomeActivity.this);
+				GCMIntentService.stopRing();
 				driverRejectRequestAsync(HomeActivity.this);
 			}
 		});
@@ -1597,13 +1585,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			
 			
-//			map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-//				
-//				@Override
-//				public void onMyLocationChange(Location arg0) {
-//					myLocation = arg0;
-//				}
-//			});
 			
 			map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 				
@@ -1799,13 +1780,49 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		switchUserScreen(userMode);
 		
-		if(userMode == UserMode.DRIVER){
+		
+		
+		if(userMode == UserMode.PASSENGER){
+			if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+				if(myLocation == null){
+					Data.pickupLatLng = new LatLng(0, 0);
+				}
+				else{
+					Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+				}
+				
+				Data.cEngagementId = "";
+				
+				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+				Editor editor = pref.edit();
+				editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
+				editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+				editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
+	    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
+	    		editor.commit();
+	  
+				
+	    		cancelTimerUpdateDrivers();
+	    		
+	    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+				switchPassengerScreen(passengerScreenMode);
+	    		
+				customerCancelPressed = false;
+				
+				startTimerRequestRide();
+			}
+			else if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+				switchPassengerScreen(passengerScreenMode);
+			}
+			else{
+				switchPassengerScreen(passengerScreenMode);
+			}
+		}
+		else if(userMode == UserMode.DRIVER){
 			switchDriverScreen(driverScreenMode);
-			getAndShowAllDriverRequests(HomeActivity.this);
 		}
-		else if(userMode == UserMode.PASSENGER){
-			switchPassengerScreen(passengerScreenMode);
-		}
+		
+		
 		
 		
 		
@@ -1999,7 +2016,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			userName.setText(Data.userData.userName);
 			
 			Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).transform(new CircleTransform()).into(profileImg);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(profileImg);}catch(Exception e){}
 			
 		} catch(Exception e){
 			e.printStackTrace();
@@ -2029,9 +2046,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		switch(mode){
 		
 			case DRIVER:
-				if(isServiceRunning(HomeActivity.this, CUpdateDriverLocationsService.class.getName())){
-					stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-				}
+				cancelTimerUpdateDrivers();
 				
 				database2.updateUserMode(Database2.UM_DRIVER);
 				
@@ -2442,9 +2457,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				title.setVisibility(View.GONE);
 //				favBtn.setVisibility(View.VISIBLE);
 
-				if(!isServiceRunning(HomeActivity.this, CUpdateDriverLocationsService.class.getName())){
-					startService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
-				}
+				startTimerUpdateDrivers();
 				
 				break;
 				
@@ -2480,7 +2493,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				title.setVisibility(View.GONE);
 //				favBtn.setVisibility(View.VISIBLE);
 
-				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				cancelTimerUpdateDrivers();
 				
 				break;
 				
@@ -2551,12 +2564,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 				driverName.setText(Data.assignedDriverInfo.name);
 				
-				if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-					driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
-    	 		}
-    	 		else{
-    	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
-    	 		}
+				if("".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach)){
+					driverTime.setText("");
+				}
+				else{
+					if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
+						driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
+	    	 		}
+	    	 		else{
+	    	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
+	    	 		}
+				}
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
 				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
@@ -3243,11 +3261,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		
     		destroyFusedLocationFetchers();
 	        
-	        PicassoTools.clearCache(Picasso.with(HomeActivity.this));
-	        
-	        
 	        ASSL.closeActivity(drawerLayout);
-	        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+	        cancelTimerUpdateDrivers();
+	        
+	        appInterruptHandler = null;
 	        
 	        System.gc();
         }catch(Exception e){
@@ -3264,13 +3281,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void drawLocationChanged(Location location){
 		
-		
 		try {
 			if(map != null){
 				zoomToCurrentLocationAtFirstLocationFix(location);
 			
 			HomeActivity.myLocation = location;
-			
+			updatePickupLocation(location);
 			
 				if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
 					
@@ -3830,7 +3846,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						Data.dCustomerId = driverRideRequest.customerId;
 						Data.dCustLatLng = driverRideRequest.latLng;
 						
-						Toast.makeText(getApplicationContext(), ""+Data.dEngagementId + " " + Data.dCustomerId, Toast.LENGTH_SHORT).show();
 						
 						driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
 						switchDriverScreen(driverScreenMode);
@@ -3897,130 +3912,134 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
-	        menuBtn.post(new Runnable() {
-				
-				@Override
-				public void run() {
+	        if(userMode == UserMode.PASSENGER){
+		        runOnUiThread(new Runnable() {
 					
-					if(driverAcceptPushRecieved){
-						passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-						switchPassengerScreen(passengerScreenMode);
-			        }
-					
-					nearestDriverProgress.setVisibility(View.VISIBLE);
-			        nearestDriverText.setVisibility(View.GONE);
-			        dontCallRefreshDriver = false;
-			        
-			        addCurrentLocationAddressMarker(destination);
-				}
-			});
+					@Override
+					public void run() {
+						
+						if(driverAcceptPushRecieved){
+							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+							switchPassengerScreen(passengerScreenMode);
+				        }
+						
+						nearestDriverProgress.setVisibility(View.VISIBLE);
+				        nearestDriverText.setVisibility(View.GONE);
+				        dontCallRefreshDriver = false;
+				        
+				        addCurrentLocationAddressMarker(destination);
+					}
+				});
+	        }
 	    }
 	    
 	    @Override
 	    protected String doInBackground(Void... params) {
-	    	try{
-	    		
-	    		if(!driverAcceptPushRecieved){
-		    		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	    			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-	    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+destination.latitude));
-	    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+destination.longitude));
-	    			HttpRequester simpleJSONParser = new HttpRequester();
-	    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
-	    			simpleJSONParser = null;
-	    			nameValuePairs = null;
-	    			Log.e("result of /find_a_driver", "="+result);
-	    			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
-	    			}
-	    			else{
-	    				try{
-	    					JSONObject jObj = new JSONObject(result);
-	    						
-	    					JSONArray data = jObj.getJSONArray("data");
-	    						
-	    					Data.driverInfos.clear();
-	    						
-	    					for(int i=0; i<data.length(); i++){
-	    							
-	    						JSONObject dataI = data.getJSONObject(i);
-	    							
-	    						String userId = dataI.getString("user_id");
-	    						double latitude = dataI.getDouble("latitude");
-	    						double longitude = dataI.getDouble("longitude");
-	    						
-	    						String userName = "", phoneNo = "", driverCarImage = "", userImage = "", rating = "4";
-	    						try{
-	    							userName = dataI.getString("user_name");
-	    							userImage = dataI.getString("user_image");
-	    							driverCarImage = dataI.getString("driver_car_image");
-	    							phoneNo = dataI.getString("phone_no");
-	    							rating = dataI.getString("rating");
-	    						} catch(Exception e){
-	    							e.printStackTrace();
-	    						}
-	    						
-	    						Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating));
-	    					}
-	    				}
-	    				catch(Exception e){
-	    					e.printStackTrace();
-	    				}
-	    			}
-	    		
-	    		}
-	    		
-	    		
-	    		
-	    		LatLng source = null;
-				
-	    		if(!driverAcceptPushRecieved){
-	    			double minDistance = 999999999;
-		    		for(int i=0; i<Data.driverInfos.size(); i++){
-		    			if(distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
-		    				minDistance = distance(destination, Data.driverInfos.get(i).latLng);
-		    				source = Data.driverInfos.get(i).latLng;
+	    	if(userMode == UserMode.PASSENGER){
+		    	try{
+		    		
+		    		if(!driverAcceptPushRecieved){
+			    		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		    			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+destination.latitude));
+		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+destination.longitude));
+		    			HttpRequester simpleJSONParser = new HttpRequester();
+		    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
+		    			simpleJSONParser = null;
+		    			nameValuePairs = null;
+		    			Log.d("result of /find_a_driver", "="+result);
+		    			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 		    			}
+		    			else{
+		    				try{
+		    					JSONObject jObj = new JSONObject(result);
+		    						
+		    					JSONArray data = jObj.getJSONArray("data");
+		    						
+		    					Data.driverInfos.clear();
+		    						
+		    					for(int i=0; i<data.length(); i++){
+		    							
+		    						JSONObject dataI = data.getJSONObject(i);
+		    							
+		    						String userId = dataI.getString("user_id");
+		    						double latitude = dataI.getDouble("latitude");
+		    						double longitude = dataI.getDouble("longitude");
+		    						
+		    						String userName = "", phoneNo = "", driverCarImage = "", userImage = "", rating = "4";
+		    						try{
+		    							userName = dataI.getString("user_name");
+		    							userImage = dataI.getString("user_image");
+		    							driverCarImage = dataI.getString("driver_car_image");
+		    							phoneNo = dataI.getString("phone_no");
+		    							rating = dataI.getString("rating");
+		    						} catch(Exception e){
+		    							e.printStackTrace();
+		    						}
+		    						
+		    						Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating));
+		    					}
+		    				}
+		    				catch(Exception e){
+		    					e.printStackTrace();
+		    				}
+		    			}
+		    		
 		    		}
-	    		}
-	    		else if(driverAcceptPushRecieved){
-	    			source = Data.assignedDriverInfo.latLng;
-	    		}
-	    		
-	    		
-	    		if(source == null){
-	    			return "error";
-	    		}
-	    		
-	    			
-	    		this.url = makeURL(source, destination);
-	    		
-		    	HttpRequester jParser = new HttpRequester();
-		    	
-		    	String response = jParser.getJSONFromUrl(url);
-		    	
-		    	JSONObject jsonObject = new JSONObject(response);
-		    	
-		    	
-		    	String status = jsonObject.getString("status");
-		    	
-		    	if("OK".equalsIgnoreCase(status)){
-		    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
-		    		
-		    		distance = element0.getJSONObject("distance").getString("text") ;
-		    		
-		    		duration = element0.getJSONObject("duration").getString("text");
 		    		
 		    		
-		    		if(driverAcceptPushRecieved){
-		    			Data.assignedDriverInfo.distanceToReach = distance;
-		    			Data.assignedDriverInfo.durationToReach = duration;
+		    		
+		    		LatLng source = null;
+					
+		    		if(!driverAcceptPushRecieved){
+		    			double minDistance = 999999999;
+			    		for(int i=0; i<Data.driverInfos.size(); i++){
+			    			if(distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
+			    				minDistance = distance(destination, Data.driverInfos.get(i).latLng);
+			    				source = Data.driverInfos.get(i).latLng;
+			    			}
+			    		}
 		    		}
-
-		    		return "Distance: " + distance + "\n" + "Duration: " + duration;
+		    		else if(driverAcceptPushRecieved){
+		    			source = Data.assignedDriverInfo.latLng;
+		    		}
 		    		
+		    		
+		    		if(source == null){
+		    			return "error";
+		    		}
+		    		
+		    			
+		    		this.url = makeURL(source, destination);
+		    		
+			    	HttpRequester jParser = new HttpRequester();
+			    	
+			    	String response = jParser.getJSONFromUrl(url);
+			    	
+			    	JSONObject jsonObject = new JSONObject(response);
+			    	
+			    	
+			    	String status = jsonObject.getString("status");
+			    	
+			    	if("OK".equalsIgnoreCase(status)){
+			    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
+			    		
+			    		distance = element0.getJSONObject("distance").getString("text") ;
+			    		
+			    		duration = element0.getJSONObject("duration").getString("text");
+			    		
+			    		
+			    		if(driverAcceptPushRecieved){
+			    			Data.assignedDriverInfo.distanceToReach = distance;
+			    			Data.assignedDriverInfo.durationToReach = duration;
+			    		}
+	
+			    		return "Distance: " + distance + "\n" + "Duration: " + duration;
+			    		
+			    	}
+		    	}catch(Exception e){
+		    		e.printStackTrace();
 		    	}
-	    	}catch(Exception e){
-	    		e.printStackTrace();
 	    	}
 	    	
 	        return "error";
@@ -4028,111 +4047,111 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    @Override
 	    protected void onPostExecute(final String result) {
 	        super.onPostExecute(result);  
-	        
-	        menuBtn.post(new Runnable() {
-				
-				@Override
-				public void run() {
-					if(!driverAcceptPushRecieved){
-			 			
-			 			if(map != null){
-							map.clear();
-							addCurrentLocationAddressMarker(destination);
-							for(int i=0; i<Data.driverInfos.size(); i++){
-								addDriverMarkerForCustomer(Data.driverInfos.get(i));
-							}
-							
-							try {
-								if(Data.driverInfos.size() > 0){
-									LatLng source = Data.driverInfos.get(Data.driverInfos.size()-1).latLng;
-									LatLng bound0 = new LatLng(source.latitude, source.longitude);
-								    LatLng bound1 = new LatLng(destination.latitude, destination.longitude);
-								    LatLngBounds bounds = new LatLngBounds.Builder().include(bound0).include(bound1).build();
-								    
-								    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200), 1000, null);
+	        if(userMode == UserMode.PASSENGER){
+		        runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						if(!driverAcceptPushRecieved){
+				 			
+				 			if(map != null){
+								map.clear();
+								addCurrentLocationAddressMarker(destination);
+								for(int i=0; i<Data.driverInfos.size(); i++){
+									addDriverMarkerForCustomer(Data.driverInfos.get(i));
 								}
-							} catch (Exception e) {
-								e.printStackTrace();
+								
+								try {
+									if(Data.driverInfos.size() > 0){
+										LatLng source = Data.driverInfos.get(Data.driverInfos.size()-1).latLng;
+										LatLng bound0 = new LatLng(source.latitude, source.longitude);
+									    LatLng bound1 = new LatLng(destination.latitude, destination.longitude);
+									    LatLngBounds bounds = new LatLngBounds.Builder().include(bound0).include(bound1).build();
+									    
+									    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200), 1000, null);
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
-						}
-			 			
-		    		}
-			        
-			        dontCallRefreshDriver = true;
-					
-					new Handler().postDelayed(new Runnable() {
-						
-						@Override
-						public void run() {
-							dontCallRefreshDriver = false;
-						}
-					}, 4000);
-			        
-			        
-			        nearestDriverProgress.setVisibility(View.GONE);
-			        
-			        nearestDriverText.setVisibility(View.VISIBLE);
-			        
-					
-			        String distanceString = "";
-			        
-			        if(!"error".equalsIgnoreCase(result)){
+				 			
+			    		}
 				        
-				        Log.i("passengerScreenMode","="+passengerScreenMode);
+				        dontCallRefreshDriver = true;
+						
+						new Handler().postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								dontCallRefreshDriver = false;
+							}
+						}, 4000);
+				        
+				        
+				        nearestDriverProgress.setVisibility(View.GONE);
+				        
+				        nearestDriverText.setVisibility(View.VISIBLE);
+				        
+						
+				        String distanceString = "";
+				        
+				        if(!"error".equalsIgnoreCase(result)){
+					        
+					        Log.i("passengerScreenMode","="+passengerScreenMode);
+					        
+					        if(!driverAcceptPushRecieved){
+					 	        
+					 	       	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+					 	       		distanceString = getResources().getString(R.string.nearest_driver_is) + " " + distance + " " + getResources().getString(R.string.away);
+						        }
+						        else{
+						        	distanceString = getResources().getString(R.string.could_not_find_nearest_driver_distance);
+						        }
+					 	        
+					 	       	nearestDriverText.setText(distanceString);
+					 	       
+					        }
+					        else if(driverAcceptPushRecieved){
+					        	
+					        }
+				        }
+				        else{
+				        	distanceString = getResources().getString(R.string.no_drivers_nearby);
+				        	nearestDriverText.setText(distanceString);
+				        }
+				        
+				        
+				        
+				        
 				        
 				        if(!driverAcceptPushRecieved){
-				 	        
-				 	       	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
-				 	       		distanceString = getResources().getString(R.string.nearest_driver_is) + " " + distance + " " + getResources().getString(R.string.away);
-					        }
-					        else{
-					        	distanceString = getResources().getString(R.string.could_not_find_nearest_driver_distance);
-					        }
-				 	        
-				 	       	nearestDriverText.setText(distanceString);
-				 	       
+				        	Data.pickupLatLng = destination;
 				        }
-				        else if(driverAcceptPushRecieved){
-				        	
-				        }
-			        }
-			        else{
-			        	distanceString = getResources().getString(R.string.no_drivers_nearby);
-			        	nearestDriverText.setText(distanceString);
-			        }
-			        
-			        
-			        
-			        
-			        
-			        if(!driverAcceptPushRecieved){
-			        	Data.pickupLatLng = destination;
-			        }
-			        else if (driverAcceptPushRecieved) {
-						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-						Editor editor = pref.edit();
-						editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
-
-						editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
-						editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
-						editor.putString(Data.SP_C_LATITUDE, "" + Data.assignedDriverInfo.latLng.latitude);
-						editor.putString(Data.SP_C_LONGITUDE, "" + Data.assignedDriverInfo.latLng.longitude);
-						editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
-						editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
-						editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
-						editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
-						editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
-						editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
-						editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
-
-						editor.commit();
-						
-						passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-						switchPassengerScreen(passengerScreenMode);
+				        else if (driverAcceptPushRecieved) {
+							SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+							Editor editor = pref.edit();
+							editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
+	
+							editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
+							editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
+							editor.putString(Data.SP_C_LATITUDE, "" + Data.assignedDriverInfo.latLng.latitude);
+							editor.putString(Data.SP_C_LONGITUDE, "" + Data.assignedDriverInfo.latLng.longitude);
+							editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
+							editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
+							editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
+							editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+							editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
+							editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
+							editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
+	
+							editor.commit();
+							
+							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+							switchPassengerScreen(passengerScreenMode);
+						}
 					}
-				}
-			});
-	        
+				});
+	        }
 	        
 	        
 	    }
@@ -4454,8 +4473,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								byte[] arg2, Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							customerCancelBeforePushReceive = false;
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							customerCancelPressed = false;
+//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							handleConnectionLost();
 						}
 
 						@Override
@@ -4477,7 +4497,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-									customerCancelBeforePushReceive = false;
+									customerCancelPressed = false;
 									
 								}
 								else{
@@ -4499,7 +4519,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								customerCancelBeforePushReceive = false;
+								customerCancelPressed = false;
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
@@ -4509,7 +4529,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			customerCancelBeforePushReceive = false;
+			customerCancelPressed = false;
 		}
 
 	}
@@ -4697,15 +4717,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(int arg0, Header[] arg1,
 								byte[] arg2, Throwable arg3) {
 							Log.e("request fail", arg3.toString());
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							DialogPopup.dismissLoadingDialog();
+							handleConnectionLost();
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
+						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) 
+						{
 							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
+							Log.v("accept ride api Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
@@ -4713,6 +4734,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								if(!jObj.isNull("error")){
 									
 									int flag = jObj.getInt("flag");	
+									Log.e("accept_a_request flag", "="+flag);
 									String errorMessage = jObj.getString("error");
 									
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
@@ -4735,12 +4757,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									if(jObj.has("flag")){
 										try{
 											int flag = jObj.getInt("flag");
+											Log.e("accept_a_request flag", "="+flag);
 											String logMessage = jObj.getString("log");
 											new DialogPopup().alertPopup(activity, "", ""+logMessage);
-											reduceRideRequest(activity, Data.dEngagementId);
+											
 										} catch(Exception e){
 											e.printStackTrace();
 										}
+										reduceRideRequest(activity, Data.dEngagementId);
 									}
 									else{
 //										{
@@ -4797,19 +4821,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								        
 										driverScreenMode = DriverScreenMode.D_START_RIDE;
 										switchDriverScreen(driverScreenMode);
-										DialogPopup.dismissLoadingDialog();
 										
-										deleteParticularDriverRequest(activity, Data.dEngagementId);
+										deleteAllDriverRequests(HomeActivity.this);
 										
 									}
 									
+									
+									DialogPopup.dismissLoadingDialog();
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
-	
+							
+							DialogPopup.dismissLoadingDialog();
 							
 						}
 					});
@@ -4837,7 +4863,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Data.driverRideRequests.clear();
 				Data.driverRideRequests.addAll(database2.getAllDriverRequests());
 				database2.close();
-				menuBtn.post(new Runnable() {
+				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						showAllRideRequestsOnMap();
@@ -4979,12 +5005,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								byte[] arg2, Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							handleConnectionLost();
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
+						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) 
+						{
 							String response = new String(arg2);
 							Log.v("Server response", "response = " + response);
 	
@@ -5077,7 +5104,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									byte[] arg2, Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								handleConnectionLost();
 							}
 
 							@Override
@@ -5789,7 +5817,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 									PicassoTools.clearCache(Picasso.with(HomeActivity.this));
 									
-									try {	
+									try {
 										Session session = new Session(HomeActivity.this);
 										Session.setActiveSession(session);	
 										session.closeAndClearTokenInformation();	
@@ -6028,7 +6056,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/request_now", params,
 					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
 
 						@Override
 						public void onFailure(int arg0, Header[] arg1,
@@ -6479,6 +6506,54 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+
+	
+	
+    Timer timerUpdateDrivers;
+	TimerTask timerTaskUpdateDrivers;
+	
+	public void startTimerUpdateDrivers(){
+		cancelTimerUpdateDrivers();
+		try {
+			timerUpdateDrivers = new Timer();
+			timerTaskUpdateDrivers = new TimerTask() {
+				@Override
+				public void run() {
+					try {
+						if(HomeActivity.appInterruptHandler != null){
+							HomeActivity.appInterruptHandler.refreshDriverLocations();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			timerUpdateDrivers.scheduleAtFixedRate(timerTaskUpdateDrivers, 0, 60000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void cancelTimerUpdateDrivers(){
+		try{
+			if(timerTaskUpdateDrivers != null){
+				timerTaskUpdateDrivers.cancel();
+				timerTaskUpdateDrivers = null;
+			}
+			if(timerUpdateDrivers != null){
+				timerUpdateDrivers.cancel();
+				timerUpdateDrivers.purge();
+				timerUpdateDrivers = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
 	
 	
 	
@@ -6581,6 +6656,90 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    	return new ArrayList<LatLng>();
 	    }
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	void callAnAutoPopup(final Activity activity) {
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.custom_two_btn_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			textHead.setVisibility(View.VISIBLE);
+			textHead.setText("Chalo Jugnoo Se");
+			textMessage.setText("Do you want to call an auto?");
+			
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			
+			btnOk.setText("Now");
+			btnCancel.setText("Later");
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+
+					Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+					Data.cSessionId = "";
+					Data.cEngagementId = "";
+					
+					SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+					Editor editor = pref.edit();
+					editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
+					editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+					editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
+		    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
+		    		editor.commit();
+		  
+		    		cancelTimerUpdateDrivers();
+		    		
+		    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+					switchPassengerScreen(passengerScreenMode);
+		    		
+					customerCancelPressed = false;
+					
+					startTimerRequestRide();
+				}
+				
+			});
+			
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+				
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	
 	
@@ -6971,7 +7130,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			if(loggedOut){
 				loggedOut = false;
 				
-		        stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				cancelTimerUpdateDrivers();
 		        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				startActivity(new Intent(HomeActivity.this, SplashLogin.class));
@@ -7066,12 +7225,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		try {
 			if(userMode == UserMode.PASSENGER){
-				stopService(new Intent(HomeActivity.this, CUpdateDriverLocationsService.class));
+				cancelTimerUpdateDrivers();
 				
-				Log.e("CRequestRideService ","stoped in home");
 				cancelTimerRequestRide();
-				Log.e("customerCancelBeforePushReceive ","="+customerCancelBeforePushReceive);
-				if(!customerCancelBeforePushReceive){
+				Log.e("customerCancelBeforePushReceive ","="+customerCancelPressed);
+				if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 					fetchAcceptedDriverInfoAndChangeState(jObj);
 				}
 			}
@@ -7080,6 +7238,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		
 	}
+	
 	
 	
 	public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj){
@@ -7114,9 +7273,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName, 
 					driverImage, driverCarImage, driverPhone, driverRating);
 			
-			menuBtn.post(new Runnable() {
+			
+			
+			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+					Log.e("assignedDriverInfo", "="+Data.assignedDriverInfo);
+					Log.e("myLocation", "="+myLocation);
 					if(getDistanceTimeAddress != null){
 						getDistanceTimeAddress.cancel(true);
 					}
@@ -7141,6 +7304,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			if(userMode == UserMode.DRIVER){
 				
 				map.clear();
+				
 			
 				if(Data.driverRideRequests.size() > 0){
 					
@@ -7184,7 +7348,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onNewRideRequest() {
 		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-			menuBtn.post(new Runnable() {
+			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					getAndShowAllDriverRequests(HomeActivity.this);
@@ -7194,11 +7358,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 
 	@Override
-	public void onCancelRideRequest(final boolean acceptedByOtherDriver) {
-		
+	public void onCancelRideRequest(final String engagementId, final boolean acceptedByOtherDriver) {
+		GCMIntentService.stopRing();
 		try {
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-					menuBtn.post(new Runnable() {
+					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							getAndShowAllDriverRequests(HomeActivity.this);
@@ -7206,33 +7370,35 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 				}
 				else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
-					menuBtn.post(new Runnable() {
-						
+					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							DialogPopup.dismissLoadingDialog();
-							driverScreenMode = DriverScreenMode.D_INITIAL;
-							switchDriverScreen(driverScreenMode);
-							if(!userCanceledDialogShown){
-								if(acceptedByOtherDriver){
-									new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
+							if(engagementId.equalsIgnoreCase(Data.dEngagementId)){
+								DialogPopup.dismissLoadingDialog();
+								driverScreenMode = DriverScreenMode.D_INITIAL;
+								switchDriverScreen(driverScreenMode);
+								if(!userCanceledDialogShown){
+									if(acceptedByOtherDriver){
+//										new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
+									}
+									else{
+										new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+									}
 								}
-								else{
-									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
-								}
+								userCanceledDialogShown = false;
 							}
-							userCanceledDialogShown = false;
 						}
 					});
 				}
 				else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_START_RIDE){
 					runOnUiThread(new Runnable() {
-						
 						@Override
 						public void run() {
-							driverScreenMode = DriverScreenMode.D_INITIAL;
-							switchDriverScreen(driverScreenMode);
-							new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+							if(engagementId.equalsIgnoreCase(Data.dEngagementId)){
+								driverScreenMode = DriverScreenMode.D_INITIAL;
+								switchDriverScreen(driverScreenMode);
+								new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+							}
 						}
 					});
 				}
@@ -7243,14 +7409,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	@Override
-	public void onRideRequestTimeout() {
+	public void onRideRequestTimeout(final String engagementId) {
+		GCMIntentService.stopRing();
 		if(userMode == UserMode.DRIVER ){
-			menuBtn.post(new Runnable() {
+			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					if(driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
-						driverScreenMode = DriverScreenMode.D_INITIAL;
-						switchDriverScreen(driverScreenMode);
+						if(engagementId.equalsIgnoreCase(Data.dEngagementId)){
+							driverScreenMode = DriverScreenMode.D_INITIAL;
+							switchDriverScreen(driverScreenMode);
+						}
 					}
 					else if(driverScreenMode == DriverScreenMode.D_INITIAL){
 						getAndShowAllDriverRequests(HomeActivity.this);
@@ -7308,7 +7477,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		editor.putString(Data.SP_C_DRIVER_PHONE, "");
 			editor.putString(Data.SP_C_DRIVER_RATING, "");
     		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-    		editor.putString(Data.SP_C_DRIVER_DURATION, "0");
+    		editor.putString(Data.SP_C_DRIVER_DURATION, "");
     		
     		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
     		editor.putString(Data.SP_C_TOTAL_FARE, "0");
@@ -7331,7 +7500,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void customerEndRideInterrupt() {
-		try {
+		try{
 			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
 				runOnUiThread(new Runnable() {
 					
@@ -7400,6 +7569,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try{
 			
 			new FBLogoutNoIntent(cont).execute();
+			
+			PicassoTools.clearCache(Picasso.with(cont));
 			
 			cont.runOnUiThread(new Runnable() {
 				
@@ -7492,7 +7663,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			};
 			
-			automaticReviewHandler.postDelayed(automaticReviewRunnable, AUTO_RATE_DELAY);
+			automaticReviewHandler.postDelayed(automaticReviewRunnable, AUTO_RATING_DELAY);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -7535,8 +7706,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void initializeFusedLocationFetchers() {
 		destroyFusedLocationFetchers();
-		if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_INITIAL)) 
-				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
+		if(((userMode == UserMode.DRIVER) && (driverScreenMode != DriverScreenMode.D_IN_RIDE)) 
+				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode != PassengerScreenMode.P_IN_RIDE))){
+			Log.e("initializeFusedLocationFetchers", "userMode = "+userMode);
+			Log.i("initializeFusedLocationFetchers", "driverScreenMode = "+driverScreenMode);
+			Log.i("initializeFusedLocationFetchers", "passengerScreenMode = "+passengerScreenMode);
 			if (myLocation == null) {
 				if (lowPowerLF == null) {
 					lowPowerLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 0);
@@ -7583,12 +7757,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_INITIAL)) 
-				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
+		Log.i("onLocationChanged interface ", "location = "+location);
+		if(((userMode == UserMode.DRIVER) && (driverScreenMode != DriverScreenMode.D_IN_RIDE)) 
+				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode != PassengerScreenMode.P_IN_RIDE))){
 			if(priority == 0){
 				if(location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK){
 					zoomToCurrentLocationAtFirstLocationFix(location);
 					HomeActivity.myLocation = location;
+					updatePickupLocation(location);
 				}
 			}
 			else if(priority == 2){
@@ -7596,6 +7772,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				if(location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK){
 					zoomToCurrentLocationAtFirstLocationFix(location);
 					HomeActivity.myLocation = location;
+					updatePickupLocation(location);
 				}
 			}
 		}
@@ -7603,6 +7780,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void zoomToCurrentLocationAtFirstLocationFix(Location location){
+		HomeActivity.myLocation = location;
 		try {
 			if(map != null){
 				if(!zoomedToMyLocation){
@@ -7614,13 +7792,57 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						getDistanceTimeAddress.execute();
 					}
 				}
-				HomeActivity.myLocation = location;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	
+	
+	/**
+	 *  Updates PickupLocation on first location fix, when passenger state is P_ASSIGNING_DRIVERS 
+	 * 	and saving it in shared preferences.
+	 * @param location location changed in listeners
+	 */
+	public void updatePickupLocation(Location location){
+		if(userMode == UserMode.PASSENGER){
+			if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+				if(Data.pickupLatLng.latitude == 0 && Data.pickupLatLng.longitude == 0){
+					Data.pickupLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+					SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+					Editor editor = pref.edit();
+					editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
+					editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+					editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
+		    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
+		    		editor.commit();
+		    		
+		    		if(getDistanceTimeAddress != null){
+						getDistanceTimeAddress.cancel(true);
+						getDistanceTimeAddress = null;
+					}
+					if(myLocation != null){
+						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+								myLocation.getLongitude()), false);
+						getDistanceTimeAddress.execute();
+					}
+				}
+			}
+			else if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+				if("".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach)){
+					if(getDistanceTimeAddress != null){
+						getDistanceTimeAddress.cancel(true);
+					}
+					if(myLocation != null){
+						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+								myLocation.getLongitude()), true);
+						getDistanceTimeAddress.execute();
+					}
+				}
+			}
+		}
+	}
 	
 	
 	
@@ -7645,7 +7867,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //		}
 	}
 	
-	
+//	SELECT * FROM `tb_updated_user_location` WHERE `user_id`=231 and `location_updated_timestamp` >= '2014-10-18' and `location_updated_timestamp` < '2014-10-20'
 	
 	
 	//TODO new Request ride timerTask
@@ -7660,6 +7882,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void startTimerRequestRide(){
 		cancelTimerRequestRide();
 		try {
+			
+			requestRideLifeTime = ((2 * 60 * 1000) + (1 * 60 * 1000));
+			serverRequestStartTime = 0;
+			serverRequestEndTime = 0;
+			executionTime = -1;
+			requestPeriod = 20000;
+			
 			timerRequestRide = new Timer();
 			timerTaskRequestRide = new TimerTask() {
 				@Override
@@ -7671,10 +7900,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						Log.e("request_ride execution", "="+(serverRequestEndTime - executionTime));
 						if(executionTime >= serverRequestEndTime){
 							cancelTimerRequestRide();
-							menuBtn.post(new Runnable() {
+							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
-									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 										noDriverAvailablePopup(HomeActivity.this);
 										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
@@ -7683,8 +7912,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							});
 						}
 						else{
-							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelBeforePushReceive){
-								menuBtn.post(new Runnable() {
+							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
+								runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
 										DialogPopup.showLoadingDialog(HomeActivity.this, "Assigning Driver...");
@@ -7707,7 +7936,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								Log.i("response of request_ride", "="+response);
 								
-								menuBtn.post(new Runnable() {
+								runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
 										DialogPopup.dismissLoadingDialog();
@@ -7716,6 +7945,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if(response.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 									Log.e("timeout","=");
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+										}
+									});
 								}
 								else{
 									try{
@@ -7736,6 +7971,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											
 											if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
 												final String log = jObj.getString("log");
+												Log.e("ASSIGNING_DRIVERS log", "="+log);
 												final String start_time = jObj.getString("start_time");
 												if(executionTime == -1){
 													serverRequestStartTime = new DateOperations().getMilliseconds(start_time);
@@ -7748,18 +7984,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												Data.cSessionId = jObj.getString("session_id");
 											}
 											else if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
-												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 													cancelTimerRequestRide();
 													fetchAcceptedDriverInfoAndChangeState(jObj);
 												}
 											}
 											else if(ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag){
 												final String log = jObj.getString("log");
+												Log.e("NO_DRIVERS_AVAILABLE log", "="+log);
 												cancelTimerRequestRide();
-												menuBtn.post(new Runnable() {
+												runOnUiThread(new Runnable() {
 													@Override
 													public void run() {
-														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 															noDriverAvailablePopup(HomeActivity.this);
 															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 															switchPassengerScreen(passengerScreenMode);
@@ -7793,11 +8030,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 				}
 			};
-			requestRideLifeTime = ((2 * 60 * 1000) + (1 * 60 * 1000));
-			serverRequestStartTime = 0;
-			serverRequestEndTime = 0;
-			executionTime = -1;
-			requestPeriod = 20000;
+			
 			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, requestPeriod);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -7819,14 +8052,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 
 	@Override
 	public void onNoDriversAvailablePushRecieved(final String logMessage) {
 		cancelTimerRequestRide();
-		if(HomeActivity.passengerScreenMode != PassengerScreenMode.P_INITIAL){
+		if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
 			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-			menuBtn.post(new Runnable() {
+			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					noDriverAvailablePopup(HomeActivity.this);
@@ -7839,8 +8074,57 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	
 	
+
 	
-	
+	public void handleConnectionLost() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if(Data.userData != null){
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+						}
+					});
+					int currentUserStatus = 0;
+					if(UserMode.DRIVER == userMode){
+						currentUserStatus = 1;
+					}
+					else if(UserMode.PASSENGER == userMode){
+						currentUserStatus = 2;
+					}
+					if(currentUserStatus != 0){
+						String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
+						if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp)){
+							String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
+							if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp1)){
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										new DialogPopup().alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+									}
+								});
+							}
+						}
+					}
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							DialogPopup.dismissLoadingDialog();
+							if(UserMode.DRIVER == userMode){
+								switchDriverScreen(driverScreenMode);
+							}
+							else if(UserMode.PASSENGER == userMode){
+								switchPassengerScreen(passengerScreenMode);
+							}
+						}
+					});
+				}
+				//TODO refresh application on connection lost
+			}
+		}).start();
+	}
 	
 	
 	

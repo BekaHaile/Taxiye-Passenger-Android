@@ -38,23 +38,26 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import android.os.Environment;
+import android.util.Log;
 
-public class SimpleJSONParser {
+public class HttpRequester {
 
 	static String SERVER_TIMEOUT = "SERVER_TIMEOUT";
-	static int TIMEOUT_CONNECTION = 15000, TIMEOUT_SOCKET = 15000;
+	static int TIMEOUT_CONNECTION = 10000, TIMEOUT_SOCKET = 10000, RETRY_COUNT = 0, SLEEP_BETWEEN_RETRY = 0;
 
 	// constructor
-	public SimpleJSONParser() {
+	public HttpRequester() {
 		SERVER_TIMEOUT = "SERVER_TIMEOUT";
 	}
 
 	public String getJSONFromUrl(String url) {
+		Log.i("HttpRequester url", "="+url);
 		InputStream inputStream = null;
 		String json = "";
 		// Making HTTP request
@@ -120,9 +123,10 @@ public class SimpleJSONParser {
 	
 	
 	public String getJSONFromUrlParams(String url, ArrayList<NameValuePair> nameValuePairs){
+		Log.i("HttpRequester url", "="+url);
         try {
             DataLoader dl = new DataLoader();
-            HttpResponse response = dl.secureLoadData(url, nameValuePairs); 
+            HttpResponse response = dl.secureLoadDataRetry(url, nameValuePairs); 
 
             StringBuilder sb = new StringBuilder();
             sb.append("HEADERS:\n\n");
@@ -237,6 +241,38 @@ class CustomX509TrustManager implements X509TrustManager {
 
 class DataLoader {
 
+		public HttpResponse secureLoadDataRetry(String url, ArrayList<NameValuePair> nameValuePairs) throws Exception {
+			int count = 0;
+			while (count <= HttpRequester.RETRY_COUNT) {
+				count += 1;
+				try {
+					HttpResponse response = secureLoadData(url, nameValuePairs);
+					/**
+					 * if we get here, that means we were successful and we can
+					 * stop.
+					 */
+					return response;
+				} catch (Exception e) {
+					/**
+					 * if we have exhausted our retry limit
+					 */
+					if (count <= HttpRequester.RETRY_COUNT) {
+						/**
+						 * we have retries remaining, so log the message and go
+						 * again.
+						 */
+						System.out.println(e.toString());
+						Thread.sleep(HttpRequester.SLEEP_BETWEEN_RETRY);
+					} else {
+						System.out.println("could not succeed with retry...");
+						throw e;
+					}
+				}
+			}
+			return null;
+		}
+	
+	
     public HttpResponse secureLoadData(String url, ArrayList<NameValuePair> nameValuePairs)
             throws ClientProtocolException, IOException,
             NoSuchAlgorithmException, KeyManagementException,
@@ -248,7 +284,7 @@ class DataLoader {
 
         //Added timeout
         HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParameters, SimpleJSONParser.TIMEOUT_CONNECTION);
+        HttpConnectionParams.setConnectionTimeout(httpParameters, HttpRequester.TIMEOUT_CONNECTION);
         HttpConnectionParams.setSoTimeout(httpParameters, TIMEOUT_SOCKET);
         
         HttpClient client = new DefaultHttpClient(httpParameters);
@@ -260,6 +296,7 @@ class DataLoader {
         sr.register(new Scheme("https", ssf, 443));
         
         DefaultHttpClient sslClient = new DefaultHttpClient(ccm, client.getParams());
+        sslClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(5, true));
 
         HttpPost post = new HttpPost(new URI(url));
         post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -273,11 +310,6 @@ class DataLoader {
 
 	
 }
-
-
-
-
-
 
 
 

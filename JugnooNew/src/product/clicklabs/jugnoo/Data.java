@@ -87,7 +87,8 @@ public class Data {
 	
 	
 	public static String D_START_RIDE = "D_START_RIDE", D_IN_RIDE = "D_IN_RIDE";
-	public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_REQUEST_FINAL = "P_REQUEST_FINAL";
+	public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_REQUEST_FINAL = "P_REQUEST_FINAL", 
+			P_ASSIGNING = "P_ASSIGNING";
 	
 	public static LatLng startRidePreviousLatLng;
 	
@@ -117,16 +118,27 @@ public class Data {
 	// live 6th:    https://dev.jugnoo.in:4006
 	// live 8th:    https://dev.jugnoo.in:4008
 	// live 10th:    https://dev.jugnoo.in:4010
+	// live 13th:    https://dev.jugnoo.in:4013
 	
+	//iOS 4012
+	//
 	// Dev new dispatcher :   https://54.81.229.172:8012
 	
 	
 	
 	public static final String DEV_SERVER_URL = "https://54.81.229.172:8012";
-	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4010";
+	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4013";
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

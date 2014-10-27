@@ -1974,7 +1974,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 					Log.e("nameValuePairs in sending null loc","="+nameValuePairs);
 					
-					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+					HttpRequester simpleJSONParser = new HttpRequester();
 					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/update_driver_location", nameValuePairs);
 					
 					Log.e("result ","="+result);
@@ -3589,7 +3589,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    }
 	    @Override
 	    protected String doInBackground(Void... params) {
-	    	return new SimpleJSONParser().getJSONFromUrl(url);
+	    	return new HttpRequester().getJSONFromUrl(url);
 	    }
 	    @Override
 	    protected void onPostExecute(String result) {
@@ -3840,12 +3840,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+destination.latitude));
 	    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+destination.longitude));
 	    			Log.e("nameValuePairs ","="+nameValuePairs);
-	    			SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+	    			HttpRequester simpleJSONParser = new HttpRequester();
 	    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
 	    			Log.e("result","="+result);
 	    			simpleJSONParser = null;
 	    			nameValuePairs = null;
-	    			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+	    			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 	    				Log.e("timeout","=");
 	    			}
 	    			else{
@@ -3913,7 +3913,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    			
 	    		this.url = makeURL(source, destination);
 	    		
-		    	SimpleJSONParser jParser = new SimpleJSONParser();
+		    	HttpRequester jParser = new HttpRequester();
 		    	
 		    	String response = jParser.getJSONFromUrl(url);
 		    	
@@ -4214,7 +4214,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         	Log.i("curLatitude ",">"+curLatitude);
         	Log.i("curLongitude ",">"+curLongitude);
         	
-            JSONObject jsonObj = new JSONObject(new SimpleJSONParser().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?" +
+            JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?" +
             		"latlng=" + curLatitude + "," + curLongitude 
             		+ "&sensor=true"));
             
@@ -6342,12 +6342,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							Log.i("nameValuePairs", ""+nameValuePairs);
 							Log.i("link", "="+Data.SERVER_URL + "/get_driver_current_location");
 							
-							SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+							HttpRequester simpleJSONParser = new HttpRequester();
 							String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_driver_current_location", nameValuePairs);
 							
 							Log.e("timerTaskDriverLocationUpdater result","=*****=="+result);
 							
-							if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+							if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 								Log.e("timeout","=");
 							}
 							else{
@@ -6482,7 +6482,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									if(driverScreenMode == DriverScreenMode.D_START_RIDE){
 										LatLng source = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 										String url = makeURLPath(source, Data.dCustLatLng);
-										String result = new SimpleJSONParser().getJSONFromUrl(url);
+										String result = new HttpRequester().getJSONFromUrl(url);
 										
 										if(result != null){
 											final List<LatLng> list = getLatLngListFromPath(result);

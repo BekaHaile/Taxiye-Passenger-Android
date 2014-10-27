@@ -112,8 +112,6 @@
 	<string name="request_ride">Request Ride</string>
 	<string name="assigning_driver">Assigning driver...</string>
 	
-	<string name="cancel_ride">Cancel Ride</string>
-	
 	<string name="no_drivers_nearby">No drivers nearby.</string>
 	<string name="could_not_find_nearest_driver_distance">Could not find nearest driver\'s distance.</string>
 	<string name="nearest_driver_is">Nearest driver is</string>
@@ -133,6 +131,9 @@
 	
 	<string name="accept_ride">Accept Ride</string>
 	<string name="cancel_request">Cancel Request</string>
+	
+	<string name="cancel_ride">Cancel Ride</string>
+	
 	
 	<string name="rating"> Rating</string>
 	<string name="call">Call</string>

@@ -749,12 +749,10 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 						nameValuePairs.add(new BasicNameValuePair("longitude", ""+location.getLongitude()));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 						
-						Log.e("nameValuePairs in fast","="+nameValuePairs);
 						
-						SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
 						
-						Log.e("SingleLocationListener    result","="+result);
 						
 						simpleJSONParser = null;
 						nameValuePairs = null;

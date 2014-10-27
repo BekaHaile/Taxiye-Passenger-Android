@@ -194,7 +194,7 @@ public class CRequestRideService extends Service {
 					Log.i("session_id", "="+Data.cSessionId);
 					
 					
-					SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+					HttpRequester simpleJSONParser = new HttpRequester();
 					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/send_req_for_ride", nameValuePairs);
 					
 					Log.i("result","="+result);
@@ -220,7 +220,7 @@ public class CRequestRideService extends Service {
 			
 			
 			
-			if(result.equalsIgnoreCase(SimpleJSONParser.SERVER_TIMEOUT)){
+			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 				Log.e("timeout","=");
 			}
 			else{

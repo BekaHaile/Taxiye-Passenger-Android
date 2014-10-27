@@ -458,7 +458,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			@Override
 			public boolean onLongClick(View v) {
 				confirmDebugPasswordPopup(SplashLogin.this);
-//				Toast.makeText(getApplicationContext(), ""+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), ""+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 				return false;
 			}
 		});
@@ -671,6 +671,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			}
 
 		
+			Log.e("Server link", Data.SERVER_URL + "/email_login");
 			
 			params.put("email", emailId);
 			params.put("password", password);

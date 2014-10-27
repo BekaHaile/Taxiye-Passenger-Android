@@ -489,7 +489,7 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	
-	public void insertDriverCurrentLocation(LatLng latLng){
+	public void updateDriverCurrentLocation(LatLng latLng){
 		try{
 			deleteDriverCurrentLocation();
 			ContentValues contentValues = new ContentValues();

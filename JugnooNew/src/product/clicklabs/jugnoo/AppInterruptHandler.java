@@ -2,15 +2,15 @@ package product.clicklabs.jugnoo;
 
 import org.json.JSONObject;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public interface AppInterruptHandler {
 	
 	public void onNewRideRequest();
 	
-	public void onCancelRideRequest(boolean acceptedByOtherDriver);
+	public void onCancelRideRequest(String engagementId, boolean acceptedByOtherDriver);
 	
-	public void onRideRequestTimeout();
+	public void onRideRequestTimeout(String engagementId);
+	
+	
 	
 	
 	
@@ -23,5 +23,6 @@ public interface AppInterruptHandler {
 	public void startRideForCustomer(final int flag);
 	
 	public void customerEndRideInterrupt();
+	
 	
 }

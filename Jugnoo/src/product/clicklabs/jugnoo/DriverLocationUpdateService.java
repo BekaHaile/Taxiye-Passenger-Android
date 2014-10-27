@@ -134,7 +134,7 @@ public class DriverLocationUpdateService extends Service {
     	
     	//TODO Toggle live to trial
 		String DEV_SERVER_URL = "http://54.81.229.172:8000";
-		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4010";
+		String LIVE_SERVER_URL = "http://54.172.55.68:4010";
 		String TRIAL_SERVER_URL = "https://54.81.229.172:8004";
 		
 		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
@@ -546,7 +546,7 @@ class GPSLocationFetcher {
 						
 						Log.e("nameValuePairs in fast","="+nameValuePairs);
 						
-						SimpleJSONParser simpleJSONParser = new SimpleJSONParser();
+						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
 						
 						Log.e("result","="+result);

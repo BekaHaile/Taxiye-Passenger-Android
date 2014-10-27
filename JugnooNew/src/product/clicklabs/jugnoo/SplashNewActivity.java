@@ -48,8 +48,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoTools;
 
 public class SplashNewActivity extends Activity implements LocationUpdate{
 	
@@ -150,7 +148,19 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		jugnooImg.startAnimation(animation);
 		
 		noNetFirstTime = false;
+		noNetSecondTime = false;
 		
+		jugnooImg.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(!loginDataFetched){
+					noNetFirstTime = false;
+					noNetSecondTime = false;
+					callFirstAttempt();
+				}
+			}
+		});
 		
 		
 		
@@ -161,8 +171,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 	    Log.i("deviceToken", Data.deviceToken + "..");
 	    
-	    PicassoTools.clearCache(Picasso.with(this));
-		
 	}
 	
 	
@@ -349,25 +357,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				
 				@Override
 				public void run() {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-								noNetFirstTime = false;
-								Log.e("regid.isEmpty()", "+"+regid.isEmpty());
-								if (regid.isEmpty()){
-							        registerInBackground();
-							    }
-							    else{
-							    	accessTokenLogin(SplashNewActivity.this);
-							    }
-							}
-							else{
-								new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
-								noNetFirstTime = true;
-							}
-						}
-					});
+					callFirstAttempt();
 				}
 			}, 2000);
 			
@@ -378,6 +368,30 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		public void onAnimationRepeat(Animation animation) {
 		}
 		
+	}
+	
+	
+	
+	public void callFirstAttempt(){
+		runOnUiThread(new Runnable() {
+		@Override
+		public void run() {
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				noNetFirstTime = false;
+				Log.e("regid.isEmpty()", "+"+regid.isEmpty());
+				if (regid.isEmpty()){
+			        registerInBackground();
+			    }
+			    else{
+			    	accessTokenLogin(SplashNewActivity.this);
+			    }
+			}
+			else{
+				new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+				noNetFirstTime = true;
+			}
+		}
+		});
 	}
 	
 	
@@ -513,20 +527,20 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
+				String resp = new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
+				return resp;
 			} catch (Exception e) {
 				e.printStackTrace();
-				return "excep";
+				return HttpRequester.SERVER_TIMEOUT;
 			}
-			
-			return "";
 		}
 		
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 
-			if(result.equalsIgnoreCase("excep")){
+			if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(result)){
+				loginDataFetched = false;
 				new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			}
 			else{
@@ -536,9 +550,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				
 				loginDataFetched = true;
 				
-				
-//				DialogPopup.showLoadingDialog(activity, "Loading...");
 			}
+			
 
 			DialogPopup.dismissLoadingDialog();
 		}
@@ -725,12 +738,10 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
     	class SingleLocationListener implements LocationListener {
 
     		public void onLocationChanged(Location loc) {
-    			Log.e("************************************** custom", "Location changed "+loc);
+//    			Log.e("************************************** custom", "Location changed "+loc);
     			SingleLocationSender.this.location = loc;
     			sendLocationToServer(location);
-    			Database2 database2 = new Database2(SplashNewActivity.this);
-		    	database2.insertDriverCurrentLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
-		    	database2.close();
+    			new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, loc);
     		}
 
     		public void onProviderDisabled(String provider) {
@@ -753,12 +764,12 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 						nameValuePairs.add(new BasicNameValuePair("longitude", ""+location.getLongitude()));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 						
-						Log.e("nameValuePairs in fast","="+nameValuePairs);
+//						Log.e("nameValuePairs in fast","="+nameValuePairs);
 						
 						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(SERVER_URL+"/update_driver_location", nameValuePairs);
 						
-						Log.e("SingleLocationListener    result","="+result);
+//						Log.e("SingleLocationListener    result","="+result);
 						
 						simpleJSONParser = null;
 						nameValuePairs = null;
@@ -773,16 +784,12 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 
 	@Override
-	public void onLocationChanged(final Location location, int priority) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Database2 database2 = new Database2(SplashNewActivity.this);
-		    	database2.insertDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-		    	database2.close();
-			}
-		}).start();
+	public void onLocationChanged(Location location, int priority) {
+		new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, location);
 	}
+	
+	
+	
 	
 	
 }
