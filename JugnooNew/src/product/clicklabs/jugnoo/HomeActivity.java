@@ -396,7 +396,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.RED;
+	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600;
@@ -1878,9 +1878,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			jugnooONToggle.setImageResource(R.drawable.on);
 			database2.updateJugnooOn("on");
 			
-			if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-			}
+			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+			startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 			
 			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
 			restartService.setPackage(getPackageName());
@@ -1895,7 +1894,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			database2.updateJugnooOn("off");
 			
 			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-			
 			
 			
 			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
@@ -2062,9 +2060,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 			case PASSENGER:
 				
-				if(isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				database2.updateUserMode(Database2.UM_PASSENGER);
 				
@@ -2169,9 +2165,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverEngagedLayout.setVisibility(View.GONE);
 				
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
+				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				cancelCustomerPathUpdateTimer();
 				
@@ -2210,9 +2204,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				changeJugnooON(JugnooDriverMode.ON);
 
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
+				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				if(map != null){
 					map.clear();
@@ -2323,9 +2315,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				cancelMapAnimateTimer();
 
-				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				driverInitialLayout.setVisibility(View.GONE);
 				driverRequestAcceptLayout.setVisibility(View.GONE);
@@ -3933,6 +3924,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        }
 	    }
 	    
+	    
 	    @Override
 	    protected String doInBackground(Void... params) {
 	    	if(userMode == UserMode.PASSENGER){
@@ -4068,7 +4060,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									    LatLng bound1 = new LatLng(destination.latitude, destination.longitude);
 									    LatLngBounds bounds = new LatLngBounds.Builder().include(bound0).include(bound1).build();
 									    
-									    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200), 1000, null);
+									    float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+									    
+									    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(200*minScaleRatio)), 1000, null);
 									}
 								} catch (Exception e) {
 									e.printStackTrace();
@@ -7359,7 +7353,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void onCancelRideRequest(final String engagementId, final boolean acceptedByOtherDriver) {
-		GCMIntentService.stopRing();
 		try {
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 					runOnUiThread(new Runnable() {
@@ -7410,7 +7403,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	@Override
 	public void onRideRequestTimeout(final String engagementId) {
-		GCMIntentService.stopRing();
 		if(userMode == UserMode.DRIVER ){
 			runOnUiThread(new Runnable() {
 				@Override

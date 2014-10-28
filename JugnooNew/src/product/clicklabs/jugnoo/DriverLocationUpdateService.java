@@ -1,13 +1,7 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -23,41 +17,20 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 
 import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationUpdateService extends Service {
 	
-	static int count = 0; 
-	
 	LocationFetcherDriver locationFetcherDriver;
 	GPSLocationFetcher gpsLocationFetcher;
-	
-	
-	LatLng lastLocation;
-	
-	
-	String GOOGLE_PROJECT_ID = "506849624961", 
-			PROPERTY_REG_ID = "registration_id", 
-			PROPERTY_APP_VERSION = "appVersion";
-	
-	String SHARED_PREF_NAME = "myPref";
-	String SP_ACCESS_TOKEN_KEY = "access_token";
-	
-	String accessToken = "", deviceToken = "", SERVER_URL = "";
 	
 	long serverUpdateTimePeriod = 60000;
 	
 	
 	public DriverLocationUpdateService() {
 		Log.e("DriverLocationUpdateService"," instance created");
-		
-		lastLocation = new LatLng(0, 0);
-		count = 0; 
-		
 	}
 
 	@Override
@@ -70,15 +43,11 @@ public class DriverLocationUpdateService extends Service {
     public void onCreate() {
         
     }
- 
 	
 	
     @Override
     public void onStart(Intent intent, int startId) {
-    	//For time consuming an long tasks you can launch a new thread here...
-       
         try{
-        	
         	Log.i("Driver location update started", "=======");
         	updateServerData();
     		
@@ -87,7 +56,6 @@ public class DriverLocationUpdateService extends Service {
     		String fast = database2.getDriverServiceFast();
     		
     		Log.e("fast", "="+fast);
-    		
     		
     		
     		if(fast.equalsIgnoreCase("no")){
@@ -130,6 +98,10 @@ public class DriverLocationUpdateService extends Service {
     
     
     public void updateServerData(){
+    	String SHARED_PREF_NAME = "myPref";
+    	String SP_ACCESS_TOKEN_KEY = "access_token";
+    	String accessToken = "", deviceToken = "", SERVER_URL = "";
+    	
     	Database2 database2 = new Database2(this);
         database2.updateDriverServiceRestartOnReboot("yes");
     	database2.updateJugnooOn("on");
@@ -139,7 +111,7 @@ public class DriverLocationUpdateService extends Service {
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4013";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8001";
 		
-		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 		
 		
 		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";

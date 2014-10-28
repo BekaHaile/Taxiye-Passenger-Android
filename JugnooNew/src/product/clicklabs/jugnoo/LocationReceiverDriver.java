@@ -19,7 +19,7 @@ public class LocationReceiverDriver extends BroadcastReceiver {
 				Database2 database2 = new Database2(context);
 		    	database2.updateDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
 		    	database2.close();
-//		    	Log.e("DriverLocationUpdateService location in pi reciever ", "=="+location);
+		    	Log.e("DriverLocationUpdateService location in pi reciever ", "=="+location);
 //		    	Log.writeLogToFile("LocationReciever", "Receiver "+new DateOperations().getCurrentTime()+" = "+location 
 //		    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));
 				new DriverLocationDispatcher().sendLocationToServer(context, "LocationReciever");

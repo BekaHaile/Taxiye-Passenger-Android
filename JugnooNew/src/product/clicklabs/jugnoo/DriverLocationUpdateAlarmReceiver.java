@@ -8,7 +8,7 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 
 	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
 	
-	private static final long MAX_TIME_BEFORE_LOCATION_UPDATE = 2 * 60000;
+	private static final long MAX_TIME_BEFORE_LOCATION_UPDATE = 3 * 60000;
 	
 	@Override
 	public void onReceive(final Context context, Intent intent) {

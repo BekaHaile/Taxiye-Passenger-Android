@@ -38,12 +38,11 @@ public class DriverLocationDispatcher {
 						nameValuePairs.add(new BasicNameValuePair("longitude", "" + latLng.longitude));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 			
-//						Log.e("nameValuePairs in location DLD", "=" + nameValuePairs);
 			
 						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
-//						Log.e("result in DLD", "=" + result);
+						Log.e("result in DLD", "=" + result);
 			
 						try{
 							//{"log":"Updated"}
