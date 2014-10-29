@@ -73,7 +73,6 @@ public class GCMIntentService extends IntentService {
 				builder.setTicker(message);
 				
 				if(ring){
-					startRing(context);
 					builder.setLights(Color.GREEN, 500, 500);
 				}
 				else{
@@ -124,7 +123,6 @@ public class GCMIntentService extends IntentService {
 				builder.setTicker(message);
 				
 				if(ring){
-					startRing(context);
 					builder.setLights(Color.GREEN, 500, 500);
 				}
 				else{
@@ -249,6 +247,8 @@ public class GCMIntentService extends IntentService {
 		    	    					 
 		    	    					 Log.e("HomeActivity.driverGetRequestPush in push ","="+HomeActivity.appInterruptHandler);
 		    	    					 
+		    	    					 startRing(this);
+		    	    					 
 		    	    					 if(HomeActivity.appInterruptHandler != null){
 		    	    						 notificationManagerResume(this, "You have got a new ride request.", true);
 		    	    						 HomeActivity.appInterruptHandler.onNewRideRequest();
@@ -272,11 +272,11 @@ public class GCMIntentService extends IntentService {
 	    	    					 clearNotifications(this);
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
+	    	    					 stopRing();
+	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
 	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, false);
 	    	    					 }
-	    	    					 
-	    	    					
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED_BY_OTHER_DRIVER.getOrdinal() == flag){
@@ -284,6 +284,8 @@ public class GCMIntentService extends IntentService {
 	    	    					 String engagementId = jObj.getString("engagement_id");
 	    	    					 clearNotifications(this);
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
+	    	    					 
+	    	    					 stopRing();
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
 	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, true);
@@ -298,10 +300,11 @@ public class GCMIntentService extends IntentService {
 	    	    					 clearNotifications(this);
 	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
+	    	    					 stopRing();
+	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
 	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 	    	    					 }
-	    	    					 
 	    	    					
 	    	    					 
 	    	    				 }
@@ -528,6 +531,7 @@ public class GCMIntentService extends IntentService {
 			    					HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 			    				}
 		    					clearNotifications(context);
+		    					stopRing();
 		    				}
 		    				stopTimer();
 		    			}

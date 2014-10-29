@@ -8,7 +8,7 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 
 	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
 	
-	private static final long MAX_TIME_BEFORE_LOCATION_UPDATE = 2 * 60000;
+	private static final long MAX_TIME_BEFORE_LOCATION_UPDATE = 3 * 60000;
 	
 	@Override
 	public void onReceive(final Context context, Intent intent) {
@@ -24,8 +24,8 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 			Log.i("lastTime", "="+lastTime);
 			Log.i("currentTime", "="+currentTime);
 			Log.e("currentTime - lastTime", "="+(currentTime - lastTime));
-//	    	Log.writeLogToFile("AlarmReceiver", "Receiver "+new DateOperations().getCurrentTime()+" = "+(currentTime - lastTime) 
-//	    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));
+	    	Log.writeLogToFile("AlarmReceiver", "Receiver "+new DateOperations().getCurrentTime()+" = "+(currentTime - lastTime) 
+	    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));
 			
 			if(currentTime >= (lastTime + MAX_TIME_BEFORE_LOCATION_UPDATE)){
 				new Thread(new Runnable() {

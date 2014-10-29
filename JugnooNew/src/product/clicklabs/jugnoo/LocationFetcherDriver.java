@@ -26,7 +26,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	public Location location; // location
 	private PendingIntent locationIntent;
 	
-	private long requestInterval, fastestInterval;
+	private long requestInterval;
 	private Context context;
 	
 	private static final int LOCATION_PI_ID = 6978;
@@ -40,19 +40,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	public LocationFetcherDriver(Context context, long requestInterval, long fastestInterval){
 		this.context = context;
 		this.requestInterval = requestInterval;
-		this.fastestInterval = fastestInterval;
-		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
-		if(resp == ConnectionResult.SUCCESS){														// google play services working
-			if(isLocationEnabled(context)){															// location fetching enabled
-				locationclient = new LocationClient(context, this, this);
-				locationclient.connect();
-			}
-			else{																					// location disabled
-			}
-		}
-		else{																						// google play services not working
-			Log.e("Google Play Service Error ","="+resp);
-		}
+		connect();
 	}
 	
 	
@@ -84,6 +72,21 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	
 	
 
+	public void connect(){
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+		if(resp == ConnectionResult.SUCCESS){														// google play services working
+			if(isLocationEnabled(context)){															// location fetching enabled
+				locationclient = new LocationClient(context, this, this);
+				locationclient.connect();
+			}
+			else{																					// location disabled
+			}
+		}
+		else{																						// google play services not working
+			Log.e("Google Play Service Error ","="+resp);
+		}
+	}
+	
 	
 	
 	public void destroy(){
@@ -107,7 +110,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.e(TAG, "onConnected");
+		Log.e(TAG, "onConnected ********************************************************");
 		
 		locationrequest = LocationRequest.create();
 		locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -122,13 +125,16 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 
 	@Override
 	public void onDisconnected() {
-		Log.e(TAG, "onDisconnected");
+		Log.e(TAG, "onDisconnected ********************************************************");
+		destroy();
+		connect();
 	}
 
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
-		Log.e(TAG, "onConnectionFailed");
-
+		Log.e(TAG, "onConnectionFailed ********************************************************");
+		destroy();
+		connect();
 	}
 
 }

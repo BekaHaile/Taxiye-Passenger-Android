@@ -104,6 +104,10 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		setContentView(R.layout.splash_new);
 		
+		if(Data.locationFetcher == null){
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+		}
+		
 		
 		loginDataFetched = false;
 		loginFailed = false;
@@ -359,7 +363,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				public void run() {
 					callFirstAttempt();
 				}
-			}, 2000);
+			}, 1000);
 			
 			
 		}
@@ -429,8 +433,11 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				Log.i("longitude", ""+Data.longitude);
 				Log.i("app_version", ""+Data.appVersion);
 			
+				//start_app_using_access_token
+				//access_token
+				
 				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/access_token", params,
+				client.post(Data.SERVER_URL + "/start_app_using_access_token", params,
 						new AsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
@@ -447,12 +454,12 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							public void onSuccess(int arg0, Header[] arg1,
 									byte[] arg2) {
 								String response = new String(arg2);
-								Log.v("Server response", "response = " + response);
+								Log.e("Server response of access_token", "response = " + response);
 		
 								try {
 									jObj = new JSONObject(response);
 									
-									boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
+									boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity);
 									
 									if(!newUpdate){
 										if(!jObj.isNull("error")){

@@ -396,7 +396,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.RED;
+	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600;
@@ -410,6 +410,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;
 	
 	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000;
+	
+	
+	
 	
 	public static final String REQUEST_RIDE_BTN_NORMAL_TEXT = "Call an auto", REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT = "Assigning driver...";
 	
@@ -429,7 +432,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		loggedOut = false;
 		zoomedToMyLocation = false;
 		dontCallRefreshDriver = false;
-		
 		
 		appMode = AppMode.NORMAL;
 		
@@ -1827,7 +1829,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		getAllFavoriteAsync(HomeActivity.this);
+//		getAllFavoriteAsync(HomeActivity.this);
 		
 		
 		
@@ -1878,9 +1880,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			jugnooONToggle.setImageResource(R.drawable.on);
 			database2.updateJugnooOn("on");
 			
-			if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-			}
+			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+			startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 			
 			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
 			restartService.setPackage(getPackageName());
@@ -1895,7 +1896,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			database2.updateJugnooOn("off");
 			
 			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-			
 			
 			
 			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
@@ -2062,9 +2062,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 			case PASSENGER:
 				
-				if(isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				database2.updateUserMode(Database2.UM_PASSENGER);
 				
@@ -2169,9 +2167,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverEngagedLayout.setVisibility(View.GONE);
 				
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
+				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				cancelCustomerPathUpdateTimer();
 				
@@ -2210,9 +2206,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				changeJugnooON(JugnooDriverMode.ON);
 
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
+				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				if(map != null){
 					map.clear();
@@ -2323,9 +2317,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				cancelMapAnimateTimer();
 
-				if(!isServiceRunning(HomeActivity.this, DriverLocationUpdateService.class.getName())){
-					startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				}
+				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
 				driverInitialLayout.setVisibility(View.GONE);
 				driverRequestAcceptLayout.setVisibility(View.GONE);
@@ -2419,10 +2412,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				cancelDriverLocationUpdateTimer();
 				cancelTimerRequestRide();
 				
-				
 				try{pickupLocationMarker.remove();} catch(Exception e){}
 				try{driverLocationMarker.remove();} catch(Exception e){}
-				
 				
 				
 		        GCMIntentService.clearNotifications(getApplicationContext());
@@ -2432,14 +2423,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					getDistanceTimeAddress = null;
 				}
 				
-//				getDistanceTimeAddress = new GetDistanceTimeAddress(map.getCameraPosition().target, false);
-//				getDistanceTimeAddress.execute();
 				
-				if(myLocation != null){
-					getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-							myLocation.getLongitude()), false);
-					getDistanceTimeAddress.execute();
-				}
+//				if(myLocation != null){
+//					getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+//							myLocation.getLongitude()), false);
+//					getDistanceTimeAddress.execute();
+//				}
 				
 				initialLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
@@ -2456,7 +2445,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
 //				favBtn.setVisibility(View.VISIBLE);
-
+				
+				Log.e("Data.latitude", "="+Data.latitude);
+				Log.e("myLocation", "="+myLocation);
+				
+				if (Data.latitude != 0 && Data.longitude != 0) {
+					showDriverMarkersAndPanMap(new LatLng(Data.latitude, Data.longitude));
+				} else if (myLocation != null) {
+					showDriverMarkersAndPanMap(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+				}
+				
+				dontCallRefreshDriver = true;
+				
 				startTimerUpdateDrivers();
 				
 				break;
@@ -3248,6 +3248,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         	saveDataOnPause(true);
         	
     		GCMIntentService.clearNotifications(HomeActivity.this);
+    		GCMIntentService.stopRing();
     		
     		try{
     			if(locationManager != null && gpsListener != null){
@@ -3933,6 +3934,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        }
 	    }
 	    
+	    
 	    @Override
 	    protected String doInBackground(Void... params) {
 	    	if(userMode == UserMode.PASSENGER){
@@ -3947,47 +3949,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
 		    			simpleJSONParser = null;
 		    			nameValuePairs = null;
-		    			Log.d("result of /find_a_driver", "="+result);
+		    			Log.e("result of /find_a_driver", "="+result);
 		    			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 		    			}
 		    			else{
 		    				try{
 		    					JSONObject jObj = new JSONObject(result);
-		    						
-		    					JSONArray data = jObj.getJSONArray("data");
-		    						
-		    					Data.driverInfos.clear();
-		    						
-		    					for(int i=0; i<data.length(); i++){
-		    							
-		    						JSONObject dataI = data.getJSONObject(i);
-		    							
-		    						String userId = dataI.getString("user_id");
-		    						double latitude = dataI.getDouble("latitude");
-		    						double longitude = dataI.getDouble("longitude");
-		    						
-		    						String userName = "", phoneNo = "", driverCarImage = "", userImage = "", rating = "4";
-		    						try{
-		    							userName = dataI.getString("user_name");
-		    							userImage = dataI.getString("user_image");
-		    							driverCarImage = dataI.getString("driver_car_image");
-		    							phoneNo = dataI.getString("phone_no");
-		    							rating = dataI.getString("rating");
-		    						} catch(Exception e){
-		    							e.printStackTrace();
-		    						}
-		    						
-		    						Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating));
-		    					}
+		    					new JSONParser().parseDriversToShow(jObj, "data");
 		    				}
 		    				catch(Exception e){
 		    					e.printStackTrace();
 		    				}
 		    			}
-		    		
 		    		}
-		    		
-		    		
 		    		
 		    		LatLng source = null;
 					
@@ -4011,31 +3985,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    		
 		    			
 		    		this.url = makeURL(source, destination);
-		    		
 			    	HttpRequester jParser = new HttpRequester();
-			    	
 			    	String response = jParser.getJSONFromUrl(url);
-			    	
 			    	JSONObject jsonObject = new JSONObject(response);
-			    	
-			    	
 			    	String status = jsonObject.getString("status");
-			    	
 			    	if("OK".equalsIgnoreCase(status)){
 			    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
-			    		
 			    		distance = element0.getJSONObject("distance").getString("text") ;
-			    		
 			    		duration = element0.getJSONObject("duration").getString("text");
-			    		
-			    		
 			    		if(driverAcceptPushRecieved){
 			    			Data.assignedDriverInfo.distanceToReach = distance;
 			    			Data.assignedDriverInfo.durationToReach = duration;
 			    		}
-	
 			    		return "Distance: " + distance + "\n" + "Duration: " + duration;
-			    		
 			    	}
 		    	}catch(Exception e){
 		    		e.printStackTrace();
@@ -4053,28 +4015,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					@Override
 					public void run() {
 						if(!driverAcceptPushRecieved){
-				 			
-				 			if(map != null){
-								map.clear();
-								addCurrentLocationAddressMarker(destination);
-								for(int i=0; i<Data.driverInfos.size(); i++){
-									addDriverMarkerForCustomer(Data.driverInfos.get(i));
-								}
-								
-								try {
-									if(Data.driverInfos.size() > 0){
-										LatLng source = Data.driverInfos.get(Data.driverInfos.size()-1).latLng;
-										LatLng bound0 = new LatLng(source.latitude, source.longitude);
-									    LatLng bound1 = new LatLng(destination.latitude, destination.longitude);
-									    LatLngBounds bounds = new LatLngBounds.Builder().include(bound0).include(bound1).build();
-									    
-									    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200), 1000, null);
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-				 			
+							showDriverMarkersAndPanMap(destination);
 			    		}
 				        
 				        dontCallRefreshDriver = true;
@@ -4169,16 +4110,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		markerOptions.snippet(""+driverInfo.userId);
 		markerOptions.position(driverInfo.latLng);
 		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
-		
 		map.addMarker(markerOptions);
-		
 //		CircleOptions circleOptions = new CircleOptions();
 //		circleOptions.center(driverInfo.latLng);
 //		circleOptions.fillColor(Color.argb(20, 0, 0, 255));
 //		circleOptions.radius(5000);
 //		circleOptions.strokeWidth(0);
 //		map.addCircle(circleOptions);
-		
 	}
 	
 	public void addCurrentLocationAddressMarker(LatLng latLng){
@@ -4196,6 +4134,32 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
+	
+	public void showDriverMarkersAndPanMap(LatLng userLatLng){
+		if(map != null){
+			map.clear();
+			addCurrentLocationAddressMarker(userLatLng);
+			LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+			for(int i=0; i<Data.driverInfos.size(); i++){
+				addDriverMarkerForCustomer(Data.driverInfos.get(i));
+				boundsBuilder.include(Data.driverInfos.get(i).latLng);
+			}
+			boundsBuilder.include(new LatLng(userLatLng.latitude, userLatLng.longitude));
+			try {
+				final LatLngBounds bounds = boundsBuilder.build();
+				final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(200*minScaleRatio)), 1000, null);
+					}
+				}, 1000);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	
 	
@@ -6528,7 +6492,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 				}
 			};
-			timerUpdateDrivers.scheduleAtFixedRate(timerTaskUpdateDrivers, 0, 60000);
+			timerUpdateDrivers.scheduleAtFixedRate(timerTaskUpdateDrivers, 100, 60000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -7359,7 +7323,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void onCancelRideRequest(final String engagementId, final boolean acceptedByOtherDriver) {
-		GCMIntentService.stopRing();
 		try {
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 					runOnUiThread(new Runnable() {
@@ -7379,7 +7342,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								switchDriverScreen(driverScreenMode);
 								if(!userCanceledDialogShown){
 									if(acceptedByOtherDriver){
-//										new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
+										new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
 									}
 									else{
 										new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
@@ -7410,7 +7373,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	@Override
 	public void onRideRequestTimeout(final String engagementId) {
-		GCMIntentService.stopRing();
 		if(userMode == UserMode.DRIVER ){
 			runOnUiThread(new Runnable() {
 				@Override
@@ -8072,6 +8034,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 
+	
+	
+	
+	
 	
 	
 
