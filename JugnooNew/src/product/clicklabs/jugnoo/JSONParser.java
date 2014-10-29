@@ -23,19 +23,16 @@ public class JSONParser {
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		
-		
-		
 		try{
 			Data.termsAgreed = userData.getInt("terms_agreed");
+			Data.termsAgreed = 1;
 		} catch(Exception e){
-			e.printStackTrace();
 			Data.termsAgreed = 1;
 		}
+		Data.termsAgreed = 1;
 		
 		Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("id"));
-		
-		
 		
 		if(Data.termsAgreed == 1){
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -45,14 +42,11 @@ public class JSONParser {
 			editor.commit();
 		}
 		
-		
-		
 		try{
 			int currentUserStatus = userData.getInt("current_user_status");
 			if(currentUserStatus == 1){
 				HomeActivity.userMode = UserMode.DRIVER;
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
-				
 				try {
 					int excepInt = userData.getInt("exceptional_driver");
 					if(1 == excepInt){
@@ -78,27 +72,6 @@ public class JSONParser {
 			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 		}
 		
-		
-		
-//		{
-//		    "user_data": {
-//		        "access_token": "c274d8d70e77850511df24a6255dab48",
-//		        "user_name": "Shankar Bhagwati",
-//		        "user_image": "http://graph.facebook.com/717496164959213/picture?width=160&height=160",
-//		        "id": 1,
-//		        "current_user_status": 1,
-//		        "fare_details": [
-//		            {
-//		                "fare_fixed": 30,
-//		                "fare_per_km": 10,
-//		                "fare_threshold_distance": 2
-//		            }
-//		        ]
-//		    },
-//		    "popup": 0
-//		}
-		
-		
 		try{
 			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
 			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
@@ -111,21 +84,85 @@ public class JSONParser {
 			HomeActivity.farePerKm = 10;
 			HomeActivity.fareThresholdDistance = 2;
 		}
-		
-		
-		
 	}
 	
 	
 	
-	
-	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
+		
+//		{
+//		    "login": {
+//		        "user_data": {
+//		            "user_name": "Driver 4",
+//		            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//		            "current_user_status": 1,
+//		            "access_token": "8ea868daf0e7379ece46787e1684cf8c2dc17877f4cc0a6af5a65ae33c355792",
+//		            "fare_details": [
+//		                {
+//		                    "fare_fixed": 30,
+//		                    "fare_per_km": 10,
+//		                    "fare_threshold_distance": 2
+//		                }
+//		            ],
+//		            "exceptional_driver": 0
+//		        },
+//		        "popup": 0
+//		    },
+//		    "status": {
+//		        "active_requests": [],
+//		        "flag": 133
+//		    },
+//		    "drivers": {
+//		        "data": [
+//		            {
+//		                "user_name": "Driver 4",
+//		                "phone_no": "+919999999999",
+//		                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//		                "driver_car_image": "",
+//		                "latitude": 30.718804,
+//		                "longitude": 76.810166,
+//		                "user_id": 214,
+//		                "distance": 0.05,
+//		                "rating": 5
+//		            },
+//		            {
+//		                "user_name": "Driver 8",
+//		                "phone_no": "+919999999999",
+//		                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//		                "driver_car_image": "",
+//		                "latitude": 30.71884,
+//		                "longitude": 76.810131,
+//		                "user_id": 233,
+//		                "distance": 5.17,
+//		                "rating": null
+//		            },
+//		            {
+//		                "user_name": "Driver 3",
+//		                "phone_no": "+919999999999",
+//		                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//		                "driver_car_image": "",
+//		                "latitude": 30.719284,
+//		                "longitude": 76.810869,
+//		                "user_id": 231,
+//		                "distance": 85.84,
+//		                "rating": 5
+//		            }
+//		        ]
+//		    }
+//		}
+		
 		JSONObject jObj = new JSONObject(response);
-		JSONObject userData = jObj.getJSONObject("user_data");
+		
+		
+		
+		
+		
+		//Fetching login data
+		JSONObject jLoginObject = jObj.getJSONObject("login");
+		JSONObject userData = jLoginObject.getJSONObject("user_data");
+		
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
 				userData.getString("user_image"), id);
-		
 		
 		try{
 			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
@@ -140,9 +177,7 @@ public class JSONParser {
 			HomeActivity.fareThresholdDistance = 2;
 		}
 		
-		
 		//current_user_status = 1 driver or 2 user
-		
 		int currentUserStatus = userData.getInt("current_user_status");
 		if(currentUserStatus == 1){
 			try{
@@ -160,55 +195,102 @@ public class JSONParser {
 		}
 		else{
 			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+			
+			
+			//Fetching drivers info
+			JSONObject jDriversObject = jObj.getJSONObject("drivers");
+			parseDriversToShow(jDriversObject, "data");
 		}
 		
 		
-		String resp = getUserStatus(context, accessToken, currentUserStatus);
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//Fetching user current status
+		JSONObject jUserStatusObject = jObj.getJSONObject("status");
+		String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
+		
+				
+				
 		return resp;
-		
 	}
 	
 	
 	
 	public String getUserStatus(Context context, String accessToken, int currentUserStatus){
+		String returnResponse = "";
+		try{
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+			HttpRequester simpleJSONParser = new HttpRequester();
+			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_current_user_status", nameValuePairs);
+			Log.e("result of = user_status", "="+result);
+			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
+				returnResponse = HttpRequester.SERVER_TIMEOUT;
+				return returnResponse;
+			}
+			else{
+				JSONObject jObject1 = new JSONObject(result);
+				returnResponse = parseCurrentUserStatus(context, currentUserStatus, jObject1);
+				return returnResponse;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			returnResponse = HttpRequester.SERVER_TIMEOUT;
+			return returnResponse;
+		}
+	}
+	
+	
+	public void parseDriversToShow(JSONObject jObject, String jsonArrayKey){
+		try{
+			JSONArray data = jObject.getJSONArray(jsonArrayKey);
+			Data.driverInfos.clear();
+			for(int i=0; i<data.length(); i++){
+				JSONObject dataI = data.getJSONObject(i);
+				String userId = dataI.getString("user_id");
+				double latitude = dataI.getDouble("latitude");
+				double longitude = dataI.getDouble("longitude");
+				String userName = dataI.getString("user_name");
+				String userImage = dataI.getString("user_image");
+				String driverCarImage = dataI.getString("driver_car_image");
+				String phoneNo = dataI.getString("phone_no");
+				String rating = dataI.getString("rating");
+				Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating));
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1){
 		
 		String returnResponse = "";
 		
-		if(currentUserStatus == 1){ // for driver
-			
-			HomeActivity.userMode = UserMode.DRIVER;
-			
-			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		if(currentUserStatus == 1){ // TODO for driver
 			
 			String screenMode = "";
 			
 			int engagementStatus = -1;
 			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "";
 			
-			//TODO
 			try{
-					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-					
-					HttpRequester simpleJSONParser = new HttpRequester();
-					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_current_user_status", nameValuePairs);
-					
-					Log.e("result of = user_status", "="+result);
-					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
-						returnResponse = HttpRequester.SERVER_TIMEOUT;
-						return returnResponse;
-					}
-					else{
-						try{
-							JSONObject jObject1 = new JSONObject(result);
 							
 							if(jObject1.has("error")){
 								returnResponse = HttpRequester.SERVER_TIMEOUT;
 								return returnResponse;
 							}
 							else{
-
 							
 //							{
 //								"flag": constants.responseFlags.ACTIVE_REQUESTS,
@@ -241,8 +323,6 @@ public class JSONParser {
 //							}
 //							]
 							
-							
-							
 								int flag = jObject1.getInt("flag");
 								
 								if(ApiResponseFlags.ACTIVE_REQUESTS.getOrdinal() == flag){
@@ -252,9 +332,7 @@ public class JSONParser {
 									Database2 database2 = new Database2(context);
 									database2.deleteAllDriverRequests();
 									for(int i=0; i<jActiveRequests.length(); i++){
-										
 										JSONObject jActiveRequest = jActiveRequests.getJSONObject(i);
-										
 										 String requestEngagementId = jActiveRequest.getString("engagement_id");
 		    	    					 String requestUserId = jActiveRequest.getString("user_id");
 		    	    					 double requestLatitude = jActiveRequest.getDouble("pickup_latitude");
@@ -269,6 +347,10 @@ public class JSONParser {
 									}
 									
 									database2.close();
+									
+									if(jActiveRequests.length() == 0){
+										GCMIntentService.stopRing();
+									}
 									
 								}
 								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
@@ -294,18 +376,15 @@ public class JSONParser {
 								}
 							
 							}
-							
-						} catch(Exception e){
-							e.printStackTrace();
-							engagementStatus = -1;
-						}
-					}
 			} catch(Exception e){
 				e.printStackTrace();
 				engagementStatus = -1;
 				returnResponse = HttpRequester.SERVER_TIMEOUT;
 				return returnResponse;
 			}
+			
+			
+			HomeActivity.userMode = UserMode.DRIVER;
 			
 			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout, 7 for nullified by chrone
 			if(EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus){
@@ -344,6 +423,8 @@ public class JSONParser {
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
 				}
 				else if(Data.D_IN_RIDE.equalsIgnoreCase(screenMode)){
+					
+					SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 					
 					HomeActivity.driverScreenMode = DriverScreenMode.D_IN_RIDE;
 					
@@ -389,38 +470,16 @@ public class JSONParser {
 			
 			
 		}
-		else{ // for customer
-			
-			HomeActivity.userMode = UserMode.PASSENGER;
-			
-			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			
+		else{ // TODO for customer
 			
 			String screenMode = "";
-			
 
 			int engagementStatus = -1;
 			String engagementId = "", sessionId = "",  userId = "", latitude = "", longitude = "", 
 					driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", 
 					pickupLatitude = "", pickupLongitude = "";
 			
-			
-			//TODO
 			try{
-					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-					
-					HttpRequester simpleJSONParser = new HttpRequester();
-					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_current_user_status", nameValuePairs);
-					
-					Log.e("result of = user_status", "="+result);
-					if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
-						returnResponse = HttpRequester.SERVER_TIMEOUT;
-						return returnResponse;
-					}
-					else{
-						try{
-							JSONObject jObject1 = new JSONObject(result);
 							
 							if(jObject1.has("error")){
 								returnResponse = HttpRequester.SERVER_TIMEOUT;
@@ -489,19 +548,14 @@ public class JSONParser {
 								}
 							
 							}
-							
-							
-						} catch(Exception e){
-							e.printStackTrace();
-							engagementStatus = -1;
-						}
-				}
 			} catch(Exception e){
 				e.printStackTrace();
 				engagementStatus = -1;
 				returnResponse = HttpRequester.SERVER_TIMEOUT;
 				return returnResponse;
 			}
+			
+			HomeActivity.userMode = UserMode.PASSENGER;
 			
 			if(EngagementStatus.REQUESTED.getOrdinal() == engagementStatus){
 				screenMode = Data.P_ASSIGNING;
@@ -531,6 +585,8 @@ public class JSONParser {
 				clearSPData(context);
 			}
 			else{
+				
+				SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 				
 				Data.cSessionId = sessionId;
 				Data.cEngagementId = engagementId;
@@ -599,7 +655,9 @@ public class JSONParser {
 	
 	
 	
-	public static void clearSPData(final Context context){
+	
+	
+	public void clearSPData(final Context context){
 		new Thread(new Runnable() {
 			
 			@Override

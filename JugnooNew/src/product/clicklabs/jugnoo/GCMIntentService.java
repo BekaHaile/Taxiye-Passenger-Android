@@ -278,8 +278,6 @@ public class GCMIntentService extends IntentService {
 	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, false);
 	    	    					 }
 	    	    					 
-	    	    					
-	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED_BY_OTHER_DRIVER.getOrdinal() == flag){
     	    						 
@@ -307,7 +305,6 @@ public class GCMIntentService extends IntentService {
 	    	    					 if(HomeActivity.appInterruptHandler != null){
 	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 	    	    					 }
-	    	    					 
 	    	    					
 	    	    					 
 	    	    				 }
@@ -534,6 +531,7 @@ public class GCMIntentService extends IntentService {
 			    					HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 			    				}
 		    					clearNotifications(context);
+		    					stopRing();
 		    				}
 		    				stopTimer();
 		    			}

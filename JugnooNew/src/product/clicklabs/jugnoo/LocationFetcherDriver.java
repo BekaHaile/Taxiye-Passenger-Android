@@ -26,7 +26,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	public Location location; // location
 	private PendingIntent locationIntent;
 	
-	private long requestInterval, fastestInterval;
+	private long requestInterval;
 	private Context context;
 	
 	private static final int LOCATION_PI_ID = 6978;
@@ -40,7 +40,6 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	public LocationFetcherDriver(Context context, long requestInterval, long fastestInterval){
 		this.context = context;
 		this.requestInterval = requestInterval;
-		this.fastestInterval = fastestInterval;
 		connect();
 	}
 	
@@ -127,15 +126,15 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	@Override
 	public void onDisconnected() {
 		Log.e(TAG, "onDisconnected ********************************************************");
-		
-		
-		
+		destroy();
+		connect();
 	}
 
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
-		Log.e(TAG, "onConnectionFailed");
-
+		Log.e(TAG, "onConnectionFailed ********************************************************");
+		destroy();
+		connect();
 	}
 
 }

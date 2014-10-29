@@ -51,7 +51,7 @@ public class DriverLocationDispatcher {
 								String log = jObj.getString("log");
 								if("Updated".equalsIgnoreCase(log)){
 									database2.updateDriverLastLocationTime();
-//									Log.writeLogToFile(filePrefix, "To Server "+new DateOperations().getCurrentTime()+" = "+result);
+									Log.writeLogToFile(filePrefix, "To Server "+new DateOperations().getCurrentTime()+" = "+result);
 								}
 							}
 						} catch(Exception e){

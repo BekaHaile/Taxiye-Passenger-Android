@@ -13,8 +13,9 @@ import android.os.Environment;
 public class Log {
 
 	
-	private static final boolean PRINT = true; 												// true for printing and false for not 
-	private static final boolean WRITE_TO_FILE = false; 												// true for writing log to file and false for not 
+	private static final boolean PRINT = false; 												// true for printing and false for not 
+	private static final boolean WRITE_TO_FILE = false; 									// true for writing log to file and false for not 
+	private static final boolean WRITE_TO_FILE_IN = false; 									// true for writing log to file and false for not 
 	public Log(){}
 
 	public static void i(String tag, String message){
@@ -68,29 +69,30 @@ public class Log {
 	static String APP_NAME = "Jugnoo";
 	
 	static void writeLogToFile(final String filePrefix, final String response) {
-
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					String fileName = Environment.getExternalStorageDirectory() + "/" + filePrefix + "_" + LOG_FILE + ".txt";
-					File gpxfile = new File(fileName);
-					
-					if(!gpxfile.exists()){
-						gpxfile.createNewFile();
+		if(WRITE_TO_FILE_IN){
+			new Thread(new Runnable() {
+	
+				@Override
+				public void run() {
+					try {
+						String fileName = Environment.getExternalStorageDirectory() + "/" + filePrefix + "_" + LOG_FILE + ".txt";
+						File gpxfile = new File(fileName);
+						
+						if(!gpxfile.exists()){
+							gpxfile.createNewFile();
+						}
+						
+						FileWriter writer = new FileWriter(gpxfile, true);
+						writer.append("\n" + response);
+						writer.flush();
+						writer.close();
+						
+					} catch (Exception e1) {
+						e1.printStackTrace();
 					}
-					
-					FileWriter writer = new FileWriter(gpxfile, true);
-					writer.append("\n" + response);
-					writer.flush();
-					writer.close();
-					
-				} catch (Exception e1) {
-					e1.printStackTrace();
 				}
-			}
-		}).start();
+			}).start();
+		}
 
 	}
 	
