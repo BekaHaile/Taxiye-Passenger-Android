@@ -37,7 +37,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	 * Constructor for initializing LocationFetcher class' object
 	 * @param context application context
 	 */
-	public LocationFetcherDriver(Context context, long requestInterval, long fastestInterval){
+	public LocationFetcherDriver(Context context, long requestInterval){
 		this.context = context;
 		this.requestInterval = requestInterval;
 		connect();
@@ -112,8 +112,11 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected ********************************************************");
 		
+		//PRIORITY_BALANCED_POWER_ACCURACY
+		//PRIORITY_HIGH_ACCURACY
+		
 		locationrequest = LocationRequest.create();
-		locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+		locationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 		locationrequest.setInterval(requestInterval);
 		locationrequest.setFastestInterval(requestInterval);
 		
@@ -121,6 +124,8 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 		Intent intent = new Intent(context, LocationReceiverDriver.class);
 		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		locationclient.requestLocationUpdates(locationrequest, locationIntent);
+		
+		Log.e("locationrequest priority", "="+locationrequest.getPriority());
 	}
 
 	@Override

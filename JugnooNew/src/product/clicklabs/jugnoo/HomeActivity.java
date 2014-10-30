@@ -3950,7 +3950,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			simpleJSONParser = null;
 		    			nameValuePairs = null;
 		    			Log.e("result of /find_a_driver", "="+result);
-		    			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
+		    			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 		    			}
 		    			else{
 		    				try{
@@ -3973,32 +3973,51 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			    				source = Data.driverInfos.get(i).latLng;
 			    			}
 			    		}
+			    		
+			    		if(Data.driverInfos.size() > 0){
+			    		double approxDistance = (minDistance * 1.5);
+			    		if(approxDistance < 1000){
+			    			distance = decimalFormat.format(approxDistance)+" m";
+			    		}
+			    		else{
+			    			approxDistance = approxDistance / 1000;
+			    			distance = decimalFormat.format(approxDistance)+" km";
+			    		}
+			    		}
+			    		else{
+			    			distance = "error";
+			    		}
+			    		return distance;
 		    		}
 		    		else if(driverAcceptPushRecieved){
 		    			source = Data.assignedDriverInfo.latLng;
-		    		}
-		    		
-		    		
-		    		if(source == null){
-		    			return "error";
-		    		}
-		    		
 		    			
-		    		this.url = makeURL(source, destination);
-			    	HttpRequester jParser = new HttpRequester();
-			    	String response = jParser.getJSONFromUrl(url);
-			    	JSONObject jsonObject = new JSONObject(response);
-			    	String status = jsonObject.getString("status");
-			    	if("OK".equalsIgnoreCase(status)){
-			    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
-			    		distance = element0.getJSONObject("distance").getString("text") ;
-			    		duration = element0.getJSONObject("duration").getString("text");
-			    		if(driverAcceptPushRecieved){
-			    			Data.assignedDriverInfo.distanceToReach = distance;
-			    			Data.assignedDriverInfo.durationToReach = duration;
+		    			if(source == null){
+			    			return "error";
 			    		}
-			    		return "Distance: " + distance + "\n" + "Duration: " + duration;
-			    	}
+			    			
+			    		this.url = makeURL(source, destination);
+				    	HttpRequester jParser = new HttpRequester();
+				    	String response = jParser.getJSONFromUrl(url);
+				    	JSONObject jsonObject = new JSONObject(response);
+				    	String status = jsonObject.getString("status");
+				    	if("OK".equalsIgnoreCase(status)){
+				    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
+				    		distance = element0.getJSONObject("distance").getString("text") ;
+				    		duration = element0.getJSONObject("duration").getString("text");
+				    		if(driverAcceptPushRecieved){
+				    			Data.assignedDriverInfo.distanceToReach = distance;
+				    			Data.assignedDriverInfo.durationToReach = duration;
+				    		}
+				    		return "Distance: " + distance + "\n" + "Duration: " + duration;
+				    	}
+				    	
+		    		}
+		    		
+		    		
+		    		
+			    	
+			    	
 		    	}catch(Exception e){
 		    		e.printStackTrace();
 		    	}
@@ -4042,7 +4061,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					        
 					        if(!driverAcceptPushRecieved){
 					 	        
-					 	       	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+					 	       	if(!"".equalsIgnoreCase(distance)){
 					 	       		distanceString = getResources().getString(R.string.nearest_driver_is) + " " + distance + " " + getResources().getString(R.string.away);
 						        }
 						        else{
@@ -4151,7 +4170,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(200*minScaleRatio)), 1000, null);
+						try {
+							map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(200*minScaleRatio)), 1000, null);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}, 1000);
 				
@@ -6255,7 +6278,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_driver_current_location", nameValuePairs);
 							
 							
-							if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
+							if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 							}
 							else{
 								try {
@@ -7905,7 +7928,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 								});
 								
-								if(response.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
+								if(response.contains(HttpRequester.SERVER_TIMEOUT)){
 									Log.e("timeout","=");
 									runOnUiThread(new Runnable() {
 										@Override
@@ -8062,9 +8085,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					if(currentUserStatus != 0){
 						String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
-						if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp)){
+						if(resp.contains(HttpRequester.SERVER_TIMEOUT)){
 							String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
-							if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp1)){
+							if(resp.contains(HttpRequester.SERVER_TIMEOUT)){
 								runOnUiThread(new Runnable() {
 									@Override
 									public void run() {

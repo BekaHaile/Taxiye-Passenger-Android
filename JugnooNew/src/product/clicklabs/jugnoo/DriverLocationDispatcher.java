@@ -10,12 +10,13 @@ import android.content.Context;
 import android.location.Location;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationDispatcher {
 
-	public void sendLocationToServer(Context context, final String filePrefix){
+	public void sendLocationToServer(DisplayToast displayToast, Context context, String filePrefix){
 		Database2 database2 = new Database2(context);
 		try {
 			String userMode = database2.getUserMode();
@@ -38,12 +39,12 @@ public class DriverLocationDispatcher {
 						nameValuePairs.add(new BasicNameValuePair("longitude", "" + latLng.longitude));
 						nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
 			
-			
 						HttpRequester simpleJSONParser = new HttpRequester();
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
 						Log.e("result in DLD", "=" + result);
-			
+						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
+						
 						try{
 							//{"log":"Updated"}
 							JSONObject jObj = new JSONObject(result);
@@ -51,11 +52,12 @@ public class DriverLocationDispatcher {
 								String log = jObj.getString("log");
 								if("Updated".equalsIgnoreCase(log)){
 									database2.updateDriverLastLocationTime();
-									Log.writeLogToFile(filePrefix, "To Server "+new DateOperations().getCurrentTime()+" = "+result);
+									displayToast.displayToast(context, filePrefix + " Ping "+new DateOperations().getCurrentTime());
 								}
 							}
 						} catch(Exception e){
 							e.printStackTrace();
+							Log.writeLogToFile(filePrefix, "Exception in sending to server inner "+new DateOperations().getCurrentTime()+" = "+e);
 						}
 						
 						simpleJSONParser = null;
@@ -71,6 +73,7 @@ public class DriverLocationDispatcher {
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
+			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
 		}
 		finally{
     		database2.close();

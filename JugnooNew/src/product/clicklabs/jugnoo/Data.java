@@ -130,7 +130,7 @@ public class Data {
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
 	
-	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 	
 	
 	
@@ -284,8 +284,8 @@ public class Data {
 	
 	public static AsyncHttpClient mainClient;
 	
-	public static final int SOCKET_TIMEOUT = 10000;
-	public static final int CONNECTION_TIMEOUT = 10000;
+	public static final int SOCKET_TIMEOUT = 30000;
+	public static final int CONNECTION_TIMEOUT = 30000;
 	public static final int MAX_RETRIES = 0;
 	public static final int RETRY_TIMEOUT = 1000;
 	
