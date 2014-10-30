@@ -64,7 +64,7 @@ public class DriverLocationUpdateService extends Service {
     				locationFetcherDriver.destroy();
     				locationFetcherDriver = null;
     			}
-    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod, 45000);
+    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     			if(gpsLocationFetcher != null){
     				gpsLocationFetcher.destroy();
     				gpsLocationFetcher = null;
@@ -111,7 +111,7 @@ public class DriverLocationUpdateService extends Service {
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
 		
-		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 		
 		
 		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -382,7 +382,7 @@ class GPSLocationFetcher {
 
 	
 
-	class MyLocationListener implements LocationListener {
+	class MyLocationListener implements LocationListener, DisplayToast {
 
 		public void onLocationChanged(final Location loc) {
 			
@@ -393,7 +393,7 @@ class GPSLocationFetcher {
 			    	database2.updateDriverCurrentLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
 			    	database2.close();
 			    	Log.e("DriverLocationUpdateService location in GPS only fast ", "=="+loc);
-					new DriverLocationDispatcher().sendLocationToServer(context, "GPSReciever");
+					new DriverLocationDispatcher().sendLocationToServer(MyLocationListener.this, context, "GPSReciever");
 				}
 			}).start();
 		}
@@ -405,6 +405,11 @@ class GPSLocationFetcher {
 		}
 
 		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+
+		@Override
+		public void displayToast(Context context, String text) {
+			
 		}
 	}
 

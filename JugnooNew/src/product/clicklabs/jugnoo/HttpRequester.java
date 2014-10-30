@@ -49,7 +49,7 @@ import android.util.Log;
 public class HttpRequester {
 
 	static String SERVER_TIMEOUT = "SERVER_TIMEOUT";
-	static int TIMEOUT_CONNECTION = 10000, TIMEOUT_SOCKET = 10000, RETRY_COUNT = 0, SLEEP_BETWEEN_RETRY = 0;
+	static int TIMEOUT_CONNECTION = 30000, TIMEOUT_SOCKET = 30000, RETRY_COUNT = 0, SLEEP_BETWEEN_RETRY = 0;
 
 	// constructor
 	public HttpRequester() {
@@ -93,7 +93,7 @@ public class HttpRequester {
 			}
 		} catch (Exception e) {
 			Log.e("Buffer Error", "Error converting result " + e.toString());
-			json = SERVER_TIMEOUT;
+			json = SERVER_TIMEOUT + " " +e;
 		}
 		return json;
 
@@ -148,7 +148,7 @@ public class HttpRequester {
             
         } catch (Exception e) {
             e.printStackTrace();
-            return SERVER_TIMEOUT;
+            return SERVER_TIMEOUT + " " +e;
         }
     }
 	

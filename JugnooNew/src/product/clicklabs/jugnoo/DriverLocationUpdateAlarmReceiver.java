@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
+public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver implements DisplayToast{
 
 	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
 	
@@ -31,10 +31,24 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						new DriverLocationDispatcher().sendLocationToServer(context, "AlarmReceiver");
+						new DriverLocationDispatcher().sendLocationToServer(DriverLocationUpdateAlarmReceiver.this, context, "AlarmReceiver");
 					}
 				}).start();
 			}
 		}
 	}
+
+	@Override
+	public void displayToast(final Context context, final String text) {
+    	// Get a handler that can be used to post to the main thread
+//    	Handler mainHandler = new Handler(context.getMainLooper());
+//    	Runnable myRunnable = new Runnable() {
+//			@Override
+//			public void run() {
+//				Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+//			}
+//		};
+//    	mainHandler.post(myRunnable);
+	}
+	
 }

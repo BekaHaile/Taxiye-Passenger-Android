@@ -284,8 +284,8 @@ public class Data {
 	
 	public static AsyncHttpClient mainClient;
 	
-	public static final int SOCKET_TIMEOUT = 10000;
-	public static final int CONNECTION_TIMEOUT = 10000;
+	public static final int SOCKET_TIMEOUT = 30000;
+	public static final int CONNECTION_TIMEOUT = 30000;
 	public static final int MAX_RETRIES = 0;
 	public static final int RETRY_TIMEOUT = 1000;
 	

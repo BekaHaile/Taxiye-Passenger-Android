@@ -1782,47 +1782,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		switchUserScreen(userMode);
 		
+		startUIAfterGettingUserStatus();
 		
-		
-		if(userMode == UserMode.PASSENGER){
-			if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-				if(myLocation == null){
-					Data.pickupLatLng = new LatLng(0, 0);
-				}
-				else{
-					Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-				}
-				
-				Data.cEngagementId = "";
-				
-				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-				Editor editor = pref.edit();
-				editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
-				editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-				editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
-	    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
-	    		editor.commit();
-	  
-				
-	    		cancelTimerUpdateDrivers();
-	    		
-	    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-				switchPassengerScreen(passengerScreenMode);
-	    		
-				customerCancelPressed = false;
-				
-				startTimerRequestRide();
-			}
-			else if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
-				switchPassengerScreen(passengerScreenMode);
-			}
-			else{
-				switchPassengerScreen(passengerScreenMode);
-			}
-		}
-		else if(userMode == UserMode.DRIVER){
-			switchDriverScreen(driverScreenMode);
-		}
 		
 		
 		
@@ -1858,6 +1819,66 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		database2.insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
 		database2.close();
 	}
+	
+	
+	public void startUIAfterGettingUserStatus(){
+		if(userMode == UserMode.PASSENGER){
+			if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+				initiateRequestRide(false);
+			}
+			else if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+				switchPassengerScreen(passengerScreenMode);
+			}
+			else{
+				switchPassengerScreen(passengerScreenMode);
+			}
+		}
+		else if(userMode == UserMode.DRIVER){
+			switchDriverScreen(driverScreenMode);
+		}
+	}
+	
+	public void initiateRequestRide(boolean newRequest){
+		
+		if(newRequest){
+			Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+			Data.cSessionId = "";
+			Data.cEngagementId = "";
+		}
+		else{
+			if(myLocation == null){
+				Data.pickupLatLng = new LatLng(0, 0);
+			}
+			else{
+				Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+			}
+			
+			Data.cEngagementId = "";
+		}
+		
+		Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+		Data.cSessionId = "";
+		Data.cEngagementId = "";
+		
+		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		Editor editor = pref.edit();
+		editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
+		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
+		editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
+		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
+		editor.commit();
+
+		cancelTimerUpdateDrivers();
+		
+		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
+		switchPassengerScreen(passengerScreenMode);
+		
+		customerCancelPressed = false;
+		
+		startTimerRequestRide();
+	}
+	
+	
 	
 	
 	Handler jugnooDriverOnHandler;
@@ -3950,7 +3971,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			simpleJSONParser = null;
 		    			nameValuePairs = null;
 		    			Log.e("result of /find_a_driver", "="+result);
-		    			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
+		    			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 		    			}
 		    			else{
 		    				try{
@@ -3973,32 +3994,51 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			    				source = Data.driverInfos.get(i).latLng;
 			    			}
 			    		}
+			    		
+			    		if(Data.driverInfos.size() > 0){
+			    		double approxDistance = (minDistance * 1.5);
+			    		if(approxDistance < 1000){
+			    			distance = decimalFormat.format(approxDistance)+" m";
+			    		}
+			    		else{
+			    			approxDistance = approxDistance / 1000;
+			    			distance = decimalFormat.format(approxDistance)+" km";
+			    		}
+			    		}
+			    		else{
+			    			distance = "error";
+			    		}
+			    		return distance;
 		    		}
 		    		else if(driverAcceptPushRecieved){
 		    			source = Data.assignedDriverInfo.latLng;
-		    		}
-		    		
-		    		
-		    		if(source == null){
-		    			return "error";
-		    		}
-		    		
 		    			
-		    		this.url = makeURL(source, destination);
-			    	HttpRequester jParser = new HttpRequester();
-			    	String response = jParser.getJSONFromUrl(url);
-			    	JSONObject jsonObject = new JSONObject(response);
-			    	String status = jsonObject.getString("status");
-			    	if("OK".equalsIgnoreCase(status)){
-			    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
-			    		distance = element0.getJSONObject("distance").getString("text") ;
-			    		duration = element0.getJSONObject("duration").getString("text");
-			    		if(driverAcceptPushRecieved){
-			    			Data.assignedDriverInfo.distanceToReach = distance;
-			    			Data.assignedDriverInfo.durationToReach = duration;
+		    			if(source == null){
+			    			return "error";
 			    		}
-			    		return "Distance: " + distance + "\n" + "Duration: " + duration;
-			    	}
+			    			
+			    		this.url = makeURL(source, destination);
+				    	HttpRequester jParser = new HttpRequester();
+				    	String response = jParser.getJSONFromUrl(url);
+				    	JSONObject jsonObject = new JSONObject(response);
+				    	String status = jsonObject.getString("status");
+				    	if("OK".equalsIgnoreCase(status)){
+				    		JSONObject element0 = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
+				    		distance = element0.getJSONObject("distance").getString("text") ;
+				    		duration = element0.getJSONObject("duration").getString("text");
+				    		if(driverAcceptPushRecieved){
+				    			Data.assignedDriverInfo.distanceToReach = distance;
+				    			Data.assignedDriverInfo.durationToReach = duration;
+				    		}
+				    		return "Distance: " + distance + "\n" + "Duration: " + duration;
+				    	}
+				    	
+		    		}
+		    		
+		    		
+		    		
+			    	
+			    	
 		    	}catch(Exception e){
 		    		e.printStackTrace();
 		    	}
@@ -4042,7 +4082,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					        
 					        if(!driverAcceptPushRecieved){
 					 	        
-					 	       	if(!"".equalsIgnoreCase(duration) && !"".equalsIgnoreCase(distance)){
+					 	       	if(!"".equalsIgnoreCase(distance)){
 					 	       		distanceString = getResources().getString(R.string.nearest_driver_is) + " " + distance + " " + getResources().getString(R.string.away);
 						        }
 						        else{
@@ -4151,7 +4191,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(200*minScaleRatio)), 1000, null);
+						try {
+							map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(200*minScaleRatio)), 1000, null);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}, 1000);
 				
@@ -6255,7 +6299,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_driver_current_location", nameValuePairs);
 							
 							
-							if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
+							if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 							}
 							else{
 								try {
@@ -6664,27 +6708,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-
-					Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-					Data.cSessionId = "";
-					Data.cEngagementId = "";
-					
-					SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-					Editor editor = pref.edit();
-					editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
-					editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-					editor.putString(Data.SP_LAST_LATITUDE, ""+Data.pickupLatLng.latitude);
-		    		editor.putString(Data.SP_LAST_LONGITUDE, ""+Data.pickupLatLng.longitude);
-		    		editor.commit();
-		  
-		    		cancelTimerUpdateDrivers();
-		    		
-		    		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-					switchPassengerScreen(passengerScreenMode);
-		    		
-					customerCancelPressed = false;
-					
-					startTimerRequestRide();
+					initiateRequestRide(true);
 				}
 				
 			});
@@ -7905,7 +7929,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 								});
 								
-								if(response.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
+								if(response.contains(HttpRequester.SERVER_TIMEOUT)){
 									Log.e("timeout","=");
 									runOnUiThread(new Runnable() {
 										@Override
@@ -7950,6 +7974,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 													cancelTimerRequestRide();
 													fetchAcceptedDriverInfoAndChangeState(jObj);
 												}
+											}
+											
+//											response = {
+//													"flag": constants.responseFlags.RIDE_STARTED,
+//													"driver_id": driver_id, 
+//													"user_name": result_driver[0].user_name, 
+//													"phone_no": result_driver[0].phone_no,
+//													            "user_image": result_driver[0].user_image, 
+//													"driver_car_image": result_driver[0].driver_car_image, 
+//													"driver_car_number": result_driver[0].driver_car_number,
+//													            "rating": rating,
+//													            "current_location_latitude": result_driver[0].current_location_latitude, 
+//													"current_location_longitude": result_driver[0].current_location_longitude,
+//													            "engagement_id": engagement_id,
+//													            "session_id": session_id};};
+											
+											else if(ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag){
+												
 											}
 											else if(ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag){
 												final String log = jObj.getString("log");
@@ -8036,6 +8078,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	
 	
+	
+	
+	
+	
 
 	
 	public void handleConnectionLost() {
@@ -8058,9 +8104,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					if(currentUserStatus != 0){
 						String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
-						if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp)){
+						if(resp.contains(HttpRequester.SERVER_TIMEOUT)){
 							String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
-							if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp1)){
+							if(resp.contains(HttpRequester.SERVER_TIMEOUT)){
 								runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
@@ -8073,13 +8119,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							DialogPopup.dismissLoadingDialog();
-							if(UserMode.DRIVER == userMode){
-								switchDriverScreen(driverScreenMode);
-							}
-							else if(UserMode.PASSENGER == userMode){
-								switchPassengerScreen(passengerScreenMode);
-							}
+							startUIAfterGettingUserStatus();
 						}
 					});
 				}

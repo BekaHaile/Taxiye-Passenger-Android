@@ -9,7 +9,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
@@ -40,11 +39,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -546,7 +543,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 
-			if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(result)){
+			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 				loginDataFetched = false;
 				new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			}

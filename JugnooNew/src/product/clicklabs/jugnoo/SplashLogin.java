@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.http.Header;
@@ -43,7 +42,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.facebook.LoggingBehavior;
 import com.facebook.Request;
@@ -57,7 +55,6 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -1169,6 +1166,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	 * it doesn't, display a dialog that allows users to download the APK from
 	 * the Google Play Store or enable it in the device's system settings.
 	 */
+	@SuppressWarnings("unused")
 	private boolean checkPlayServices() {
 	    int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 	    if (resultCode != ConnectionResult.SUCCESS) {
