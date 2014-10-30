@@ -232,7 +232,7 @@ public class JSONParser {
 			HttpRequester simpleJSONParser = new HttpRequester();
 			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_current_user_status", nameValuePairs);
 			Log.e("result of = user_status", "="+result);
-			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 				returnResponse = HttpRequester.SERVER_TIMEOUT;
 				return returnResponse;
 			}

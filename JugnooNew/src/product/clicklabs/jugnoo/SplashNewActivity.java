@@ -546,7 +546,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 
-			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+			if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(result)){
 				loginDataFetched = false;
 				new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			}

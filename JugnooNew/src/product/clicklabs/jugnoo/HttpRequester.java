@@ -93,7 +93,7 @@ public class HttpRequester {
 			}
 		} catch (Exception e) {
 			Log.e("Buffer Error", "Error converting result " + e.toString());
-			json = SERVER_TIMEOUT + " " +e;
+			json = SERVER_TIMEOUT;
 		}
 		return json;
 
@@ -148,7 +148,7 @@ public class HttpRequester {
             
         } catch (Exception e) {
             e.printStackTrace();
-            return SERVER_TIMEOUT + " " +e;
+            return SERVER_TIMEOUT;
         }
     }
 	

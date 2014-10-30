@@ -244,7 +244,6 @@ public class DriverMissedRidesFragment extends Fragment {
 										
 										JSONArray missedRidesData = jObj.getJSONArray("missed_rides");
 										missedRideInfos.clear();
-										DecimalFormat decimalFormat = new DecimalFormat("#.#");
 										if(missedRidesData.length() > 0){
 											for(int i=missedRidesData.length()-1; i>=0; i--){
 												JSONObject rideData = missedRidesData.getJSONObject(i);
@@ -252,7 +251,7 @@ public class DriverMissedRidesFragment extends Fragment {
 														rideData.getString("pickup_location_address"),
 														rideData.getString("timestamp"),
 														rideData.getString("user_name"),
-														decimalFormat.format(rideData.getDouble("distance"))));
+														rideData.getString("distance")));
 											}
 										}
 									}

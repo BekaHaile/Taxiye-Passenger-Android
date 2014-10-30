@@ -1784,6 +1784,45 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		updateUIAfterGettingUserStatus();
+		
+		
+		
+		
+		
+		
+//		getAllFavoriteAsync(HomeActivity.this);
+		
+		
+		
+		gpsListener = new CustomLocationListener();
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
+	    
+		
+		
+		Database2 database2 = new Database2(HomeActivity.this);
+		String jugnooOn = database2.getJugnooOn();
+		
+		
+		if("on".equalsIgnoreCase(jugnooOn)){
+			jugnooDriverMode = JugnooDriverMode.ON;
+		}
+		else{
+			jugnooDriverMode = JugnooDriverMode.OFF;
+		}
+		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+			changeJugnooON(jugnooDriverMode);
+		}
+		
+		changeExceptionalDriverUI();
+		
+		database2.insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
+		database2.close();
+	}
+	
+	
+	public void updateUIAfterGettingUserStatus(){
 		if(userMode == UserMode.PASSENGER){
 			if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
 				if(myLocation == null){
@@ -1823,41 +1862,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		else if(userMode == UserMode.DRIVER){
 			switchDriverScreen(driverScreenMode);
 		}
-		
-		
-		
-		
-		
-		
-//		getAllFavoriteAsync(HomeActivity.this);
-		
-		
-		
-		gpsListener = new CustomLocationListener();
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
-	    
-		
-		
-		Database2 database2 = new Database2(HomeActivity.this);
-		String jugnooOn = database2.getJugnooOn();
-		
-		
-		if("on".equalsIgnoreCase(jugnooOn)){
-			jugnooDriverMode = JugnooDriverMode.ON;
-		}
-		else{
-			jugnooDriverMode = JugnooDriverMode.OFF;
-		}
-		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-			changeJugnooON(jugnooDriverMode);
-		}
-		
-		changeExceptionalDriverUI();
-		
-		database2.insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
-		database2.close();
 	}
+	
+	
 	
 	
 	Handler jugnooDriverOnHandler;
@@ -3950,7 +3957,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			simpleJSONParser = null;
 		    			nameValuePairs = null;
 		    			Log.e("result of /find_a_driver", "="+result);
-		    			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+		    			if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 		    			}
 		    			else{
 		    				try{
@@ -3975,14 +3982,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			    		}
 			    		
 			    		if(Data.driverInfos.size() > 0){
-			    		double approxDistance = (minDistance * 1.5);
-			    		if(approxDistance < 1000){
-			    			distance = decimalFormat.format(approxDistance)+" m";
-			    		}
-			    		else{
-			    			approxDistance = approxDistance / 1000;
-			    			distance = decimalFormat.format(approxDistance)+" km";
-			    		}
+				    		double approxDistance = (minDistance * 1.5);
+				    		if(approxDistance < 1000){
+				    			distance = decimalFormat.format(approxDistance)+" m";
+				    		}
+				    		else{
+				    			approxDistance = approxDistance / 1000;
+				    			distance = decimalFormat.format(approxDistance)+" km";
+				    		}
 			    		}
 			    		else{
 			    			distance = "error";
@@ -4013,11 +4020,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				    	}
 				    	
 		    		}
-		    		
-		    		
-		    		
-			    	
-			    	
 		    	}catch(Exception e){
 		    		e.printStackTrace();
 		    	}
@@ -6278,7 +6280,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_driver_current_location", nameValuePairs);
 							
 							
-							if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+							if(result.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 							}
 							else{
 								try {
@@ -7928,7 +7930,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 								});
 								
-								if(response.contains(HttpRequester.SERVER_TIMEOUT)){
+								if(response.equalsIgnoreCase(HttpRequester.SERVER_TIMEOUT)){
 									Log.e("timeout","=");
 									runOnUiThread(new Runnable() {
 										@Override
@@ -8085,9 +8087,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					if(currentUserStatus != 0){
 						String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
-						if(resp.contains(HttpRequester.SERVER_TIMEOUT)){
+						if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp)){
 							String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
-							if(resp.contains(HttpRequester.SERVER_TIMEOUT)){
+							if(HttpRequester.SERVER_TIMEOUT.equalsIgnoreCase(resp1)){
 								runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
@@ -8101,12 +8103,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						@Override
 						public void run() {
 							DialogPopup.dismissLoadingDialog();
-							if(UserMode.DRIVER == userMode){
-								switchDriverScreen(driverScreenMode);
-							}
-							else if(UserMode.PASSENGER == userMode){
-								switchPassengerScreen(passengerScreenMode);
-							}
+							updateUIAfterGettingUserStatus();
 						}
 					});
 				}
