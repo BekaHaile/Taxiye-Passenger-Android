@@ -60,6 +60,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
@@ -190,6 +192,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	//Initial layout
 	RelativeLayout initialLayout;
+	TextView textViewAssigningInProgress;
 	RelativeLayout searchBarLayout;
 	EditText searchEt;
 	Button search, myLocationBtn, requestRideBtn, initialCancelRideBtn;
@@ -532,6 +535,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		//Initial layout 
 		initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
+		textViewAssigningInProgress = (TextView) findViewById(R.id.textViewAssigningInProgress); textViewAssigningInProgress.setTypeface(Data.regularFont(getApplicationContext()));
 		searchBarLayout = (RelativeLayout) findViewById(R.id.searchBarLayout);
 		searchBarLayout.setVisibility(View.GONE);
 		
@@ -1877,8 +1881,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	
 	Handler jugnooDriverOnHandler;
 	Runnable jugnooDriverOnRunnable;
 	
@@ -2427,6 +2429,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			case P_INITIAL:
 
 				requestRideBtn.setText(REQUEST_RIDE_BTN_NORMAL_TEXT);
+				requestRideBtn.setBackgroundResource(R.drawable.blue_btn_selector);
 				
 				cancelDriverLocationUpdateTimer();
 				cancelTimerRequestRide();
@@ -2458,6 +2461,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				nearestDriverRl.setVisibility(View.VISIBLE);
 				initialCancelRideBtn.setVisibility(View.GONE);
+				textViewAssigningInProgress.setVisibility(View.GONE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -2484,6 +2488,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			case P_ASSIGNING:
 				
 				requestRideBtn.setText(REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT);
+				requestRideBtn.setBackgroundResource(R.drawable.blue_btn_normal);
 				
 				initialLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
@@ -2505,6 +2510,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				nearestDriverRl.setVisibility(View.GONE);
 				initialCancelRideBtn.setVisibility(View.VISIBLE);
+				textViewAssigningInProgress.setVisibility(View.VISIBLE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -7910,12 +7916,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 						else{
 							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
-								runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										DialogPopup.showLoadingDialog(HomeActivity.this, "Assigning Driver...");
-									}
-								});
 								ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 								nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 								nameValuePairs.add(new BasicNameValuePair("latitude", ""+Data.pickupLatLng.latitude));
@@ -7933,19 +7933,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								Log.i("response of request_ride", "="+response);
 								
-								runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										DialogPopup.dismissLoadingDialog();
-									}
-								});
-								
 								if(response.contains(HttpRequester.SERVER_TIMEOUT)){
 									Log.e("timeout","=");
 									runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
-											new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//											new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 										}
 									});
 								}
@@ -8047,12 +8040,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			};
 			
 			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, requestPeriod);
+			startAssigningDriversAnimation();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void cancelTimerRequestRide(){
+		stopAssigningDriversAnimation();
 		try{
 			if(timerTaskRequestRide != null){
 				timerTaskRequestRide.cancel();
@@ -8067,6 +8063,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public void startAssigningDriversAnimation(){
+		try{
+			Animation myFadeInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.tween);
+			requestRideBtn.startAnimation(myFadeInAnimation);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void stopAssigningDriversAnimation(){
+		try{
+			requestRideBtn.clearAnimation();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	
 
