@@ -3,17 +3,12 @@ package product.clicklabs.jugnoo;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -22,6 +17,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 public class TermsConditionsActivity extends Activity{
 	

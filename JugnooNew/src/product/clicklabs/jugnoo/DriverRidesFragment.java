@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import java.text.DecimalFormat;
+
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -227,11 +229,12 @@ public class DriverRidesFragment extends Fragment {
 									else{
 										JSONArray bookingData = jObj.getJSONArray("booking_data");
 										Data.rides.clear();
+										DecimalFormat decimalFormat = new DecimalFormat("#.#");
 										if(bookingData.length() > 0){
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
 												Data.rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
-														booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
+														booData.getString("to"), booData.getString("fare"), decimalFormat.format(booData.getDouble("distance")),
 														booData.getString("time")));
 											}
 										}
