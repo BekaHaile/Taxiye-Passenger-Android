@@ -51,7 +51,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -396,7 +395,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
+	public static final int MAP_PATH_COLOR = Color.RED;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600;
@@ -1074,7 +1073,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										callAnAutoPopup(HomeActivity.this);
 									}
 									else{
-										noDriverAvailablePopup(HomeActivity.this);
+										noDriverAvailablePopup(HomeActivity.this, true);
 									}
 								}
 								else{
@@ -1856,9 +1855,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Data.cEngagementId = "";
 		}
 		
-		Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-		Data.cSessionId = "";
-		Data.cEngagementId = "";
 		
 		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		Editor editor = pref.edit();
@@ -1877,6 +1873,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		startTimerRequestRide();
 	}
+	
+	
 	
 	
 	
@@ -3409,6 +3407,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 					
 					lastLocation = location;
+					
+//					Log.writeLogToFile("LatLngDataFile", "@\""+lastLocation.getLatitude()+"\",@\""+lastLocation.getLongitude()+"\"");
+					
 				}
 				
 				
@@ -5978,58 +5979,68 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	void noDriverAvailablePopup(final Activity activity){
+	void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby){
 		try {
 			if(noDriversDialog != null && noDriversDialog.isShowing()){
-				
+				noDriversDialog.dismiss();
+			}
+			noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			noDriversDialog.setContentView(R.layout.no_driver_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+
+			WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			noDriversDialog.setCancelable(false);
+			noDriversDialog.setCanceledOnTouchOutside(false);
+
+			TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
+			textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			textHead.setVisibility(View.GONE);
+			TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
+			textMessage.setTypeface(Data.regularFont(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+			
+			if(zeroDriversNearby){
+				textMessage.setText("Sorry there are no drivers available nearby within 3 km. We will look into it");
 			}
 			else{
-				noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				noDriversDialog.setContentView(R.layout.no_driver_dialog);
-	
-				FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
-				new ASSL(activity, frameLayout, 1134, 720, true);
-				
-				WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
-				layoutParams.dimAmount = 0.6f;
-				noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				noDriversDialog.setCancelable(false);
-				noDriversDialog.setCanceledOnTouchOutside(false);
-				
-				
-				TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
-	
-				textMessage.setMovementMethod(new ScrollingMovementMethod());
-				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
-				
-				
-				Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-				Button crossbtn = (Button) noDriversDialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
-				crossbtn.setVisibility(View.GONE);
-				
-				btnOk.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						noDriversDialog.dismiss();
-						noDriverAsync(activity);
-						noDriversDialog = null;
-					}
-				});
-				
-				crossbtn.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						noDriversDialog.dismiss();
-						noDriverAsync(activity);
-						noDriversDialog = null;
-					}
-					
-				});
-	
-				noDriversDialog.show();
+				textMessage.setText("Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later.");
 			}
+			
+
+			Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
+			btnOk.setTypeface(Data.regularFont(activity));
+			Button crossbtn = (Button) noDriversDialog
+					.findViewById(R.id.crossbtn);
+			crossbtn.setTypeface(Data.regularFont(activity));
+			crossbtn.setVisibility(View.GONE);
+
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					noDriversDialog.dismiss();
+					noDriverAsync(activity);
+					noDriversDialog = null;
+				}
+			});
+
+			crossbtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					noDriversDialog.dismiss();
+					noDriverAsync(activity);
+					noDriversDialog = null;
+				}
+
+			});
+
+			noDriversDialog.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -7890,7 +7901,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								@Override
 								public void run() {
 									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
-										noDriverAvailablePopup(HomeActivity.this);
+										noDriverAvailablePopup(HomeActivity.this, false);
 										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
 									}
@@ -8001,7 +8012,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 													@Override
 													public void run() {
 														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
-															noDriverAvailablePopup(HomeActivity.this);
+															noDriverAvailablePopup(HomeActivity.this, false);
 															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 															switchPassengerScreen(passengerScreenMode);
 														}
@@ -8068,7 +8079,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					noDriverAvailablePopup(HomeActivity.this);
+					noDriverAvailablePopup(HomeActivity.this, false);
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 					switchPassengerScreen(passengerScreenMode);
 				}

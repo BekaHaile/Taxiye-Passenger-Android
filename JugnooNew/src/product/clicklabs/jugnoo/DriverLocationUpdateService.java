@@ -64,7 +64,7 @@ public class DriverLocationUpdateService extends Service {
     				locationFetcherDriver.destroy();
     				locationFetcherDriver = null;
     			}
-    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, 5 * serverUpdateTimePeriod);
     			if(gpsLocationFetcher != null){
     				gpsLocationFetcher.destroy();
     				gpsLocationFetcher = null;
@@ -111,7 +111,7 @@ public class DriverLocationUpdateService extends Service {
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
 		
-		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 		
 		
 		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -306,7 +306,7 @@ public class DriverLocationUpdateService extends Service {
 	
 	private static int DRIVER_LOCATION_PI_REQUEST_CODE = 111;
 	private static final String SEND_LOCATION = "product.clicklabs.jugnoo.SEND_LOCATION";
-	private static final long ALARM_REPEAT_INTERVAL = 3 * 60000;
+	private static final long ALARM_REPEAT_INTERVAL = 1 * 60000;
 	
 	
 	public void setupLocationUpdateAlarm(){
