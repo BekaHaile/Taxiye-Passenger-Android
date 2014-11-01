@@ -124,6 +124,7 @@ public class Database2 {																	// class for handling database related 
 				+ LAST_LOCATION_TIME + " TEXT" 
 				+ ");");
 		
+		
 	}
 	
 	
@@ -559,6 +560,7 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	
+	
 	public int deleteDriverLastLocationTime(){
 		try{
 			return database.delete(Database2.TABLE_DRIVER_LAST_LOCATION_TIME, null, null);
@@ -567,5 +569,15 @@ public class Database2 {																	// class for handling database related 
 		}
 		return 0;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

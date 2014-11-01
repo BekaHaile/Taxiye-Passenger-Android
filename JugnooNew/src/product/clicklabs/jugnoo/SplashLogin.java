@@ -1273,7 +1273,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 					try {
 						final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 						dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-						dialog.setContentView(R.layout.custom_two_btn_dialog);
+						dialog.setContentView(R.layout.custom_three_btn_dialog);
 
 						FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 						new ASSL(activity, frameLayout, 1134, 720, true);
@@ -1301,6 +1301,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 							}
 						});
 						
+						
 						TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
 						TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
 						
@@ -1309,7 +1310,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
 						
 						if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-							textMessage.setText("Current server is TRIAL.\nChange to:");
+							textMessage.setText("Current server is SALES.\nChange to:");
 						}
 						else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
 							textMessage.setText("Current server is LIVE.\nChange to:");
@@ -1323,8 +1324,11 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
 						btnOk.setText("LIVE");
 						
+						Button btnNeutral = (Button) dialog.findViewById(R.id.btnNeutral); btnNeutral.setTypeface(Data.regularFont(activity));
+						btnNeutral.setText("DEV");
+						
 						Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
-						btnCancel.setText("TRIAL");
+						btnCancel.setText("SALES");
 						
 						Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
 						crossbtn.setVisibility(View.VISIBLE);
@@ -1333,7 +1337,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						btnOk.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
-								
 								SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
 								SharedPreferences.Editor editor = preferences.edit();
 								editor.putString(Data.SP_SERVER_LINK, Data.LIVE_SERVER_URL);
@@ -1341,13 +1344,22 @@ public class SplashLogin extends Activity implements LocationUpdate{
 								
 								Data.SERVER_URL = Data.LIVE_SERVER_URL;
 								
+								dialog.dismiss();
+							}
+						});
+						
+						btnNeutral.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+								SharedPreferences.Editor editor = preferences.edit();
+								editor.putString(Data.SP_SERVER_LINK, Data.DEV_SERVER_URL);
+								editor.commit();
+								
+								Data.SERVER_URL = Data.DEV_SERVER_URL;
 								
 								dialog.dismiss();
-								
-								
 							}
-							
-							
 						});
 						
 						btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -1363,7 +1375,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 								
 								dialog.dismiss();
 							}
-							
 						});
 
 						
@@ -1372,7 +1383,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 							public void onClick(View view) {
 								dialog.dismiss();
 							}
-							
 						});
 						
 						

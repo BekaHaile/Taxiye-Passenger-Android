@@ -31,7 +31,7 @@ import android.widget.TextView;
 public class DriverRidesFragment extends Fragment {
 
 	ProgressBar progressBarRides;
-	TextView textViewNoRides;
+	TextView textViewInfoDisplay;
 	ListView listViewRides;
 	
 	DriverRidesListAdapter driverRidesListAdapter;
@@ -55,14 +55,23 @@ public class DriverRidesFragment extends Fragment {
 		ASSL.DoMagic(main);
 
 		progressBarRides = (ProgressBar) rootView.findViewById(R.id.progressBarRides);
-		textViewNoRides = (TextView) rootView.findViewById(R.id.textViewNoRides); textViewNoRides.setTypeface(Data.regularFont(getActivity()));
+		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
 		listViewRides = (ListView) rootView.findViewById(R.id.listViewRides);
 		
 		driverRidesListAdapter = new DriverRidesListAdapter();
 		listViewRides.setAdapter(driverRidesListAdapter);
 		
 		progressBarRides.setVisibility(View.GONE);
-		textViewNoRides.setVisibility(View.GONE);
+		textViewInfoDisplay.setVisibility(View.GONE);
+		
+		textViewInfoDisplay.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(!"No rides currently".equalsIgnoreCase(textViewInfoDisplay.getText().toString())){
+					getRidesAsync(getActivity());
+				}
+			}
+		});
 		
 		getRidesAsync(getActivity());
 		
@@ -70,14 +79,24 @@ public class DriverRidesFragment extends Fragment {
 	}
 
 	
-	public void updateListData(){
-		if(Data.rides.size() == 0){
-			textViewNoRides.setVisibility(View.VISIBLE);
+	public void updateListData(String message, boolean errorOccurred){
+		if(errorOccurred){
+			textViewInfoDisplay.setText(message);
+			textViewInfoDisplay.setVisibility(View.VISIBLE);
+			
+			Data.rides.clear();
+			driverRidesListAdapter.notifyDataSetChanged();
 		}
 		else{
-			textViewNoRides.setVisibility(View.GONE);
+			if(Data.rides.size() == 0){
+				textViewInfoDisplay.setText(message);
+				textViewInfoDisplay.setVisibility(View.VISIBLE);
+			}
+			else{
+				textViewInfoDisplay.setVisibility(View.GONE);
+			}
+			driverRidesListAdapter.notifyDataSetChanged();
 		}
-		driverRidesListAdapter.notifyDataSetChanged();
 	}
 	
 	@Override
@@ -189,9 +208,6 @@ public class DriverRidesFragment extends Fragment {
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("current_mode", "1");
-			
-				//booking_history
-				
 				fetchRidesClient = Data.getClient();
 				fetchRidesClient.post(Data.SERVER_URL + "/booking_history", params,
 						new AsyncHttpResponseHandler() {
@@ -202,7 +218,7 @@ public class DriverRidesFragment extends Fragment {
 									byte[] arg2, Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								progressBarRides.setVisibility(View.GONE);
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								updateListData("Some error occurred. Tap to retry", true);
 							}
 	
 							@Override
@@ -219,11 +235,8 @@ public class DriverRidesFragment extends Fragment {
 										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 											HomeActivity.logoutUser(activity);
 										}
-										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-											new DialogPopup().alertPopup(activity, "", error);
-										}
 										else{
-											new DialogPopup().alertPopup(activity, "", error);
+											updateListData("Some error occurred. Tap to retry", true);
 										}
 									}
 									else{
@@ -238,12 +251,12 @@ public class DriverRidesFragment extends Fragment {
 														booData.getString("time")));
 											}
 										}
+										updateListData("No rides currently", false);
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									updateListData("Some error occurred. Tap to retry", true);
 								}
-								updateListData();
 								progressBarRides.setVisibility(View.GONE);
 							}
 							
@@ -258,7 +271,7 @@ public class DriverRidesFragment extends Fragment {
 						});
 			}
 			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				updateListData("No Internet connection. Tap to retry", true);
 			}
 		}
 

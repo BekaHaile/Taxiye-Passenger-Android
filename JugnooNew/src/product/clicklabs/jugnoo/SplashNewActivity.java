@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -181,6 +182,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
 		
+		
+		
 		super.onResume();
 	}
 	
@@ -333,7 +336,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	class ShowAnimListener implements AnimationListener{
-
 		
 		public ShowAnimListener(){
 		}
@@ -354,14 +356,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-			new Handler().postDelayed(new Runnable() {
-				
-				@Override
-				public void run() {
-					callFirstAttempt();
-				}
-			}, 1000);
-			
+			if(SplashNewActivity.isLastLocationUpdateFine(SplashNewActivity.this)){
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						callFirstAttempt();
+					}
+				}, 1000);
+			}
 			
 		}
 
@@ -793,7 +795,84 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	}
 	
 	
+	public static boolean isLastLocationUpdateFine(Activity activity){
+		try {
+			Database2 database2 = new Database2(activity);
+			String userMode = database2.getUserMode();
+			long lastLocationUpdateTime = database2.getDriverLastLocationTime();
+			database2.close();
+			
+			long currentTime = System.currentTimeMillis();
+			
+			Log.e("isLastLocationUpdateFine lastLocationUpdateTime", "="+(currentTime - (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT)));
+			
+			if(lastLocationUpdateTime == 0){
+				lastLocationUpdateTime = System.currentTimeMillis();
+			}
+			
+			if(Database2.UM_DRIVER.equalsIgnoreCase(userMode) && 
+					(currentTime >= (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT))){
+				restartPhonePopup(activity);
+				return false;
+			}
+			else{
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return true;
+		}
+	}
 	
+	
+	public static void restartPhonePopup(final Activity activity){
+		try {
+			final Dialog noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			noDriversDialog.setContentView(R.layout.no_driver_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+
+			WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			noDriversDialog.setCancelable(false);
+			noDriversDialog.setCanceledOnTouchOutside(false);
+
+			TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
+			textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			textHead.setVisibility(View.GONE);
+			TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
+			textMessage.setTypeface(Data.regularFont(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+			
+			textMessage.setText("Please switch off and switch on your phone to continue using Jugnoo");
+			
+
+			Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
+			btnOk.setTypeface(Data.regularFont(activity));
+			Button crossbtn = (Button) noDriversDialog
+					.findViewById(R.id.crossbtn);
+			crossbtn.setTypeface(Data.regularFont(activity));
+			crossbtn.setVisibility(View.GONE);
+
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					noDriversDialog.dismiss();
+					activity.finish();
+				}
+			});
+
+
+			noDriversDialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 }

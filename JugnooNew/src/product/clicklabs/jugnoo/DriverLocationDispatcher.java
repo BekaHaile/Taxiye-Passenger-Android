@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationDispatcher {
 
-	public void sendLocationToServer(DisplayToast displayToast, Context context, String filePrefix){
+	public void sendLocationToServer(Context context, String filePrefix){
 		Database2 database2 = new Database2(context);
 		try {
 			String userMode = database2.getUserMode();
@@ -51,7 +51,6 @@ public class DriverLocationDispatcher {
 								String log = jObj.getString("log");
 								if("Updated".equalsIgnoreCase(log)){
 									database2.updateDriverLastLocationTime();
-//									displayToast.displayToast(context, filePrefix + " Ping "+new DateOperations().getCurrentTime());
 								}
 							}
 						} catch(Exception e){
@@ -69,7 +68,7 @@ public class DriverLocationDispatcher {
 
 			database2.close();
 			
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
