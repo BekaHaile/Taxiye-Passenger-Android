@@ -164,10 +164,10 @@
                 android:id="@+id/extraTextForScroll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28px"
+                android:layout_marginTop="10px"
                 android:textColor="@color/white"
                 android:text="      "
-                android:textSize="34px"
+                android:textSize="10px"
                 
                 />
         

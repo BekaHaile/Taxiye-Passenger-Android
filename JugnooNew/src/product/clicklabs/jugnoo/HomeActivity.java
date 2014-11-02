@@ -354,15 +354,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	LocationManager locationManager;
-	
-	static PassengerScreenMode passengerScreenMode;
-	
+
 	static UserMode userMode;
+	static PassengerScreenMode passengerScreenMode;
+	static DriverScreenMode driverScreenMode;
+	
 	
 	static JugnooDriverMode jugnooDriverMode;
 	static ExceptionalDriver exceptionalDriver = ExceptionalDriver.NO;
 	
-	static DriverScreenMode driverScreenMode;
 	
 	
 	
@@ -379,8 +379,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	static Activity activity;
 	
-	boolean customerCancelPressed = false, 
-			userCanceledDialogShown = false;
 	boolean loggedOut = false, 
 			zoomedToMyLocation = false;
 	boolean dontCallRefreshDriver = false;
@@ -428,9 +426,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		HomeActivity.appInterruptHandler = HomeActivity.this;
 		
 		activity = this;
-		
-		customerCancelPressed = false;
-		userCanceledDialogShown = false;
 		
 		loggedOut = false;
 		zoomedToMyLocation = false;
@@ -1101,7 +1096,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				if(!"".equalsIgnoreCase(Data.cSessionId)){
-					customerCancelPressed = true;
 					cancelCustomerRequestAsync(HomeActivity.this);
 				}
 			}
@@ -1799,10 +1793,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
 		switchPassengerScreen(passengerScreenMode);
 		
-		customerCancelPressed = false;
-		
 		startTimerRequestRide();
 	}
+	
+	
 	
 	
 	
@@ -2021,7 +2015,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 			default:
-				database2.updateUserMode(Database2.UM_PASSENGER);
+				database2.updateUserMode(Database2.UM_OFFLINE);
 		
 		}
 		
@@ -2281,6 +2275,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		}
 		}
+		
+		
+		
 		
 	}
 	
@@ -2553,6 +2550,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 				startDriverLocationUpdateTimer();
 				
+				cancelTimerUpdateDrivers();
 				
 				break;
 				
@@ -2560,6 +2558,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 			case P_IN_RIDE:
 				
+				cancelTimerUpdateDrivers();
 				
 				cancelDriverLocationUpdateTimer();
 				
@@ -2628,7 +2627,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
 //				favBtn.setVisibility(View.VISIBLE);
-
 				
 		}
 		
@@ -4341,7 +4339,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								byte[] arg2, Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							customerCancelPressed = false;
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							handleConnectionLost();
 						}
@@ -4365,7 +4362,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-									customerCancelPressed = false;
 									
 								}
 								else{
@@ -4387,7 +4383,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								customerCancelPressed = false;
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
@@ -4397,7 +4392,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			customerCancelPressed = false;
 		}
 
 	}
@@ -4550,8 +4544,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void driverAcceptRideAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
-			userCanceledDialogShown = false;
-			
 			DialogPopup.showLoadingDialog(activity, "Fetching customer data...");
 			
 			RequestParams params = new RequestParams();
@@ -4616,8 +4608,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									DialogPopup.dismissLoadingDialog();
 									
 									reduceRideRequest(activity, Data.dEngagementId);
-									
-									userCanceledDialogShown = false;
 									
 								}
 								else{
@@ -5884,7 +5874,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					noDriversDialog.dismiss();
-					noDriverAsync(activity);
+//					noDriverAsync(activity);
 					noDriversDialog = null;
 				}
 			});
@@ -6126,10 +6116,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
+
+	//Customer's timer
 	Timer timerDriverLocationUpdater;
-	
 	TimerTask timerTaskDriverLocationUpdater;
-	
 	
 	public void startDriverLocationUpdateTimer(){
 		
@@ -6266,6 +6257,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	//Driver's timer
 	Timer timerCustomerPathUpdater;
 	TimerTask timerTaskCustomerPathUpdater;
 	
@@ -6386,7 +6378,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 
 	
-	
+	//Customer's timer
     Timer timerUpdateDrivers;
 	TimerTask timerTaskUpdateDrivers;
 	
@@ -6437,7 +6429,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
+	//Both driver and customer
 	Timer timerMapAnimate;
 	TimerTask timerTaskMapAnimate;
 	
@@ -7042,6 +7034,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			if(loggedOut){
 				loggedOut = false;
 				
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Database2 database2 = new Database2(HomeActivity.this);
+						database2.updateUserMode(Database2.UM_OFFLINE);
+						database2.close();
+					}
+				}).start();
+				
 				cancelTimerUpdateDrivers();
 		        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
@@ -7054,6 +7055,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		}
 	}
+	
+	
 	
 	
 	
@@ -7137,11 +7140,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		try {
 			if(userMode == UserMode.PASSENGER){
-				cancelTimerUpdateDrivers();
-				
-				cancelTimerRequestRide();
-				Log.e("customerCancelBeforePushReceive ","="+customerCancelPressed);
-				if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
+				if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+					cancelTimerUpdateDrivers();
+					cancelTimerRequestRide();
 					fetchAcceptedDriverInfoAndChangeState(jObj);
 				}
 			}
@@ -7340,15 +7341,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								DialogPopup.dismissLoadingDialog();
 								driverScreenMode = DriverScreenMode.D_INITIAL;
 								switchDriverScreen(driverScreenMode);
-								if(!userCanceledDialogShown){
-									if(acceptedByOtherDriver){
-										new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
-									}
-									else{
-										new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
-									}
+								if(acceptedByOtherDriver){
+									new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
 								}
-								userCanceledDialogShown = false;
+								else{
+									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+								}
 							}
 						}
 					});
@@ -7810,6 +7808,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	//TODO new Request ride timerTask
+	//Customer's timer
     Timer timerRequestRide;
 	TimerTask timerTaskRequestRide;
 	long requestRideLifeTime;
@@ -7842,7 +7841,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
-									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
+									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
 										noDriverAvailablePopup(HomeActivity.this, false);
 										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
@@ -7851,7 +7850,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							});
 						}
 						else{
-							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
+							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
 								
 								runOnUiThread(new Runnable() {
 									@Override
@@ -7922,13 +7921,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												Data.cSessionId = jObj.getString("session_id");
 											}
 											else if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
-												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
+												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
 													cancelTimerRequestRide();
 													fetchAcceptedDriverInfoAndChangeState(jObj);
 												}
 											}
 											else if(ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag){
-												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
+												if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
 													cancelTimerRequestRide();
 													fetchAcceptedDriverStartRideInfoAndChangeState(jObj);
 												}
@@ -7940,7 +7939,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												runOnUiThread(new Runnable() {
 													@Override
 													public void run() {
-														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
+														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
 															noDriverAvailablePopup(HomeActivity.this, false);
 															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 															switchPassengerScreen(passengerScreenMode);
@@ -8016,8 +8015,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void startAssigningDriversAnimation(){
 		try{
-			Animation myFadeInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.tween);
-			requestRideBtn.startAnimation(myFadeInAnimation);
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Animation myFadeInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.tween);
+					requestRideBtn.startAnimation(myFadeInAnimation);
+				}
+			});
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -8025,7 +8030,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void stopAssigningDriversAnimation(){
 		try{
-			requestRideBtn.clearAnimation();
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					requestRideBtn.clearAnimation();
+				}
+			});
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -8039,7 +8050,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onNoDriversAvailablePushRecieved(final String logMessage) {
 		cancelTimerRequestRide();
-		if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING && !customerCancelPressed){
+		if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
 			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			runOnUiThread(new Runnable() {
 				@Override

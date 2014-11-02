@@ -41,6 +41,7 @@ public class Database2 {																	// class for handling database related 
 	private static final String USER_MODE = "user_mode";
 	public static final String UM_DRIVER = "driver";
 	public static final String UM_PASSENGER = "passenger";
+	public static final String UM_OFFLINE = "offline";
 	
 	
 	private static final String TABLE_DRIVER_REQUESTS = "table_driver_requests";
@@ -348,11 +349,11 @@ public class Database2 {																	// class for handling database related 
 				String userMode = cursor.getString(cursor.getColumnIndex(Database2.USER_MODE));
 				return userMode;
 			} else {
-				return Database2.UM_PASSENGER;
+				return Database2.UM_OFFLINE;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Database2.UM_PASSENGER;
+			return Database2.UM_OFFLINE;
 		}
 	}
 	
