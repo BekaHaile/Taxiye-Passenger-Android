@@ -766,6 +766,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
+			Database2 database2 = new Database2(RegisterScreen.this);
+	        database2.updateDriverLastLocationTime();
+	        database2.close();
 //			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
 			if(Data.termsAgreed == 1){
 				startActivity(new Intent(RegisterScreen.this, HomeActivity.class));

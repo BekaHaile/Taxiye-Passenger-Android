@@ -411,7 +411,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000;
 	
-	public static final long MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT = 6 * 60000;
+	public static final long MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT = 1 * 60000;
 	
 	
 	
@@ -1972,7 +1972,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         return false;
     }
 	
-	public void switchUserScreen(UserMode mode){
+	public void switchUserScreen(final UserMode mode){
 		
 		if(getDistanceTimeAddress != null){
 			getDistanceTimeAddress.cancel(true);
@@ -2015,7 +2015,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 			default:
-				database2.updateUserMode(Database2.UM_OFFLINE);
 		
 		}
 		
@@ -2032,7 +2031,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public void switchDriverScreen(DriverScreenMode mode){
+	public void switchDriverScreen(final DriverScreenMode mode){
 		if(userMode == UserMode.DRIVER){
 			
 			initializeFusedLocationFetchers();
@@ -2274,6 +2273,30 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverEngagedLayout.setVisibility(View.GONE);
 		
 		}
+		
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Database2 database2 = new Database2(HomeActivity.this);
+				try {
+					if(DriverScreenMode.D_INITIAL == mode){
+						database2.updateDriverScreenMode(Database2.VULNERABLE);
+					}
+					else{
+						database2.updateDriverScreenMode(Database2.NOT_VULNERABLE);
+					}
+				} catch (Exception e) {
+					database2.updateDriverScreenMode(Database2.NOT_VULNERABLE);
+					e.printStackTrace();
+				}
+				finally{
+					database2.close();
+				}
+			}
+		}).start();
+		
+		
 		}
 		
 		
@@ -3984,9 +4007,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
 	
 							editor.commit();
-							
-							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-							switchPassengerScreen(passengerScreenMode);
+							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+								passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+								switchPassengerScreen(passengerScreenMode);
+							}
 						}
 					}
 				});
@@ -7879,7 +7903,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								String response = new HttpRequester().getJSONFromUrlParams(Data.SERVER_URL+"/request_ride", nameValuePairs);
 								
-								Log.i("response of request_ride", "="+response);
+								Log.e("response of request_ride", "="+response);
 								
 								if(response.contains(HttpRequester.SERVER_TIMEOUT)){
 									Log.e("timeout","=");

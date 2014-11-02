@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.WindowManager;
@@ -799,21 +800,39 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		try {
 			Database2 database2 = new Database2(activity);
 			String userMode = database2.getUserMode();
+			String driverScreenMode = database2.getDriverScreenMode();
 			long lastLocationUpdateTime = database2.getDriverLastLocationTime();
 			database2.close();
 			
 			long currentTime = System.currentTimeMillis();
 			
-			Log.e("isLastLocationUpdateFine lastLocationUpdateTime", "="+(currentTime - (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT)));
-			
 			if(lastLocationUpdateTime == 0){
 				lastLocationUpdateTime = System.currentTimeMillis();
 			}
 			
-			if(Database2.UM_DRIVER.equalsIgnoreCase(userMode) && 
-					(currentTime >= (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT))){
-				restartPhonePopup(activity);
-				return false;
+			long systemUpTime = SystemClock.uptimeMillis();
+			
+			Log.e("isLastLocationUpdateFine lastLocationUpdateTime", "="+(currentTime - (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT)));
+			Log.e("isLastLocationUpdateFine systemUpTime", "="+systemUpTime);
+			Log.e("isLastLocationUpdateFine userMode", "="+userMode);
+			Log.e("isLastLocationUpdateFine driverScreenMode", "="+driverScreenMode);
+			
+			
+			if(systemUpTime > HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT){
+				Log.i("systemUpTime", "greater");
+				if(Database2.UM_DRIVER.equalsIgnoreCase(userMode) && 
+						(currentTime >= (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT))){
+					if(Database2.VULNERABLE.equalsIgnoreCase(driverScreenMode)){
+						restartPhonePopup(activity);
+						return false;
+					}
+					else{
+						return true;
+					}
+				}
+				else{
+					return true;
+				}
 			}
 			else{
 				return true;
@@ -825,50 +844,52 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	}
 	
 	
+	public static Dialog restartPhoneDialog;
 	public static void restartPhonePopup(final Activity activity){
 		try {
-			final Dialog noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			noDriversDialog.setContentView(R.layout.no_driver_dialog);
-
-			FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
-
-			WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			noDriversDialog.setCancelable(false);
-			noDriversDialog.setCanceledOnTouchOutside(false);
-
-			TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
-			textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			textHead.setVisibility(View.GONE);
-			TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
-			textMessage.setTypeface(Data.regularFont(activity));
-
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
-			
-			textMessage.setText("Please switch off and switch on your phone to continue using Jugnoo");
-			
-
-			Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
-			btnOk.setTypeface(Data.regularFont(activity));
-			Button crossbtn = (Button) noDriversDialog
-					.findViewById(R.id.crossbtn);
-			crossbtn.setTypeface(Data.regularFont(activity));
-			crossbtn.setVisibility(View.GONE);
-
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					noDriversDialog.dismiss();
-					activity.finish();
-				}
-			});
-
-
-			noDriversDialog.show();
+			if(restartPhoneDialog == null || !restartPhoneDialog.isShowing()){
+				restartPhoneDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				restartPhoneDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				restartPhoneDialog.setContentView(R.layout.no_driver_dialog);
+	
+				FrameLayout frameLayout = (FrameLayout) restartPhoneDialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, true);
+	
+				WindowManager.LayoutParams layoutParams = restartPhoneDialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				restartPhoneDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				restartPhoneDialog.setCancelable(false);
+				restartPhoneDialog.setCanceledOnTouchOutside(false);
+	
+				TextView textHead = (TextView) restartPhoneDialog.findViewById(R.id.textHead);
+				textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+				textHead.setVisibility(View.GONE);
+				TextView textMessage = (TextView) restartPhoneDialog.findViewById(R.id.textMessage);
+				textMessage.setTypeface(Data.regularFont(activity));
+	
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+				
+				textMessage.setText("Network Problem. Please Switch OFF and Switch ON your phone to continue using Jugnoo.");
+				
+	
+				Button btnOk = (Button) restartPhoneDialog.findViewById(R.id.btnOk);
+				btnOk.setTypeface(Data.regularFont(activity));
+				Button crossbtn = (Button) restartPhoneDialog
+						.findViewById(R.id.crossbtn);
+				crossbtn.setTypeface(Data.regularFont(activity));
+				crossbtn.setVisibility(View.GONE);
+	
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						restartPhoneDialog.dismiss();
+						activity.finish();
+					}
+				});
+	
+				restartPhoneDialog.show();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

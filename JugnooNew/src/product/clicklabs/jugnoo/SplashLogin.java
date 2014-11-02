@@ -1134,6 +1134,10 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 		if(hasFocus && loginDataFetched){
 			
+			Database2 database2 = new Database2(SplashLogin.this);
+	        database2.updateDriverLastLocationTime();
+	        database2.close();
+	        
 			Map<String, String> articleParams = new HashMap<String, String>();
 			articleParams.put("username", Data.userData.userName);
 			FlurryAgent.logEvent("App Login", articleParams);

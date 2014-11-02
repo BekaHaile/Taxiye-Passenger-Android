@@ -69,9 +69,10 @@ public class DriverMissedRidesFragment extends Fragment {
 		textViewInfoDisplay.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(!"No rides currently".equalsIgnoreCase(textViewInfoDisplay.getText().toString())){
-					getMissedRidesAsync(getActivity());
-				}
+				getMissedRidesAsync(getActivity());
+//				if(!"No rides currently".equalsIgnoreCase(textViewInfoDisplay.getText().toString())){
+//					getMissedRidesAsync(getActivity());
+//				}
 			}
 		});
 		
@@ -207,6 +208,7 @@ public class DriverMissedRidesFragment extends Fragment {
 		if(fetchMissedRidesClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				progressBarMissedRides.setVisibility(View.VISIBLE);
+				textViewInfoDisplay.setVisibility(View.GONE);
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				fetchMissedRidesClient = Data.getClient();

@@ -67,9 +67,10 @@ public class DriverRidesFragment extends Fragment {
 		textViewInfoDisplay.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(!"No rides currently".equalsIgnoreCase(textViewInfoDisplay.getText().toString())){
-					getRidesAsync(getActivity());
-				}
+				getRidesAsync(getActivity());
+//				if(!"No rides currently".equalsIgnoreCase(textViewInfoDisplay.getText().toString())){
+//					getRidesAsync(getActivity());
+//				}
 			}
 		});
 		
@@ -205,6 +206,7 @@ public class DriverRidesFragment extends Fragment {
 		if(fetchRidesClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				progressBarRides.setVisibility(View.VISIBLE);
+				textViewInfoDisplay.setVisibility(View.GONE);
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("current_mode", "1");
