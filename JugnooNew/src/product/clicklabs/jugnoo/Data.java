@@ -29,7 +29,7 @@ public class Data {
 	
 	public static final String INVALID_ACCESS_TOKEN = "invalid access token";
 	
-	public static final String DEBUG_PASSWORD = "8080";
+	public static final String DEBUG_PASSWORD = "3131";
 	
 	public static final String SHARED_PREF_NAME = "myPref", SETTINGS_SHARED_PREF_NAME = "settingsPref";
 	public static final String SP_ACCESS_TOKEN_KEY = "access_token", SP_ID_KEY = "session_id",
@@ -130,7 +130,7 @@ public class Data {
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 	
 	
 	

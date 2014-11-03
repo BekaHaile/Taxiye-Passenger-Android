@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,6 +26,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.WindowManager;
@@ -181,6 +183,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
 		
+		
+		
 		super.onResume();
 	}
 	
@@ -333,7 +337,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	class ShowAnimListener implements AnimationListener{
-
 		
 		public ShowAnimListener(){
 		}
@@ -354,14 +357,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-			new Handler().postDelayed(new Runnable() {
-				
-				@Override
-				public void run() {
-					callFirstAttempt();
-				}
-			}, 1000);
-			
+			if(SplashNewActivity.isLastLocationUpdateFine(SplashNewActivity.this)){
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						callFirstAttempt();
+					}
+				}, 1000);
+			}
 			
 		}
 
@@ -793,7 +796,119 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	}
 	
 	
+	public static boolean isLastLocationUpdateFine(Activity activity){
+		try {
+			Database2 database2 = new Database2(activity);
+			String userMode = database2.getUserMode();
+			String driverScreenMode = database2.getDriverScreenMode();
+			long lastLocationUpdateTime = database2.getDriverLastLocationTime();
+			database2.close();
+			
+			long currentTime = System.currentTimeMillis();
+			
+			if(lastLocationUpdateTime == 0){
+				lastLocationUpdateTime = System.currentTimeMillis();
+			}
+			
+			long systemUpTime = SystemClock.uptimeMillis();
+			
+			Log.e("isLastLocationUpdateFine lastLocationUpdateTime", "="+(currentTime - (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT)));
+			Log.e("isLastLocationUpdateFine systemUpTime", "="+systemUpTime);
+			Log.e("isLastLocationUpdateFine userMode", "="+userMode);
+			Log.e("isLastLocationUpdateFine driverScreenMode", "="+driverScreenMode);
+			
+			
+			if(systemUpTime > HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT){
+				Log.i("systemUpTime", "greater");
+				if(Database2.UM_DRIVER.equalsIgnoreCase(userMode) && 
+						(currentTime >= (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT))){
+					if(Database2.VULNERABLE.equalsIgnoreCase(driverScreenMode)){
+						showRestartPhonePopup(activity);
+						return false;
+					}
+					else{
+						dismissRestartPhonePopup();
+						return true;
+					}
+				}
+				else{
+					dismissRestartPhonePopup();
+					return true;
+				}
+			}
+			else{
+				dismissRestartPhonePopup();
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			dismissRestartPhonePopup();
+			return true;
+		}
+	}
 	
 	
+	public static Dialog restartPhoneDialog;
+	public static void showRestartPhonePopup(final Activity activity){
+		try {
+			if(restartPhoneDialog == null || !restartPhoneDialog.isShowing()){
+				restartPhoneDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				restartPhoneDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				restartPhoneDialog.setContentView(R.layout.no_driver_dialog);
+	
+				FrameLayout frameLayout = (FrameLayout) restartPhoneDialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, true);
+	
+				WindowManager.LayoutParams layoutParams = restartPhoneDialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				restartPhoneDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				restartPhoneDialog.setCancelable(false);
+				restartPhoneDialog.setCanceledOnTouchOutside(false);
+	
+				TextView textHead = (TextView) restartPhoneDialog.findViewById(R.id.textHead);
+				textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+				textHead.setVisibility(View.GONE);
+				TextView textMessage = (TextView) restartPhoneDialog.findViewById(R.id.textMessage);
+				textMessage.setTypeface(Data.regularFont(activity));
+	
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+				
+				textMessage.setText("Network Problem. Please Switch OFF and Switch ON your phone and wait for 5 minutes to continue using Jugnoo.");
+				
+	
+				Button btnOk = (Button) restartPhoneDialog.findViewById(R.id.btnOk);
+				btnOk.setTypeface(Data.regularFont(activity));
+				Button crossbtn = (Button) restartPhoneDialog
+						.findViewById(R.id.crossbtn);
+				crossbtn.setTypeface(Data.regularFont(activity));
+				crossbtn.setVisibility(View.GONE);
+	
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						restartPhoneDialog.dismiss();
+						activity.finish();
+					}
+				});
+	
+				restartPhoneDialog.show();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public static void dismissRestartPhonePopup(){
+		try{
+			if(restartPhoneDialog != null && restartPhoneDialog.isShowing()){
+				restartPhoneDialog.dismiss();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 }

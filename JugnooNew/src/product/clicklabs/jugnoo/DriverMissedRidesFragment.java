@@ -32,7 +32,7 @@ import com.loopj.android.http.RequestParams;
 public class DriverMissedRidesFragment extends Fragment {
 
 	ProgressBar progressBarMissedRides;
-	TextView textViewNoMissedRides;
+	TextView textViewInfoDisplay;
 	ListView listViewMissedRides;
 	
 	DriverMissedRidesListAdapter driverMissedRidesListAdapter;
@@ -57,28 +57,45 @@ public class DriverMissedRidesFragment extends Fragment {
 		ASSL.DoMagic(main);
 
 		progressBarMissedRides = (ProgressBar) rootView.findViewById(R.id.progressBarMissedRides);
-		textViewNoMissedRides = (TextView) rootView.findViewById(R.id.textViewNoMissedRides); textViewNoMissedRides.setTypeface(Data.regularFont(getActivity()));
+		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
 		listViewMissedRides = (ListView) rootView.findViewById(R.id.listViewMissedRides);
 		
 		driverMissedRidesListAdapter = new DriverMissedRidesListAdapter();
 		listViewMissedRides.setAdapter(driverMissedRidesListAdapter);
 		
 		progressBarMissedRides.setVisibility(View.GONE);
-		textViewNoMissedRides.setVisibility(View.GONE);
+		textViewInfoDisplay.setVisibility(View.GONE);
+		
+		textViewInfoDisplay.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getMissedRidesAsync(getActivity());
+			}
+		});
 		
 		getMissedRidesAsync(getActivity());
 
 		return rootView;
 	}
 
-	public void updateListData(){
-		if(missedRideInfos.size() == 0){
-			textViewNoMissedRides.setVisibility(View.VISIBLE);
+	public void updateListData(String message, boolean errorOccurred){
+		if(errorOccurred){
+			textViewInfoDisplay.setText(message);
+			textViewInfoDisplay.setVisibility(View.VISIBLE);
+			
+			missedRideInfos.clear();
+			driverMissedRidesListAdapter.notifyDataSetChanged();
 		}
 		else{
-			textViewNoMissedRides.setVisibility(View.GONE);
+			if(missedRideInfos.size() == 0){
+				textViewInfoDisplay.setText(message);
+				textViewInfoDisplay.setVisibility(View.VISIBLE);
+			}
+			else{
+				textViewInfoDisplay.setVisibility(View.GONE);
+			}
+			driverMissedRidesListAdapter.notifyDataSetChanged();
 		}
-		driverMissedRidesListAdapter.notifyDataSetChanged();
 	}
 	
 	@Override
@@ -188,11 +205,9 @@ public class DriverMissedRidesFragment extends Fragment {
 		if(fetchMissedRidesClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				progressBarMissedRides.setVisibility(View.VISIBLE);
+				textViewInfoDisplay.setVisibility(View.GONE);
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
-			
-				//booking_history
-				
 				fetchMissedRidesClient = Data.getClient();
 				fetchMissedRidesClient.post(Data.SERVER_URL + "/get_missed_rides", params,
 						new AsyncHttpResponseHandler() {
@@ -203,7 +218,7 @@ public class DriverMissedRidesFragment extends Fragment {
 									byte[] arg2, Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								progressBarMissedRides.setVisibility(View.GONE);
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								updateListData("Some error occurred. Tap to retry", true);
 							}
 	
 							
@@ -211,7 +226,7 @@ public class DriverMissedRidesFragment extends Fragment {
 							public void onSuccess(int arg0, Header[] arg1,
 									byte[] arg2) {
 								String response = new String(arg2);
-								Log.d("Server response", "response = " + response);
+								Log.e("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
 									if(!jObj.isNull("error")){
@@ -221,11 +236,8 @@ public class DriverMissedRidesFragment extends Fragment {
 										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 											HomeActivity.logoutUser(activity);
 										}
-										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-											new DialogPopup().alertPopup(activity, "", error);
-										}
 										else{
-											new DialogPopup().alertPopup(activity, "", error);
+											updateListData("Some error occurred. Tap to retry", true);
 										}
 									}
 									else{
@@ -248,6 +260,7 @@ public class DriverMissedRidesFragment extends Fragment {
 										if(missedRidesData.length() > 0){
 											for(int i=missedRidesData.length()-1; i>=0; i--){
 												JSONObject rideData = missedRidesData.getJSONObject(i);
+												Log.e("rideData"+i, "="+rideData);
 												missedRideInfos.add(new MissedRideInfo(rideData.getString("engagement_id"),
 														rideData.getString("pickup_location_address"),
 														rideData.getString("timestamp"),
@@ -255,12 +268,12 @@ public class DriverMissedRidesFragment extends Fragment {
 														decimalFormat.format(rideData.getDouble("distance"))));
 											}
 										}
+										updateListData("No missed rides currently", false);
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									updateListData("Some error occurred. Tap to retry", true);
 								}
-								updateListData();
 								progressBarMissedRides.setVisibility(View.GONE);
 							}
 							
@@ -273,7 +286,7 @@ public class DriverMissedRidesFragment extends Fragment {
 						});
 			}
 			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				updateListData("No Internet connection. Tap to retry", true);
 			}
 		}
 

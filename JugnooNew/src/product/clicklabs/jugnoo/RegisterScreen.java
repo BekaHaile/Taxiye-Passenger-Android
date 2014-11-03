@@ -22,8 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -34,6 +37,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	EditText firstNameEt, lastNameEt, emailIdEt, phoneNoEt, passwordEt, confirmPasswordEt;
 	Button signUpBtn;
 	TextView extraTextForScroll;
+	ScrollView scroll;
 	
 	LinearLayout relative;
 	
@@ -55,6 +59,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(RegisterScreen.this, relative, 1134, 720, false);
 		
+		scroll = (ScrollView) findViewById(R.id.scroll);
+		
 		firstNameEt = (EditText) findViewById(R.id.firstNameEt); firstNameEt.setTypeface(Data.regularFont(getApplicationContext()));
 		lastNameEt = (EditText) findViewById(R.id.lastNameEt); lastNameEt.setTypeface(Data.regularFont(getApplicationContext()));
 		emailIdEt = (EditText) findViewById(R.id.emailIdEt); emailIdEt.setTypeface(Data.regularFont(getApplicationContext()));
@@ -74,6 +80,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				firstNameEt.setError(null);
+				
 			}
 		});
 		
@@ -118,6 +125,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		});
 		
 		
+		
+		
 		signUpBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -141,41 +150,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 				String phoneNo = phoneNoEt.getText().toString().trim();
 				String password = passwordEt.getText().toString().trim();
 				String confirmPassword = confirmPasswordEt.getText().toString().trim();
-				
-				//TODO remove extra characters phoneNo
-				try{
-					//     (/)N,*;#-.
-					phoneNo = phoneNo.replace(" ", "");
-					
-					phoneNo = phoneNo.replace("(", "");
-					phoneNo = phoneNo.replace("/", "");
-					phoneNo = phoneNo.replace(")", "");
-					phoneNo = phoneNo.replace("N", "");
-					phoneNo = phoneNo.replace(",", "");
-					phoneNo = phoneNo.replace("*", "");
-					phoneNo = phoneNo.replace(";", "");
-					phoneNo = phoneNo.replace("#", "");
-					phoneNo = phoneNo.replace("-", "");
-					phoneNo = phoneNo.replace(".", "");
-					
-					
-					if(phoneNo.length() > 2){
-						if(phoneNo.charAt(0) != '+'){
-							if(phoneNo.charAt(0) == '0' && phoneNo.charAt(1) == '0'){
-								phoneNo = "+" + GetCountryZipCode() + phoneNo.substring(2);
-							}
-							else if(phoneNo.charAt(0) == '0'){
-								phoneNo = "+" + GetCountryZipCode() + phoneNo.substring(1);
-							}
-							else{
-								phoneNo = "+" + GetCountryZipCode() + phoneNo;
-							}
-						}
-					}
-					
-				} catch(Exception e){
-					e.printStackTrace();
-				}
+
 				
 				
 				if("".equalsIgnoreCase(firstName)){
@@ -193,51 +168,80 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 							phoneNoEt.setError("Please enter phone number");
 						}
 						else{
-							if("".equalsIgnoreCase(password)){
-								passwordEt.requestFocus();
-								passwordEt.setError("Please enter password");
-							}
-							else{
-								if("".equalsIgnoreCase(confirmPassword)){
-									confirmPasswordEt.requestFocus();
-									confirmPasswordEt.setError("Please confirm password");
+							//TODO remove extra characters phoneNo
+							phoneNo = phoneNo.replace(" ", "");
+							phoneNo = phoneNo.replace("(", "");
+							phoneNo = phoneNo.replace("/", "");
+							phoneNo = phoneNo.replace(")", "");
+							phoneNo = phoneNo.replace("N", "");
+							phoneNo = phoneNo.replace(",", "");
+							phoneNo = phoneNo.replace("*", "");
+							phoneNo = phoneNo.replace(";", "");
+							phoneNo = phoneNo.replace("#", "");
+							phoneNo = phoneNo.replace("-", "");
+							phoneNo = phoneNo.replace(".", "");
+							
+							if(phoneNo.length() >= 10){
+								phoneNo = phoneNo.substring(phoneNo.length()-10, phoneNo.length());
+								if(phoneNo.charAt(0) == '0' || phoneNo.charAt(0) == '1' || phoneNo.contains("+")){
+									phoneNoEt.requestFocus();
+									phoneNoEt.setError("Please enter valid phone number");
 								}
 								else{
-									if(isEmailValid(emailId)){
-										if(isPhoneValid(phoneNo)){
-											if(password.equals(confirmPassword)){
-												if(password.length() >= 6){
-													
-													if(facebookLogin){
-														if(noFbEmail){
-															emailId = "";
+									phoneNo = "+91" + phoneNo;
+									
+									if("".equalsIgnoreCase(password)){
+										passwordEt.requestFocus();
+										passwordEt.setError("Please enter password");
+									}
+									else{
+										if("".equalsIgnoreCase(confirmPassword)){
+											confirmPasswordEt.requestFocus();
+											confirmPasswordEt.setError("Please confirm password");
+										}
+										else{
+											if(isEmailValid(emailId)){
+												if(isPhoneValid(phoneNo)){
+													if(password.equals(confirmPassword)){
+														if(password.length() >= 6){
+															
+															if(facebookLogin){
+																if(noFbEmail){
+																	emailId = "";
+																}
+																sendFacebookSignupValues(RegisterScreen.this, "", phoneNo, password);
+															}
+															else{
+																sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, "");
+															}
+															
 														}
-														sendFacebookSignupValues(RegisterScreen.this, "", phoneNo, password);
+														else{
+															passwordEt.requestFocus();
+															passwordEt.setError("Password must be of atleast six characters");
+														}
 													}
 													else{
-														sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, "");
+														passwordEt.requestFocus();
+														passwordEt.setError("Passwords does not match");
 													}
 												}
 												else{
-													passwordEt.requestFocus();
-													passwordEt.setError("Password must be of atleast six characters");
+													phoneNoEt.requestFocus();
+													phoneNoEt.setError("Please enter valid phone number");
 												}
 											}
 											else{
-												passwordEt.requestFocus();
-												passwordEt.setError("Passwords does not match");
+												emailIdEt.requestFocus();
+												emailIdEt.setError("Please enter valid email id");
 											}
 										}
-										else{
-											phoneNoEt.requestFocus();
-											phoneNoEt.setError("Please enter valid phone number");
-										}
-									}
-									else{
-										emailIdEt.requestFocus();
-										emailIdEt.setError("Please enter valid email id");
 									}
 								}
+							}
+							else{
+								phoneNoEt.requestFocus();
+								phoneNoEt.setError("Please enter valid phone number");
 							}
 						}
 					}
@@ -762,6 +766,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
+			Database2 database2 = new Database2(RegisterScreen.this);
+	        database2.updateDriverLastLocationTime();
+	        database2.close();
 //			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
 			if(Data.termsAgreed == 1){
 				startActivity(new Intent(RegisterScreen.this, HomeActivity.class));

@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationDispatcher {
 
-	public void sendLocationToServer(DisplayToast displayToast, Context context, String filePrefix){
+	public void sendLocationToServer(Context context, String filePrefix){
 		Database2 database2 = new Database2(context);
 		try {
 			String userMode = database2.getUserMode();
@@ -42,7 +42,7 @@ public class DriverLocationDispatcher {
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
 						Log.e("result in DLD", "=" + result);
-						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
+//						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
 						
 						try{
 							//{"log":"Updated"}
@@ -51,12 +51,11 @@ public class DriverLocationDispatcher {
 								String log = jObj.getString("log");
 								if("Updated".equalsIgnoreCase(log)){
 									database2.updateDriverLastLocationTime();
-//									displayToast.displayToast(context, filePrefix + " Ping "+new DateOperations().getCurrentTime());
 								}
 							}
 						} catch(Exception e){
 							e.printStackTrace();
-							Log.writeLogToFile(filePrefix, "Exception in sending to server inner "+new DateOperations().getCurrentTime()+" = "+e);
+//							Log.writeLogToFile(filePrefix, "Exception in sending to server inner "+new DateOperations().getCurrentTime()+" = "+e);
 						}
 						
 						simpleJSONParser = null;
@@ -69,10 +68,10 @@ public class DriverLocationDispatcher {
 
 			database2.close();
 			
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
+//			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
 		}
 		finally{
     		database2.close();
