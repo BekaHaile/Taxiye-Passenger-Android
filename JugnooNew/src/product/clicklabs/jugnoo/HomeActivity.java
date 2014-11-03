@@ -411,7 +411,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000;
 	
-	public static final long MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT = 1 * 60000;
+	public static final long MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT = 10 * 60000;
 	
 	
 	
@@ -1723,24 +1723,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    
 		
 		
-		Database2 database2 = new Database2(HomeActivity.this);
-		String jugnooOn = database2.getJugnooOn();
-		
-		
-		if("on".equalsIgnoreCase(jugnooOn)){
-			jugnooDriverMode = JugnooDriverMode.ON;
+		try {
+			Database2 database2 = new Database2(HomeActivity.this);
+			String jugnooOn = database2.getJugnooOn();
+			
+			
+			if("on".equalsIgnoreCase(jugnooOn)){
+				jugnooDriverMode = JugnooDriverMode.ON;
+			}
+			else{
+				jugnooDriverMode = JugnooDriverMode.OFF;
+			}
+			if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+				changeJugnooON(jugnooDriverMode);
+			}
+			
+			changeExceptionalDriverUI();
+			
+			database2.insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
+			database2.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		else{
-			jugnooDriverMode = JugnooDriverMode.OFF;
-		}
-		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-			changeJugnooON(jugnooDriverMode);
-		}
-		
-		changeExceptionalDriverUI();
-		
-		database2.insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
-		database2.close();
 	}
 	
 	
@@ -2744,14 +2748,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
 		
 		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-			  if(myLocation != null){
-				  if(!dontCallRefreshDriver){
-					  getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-							  myLocation.getLongitude()), false);
-					  getDistanceTimeAddress.execute();
-				  }
-			  }
-		  }
+			  startTimerUpdateDrivers();
+		}
 	    
 	    if(FavoriteActivity.zoomToMap){
 	    	FavoriteActivity.zoomToMap = false;
@@ -3109,6 +3107,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		try{
 			if(userMode == UserMode.PASSENGER){
+				cancelTimerUpdateDrivers();
 				if(locationManager != null && gpsListener != null){
 					locationManager.removeUpdates(gpsListener);
 					gpsListener = null;
@@ -3878,7 +3877,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
 		    			simpleJSONParser = null;
 		    			nameValuePairs = null;
-		    			Log.e("result of /find_a_driver", "="+result);
 		    			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 		    			}
 		    			else{
@@ -5148,10 +5146,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									clearSPData();
 									
-									
 						        	driverScreenMode = DriverScreenMode.D_RIDE_END;
 									switchDriverScreen(driverScreenMode);
-									
 									
 								}
 							}  catch (Exception exception) {
@@ -7669,9 +7665,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		destroyFusedLocationFetchers();
 		if(((userMode == UserMode.DRIVER) && (driverScreenMode != DriverScreenMode.D_IN_RIDE)) 
 				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode != PassengerScreenMode.P_IN_RIDE))){
-			Log.e("initializeFusedLocationFetchers", "userMode = "+userMode);
-			Log.i("initializeFusedLocationFetchers", "driverScreenMode = "+driverScreenMode);
-			Log.i("initializeFusedLocationFetchers", "passengerScreenMode = "+passengerScreenMode);
 			if (myLocation == null) {
 				if (lowPowerLF == null) {
 					lowPowerLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 0);
@@ -7718,7 +7711,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		Log.i("onLocationChanged interface ", "location = "+location);
 		if(((userMode == UserMode.DRIVER) && (driverScreenMode != DriverScreenMode.D_IN_RIDE)) 
 				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode != PassengerScreenMode.P_IN_RIDE))){
 			if(priority == 0){
@@ -8130,6 +8122,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
+							DialogPopup.dismissLoadingDialog();
 							startUIAfterGettingUserStatus();
 						}
 					});

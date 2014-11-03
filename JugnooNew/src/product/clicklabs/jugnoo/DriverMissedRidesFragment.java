@@ -70,9 +70,6 @@ public class DriverMissedRidesFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				getMissedRidesAsync(getActivity());
-//				if(!"No rides currently".equalsIgnoreCase(textViewInfoDisplay.getText().toString())){
-//					getMissedRidesAsync(getActivity());
-//				}
 			}
 		});
 		
@@ -229,7 +226,7 @@ public class DriverMissedRidesFragment extends Fragment {
 							public void onSuccess(int arg0, Header[] arg1,
 									byte[] arg2) {
 								String response = new String(arg2);
-								Log.d("Server response", "response = " + response);
+								Log.e("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
 									if(!jObj.isNull("error")){
@@ -263,6 +260,7 @@ public class DriverMissedRidesFragment extends Fragment {
 										if(missedRidesData.length() > 0){
 											for(int i=missedRidesData.length()-1; i>=0; i--){
 												JSONObject rideData = missedRidesData.getJSONObject(i);
+												Log.e("rideData"+i, "="+rideData);
 												missedRideInfos.add(new MissedRideInfo(rideData.getString("engagement_id"),
 														rideData.getString("pickup_location_address"),
 														rideData.getString("timestamp"),

@@ -42,7 +42,7 @@ public class DriverLocationDispatcher {
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
 						Log.e("result in DLD", "=" + result);
-						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
+//						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
 						
 						try{
 							//{"log":"Updated"}
@@ -55,7 +55,7 @@ public class DriverLocationDispatcher {
 							}
 						} catch(Exception e){
 							e.printStackTrace();
-							Log.writeLogToFile(filePrefix, "Exception in sending to server inner "+new DateOperations().getCurrentTime()+" = "+e);
+//							Log.writeLogToFile(filePrefix, "Exception in sending to server inner "+new DateOperations().getCurrentTime()+" = "+e);
 						}
 						
 						simpleJSONParser = null;
@@ -71,7 +71,7 @@ public class DriverLocationDispatcher {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
+//			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
 		}
 		finally{
     		database2.close();

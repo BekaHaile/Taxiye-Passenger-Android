@@ -68,9 +68,6 @@ public class DriverRidesFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				getRidesAsync(getActivity());
-//				if(!"No rides currently".equalsIgnoreCase(textViewInfoDisplay.getText().toString())){
-//					getRidesAsync(getActivity());
-//				}
 			}
 		});
 		

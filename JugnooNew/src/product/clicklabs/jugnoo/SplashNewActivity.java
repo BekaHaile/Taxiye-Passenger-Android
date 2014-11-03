@@ -823,29 +823,33 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				if(Database2.UM_DRIVER.equalsIgnoreCase(userMode) && 
 						(currentTime >= (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT))){
 					if(Database2.VULNERABLE.equalsIgnoreCase(driverScreenMode)){
-						restartPhonePopup(activity);
+						showRestartPhonePopup(activity);
 						return false;
 					}
 					else{
+						dismissRestartPhonePopup();
 						return true;
 					}
 				}
 				else{
+					dismissRestartPhonePopup();
 					return true;
 				}
 			}
 			else{
+				dismissRestartPhonePopup();
 				return true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			dismissRestartPhonePopup();
 			return true;
 		}
 	}
 	
 	
 	public static Dialog restartPhoneDialog;
-	public static void restartPhonePopup(final Activity activity){
+	public static void showRestartPhonePopup(final Activity activity){
 		try {
 			if(restartPhoneDialog == null || !restartPhoneDialog.isShowing()){
 				restartPhoneDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -870,7 +874,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				textMessage.setMovementMethod(new ScrollingMovementMethod());
 				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 				
-				textMessage.setText("Network Problem. Please Switch OFF and Switch ON your phone to continue using Jugnoo.");
+				textMessage.setText("Network Problem. Please Switch OFF and Switch ON your phone and wait for 5 minutes to continue using Jugnoo.");
 				
 	
 				Button btnOk = (Button) restartPhoneDialog.findViewById(R.id.btnOk);
@@ -895,5 +899,16 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 	}
 	
+	
+	
+	public static void dismissRestartPhonePopup(){
+		try{
+			if(restartPhoneDialog != null && restartPhoneDialog.isShowing()){
+				restartPhoneDialog.dismiss();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 }
