@@ -188,6 +188,11 @@ class RideInfo{
 		this.time = time;
 	}
 	
+	@Override
+	public String toString() {
+		return fromLocation + " " + toLocation + " " + fare + " " + distance + " " + time;
+	}
+	
 }
 
 class MissedRideInfo{
@@ -281,7 +286,8 @@ enum ApiResponseFlags {
 	USER_OFFLINE(130),
 	NO_ACTIVE_SESSION(131),
 	ENGAGEMENT_DATA(132),
-	ACTIVE_REQUESTS(133)
+	ACTIVE_REQUESTS(133),
+	COUPONS(140)
 	;
 
 	private int ordinal;
@@ -365,5 +371,64 @@ enum PushFlags {
 	public int getOrdinal() {
 		return ordinal;
 	}
+}
+
+
+enum CouponStatus {
+	EXPIRED(0), 
+	ACTIVE(1),
+	REDEEMED(2)
+	;
+
+	private int ordinal;
+
+	private CouponStatus(int ordinal) {
+		this.ordinal = ordinal;
+	}
+
+	public int getOrdinal() {
+		return ordinal;
+	}
+}
+
+
+class CouponInfo{
+	
+	int type, status;
+	String title, subtitle, description, image, redeemedOn, expiryDate;
+	double discountPrecent, maximumDiscountableValue;
+	int count;
+	boolean enabled;
+	
+	public CouponInfo(int type, int status, String title, String subtitle, String description, String image, 
+			String redeemedOn, String expiryDate, double discountPrecent, double maximumDiscountableValue){
+		this.type = type;
+		this.status = status;
+		this.title = title;
+		this.subtitle = subtitle;
+		this.description = description;
+		this.image = image;
+		this.redeemedOn = redeemedOn;
+		this.expiryDate = expiryDate;
+		this.discountPrecent = discountPrecent;
+		this.maximumDiscountableValue = maximumDiscountableValue;
+		this.count = 1;
+		this.enabled = true;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		try{
+			if(((CouponInfo)o).type == this.type){
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch(Exception e){
+			return false;
+		}
+	}
+	
 }
 

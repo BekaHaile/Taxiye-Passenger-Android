@@ -345,7 +345,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    					 if (HomeActivity.appInterruptHandler != null) {
 	    	    						 notificationManagerResume(this, "Your ride has ended.", false);
-	    	    						 HomeActivity.appInterruptHandler.customerEndRideInterrupt();
+	    	    						 HomeActivity.appInterruptHandler.customerEndRideInterrupt(jObj);
 	    	    					 }
 	    	    					 else{
 	    	    						 String SHARED_PREF_NAME = "myPref",
@@ -361,8 +361,6 @@ public class GCMIntentService extends IntentService {
 	    	    						 editor.putString(SP_C_TOTAL_FARE, ""+Data.totalFare);
 	    	    						 editor.putString(SP_C_WAIT_TIME, Data.waitTime);
 	    	    						 editor.commit();
-	    	    						 
-	    	    						 
 	    	    						 
 	    	    						 
 	    	    						 notificationManager(this, "Your ride has ended.", false);

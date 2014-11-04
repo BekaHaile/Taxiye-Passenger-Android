@@ -141,6 +141,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout inviteFriendRl;
 	TextView inviteFriendText;
 	
+	RelativeLayout accountRl;
+	TextView accountText;
+	
 	RelativeLayout bookingsRl;
 	TextView bookingsText;
 	
@@ -320,6 +323,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	reviewRatingText;
 	LinearLayout reviewRatingBarRl, endRideInfoRl;
 	TextView jugnooRideOverText, takeFareText;
+	RelativeLayout relativeLayoutCoupon;
+	TextView textViewCouponTitle, textViewCouponSubTitle, textViewCouponPayTakeText, textViewCouponDiscountedFare;
 	RatingBar reviewRatingBar;
 	Button reviewSubmitBtn;
 	
@@ -380,7 +385,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	static Activity activity;
 	
 	boolean loggedOut = false, 
-			zoomedToMyLocation = false;
+			zoomedToMyLocation = false, 
+			mapTouchedOnce = false;
 	boolean dontCallRefreshDriver = false;
 	
 	
@@ -411,7 +417,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000;
 	
-	public static final long MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT = 1 * 60000;
+	public static final long MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT = 10 * 60000;
 	
 	
 	
@@ -430,6 +436,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		loggedOut = false;
 		zoomedToMyLocation = false;
 		dontCallRefreshDriver = false;
+		mapTouchedOnce = false;
 		
 		appMode = AppMode.NORMAL;
 		
@@ -468,6 +475,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		inviteFriendRl = (RelativeLayout) findViewById(R.id.inviteFriendRl);
 		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText); inviteFriendText.setTypeface(Data.regularFont(getApplicationContext()));
 		
+		accountRl = (RelativeLayout) findViewById(R.id.accountRl);
+		accountText = (TextView) findViewById(R.id.accountText); accountText.setTypeface(Data.regularFont(getApplicationContext()));
+		
 		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
 		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.regularFont(getApplicationContext()));
 		
@@ -479,6 +489,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		sosRl = (RelativeLayout) findViewById(R.id.sosRl);
 		sosText = (TextView) findViewById(R.id.sosText); sosText.setTypeface(Data.regularFont(getApplicationContext()));
+		sosRl.setVisibility(View.GONE);
 		
 		languagePrefrencesRl = (RelativeLayout) findViewById(R.id.languagePrefrencesRl);
 		languagePrefrencesText = (TextView) findViewById(R.id.languagePrefrencesText); languagePrefrencesText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -742,6 +753,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		reviewRatingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
 		reviewSubmitBtn = (Button) findViewById(R.id.reviewSubmitBtn); reviewSubmitBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
+
+		relativeLayoutCoupon = (RelativeLayout) findViewById(R.id.relativeLayoutCoupon);
+		textViewCouponTitle = (TextView) findViewById(R.id.textViewCouponTitle); textViewCouponTitle.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
+		textViewCouponSubTitle = (TextView) findViewById(R.id.textViewCouponSubTitle); textViewCouponSubTitle.setTypeface(Data.museoSlab(getApplicationContext()));
+		textViewCouponPayTakeText = (TextView) findViewById(R.id.textViewCouponPayTakeText); textViewCouponPayTakeText.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
+		textViewCouponDiscountedFare = (TextView) findViewById(R.id.textViewCouponDiscountedFare); textViewCouponDiscountedFare.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
+		
+		
+
+		reviewRatingBarRl.setVisibility(View.GONE);
+		endRideInfoRl.setVisibility(View.VISIBLE);
+		
+		
 		reviewRatingBar.setRating(0);
 		
 		
@@ -903,6 +927,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				else{
 					inviteFbFriend();
 				}
+			}
+		});
+		
+		accountRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
@@ -1995,6 +2028,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				passengerMainLayout.setVisibility(View.GONE);
 				driverMainLayout.setVisibility(View.VISIBLE);
 				
+				accountRl.setVisibility(View.GONE);
+				
 //				favBtn.setVisibility(View.GONE);
 				
 				break;
@@ -2010,6 +2045,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				passengerMainLayout.setVisibility(View.VISIBLE);
 				driverMainLayout.setVisibility(View.GONE);
+				
+				accountRl.setVisibility(View.VISIBLE);
 				
 //				favBtn.setVisibility(View.VISIBLE);
 				
@@ -2081,8 +2118,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			reviewSubmitBtn.setText("OK");
 			
-			reviewRatingBarRl.setVisibility(View.GONE);
-			endRideInfoRl.setVisibility(View.VISIBLE);
 			
 			jugnooRideOverText.setText("The Jugnoo ride is over.");
 			takeFareText.setText("Please take the fare as shown above from the customer.");
@@ -2353,8 +2388,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			reviewSubmitBtn.setText("OK");
 			
-			reviewRatingBarRl.setVisibility(View.GONE);
-			endRideInfoRl.setVisibility(View.VISIBLE);
 			
 			jugnooRideOverText.setText("The Jugnoo ride is over.");
 			takeFareText.setText("Please pay the fare as shown above to the driver.");
@@ -4055,6 +4088,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	
 	public void showDriverMarkersAndPanMap(LatLng userLatLng){
 		if(map != null){
 			map.clear();
@@ -4072,10 +4106,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					@Override
 					public void run() {
 						try {
-							map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(200*minScaleRatio)), 1000, null);
+							if(!mapTouchedOnce){
+								map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(180*minScaleRatio)), 1000, null);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+						mapTouchedOnce = true;
 					}
 				}, 1000);
 				
@@ -4084,8 +4121,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		}
 	}
-	
-	
 	
 	
 	/**
@@ -5103,7 +5138,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onSuccess(int arg0, Header[] arg1,
 								byte[] arg2) {
 							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
+							Log.e("Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
@@ -5125,12 +5160,39 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 //									{"log":"ride_ended"}//result
 
+//									{
+//									    "flag": 4,
+//									    "fare": 30,
+//									    "to_pay": 0,
+//									    "discount": 30,
+//									    "distance_travelled": "0",
+//									    "wait_time": "0",
+//									    "coupon": {
+//									        "account_id": 1,
+//									        "user_id": 207,
+//									        "coupon_id": 1,
+//									        "redeemed_on": null,
+//									        "status": 1,
+//									        "expiry_date": "2014-11-07T18:29:59.000Z",
+//									        "title": "Free ride",
+//									        "description": "upte 100/-",
+//									        "discount": 100,
+//									        "maximum": 100,
+//									        "image": null,
+//									        "type": 0,
+//									        "subtitle": "upto Rs. 100"
+//									    }
+//									}
+									
 									try{
 										totalFare = jObj.getDouble("fare");
 									} catch(Exception e){
 										e.printStackTrace();
 										totalFare = 0;
 									}
+									
+									displayCouponApplied(jObj);
+									
 
 									lastLocation = null;
 									
@@ -5170,6 +5232,39 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	public void displayCouponApplied(JSONObject jObj){
+		try {
+			if(jObj.has("coupon")){
+				endRideInfoRl.setVisibility(View.GONE);
+				relativeLayoutCoupon.setVisibility(View.VISIBLE);
+				
+				String moneyToPay = decimalFormat.format(jObj.getDouble("to_pay"));
+				
+				JSONObject couponObject = jObj.getJSONObject("coupon");
+				
+				String couponTitle = couponObject.getString("title");
+				String couponSubTitle = couponObject.getString("subtitle");
+				
+				textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+				textViewCouponTitle.setText(couponTitle);
+				textViewCouponSubTitle.setText(couponSubTitle);
+				if(UserMode.DRIVER == HomeActivity.userMode){
+					textViewCouponPayTakeText.setText("Take");
+				}
+				else{
+					textViewCouponPayTakeText.setText("Pay");
+				}
+			}
+			else{
+				endRideInfoRl.setVisibility(View.VISIBLE);
+				relativeLayoutCoupon.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			endRideInfoRl.setVisibility(View.VISIBLE);
+			relativeLayoutCoupon.setVisibility(View.GONE);
+		}
+	}
 	
 	
 	/**
@@ -7161,9 +7256,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			if(userMode == UserMode.PASSENGER){
 				if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-					cancelTimerUpdateDrivers();
-					cancelTimerRequestRide();
-					fetchAcceptedDriverInfoAndChangeState(jObj);
+					if(jObj.getString("session_id").equalsIgnoreCase(Data.cSessionId)){
+						cancelTimerUpdateDrivers();
+						cancelTimerRequestRide();
+						fetchAcceptedDriverInfoAndChangeState(jObj);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -7479,13 +7576,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
 	@Override
-	public void customerEndRideInterrupt() {
+	public void customerEndRideInterrupt(final JSONObject jObj) {
 		try{
 			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
 				runOnUiThread(new Runnable() {
 					
 					@Override
 					public void run() {
+						displayCouponApplied(jObj);
 						lastLocation = null;
 						clearSPData();
 						map.clear();

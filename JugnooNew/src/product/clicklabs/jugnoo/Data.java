@@ -130,7 +130,7 @@ public class Data {
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
 	
-	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 	
 	
 	
@@ -270,7 +270,7 @@ public class Data {
 	
 	
 	
-	public static Typeface regular;																// fonts declaration
+	public static Typeface regular, museoSlab;																// fonts declaration
 	
 
 	public static Typeface regularFont(Context appContext) {											// accessing fonts functions
@@ -279,6 +279,17 @@ public class Data {
 		}
 		return regular;
 	}
+	
+	
+	public static Typeface museoSlab(Context appContext) {
+		if (museoSlab == null) {
+			museoSlab = Typeface.createFromAsset(appContext.getAssets(), "fonts/museo_slab.otf");
+		}
+		return museoSlab;
+	}
+	
+	
+	
 	
 	
 	

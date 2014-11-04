@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="product.clicklabs.jugnoo"
-    android:versionCode="124"
-    android:versionName="1.2.4" >
+    android:versionCode="125"
+    android:versionName="1.2.5" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -140,6 +140,12 @@
            
            <activity
             android:name="product.clicklabs.jugnoo.TermsConditionsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+            <activity
+            android:name="product.clicklabs.jugnoo.AccountActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>

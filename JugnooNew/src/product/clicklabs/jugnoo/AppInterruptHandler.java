@@ -22,7 +22,7 @@ public interface AppInterruptHandler {
 	
 	public void startRideForCustomer(final int flag);
 	
-	public void customerEndRideInterrupt();
+	public void customerEndRideInterrupt(JSONObject jObj);
 	
 	
 }
