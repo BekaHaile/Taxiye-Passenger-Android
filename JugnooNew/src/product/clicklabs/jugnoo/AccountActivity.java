@@ -138,7 +138,7 @@ public class AccountActivity extends Activity{
 	
 	
 	class ViewHolderCoupon {
-		TextView textViewCouponTitle, textViewCouponSubTitle;
+		TextView textViewCouponYouHave, textViewCouponTitle, textViewCouponSubTitle;
 		RelativeLayout relative;
 		int id;
 	}
@@ -173,6 +173,7 @@ public class AccountActivity extends Activity{
 				holder = new ViewHolderCoupon();
 				convertView = mInflater.inflate(R.layout.list_item_coupon, null);
 				
+				holder.textViewCouponYouHave = (TextView) convertView.findViewById(R.id.textViewCouponYouHave); holder.textViewCouponYouHave.setTypeface(Data.museoSlab(context), Typeface.BOLD);
 				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Data.museoSlab(context), Typeface.BOLD);
 				holder.textViewCouponSubTitle = (TextView) convertView.findViewById(R.id.textViewCouponSubTitle); holder.textViewCouponSubTitle.setTypeface(Data.museoSlab(context));
 				
@@ -204,7 +205,7 @@ public class AccountActivity extends Activity{
 				holder.relative.setAlpha(1.0f);
 			}
 			else{
-				holder.textViewCouponTitle.setText("0 Free ride");
+				holder.textViewCouponTitle.setText("0 Free rides");
 				holder.textViewCouponSubTitle.setVisibility(View.GONE);
 				holder.relative.setAlpha(0.5f);
 			}
@@ -216,7 +217,10 @@ public class AccountActivity extends Activity{
 				@Override
 				public void onClick(View v) {
 					holder = (ViewHolderCoupon) v.getTag();
-					alertPopup(AccountActivity.this, "", couponInfosList.get(holder.id).description);
+					CouponInfo couponInfo = couponInfosList.get(holder.id);
+					if(couponInfo.enabled){
+						alertPopup(AccountActivity.this, "", couponInfo.description);
+					}
 				}
 			});
 			
