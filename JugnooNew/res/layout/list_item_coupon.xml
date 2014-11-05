@@ -13,7 +13,9 @@
             android:layout_height="244px"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20px"
-            android:background="@drawable/coupon_bg" >
+            android:background="@drawable/coupon_bg"
+            android:tag="mwar"
+             >
 
             <LinearLayout
                 android:id="@+id/linearLayoutCouponTitle"

@@ -202,12 +202,15 @@ public class AccountActivity extends Activity{
 				}
 				holder.textViewCouponSubTitle.setText(couponInfo.subtitle);
 				holder.textViewCouponSubTitle.setVisibility(View.VISIBLE);
-				holder.relative.setAlpha(1.0f);
+				holder.textViewCouponYouHave.setAlpha(1.0f);
+				holder.textViewCouponTitle.setAlpha(1.0f);
 			}
 			else{
 				holder.textViewCouponTitle.setText("0 Free rides");
 				holder.textViewCouponSubTitle.setVisibility(View.GONE);
-				holder.relative.setAlpha(0.5f);
+				holder.textViewCouponYouHave.setAlpha(0.5f);
+				holder.textViewCouponTitle.setAlpha(0.5f);
+				
 			}
 			
 			

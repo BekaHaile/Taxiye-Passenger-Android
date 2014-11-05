@@ -1178,7 +1178,8 @@
                     android:layout_above="@+id/reviewSubmitBtn"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="25px"
-                    android:background="@drawable/coupon_fare_bg" >
+                    android:background="@drawable/coupon_fare_bg"
+                    android:tag="mwar" >
 
                     <LinearLayout
                         android:id="@+id/linearLayoutCouponTitle"
@@ -1492,6 +1493,39 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/couponsRl"
+                        android:layout_width="match_parent"
+                        android:layout_height="84px"
+                        android:background="@drawable/menu_item_selector"
+                        android:splitMotionEvents="false" >
+
+                        <TextView
+                            android:id="@+id/couponsText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="42px"
+                            android:text="Coupons"
+                            android:textColor="@color/white"
+                            android:textSize="34px" />
+
+                        <ImageView
+                            android:layout_width="72px"
+                            android:layout_height="47px"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20px"
+                            android:layout_toRightOf="@+id/couponsText"
+                            android:src="@drawable/free_rides_icon"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="3px"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/menu_divider" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/inviteFriendRl"
                         android:layout_width="match_parent"
                         android:layout_height="84px"
@@ -1505,30 +1539,6 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="42px"
                             android:text="@string/invite_friends"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/accountRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/accountText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="Account"
                             android:textColor="@color/white"
                             android:textSize="34px" />
 

@@ -141,8 +141,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout inviteFriendRl;
 	TextView inviteFriendText;
 	
-	RelativeLayout accountRl;
-	TextView accountText;
+	RelativeLayout couponsRl;
+	TextView couponsText;
 	
 	RelativeLayout bookingsRl;
 	TextView bookingsText;
@@ -475,8 +475,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		inviteFriendRl = (RelativeLayout) findViewById(R.id.inviteFriendRl);
 		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText); inviteFriendText.setTypeface(Data.regularFont(getApplicationContext()));
 		
-		accountRl = (RelativeLayout) findViewById(R.id.accountRl);
-		accountText = (TextView) findViewById(R.id.accountText); accountText.setTypeface(Data.regularFont(getApplicationContext()));
+		couponsRl = (RelativeLayout) findViewById(R.id.couponsRl);
+		couponsText = (TextView) findViewById(R.id.couponsText); couponsText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
 		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -930,7 +930,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
-		accountRl.setOnClickListener(new View.OnClickListener() {
+		couponsRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -2028,7 +2028,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				passengerMainLayout.setVisibility(View.GONE);
 				driverMainLayout.setVisibility(View.VISIBLE);
 				
-				accountRl.setVisibility(View.GONE);
+				couponsRl.setVisibility(View.GONE);
 				
 //				favBtn.setVisibility(View.GONE);
 				
@@ -2046,7 +2046,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				passengerMainLayout.setVisibility(View.VISIBLE);
 				driverMainLayout.setVisibility(View.GONE);
 				
-				accountRl.setVisibility(View.VISIBLE);
+				couponsRl.setVisibility(View.VISIBLE);
 				
 //				favBtn.setVisibility(View.VISIBLE);
 				
@@ -2778,7 +2778,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	protected void onResume() {
 		super.onResume();
 	    
-		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
+//		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
 		
 		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 			  startTimerUpdateDrivers();

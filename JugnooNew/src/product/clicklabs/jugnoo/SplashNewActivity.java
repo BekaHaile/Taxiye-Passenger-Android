@@ -357,14 +357,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-			if(SplashNewActivity.isLastLocationUpdateFine(SplashNewActivity.this)){
+//			if(SplashNewActivity.isLastLocationUpdateFine(SplashNewActivity.this)){
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
 						callFirstAttempt();
 					}
 				}, 1000);
-			}
+//			}
 			
 		}
 
