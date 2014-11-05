@@ -4236,6 +4236,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
 	String getAddress(double curLatitude, double curLongitude) {
     	String fullAddress = "Unnamed";
 
@@ -7597,8 +7598,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 
-
-
+	@Override
+	public void onAssigningDriversPushReceived() {
+		try{
+			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						
+					}
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 
 	static class FBLogoutNoIntent extends AsyncTask<Void, Void, String> {
 		

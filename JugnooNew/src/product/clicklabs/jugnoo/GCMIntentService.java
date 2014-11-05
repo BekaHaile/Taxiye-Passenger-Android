@@ -269,14 +269,24 @@ public class GCMIntentService extends IntentService {
 			    	    					 requestTimeoutTimerTask.startTimer(0, 20000, startTimeMillis, 60000);
 		    	    					 }
 		    	    					 
-		    	    					 
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
-	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    			    				 HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
-	    			    			 }
+									if (HomeActivity.appInterruptHandler != null) {
+										HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
+										notificationManagerResume(this, "Your request has been accepted", false);
+									} else {
+										notificationManager(this, "Your request has been accepted", false);
+									}
 	    	    				 }
+	    	    				 else if(PushFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
+										if (HomeActivity.appInterruptHandler != null) {
+											HomeActivity.appInterruptHandler.onAssigningDriversPushReceived();
+											notificationManagerResume(this, "Assigning drivers", false);
+										} else {
+											notificationManager(this, "Assigning drivers", false);
+										}
+		    	    				 }
 	    	    				 else if(PushFlags.REQUEST_CANCELLED.getOrdinal() == flag){
     	    						 
 	    	    					 String engagementId = jObj.getString("engagement_id");
@@ -303,7 +313,6 @@ public class GCMIntentService extends IntentService {
 	    	    					 }
 	    	    					 
 	    	    					 
-	    	    					 
 	    	    				 }
 	    	    				else if(PushFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
     	    						 
@@ -316,7 +325,6 @@ public class GCMIntentService extends IntentService {
 	    	    					 if(HomeActivity.appInterruptHandler != null){
 	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 	    	    					 }
-	    	    					
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_STARTED.getOrdinal() == flag){
@@ -344,8 +352,11 @@ public class GCMIntentService extends IntentService {
 	    	    					 Data.waitTime = jObj.getString("wait_time");
 	    	    					 
 	    	    					 if (HomeActivity.appInterruptHandler != null) {
-	    	    						 notificationManagerResume(this, "Your ride has ended.", false);
-	    	    						 HomeActivity.appInterruptHandler.customerEndRideInterrupt(jObj);
+	    	    						 if(PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode){
+	    	    							 notificationManagerResume(this, "Your ride has ended.", false);
+		    	    						 HomeActivity.appInterruptHandler.customerEndRideInterrupt(jObj);
+	    	    						 }
+	    	    						
 	    	    					 }
 	    	    					 else{
 	    	    						 String SHARED_PREF_NAME = "myPref",
@@ -391,10 +402,7 @@ public class GCMIntentService extends IntentService {
 	    		    			 
 	    		    		 }
 	    		    		 
-	    		    		 
-	    		    		 
 	    		    	 }
-	    		    	 
 	    	    		
 	    	    	 }
 	    	    	 catch(Exception e){

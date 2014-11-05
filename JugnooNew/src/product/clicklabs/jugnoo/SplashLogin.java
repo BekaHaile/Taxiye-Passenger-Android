@@ -1431,13 +1431,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		            }
 		        });
 		 
-		        // on pressing cancel button
-//		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//		            public void onClick(DialogInterface dialog, int which) {
-//		            dialog.dismiss();
-//		            }
-//		        });
-		 
 		        locationAlertDialog = alertDialogPrepare.create();
 		        
 		        // Showing Alert Message
