@@ -308,6 +308,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	Button driverEndRideBtn;
 	public static int waitStart = 2;
+	double distanceAfterWaitStarted = 0;
+	
 	
 	
 	
@@ -405,19 +407,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
-	public static final long DRIVER_START_RIDE_CHECK_METERS = 600;
+	public static final long DRIVER_START_RIDE_CHECK_METERS = 600; //in meters
 	
-	public static final long LOCATION_UPDATE_TIME_PERIOD = 10000;
-	public static final double MAX_DISPLACEMENT_THRESHOLD = 200;
+	public static final long LOCATION_UPDATE_TIME_PERIOD = 10000; //in milliseconds
+	public static final double MAX_DISPLACEMENT_THRESHOLD = 200; //in meters
 	
-	public static final long SERVICE_RESTART_TIMER = 12 * 60 * 60 * 1000;
+	public static final long SERVICE_RESTART_TIMER = 12 * 60 * 60 * 1000; //in milliseconds
 	
 	
-	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;
+	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;  //in meters
 	
-	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000;
+	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000; //in milliseconds
 	
-	public static final long MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT = 10 * 60000;
+	public static final long MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT = 10 * 60000; //in milliseconds
+	
+	public static final double MAX_WAIT_TIME_ALLOWED_DISTANCE = 200; //in meters
 	
 	
 	
@@ -708,6 +712,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						cArg.setText(hh + ":" + mm + ":" + ss);
 					}
 				});
+		
 		
 		waitChronometer.setText("00:00:00");
 		waitChronometer.setOnChronometerTickListener(new OnChronometerTickListener() {
@@ -1433,38 +1438,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				if(waitStart == 2){ 
-					Log.e("waitChronometer.eclipsedTime on first start","="+waitChronometer.eclipsedTime);
-					waitChronometer.start();
-					rideTimeChronometer.stop();
-					driverWaitRl.setBackgroundResource(R.drawable.red_btn_selector);
-					driverWaitText.setText(getResources().getString(R.string.stop_wait));
-					waitStart = 1;
-					
-					startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 1);
-					
+					startWait();
 				}
-				else{
-					if(waitStart == 1){
-						Log.e("waitChronometer.stop()","in driverWaitBtn on click");
-						waitChronometer.stop();
-						rideTimeChronometer.start();
-						driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
-						driverWaitText.setText(getResources().getString(R.string.start_wait));
-						waitStart = 0;
-						
-						startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
-					}
-					else if(waitStart == 0){
-						waitChronometer.start();
-						rideTimeChronometer.stop();
-						driverWaitRl.setBackgroundResource(R.drawable.red_btn_selector);
-						driverWaitText.setText(getResources().getString(R.string.stop_wait));
-						waitStart = 1;
-						
-						startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 1);
-					}
+				else if(waitStart == 1){
+					stopWait();
 				}
-				
+				else if(waitStart == 0){
+					startWait();
+				}
 			}
 		});
 		
@@ -1712,9 +1693,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		setUserData();
-		
-		
 
 		
 		if(userMode == null){
@@ -1797,6 +1775,39 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			switchDriverScreen(driverScreenMode);
 		}
 	}
+	
+	
+	public void startWait(){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				waitChronometer.start();
+				rideTimeChronometer.stop();
+				driverWaitRl.setBackgroundResource(R.drawable.red_btn_selector);
+				driverWaitText.setText(getResources().getString(R.string.stop_wait));
+				waitStart = 1;
+				distanceAfterWaitStarted = 0;
+				startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 1);
+			}
+		});
+	}
+	
+	
+	
+	public void stopWait(){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				waitChronometer.stop();
+				rideTimeChronometer.start();
+				driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
+				driverWaitText.setText(getResources().getString(R.string.start_wait));
+				waitStart = 0;
+				startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
+			}
+		});
+	}
+	
 	
 	public void initiateRequestRide(boolean newRequest){
 		
@@ -2778,6 +2789,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	protected void onResume() {
 		super.onResume();
 	    
+		setUserData();
+		
 //		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
 		
 		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
@@ -2982,28 +2995,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 					if(stopWait){
 						if(waitChronometer.isRunning){
-				    		runOnUiThread(new Runnable() {
-								
-								@Override
-								public void run() {
-									try{
-										Log.e("waitChronometer.stop()","in onPause on click");
-						        		waitChronometer.stop();
-						        		driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
-						        		driverWaitText.setText(getResources().getString(R.string.start_wait));
-										waitStart = 0;
-					        		} catch(Exception e){
-					        			e.printStackTrace();
-					        		}
-								}
-							});
-				    		try{
-				    			startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
-				    		} catch(Exception e){
-				    			e.printStackTrace();
-				    		}
+							stopWait();
 						}
-						
 						if(rideTimeChronometer.isRunning){
 							runOnUiThread(new Runnable() {
 								@Override
@@ -3016,7 +3009,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							});
 						}
-						
 					}
 					
 					editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
@@ -3267,6 +3259,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						if(displacement < MAX_DISPLACEMENT_THRESHOLD){
 							
 							totalDistance = totalDistance + displacement;
+							checkAndUpdateWaitTimeDistance(displacement);
 							map.addPolyline(new PolylineOptions()
 					        .add(lastLatLng, currentLatLng)
 					        .width(5)
@@ -3316,6 +3309,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if(displacement < MAX_DISPLACEMENT_THRESHOLD){
 									totalDistance = totalDistance + displacement;
+									checkAndUpdateWaitTimeDistance(displacement);
 									map.addPolyline(new PolylineOptions()
 							        .add(Data.startRidePreviousLatLng, currentLatLng)
 							        .width(5)
@@ -3359,6 +3353,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 	
+	}
+	
+	
+	
+	public void checkAndUpdateWaitTimeDistance(final double distance){
+		try {
+			if(waitStart == 1){
+				distanceAfterWaitStarted = distanceAfterWaitStarted + distance;
+				if(distanceAfterWaitStarted >= MAX_WAIT_TIME_ALLOWED_DISTANCE){
+					stopWait();
+				}
+			}
+			Log.e("distanceAfterWaitStarted wait ------------", "="+distanceAfterWaitStarted);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -3546,6 +3556,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		           List<LatLng> list = decodePoly(encodedString);
 			    	
 			    	totalDistance = totalDistance + distanceOfPath;
+			    	checkAndUpdateWaitTimeDistance(distanceOfPath);
 			    	
 			    	 Database database = new Database(HomeActivity.this);
 			    	 
@@ -3562,6 +3573,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    	}
 	    	else{																									// displacement would be correct
 	    		totalDistance = totalDistance + displacementToCompare;
+	    		checkAndUpdateWaitTimeDistance(displacementToCompare);
 	    		
 	    		 Database database = new Database(HomeActivity.this);
 	    		 map.addPolyline(new PolylineOptions()
@@ -5204,7 +5216,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									waitStart = 2;
 									waitChronometer.stop();
 									rideTimeChronometer.stop();
-									Log.e("waitChronometer.stop()","in endRideAPi on click");
 									
 									
 									clearSPData();
@@ -5500,14 +5511,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 								}
 								else{
-									
-//									{"log":"Added to favourite successfully"}	//result
-
-									
 									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
-									
-									getAllFavoriteAsync(activity);
-									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -5527,79 +5531,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 
 	
-	/**
-	 * ASync for get all favorite locations from server
-	 */
-	public void getAllFavoriteAsync(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			RequestParams params = new RequestParams();
-			
-			params.put("access_token", Data.userData.accessToken);
-
-			Log.i("access_token", "=" + Data.userData.accessToken);
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/get_fav_locations", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							}
-
-						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-
-									String errorMessage = jObj.getString("error");
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-									}
-									else{
-									}
-								}
-								else{
-									
-									JSONArray favouriteData = jObj.getJSONArray("favourite_data");
-									
-									Data.favoriteLocations.clear();
-									
-									if(favouriteData.length() > 0){
-										
-										for(int i=0; i<favouriteData.length(); i++){
-											JSONObject favData = favouriteData.getJSONObject(i);
-											
-											Data.favoriteLocations.add(new FavoriteLocation(favData.getInt("s_no"), favData.getString("fav_name"), 
-													new LatLng(favData.getDouble("fav_latitude"), favData.getDouble("fav_longitude"))));
-											
-										}
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-							}
-	
-						}
-					});
-		}
-		else {
-		}
-
-	}
 	
 	
 	
@@ -6814,7 +6745,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							dialog.dismiss();
 	
 							GCMIntentService.clearNotifications(HomeActivity.this);
-							Log.e("waitChronometer.stop()","in driverEndRideSlider on click");
 							waitChronometer.stop();
 							rideTimeChronometer.stop();
 							

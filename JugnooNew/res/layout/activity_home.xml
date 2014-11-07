@@ -265,7 +265,7 @@
                             android:layout_marginLeft="10px"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="John Paulo"
+                            android:text=" "
                             android:textColor="@color/black_light"
                             android:textSize="30px" />
 
@@ -592,7 +592,7 @@
                             android:layout_marginTop="20px"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:text="John Paulo"
+                            android:text=" "
                             android:textColor="@color/bg_grey_opaque"
                             android:textSize="40px" />
 
@@ -951,7 +951,7 @@
                         android:layout_marginTop="20px"
                         android:gravity="center"
                         android:singleLine="true"
-                        android:text="John Paulo"
+                        android:text=" "
                         android:textColor="@color/white"
                         android:textSize="38px" />
 
@@ -1317,7 +1317,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:text="John Paulo"
+                    android:text=" "
                     android:textColor="@color/white"
                     android:textSize="40px"
                     android:visibility="gone" />
@@ -1384,7 +1384,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10px"
                 android:gravity="center"
-                android:text="John Paulo"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="34px" />
 

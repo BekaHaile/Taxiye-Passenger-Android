@@ -23,10 +23,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -428,6 +426,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			Log.i("ph_no", "=" + phoneNo);
 			Log.i("email", "=" + emailId);
 			Log.i("password", "=" + password);
+			Log.i("otp", "=" + otp);
 			Log.i("device_token", "=" + Data.deviceToken);
 			Log.i("latitude", "=" + Data.latitude);
 			Log.i("longitude", "=" + Data.longitude);
@@ -455,7 +454,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 						public void onSuccess(int arg0, Header[] arg1,
 								byte[] arg2) {
 							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
+							Log.i("Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
@@ -466,7 +465,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								if(!newUpdate){
 								
 								if(!jObj.isNull("error")){
-									
+									DialogPopup.dismissLoadingDialog();
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
@@ -477,13 +476,14 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else if(0 == flag){ // {"error": 'Please enter otp',"flag":0} //error
-										RegisterScreen.this.firstName = firstName;
-										RegisterScreen.this.lastName = lastName;
-										RegisterScreen.this.emailId = emailId;
-										RegisterScreen.this.phoneNo = phoneNo;
-										RegisterScreen.this.password = password;
-										otpAlertString = errorMessage;
-										showOtpDialog = true;
+//										RegisterScreen.this.firstName = firstName;
+//										RegisterScreen.this.lastName = lastName;
+//										RegisterScreen.this.emailId = emailId;
+//										RegisterScreen.this.phoneNo = phoneNo;
+//										RegisterScreen.this.password = password;
+//										otpAlertString = errorMessage;
+//										showOtpDialog = true;
+										sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, "4444");
 									}
 									else if(1 == flag){ // {"error": 'Incorrect verification code',"flag":1}
 										RegisterScreen.this.firstName = firstName;
@@ -497,7 +497,6 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-									DialogPopup.dismissLoadingDialog();
 								}
 								else{
 									new JSONParser().parseLoginData(activity, response);
@@ -505,6 +504,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									Database database22 = new Database(RegisterScreen.this);
 									database22.insertEmail(emailId);
 									database22.close();
+									
 									loginDataFetched = true;
 									
 									DialogPopup.dismissLoadingDialog();
@@ -697,7 +697,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								if(!newUpdate){
 								
 								if(!jObj.isNull("error")){
-									
+									DialogPopup.dismissLoadingDialog();
 //									{"error": 'Some parameter missing',"flag":0} //error
 //									{"error": 'Not An Authenticated User!',"flag":1}
 //									{"error": 'Please enter otp',"flag":2}  
@@ -713,10 +713,11 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
-										RegisterScreen.this.phoneNo = phoneNo;
-										RegisterScreen.this.password = password;
-										otpAlertString = errorMessage;
-										showOtpDialog = true;
+//										RegisterScreen.this.phoneNo = phoneNo;
+//										RegisterScreen.this.password = password;
+//										otpAlertString = errorMessage;
+//										showOtpDialog = true;
+										sendFacebookSignupValues(RegisterScreen.this, "4444", phoneNo, password);
 									}
 									else if(6 == flag){ // {"error": 'Incorrect verification code',"flag":6}
 										RegisterScreen.this.phoneNo = phoneNo;
@@ -727,7 +728,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-									DialogPopup.dismissLoadingDialog();
+									
 								}
 								else{
 									

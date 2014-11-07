@@ -1,6 +1,9 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
+
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
@@ -16,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -31,11 +35,15 @@ public class FavoriteActivity extends Activity{
 	Button backBtn;
 	TextView favTitleText, noFavoriteLocationsText;
 	ListView favoriteList;
+	ProgressBar progressBarFavorites;
 	
 	static boolean zoomToMap = false;
 	static LatLng zoomLatLng;
 	
 	FavoriteListAdapter favoriteListAdapter;
+	ArrayList<FavoriteLocation> favoriteLocations = new ArrayList<FavoriteLocation>();
+	
+	AsyncHttpClient fetchFavoritesClient;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,11 @@ public class FavoriteActivity extends Activity{
 		favTitleText = (TextView) findViewById(R.id.favTitleText); favTitleText.setTypeface(Data.regularFont(getApplicationContext()));
 		noFavoriteLocationsText = (TextView) findViewById(R.id.noFavoriteLocationsText); 
 		noFavoriteLocationsText.setTypeface(Data.regularFont(getApplicationContext()));
+		progressBarFavorites = (ProgressBar) findViewById(R.id.progressBarFavorites);
+		
+		progressBarFavorites.setVisibility(View.GONE);
+		noFavoriteLocationsText.setVisibility(View.GONE);
+		
 		
 		favoriteList = (ListView) findViewById(R.id.favoriteList);
 		favoriteListAdapter = new FavoriteListAdapter();
@@ -67,21 +80,35 @@ public class FavoriteActivity extends Activity{
 			}
 		});
 		
-		updateFavoriteList();
+		noFavoriteLocationsText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getAllFavoriteAsync(FavoriteActivity.this);
+			}
+		});
+		
+		getAllFavoriteAsync(FavoriteActivity.this);
 		
 	}
 	
-	void updateFavoriteList(){
-		
-		favoriteListAdapter.notifyDataSetChanged();
-		
-		if(Data.favoriteLocations.size() == 0){
+	public void updateListData(String message, boolean errorOccurred){
+		if(errorOccurred){
+			noFavoriteLocationsText.setText(message);
 			noFavoriteLocationsText.setVisibility(View.VISIBLE);
+			
+			favoriteLocations.clear();
+			favoriteListAdapter.notifyDataSetChanged();
 		}
 		else{
-			noFavoriteLocationsText.setVisibility(View.GONE);
+			if(favoriteLocations.size() == 0){
+				noFavoriteLocationsText.setText(message);
+				noFavoriteLocationsText.setVisibility(View.VISIBLE);
+			}
+			else{
+				noFavoriteLocationsText.setVisibility(View.GONE);
+			}
+			favoriteListAdapter.notifyDataSetChanged();
 		}
-		
 	}
 	
 	
@@ -102,7 +129,7 @@ public class FavoriteActivity extends Activity{
 
 		@Override
 		public int getCount() {
-			return Data.favoriteLocations.size();
+			return favoriteLocations.size();
 		}
 
 		@Override
@@ -144,7 +171,7 @@ public class FavoriteActivity extends Activity{
 			
 			holder.id = position;
 			
-			holder.name.setText(""+Data.favoriteLocations.get(position).name);
+			holder.name.setText(""+favoriteLocations.get(position).name);
 			
 			holder.relative.setOnClickListener(new OnClickListener() {
 
@@ -152,7 +179,7 @@ public class FavoriteActivity extends Activity{
 				public void onClick(View v) {
 					holder = (ViewHolderFavorite) v.getTag();
 					
-					FavoriteLocation favoriteLocation = Data.favoriteLocations.get(holder.id);
+					FavoriteLocation favoriteLocation = favoriteLocations.get(holder.id);
 					
 					Log.e("searchResult.latLng ==",">"+favoriteLocation.latLng);
 					
@@ -173,7 +200,7 @@ public class FavoriteActivity extends Activity{
 				public void onClick(View v) {
 					holder = (ViewHolderFavorite) v.getTag();
 					
-					FavoriteLocation favoriteLocation = Data.favoriteLocations.get(holder.id);
+					FavoriteLocation favoriteLocation = favoriteLocations.get(holder.id);
 					
 					deleteFavoriteAsync(FavoriteActivity.this, favoriteLocation.sNo, holder.id);
 					
@@ -185,6 +212,82 @@ public class FavoriteActivity extends Activity{
 		}
 
 	}
+	
+	
+	/**
+	 * ASync for get all favorite locations from server
+	 */
+	public void getAllFavoriteAsync(final Activity activity) {
+		if(fetchFavoritesClient == null){
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				Log.i("access_token", "=" + Data.userData.accessToken);
+				fetchFavoritesClient = Data.getClient();
+				fetchFavoritesClient.post(Data.SERVER_URL + "/get_fav_locations", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+	
+							@Override
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								updateListData("Some error occurred. Tap to retry", true);
+							}
+	
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								String response = new String(arg2);
+								Log.v("Server response", "response = " + response);
+		
+								try {
+									jObj = new JSONObject(response);
+									
+									if(!jObj.isNull("error")){
+										int flag = jObj.getInt("flag");	
+										String errorMessage = jObj.getString("error");
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
+										}
+										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+										}
+										else{
+										}
+										updateListData("Some error occurred. Tap to retry", true);
+									}
+									else{
+										JSONArray favouriteData = jObj.getJSONArray("favourite_data");
+										favoriteLocations.clear();
+										if(favouriteData.length() > 0){
+											for(int i=0; i<favouriteData.length(); i++){
+												JSONObject favData = favouriteData.getJSONObject(i);
+												favoriteLocations.add(new FavoriteLocation(favData.getInt("s_no"), favData.getString("fav_name"), 
+														new LatLng(favData.getDouble("fav_latitude"), favData.getDouble("fav_longitude"))));
+											}
+										}
+										updateListData("No favorites", false);
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+								}
+		
+							}
+							
+							@Override
+								public void onFinish() {
+									super.onFinish();
+									fetchFavoritesClient = null;
+								}
+							
+						});
+			}
+			else {
+			}
+		}
+
+	}
+	
 	
 	/**
 	 * ASync for deleteFavoriteAsync from server
@@ -238,8 +341,8 @@ public class FavoriteActivity extends Activity{
 									
 									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
 									
-									Data.favoriteLocations.remove(index);
-									updateFavoriteList();
+									favoriteLocations.remove(index);
+									updateListData("No favorites", false);
 									
 								}
 							}  catch (Exception exception) {
@@ -277,6 +380,9 @@ public class FavoriteActivity extends Activity{
 	
 	@Override
 	protected void onDestroy() {
+		if(fetchFavoritesClient != null){
+			fetchFavoritesClient.cancelAllRequests(true);
+		}
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();

@@ -25,7 +25,7 @@ import com.loopj.android.http.AsyncHttpClient;
  */
 public class Data {
 	
-	public static String FLURRY_KEY = "H8Y94ND8GPQTKKG5R2VY";
+	public static final String FLURRY_KEY = "H8Y94ND8GPQTKKG5R2VY";
 	
 	public static final String INVALID_ACCESS_TOKEN = "invalid access token";
 	
@@ -90,6 +90,7 @@ public class Data {
 	public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_REQUEST_FINAL = "P_REQUEST_FINAL", 
 			P_ASSIGNING = "P_ASSIGNING";
 	
+	
 	public static LatLng startRidePreviousLatLng;
 	
 	
@@ -130,7 +131,7 @@ public class Data {
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 	
 	
 	
@@ -168,13 +169,6 @@ public class Data {
 	
 	
 	public static ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
-	
-	public static ArrayList<FavoriteLocation> favoriteLocations = new ArrayList<FavoriteLocation>();
-	
-	public static ArrayList<RideInfo> rides = new ArrayList<RideInfo>();
-	
-	public static ArrayList<FriendInfo> friendInfos = new ArrayList<FriendInfo>();
-	public static ArrayList<FriendInfo> friendInfosDuplicate = new ArrayList<FriendInfo>();
 	
 	
 	
@@ -222,9 +216,6 @@ public class Data {
 	public static void clearDataOnLogout(Context context){
 		try{
 			driverInfos = new ArrayList<DriverInfo>();
-			favoriteLocations = new ArrayList<FavoriteLocation>();
-			friendInfos = new ArrayList<FriendInfo>();
-			friendInfosDuplicate = new ArrayList<FriendInfo>();
 			userData = null;
 			locationFetcher = null;
 			deviceToken = ""; country = ""; deviceName = ""; appVersion = 0; osVersion = "";

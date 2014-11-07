@@ -63,10 +63,18 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	
 	AutoCompleteTextView emailEt;
 	EditText passwordEt;
-	Button signInBtn, forgotPasswordBtn, signupBtn, facebookSignInBtn;
+	Button signInBtn, forgotPasswordBtn, facebookSignInBtn;
 	TextView extraTextForScroll;
-	ImageView orBg, jugnooLogoBig;
+	ImageView jugnooLogoBig;
 	TextView orText;
+	
+	LinearLayout needHelpLinearLayout;
+	TextView needHelpText, callUsText;
+	
+	RelativeLayout signupRl;
+	TextView newToJugnooText, signupText;
+	
+	
 	
 	LinearLayout relative;
 	
@@ -85,9 +93,11 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	
 	GoogleCloudMessaging gcm;
-	String regid;
 	
 	String enteredEmail = "";
+	
+	String jugnooPhoneNumber = "+918556921929";
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,14 +116,24 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		signInBtn = (Button) findViewById(R.id.signInBtn); signInBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		signupBtn = (Button) findViewById(R.id.signupBtn); signupBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 		facebookSignInBtn = (Button) findViewById(R.id.facebookSignInBtn); facebookSignInBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 		
-		orBg = (ImageView) findViewById(R.id.orBg); 
 		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		needHelpLinearLayout = (LinearLayout) findViewById(R.id.needHelpLinearLayout);
+		needHelpText = (TextView) findViewById(R.id.needHelpText); needHelpText.setTypeface(Data.regularFont(SplashLogin.this), Typeface.BOLD);
+		callUsText = (TextView) findViewById(R.id.callUsText); callUsText.setTypeface(Data.regularFont(SplashLogin.this), Typeface.BOLD);
+		
+		callUsText.setText("Call us now "+jugnooPhoneNumber);
+		
+		
+		
+		signupRl = (RelativeLayout) findViewById(R.id.signupRl);
+		newToJugnooText = (TextView) findViewById(R.id.newToJugnooText); newToJugnooText.setTypeface(Data.regularFont(SplashLogin.this));
+		signupText = (TextView) findViewById(R.id.signupText); signupText.setTypeface(Data.regularFont(SplashLogin.this), Typeface.BOLD);
 		
 		
 		Database database = new Database(SplashLogin.this);													// getting already logged in email strings for drop down
@@ -137,22 +157,13 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		emailEt.setAdapter(adapter);
 		
 		
-		orBg.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-			}
-		});
 		
 		signInBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				
 				String email = emailEt.getText().toString().trim();
 				String password = passwordEt.getText().toString().trim();
-				
 				if("".equalsIgnoreCase(email)){
 					emailEt.requestFocus();
 					emailEt.setError("Please enter email");
@@ -165,13 +176,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 					else{
 						if(isEmailValid(email)){
 							enteredEmail = email;
-							
-							
-//							new CheckDeviceTokenAsync(email, password, 0).execute();
-							
 							sendLoginValues(SplashLogin.this, email, password);
-							
-//							new SendLoginValuesAsync(SplashLogin.this, email, password).execute();
 						}
 						else{
 							emailEt.requestFocus();
@@ -179,15 +184,12 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						}
 					}
 				}
-				
-//				
-				
 			}
 		});
 		
 		
 		
-		signupBtn.setOnClickListener(new View.OnClickListener() {
+		signupRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -208,6 +210,17 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				finish();
 			}
 		});
+		
+		needHelpLinearLayout.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent callIntent = new Intent(Intent.ACTION_VIEW);
+		        callIntent.setData(Uri.parse("tel:"+jugnooPhoneNumber));
+		        startActivity(callIntent);
+			}
+		});
+		
 		
 		
 		passwordEt.setOnEditorActionListener(new OnEditorActionListener() {
@@ -271,21 +284,14 @@ public class SplashLogin extends Activity implements LocationUpdate{
 												Log.v("app id", "" + session.getApplicationId());
 												if (session.isOpened()) {
 													Log.e("heyyy", "Logged in..." + session.getAccessToken());
-
 													Data.fbAccessToken = session.getAccessToken();
 													Log.e("fbAccessToken===", "="+Data.fbAccessToken);
-											    	
-													
 													DialogPopup.showLoadingDialog(SplashLogin.this, "Loading...");
-													
-
 													Request.executeMeRequestAsync(session,
 															new Request.GraphUserCallback() {
 																@Override
 																public void onCompleted(GraphUser user, Response response) { // fetching user data from FaceBook
-
 																	DialogPopup.dismissLoadingDialog();
-																	
 																	if (user != null) {
 																		Log.i("data", "username" + user.getName() + "fbid!" + user.getId() + " firstname "
 																						+ user.getFirstName() + " lastname " + user.getLastName() + "  ");
@@ -297,7 +303,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 																		Data.fbLastName = user.getLastName();
 																		Data.fbUserName = user.getUsername();
 																		
-																		
 																		try {
 																			Data.fbUserEmail = ((String)user.asMap().get("email"));
 																			Log.e("Data.userEmail before","="+Data.fbUserEmail);
@@ -307,10 +312,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 																		} catch (Exception e2) {
 																			e2.printStackTrace();
 																		}
-
-																		
-
-																		
 																		
 																		if(Data.fbUserName == null){
 																			Data.fbUserName = "";
@@ -319,24 +320,16 @@ public class SplashLogin extends Activity implements LocationUpdate{
 																		if(Data.fbUserEmail == null){
 																			Data.fbUserEmail = "";
 																		}
-																		
-																		
-																		
 																		Log.e("Data.fbId","="+Data.fbId);
 																		Log.e("Data.fbFirstName","="+Data.fbFirstName);
 																		Log.e("Data.fbLastName","="+Data.fbLastName);
 																		Log.e("Data.fbUserName","="+Data.fbUserName);
 																		Log.e("Data.userEmail","="+Data.fbUserEmail);
-
 																		sendFacebookLoginValues(SplashLogin.this, "");
-//																		new CheckDeviceTokenAsync("", "", 1).execute();
-																		
 																	}
 																	else{
 																		new DialogPopup().alertPopup(SplashLogin.this, "Facebook Error", "Error in fetching information from Facebook.");
 																	}
-																	
-
 																}
 															});
 												}
@@ -347,19 +340,13 @@ public class SplashLogin extends Activity implements LocationUpdate{
 												}
 											}
 										});
-
 							} else if (session.isClosed()) {
 								
 							}
-							
-							
 						}
 					});
 					session.openForRead(openRequest);
 				}
-				
-				
-				
 			}
 		});
 		
@@ -387,7 +374,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 							ViewGroup.LayoutParams params_12 = extraTextForScroll
 									.getLayoutParams();
 
-							params_12.height = (int)(370.0f*ASSL.Yscale());
+							params_12.height = (int)(heightDiff);
 
 							extraTextForScroll.setLayoutParams(params_12);
 							extraTextForScroll.requestLayout();
@@ -408,9 +395,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		
-		
-		
-		
 		try {																						// to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			Data.appVersion = pInfo.versionCode;
@@ -421,34 +405,17 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			
-//			Data.deviceToken = GCMRegistrar.getRegistrationId(this);
-//			Log.i("Data.deviceToken", Data.deviceToken + "..");
-			
-//			Data.registerForGCM(SplashLogin.this);
-//			
-//			
-//			
 			gcm = GoogleCloudMessaging.getInstance(this);
-		    regid = getRegistrationId(this);
-		    Data.deviceToken = regid;
+			Data.deviceToken = getRegistrationId(this);
 	
 		    Log.i("deviceToken", Data.deviceToken + "..");
 		    
-		    if (regid.isEmpty()) {
+		    if (Data.deviceToken.isEmpty()) {
 		        registerInBackground();
 		    }
-			
-//			Data.generateKeyHash(SplashLogin.this);
-			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
-		
-//		if (checkPlayServices()) {
-//			accessTokenLogin(SplashLogin.this);
-//		}
-		
 		
 		jugnooLogoBig = (ImageView) findViewById(R.id.jugnooLogoBig);
 		jugnooLogoBig.setOnLongClickListener(new View.OnLongClickListener() {
@@ -456,7 +423,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			@Override
 			public boolean onLongClick(View v) {
 				confirmDebugPasswordPopup(SplashLogin.this);
-//				Toast.makeText(getApplicationContext(), ""+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 				return false;
 			}
 		});
@@ -465,7 +431,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
-//				Toast.makeText(getApplicationContext(), ""+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 			}
 		});
 		
@@ -614,9 +579,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	
 	
 	
-	
-	
-	
 	private void registerInBackground() {
 	    new AsyncTask<String, Integer, String>() {
 	        @Override
@@ -626,11 +588,10 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	                if (gcm == null) {
 	                    gcm = GoogleCloudMessaging.getInstance(SplashLogin.this);
 	                }
-	                regid = gcm.register(Data.GOOGLE_PROJECT_ID);
-	                Data.deviceToken = regid;
-	                msg = "Device registered, registration ID=" + regid;
+	                Data.deviceToken = gcm.register(Data.GOOGLE_PROJECT_ID);
+	                msg = "Device registered, registration ID=" + Data.deviceToken;
 	                
-	                setRegistrationId(SplashLogin.this, regid);
+	                setRegistrationId(SplashLogin.this, Data.deviceToken);
 	            } catch (IOException ex) {
 	                msg = "Error :" + ex.getMessage();
 	            }
@@ -640,7 +601,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	        @Override
 	        protected void onPostExecute(String msg) {
 	        	Log.e("msg  ===== ","="+msg);
-	        	//=Device registered, registration ID=APA91bHaLnaJLjUGLXDKcW39Gke0eK78tFRe1ByJsj8rmFS2boJ2_HNzvxkS39tfo0z6IahCUPyV49gpHx-2M3WzWmpHv4u4O0cGuYxN-aKuPx1SG4Gy-2WHBg8o3sSP_GtJgfThb3G36miecVxQ1xGafeKMgbV2sO9EP1aaVDyXI3t6bgS7gmQ
 	        }
 	    }.execute(null, null, null);
 	}
@@ -666,8 +626,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				Data.latitude = Data.locationFetcher.getLatitude();
 				Data.longitude = Data.locationFetcher.getLongitude();
 			}
-
-		
 			
 			params.put("email", emailId);
 			params.put("password", password);
@@ -689,7 +647,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			Log.i("device_name", "=" + Data.deviceName);
 			Log.i("app_version", "=" + Data.appVersion);
 			Log.i("os_version", "=" + Data.osVersion);
-			
 			
 		
 			AsyncHttpClient client = Data.getClient();
@@ -720,7 +677,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 								if(!newUpdate){
 									
 									if(!jObj.isNull("error")){
-										
+										DialogPopup.dismissLoadingDialog();
 										int flag = jObj.getInt("flag");	
 										String errorMessage = jObj.getString("error");
 										
@@ -737,13 +694,14 @@ public class SplashLogin extends Activity implements LocationUpdate{
 											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 										else if(3 == flag){ // {"error":"enter otp","flag":2}//error
-											confirmOTPPopup(activity, 1);
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+//											confirmOTPPopup(activity, 1);
+//											new DialogPopup().alertPopup(activity, "", errorMessage);
+											sendSignupValues(SplashLogin.this, enteredEmail, "4444");
 										}
 										else{
 											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
-										DialogPopup.dismissLoadingDialog();
+										
 									}
 									else{
 										
@@ -1057,7 +1015,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 								if(!newUpdate){
 										
 									if(!jObj.isNull("error")){
-										
+										DialogPopup.dismissLoadingDialog();
 	//									{"error": 'Some parameter missing',"flag":0} //error
 	//									{"error": 'Not An Authenticated User!',"flag":1}
 	//									{"error": 'Please enter otp',"flag":2}  
@@ -1073,8 +1031,9 @@ public class SplashLogin extends Activity implements LocationUpdate{
 											HomeActivity.logoutUser(activity);
 										}
 										else if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
-											confirmOTPPopup(activity, 0);
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+//											confirmOTPPopup(activity, 0);
+//											new DialogPopup().alertPopup(activity, "", errorMessage);
+											sendFacebookLoginValues(SplashLogin.this, "4444");
 										}
 										else if(3 == flag){ // {"error": 'Please enter details',"flag":3}
 											facebookRegister = true;
@@ -1082,7 +1041,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 										else{
 											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
-										DialogPopup.dismissLoadingDialog();
+										
 									}
 									else{
 										

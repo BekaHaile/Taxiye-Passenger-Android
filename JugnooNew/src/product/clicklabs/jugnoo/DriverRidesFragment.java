@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -40,6 +41,8 @@ public class DriverRidesFragment extends Fragment {
 	
 	AsyncHttpClient fetchRidesClient;
 
+	ArrayList<RideInfo> rides = new ArrayList<RideInfo>();
+	
 	public DriverRidesFragment() {
 	}
 	
@@ -47,7 +50,7 @@ public class DriverRidesFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Data.rides.clear();
+		rides.clear();
 		View rootView = inflater.inflate(R.layout.fragment_rides, container, false);
 
 		main = (RelativeLayout) rootView.findViewById(R.id.main);
@@ -82,11 +85,11 @@ public class DriverRidesFragment extends Fragment {
 			textViewInfoDisplay.setText(message);
 			textViewInfoDisplay.setVisibility(View.VISIBLE);
 			
-			Data.rides.clear();
+			rides.clear();
 			driverRidesListAdapter.notifyDataSetChanged();
 		}
 		else{
-			if(Data.rides.size() == 0){
+			if(rides.size() == 0){
 				textViewInfoDisplay.setText(message);
 				textViewInfoDisplay.setVisibility(View.VISIBLE);
 			}
@@ -133,7 +136,7 @@ public class DriverRidesFragment extends Fragment {
 
 		@Override
 		public int getCount() {
-			return Data.rides.size();
+			return rides.size();
 		}
 
 		@Override
@@ -174,7 +177,7 @@ public class DriverRidesFragment extends Fragment {
 			}
 			
 			
-			RideInfo booking = Data.rides.get(position);
+			RideInfo booking = rides.get(position);
 			
 			if(dateOperations == null){
 				dateOperations = new DateOperations();
@@ -240,12 +243,12 @@ public class DriverRidesFragment extends Fragment {
 									}
 									else{
 										JSONArray bookingData = jObj.getJSONArray("booking_data");
-										Data.rides.clear();
+										rides.clear();
 										DecimalFormat decimalFormat = new DecimalFormat("#.#");
 										if(bookingData.length() > 0){
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
-												Data.rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
+												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
 														booData.getString("to"), booData.getString("fare"), decimalFormat.format(booData.getDouble("distance")),
 														booData.getString("time")));
 											}

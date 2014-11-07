@@ -96,35 +96,6 @@ class CustomerInfo{
 
 
 
-class FriendInfo implements Comparable<FriendInfo> {
-	
-	String fbId, fbName, fbImage;
-	int flag;
-	boolean tick;
-	
-	public FriendInfo(String fbId, String fbName, int flag){
-		this.fbId = fbId;
-		this.fbName = fbName;
-		this.fbImage = "http://graph.facebook.com/"+fbId+"/picture?width=160&height=160";
-		this.flag = flag;
-		this.tick = false;
-	}
-	
-	public FriendInfo(String fbId, String fbName, String image){
-		this.fbId = fbId;
-		this.fbName = fbName;
-		this.fbImage = image;
-		this.flag = 0;
-		this.tick = false;
-	}
-	
-	@Override
-	public int compareTo(FriendInfo another) {
-		return this.fbName.toLowerCase().compareTo(another.fbName.toLowerCase());
-	}
-	
-}
-
 
 
 class UserData{

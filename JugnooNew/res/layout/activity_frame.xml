@@ -44,7 +44,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10px"
                 android:gravity="center"
-                android:text="John Paulo"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="34px" />
 
