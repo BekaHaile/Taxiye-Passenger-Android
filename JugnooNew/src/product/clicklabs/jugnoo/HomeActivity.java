@@ -1535,7 +1535,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			//30.7500, 76.7800
 			
-			if(Data.latitude == 0 && Data.longitude == 0){
+			if(0 == Data.latitude && 0 == Data.longitude){
 				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 14));
 			}
 			else{
@@ -1684,57 +1684,52 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
-		
-		
-		
-		
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
-		
-		
-
-		
-		if(userMode == null){
-			userMode = UserMode.PASSENGER;
-		}
-		
-		if(passengerScreenMode == null){
-			passengerScreenMode = PassengerScreenMode.P_INITIAL;
-		}
-		
-		if(driverScreenMode == null){
-			driverScreenMode = DriverScreenMode.D_INITIAL;
-		}
-		
-		if(userMode == UserMode.DRIVER){
-			driverModeToggle.setImageResource(R.drawable.on);
-		}
-		else{
-			driverModeToggle.setImageResource(R.drawable.off);
-		}
-		
-		switchUserScreen(userMode);
-		
-		startUIAfterGettingUserStatus();
-		
-		
-		
-		
-		
-		
-		
-//		getAllFavoriteAsync(HomeActivity.this);
-		
-		
-		
 		gpsListener = new CustomLocationListener();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
-	    
+		
 		
 		
 		try {
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			
+			
+			
+	
+			
+			if(userMode == null){
+				userMode = UserMode.PASSENGER;
+			}
+			
+			if(passengerScreenMode == null){
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			}
+			
+			if(driverScreenMode == null){
+				driverScreenMode = DriverScreenMode.D_INITIAL;
+			}
+			
+			if(userMode == UserMode.DRIVER){
+				driverModeToggle.setImageResource(R.drawable.on);
+			}
+			else{
+				driverModeToggle.setImageResource(R.drawable.off);
+			}
+			
+			switchUserScreen(userMode);
+			
+			startUIAfterGettingUserStatus();
+		
+		
+		
+		
+		
+		
+		
+	    
+		
+		
+		
 			Database2 database2 = new Database2(HomeActivity.this);
 			String jugnooOn = database2.getJugnooOn();
 			
@@ -2785,46 +2780,61 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
+	public static boolean checkIfUserDataNull(Activity activity){
+		Log.e("checkIfUserDataNull", "Data.userData = "+Data.userData);
+		if(Data.userData == null){
+			activity.startActivity(new Intent(activity, SplashNewActivity.class));
+			activity.finish();
+			activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
 	    
-		setUserData();
-		
-//		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
-		
-		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-			  startTimerUpdateDrivers();
-		}
-	    
-	    if(FavoriteActivity.zoomToMap){
-	    	FavoriteActivity.zoomToMap = false;
-	    	if(map != null){
-	    		map.animateCamera(CameraUpdateFactory.newLatLng(FavoriteActivity.zoomLatLng), 1000, null);
-	    	}
-	    }
-	    
-	    try{
-	    	if(userMode == UserMode.PASSENGER){
-	    		if(locationManager == null){
-	    			gpsListener = new CustomLocationListener();
-	    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
-	    		}
-	    	}
-	    	else if(userMode == UserMode.DRIVER){
-	    		if(locationManager == null){
-		    		gpsListener = new CustomLocationListener();
-		    		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		    		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
+		if(!checkIfUserDataNull(HomeActivity.this)){
+			setUserData();
+	//		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
+			
+			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+				  startTimerUpdateDrivers();
+			}
+		    
+		    if(FavoriteActivity.zoomToMap){
+		    	FavoriteActivity.zoomToMap = false;
+		    	if(map != null){
+		    		map.animateCamera(CameraUpdateFactory.newLatLng(FavoriteActivity.zoomLatLng), 1000, null);
 		    	}
-	    	}
-	    } catch(Exception e){
-	    	e.printStackTrace();
-	    }
-	    
-	    initializeFusedLocationFetchers();
-	    
+		    }
+		    
+		    try{
+		    	if(userMode == UserMode.PASSENGER){
+		    		if(locationManager == null){
+		    			gpsListener = new CustomLocationListener();
+		    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
+		    		}
+		    	}
+		    	else if(userMode == UserMode.DRIVER){
+		    		if(locationManager == null){
+			    		gpsListener = new CustomLocationListener();
+			    		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			    		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
+			    	}
+		    	}
+		    } catch(Exception e){
+		    	e.printStackTrace();
+		    }
+		    
+		    initializeFusedLocationFetchers();
+		}
 	}
 	
 	
