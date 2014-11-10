@@ -332,7 +332,7 @@ enum PushFlags {
 	NO_DRIVERS_AVAILABLE(8),
 	WAITING_STARTED(9),
 	WAITING_ENDED(10),
-	ASSIGNING_DRIVERS(11)
+	CHANGE_STATE(20)
 	;
 
 	private int ordinal;

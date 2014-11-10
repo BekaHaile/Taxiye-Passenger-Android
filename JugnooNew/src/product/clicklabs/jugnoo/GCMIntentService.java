@@ -279,14 +279,6 @@ public class GCMIntentService extends IntentService {
 										notificationManager(this, "Your request has been accepted", false);
 									}
 	    	    				 }
-	    	    				 else if(PushFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
-										if (HomeActivity.appInterruptHandler != null) {
-											HomeActivity.appInterruptHandler.onAssigningDriversPushReceived();
-											notificationManagerResume(this, "Assigning drivers", false);
-										} else {
-											notificationManager(this, "Assigning drivers", false);
-										}
-		    	    				 }
 	    	    				 else if(PushFlags.REQUEST_CANCELLED.getOrdinal() == flag){
     	    						 
 	    	    					 String engagementId = jObj.getString("engagement_id");
@@ -397,6 +389,15 @@ public class GCMIntentService extends IntentService {
 	    	    						 HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
 	    	    					 }
 	    	    				 }
+	    	    				 else if (PushFlags.CHANGE_STATE.getOrdinal() == flag) {
+	    	    					 String logMessage = jObj.getString("message");
+									if (HomeActivity.appInterruptHandler != null) {
+										HomeActivity.appInterruptHandler.onChangeStatePushReceived();
+										notificationManagerResume(this, logMessage, false);
+									} else {
+										notificationManager(this, logMessage, false);
+									}
+								}
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 

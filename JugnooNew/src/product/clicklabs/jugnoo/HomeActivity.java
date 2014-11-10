@@ -7539,16 +7539,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 
 	@Override
-	public void onAssigningDriversPushReceived() {
+	public void onChangeStatePushReceived() {
 		try{
-			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						
-					}
-				});
-			}
+			handleConnectionLost();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

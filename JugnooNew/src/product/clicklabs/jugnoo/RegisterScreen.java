@@ -476,14 +476,13 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else if(0 == flag){ // {"error": 'Please enter otp',"flag":0} //error
-//										RegisterScreen.this.firstName = firstName;
-//										RegisterScreen.this.lastName = lastName;
-//										RegisterScreen.this.emailId = emailId;
-//										RegisterScreen.this.phoneNo = phoneNo;
-//										RegisterScreen.this.password = password;
-//										otpAlertString = errorMessage;
-//										showOtpDialog = true;
-										sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, "4444");
+										RegisterScreen.this.firstName = firstName;
+										RegisterScreen.this.lastName = lastName;
+										RegisterScreen.this.emailId = emailId;
+										RegisterScreen.this.phoneNo = phoneNo;
+										RegisterScreen.this.password = password;
+										otpAlertString = errorMessage;
+										showOtpDialog = true;
 									}
 									else if(1 == flag){ // {"error": 'Incorrect verification code',"flag":1}
 										RegisterScreen.this.firstName = firstName;
@@ -713,11 +712,10 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
-//										RegisterScreen.this.phoneNo = phoneNo;
-//										RegisterScreen.this.password = password;
-//										otpAlertString = errorMessage;
-//										showOtpDialog = true;
-										sendFacebookSignupValues(RegisterScreen.this, "4444", phoneNo, password);
+										RegisterScreen.this.phoneNo = phoneNo;
+										RegisterScreen.this.password = password;
+										otpAlertString = errorMessage;
+										showOtpDialog = true;
 									}
 									else if(6 == flag){ // {"error": 'Incorrect verification code',"flag":6}
 										RegisterScreen.this.phoneNo = phoneNo;

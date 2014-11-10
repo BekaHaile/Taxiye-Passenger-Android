@@ -694,9 +694,8 @@ public class SplashLogin extends Activity implements LocationUpdate{
 											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 										else if(3 == flag){ // {"error":"enter otp","flag":2}//error
-//											confirmOTPPopup(activity, 1);
-//											new DialogPopup().alertPopup(activity, "", errorMessage);
-											sendSignupValues(SplashLogin.this, enteredEmail, "4444");
+											confirmOTPPopup(activity, 1);
+											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 										else{
 											new DialogPopup().alertPopup(activity, "", errorMessage);
@@ -1031,9 +1030,8 @@ public class SplashLogin extends Activity implements LocationUpdate{
 											HomeActivity.logoutUser(activity);
 										}
 										else if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
-//											confirmOTPPopup(activity, 0);
-//											new DialogPopup().alertPopup(activity, "", errorMessage);
-											sendFacebookLoginValues(SplashLogin.this, "4444");
+											confirmOTPPopup(activity, 0);
+											new DialogPopup().alertPopup(activity, "", errorMessage);
 										}
 										else if(3 == flag){ // {"error": 'Please enter details',"flag":3}
 											facebookRegister = true;

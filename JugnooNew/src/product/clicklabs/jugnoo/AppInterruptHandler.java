@@ -16,7 +16,7 @@ public interface AppInterruptHandler {
 	
 	public void refreshDriverLocations();
 	
-	public void onAssigningDriversPushReceived();
+	public void onChangeStatePushReceived();
 	
 	public void rideRequestAcceptedInterrupt(JSONObject jObj);
 	
