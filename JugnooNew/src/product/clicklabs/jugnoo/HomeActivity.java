@@ -2570,17 +2570,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 				driverName.setText(Data.assignedDriverInfo.name);
 				
-				if("".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach)){
-					driverTime.setText("");
-				}
-				else{
-					if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-						driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
-	    	 		}
-	    	 		else{
-	    	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
-	    	 		}
-				}
+				updateAssignedDriverETA();
 				
 				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
 				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
@@ -2700,6 +2690,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		
 	}
+	
+	
+	
+	public void updateAssignedDriverETA(){
+		if("".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach) || "no".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach)){
+			driverTime.setText("");
+		}
+		else{
+			if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
+				driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ getResources().getString(R.string.will_arrive_in));
+	 		}
+	 		else{
+	 			driverTime.setText(getResources().getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
+	 		}
+		}
+	}
+	
 	
 	
 	/**
@@ -4061,8 +4068,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 							editor.commit();
 							if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
-								passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-								switchPassengerScreen(passengerScreenMode);
+								updateAssignedDriverETA();
 							}
 						}
 					}
@@ -7835,6 +7841,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						getDistanceTimeAddress.cancel(true);
 					}
 					if(myLocation != null){
+						Data.assignedDriverInfo.durationToReach = "no";
 						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
 								myLocation.getLongitude()), true);
 						getDistanceTimeAddress.execute();

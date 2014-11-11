@@ -318,7 +318,6 @@ public class AccountActivity extends Activity{
 									byte[] arg2) {
 								String response = new String(arg2);
 								Log.e("Server response", "response = " + response);
-								Log.writeLogToFile("Account", response);
 								try {
 									jObj = new JSONObject(response);
 									if(!jObj.isNull("error")){

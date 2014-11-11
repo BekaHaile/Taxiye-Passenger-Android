@@ -65,10 +65,10 @@ public class GCMIntentService extends IntentService {
 				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 				
-				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+				Notification.Builder builder = new Notification.Builder(context);
 				builder.setAutoCancel(true);
 				builder.setContentTitle("Jugnoo");
-				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+				builder.setStyle(new Notification.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
 				
@@ -115,10 +115,10 @@ public class GCMIntentService extends IntentService {
 				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 				
-				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+				Notification.Builder builder = new Notification.Builder(context);
 				builder.setAutoCancel(true);
 				builder.setContentTitle("Jugnoo");
-				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+				builder.setStyle(new Notification.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
 				
@@ -151,8 +151,8 @@ public class GCMIntentService extends IntentService {
 	    
 	    
 	    public static void clearNotifications(Context context){
-	    	NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-	    	notificationManager.cancel(NOTIFICATION_ID);
+			NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.cancel(NOTIFICATION_ID);
 	    }
 	    
 		protected void onRegistered(Context arg0, String arg1) {
@@ -398,6 +398,15 @@ public class GCMIntentService extends IntentService {
 										notificationManager(this, logMessage, false);
 									}
 								}
+	    	    				else if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag){
+	    	    					 String message1 = jObj.getString("message");
+	    	    					 if (HomeActivity.activity == null) {
+		    	    					 notificationManager(this, ""+message1, false);
+	    	    					 }
+	    	    					 else{
+		    	    					 notificationManagerResume(this, ""+message1, false);
+	    	    					 }
+	    	    				 }
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 
