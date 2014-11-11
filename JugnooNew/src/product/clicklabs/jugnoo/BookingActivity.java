@@ -1,12 +1,10 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
+
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -25,6 +23,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 public class BookingActivity extends Activity{
 	
 	
@@ -39,13 +41,15 @@ public class BookingActivity extends Activity{
 	
 	AsyncHttpClient fetchBookingsClient;
 	
+	ArrayList<RideInfo> rides = new ArrayList<RideInfo>();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.booking_activity);
 		
-		Data.rides.clear();
+		rides.clear();
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(BookingActivity.this, relative, 1134, 720, false);
@@ -81,7 +85,7 @@ public class BookingActivity extends Activity{
 	}
 	
 	void updateBookingList(){
-		if(Data.rides.size() == 0){
+		if(rides.size() == 0){
 			textViewNoBookings.setVisibility(View.VISIBLE);
 		}
 		else{
@@ -107,7 +111,7 @@ public class BookingActivity extends Activity{
 
 		@Override
 		public int getCount() {
-			return Data.rides.size();
+			return rides.size();
 		}
 
 		@Override
@@ -148,7 +152,7 @@ public class BookingActivity extends Activity{
 			}
 			
 			
-			RideInfo booking = Data.rides.get(position);
+			RideInfo booking = rides.get(position);
 			
 			DateOperations dateOperations = new DateOperations();
 			
@@ -192,73 +196,80 @@ public class BookingActivity extends Activity{
 	 * ASync for get rides from server
 	 */
 	public void getRidesAsync(final Activity activity) {
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
-			progressBarBookings.setVisibility(View.VISIBLE);
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("current_mode", "0");
-		
-			//booking_history
+		if(fetchBookingsClient == null){
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				progressBarBookings.setVisibility(View.VISIBLE);
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("current_mode", "0");
 			
-			fetchBookingsClient = Data.getClient();
-			fetchBookingsClient.post(Data.SERVER_URL + "/booking_history", params,
-					new AsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							progressBarBookings.setVisibility(View.GONE);
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								if(!jObj.isNull("error")){
-									int flag = jObj.getInt("flag");	
-									String error = jObj.getString("error");
-									String errorMessage = jObj.getString("error");
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", error);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", error);
-									}
-								}
-								else{
-									JSONArray bookingData = jObj.getJSONArray("booking_data");
-									Data.rides.clear();
-									if(bookingData.length() > 0){
-										for(int i=0; i<bookingData.length(); i++){
-											JSONObject booData = bookingData.getJSONObject(i);
-											Data.rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
-													booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
-													booData.getString("time")));
+				//booking_history
+				
+				fetchBookingsClient = Data.getClient();
+				fetchBookingsClient.post(Data.SERVER_URL + "/booking_history", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+	
+							@Override
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								progressBarBookings.setVisibility(View.GONE);
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+	
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								String response = new String(arg2);
+								Log.v("Server response", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									if(!jObj.isNull("error")){
+										int flag = jObj.getInt("flag");	
+										String error = jObj.getString("error");
+										String errorMessage = jObj.getString("error");
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
+										}
+										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
+											new DialogPopup().alertPopup(activity, "", error);
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", error);
 										}
 									}
+									else{
+										JSONArray bookingData = jObj.getJSONArray("booking_data");
+										rides.clear();
+										if(bookingData.length() > 0){
+											for(int i=0; i<bookingData.length(); i++){
+												JSONObject booData = bookingData.getJSONObject(i);
+												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
+														booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
+														booData.getString("time")));
+											}
+										}
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								updateBookingList();
+								progressBarBookings.setVisibility(View.GONE);
 							}
-							updateBookingList();
-							progressBarBookings.setVisibility(View.GONE);
-						}
-					});
+							
+							@Override
+							public void onFinish() {
+								super.onFinish();
+								fetchBookingsClient = null;
+							}
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
 		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-
 	}
 	
 }

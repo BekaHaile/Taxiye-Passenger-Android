@@ -23,12 +23,12 @@
             android:tag="mwar" />
 
         <TextView
-            android:id="@+id/favTitleText"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="@string/favorites"
+            android:text="Coupons"
             android:textColor="@color/white"
             android:textSize="48px" />
     </RelativeLayout>
@@ -36,33 +36,34 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:splitMotionEvents="false" >
 
-        <ProgressBar
-            android:id="@+id/progressBarFavorites"
-            android:layout_width="140px"
-            android:layout_height="140px"
-            android:layout_centerInParent="true" />
-
         <ListView
-            android:id="@+id/favoriteList"
+            android:id="@+id/listViewCoupons"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/favTitleRl"
             android:divider="@drawable/transparent"
             android:dividerHeight="0px"
-            android:splitMotionEvents="false" >
+            android:listSelector="@drawable/transparent"
+            android:splitMotionEvents="false"
+            android:layout_marginTop="20px" >
         </ListView>
 
         <TextView
-            android:id="@+id/noFavoriteLocationsText"
+            android:id="@+id/textViewAccountInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="@string/no_favorite_locations_added"
+            android:text="TextView"
             android:textColor="@color/black"
-            android:textSize="38px" />
+            android:textSize="48px" />
+
+        <ProgressBar
+            android:id="@+id/progressBarAccount"
+            android:layout_width="140px"
+            android:layout_height="140px"
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 
 </LinearLayout>

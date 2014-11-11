@@ -357,14 +357,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-			if(SplashNewActivity.isLastLocationUpdateFine(SplashNewActivity.this)){
+//			if(SplashNewActivity.isLastLocationUpdateFine(SplashNewActivity.this)){
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
 						callFirstAttempt();
 					}
 				}, 1000);
-			}
+//			}
 			
 		}
 
@@ -812,14 +812,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			long systemUpTime = SystemClock.uptimeMillis();
 			
-			Log.e("isLastLocationUpdateFine lastLocationUpdateTime", "="+(currentTime - (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT)));
-			Log.e("isLastLocationUpdateFine systemUpTime", "="+systemUpTime);
-			Log.e("isLastLocationUpdateFine userMode", "="+userMode);
-			Log.e("isLastLocationUpdateFine driverScreenMode", "="+driverScreenMode);
+//			Log.e("isLastLocationUpdateFine lastLocationUpdateTime", "="+(currentTime - (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT)));
+//			Log.e("isLastLocationUpdateFine systemUpTime", "="+systemUpTime);
+//			Log.e("isLastLocationUpdateFine userMode", "="+userMode);
+//			Log.e("isLastLocationUpdateFine driverScreenMode", "="+driverScreenMode);
 			
 			
 			if(systemUpTime > HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT){
-				Log.i("systemUpTime", "greater");
+//				Log.i("systemUpTime", "greater");
 				if(Database2.UM_DRIVER.equalsIgnoreCase(userMode) && 
 						(currentTime >= (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT))){
 					if(Database2.VULNERABLE.equalsIgnoreCase(driverScreenMode)){

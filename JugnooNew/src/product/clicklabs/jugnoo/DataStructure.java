@@ -96,35 +96,6 @@ class CustomerInfo{
 
 
 
-class FriendInfo implements Comparable<FriendInfo> {
-	
-	String fbId, fbName, fbImage;
-	int flag;
-	boolean tick;
-	
-	public FriendInfo(String fbId, String fbName, int flag){
-		this.fbId = fbId;
-		this.fbName = fbName;
-		this.fbImage = "http://graph.facebook.com/"+fbId+"/picture?width=160&height=160";
-		this.flag = flag;
-		this.tick = false;
-	}
-	
-	public FriendInfo(String fbId, String fbName, String image){
-		this.fbId = fbId;
-		this.fbName = fbName;
-		this.fbImage = image;
-		this.flag = 0;
-		this.tick = false;
-	}
-	
-	@Override
-	public int compareTo(FriendInfo another) {
-		return this.fbName.toLowerCase().compareTo(another.fbName.toLowerCase());
-	}
-	
-}
-
 
 
 class UserData{
@@ -186,6 +157,11 @@ class RideInfo{
 		this.fare = fare;
 		this.distance = distance;
 		this.time = time;
+	}
+	
+	@Override
+	public String toString() {
+		return fromLocation + " " + toLocation + " " + fare + " " + distance + " " + time;
 	}
 	
 }
@@ -281,7 +257,8 @@ enum ApiResponseFlags {
 	USER_OFFLINE(130),
 	NO_ACTIVE_SESSION(131),
 	ENGAGEMENT_DATA(132),
-	ACTIVE_REQUESTS(133)
+	ACTIVE_REQUESTS(133),
+	COUPONS(140)
 	;
 
 	private int ordinal;
@@ -354,7 +331,10 @@ enum PushFlags {
 	RIDE_REJECTED_BY_DRIVER(7),
 	NO_DRIVERS_AVAILABLE(8),
 	WAITING_STARTED(9),
-	WAITING_ENDED(10);
+	WAITING_ENDED(10),
+	CHANGE_STATE(20),
+	DISPLAY_MESSAGE(21)
+	;
 
 	private int ordinal;
 
@@ -365,5 +345,64 @@ enum PushFlags {
 	public int getOrdinal() {
 		return ordinal;
 	}
+}
+
+
+enum CouponStatus {
+	EXPIRED(0), 
+	ACTIVE(1),
+	REDEEMED(2)
+	;
+
+	private int ordinal;
+
+	private CouponStatus(int ordinal) {
+		this.ordinal = ordinal;
+	}
+
+	public int getOrdinal() {
+		return ordinal;
+	}
+}
+
+
+class CouponInfo{
+	
+	int type, status;
+	String title, subtitle, description, image, redeemedOn, expiryDate;
+	double discountPrecent, maximumDiscountableValue;
+	int count;
+	boolean enabled;
+	
+	public CouponInfo(int type, int status, String title, String subtitle, String description, String image, 
+			String redeemedOn, String expiryDate, double discountPrecent, double maximumDiscountableValue){
+		this.type = type;
+		this.status = status;
+		this.title = title;
+		this.subtitle = subtitle;
+		this.description = description;
+		this.image = image;
+		this.redeemedOn = redeemedOn;
+		this.expiryDate = expiryDate;
+		this.discountPrecent = discountPrecent;
+		this.maximumDiscountableValue = maximumDiscountableValue;
+		this.count = 1;
+		this.enabled = true;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		try{
+			if(((CouponInfo)o).type == this.type){
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch(Exception e){
+			return false;
+		}
+	}
+	
 }
 

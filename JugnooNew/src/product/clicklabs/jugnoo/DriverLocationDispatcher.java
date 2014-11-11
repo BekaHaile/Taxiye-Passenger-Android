@@ -17,6 +17,9 @@ public class DriverLocationDispatcher {
 
 	public void sendLocationToServer(Context context, String filePrefix){
 		Database2 database2 = new Database2(context);
+		
+		double LOCATION_TOLERANCE = 0.0001;
+		
 		try {
 			String userMode = database2.getUserMode();
 			
@@ -31,7 +34,7 @@ public class DriverLocationDispatcher {
 				
 				if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
 					LatLng latLng = database2.getDriverCurrentLocation();
-					if(latLng.latitude != 0 && latLng.longitude != 0){
+					if((Math.abs(latLng.latitude) > LOCATION_TOLERANCE) && (Math.abs(latLng.longitude) > LOCATION_TOLERANCE)){
 						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 						nameValuePairs.add(new BasicNameValuePair("latitude", "" + latLng.latitude));
@@ -42,7 +45,7 @@ public class DriverLocationDispatcher {
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
 						Log.e("result in DLD", "=" + result);
-//						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
+						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
 						
 						try{
 							//{"log":"Updated"}
@@ -55,7 +58,7 @@ public class DriverLocationDispatcher {
 							}
 						} catch(Exception e){
 							e.printStackTrace();
-//							Log.writeLogToFile(filePrefix, "Exception in sending to server inner "+new DateOperations().getCurrentTime()+" = "+e);
+							Log.writeLogToFile(filePrefix, "Exception in sending to server inner "+new DateOperations().getCurrentTime()+" = "+e);
 						}
 						
 						simpleJSONParser = null;
@@ -71,7 +74,7 @@ public class DriverLocationDispatcher {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-//			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
+			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
 		}
 		finally{
     		database2.close();

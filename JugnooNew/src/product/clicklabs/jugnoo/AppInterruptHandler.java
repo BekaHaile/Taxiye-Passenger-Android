@@ -16,13 +16,15 @@ public interface AppInterruptHandler {
 	
 	public void refreshDriverLocations();
 	
+	public void onChangeStatePushReceived();
+	
 	public void rideRequestAcceptedInterrupt(JSONObject jObj);
 	
 	public void onNoDriversAvailablePushRecieved(String logMessage);
 	
 	public void startRideForCustomer(final int flag);
 	
-	public void customerEndRideInterrupt();
+	public void customerEndRideInterrupt(JSONObject jObj);
 	
 	
 }
