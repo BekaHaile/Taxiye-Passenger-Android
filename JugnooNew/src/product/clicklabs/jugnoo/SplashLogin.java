@@ -10,19 +10,15 @@ import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,9 +33,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -61,18 +55,16 @@ import com.loopj.android.http.RequestParams;
 
 public class SplashLogin extends Activity implements LocationUpdate{
 	
+	TextView title;
+	Button backBtn;
 	AutoCompleteTextView emailEt;
 	EditText passwordEt;
 	Button signInBtn, forgotPasswordBtn, facebookSignInBtn;
 	TextView extraTextForScroll;
-	ImageView jugnooLogoBig;
 	TextView orText;
 	
 	LinearLayout needHelpLinearLayout;
 	TextView needHelpText, callUsText;
-	
-	RelativeLayout signupRl;
-	TextView newToJugnooText, signupText;
 	
 	
 	
@@ -90,7 +82,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	}
 	
 	
-	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	
 	GoogleCloudMessaging gcm;
 	
@@ -112,11 +103,14 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashLogin.this, relative, 1134, 720, false);
 		
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		
 		emailEt = (AutoCompleteTextView) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
 		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		signInBtn = (Button) findViewById(R.id.signInBtn); signInBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		facebookSignInBtn = (Button) findViewById(R.id.facebookSignInBtn); facebookSignInBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
@@ -124,16 +118,12 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		needHelpLinearLayout = (LinearLayout) findViewById(R.id.needHelpLinearLayout);
-		needHelpText = (TextView) findViewById(R.id.needHelpText); needHelpText.setTypeface(Data.regularFont(SplashLogin.this), Typeface.BOLD);
-		callUsText = (TextView) findViewById(R.id.callUsText); callUsText.setTypeface(Data.regularFont(SplashLogin.this), Typeface.BOLD);
+		needHelpText = (TextView) findViewById(R.id.needHelpText); needHelpText.setTypeface(Data.regularFont(SplashLogin.this));
+		callUsText = (TextView) findViewById(R.id.callUsText); callUsText.setTypeface(Data.regularFont(SplashLogin.this));
 		
 		callUsText.setText("Call us now "+jugnooPhoneNumber);
 		
 		
-		
-		signupRl = (RelativeLayout) findViewById(R.id.signupRl);
-		newToJugnooText = (TextView) findViewById(R.id.newToJugnooText); newToJugnooText.setTypeface(Data.regularFont(SplashLogin.this));
-		signupText = (TextView) findViewById(R.id.signupText); signupText.setTypeface(Data.regularFont(SplashLogin.this), Typeface.BOLD);
 		
 		
 		Database database = new Database(SplashLogin.this);													// getting already logged in email strings for drop down
@@ -189,16 +179,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 		
 		
-		signupRl.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				RegisterScreen.facebookLogin = false;
-				startActivity(new Intent(SplashLogin.this, RegisterScreen.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				finish();
-			}
-		});
 		
 		forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
 			
@@ -208,6 +188,16 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				finish();
+			}
+		});
+		
+		backBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(SplashLogin.this, SplashNewActivity.class));
+				finish();
+				overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
 		});
 		
@@ -392,8 +382,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				});
 		
 		
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
 		
 		try {																						// to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -417,23 +405,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
 		
-		jugnooLogoBig = (ImageView) findViewById(R.id.jugnooLogoBig);
-		jugnooLogoBig.setOnLongClickListener(new View.OnLongClickListener() {
-			
-			@Override
-			public boolean onLongClick(View v) {
-				confirmDebugPasswordPopup(SplashLogin.this);
-				return false;
-			}
-		});
-		
-		jugnooLogoBig.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-			}
-		});
-		
 		
 		
 		
@@ -452,12 +423,11 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if(resp != ConnectionResult.SUCCESS){
 			Log.e("Google Play Service Error ","="+resp);
-			showGooglePlayErrorAlert(SplashLogin.this);
+			new DialogPopup().showGooglePlayErrorAlert(SplashLogin.this);
 		}
 		else{
-			showLocationSettingsAlert(SplashLogin.this);
+			new DialogPopup().showLocationSettingsAlert(SplashLogin.this);
 		}
-		
 		
 	}
 	
@@ -476,52 +446,14 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	}
 	
 	
-	
-	AlertDialog alertDialog;
-	/**
-	 * Function to show settings alert dialog
-	 * On pressing Settings button will lauch Settings Options
-	 * */
-	public void showGooglePlayErrorAlert(final Activity mContext){
-		try{
-			if(alertDialog != null && alertDialog.isShowing()){
-				alertDialog.dismiss();
-			}
-				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
-		   	 
-		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Google Play Services Error");
-		        alertDialogPrepare.setCancelable(false);
-		 
-		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Google Play services not found or outdated. Please install Google Play Services?");
-		 
-		        // On pressing Settings button
-		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog,int which) {
-		            	dialog.dismiss();
-		            	Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setData(Uri.parse("market://details?id=com.google.android.gms"));
-						mContext.startActivity(intent);
-		            }
-		        });
-		 
-		        // on pressing cancel button
-		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int which) {
-		            	dialog.dismiss();
-		            	mContext.finish();
-		            }
-		        });
-		 
-		        alertDialog = alertDialogPrepare.create();
-		        
-		        // Showing Alert Message
-		        alertDialog.show();
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+	@Override
+	public void onBackPressed() {
+		startActivity(new Intent(SplashLogin.this, SplashNewActivity.class));
+		finish();
+		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		super.onBackPressed();
 	}
+	
 	
 	
 	public static final String EXTRA_MESSAGE = "message";
@@ -1043,7 +975,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 									}
 									else{
 										
-										
 										new JSONParser().parseLoginData(activity, response);
 										loginDataFetched = true;
 										
@@ -1122,281 +1053,9 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	}
 	
 	
-	/**
-	 * Check the device to make sure it has the Google Play Services APK. If
-	 * it doesn't, display a dialog that allows users to download the APK from
-	 * the Google Play Store or enable it in the device's system settings.
-	 */
-	@SuppressWarnings("unused")
-	private boolean checkPlayServices() {
-	    int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-	    if (resultCode != ConnectionResult.SUCCESS) {
-	        if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-	            GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-	                    PLAY_SERVICES_RESOLUTION_REQUEST).show();
-	        } else {
-	            Log.i("Splash login ", "This device is not supported.");
-	        }
-	        return false;
-	    }
-	    return true;
-	}
-
-	
-	//TODO debug code confirm popup
-	public void confirmDebugPasswordPopup(final Activity activity){
-
-		try {
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.otp_confirm_dialog);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
-			
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-			
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
-			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(activity));
-			
-			textHead.setText("Confirm Debug Password");
-			textMessage.setText("Please enter password to continue.");
-			
-			
-			final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(activity));
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
-			
-			btnConfirm.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					String code = etCode.getText().toString().trim();
-					if("".equalsIgnoreCase(code)){
-						etCode.requestFocus();
-						etCode.setError("Code can't be empty.");
-					}
-					else{
-						if(Data.DEBUG_PASSWORD.equalsIgnoreCase(code)){
-							dialog.dismiss();
-							changeServerLinkPopup(activity);
-						}
-						else{
-							etCode.requestFocus();
-							etCode.setError("Code not matched.");
-						}
-					}
-				}
-				
-			});
-			
-			
-			etCode.setOnEditorActionListener(new OnEditorActionListener() {
-
-				@Override
-				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-					int result = actionId & EditorInfo.IME_MASK_ACTION;
-					switch (result) {
-						case EditorInfo.IME_ACTION_DONE:
-							btnConfirm.performClick();
-						break;
-
-						case EditorInfo.IME_ACTION_NEXT:
-						break;
-
-						default:
-					}
-					return true;
-				}
-			});
-			
-			crossbtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-				
-			});
-
-			dialog.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-	}
-	
-	//TODO change server link popup
-			void changeServerLinkPopup(final Activity activity) {
-					try {
-						final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-						dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-						dialog.setContentView(R.layout.custom_three_btn_dialog);
-
-						FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-						new ASSL(activity, frameLayout, 1134, 720, true);
-						
-						WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-						layoutParams.dimAmount = 0.6f;
-						dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-						dialog.setCancelable(false);
-						dialog.setCanceledOnTouchOutside(false);
-						
-						
-						frameLayout.setOnClickListener(new View.OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								dialog.dismiss();
-							}
-						});
-						
-						RelativeLayout innerRl = (RelativeLayout) dialog.findViewById(R.id.innerRl);
-						innerRl.setOnClickListener(new View.OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-							}
-						});
-						
-						
-						TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-						TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
-						
-						
-						SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-						String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
-						
-						if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-							textMessage.setText("Current server is SALES.\nChange to:");
-						}
-						else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-							textMessage.setText("Current server is LIVE.\nChange to:");
-						}
-						else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-							textMessage.setText("Current server is DEV.\nChange to:");
-						}
-						
-						
-						
-						Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-						btnOk.setText("LIVE");
-						
-						Button btnNeutral = (Button) dialog.findViewById(R.id.btnNeutral); btnNeutral.setTypeface(Data.regularFont(activity));
-						btnNeutral.setText("DEV");
-						
-						Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
-						btnCancel.setText("SALES");
-						
-						Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
-						crossbtn.setVisibility(View.VISIBLE);
-						
-						
-						btnOk.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-								SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-								SharedPreferences.Editor editor = preferences.edit();
-								editor.putString(Data.SP_SERVER_LINK, Data.LIVE_SERVER_URL);
-								editor.commit();
-								
-								Data.SERVER_URL = Data.LIVE_SERVER_URL;
-								
-								dialog.dismiss();
-							}
-						});
-						
-						btnNeutral.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-								SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-								SharedPreferences.Editor editor = preferences.edit();
-								editor.putString(Data.SP_SERVER_LINK, Data.DEV_SERVER_URL);
-								editor.commit();
-								
-								Data.SERVER_URL = Data.DEV_SERVER_URL;
-								
-								dialog.dismiss();
-							}
-						});
-						
-						btnCancel.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-								
-								SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-								SharedPreferences.Editor editor = preferences.edit();
-								editor.putString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
-								editor.commit();
-								
-								Data.SERVER_URL = Data.TRIAL_SERVER_URL;
-								
-								dialog.dismiss();
-							}
-						});
-
-						
-						crossbtn.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-								dialog.dismiss();
-							}
-						});
-						
-						
-						dialog.show();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
 	
 	
 	
-	
-			
-	static AlertDialog locationAlertDialog;
-	/**
-	 * Function to show settings alert dialog
-	 * On pressing Settings button will lauch Settings Options
-	 * */
-	public static void showLocationSettingsAlert(final Context mContext){
-		try{
-			if(!((LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-					&&
-					!((LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
-			if(locationAlertDialog != null && locationAlertDialog.isShowing()){
-				locationAlertDialog.dismiss();
-			}
-				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
-		   	 
-		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Loaction Settings");
-		        alertDialogPrepare.setCancelable(false);
-		 
-		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Location is not enabled. Do you want to enable it from settings menu?");
-		 
-		        // On pressing Settings button
-		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog,int which) {
-		            	Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-		            	mContext.startActivity(intent);
-		            	dialog.dismiss();
-		            }
-		        });
-		 
-		        locationAlertDialog = alertDialogPrepare.create();
-		        
-		        // Showing Alert Message
-		        locationAlertDialog.show();
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 	
 	
 	

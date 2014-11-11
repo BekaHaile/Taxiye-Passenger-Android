@@ -6,10 +6,13 @@ import org.json.JSONObject;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,8 +26,12 @@ import com.loopj.android.http.RequestParams;
 
 public class ForgotPasswordScreen extends Activity{
 	
+	TextView title;
+	Button backBtn;
+	
 	EditText emailEt;
 	Button sendEmailBtn;
+	TextView extraTextForScroll, forgotPasswordHelpText;
 	
 	LinearLayout relative;
 	
@@ -39,11 +46,29 @@ public class ForgotPasswordScreen extends Activity{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(ForgotPasswordScreen.this, relative, 1134, 720, false);
 		
+		
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		forgotPasswordHelpText = (TextView) findViewById(R.id.forgotPasswordHelpText); forgotPasswordHelpText.setTypeface(Data.regularFont(getApplicationContext()));
+		
 		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn); sendEmailBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
+		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 
+		
+		backBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(ForgotPasswordScreen.this, SplashLogin.class));
+				overridePendingTransition(R.anim.left_in, R.anim.left_out);
+				finish();
+			}
+		});
+		
 
 		emailEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
@@ -102,7 +127,45 @@ public class ForgotPasswordScreen extends Activity{
 		emailEt.setText(emailAlready);
 		emailEt.setSelection(emailEt.getText().toString().length());
 		
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		final View activityRootView = findViewById(R.id.mainLinear);
+		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
+				new OnGlobalLayoutListener() {
+
+					@Override
+					public void onGlobalLayout() {
+						Rect r = new Rect();
+						// r will be populated with the coordinates of your view
+						// that area still visible.
+						activityRootView.getWindowVisibleDisplayFrame(r);
+
+						int heightDiff = activityRootView.getRootView()
+								.getHeight() - (r.bottom - r.top);
+						if (heightDiff > 100) { // if more than 100 pixels, its
+												// probably a keyboard...
+
+							/************** Adapter for the parent List *************/
+
+							ViewGroup.LayoutParams params_12 = extraTextForScroll
+									.getLayoutParams();
+
+							params_12.height = (int)(heightDiff);
+
+							extraTextForScroll.setLayoutParams(params_12);
+							extraTextForScroll.requestLayout();
+
+						} else {
+
+							ViewGroup.LayoutParams params = extraTextForScroll
+									.getLayoutParams();
+							params.height = 0;
+							extraTextForScroll.setLayoutParams(params);
+							extraTextForScroll.requestLayout();
+
+						}
+					}
+				});
+		
+		
 		
 	}
 

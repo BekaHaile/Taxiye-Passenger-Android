@@ -58,7 +58,6 @@ public class DriverLocationDispatcher {
 							}
 						} catch(Exception e){
 							e.printStackTrace();
-							Log.writeLogToFile(filePrefix, "Exception in sending to server inner "+new DateOperations().getCurrentTime()+" = "+e);
 						}
 						
 						simpleJSONParser = null;
