@@ -215,7 +215,7 @@
                 android:id="@+id/extraTextForScroll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10px"
+                android:layout_marginTop="20px"
                 android:textColor="@color/white"
                 android:text="      "
                 android:textSize="10px"

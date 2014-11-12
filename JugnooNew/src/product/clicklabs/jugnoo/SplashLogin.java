@@ -358,6 +358,18 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	
 	
 	public void performBackPressed(){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					if(Session.getActiveSession() != null){
+						Session.getActiveSession().closeAndClearTokenInformation();
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
 		Intent intent = new Intent(SplashLogin.this, SplashNewActivity.class);
 		intent.putExtra("no_anim", "yes");
 		startActivity(intent);

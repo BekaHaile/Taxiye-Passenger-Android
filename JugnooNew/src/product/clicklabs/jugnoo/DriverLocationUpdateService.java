@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationUpdateService extends Service {
 	
-	LocationFetcherDriver locationFetcherDriver;
+	LocationFetcherDriverGPS locationFetcherDriver;
 	GPSLocationFetcher gpsLocationFetcher;
 	
 	long serverUpdateTimePeriod = 60000;
@@ -58,13 +58,15 @@ public class DriverLocationUpdateService extends Service {
     		Log.e("fast", "="+fast);
     		
     		
+    		
     		if(fast.equalsIgnoreCase("no")){
-    			serverUpdateTimePeriod = 60000;
+    			serverUpdateTimePeriod = 120000;
     			if(locationFetcherDriver != null){
     				locationFetcherDriver.destroy();
     				locationFetcherDriver = null;
     			}
-    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+//    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+    			locationFetcherDriver = new LocationFetcherDriverGPS(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     			if(gpsLocationFetcher != null){
     				gpsLocationFetcher.destroy();
     				gpsLocationFetcher = null;

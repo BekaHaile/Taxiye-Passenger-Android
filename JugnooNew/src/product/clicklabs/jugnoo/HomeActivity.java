@@ -6723,6 +6723,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textHead.setText("Confirm Debug Password");
 				textMessage.setText("Please enter password to continue.");
 				
+				textHead.setVisibility(View.GONE);
+				textMessage.setVisibility(View.GONE);
 				
 				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(activity));
 				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));

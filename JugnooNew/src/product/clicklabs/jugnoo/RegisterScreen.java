@@ -271,7 +271,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		});
 		
 		
-		confirmPasswordEt.setOnEditorActionListener(new OnEditorActionListener() {
+		referralCodeEt.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
@@ -853,6 +853,18 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	
 	
 	public void performBackPressed(){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					if(Session.getActiveSession() != null){
+						Session.getActiveSession().closeAndClearTokenInformation();
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
 		Intent intent = new Intent(RegisterScreen.this, SplashNewActivity.class);
 		intent.putExtra("no_anim", "yes");
 		startActivity(intent);

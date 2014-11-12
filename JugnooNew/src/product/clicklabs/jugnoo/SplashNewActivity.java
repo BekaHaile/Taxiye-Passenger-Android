@@ -807,6 +807,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				textHead.setText("Confirm Debug Password");
 				textMessage.setText("Please enter password to continue.");
 				
+				textHead.setVisibility(View.GONE);
+				textMessage.setVisibility(View.GONE);
+				
 				
 				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(activity));
 				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
@@ -1031,7 +1034,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
     		public void onLocationChanged(Location loc) {
     			SingleLocationSender.this.location = loc;
     			new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, loc);
-    			new DriverLocationDispatcher().sendLocationToServer(SplashNewActivity.this, "LocationReciever");
+    			new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						new DriverLocationDispatcher().sendLocationToServer(SplashNewActivity.this, "LocationReciever");
+					}
+				}).start();
+    			
     		}
 
     		public void onProviderDisabled(String provider) {

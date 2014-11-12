@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -23,7 +22,6 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	private final String TAG = this.getClass().getSimpleName();
 	private LocationClient locationclient;
 	private LocationRequest locationrequest;
-	public Location location; // location
 	private PendingIntent locationIntent;
 	
 	private long requestInterval;
