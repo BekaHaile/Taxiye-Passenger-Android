@@ -925,13 +925,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				
-				if("".equalsIgnoreCase(Data.fbAccessToken)){
-					facebookLogin();
-				}
-				else{
-					inviteFbFriend();
-				}
+				new FacebookLogin().openFacebookSession(HomeActivity.this, facebookLoginCallback);
 			}
 		});
 		
@@ -5552,124 +5546,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	
-	
-	public void facebookLogin() {
-		
-		
-		if (!AppStatus.getInstance(HomeActivity.this).isOnline(
-				HomeActivity.this)) {
-			new DialogPopup().alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
-		} else {
-			Log.i(" connection", " connection");
-			SplashLogin.session = new Session(HomeActivity.this);
-			Session.setActiveSession(SplashLogin.session);
-			Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_RAW_RESPONSES);
-
-			Session.OpenRequest openRequest = null;
-			openRequest = new Session.OpenRequest(HomeActivity.this);
-			openRequest.setPermissions(Arrays.asList("email", "user_friends", "user_photos"));
-
-			try {
-				if (SplashLogin.isSystemPackage(getPackageManager().getPackageInfo("com.facebook.katana", 0))) {
-					openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-				} else {
-					openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
-				}
-			} catch (NameNotFoundException e) {
-				e.printStackTrace();
-			}
-
-			openRequest.setCallback(new Session.StatusCallback() {
-				@Override
-				public void call(Session session, SessionState state, Exception exception) {
-
-					if (session.isOpened()) {
-						Session.openActiveSession(HomeActivity.this, true, new Session.StatusCallback() {
-									@SuppressWarnings("deprecation")
-									@Override
-									public void call(final Session session, SessionState state, Exception exception) {
-										Log.v("session.isOpened()", "" + session.isOpened());
-										Log.v("app id", "" + session.getApplicationId());
-										if (session.isOpened()) {
-											Log.e("heyyy", "Logged in..." + session.getAccessToken());
-
-											Data.fbAccessToken = session.getAccessToken();
-											Log.e("fbAccessToken===", "="+Data.fbAccessToken);
-									    	
-											
-											DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-											
-
-											Request.executeMeRequestAsync(session,
-													new Request.GraphUserCallback() {
-														@Override
-														public void onCompleted(GraphUser user, Response response) { // fetching user data from FaceBook
-
-															DialogPopup.dismissLoadingDialog();
-															
-															if (user != null) {
-																Log.i("data", "username" + user.getName() + "fbid!" + user.getId() + " firstname "
-																				+ user.getFirstName() + " lastname " + user.getLastName() + "  ");
-																Log.i("res", response.toString());
-																Log.i("user", "User " + user);
-																
-																Data.fbId = user.getId();
-																Data.fbFirstName = user.getFirstName();
-																Data.fbLastName = user.getLastName();
-																Data.fbUserName = user.getUsername();
-																
-																try {
-																	Data.fbUserEmail = ((String)user.asMap().get("email"));
-																	if("".equalsIgnoreCase(Data.fbUserEmail)){
-																		Data.fbUserEmail = user.getUsername() + "@facebook.com";
-																	}
-																} catch (Exception e2) {
-																	Data.fbUserEmail = user.getUsername() + "@facebook.com";
-																	e2.printStackTrace();
-																}
-
-																Log.e("Data.fbId","="+Data.fbId);
-																Log.e("Data.fbFirstName","="+Data.fbFirstName);
-																Log.e("Data.fbLastName","="+Data.fbLastName);
-																Log.e("Data.fbUserName","="+Data.fbUserName);
-																Log.e("Data.userEmail","="+Data.fbUserEmail);
-
-																
-																inviteFbFriend();
-																
-															}
-															else{
-																new DialogPopup().alertPopup(HomeActivity.this, "Facebook Error", "Error in fetching information from Facebook.");
-															}
-															
-
-														}
-													});
-										}
-										else if (session.isClosed()) {
-											Log.e("heyy", "Logged out...");
-
-											DialogPopup.dismissLoadingDialog();
-										}
-									}
-								});
-
-					} else if (session.isClosed()) {
-						
-					}
-					
-					
-				}
-			});
-			SplashLogin.session.openForRead(openRequest);
+	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
+		@Override
+		public void facebookLoginDone() {
+			new FacebookLogin().openAppInviteDialog(HomeActivity.this);
 		}
-		
-		
-		
-	}
-
+	};
+	
+	
 	
 	
 	
@@ -5739,9 +5623,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									PicassoTools.clearCache(Picasso.with(HomeActivity.this));
 									
 									try {
-										Session session = new Session(HomeActivity.this);
-										Session.setActiveSession(session);	
-										session.closeAndClearTokenInformation();	
+										Session.getActiveSession().closeAndClearTokenInformation();	
 									}
 									catch(Exception e) {
 										Log.v("Logout", "Error"+e);	
@@ -6008,43 +5890,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void inviteFbFriend(){
-		
-		Bundle parameters = new Bundle();
-		parameters.putString("message", "Download app now to get started. Available on Google Play Store and App Store");
-		parameters.putString("data", "Get from one place to another with ease.");
-		parameters.putString("link", "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo");
-		
-
-		WebDialog.Builder builder = new Builder(HomeActivity.this, Session.getActiveSession(), "apprequests", parameters);
-
-		builder.setOnCompleteListener(new OnCompleteListener() {
-
-		    @Override
-		    public void onComplete(Bundle values, FacebookException error) {
-		    	Log.e("values","="+values);
-		    	Log.e("error","="+error);
-		        if (error != null){
-		        	Toast.makeText(HomeActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();
-		        }
-		        else{
-
-		            final String requestId = values.getString("request");
-		            if (requestId != null) {
-		            	new DialogPopup().alertPopup(HomeActivity.this, "", "Friends invited successfully.");
-		            } 
-		            else {
-		                Toast.makeText(HomeActivity.this,"Request cancelled",Toast.LENGTH_SHORT).show();
-		            }
-		        }                       
-		    }
-		});
-
-		WebDialog webDialog = builder.build();
-		webDialog.show();
-	        
-	        
-	}
+	
 	
 	
 	
@@ -7108,7 +6954,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				cancelTimerUpdateDrivers();
 		        stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
-				startActivity(new Intent(HomeActivity.this, SplashLogin.class));
+		        Intent intent = new Intent(HomeActivity.this, SplashNewActivity.class);
+				intent.putExtra("no_anim", "yes");
+				startActivity(intent);
 				finish();
 				overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
@@ -7570,11 +7418,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		protected String doInBackground(Void... urls) {
 			try {
-				//deactivating current session of FB
 				try {	
-					Session session = new Session(act);
-					Session.setActiveSession(session);	
-					session.closeAndClearTokenInformation();	
+					Session.getActiveSession().closeAndClearTokenInformation();		
 				}
 				catch(Exception e) {
 					Log.v("Logout", "Error"+e);	
@@ -7623,7 +7468,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			                    public void onClick(DialogInterface dialog, int which) {
 			                    	try {
 			                			dialog.dismiss();
-			                			cont.startActivity(new Intent(cont, SplashLogin.class));
+			                			Intent intent = new Intent(cont, SplashNewActivity.class);
+			                			intent.putExtra("no_anim", "yes");
+			                			cont.startActivity(intent);
 			                			cont.finish();
 			                			cont.overridePendingTransition(
 			                					R.anim.left_in,

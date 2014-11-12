@@ -165,6 +165,7 @@ public class ForgotPasswordScreen extends Activity{
 					}
 				});
 		
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		
 	}

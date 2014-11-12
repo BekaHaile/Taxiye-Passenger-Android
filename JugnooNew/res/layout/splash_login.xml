@@ -38,7 +38,7 @@
             android:layout_height="99px"
             android:layout_marginTop="120px"
             android:background="@drawable/blue_dark_btn_selector"
-            android:text="LOGIN WITH FACEBOOK"
+            android:text="LOGIN VIA FACEBOOK"
             android:textColor="@drawable/white_color_selector"
                         android:textSize="@dimen/button_text_size" />
 

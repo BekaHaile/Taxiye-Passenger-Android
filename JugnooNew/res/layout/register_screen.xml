@@ -89,115 +89,110 @@
         
         <LinearLayout
             android:id="@+id/etLayout"
-            android:layout_width="648px"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/jugnooLogoBig"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20px"
-            android:background="@drawable/white_bg_rounded"
             android:gravity="center_horizontal"
             android:orientation="vertical" 
         android:splitMotionEvents="false">
 
             <EditText
-                android:id="@+id/firstNameEt"
-                android:layout_width="620px"
-                android:layout_height="98px"
-                android:background="#0000"
-                android:hint="@string/first_name"
+                android:id="@+id/nameEt"
+                android:layout_width="650px"
+                android:layout_height="100px"
+                android:hint="Name"
                 android:singleLine="true"
                 android:textSize="34px"
                 android:textColor="@color/black"
+            	android:background="@drawable/white_bg_rounded"
                 android:capitalize="words"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
                  />
 
-            <ImageView
-                android:layout_width="648px"
-                android:layout_height="2px"
-                android:background="#E7E7E7" />
-
-            <EditText
-                android:id="@+id/lastNameEt"
-                android:layout_width="620px"
-                android:layout_height="98px"
-                android:background="#0000"
-                android:hint="@string/last_name"
-                android:singleLine="true"
-                android:textSize="34px" 
-                android:textColor="@color/black"
-                android:capitalize="words"
-                 />
             
-            
-            <ImageView
-                android:layout_width="648px"
-                android:layout_height="2px"
-                android:background="#E7E7E7" />
 
             <EditText
                 android:id="@+id/emailIdEt"
-                android:layout_width="620px"
-                android:layout_height="98px"
-                android:background="#0000"
+                android:layout_width="650px"
+                android:layout_height="100px"
                 android:hint="@string/email_id"
                 android:singleLine="true"
                 android:textSize="34px"
                 android:textColor="@color/black"
                 android:inputType="textEmailAddress"
+            	android:background="@drawable/white_bg_rounded"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+            android:layout_marginTop="5px"
                   />
             
             
-            <ImageView
-                android:layout_width="648px"
-                android:layout_height="2px"
-                android:background="#E7E7E7" />
 
             <EditText
                 android:id="@+id/phoneNoEt"
-                android:layout_width="620px"
-                android:layout_height="98px"
-                android:background="#0000"
+                android:layout_width="650px"
+                android:layout_height="100px"
                 android:hint="@string/phone_number"
                 android:singleLine="true"
                 android:textSize="34px" 
                 android:textColor="@color/black"
                 android:inputType="phone"
                 android:maxLength="14"
+            	android:background="@drawable/white_bg_rounded"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+            android:layout_marginTop="5px"
                  />
             
-            <ImageView
-                android:layout_width="648px"
-                android:layout_height="2px"
-                android:background="#E7E7E7" />
 
             <EditText
                 android:id="@+id/passwordEt"
-                android:layout_width="620px"
-                android:layout_height="98px"
-                android:background="#0000"
+                android:layout_width="650px"
+                android:layout_height="100px"
                 android:hint="@string/password"
                 android:singleLine="true"
                 android:textSize="34px" 
                 android:textColor="@color/black"
                 android:inputType="textPassword"
+            	android:background="@drawable/white_bg_rounded"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+            android:layout_marginTop="5px"
                  />
             
             
-            <ImageView
-                android:layout_width="648px"
-                android:layout_height="2px"
-                android:background="#E7E7E7" />
 
             <EditText
                 android:id="@+id/confirmPasswordEt"
-                android:layout_width="620px"
-                android:layout_height="98px"
-                android:background="#0000"
+                android:layout_width="650px"
+                android:layout_height="100px"
                 android:hint="@string/confirm_password"
                 android:singleLine="true"
                 android:textSize="34px" 
                 android:textColor="@color/black"
                 android:inputType="textPassword"
+            	android:background="@drawable/white_bg_rounded"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+            android:layout_marginTop="5px"
+                 />
+            
+            
+            <EditText
+                android:id="@+id/referralCodeEt"
+                android:layout_width="650px"
+                android:layout_height="100px"
+                android:hint="Referral Code (Optional)"
+                android:singleLine="true"
+                android:textSize="34px" 
+                android:textColor="@color/black"
+            	android:background="@drawable/white_bg_rounded"
+                android:capitalize="words"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+            android:layout_marginTop="5px"
                  />
             
             

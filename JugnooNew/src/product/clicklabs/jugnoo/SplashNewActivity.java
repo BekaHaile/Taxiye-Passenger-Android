@@ -187,16 +187,36 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
 		
-		
-		Animation animation = new TranslateAnimation(0, 0, 0, (int)(438*ASSL.Yscale()));
-		animation.setFillAfter(false);
-		animation.setDuration(650);
-		animation.setInterpolator(new AccelerateDecelerateInterpolator());
-		animation.setAnimationListener(new ShowAnimListener());
-		jugnooImg.startAnimation(animation);
-		
-		noNetFirstTime = false;
+		gcm = GoogleCloudMessaging.getInstance(this);
+	    regid = getRegistrationId(this);
+	    Data.deviceToken = regid;
+
+	    Log.i("deviceToken", Data.deviceToken + "..");
+	    
+	    noNetFirstTime = false;
 		noNetSecondTime = false;
+	    
+		if(getIntent().hasExtra("no_anim")){
+			jugnooImg.clearAnimation();
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(jugnooImg.getLayoutParams());
+			layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			layoutParams.setMargins(0, (int)(150 * ASSL.Yscale()), 0, 0);
+			jugnooImg.setLayoutParams(layoutParams);
+			jugnooTextImg.setVisibility(View.VISIBLE);
+			callFirstAttempt();
+		}
+		else{
+			Animation animation = new TranslateAnimation(0, 0, 0, (int)(438*ASSL.Yscale()));
+			animation.setFillAfter(false);
+			animation.setDuration(650);
+			animation.setInterpolator(new AccelerateDecelerateInterpolator());
+			animation.setAnimationListener(new ShowAnimListener());
+			jugnooImg.startAnimation(animation);
+		}
+		
+		
+		
+		
 		
 		jugnooImg.setOnClickListener(new View.OnClickListener() {
 			
@@ -213,11 +233,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		
 		
-		gcm = GoogleCloudMessaging.getInstance(this);
-	    regid = getRegistrationId(this);
-	    Data.deviceToken = regid;
-
-	    Log.i("deviceToken", Data.deviceToken + "..");
+		
 	    
 	}
 	

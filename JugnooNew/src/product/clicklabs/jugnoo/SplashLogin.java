@@ -73,8 +73,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	boolean loginDataFetched = false, facebookRegister = false;
 	
 
-	public static Session session;
-	
 	
 	public static boolean isSystemPackage(PackageInfo pkgInfo) {
 		return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true
@@ -195,9 +193,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(SplashLogin.this, SplashNewActivity.class));
-				finish();
-				overridePendingTransition(R.anim.left_in, R.anim.left_out);
+				performBackPressed();
 			}
 		});
 		
@@ -234,109 +230,9 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 		
 		facebookSignInBtn.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
-				
-				if (!AppStatus.getInstance(SplashLogin.this).isOnline(
-						SplashLogin.this)) {
-					new DialogPopup().alertPopup(SplashLogin.this, "", Data.CHECK_INTERNET_MSG);
-				} else {
-					Log.i(" connection", " connection");
-					session = new Session(SplashLogin.this);
-					Session.setActiveSession(session);
-					Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_RAW_RESPONSES);
-
-					Session.OpenRequest openRequest = null;
-					openRequest = new Session.OpenRequest(SplashLogin.this);
-					openRequest.setPermissions(Arrays.asList("email", "user_friends", "user_photos"));
-
-					try {
-						if (SplashLogin.isSystemPackage(getPackageManager().getPackageInfo("com.facebook.katana", 0))) {
-							openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-						} else {
-							openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
-						}
-					} catch (NameNotFoundException e) {
-						e.printStackTrace();
-					}
-
-					openRequest.setCallback(new Session.StatusCallback() {
-						@Override
-						public void call(Session session, SessionState state, Exception exception) {
-
-							if (session.isOpened()) {
-								Session.openActiveSession(SplashLogin.this, true, new Session.StatusCallback() {
-											@SuppressWarnings("deprecation")
-											@Override
-											public void call(final Session session, SessionState state, Exception exception) {
-												Log.v("session.isOpened()", "" + session.isOpened());
-												Log.v("app id", "" + session.getApplicationId());
-												if (session.isOpened()) {
-													Log.e("heyyy", "Logged in..." + session.getAccessToken());
-													Data.fbAccessToken = session.getAccessToken();
-													Log.e("fbAccessToken===", "="+Data.fbAccessToken);
-													DialogPopup.showLoadingDialog(SplashLogin.this, "Loading...");
-													Request.executeMeRequestAsync(session,
-															new Request.GraphUserCallback() {
-																@Override
-																public void onCompleted(GraphUser user, Response response) { // fetching user data from FaceBook
-																	DialogPopup.dismissLoadingDialog();
-																	if (user != null) {
-																		Log.i("data", "username" + user.getName() + "fbid!" + user.getId() + " firstname "
-																						+ user.getFirstName() + " lastname " + user.getLastName() + "  ");
-																		Log.i("res", response.toString());
-																		Log.i("user", "User " + user);
-																		
-																		Data.fbId = user.getId();
-																		Data.fbFirstName = user.getFirstName();
-																		Data.fbLastName = user.getLastName();
-																		Data.fbUserName = user.getUsername();
-																		
-																		try {
-																			Data.fbUserEmail = ((String)user.asMap().get("email"));
-																			Log.e("Data.userEmail before","="+Data.fbUserEmail);
-																			if(Data.fbUserEmail == null && Data.fbUserName != null){
-																				Data.fbUserEmail = Data.fbUserName + "@facebook.com";
-																			}
-																		} catch (Exception e2) {
-																			e2.printStackTrace();
-																		}
-																		
-																		if(Data.fbUserName == null){
-																			Data.fbUserName = "";
-																		}
-																		
-																		if(Data.fbUserEmail == null){
-																			Data.fbUserEmail = "";
-																		}
-																		Log.e("Data.fbId","="+Data.fbId);
-																		Log.e("Data.fbFirstName","="+Data.fbFirstName);
-																		Log.e("Data.fbLastName","="+Data.fbLastName);
-																		Log.e("Data.fbUserName","="+Data.fbUserName);
-																		Log.e("Data.userEmail","="+Data.fbUserEmail);
-																		sendFacebookLoginValues(SplashLogin.this, "");
-																	}
-																	else{
-																		new DialogPopup().alertPopup(SplashLogin.this, "Facebook Error", "Error in fetching information from Facebook.");
-																	}
-																}
-															});
-												}
-												else if (session.isClosed()) {
-													Log.e("heyy", "Logged out...");
-
-													DialogPopup.dismissLoadingDialog();
-												}
-											}
-										});
-							} else if (session.isClosed()) {
-								
-							}
-						}
-					});
-					session.openForRead(openRequest);
-				}
+				new FacebookLogin().openFacebookSession(SplashLogin.this, facebookLoginCallback);
 			}
 		});
 		
@@ -406,10 +302,18 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		}
 		
 		
-		
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		
 	}
+	
+	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
+		@Override
+		public void facebookLoginDone() {
+			sendFacebookLoginValues(SplashLogin.this, "");
+		}
+	};
+	
 	
 	@Override
 	protected void onResume() {
@@ -448,12 +352,18 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	
 	@Override
 	public void onBackPressed() {
-		startActivity(new Intent(SplashLogin.this, SplashNewActivity.class));
-		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		performBackPressed();
 		super.onBackPressed();
 	}
 	
+	
+	public void performBackPressed(){
+		Intent intent = new Intent(SplashLogin.this, SplashNewActivity.class);
+		intent.putExtra("no_anim", "yes");
+		startActivity(intent);
+		finish();
+		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+	}
 	
 	
 	public static final String EXTRA_MESSAGE = "message";
@@ -778,6 +688,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			params.put("device_name", Data.deviceName);
 			params.put("app_version", Data.appVersion);
 			params.put("os_version", Data.osVersion);
+			params.put("referral_code", "");
 
 			Log.i("email", "=" + emailId);
 			Log.i("device_token", "=" + Data.deviceToken);
@@ -898,6 +809,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			params.put("otp", otp);
 			params.put("ph_no", "");
 			params.put("password", "");
+			params.put("referral_code", "");
 			
 			
 			

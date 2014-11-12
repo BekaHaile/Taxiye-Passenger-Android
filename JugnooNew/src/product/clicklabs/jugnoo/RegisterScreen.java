@@ -26,20 +26,27 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.facebook.Session;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class RegisterScreen extends Activity implements LocationUpdate{
 	
-	EditText firstNameEt, lastNameEt, emailIdEt, phoneNoEt, passwordEt, confirmPasswordEt;
+	Button backBtn;
+	TextView title;
+	
+	Button registerWithFacebookBtn;
+	TextView orText;
+	
+	EditText nameEt, referralCodeEt, emailIdEt, phoneNoEt, passwordEt, confirmPasswordEt;
 	Button signUpBtn;
 	TextView extraTextForScroll;
 	ScrollView scroll;
 	
 	LinearLayout relative;
 	
-	String firstName = "", lastName = "", emailId = "", phoneNo = "", password = "";
+	String name = "", referralCode = "", emailId = "", phoneNo = "", password = "";
 	
 	public static boolean facebookLogin = false;
 	boolean loginDataFetched = false, showOtpDialog = false;
@@ -57,10 +64,16 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(RegisterScreen.this, relative, 1134, 720, false);
 		
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		registerWithFacebookBtn = (Button) findViewById(R.id.registerWithFacebookBtn); registerWithFacebookBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.regularFont(getApplicationContext()));
+		
 		scroll = (ScrollView) findViewById(R.id.scroll);
 		
-		firstNameEt = (EditText) findViewById(R.id.firstNameEt); firstNameEt.setTypeface(Data.regularFont(getApplicationContext()));
-		lastNameEt = (EditText) findViewById(R.id.lastNameEt); lastNameEt.setTypeface(Data.regularFont(getApplicationContext()));
+		nameEt = (EditText) findViewById(R.id.nameEt); nameEt.setTypeface(Data.regularFont(getApplicationContext()));
+		referralCodeEt = (EditText) findViewById(R.id.referralCodeEt); referralCodeEt.setTypeface(Data.regularFont(getApplicationContext()));
 		emailIdEt = (EditText) findViewById(R.id.emailIdEt); emailIdEt.setTypeface(Data.regularFont(getApplicationContext()));
 		phoneNoEt = (EditText) findViewById(R.id.phoneNoEt); phoneNoEt.setTypeface(Data.regularFont(getApplicationContext()));
 		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
@@ -73,22 +86,31 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		
 
-		firstNameEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		registerWithFacebookBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				new FacebookLogin().openFacebookSession(RegisterScreen.this, facebookLoginCallback);
+			}
+		});
+		
+		backBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				performBackPressed();
+			}
+		});
+		
+		nameEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				firstNameEt.setError(null);
+				nameEt.setError(null);
 				
 			}
 		});
 		
-		lastNameEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				lastNameEt.setError(null);
-			}
-		});
 		
 		emailIdEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
@@ -130,11 +152,11 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			@Override
 			public void onClick(View v) {
 				
-				String firstName = firstNameEt.getText().toString().trim();
-				if(firstName.length() > 0){
-					firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1, firstName.length());
+				String name = nameEt.getText().toString().trim();
+				if(name.length() > 0){
+					name = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
 				}
-				String lastName = lastNameEt.getText().toString().trim();
+				String referralCode = referralCodeEt.getText().toString().trim();
 				String emailId = emailIdEt.getText().toString().trim();
 				boolean noFbEmail = false;
 				
@@ -151,9 +173,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 
 				
 				
-				if("".equalsIgnoreCase(firstName)){
-					firstNameEt.requestFocus();
-					firstNameEt.setError("Please enter firstname");
+				if("".equalsIgnoreCase(name)){
+					nameEt.requestFocus();
+					nameEt.setError("Please enter name");
 				}
 				else{
 					if("".equalsIgnoreCase(emailId)){
@@ -207,10 +229,10 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 																if(noFbEmail){
 																	emailId = "";
 																}
-																sendFacebookSignupValues(RegisterScreen.this, "", phoneNo, password);
+																sendFacebookSignupValues(RegisterScreen.this, referralCode, "", phoneNo, password);
 															}
 															else{
-																sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, "");
+																sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password, "");
 															}
 															
 														}
@@ -271,12 +293,10 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		
 		if(facebookLogin){
-			firstNameEt.setText(Data.fbFirstName);
-			lastNameEt.setText(Data.fbLastName);
+			nameEt.setText(Data.fbFirstName + " " + Data.fbLastName);
 			emailIdEt.setText(Data.fbUserEmail);
 			
-			firstNameEt.setEnabled(false);
-			lastNameEt.setEnabled(false);
+			nameEt.setEnabled(false);
 			emailIdEt.setEnabled(false);
 		}
 		
@@ -325,7 +345,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 
 		
-//		firstNameEt.setText("Test");
+//		nameEt.setText("Test");
 //		lastNameEt.setText("Passenger84");
 //		emailIdEt.setText("passenger84@click-labs.com");
 //		phoneNoEt.setText("9999999999");
@@ -338,7 +358,30 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		
 	}
+	
+	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
+		@Override
+		public void facebookLoginDone() {
+			facebookLogin = true;
+			nameEt.setText(Data.fbFirstName + " " + Data.fbLastName);
+			emailIdEt.setText(Data.fbUserEmail);
+			
+			nameEt.setEnabled(false);
+			emailIdEt.setEnabled(false);
+		}
+	};
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		try {
+			super.onActivityResult(requestCode, resultCode, data);
+			Session.getActiveSession().onActivityResult(this, requestCode,
+					resultCode, data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	String GetCountryZipCode() {
 
@@ -394,7 +437,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	/**
 	 * ASync for register from server
 	 */
-	public void sendSignupValues(final Activity activity, final String firstName, final String lastName, 
+	public void sendSignupValues(final Activity activity, final String name, final String referralCode, 
 			final String emailId, final String phoneNo, final String password, final String otp) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
@@ -408,7 +451,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			}
 
 		
-			params.put("user_name", firstName + " " + lastName);
+			params.put("user_name", name);
 			params.put("ph_no", phoneNo);
 			params.put("email", emailId);
 			params.put("password", password);
@@ -421,8 +464,10 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			params.put("device_name", Data.deviceName);
 			params.put("app_version", Data.appVersion);
 			params.put("os_version", Data.osVersion);
+			params.put("referral_code", referralCode);
+			
 
-			Log.i("user_name", "=" + firstName + " " + lastName);
+			Log.i("user_name", "=" + name);
 			Log.i("ph_no", "=" + phoneNo);
 			Log.i("email", "=" + emailId);
 			Log.i("password", "=" + password);
@@ -434,6 +479,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			Log.i("device_name", "=" + Data.deviceName);
 			Log.i("app_version", "=" + Data.appVersion);
 			Log.i("os_version", "=" + Data.osVersion);
+			Log.i("referral_code", "="+referralCode);
 			
 			
 		
@@ -476,8 +522,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
 									else if(0 == flag){ // {"error": 'Please enter otp',"flag":0} //error
-										RegisterScreen.this.firstName = firstName;
-										RegisterScreen.this.lastName = lastName;
+										RegisterScreen.this.name = name;
+										RegisterScreen.this.referralCode = referralCode;
 										RegisterScreen.this.emailId = emailId;
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
@@ -485,8 +531,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										showOtpDialog = true;
 									}
 									else if(1 == flag){ // {"error": 'Incorrect verification code',"flag":1}
-										RegisterScreen.this.firstName = firstName;
-										RegisterScreen.this.lastName = lastName;
+										RegisterScreen.this.name = name;
+										RegisterScreen.this.referralCode = referralCode;
 										RegisterScreen.this.emailId = emailId;
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
@@ -567,10 +613,10 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 					else{
 						dialog.dismiss();
 						if(facebookLogin){
-							sendFacebookSignupValues(RegisterScreen.this, code, phoneNo, password);
+							sendFacebookSignupValues(RegisterScreen.this, code, referralCode, phoneNo, password);
 						}
 						else{
-							sendSignupValues(RegisterScreen.this, firstName, lastName, emailId, phoneNo, password, code);
+							sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password, code);
 						}
 					}
 				}
@@ -618,7 +664,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	/**
 	 * ASync for login from server
 	 */
-	public void sendFacebookSignupValues(final Activity activity, String otp, final String phoneNo, final String password) {
+	public void sendFacebookSignupValues(final Activity activity, final String referralCode,  String otp, final String phoneNo, final String password) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -647,6 +693,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			params.put("otp", otp);
 			params.put("ph_no", phoneNo);
 			params.put("password", password);
+			params.put("referral_code", referralCode);
 			
 
 			Log.i("user_fb_id", "="+Data.fbId);
@@ -665,6 +712,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			Log.i("otp", "="+otp);
 			Log.i("ph_no", "="+phoneNo);
 			Log.i("password", "="+password);
+			Log.i("referral_code", "="+referralCode);
 			
 			
 		
@@ -682,8 +730,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
+						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
 							String response = new String(arg2);
 							Log.v("Server response", "response = " + response);
 	
@@ -711,13 +758,15 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
 									}
-									else if(2 == flag){ // {"error": 'Please enter otp',"flag":2}  
+									else if(2 == flag){ // {"error": 'Please enter otp',"flag":2} 
+										RegisterScreen.this.referralCode = referralCode;
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
 										otpAlertString = errorMessage;
 										showOtpDialog = true;
 									}
 									else if(6 == flag){ // {"error": 'Incorrect verification code',"flag":6}
+										RegisterScreen.this.referralCode = referralCode;
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
 										otpAlertString = errorMessage;
@@ -798,11 +847,19 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	
 	@Override
 	public void onBackPressed() {
-		startActivity(new Intent(RegisterScreen.this, SplashLogin.class));
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
-		finish();
+		performBackPressed();
 		super.onBackPressed();
 	}
+	
+	
+	public void performBackPressed(){
+		Intent intent = new Intent(RegisterScreen.this, SplashNewActivity.class);
+		intent.putExtra("no_anim", "yes");
+		startActivity(intent);
+		finish();
+		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+	}
+	
 	
 	
 	
