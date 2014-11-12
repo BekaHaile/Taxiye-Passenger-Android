@@ -119,6 +119,7 @@ public class Data {
 	// live 6th:    https://dev.jugnoo.in:4006
 	// live 8th:    https://dev.jugnoo.in:4008
 	// live 10th:    https://dev.jugnoo.in:4010
+	// live 12th:    https://dev.jugnoo.in:4012     app versions: 126, 127, 128, 129, 130
 	// live 13th:    https://dev.jugnoo.in:4013
 	
 	//iOS 4012

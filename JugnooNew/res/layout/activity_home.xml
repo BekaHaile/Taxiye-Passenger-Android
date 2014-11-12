@@ -911,11 +911,14 @@
                         android:layout_height="700px"
                         android:scaleType="centerCrop" />
 
-                    <ImageView
-                        android:id="@+id/reviewUserImgBlurTop"
+                      <ImageView
+                        android:id="@+id/reviewUserImgBluredTop"
                         android:layout_width="match_parent"
                         android:layout_height="700px"
-                        android:background="@drawable/profile_pic_top" />
+                        android:scaleType="centerCrop"
+                        android:background="#11000000"
+                         />
+                    
 
                     <RelativeLayout
                         android:id="@+id/reviewUserImageRL"

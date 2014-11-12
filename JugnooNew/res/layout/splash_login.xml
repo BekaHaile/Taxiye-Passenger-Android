@@ -3,15 +3,18 @@
     android:id="@+id/relative"
     android:layout_width="720px"
     android:layout_height="1134px"
-    android:background="@color/bg_grey_opaque"
+    android:background="@drawable/common_bg"
     android:orientation="vertical"
         android:splitMotionEvents="false" >
         
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
+        
+        
     
     <ScrollView 
         android:id="@+id/scroll"
@@ -27,19 +30,67 @@
         android:orientation="vertical" 
         android:splitMotionEvents="false"
         >
+        
+        
+        <Button
+            android:id="@+id/facebookSignInBtn"
+            android:layout_width="648px"
+            android:layout_height="99px"
+            android:layout_marginTop="120px"
+            android:background="@drawable/blue_dark_btn_selector"
+            android:text="LOGIN VIA FACEBOOK"
+            android:textColor="@drawable/white_color_selector"
+                        android:textSize="@dimen/button_text_size" />
 
         
-        <ImageView
-            android:id="@+id/jugnooLogoBig"
-            android:layout_width="454px"
-            android:layout_height="148px"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="80px"
-            android:background="@drawable/jugnoo_text"
-            android:tag="mwar" 
-            android:longClickable="true"
+        <RelativeLayout 
+            android:id="@+id/orDivRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+        android:splitMotionEvents="false"
+            
+            >
+             
+            
+             <ImageView 
+            android:layout_width="248px"
+            android:layout_height="3px"
+            android:background="@drawable/divider_small"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="36px"
+            />
+            
+             
+             
+            
+            
+            <TextView
+            android:id="@+id/orText"
+            android:layout_width="wrap_content"
+            android:layout_height="50px"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/or"
+            android:textColor="@color/white"
+            android:textSize="30px" 
             
             />
+            
+            
+            
+             <ImageView 
+            android:layout_width="248px"
+            android:layout_height="3px"
+            android:background="@drawable/divider_small"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="36px"
+            />
+            
+            
+        </RelativeLayout>
+        
 
         <LinearLayout
             android:id="@+id/etLayout"
@@ -47,7 +98,7 @@
             android:layout_height="198px"
             android:layout_below="@+id/jugnooLogoBig"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="80px"
+            android:layout_marginTop="20px"
             android:background="@drawable/white_bg_rounded"
             android:gravity="center_horizontal"
             android:orientation="vertical"
@@ -109,74 +160,14 @@
             android:layout_height="90px"
             android:background="@drawable/transparent"
             android:text="@string/forgot_password"
-            android:textColor="@drawable/white_color_selector"
-            android:textSize="30px" 
+            android:textColor="@drawable/blue_alpha_color_selector"
+            android:textSize="36px" 
             android:layout_centerInParent="true"
             
             />
             
             
         </RelativeLayout>
-        
-        
-        <RelativeLayout 
-            android:id="@+id/orDivRl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1px"
-        android:splitMotionEvents="false"
-            
-            >
-             
-            
-             <ImageView 
-            android:layout_width="248px"
-            android:layout_height="3px"
-            android:background="@drawable/divider_small"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="36px"
-            />
-            
-             
-             
-            
-            
-            <TextView
-            android:id="@+id/orText"
-            android:layout_width="wrap_content"
-            android:layout_height="50px"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="@string/or"
-            android:textColor="@color/white"
-            android:textSize="30px" 
-            
-            />
-            
-            
-            
-             <ImageView 
-            android:layout_width="248px"
-            android:layout_height="3px"
-            android:background="@drawable/divider_small"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="36px"
-            />
-            
-            
-        </RelativeLayout>
-        
-        
-        <Button
-            android:id="@+id/facebookSignInBtn"
-            android:layout_width="648px"
-            android:layout_height="99px"
-            android:layout_marginTop="20px"
-            android:background="@drawable/blue_dark_btn_selector"
-            android:text="LOGIN WITH FACEBOOK"
-            android:textColor="@drawable/white_color_selector"
-                        android:textSize="@dimen/button_text_size" />
         
         
         
@@ -188,6 +179,7 @@
                	android:orientation="vertical"
                	android:gravity="center_horizontal"
                	android:layout_marginTop="25px"
+               	android:visibility="gone"
                 >
             
             <TextView 
@@ -195,8 +187,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Need Help"
-            android:textColor="@drawable/white_color_selector"
-            android:textSize="30px" 
+            android:textColor="@drawable/blue_alpha_color_selector"
+            android:textSize="36px" 
                 />
             
             <TextView 
@@ -204,8 +196,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Call us now - 435469"
-            android:textColor="@drawable/white_color_selector"
-            android:textSize="30px" 
+            android:textColor="@drawable/blue_alpha_color_selector"
+            android:textSize="36px" 
             android:layout_marginTop="2px"
                 />
             </LinearLayout>
@@ -216,53 +208,45 @@
         <TextView
                 android:id="@+id/extraTextForScroll"
                 android:layout_width="wrap_content"
-                android:layout_height="1px"
+                android:layout_height="20px"
                 android:textColor="@color/white"
                 android:text="      "
                 android:textSize="10px"
+                android:layout_marginTop="20px"
                 
                 />
         
     </LinearLayout>
     </ScrollView>
-
+    
     <RelativeLayout
-            android:id="@+id/signupRl"
-            android:layout_width="match_parent"
-            android:layout_height="110px"
-            android:background="@drawable/blue_bg_selector"
-            android:layout_alignParentBottom="true"
-            >
-             
-            <LinearLayout 
-                android:layout_width="wrap_content"
-               	android:layout_height="wrap_content"
-               	android:layout_centerInParent="true"
-               	android:orientation="vertical"
-               	android:gravity="center_horizontal"
-                >
-            
-            <TextView 
-                android:id="@+id/newToJugnooText"
+        android:id="@+id/topRl"
+        android:layout_width="match_parent"
+        android:layout_height="90px"
+        android:splitMotionEvents="false" >
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="82px"
+            android:layout_centerVertical="true"
+            android:text="Back"
+            android:background="@drawable/transparent"
+            android:textColor="@drawable/blue_alpha_color_selector"
+            android:textSize="@dimen/button_text_size"
+             />
+
+        <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New to Jugnoo!!"
-            android:textColor="@drawable/white_color_selector"
-            android:textSize="30px" 
-                />
-            
-            <TextView 
-                android:id="@+id/signupText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="REGISTER HERE"
-            android:textColor="@drawable/white_color_selector"
-            android:textSize="@dimen/button_text_size" 
-            android:layout_marginTop="5px"
-                />
-            </LinearLayout>
-            
-            </RelativeLayout>
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="LOGIN"
+            android:textColor="@color/blue_btn"
+            android:textSize="@dimen/button_text_size" />
+    </RelativeLayout>
+
     
     </RelativeLayout>
     

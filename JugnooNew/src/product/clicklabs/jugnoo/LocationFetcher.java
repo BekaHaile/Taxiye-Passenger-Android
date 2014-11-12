@@ -34,22 +34,22 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	public int priority;
 	
 	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval, int priority){
-		this.locationUpdate = locationUpdate;
-		this.context = (Context) locationUpdate;
-		this.requestInterval = requestInterval;
-		this.priority = priority;
-		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
-		if(resp == ConnectionResult.SUCCESS){														// google play services working
-			if(isLocationEnabled(context)){															// location fetching enabled
-				locationclient = new LocationClient(context, this, this);
-				locationclient.connect();
+			this.locationUpdate = locationUpdate;
+			this.context = (Context) locationUpdate;
+			this.requestInterval = requestInterval;
+			this.priority = priority;
+			int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+			if(resp == ConnectionResult.SUCCESS){														// google play services working
+				if(isLocationEnabled(context)){															// location fetching enabled
+					locationclient = new LocationClient(context, this, this);
+					locationclient.connect();
+				}
+				else{																					// location disabled
+				}
 			}
-			else{																					// location disabled
+			else{																						// google play services not working
+				Log.e("Google Play Service Error ","="+resp);
 			}
-		}
-		else{																						// google play services not working
-			Log.e("Google Play Service Error ","="+resp);
-		}
 	}
 	
 	

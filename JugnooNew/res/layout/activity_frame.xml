@@ -4,358 +4,376 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
-    <LinearLayout
-            android:layout_width="495px"
-            android:layout_height="match_parent"
-            android:background="@color/bg_grey"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:splitMotionEvents="false" >
-
-            <RelativeLayout
-                android:id="@+id/profileRl"
-                android:layout_width="300px"
-                android:layout_height="300px"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="110px"
-                android:splitMotionEvents="false"
-                android:tag="mwar" >
-
-                <ImageView
-                    android:id="@+id/profileBack"
-                    android:layout_width="300px"
-                    android:layout_height="300px"
-                    android:background="@drawable/ring"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:id="@+id/profileImg"
-                    android:layout_width="270px"
-                    android:layout_height="270px"
-                    android:layout_centerInParent="true"
-                    android:tag="mwar" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/profileRl"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10px"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@color/white"
-                android:textSize="34px" />
-
-            <ScrollView
+    <RelativeLayout
+                android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:splitMotionEvents="false"
+                android:visibility="visible" >
+
+                <RelativeLayout
+                    android:id="@+id/upLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="700px"
+                    android:splitMotionEvents="false" >
+
+                    <ImageView
+                        android:id="@+id/reviewUserImgBlured"
+                        android:layout_width="match_parent"
+                        android:layout_height="700px"
+                        android:scaleType="centerCrop" />
+
+                      <ImageView
+                        android:id="@+id/reviewUserImgBluredTop"
+                        android:layout_width="match_parent"
+                        android:layout_height="700px"
+                        android:scaleType="centerCrop"
+                        android:background="#11000000"
+                         />
+                    
+
+                    <RelativeLayout
+                        android:id="@+id/reviewUserImageRL"
+                        android:layout_width="300px"
+                        android:layout_height="300px"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="110px"
+                        android:splitMotionEvents="false"
+                        android:tag="mwar" >
+
+                        <ImageView
+                            android:id="@+id/reviewUserImgBack"
+                            android:layout_width="300px"
+                            android:layout_height="300px"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/ring_white"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            android:id="@+id/reviewUserImage"
+                            android:layout_width="260px"
+                            android:layout_height="260px"
+                            android:layout_centerInParent="true"
+                            android:tag="mwar" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/reviewUserName"
+                        android:layout_width="680px"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/reviewUserImageRL"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20px"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text=" "
+                        android:textColor="@color/white"
+                        android:textSize="38px" />
+
+                    <RelativeLayout
+                        android:id="@+id/reviewReachedDistanceRl"
+                        android:layout_width="match_parent"
+                        android:layout_height="180px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/black_translucent"
+                        android:splitMotionEvents="false" >
+
+                        <TextView
+                            android:id="@+id/reviewReachedDestinationText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10px"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="@string/reached_destination"
+                            android:textColor="@color/white"
+                            android:textSize="40px" />
+
+                        <RelativeLayout
+                            android:id="@+id/reviewDistanceRl"
+                            android:layout_width="239px"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/reviewReachedDestinationText"
+                            android:layout_marginTop="15px"
+                            android:splitMotionEvents="false" >
+
+                            <TextView
+                                android:id="@+id/reviewDistanceText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="10px"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="@string/distance"
+                                android:textColor="@color/white"
+                                android:textSize="38px" />
+
+                            <TextView
+                                android:id="@+id/reviewDistanceValue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/reviewDistanceText"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="0px"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="4.7 Kms"
+                                android:textColor="@color/white"
+                                android:textSize="36px" />
+                        </RelativeLayout>
+
+                        <ImageView
+                            android:layout_width="2px"
+                            android:layout_height="90px"
+                            android:layout_marginTop="77px"
+                            android:layout_toRightOf="@+id/reviewDistanceRl"
+                            android:background="@color/white" />
+
+                        <RelativeLayout
+                            android:id="@+id/reviewWaitTimeRl"
+                            android:layout_width="239px"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/reviewReachedDestinationText"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15px"
+                            android:splitMotionEvents="false" >
+
+                            <TextView
+                                android:id="@+id/reviewWaitText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="10px"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="@string/wait_time"
+                                android:textColor="@color/white"
+                                android:textSize="38px" />
+
+                            <TextView
+                                android:id="@+id/reviewWaitValue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/reviewWaitText"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="0px"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="4 min"
+                                android:textColor="@color/white"
+                                android:textSize="36px" />
+                        </RelativeLayout>
+
+                        <ImageView
+                            android:layout_width="2px"
+                            android:layout_height="90px"
+                            android:layout_marginTop="77px"
+                            android:layout_toLeftOf="@+id/reviewFareRl"
+                            android:background="@color/white" />
+
+                        <RelativeLayout
+                            android:id="@+id/reviewFareRl"
+                            android:layout_width="239px"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/reviewReachedDestinationText"
+                            android:layout_marginTop="15px"
+                            android:splitMotionEvents="false" >
+
+                            <TextView
+                                android:id="@+id/reviewFareText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="10px"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="@string/fare"
+                                android:textColor="@color/white"
+                                android:textSize="38px" />
+
+                            <TextView
+                                android:id="@+id/reviewFareValue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/reviewFareText"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="0px"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="Rs 10.00"
+                                android:textColor="@color/white"
+                                android:textSize="36px" />
+                        </RelativeLayout>
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="6px"
+                    android:layout_below="@+id/upLayout"
+                    android:background="@drawable/shadow_down" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
+                    android:id="@+id/reviewRatingBarRl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/reviewSubmitBtn"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10px"
+                    android:orientation="vertical"
+                    android:splitMotionEvents="false"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:id="@+id/reviewRatingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/reviewRatingBarRl"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="20px"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="Driver Rating"
+                        android:textColor="@color/black"
+                        android:textSize="40px" />
+
+                    <RatingBar
+                        android:id="@+id/reviewRatingBar"
+                        style="@style/CustomRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:rating="1"
+                        android:stepSize="1.0" 
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/endRideInfoRl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/reviewSubmitBtn"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20px"
                     android:orientation="vertical"
                     android:splitMotionEvents="false" >
 
-                    <RelativeLayout
-                        android:id="@+id/driverModeRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:layout_marginTop="40px"
-                        android:background="@drawable/transparent"
-                        android:splitMotionEvents="false" >
+                    <TextView
+                        android:id="@+id/jugnooRideOverText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="The Jugnoo ride is over."
+                        android:textColor="@color/black"
+                        android:textSize="40px" />
 
-                        <TextView
-                            android:id="@+id/driverModeText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/driver_mode"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:id="@+id/driverModeToggle"
-                            android:layout_width="90px"
-                            android:layout_height="72px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"
-                            android:src="@drawable/on"
-                            android:tag="mwar" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/jugnooONRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/transparent"
-                        android:splitMotionEvents="false" >
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-
-                        <TextView
-                            android:id="@+id/jugnooONText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/jugnoo_on"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:id="@+id/jugnooONToggle"
-                            android:layout_width="90px"
-                            android:layout_height="72px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"
-                            android:src="@drawable/on"
-                            android:tag="mwar" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/driverTypeRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false"
-                        android:visibility="gone" >
-
-                        <TextView
-                            android:id="@+id/driverTypeText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/driver_type"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/couponsRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/couponsText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="Coupons"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-                        
-                        <ImageView 
-                            android:layout_width="72px"
-                            android:layout_height="47px"
-                            android:tag="mwar"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/free_rides_icon"
-                            android:layout_toRightOf="@+id/couponsText"
-                            android:layout_marginLeft="20px"
-                            
-                            />
-                        
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-                    
-                    
-                    <RelativeLayout
-                        android:id="@+id/inviteFriendRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/inviteFriendText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/invite_friends"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    
-
-                    <RelativeLayout
-                        android:id="@+id/bookingsRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/bookingsText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/rides"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/aboutRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/aboutText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/about"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/supportRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/supportText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/support"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/sosRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/sosText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/sos"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/languagePrefrencesRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false"
-                        android:visibility="gone" >
-
-                        <TextView
-                            android:id="@+id/languagePrefrencesText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/language_preferences"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/logoutRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/logoutText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/logout"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/takeFareText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="40px"
+                        android:layout_marginTop="10px"
+                        android:gravity="center"
+                        android:paddingLeft="40px"
+                        android:paddingRight="40px"
+                        android:text="Please take the fare as shown above from the customer."
+                        android:textColor="@color/black"
+                        android:textSize="40px" />
                 </LinearLayout>
-            </ScrollView>
-        </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutCoupon"
+                    android:layout_width="644px"
+                    android:layout_height="244px"
+                    android:layout_above="@+id/reviewSubmitBtn"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="25px"
+                    android:background="@drawable/coupon_fare_bg"
+                    android:tag="mwar" >
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutCouponTitle"
+                        android:layout_width="405px"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/textViewCouponTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="20px"
+                            android:layout_marginRight="20px"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="Free Ride"
+                            android:textColor="@color/black"
+                            android:textSize="46px" />
+
+                        <TextView
+                            android:id="@+id/textViewCouponSubTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="20px"
+                            android:layout_marginRight="20px"
+                            android:layout_marginTop="40px"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="of upto Rs. 100/-"
+                            android:textColor="@color/black"
+                            android:textSize="32px" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearlayoutDiscountedFareInfo"
+                        android:layout_width="240px"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/textViewCouponPayTakeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:text="Pay"
+                            android:textColor="@color/black"
+                            android:textSize="46px" />
+
+                        <TextView
+                            android:id="@+id/textViewCouponDiscountedFare"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="60px"
+                            android:gravity="center"
+                            android:text="Rs. 1000"
+                            android:textColor="@color/black"
+                            android:textSize="38px" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/reviewSubmitBtn"
+                    android:layout_width="648px"
+                    android:layout_height="99px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="35px"
+                    android:background="@drawable/blue_btn_selector"
+                    android:text="@string/submit"
+                    android:textColor="@drawable/white_color_selector"
+                    android:textSize="@dimen/button_text_size" />
+            </RelativeLayout>
     
 </FrameLayout>
