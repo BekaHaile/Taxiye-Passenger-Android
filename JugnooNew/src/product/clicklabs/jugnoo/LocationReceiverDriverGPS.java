@@ -4,16 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 
-import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.model.LatLng;
 
-public class LocationReceiverDriver extends BroadcastReceiver {
+public class LocationReceiverDriverGPS extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
     	Log.e("intent", "");
-    	final Location location = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
+    	final Location location = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
     	if(location != null){
 	    	new Thread(new Runnable() {
 				@Override

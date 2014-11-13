@@ -23,14 +23,11 @@ public class Database2 {																	// class for handling database related 
 
 	SQLiteDatabase database;
 
-	private static final String TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT = "table_driver_service_restart_on_reboot";
-	private static final String DRIVER_SERVICE_RESTART_ON_REBOOT = "driver_service_restart_on_reboot";
+	public static final String YES = "yes", NO = "no", NEVER = "never";
 	
 	private static final String TABLE_DRIVER_SERVICE_FAST = "table_driver_service_fast";
 	private static final String FAST = "fast";
 	
-	private static final String TABLE_JUGNOO_ON = "table_jugnoo_on";
-	private static final String JUGNOO_ON = "jugnoo_on";
 	
 	private static final String TABLE_DRIVER_LOC_DATA = "table_driver_loc_data";
 	private static final String DLD_ACCESS_TOKEN = "dld_access_token";
@@ -66,6 +63,11 @@ public class Database2 {																	// class for handling database related 
 	private static final String TABLE_DRIVER_LAST_LOCATION_TIME = "table_driver_last_location_time";
 	private static final String LAST_LOCATION_TIME = "last_location_time";
 	
+	private static final String TABLE_DRIVER_SERVICE = "table_driver_service";
+	private static final String DRIVER_SERVICE_RUN = "driver_service_run";
+	
+	private static final String TABLE_DRIVER_SERVICE_TIME_TO_RESTART = "table_driver_service_time_to_restart";
+	private static final String TIME_TO_RESTART = "time_to_restart";
 	
 	/**
 	 * Creates and opens database for the application use 
@@ -94,14 +96,10 @@ public class Database2 {																	// class for handling database related 
 	
 	public static void createAllTables(SQLiteDatabase database){
 		/****************************************** CREATING ALL THE TABLES *****************************************************/
-		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT + " ("
-				+ DRIVER_SERVICE_RESTART_ON_REBOOT + " TEXT" + ");");
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_FAST + " ("
 				+ FAST + " TEXT" + ");");
 		
-		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_JUGNOO_ON + " ("
-				+ JUGNOO_ON + " TEXT" + ");");
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_LOC_DATA + " ("
 				+ DLD_ACCESS_TOKEN + " TEXT, " 
@@ -134,6 +132,12 @@ public class Database2 {																	// class for handling database related 
 				+ ");");
 		
 		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE + " ("
+				+ DRIVER_SERVICE_RUN + " TEXT" + ");");
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_TIME_TO_RESTART + " ("
+				+ TIME_TO_RESTART + " TEXT" + ");");
+		
 	}
 	
 	
@@ -150,45 +154,6 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	
-	public String getDriverServiceRestartOnReboot() {
-		try {
-			String[] columns = new String[] { Database2.DRIVER_SERVICE_RESTART_ON_REBOOT };
-			Cursor cursor = database.query(Database2.TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT, columns, null, null, null, null, null);
-			if (cursor.getCount() > 0) {
-				cursor.moveToFirst();
-				String choice = cursor.getString(cursor.getColumnIndex(Database2.DRIVER_SERVICE_RESTART_ON_REBOOT));
-				return choice;
-			} else {
-				return "yes";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "yes";
-		}
-	}
-	
-	public void updateDriverServiceRestartOnReboot(String choice) {
-		deleteDriverServiceRestartOnReboot();
-		insertDriverServiceRestartOnReboot(choice);
-	}
-	
-	public void insertDriverServiceRestartOnReboot(String choice){
-		try{
-			ContentValues contentValues = new ContentValues();
-			contentValues.put(Database2.DRIVER_SERVICE_RESTART_ON_REBOOT, choice);
-			database.insert(Database2.TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT, null, contentValues);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	public void deleteDriverServiceRestartOnReboot(){
-		try{
-			database.delete(Database2.TABLE_DRIVER_SERVICE_RESTART_ON_REBOOT, null, null);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 	
 	
 	
@@ -203,7 +168,7 @@ public class Database2 {																	// class for handling database related 
 			String choice = cursor.getString(cursor.getColumnIndex(Database2.FAST));
 			return choice;
 		} else {
-			return "no";
+			return NO;
 		}
 	}
 	
@@ -231,52 +196,6 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	
-	
-	public String getJugnooOn() {
-		try {
-			String[] columns = new String[] { Database2.JUGNOO_ON };
-			Cursor cursor = database.query(Database2.TABLE_JUGNOO_ON, columns, null, null, null, null, null);
-			if (cursor.getCount() > 0) {
-				cursor.moveToFirst();
-				String choice = cursor.getString(cursor.getColumnIndex(Database2.JUGNOO_ON));
-				return choice;
-			} else {
-				return "on";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "e="+e.toString();
-		}
-	}
-	
-	
-	
-	public void updateJugnooOn(String choice) {
-		try {
-			deleteJugnooOn();
-			insertJugnooOn(choice);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void insertJugnooOn(String choice){
-		try{
-			ContentValues contentValues = new ContentValues();
-			contentValues.put(Database2.JUGNOO_ON, choice);
-			database.insert(Database2.TABLE_JUGNOO_ON, null, contentValues);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	public void deleteJugnooOn(){
-		try{
-			database.delete(Database2.TABLE_JUGNOO_ON, null, null);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 	
 	
 	
@@ -632,6 +551,100 @@ public class Database2 {																	// class for handling database related 
 	
 	
 	
+	
+	
+	
+	
+	
+	public String getDriverServiceRun() {
+		try {
+			String[] columns = new String[] { Database2.DRIVER_SERVICE_RUN };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_SERVICE, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				String choice = cursor.getString(cursor.getColumnIndex(Database2.DRIVER_SERVICE_RUN));
+				return choice;
+			} else {
+				return YES;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return YES;
+		}
+	}
+	
+	public void updateDriverServiceRun(String choice) {
+		try{
+			deleteDriverServiceRun();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.DRIVER_SERVICE_RUN, choice);
+			database.insert(Database2.TABLE_DRIVER_SERVICE, null, contentValues);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void deleteDriverServiceRun(){
+		try{
+			database.delete(Database2.TABLE_DRIVER_SERVICE, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public long getDriverServiceTimeToRestart() {
+		long timeToRestart = 0;
+		try {
+			String[] columns = new String[] { Database2.TIME_TO_RESTART };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_SERVICE_TIME_TO_RESTART, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				timeToRestart = Long.parseLong(cursor.getString(cursor.getColumnIndex(Database2.TIME_TO_RESTART)));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return timeToRestart;
+	}
+	
+	
+	
+	public void updateDriverServiceTimeToRestart(long timeToRestart) {
+		try {
+			deleteDriverServiceTimeToRestart();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.TIME_TO_RESTART, ""+timeToRestart);
+			database.insert(Database2.TABLE_DRIVER_SERVICE_TIME_TO_RESTART, null, contentValues);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void deleteDriverServiceTimeToRestart(){
+		try{
+			database.delete(Database2.TABLE_DRIVER_SERVICE_TIME_TO_RESTART, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	
 	

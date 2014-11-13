@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -20,10 +19,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,7 +28,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -80,18 +76,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.facebook.FacebookException;
-import com.facebook.LoggingBehavior;
-import com.facebook.Request;
-import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionLoginBehavior;
-import com.facebook.SessionState;
-import com.facebook.Settings;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.WebDialog;
-import com.facebook.widget.WebDialog.Builder;
-import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -396,6 +381,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	Dialog noDriversDialog;
 	
 	LocationFetcher lowPowerLF, highAccuracyLF;
+	
 	
 	
 	
@@ -896,8 +882,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				Log.e("hellondsmhfajk.", "userMode = "+userMode + " driverScreenMode = "+driverScreenMode);
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
+					Log.e("jugnooDriverMode onClick", "="+jugnooDriverMode);
 					if(jugnooDriverMode == JugnooDriverMode.ON){
 						jugnooDriverMode = JugnooDriverMode.OFF;
 						changeJugnooON(jugnooDriverMode);
@@ -1683,7 +1669,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
 		
 		
-		
+		Database2 database2 = new Database2(HomeActivity.this);
 		try {
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			
@@ -1718,33 +1704,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
-		
-	    
-		
-		
-		
-			Database2 database2 = new Database2(HomeActivity.this);
-			String jugnooOn = database2.getJugnooOn();
 			
+			String jugnooOn = database2.getDriverServiceRun();
 			
-			if("on".equalsIgnoreCase(jugnooOn)){
+			Log.e("onCreate", "=jugnooOn = "+jugnooOn);
+			if(Database2.YES.equalsIgnoreCase(jugnooOn)){
 				jugnooDriverMode = JugnooDriverMode.ON;
 			}
 			else{
 				jugnooDriverMode = JugnooDriverMode.OFF;
 			}
-			if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-				changeJugnooON(jugnooDriverMode);
-			}
+			changeJugnooONUI(jugnooDriverMode);
 			
 			changeExceptionalDriverUI();
 			
 			database2.insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
-			database2.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		database2.close();
 	}
 	
 	
@@ -1851,37 +1830,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 		
-		Database2 database2 = new Database2(HomeActivity.this);
 		
 		if(mode == JugnooDriverMode.ON){
-			jugnooDriverMode = JugnooDriverMode.ON;
+			new DriverServiceOperations().startDriverService(HomeActivity.this);
 			jugnooONToggle.setImageResource(R.drawable.on);
-			database2.updateJugnooOn("on");
-			
-			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-			startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-			
-			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
-			restartService.setPackage(getPackageName());
-			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
-			AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-			alarmService.cancel(restartServicePI);
-			
 		}
 		else{
-			jugnooDriverMode = JugnooDriverMode.OFF;
 			jugnooONToggle.setImageResource(R.drawable.off);
-			database2.updateJugnooOn("off");
-			
-			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-			
-			
-			Intent restartService = new Intent(getApplicationContext(), DriverLocationUpdateService.class);
-			restartService.setPackage(getPackageName());
-			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
-			AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-			alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + SERVICE_RESTART_TIMER, restartServicePI);
-			
+			new DriverServiceOperations().stopAndScheduleDriverService(HomeActivity.this);
 			
 			jugnooDriverOnHandler = null;
 			jugnooDriverOnRunnable = null;
@@ -1895,15 +1851,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			};
 			jugnooDriverOnHandler.postDelayed(jugnooDriverOnRunnable, SERVICE_RESTART_TIMER);
-			
-			database2.updateDriverServiceRestartOnReboot("yes");
-			
 			sendNullLocationToServerForDriver();
-			
 		}
-		
-		database2.close();
-		
 		
 	}
 	
@@ -2142,8 +2091,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.GONE);
 				
-				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
-				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
+				new DriverServiceOperations().checkStartService(HomeActivity.this);
 				
 				cancelCustomerPathUpdateTimer();
 				
@@ -2178,8 +2126,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			case D_START_RIDE:
 				
 				updateDriverServiceFast("yes");
-				
-				changeJugnooON(JugnooDriverMode.ON);
 
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
@@ -2267,6 +2213,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				if(map != null){
 					map.clear();
 				}
+				
+				updateDistanceFareTexts();
 				
 				driverPassengerName.setText(Data.assignedCustomerInfo.name);
 				
@@ -3000,7 +2948,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
 					editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
 					
-					
 				}
 				else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
 					
@@ -3037,20 +2984,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
 					editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
 					
-					Log.e("Data.SP_WAIT_TIME", "=="+elapsedMillis);
+					Log.e("Data.SP_TOTAL_DISTANCE", "=="+totalDistance);
 					
 					long elapsedRideTime = rideTimeChronometer.eclipsedTime;
 					editor.putString(Data.SP_RIDE_TIME, ""+elapsedRideTime);
 					
-					Log.e("Data.SP_RIDE_TIME", "=="+elapsedRideTime);
-					
 					if(HomeActivity.myLocation != null){
 						editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
 			    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
-					}
-					else{
-						editor.putString(Data.SP_LAST_LATITUDE, "0");
-			    		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 					}
 					
 				}
@@ -3108,10 +3049,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					if(HomeActivity.myLocation != null){
 						editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
 			    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
-					}
-					else{
-						editor.putString(Data.SP_LAST_LATITUDE, "0");
-			    		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 					}
 					
 				
@@ -3260,14 +3197,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					saveDataOnPause(false);
 					
 					final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+					Log.i("lastLocation", "="+lastLocation);
+					Log.i("totalDistance", "="+totalDistance);
+					
+					
 					if(lastLocation != null){
 						
 						final LatLng lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
 						
 						double displacement = distance(lastLatLng, currentLatLng);
-						Log.e("displacement", "="+displacement);
+						Log.i("displacement", "="+displacement);
 						
-						if(displacement < MAX_DISPLACEMENT_THRESHOLD){
+						if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
 							
 							totalDistance = totalDistance + displacement;
 							checkAndUpdateWaitTimeDistance(displacement);
@@ -3280,8 +3221,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								@Override
 								public void run() {
-									Log.e("lastLatLng","="+lastLatLng);
-									Log.e("currentLatLng","="+currentLatLng);
 									Database database = new Database(HomeActivity.this);
 									database.insertPolyLine(lastLatLng, currentLatLng);
 									database.close();
@@ -3298,27 +3237,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					else if(lastLocation == null){
 						
-						if(totalDistance == -1){
+						if(Utils.compareDouble(totalDistance, -1.0) == 0){
 							totalDistance = 0;
-							
-							MarkerOptions markerOptions = new MarkerOptions();
-							markerOptions.snippet("");
-							markerOptions.title("start ride location");
-							markerOptions.position(currentLatLng);
-							markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
-							map.addMarker(markerOptions);
-
-							updateDistanceFareTexts();
-							
 						}
-						else{
 							try{
 								displayOldPath();
 								
 								double displacement = distance(Data.startRidePreviousLatLng, currentLatLng);
 								Log.e("displacement", "="+displacement);
 								
-								if(displacement < MAX_DISPLACEMENT_THRESHOLD){
+								if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
 									totalDistance = totalDistance + displacement;
 									checkAndUpdateWaitTimeDistance(displacement);
 									map.addPolyline(new PolylineOptions()
@@ -3330,8 +3258,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 										@Override
 										public void run() {
-											Log.e("Data.startRidePreviousLatLng","="+Data.startRidePreviousLatLng);
-											Log.e("currentLatLng","="+currentLatLng);
 											Database database = new Database(HomeActivity.this);
 											database.insertPolyLine(Data.startRidePreviousLatLng, currentLatLng);
 											database.close();
@@ -3348,14 +3274,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							} catch(Exception e){
 								e.printStackTrace();
 							}
-						}
 						
 					}
 					
 					lastLocation = location;
-					
-//					Log.writeLogToFile("LatLngDataFile", "@\""+lastLocation.getLatitude()+"\",@\""+lastLocation.getLongitude()+"\"");
-					
 				}
 				
 				
@@ -3376,7 +3298,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					stopWait();
 				}
 			}
-			Log.e("distanceAfterWaitStarted wait ------------", "="+distanceAfterWaitStarted);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3427,6 +3348,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		
 		map.addPolyline(polylineOptions);
+		
+		if(firstLatLng == null){
+			firstLatLng = Data.startRidePreviousLatLng;
+		}
 		
 		if(firstLatLng != null){
 			MarkerOptions markerOptions = new MarkerOptions();
@@ -3558,7 +3483,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    	JSONObject leg0 = json.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
 	    	double distanceOfPath = leg0.getJSONObject("distance").getDouble("value");
 	    	
-	    	if(distanceOfPath <= (displacementToCompare*1.8)){														// distance would be approximately correct
+	    	if(Utils.compareDouble(distanceOfPath, (displacementToCompare*1.8)) <= 0){														// distance would be approximately correct
 
 		           JSONArray routeArray = json.getJSONArray("routes");
 		           JSONObject routes = routeArray.getJSONObject(0);
@@ -4541,7 +4466,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								else{
 									
 									if(flag == 1){
-										
 										try {
 											int excepInt = jObj.getInt("exceptional_driver");
 											if(1 == excepInt){
@@ -4566,8 +4490,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										switchDriverScreen(driverScreenMode);
 										
 										getAndShowAllDriverRequests(activity);
+										new DriverServiceOperations().startDriverService(HomeActivity.this);
 									}
 									else{
+										new DriverServiceOperations().stopService(HomeActivity.this);
 										userMode = UserMode.PASSENGER;
 										driverModeToggle.setImageResource(R.drawable.off);
 										
@@ -4914,6 +4840,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void driverStartRideAsync(final Activity activity, double pickupLatitude, double pickupLongitude) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
+			lastLocation = null;
+			
+			HomeActivity.previousWaitTime = 0;
+			HomeActivity.previousRideTime = 0;
+			HomeActivity.totalDistance = -1;
+			
+			clearRideSPData();
+			
+			waitStart = 2;
+			
+			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();
@@ -4975,17 +4912,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										map.clear();
 									}
 									
-									lastLocation = null;
 									
-									HomeActivity.previousWaitTime = 0;
-									HomeActivity.previousRideTime = 0;
-									HomeActivity.totalDistance = -1;
-									
-									Database database = new Database(HomeActivity.this);
-									database.deleteSavedPath();
-									database.close();
-									
-									waitStart = 2;
+									if(HomeActivity.myLocation != null){
+										Data.startRidePreviousLatLng = new LatLng(HomeActivity.myLocation.getLatitude(),
+												HomeActivity.myLocation.getLongitude());
+										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+										Editor editor = pref.edit();
+										editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
+							    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
+							    		editor.commit();
+									}
 									
 						        	driverScreenMode = DriverScreenMode.D_IN_RIDE;
 									switchDriverScreen(driverScreenMode);
@@ -5636,6 +5572,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									userMode = UserMode.PASSENGER;
 									passengerScreenMode = PassengerScreenMode.P_INITIAL;
 									driverScreenMode = DriverScreenMode.D_INITIAL;
+									
+									new DriverServiceOperations().stopService(HomeActivity.this);
 									
 									loggedOut = true;
 									
@@ -6991,9 +6929,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						lastLocation = null;
 						
 						HomeActivity.totalDistance = -1;
-						Database database = new Database(HomeActivity.this);
-						database.deleteSavedPath();
-						database.close();
+						clearRideSPData();
 						
 						
 						passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
@@ -7161,7 +7097,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					driverImage, driverCarImage, driverPhone, driverRating);
 			
 			Data.startRidePreviousLatLng = Data.pickupLatLng;
-			HomeActivity.totalDistance = 0;
+			HomeActivity.totalDistance = -1;
 			
 			runOnUiThread(new Runnable() {
 				@Override
@@ -7304,70 +7240,72 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 
+	public void clearRideSPData(){
 
+		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		Editor editor = pref.edit();
+
+		editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
+		editor.putString(Data.SP_WAIT_TIME, "0");
+		editor.putString(Data.SP_RIDE_TIME, "0");
+		editor.putString(Data.SP_LAST_LATITUDE, "0");
+		editor.putString(Data.SP_LAST_LONGITUDE, "0");
+
+		editor.commit();
+
+		Database database = new Database(HomeActivity.this);
+		database.deleteSavedPath();
+		database.close();
 	
-	public void clearSPData(){
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-        	
-        	SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-    		Editor editor = pref.edit();
-        		
-    		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
-    		
-    		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
-    		editor.putString(Data.SP_D_CUSTOMER_ID, "");
-    		editor.putString(Data.SP_D_LATITUDE, "0");
-    		editor.putString(Data.SP_D_LONGITUDE, "0");
-    		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
-    		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
-    		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
-    		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
-    		
-    		
-    		
-    		
-    		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-    		editor.putString(Data.SP_WAIT_TIME, "0");
-    		editor.putString(Data.SP_RIDE_TIME, "0");
-    		editor.putString(Data.SP_LAST_LATITUDE, "0");
-    		editor.putString(Data.SP_LAST_LONGITUDE, "0");
-    		
-    		
-    		
-    		
-    		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+	}
+	
+	public void clearSPData() {
 
-    		editor.putString(Data.SP_C_SESSION_ID, "");
-    		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
-    		editor.putString(Data.SP_C_DRIVER_ID, "");
-    		editor.putString(Data.SP_C_LATITUDE, "0");
-    		editor.putString(Data.SP_C_LONGITUDE, "0");
-    		editor.putString(Data.SP_C_DRIVER_NAME, "");
-    		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
-    		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
-    		editor.putString(Data.SP_C_DRIVER_PHONE, "");
-			editor.putString(Data.SP_C_DRIVER_RATING, "");
-    		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-    		editor.putString(Data.SP_C_DRIVER_DURATION, "");
-    		
-    		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
-    		editor.putString(Data.SP_C_TOTAL_FARE, "0");
-    		editor.putString(Data.SP_C_WAIT_TIME, "0");
-        		
-        	
-        	editor.commit();
-    		
-        	
-        	Database database = new Database(HomeActivity.this);
-			database.deleteSavedPath();
-			database.close();
-        	
-		
-			}
-		}).start();
+		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		Editor editor = pref.edit();
+
+		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
+
+		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
+		editor.putString(Data.SP_D_CUSTOMER_ID, "");
+		editor.putString(Data.SP_D_LATITUDE, "0");
+		editor.putString(Data.SP_D_LONGITUDE, "0");
+		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
+		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
+		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
+		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
+
+		editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
+		editor.putString(Data.SP_WAIT_TIME, "0");
+		editor.putString(Data.SP_RIDE_TIME, "0");
+		editor.putString(Data.SP_LAST_LATITUDE, "0");
+		editor.putString(Data.SP_LAST_LONGITUDE, "0");
+
+		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+
+		editor.putString(Data.SP_C_SESSION_ID, "");
+		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
+		editor.putString(Data.SP_C_DRIVER_ID, "");
+		editor.putString(Data.SP_C_LATITUDE, "0");
+		editor.putString(Data.SP_C_LONGITUDE, "0");
+		editor.putString(Data.SP_C_DRIVER_NAME, "");
+		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
+		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
+		editor.putString(Data.SP_C_DRIVER_PHONE, "");
+		editor.putString(Data.SP_C_DRIVER_RATING, "");
+		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
+		editor.putString(Data.SP_C_DRIVER_DURATION, "");
+
+		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
+		editor.putString(Data.SP_C_TOTAL_FARE, "0");
+		editor.putString(Data.SP_C_WAIT_TIME, "0");
+
+		editor.commit();
+
+		Database database = new Database(HomeActivity.this);
+		database.deleteSavedPath();
+		database.close();
+
 	}
 	
 

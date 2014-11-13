@@ -492,7 +492,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				params.put("app_version", ""+Data.appVersion);
 				params.put("device_type", "0");
 
-				new SingleLocationSender(SplashNewActivity.this, accessToken, Data.deviceToken, Data.SERVER_URL);
+//				new SingleLocationSender(SplashNewActivity.this, accessToken, Data.deviceToken, Data.SERVER_URL);
 				
 				Log.i("accessToken", "=" + accessToken);
 				Log.i("device_token", Data.deviceToken);

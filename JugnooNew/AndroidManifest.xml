@@ -52,6 +52,7 @@
         >
         
         <receiver android:name=".LocationReceiverDriver" />
+         <receiver android:name=".LocationReceiverDriverGPS" />
         
         <receiver
             android:name="product.clicklabs.jugnoo.GcmBroadcastReceiver"
@@ -170,6 +171,12 @@
         <receiver android:name="product.clicklabs.jugnoo.DriverLocationUpdateAlarmReceiver" >
             <intent-filter>
                 <action android:name="product.clicklabs.jugnoo.SEND_LOCATION" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver android:name="product.clicklabs.jugnoo.DriverServiceRestartAlarmReceiver" >
+            <intent-filter>
+                <action android:name="product.clicklabs.jugnoo.START_SERVICE" />
             </intent-filter>
         </receiver>
         

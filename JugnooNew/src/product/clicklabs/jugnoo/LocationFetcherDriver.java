@@ -121,7 +121,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 		
 		
 		Intent intent = new Intent(context, LocationReceiverDriver.class);
-		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		locationclient.requestLocationUpdates(locationrequest, locationIntent);
 		
 		Log.e("locationrequest priority", "="+locationrequest.getPriority());

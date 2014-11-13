@@ -1,8 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -23,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationUpdateService extends Service {
 	
+//	LocationFetcherDriver locationFetcherDriver;
 	LocationFetcherDriverGPS locationFetcherDriver;
 	GPSLocationFetcher gpsLocationFetcher;
 	
@@ -49,7 +47,7 @@ public class DriverLocationUpdateService extends Service {
     public void onStart(Intent intent, int startId) {
         try{
         	Log.i("Driver location update started", "=======");
-        	updateServerData();
+        	updateServerData(this);
     		
     		Database2 database2 = new Database2(this);
     		
@@ -59,12 +57,13 @@ public class DriverLocationUpdateService extends Service {
     		
     		
     		
-    		if(fast.equalsIgnoreCase("no")){
-    			serverUpdateTimePeriod = 120000;
+    		if(fast.equalsIgnoreCase(Database2.NO)){
     			if(locationFetcherDriver != null){
     				locationFetcherDriver.destroy();
     				locationFetcherDriver = null;
     			}
+//    			serverUpdateTimePeriod = 60000;
+    			serverUpdateTimePeriod = 120000;
 //    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     			locationFetcherDriver = new LocationFetcherDriverGPS(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     			if(gpsLocationFetcher != null){
@@ -89,8 +88,6 @@ public class DriverLocationUpdateService extends Service {
             database2.close();
             
             setupLocationUpdateAlarm();
-            
-            startCheckIfDriverTimer();
         	
         } catch(Exception e){
         	e.printStackTrace();
@@ -99,14 +96,12 @@ public class DriverLocationUpdateService extends Service {
     }
     
     
-    public void updateServerData(){
+    public static void updateServerData(Context context){
     	String SHARED_PREF_NAME = "myPref";
     	String SP_ACCESS_TOKEN_KEY = "access_token";
     	String accessToken = "", deviceToken = "", SERVER_URL = "";
     	
-    	Database2 database2 = new Database2(this);
-        database2.updateDriverServiceRestartOnReboot("yes");
-    	database2.updateJugnooOn("on");
+    	Database2 database2 = new Database2(context);
     	
     	//TODO Toggle live to trial
 		String DEV_SERVER_URL = "https://54.81.229.172:8012";
@@ -122,7 +117,7 @@ public class DriverLocationUpdateService extends Service {
 		
 		SERVER_URL = DEFAULT_SERVER_URL;
 		
-		SharedPreferences preferences = getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
+		SharedPreferences preferences = context.getSharedPreferences(SETTINGS_SHARED_PREF_NAME, 0);
 		String link = preferences.getString(SP_SERVER_LINK, DEFAULT_SERVER_URL);
 		
 		if(link.equalsIgnoreCase(TRIAL_SERVER_URL)){
@@ -135,10 +130,10 @@ public class DriverLocationUpdateService extends Service {
 			SERVER_URL = DEV_SERVER_URL;
 		}
 		
-		SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+		SharedPreferences pref = context.getSharedPreferences(SHARED_PREF_NAME, 0);
 		accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
 		
-		deviceToken = DriverLocationUpdateService.this.getSharedPreferences(SplashLogin.class.getSimpleName(), 
+		deviceToken = context.getSharedPreferences(SplashLogin.class.getSimpleName(), 
 				Context.MODE_PRIVATE).getString("registration_id", "");
     	
 		Log.e("SERVER_URL in updateService","="+SERVER_URL);
@@ -167,10 +162,10 @@ public class DriverLocationUpdateService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
     	try {
     		Database2 database2 = new Database2(this);
-    		String jugnooOn = database2.getJugnooOn();
+    		String serviceRestartOnReboot = database2.getDriverServiceRun();
     		database2.close();
-    		Log.e("onTaskRemoved jugnooOn =","="+jugnooOn);
-    		if("on".equalsIgnoreCase(jugnooOn)){
+    		Log.e("onTaskRemoved serviceRestartOnReboot =","="+serviceRestartOnReboot);
+    		if(Database2.YES.equalsIgnoreCase(serviceRestartOnReboot)){
     			Log.e("onTaskRemoved","="+rootIntent);
     			Intent restartService = new Intent(getApplicationContext(), this.getClass());
     			restartService.setPackage(getPackageName());
@@ -210,100 +205,10 @@ public class DriverLocationUpdateService extends Service {
 			gpsLocationFetcher = null;
 		}
         
-        Database2 database2 = new Database2(DriverLocationUpdateService.this);
-        database2.updateDriverServiceRestartOnReboot("no");
-        database2.close();    
-        
         cancelLocationUpdateAlarm();
         
-        cancelCheckIfDriverTimer();
     }
     
-    
-    double distance(LatLng start, LatLng end) {
-		try {
-			Location location1 = new Location("locationA");
-			location1.setLatitude(start.latitude);
-			location1.setLongitude(start.longitude);
-			Location location2 = new Location("locationA");
-			location2.setLatitude(end.latitude);
-			location2.setLongitude(end.longitude);
-
-			double distance = location1.distanceTo(location2);
-			return distance;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-
-	}
-    
-    
-    
-    
-    
-	Timer timerCheckIfDriver;
-	TimerTask timerTaskCheckIfDriver;
-	
-	public void startCheckIfDriverTimer(){
-		cancelCheckIfDriverTimer();
-		try {
-			timerCheckIfDriver = new Timer();
-			timerTaskCheckIfDriver = new TimerTask() {
-				@Override
-				public void run() {
-					Database2 database2 = new Database2(DriverLocationUpdateService.this);
-					try {
-						String accessToken = database2.getDLDAccessToken();
-						database2.close();
-						
-						if("".equalsIgnoreCase(accessToken)){
-							updateServerData();
-						}
-						
-						database2 = new Database2(DriverLocationUpdateService.this);
-						String userMode = database2.getUserMode();
-						database2.close();
-						
-//						Log.e("DriverLocationUpdateService userMode in timertask ", "=="+userMode);
-						
-						if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
-							
-						}
-						else{
-							stopSelf();
-						}
-					} 
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-					finally{
-						database2.close();
-					}
-					
-				}
-			};
-			timerCheckIfDriver.scheduleAtFixedRate(timerTaskCheckIfDriver, 1000, 3 * 60000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void cancelCheckIfDriverTimer(){
-		try{
-			if(timerTaskCheckIfDriver != null){
-				timerTaskCheckIfDriver.cancel();
-				timerTaskCheckIfDriver = null;
-			}
-			if(timerCheckIfDriver != null){
-				timerCheckIfDriver.cancel();
-				timerCheckIfDriver.purge();
-				timerCheckIfDriver = null;
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
     
 	
 	

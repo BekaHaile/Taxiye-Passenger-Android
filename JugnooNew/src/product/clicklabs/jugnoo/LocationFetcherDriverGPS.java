@@ -14,7 +14,7 @@ public class LocationFetcherDriverGPS {
 	private PendingIntent locationIntent;
 	
 	
-	private static final int LOCATION_PI_ID = 6978;
+	private static final int LOCATION_PI_ID = 69781;
 	
 	
 	
@@ -33,14 +33,14 @@ public class LocationFetcherDriverGPS {
 		try {
 			this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 			if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-				Intent intent = new Intent(context, LocationReceiverDriver.class);
-				locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+				Intent intent = new Intent(context, LocationReceiverDriverGPS.class);
+				locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, requestInterval, 0, locationIntent);
 				
 			} else {
 				if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-					Intent intent = new Intent(context, LocationReceiverDriver.class);
-					locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+					Intent intent = new Intent(context, LocationReceiverDriverGPS.class);
+					locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, requestInterval, 0, locationIntent);
 				}
 			}
@@ -54,18 +54,13 @@ public class LocationFetcherDriverGPS {
 	
 	public void destroy(){
 		try{
-			if(locationManager != null && locationIntent != null){
-				locationManager.removeUpdates(locationIntent);
-				locationIntent.cancel();
-			}
+			locationManager.removeUpdates(locationIntent);
+			locationIntent.cancel();
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		finally{
-			locationManager = null;
-			locationIntent = null;
-		}
+		Log.e("LocationFetcherDriverGPS", "destroyed");
 	}
 
 }
