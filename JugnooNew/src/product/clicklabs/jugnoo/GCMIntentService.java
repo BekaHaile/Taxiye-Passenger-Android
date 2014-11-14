@@ -407,6 +407,15 @@ public class GCMIntentService extends IntentService {
 		    	    					 notificationManagerResume(this, ""+message1, false);
 	    	    					 }
 	    	    				 }
+	    	    				else if(PushFlags.TOGGLE_LOCATION_UPDATES.getOrdinal() == flag){
+	    	    					 int toggleLocation = jObj.getInt("toggle_location");
+	    	    					 if (1 == toggleLocation) {
+	    	    						 new DriverServiceOperations().startDriverService(GCMIntentService.this);
+	    	    					 }
+	    	    					 else{
+	    	    						 new DriverServiceOperations().stopAndScheduleDriverService(GCMIntentService.this);
+	    	    					 }
+	    	    				 }
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 

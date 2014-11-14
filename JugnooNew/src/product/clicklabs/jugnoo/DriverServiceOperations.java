@@ -79,9 +79,9 @@ public class DriverServiceOperations {
 			database2.updateDriverServiceRun(Database2.NO);
 			
 			context.stopService(new Intent(context, DriverLocationUpdateService.class));
-			
-			setupAlarm(context, getRestartSetCalendar().getTimeInMillis());
-			database2.updateDriverServiceTimeToRestart(getRestartSetCalendar().getTimeInMillis());
+			Calendar calendar = getRestartSetCalendar();
+			setupAlarm(context, calendar.getTimeInMillis());
+			database2.updateDriverServiceTimeToRestart(calendar.getTimeInMillis());
 			Log.e("stopAndScheduleDriverService", "=current = "+ System.currentTimeMillis() + " adv = " + getRestartSetCalendar().getTimeInMillis());
 		} catch(Exception e){
 			e.printStackTrace();

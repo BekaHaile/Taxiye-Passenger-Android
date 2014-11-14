@@ -610,7 +610,7 @@ public class Database2 {																	// class for handling database related 
 	
 	
 	public long getDriverServiceTimeToRestart() {
-		long timeToRestart = 0;
+		long timeToRestart = System.currentTimeMillis() - 1000;
 		try {
 			String[] columns = new String[] { Database2.TIME_TO_RESTART };
 			Cursor cursor = database.query(Database2.TABLE_DRIVER_SERVICE_TIME_TO_RESTART, columns, null, null, null, null, null);

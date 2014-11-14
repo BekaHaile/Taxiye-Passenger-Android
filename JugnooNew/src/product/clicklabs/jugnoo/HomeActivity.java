@@ -7751,13 +7751,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									try{
 										JSONObject jObj = new JSONObject(response);
 										if(!jObj.isNull("error")){
-											String errorMessage = jObj.getString("error");
+											final String errorMessage = jObj.getString("error");
 											if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 												cancelTimerRequestRide();
 												HomeActivity.logoutUser(activity);
 											}
 											else{
-												
+												cancelTimerRequestRide();
+												runOnUiThread(new Runnable() {
+													@Override
+													public void run() {
+														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+															new DialogPopup().alertPopup(HomeActivity.this, "", errorMessage);
+															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+															switchPassengerScreen(passengerScreenMode);
+														}
+													}
+												});
 											}
 										}
 										else{
