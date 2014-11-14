@@ -40,7 +40,7 @@ public class DriverServiceOperations {
 	public Calendar getRestartSetCalendar(){
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.add(Calendar.MINUTE, 6);
+		calendar.add(Calendar.HOUR, 2);
 		return calendar;
 	}
 	

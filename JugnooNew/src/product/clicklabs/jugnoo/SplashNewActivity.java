@@ -487,8 +487,20 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				RequestParams params = new RequestParams();
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.deviceToken);
-				params.put("latitude", ""+Data.latitude);
-				params.put("longitude", ""+Data.longitude);
+				
+				Database2 database2 = new Database2(activity);
+				final String serviceRestartOnReboot = database2.getDriverServiceRun();
+				if(Database2.NO.equalsIgnoreCase(serviceRestartOnReboot)){
+					params.put("latitude", "0");
+					params.put("longitude", "0");
+				}
+				else{
+					params.put("latitude", ""+Data.latitude);
+					params.put("longitude", ""+Data.longitude);
+				}
+				database2.close();
+				
+				
 				params.put("app_version", ""+Data.appVersion);
 				params.put("device_type", "0");
 

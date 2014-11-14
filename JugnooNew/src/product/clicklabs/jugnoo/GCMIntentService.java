@@ -1,8 +1,11 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.app.IntentService;
@@ -19,6 +22,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
@@ -26,6 +30,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.maps.model.LatLng;
 
 public class GCMIntentService extends IntentService {
 	
@@ -413,7 +418,7 @@ public class GCMIntentService extends IntentService {
 	    	    						 new DriverServiceOperations().startDriverService(GCMIntentService.this);
 	    	    					 }
 	    	    					 else{
-	    	    						 new DriverServiceOperations().stopAndScheduleDriverService(GCMIntentService.this);
+	    	    						 sendNullLocationToServerForDriver(GCMIntentService.this);
 	    	    					 }
 	    	    				 }
 	    	    				 
@@ -437,6 +442,58 @@ public class GCMIntentService extends IntentService {
 	        GcmBroadcastReceiver.completeWakefulIntent(intent);
 	    }
 
+	    
+	    
+	    public void sendNullLocationToServerForDriver(final Context context){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Database2 database2 = new Database2(context);
+					try {
+						String accessToken = database2.getDLDAccessToken();
+						String deviceToken = database2.getDLDDeviceToken();
+						String serverUrl = database2.getDLDServerUrl();
+						
+						if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
+								ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+								nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+								nameValuePairs.add(new BasicNameValuePair("latitude", "0"));
+								nameValuePairs.add(new BasicNameValuePair("longitude", "0"));
+								nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
+					
+								HttpRequester simpleJSONParser = new HttpRequester();
+								String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
+											
+								Log.e("result in sending zero location on push", "=" + result);
+								
+								try{
+									//{"log":"Updated"}
+									JSONObject jObj = new JSONObject(result);
+									if(jObj.has("log")){
+										String log = jObj.getString("log");
+										if("Updated".equalsIgnoreCase(log)){
+											new DriverServiceOperations().stopAndScheduleDriverService(context);
+										}
+									}
+								} catch(Exception e){
+									e.printStackTrace();
+								}
+								
+								simpleJSONParser = null;
+								nameValuePairs = null;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					finally{
+						database2.close();
+					}
+				}
+			}).start();
+		}
+	    
+	    
+	    
 	    
 	    
 	    public static MediaPlayer mediaPlayer;

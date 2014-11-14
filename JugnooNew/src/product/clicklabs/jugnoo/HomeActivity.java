@@ -1090,7 +1090,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										callAnAutoPopup(HomeActivity.this);
 									}
 									else{
-										noDriverAvailablePopup(HomeActivity.this, true);
+										noDriverAvailablePopup(HomeActivity.this, true, "");
 									}
 								}
 								else{
@@ -1830,38 +1830,82 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 		
-		
 		if(mode == JugnooDriverMode.ON){
-			new DriverServiceOperations().startDriverService(HomeActivity.this);
-			jugnooONToggle.setImageResource(R.drawable.on);
+			if(myLocation != null){
+				sendMyLocationToServerForDriver();
+			}
+			else{
+				Toast.makeText(HomeActivity.this, "Waiting for location...", Toast.LENGTH_SHORT).show();
+			}
 		}
 		else{
-			jugnooONToggle.setImageResource(R.drawable.off);
-			new DriverServiceOperations().stopAndScheduleDriverService(HomeActivity.this);
-			
-			jugnooDriverOnHandler = null;
-			jugnooDriverOnRunnable = null;
-			
-			jugnooDriverOnHandler = new Handler();
-			jugnooDriverOnRunnable = new Runnable() {
-				
-				@Override
-				public void run() {
-					changeJugnooONUI(JugnooDriverMode.ON);
-				}
-			};
-			jugnooDriverOnHandler.postDelayed(jugnooDriverOnRunnable, SERVICE_RESTART_TIMER);
 			sendNullLocationToServerForDriver();
 		}
 		
 	}
 	
-	
-	public void sendNullLocationToServerForDriver(){
+	public void sendMyLocationToServerForDriver(){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+			}
+		});
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
+					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+					nameValuePairs.add(new BasicNameValuePair("latitude", ""+myLocation.getLatitude()));
+					nameValuePairs.add(new BasicNameValuePair("longitude", ""+myLocation.getLongitude()));
+					nameValuePairs.add(new BasicNameValuePair("device_token", Data.deviceToken));
+					
+					Log.e("nameValuePairs in sending null loc","="+nameValuePairs);
+					
+					HttpRequester simpleJSONParser = new HttpRequester();
+					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/update_driver_location", nameValuePairs);
+					
+					Log.e("result ","="+result);
+					
+					simpleJSONParser = null;
+					nameValuePairs = null;
+					
+					//{"log":"Updated"}
+					JSONObject jObj = new JSONObject(result);
+					if(jObj.has("log")){
+						String log = jObj.getString("log");
+						if("Updated".equalsIgnoreCase(log)){
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									DialogPopup.dismissLoadingDialog();
+									new DriverServiceOperations().startDriverService(HomeActivity.this);
+									jugnooONToggle.setImageResource(R.drawable.on);
+								}
+							});
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+	
+	
+	public void sendNullLocationToServerForDriver(){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+			}
+		});
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 					nameValuePairs.add(new BasicNameValuePair("latitude", "0"));
@@ -1877,6 +1921,35 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 					simpleJSONParser = null;
 					nameValuePairs = null;
+					
+					//{"log":"Updated"}
+					JSONObject jObj = new JSONObject(result);
+					if(jObj.has("log")){
+						String log = jObj.getString("log");
+						if("Updated".equalsIgnoreCase(log)){
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									DialogPopup.dismissLoadingDialog();
+									jugnooONToggle.setImageResource(R.drawable.off);
+									new DriverServiceOperations().stopAndScheduleDriverService(HomeActivity.this);
+									
+									jugnooDriverOnHandler = null;
+									jugnooDriverOnRunnable = null;
+									
+									jugnooDriverOnHandler = new Handler();
+									jugnooDriverOnRunnable = new Runnable() {
+										
+										@Override
+										public void run() {
+											changeJugnooONUI(JugnooDriverMode.ON);
+										}
+									};
+									jugnooDriverOnHandler.postDelayed(jugnooDriverOnRunnable, SERVICE_RESTART_TIMER);
+								}
+							});
+						}
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -5711,7 +5784,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby){
+	void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby, String message){
 		try {
 			if(noDriversDialog != null && noDriversDialog.isShowing()){
 				noDriversDialog.dismiss();
@@ -5742,7 +5815,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textMessage.setText("Sorry there are no drivers available nearby within 3 km. We will look into it");
 			}
 			else{
-				textMessage.setText("Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later.");
+				if("".equalsIgnoreCase(message)){
+					textMessage.setText("Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later.");
+				}
+				else{
+					textMessage.setText(message);
+				}
+				//"Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later."
 			}
 			
 
@@ -7699,7 +7778,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								@Override
 								public void run() {
 									if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-										noDriverAvailablePopup(HomeActivity.this, false);
+										noDriverAvailablePopup(HomeActivity.this, false, "");
 										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
 									}
@@ -7752,22 +7831,25 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										JSONObject jObj = new JSONObject(response);
 										if(!jObj.isNull("error")){
 											final String errorMessage = jObj.getString("error");
+											final int flag = jObj.getInt("flag");
 											if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 												cancelTimerRequestRide();
 												HomeActivity.logoutUser(activity);
 											}
 											else{
-												cancelTimerRequestRide();
-												runOnUiThread(new Runnable() {
-													@Override
-													public void run() {
-														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-															new DialogPopup().alertPopup(HomeActivity.this, "", errorMessage);
-															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-															switchPassengerScreen(passengerScreenMode);
+												if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+													cancelTimerRequestRide();
+													runOnUiThread(new Runnable() {
+														@Override
+														public void run() {
+															if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+																new DialogPopup().alertPopup(HomeActivity.this, "", errorMessage);
+																HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+																switchPassengerScreen(passengerScreenMode);
+															}
 														}
-													}
-												});
+													});
+												}
 											}
 										}
 										else{
@@ -7807,7 +7889,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 													@Override
 													public void run() {
 														if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-															noDriverAvailablePopup(HomeActivity.this, false);
+															noDriverAvailablePopup(HomeActivity.this, false, log);
 															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 															switchPassengerScreen(passengerScreenMode);
 														}
@@ -7922,7 +8004,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					noDriverAvailablePopup(HomeActivity.this, false);
+					noDriverAvailablePopup(HomeActivity.this, false, logMessage);
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 					switchPassengerScreen(passengerScreenMode);
 				}
