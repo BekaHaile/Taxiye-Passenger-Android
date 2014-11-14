@@ -24,7 +24,7 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 				}
 				long currentTime = System.currentTimeMillis();
 				
-				Log.e("currentTime - lastTime", "="+(currentTime - lastTime));
+				Log.e("currentTime - lastTime", "="+((currentTime - lastTime)/1000));
 		    	Log.writeLogToFile("AlarmReceiver", "Receiver "+new DateOperations().getCurrentTime()+" = "+(currentTime - lastTime) 
 		    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));
 				

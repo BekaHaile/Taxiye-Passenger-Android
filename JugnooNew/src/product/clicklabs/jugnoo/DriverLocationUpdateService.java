@@ -20,8 +20,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DriverLocationUpdateService extends Service {
 	
-//	LocationFetcherDriver locationFetcherDriver;
-	LocationFetcherDriverGPS locationFetcherDriver;
+	LocationFetcherDriver locationFetcherDriver;
+//	LocationFetcherDriverGPS locationFetcherDriver;
+//	GPSLocationFetcher locationFetcherDriver;
 	GPSLocationFetcher gpsLocationFetcher;
 	
 	long serverUpdateTimePeriod = 60000;
@@ -63,9 +64,10 @@ public class DriverLocationUpdateService extends Service {
     				locationFetcherDriver = null;
     			}
 //    			serverUpdateTimePeriod = 60000;
-    			serverUpdateTimePeriod = 120000;
-//    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
-    			locationFetcherDriver = new LocationFetcherDriverGPS(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+    			serverUpdateTimePeriod = 2 * 60000;
+    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+//    			locationFetcherDriver = new LocationFetcherDriverGPS(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+//    			locationFetcherDriver = new GPSLocationFetcher(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     			if(gpsLocationFetcher != null){
     				gpsLocationFetcher.destroy();
     				gpsLocationFetcher = null;
@@ -108,7 +110,7 @@ public class DriverLocationUpdateService extends Service {
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
 		
-		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 		
 		
 		

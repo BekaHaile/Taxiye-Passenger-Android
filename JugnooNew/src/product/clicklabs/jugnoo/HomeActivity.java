@@ -2575,6 +2575,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					markerOptions1.snippet("");
 					markerOptions1.position(Data.assignedDriverInfo.latLng);
 					markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
+					markerOptions1.anchor(0.5f, 0.7f);
 					
 					driverLocationMarker = map.addMarker(markerOptions1);
 					
@@ -4083,6 +4084,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		markerOptions.snippet(""+driverInfo.userId);
 		markerOptions.position(driverInfo.latLng);
 		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
+		markerOptions.anchor(0.5f, 0.7f);
+		
 		map.addMarker(markerOptions);
 //		CircleOptions circleOptions = new CircleOptions();
 //		circleOptions.center(driverInfo.latLng);

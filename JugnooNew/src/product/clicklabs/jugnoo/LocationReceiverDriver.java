@@ -12,15 +12,16 @@ public class LocationReceiverDriver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-    	Log.e("intent", "");
     	final Location location = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
     	if(location != null){
 	    	new Thread(new Runnable() {
 				@Override
 				public void run() {
-					Database2 database2 = new Database2(context);
-			    	database2.updateDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-			    	database2.close();
+					if(location.hasAccuracy() && (location.getAccuracy() <= 500)){
+						Database2 database2 = new Database2(context);
+				    	database2.updateDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+				    	database2.close();
+					}
 			    	Log.e("DriverLocationUpdateService location in pi reciever ", "=="+location);
 			    	Log.writeLogToFile("LocationReciever", "Receiver "+new DateOperations().getCurrentTime()+" = "+location 
 			    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));

@@ -12,7 +12,6 @@ public class LocationReceiverDriverGPS extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-    	Log.e("intent", "");
     	final Location location = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
     	if(location != null){
 	    	new Thread(new Runnable() {
