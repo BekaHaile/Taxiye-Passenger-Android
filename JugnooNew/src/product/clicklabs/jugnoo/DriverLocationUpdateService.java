@@ -21,8 +21,6 @@ import com.google.android.gms.maps.model.LatLng;
 public class DriverLocationUpdateService extends Service {
 	
 	LocationFetcherDriver locationFetcherDriver;
-//	LocationFetcherDriverGPS locationFetcherDriver;
-//	GPSLocationFetcher locationFetcherDriver;
 	GPSLocationFetcher gpsLocationFetcher;
 	
 	long serverUpdateTimePeriod = 60000;
@@ -42,7 +40,7 @@ public class DriverLocationUpdateService extends Service {
     public void onCreate() {
         
     }
-	
+
 	
     @Override
     public void onStart(Intent intent, int startId) {
@@ -64,10 +62,7 @@ public class DriverLocationUpdateService extends Service {
     				locationFetcherDriver = null;
     			}
     			serverUpdateTimePeriod = 60000;
-//    			serverUpdateTimePeriod = 2 * 60000;
     			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
-//    			locationFetcherDriver = new LocationFetcherDriverGPS(DriverLocationUpdateService.this, serverUpdateTimePeriod);
-//    			locationFetcherDriver = new GPSLocationFetcher(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     			if(gpsLocationFetcher != null){
     				gpsLocationFetcher.destroy();
     				gpsLocationFetcher = null;

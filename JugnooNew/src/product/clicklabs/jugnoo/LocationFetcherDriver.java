@@ -111,9 +111,6 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected ********************************************************");
 		
-		//PRIORITY_BALANCED_POWER_ACCURACY
-		//PRIORITY_HIGH_ACCURACY
-		
 		locationrequest = LocationRequest.create();
 		locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 		locationrequest.setInterval(requestInterval);

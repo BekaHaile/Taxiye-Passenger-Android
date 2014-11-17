@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -121,6 +122,7 @@ public class DriverRidesFragment extends Fragment {
 	
 	class ViewHolderDriverRides {
 		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue;
+		ImageView couponImg;
 		LinearLayout relative;
 		int id;
 	}
@@ -162,6 +164,7 @@ public class DriverRidesFragment extends Fragment {
 				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(getActivity()));
 				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.regularFont(getActivity()));
 				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
+				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
 				
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
@@ -228,6 +231,7 @@ public class DriverRidesFragment extends Fragment {
 									byte[] arg2) {
 								String response = new String(arg2);
 								Log.d("Server response", "response = " + response);
+								
 								try {
 									jObj = new JSONObject(response);
 									if(!jObj.isNull("error")){

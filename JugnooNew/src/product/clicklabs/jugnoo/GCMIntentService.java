@@ -68,10 +68,10 @@ public class GCMIntentService extends IntentService {
 				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 				
-				Notification.Builder builder = new Notification.Builder(context);
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 				builder.setAutoCancel(true);
 				builder.setContentTitle("Jugnoo");
-				builder.setStyle(new Notification.BigTextStyle().bigText(message));
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
 				
@@ -118,10 +118,10 @@ public class GCMIntentService extends IntentService {
 				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 				
-				Notification.Builder builder = new Notification.Builder(context);
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 				builder.setAutoCancel(true);
 				builder.setContentTitle("Jugnoo");
-				builder.setStyle(new Notification.BigTextStyle().bigText(message));
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
 				

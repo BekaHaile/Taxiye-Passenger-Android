@@ -165,6 +165,15 @@
     </LinearLayout>
     
     
+    <LinearLayout 
+         android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+            android:layout_marginRight="20px"
+            android:gravity="right"
+        >
     
     <TextView
             android:id="@+id/fareValue"
@@ -173,13 +182,20 @@
             android:text="Rs. 2500"
             android:textColor="@color/blue_btn"
             android:gravity="center_vertical|right"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20px"
             android:textSize="36px"
-            android:layout_marginLeft="0px"
              />
     
+    <ImageView
+        android:id="@+id/couponImg"
+            android:layout_width="72px"
+            android:layout_height="47px"
+            android:src="@drawable/free_rides_icon"
+            android:tag="mwar"
+            android:layout_below="@+id/fareValue"
+            android:layout_marginTop="40px"
+            android:visibility="gone"
+             />
+    </LinearLayout>
     
     </RelativeLayout>
 

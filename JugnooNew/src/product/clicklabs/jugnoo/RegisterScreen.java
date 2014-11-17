@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -20,7 +19,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -49,9 +47,14 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	String name = "", referralCode = "", emailId = "", phoneNo = "", password = "";
 	
 	public static boolean facebookLogin = false;
-	boolean loginDataFetched = false, showOtpDialog = false;
-	String otpAlertString = "";
+	boolean loginDataFetched = false, sendToOtpScreen = false;
+	int otpFlag = 0;
 	
+	public void resetFlags(){
+		loginDataFetched = false;
+		sendToOtpScreen = false;
+		otpFlag = 0;
+	}
 	
 	
 	@Override
@@ -229,10 +232,10 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 																if(noFbEmail){
 																	emailId = "";
 																}
-																sendFacebookSignupValues(RegisterScreen.this, referralCode, "", phoneNo, password);
+																sendFacebookSignupValues(RegisterScreen.this, referralCode, phoneNo, password);
 															}
 															else{
-																sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password, "");
+																sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password);
 															}
 															
 														}
@@ -294,10 +297,36 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		if(facebookLogin){
 			nameEt.setText(Data.fbFirstName + " " + Data.fbLastName);
-			emailIdEt.setText(Data.fbUserEmail);
-			
 			nameEt.setEnabled(false);
-			emailIdEt.setEnabled(false);
+			if("".equalsIgnoreCase(Data.fbUserEmail)){
+				emailIdEt.setText("");
+				emailIdEt.setEnabled(true);
+			}
+			else{
+				emailIdEt.setText(Data.fbUserEmail);
+				emailIdEt.setEnabled(false);
+			}
+		}
+		
+		try {
+			if(getIntent().hasExtra("back_from_otp")){
+				if(facebookLogin){
+					referralCodeEt.setText(OTPConfirmScreen.facebookRegisterData.referralCode);
+					phoneNoEt.setText(OTPConfirmScreen.facebookRegisterData.phoneNo);
+					passwordEt.setText(OTPConfirmScreen.facebookRegisterData.password);
+					confirmPasswordEt.setText(OTPConfirmScreen.facebookRegisterData.password);
+				}
+				else{
+					nameEt.setText(OTPConfirmScreen.emailRegisterData.name);
+					emailIdEt.setText(OTPConfirmScreen.emailRegisterData.emailId);
+					referralCodeEt.setText(OTPConfirmScreen.emailRegisterData.referralCode);
+					phoneNoEt.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
+					passwordEt.setText(OTPConfirmScreen.emailRegisterData.password);
+					confirmPasswordEt.setText(OTPConfirmScreen.emailRegisterData.password);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		
@@ -438,9 +467,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	 * ASync for register from server
 	 */
 	public void sendSignupValues(final Activity activity, final String name, final String referralCode, 
-			final String emailId, final String phoneNo, final String password, final String otp) {
+			final String emailId, final String phoneNo, final String password) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
+			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();
@@ -455,7 +484,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			params.put("ph_no", phoneNo);
 			params.put("email", emailId);
 			params.put("password", password);
-			params.put("otp", otp);
+			params.put("otp", "");
 			params.put("device_type", "0");
 			params.put("device_token", Data.deviceToken);
 			params.put("latitude", ""+Data.latitude);
@@ -471,7 +500,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			Log.i("ph_no", "=" + phoneNo);
 			Log.i("email", "=" + emailId);
 			Log.i("password", "=" + password);
-			Log.i("otp", "=" + otp);
+			Log.i("otp", "=" + "");
 			Log.i("device_token", "=" + Data.deviceToken);
 			Log.i("latitude", "=" + Data.latitude);
 			Log.i("longitude", "=" + Data.longitude);
@@ -511,7 +540,6 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								if(!newUpdate){
 								
 								if(!jObj.isNull("error")){
-									DialogPopup.dismissLoadingDialog();
 									int flag = jObj.getInt("flag");	
 									String errorMessage = jObj.getString("error");
 									
@@ -527,21 +555,13 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										RegisterScreen.this.emailId = emailId;
 										RegisterScreen.this.phoneNo = phoneNo;
 										RegisterScreen.this.password = password;
-										otpAlertString = errorMessage;
-										showOtpDialog = true;
-									}
-									else if(1 == flag){ // {"error": 'Incorrect verification code',"flag":1}
-										RegisterScreen.this.name = name;
-										RegisterScreen.this.referralCode = referralCode;
-										RegisterScreen.this.emailId = emailId;
-										RegisterScreen.this.phoneNo = phoneNo;
-										RegisterScreen.this.password = password;
-										otpAlertString = errorMessage;
-										showOtpDialog = true;
+										otpFlag = 0;
+										sendToOtpScreen = true;
 									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
+									DialogPopup.dismissLoadingDialog();
 								}
 								else{
 									new JSONParser().parseLoginData(activity, response);
@@ -576,97 +596,13 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	}
 	
 	
-	
-	
-	void confirmOTPPopup(Activity activity){
-
-		try {
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.otp_confirm_dialog);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
-			
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-			
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(getApplicationContext()));
-			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(getApplicationContext()));
-			
-			
-			final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(getApplicationContext()));
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(getApplicationContext()));
-			
-			btnConfirm.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					String code = etCode.getText().toString().trim();
-					if("".equalsIgnoreCase(code)){
-						etCode.requestFocus();
-						etCode.setError("Code can't be empty.");
-					}
-					else{
-						dialog.dismiss();
-						if(facebookLogin){
-							sendFacebookSignupValues(RegisterScreen.this, code, referralCode, phoneNo, password);
-						}
-						else{
-							sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password, code);
-						}
-					}
-				}
-				
-			});
-			
-			
-			etCode.setOnEditorActionListener(new OnEditorActionListener() {
-
-				@Override
-				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-					int result = actionId & EditorInfo.IME_MASK_ACTION;
-					switch (result) {
-						case EditorInfo.IME_ACTION_DONE:
-							btnConfirm.performClick();
-						break;
-
-						case EditorInfo.IME_ACTION_NEXT:
-						break;
-
-						default:
-					}
-					return true;
-				}
-			});
-			
-			crossbtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-				
-			});
-
-			dialog.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-	}
-	
-	
-	
 
 	/**
 	 * ASync for login from server
 	 */
-	public void sendFacebookSignupValues(final Activity activity, final String referralCode,  String otp, final String phoneNo, final String password) {
+	public void sendFacebookSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
+			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();
@@ -690,7 +626,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			params.put("os_version", Data.osVersion);
 			params.put("device_name", Data.deviceName);
 			params.put("device_type", "0");
-			params.put("otp", otp);
+			params.put("otp", "");
 			params.put("ph_no", phoneNo);
 			params.put("password", password);
 			params.put("referral_code", referralCode);
@@ -709,7 +645,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			Log.i("os_version", "="+Data.osVersion);
 			Log.i("device_name", "="+Data.deviceName);
 			Log.i("device_type", "="+"0");
-			Log.i("otp", "="+otp);
+			Log.i("otp", "="+"");
 			Log.i("ph_no", "="+phoneNo);
 			Log.i("password", "="+password);
 			Log.i("referral_code", "="+referralCode);
@@ -741,50 +677,29 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
 								
 								if(!newUpdate){
-								
-								if(!jObj.isNull("error")){
-									DialogPopup.dismissLoadingDialog();
-//									{"error": 'Some parameter missing',"flag":0} //error
-//									{"error": 'Not An Authenticated User!',"flag":1}
-//									{"error": 'Please enter otp',"flag":2}  
-//									{"error": 'Please enter details',"flag":3}
-//								{"error": 'Message sending failed',"flag":4}
-//								{"error": 'User not registered',"flag":5}
-//								{"error": 'Incorrect verification code',"flag":6}
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(2 == flag){ // {"error": 'Please enter otp',"flag":2} 
-										RegisterScreen.this.referralCode = referralCode;
-										RegisterScreen.this.phoneNo = phoneNo;
-										RegisterScreen.this.password = password;
-										otpAlertString = errorMessage;
-										showOtpDialog = true;
-									}
-									else if(6 == flag){ // {"error": 'Incorrect verification code',"flag":6}
-										RegisterScreen.this.referralCode = referralCode;
-										RegisterScreen.this.phoneNo = phoneNo;
-										RegisterScreen.this.password = password;
-										otpAlertString = errorMessage;
-										showOtpDialog = true;
+									if(!jObj.isNull("error")){
+										int flag = jObj.getInt("flag");	
+										String errorMessage = jObj.getString("error");
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
+										}
+										else if(2 == flag){ // {"error": 'Please enter otp',"flag":2} 
+											RegisterScreen.this.referralCode = referralCode;
+											RegisterScreen.this.phoneNo = phoneNo;
+											RegisterScreen.this.password = password;
+											otpFlag = 1;
+											sendToOtpScreen = true;
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+										DialogPopup.dismissLoadingDialog();
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										new JSONParser().parseLoginData(activity, response);
+										loginDataFetched = true;
+										DialogPopup.dismissLoadingDialog();
 									}
-									
-								}
-								else{
-									
-									new JSONParser().parseLoginData(activity, response);
-									loginDataFetched = true;
-									
-									DialogPopup.dismissLoadingDialog();
-									
-								}
 								}
 								else{
 									DialogPopup.dismissLoadingDialog();
@@ -805,6 +720,29 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 
 	}
 	
+	
+	/**
+	 * Send intent to otp screen by making required data objects
+	 *  flag 0 for email, 1 for Facebook
+	 */
+	public void sendIntentToOtpScreen(){
+		if(0 == otpFlag){
+			RegisterScreen.facebookLogin = false;
+			OTPConfirmScreen.intentFromRegister = true;
+			OTPConfirmScreen.emailRegisterData = new EmailRegisterData(name, emailId, phoneNo, password, referralCode);
+			startActivity(new Intent(RegisterScreen.this, OTPConfirmScreen.class));
+			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		}
+		else if(1 == otpFlag){
+			RegisterScreen.facebookLogin = true;
+			OTPConfirmScreen.intentFromRegister = true;
+			OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(phoneNo, password, referralCode);
+			startActivity(new Intent(RegisterScreen.this, OTPConfirmScreen.class));
+			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		}
+	}
 	
 	
 	
@@ -827,10 +765,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
 		}
-		else if(hasFocus && showOtpDialog){
-			showOtpDialog = false;
-			confirmOTPPopup(RegisterScreen.this);
-			new DialogPopup().alertPopup(RegisterScreen.this, "", otpAlertString);
+		else if(hasFocus && sendToOtpScreen){
+			sendIntentToOtpScreen();
 		}
 		
 	}
