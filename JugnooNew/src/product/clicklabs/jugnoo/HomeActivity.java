@@ -132,14 +132,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout bookingsRl;
 	TextView bookingsText;
 	
-	RelativeLayout aboutRl;
-	TextView aboutText;
-	
-	RelativeLayout supportRl;
-	TextView supportText;
-	
-	RelativeLayout sosRl;
-	TextView sosText;
+	RelativeLayout helpRl;
+	TextView helpText;
 	
 	RelativeLayout languagePrefrencesRl;
 	TextView languagePrefrencesText;
@@ -471,15 +465,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
 		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.regularFont(getApplicationContext()));
 		
-		aboutRl = (RelativeLayout) findViewById(R.id.aboutRl);
-		aboutText = (TextView) findViewById(R.id.aboutText); aboutText.setTypeface(Data.regularFont(getApplicationContext()));
-		
-		supportRl = (RelativeLayout) findViewById(R.id.supportRl);
-		supportText = (TextView) findViewById(R.id.supportText); supportText.setTypeface(Data.regularFont(getApplicationContext()));
-		
-		sosRl = (RelativeLayout) findViewById(R.id.sosRl);
-		sosText = (TextView) findViewById(R.id.sosText); sosText.setTypeface(Data.regularFont(getApplicationContext()));
-		sosRl.setVisibility(View.GONE);
+		helpRl = (RelativeLayout) findViewById(R.id.helpRl);
+		helpText = (TextView) findViewById(R.id.helpText); helpText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		languagePrefrencesRl = (RelativeLayout) findViewById(R.id.languagePrefrencesRl);
 		languagePrefrencesText = (TextView) findViewById(R.id.languagePrefrencesText); languagePrefrencesText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -925,40 +912,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		});
 		
 		
-		aboutRl.setOnClickListener(new View.OnClickListener() {
+		helpRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
+				startActivity(new Intent(HomeActivity.this, HelpActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
-		
-		supportRl.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent email = new Intent(Intent.ACTION_SEND);
-				email.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@jugnoo.in" });
-				email.putExtra(Intent.EXTRA_SUBJECT, "Jugnoo Support");
-				email.putExtra(Intent.EXTRA_TEXT, "");
-				email.setType("message/rfc822");
-				startActivity(Intent.createChooser(email, "Choose an Email client:"));
-			}
-		});
-		
-		
-		
-		sosRl.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent callIntent = new Intent(Intent.ACTION_VIEW);
-		        callIntent.setData(Uri.parse("tel:100"));
-		        startActivity(callIntent);
-			}
-		});
 		
 		
 		languagePrefrencesRl.setOnClickListener(new View.OnClickListener() {

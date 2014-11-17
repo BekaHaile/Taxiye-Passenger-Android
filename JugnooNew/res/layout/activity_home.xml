@@ -1346,7 +1346,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:splitMotionEvents="false" >
-
+        
         <LinearLayout
             android:layout_width="495px"
             android:layout_height="match_parent"
@@ -1578,19 +1578,19 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/aboutRl"
+                        android:id="@+id/helpRl"
                         android:layout_width="match_parent"
                         android:layout_height="84px"
                         android:background="@drawable/menu_item_selector"
                         android:splitMotionEvents="false" >
 
                         <TextView
-                            android:id="@+id/aboutText"
+                            android:id="@+id/helpText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="42px"
-                            android:text="@string/about"
+                            android:text="Help"
                             android:textColor="@color/white"
                             android:textSize="34px" />
 
@@ -1601,53 +1601,6 @@
                             android:background="@drawable/menu_divider" />
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/supportRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/supportText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/support"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/sosRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/sosText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/sos"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/languagePrefrencesRl"
@@ -1694,6 +1647,7 @@
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
+        
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

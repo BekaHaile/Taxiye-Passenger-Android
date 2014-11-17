@@ -4,29 +4,31 @@ import java.text.DecimalFormat;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AboutActivity extends Activity{
+public class HelpActivity extends Activity{
 	
 	
 	LinearLayout relative;
 	
 	Button backBtn;
-	TextView about1Text, about2Text, about3Text;
+	TextView title;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about_activity);
+		setContentView(R.layout.help_activity);
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
-		new ASSL(AboutActivity.this, relative, 1134, 720, false);
+		new ASSL(HelpActivity.this, relative, 1134, 720, false);
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
@@ -77,6 +79,23 @@ public class AboutActivity extends Activity{
 		
 		
 	}
+	
+	
+	public void openMailIntentToSupport(){
+		Intent email = new Intent(Intent.ACTION_SEND);
+		email.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@jugnoo.in" });
+		email.putExtra(Intent.EXTRA_SUBJECT, "Jugnoo Support");
+		email.putExtra(Intent.EXTRA_TEXT, "");
+		email.setType("message/rfc822");
+		startActivity(Intent.createChooser(email, "Choose an Email client:"));
+	}
+	
+	public void openCallIntent(String phoneNumber){
+		Intent callIntent = new Intent(Intent.ACTION_VIEW);
+        callIntent.setData(Uri.parse("tel:"+phoneNumber));
+        startActivity(callIntent);
+	}
+	
 	
 	@Override
 	public void onBackPressed() {
