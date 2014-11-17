@@ -63,8 +63,8 @@ public class DriverLocationUpdateService extends Service {
     				locationFetcherDriver.destroy();
     				locationFetcherDriver = null;
     			}
-//    			serverUpdateTimePeriod = 60000;
-    			serverUpdateTimePeriod = 2 * 60000;
+    			serverUpdateTimePeriod = 60000;
+//    			serverUpdateTimePeriod = 2 * 60000;
     			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
 //    			locationFetcherDriver = new LocationFetcherDriverGPS(DriverLocationUpdateService.this, serverUpdateTimePeriod);
 //    			locationFetcherDriver = new GPSLocationFetcher(DriverLocationUpdateService.this, serverUpdateTimePeriod);
@@ -110,7 +110,7 @@ public class DriverLocationUpdateService extends Service {
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 		String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
 		
-		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 		
 		
 		

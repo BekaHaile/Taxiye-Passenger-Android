@@ -52,6 +52,7 @@
         >
         
         <receiver android:name=".LocationReceiverDriver" />
+        
          <receiver android:name=".LocationReceiverDriverGPS" />
         
         <receiver
