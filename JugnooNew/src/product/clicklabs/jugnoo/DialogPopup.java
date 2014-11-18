@@ -210,7 +210,7 @@ public class DialogPopup {
 				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
 		   	 
 		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Loaction Settings");
+		        alertDialogPrepare.setTitle("Location Settings");
 		        alertDialogPrepare.setCancelable(false);
 		 
 		        // Setting Dialog Message

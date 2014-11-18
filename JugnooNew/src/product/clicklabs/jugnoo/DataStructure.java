@@ -99,13 +99,14 @@ class CustomerInfo{
 
 
 class UserData{
-	String accessToken, userName, userImage, id;
+	String accessToken, userName, userImage, id, referralCode;
 	
-	public UserData(String accessToken, String userName, String userImage, String id){
+	public UserData(String accessToken, String userName, String userImage, String id, String referralCode){
 		this.accessToken = accessToken;
 		this.userName = userName;
 		this.userImage = userImage;
 		this.id = id;
+		this.referralCode = referralCode;
 	}
 }
 

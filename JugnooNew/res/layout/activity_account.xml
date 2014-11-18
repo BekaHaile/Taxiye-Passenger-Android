@@ -39,16 +39,57 @@
         android:orientation="vertical"
         android:splitMotionEvents="false" >
 
-        <ListView
-            android:id="@+id/listViewCoupons"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/transparent"
-            android:dividerHeight="0px"
-            android:listSelector="@drawable/transparent"
-            android:splitMotionEvents="false"
-            android:layout_marginTop="20px" >
-        </ListView>
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <ListView
+                    android:id="@+id/listViewCoupons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px"
+                    android:divider="@drawable/transparent"
+                    android:dividerHeight="0px"
+                    android:listSelector="@drawable/transparent"
+                    android:splitMotionEvents="false" >
+                </ListView>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutReferral"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textViewWantMoreRides"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Want more free rides?"
+                        android:textColor="@color/black"
+                        android:textSize="40px"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/buttonReferUs"
+                        android:layout_width="648px"
+                        android:layout_height="99px"
+                        android:layout_below="@+id/textViewWantMoreRides"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="40px"
+                        android:background="@drawable/blue_btn_selector"
+                        android:text="Refer us"
+                        android:textColor="@drawable/white_color_selector"
+                        android:textSize="@dimen/button_text_size" />
+
+                    
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
 
         <TextView
             android:id="@+id/textViewAccountInfo"

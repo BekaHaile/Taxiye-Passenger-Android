@@ -10,6 +10,7 @@ import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -45,6 +46,12 @@ public class AccountActivity extends Activity{
 	ListView listViewCoupons;
 	CouponsListAdapter couponsListAdapter;
 	
+	RelativeLayout relativeLayoutReferral;
+	TextView textViewWantMoreRides;
+	Button buttonReferUs;
+	
+	
+	
 	AsyncHttpClient fetchAccountInfoClient;
 	
 	ArrayList<CouponInfo> couponInfosList = new ArrayList<CouponInfo>();
@@ -70,9 +77,13 @@ public class AccountActivity extends Activity{
 		couponsListAdapter = new CouponsListAdapter(AccountActivity.this);
 		listViewCoupons.setAdapter(couponsListAdapter);
 		
+		relativeLayoutReferral = (RelativeLayout) findViewById(R.id.relativeLayoutReferral);
+		textViewWantMoreRides = (TextView) findViewById(R.id.textViewWantMoreRides); textViewWantMoreRides.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		buttonReferUs = (Button) findViewById(R.id.buttonReferUs); buttonReferUs.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 
 		textViewAccountInfo.setVisibility(View.GONE);
 		progressBarAccount.setVisibility(View.GONE);
+		relativeLayoutReferral.setVisibility(View.GONE);
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +100,16 @@ public class AccountActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				getAccountInfoAsync(AccountActivity.this);
+			}
+		});
+		
+		
+		buttonReferUs.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(AccountActivity.this, ShareActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
@@ -123,16 +144,21 @@ public class AccountActivity extends Activity{
 			
 			couponInfosList.clear();
 			couponsListAdapter.notifyDataSetChanged();
+			Utils.expandListForFixedHeight(listViewCoupons);
+			relativeLayoutReferral.setVisibility(View.GONE);
 		}
 		else{
 			if(couponInfosList.size() == 0){
 				textViewAccountInfo.setText(message);
 				textViewAccountInfo.setVisibility(View.VISIBLE);
+				relativeLayoutReferral.setVisibility(View.GONE);
 			}
 			else{
 				textViewAccountInfo.setVisibility(View.GONE);
+				relativeLayoutReferral.setVisibility(View.VISIBLE);
 			}
 			couponsListAdapter.notifyDataSetChanged();
+			Utils.expandListForFixedHeight(listViewCoupons);
 		}
 	}
 	
