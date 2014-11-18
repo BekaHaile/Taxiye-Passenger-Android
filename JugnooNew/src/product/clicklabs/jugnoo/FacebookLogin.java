@@ -178,20 +178,24 @@ public class FacebookLogin {
 							try {
 								Data.fbUserEmail = ((String)user.asMap().get("email"));
 								Log.e("Data.userEmail before","="+Data.fbUserEmail);
-								if(Data.fbUserEmail == null && Data.fbUserName != null){
-									Data.fbUserEmail = Data.fbUserName + "@facebook.com";
-								}
 							} catch (Exception e2) {
 								e2.printStackTrace();
+							}
+							finally{
+								if(Data.fbUserEmail == null || "".equalsIgnoreCase(Data.fbUserEmail)){
+									if(Data.fbUserName != null && !"".equalsIgnoreCase(Data.fbUserName)){
+										Data.fbUserEmail = Data.fbUserName + "@facebook.com";
+									}
+									else{
+										Data.fbUserEmail = Data.fbId + "@facebook.com";
+									}
+								}
 							}
 							
 							if(Data.fbUserName == null){
 								Data.fbUserName = "";
 							}
-							
-							if(Data.fbUserEmail == null){
-								Data.fbUserEmail = "";
-							}
+							Log.e("Data.userEmail after","="+Data.fbUserEmail);
 							
 							facebookLoginCallback.facebookLoginDone();
 						}

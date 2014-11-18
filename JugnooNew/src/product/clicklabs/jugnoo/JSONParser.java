@@ -44,7 +44,11 @@ public class JSONParser {
 		
 		try{
 			int currentUserStatus = userData.getInt("current_user_status");
+			
+			
+			
 			if(currentUserStatus == 1){
+				new DriverServiceOperations().startDriverService(context);
 				HomeActivity.userMode = UserMode.DRIVER;
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
 				try {
@@ -61,6 +65,7 @@ public class JSONParser {
 				}
 			}
 			else if(currentUserStatus == 2){
+				new DriverServiceOperations().stopService(context);
 				HomeActivity.userMode = UserMode.PASSENGER;
 				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 				HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
@@ -450,9 +455,12 @@ public class JSONParser {
 					
 					HomeActivity.waitStart = 2;
 					
-					if(-1 == HomeActivity.totalDistance){
-						Data.startRidePreviousLatLng = Data.dCustLatLng;
-						HomeActivity.totalDistance = 0;
+					if(Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0){
+						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
+						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+						
+						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
+						HomeActivity.totalDistance = -1;
 					}
 					else{
 						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
@@ -617,9 +625,9 @@ public class JSONParser {
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
 					
-					if(-1 == HomeActivity.totalDistance){
+					if(Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0){
 						Data.startRidePreviousLatLng = Data.pickupLatLng;
-						HomeActivity.totalDistance = 0;
+						HomeActivity.totalDistance = -1;
 					}
 					else{
 						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
@@ -657,68 +665,52 @@ public class JSONParser {
 	
 	
 	
-	public void clearSPData(final Context context){
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-        	
-	        	SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-	    		Editor editor = pref.edit();
-        		
-        		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
-        		
-        		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
-        		editor.putString(Data.SP_D_CUSTOMER_ID, "");
-        		editor.putString(Data.SP_D_LATITUDE, "0");
-        		editor.putString(Data.SP_D_LONGITUDE, "0");
-        		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
-        		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
-        		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
-        		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
-        		
-        		
-        		
-        		
-        		editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-        		editor.putString(Data.SP_WAIT_TIME, "0");
-        		editor.putString(Data.SP_RIDE_TIME, "0");
-        		editor.putString(Data.SP_LAST_LATITUDE, "0");
-        		editor.putString(Data.SP_LAST_LONGITUDE, "0");
-        		
-        		
-        		
-        		
-        		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+	public void clearSPData(final Context context) {
+		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		Editor editor = pref.edit();
 
-        		editor.putString(Data.SP_C_SESSION_ID, "");
-        		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
-        		editor.putString(Data.SP_C_DRIVER_ID, "");
-        		editor.putString(Data.SP_C_LATITUDE, "0");
-        		editor.putString(Data.SP_C_LONGITUDE, "0");
-        		editor.putString(Data.SP_C_DRIVER_NAME, "");
-        		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
-        		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
-        		editor.putString(Data.SP_C_DRIVER_PHONE, "");
-				editor.putString(Data.SP_C_DRIVER_RATING, "");
-        		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-        		editor.putString(Data.SP_C_DRIVER_DURATION, "");
-        		
-        		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
-        		editor.putString(Data.SP_C_TOTAL_FARE, "0");
-        		editor.putString(Data.SP_C_WAIT_TIME, "0");
-        		
-        	
-	        	editor.commit();
-	    		
-	        	
-	        	Database database = new Database(context);
-				database.deleteSavedPath();
-				database.close();
-        	
-		
-			}
-		}).start();
+		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
+
+		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
+		editor.putString(Data.SP_D_CUSTOMER_ID, "");
+		editor.putString(Data.SP_D_LATITUDE, "0");
+		editor.putString(Data.SP_D_LONGITUDE, "0");
+		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
+		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
+		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
+		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
+
+		editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
+		editor.putString(Data.SP_WAIT_TIME, "0");
+		editor.putString(Data.SP_RIDE_TIME, "0");
+		editor.putString(Data.SP_LAST_LATITUDE, "0");
+		editor.putString(Data.SP_LAST_LONGITUDE, "0");
+
+		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+
+		editor.putString(Data.SP_C_SESSION_ID, "");
+		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
+		editor.putString(Data.SP_C_DRIVER_ID, "");
+		editor.putString(Data.SP_C_LATITUDE, "0");
+		editor.putString(Data.SP_C_LONGITUDE, "0");
+		editor.putString(Data.SP_C_DRIVER_NAME, "");
+		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
+		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
+		editor.putString(Data.SP_C_DRIVER_PHONE, "");
+		editor.putString(Data.SP_C_DRIVER_RATING, "");
+		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
+		editor.putString(Data.SP_C_DRIVER_DURATION, "");
+
+		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
+		editor.putString(Data.SP_C_TOTAL_FARE, "0");
+		editor.putString(Data.SP_C_WAIT_TIME, "0");
+
+		editor.commit();
+
+		Database database = new Database(context);
+		database.deleteSavedPath();
+		database.close();
+
 	}
 	
 	

@@ -230,8 +230,6 @@ public class DriverMissedRidesFragment extends Fragment {
 								try {
 									jObj = new JSONObject(response);
 									if(!jObj.isNull("error")){
-										int flag = jObj.getInt("flag");	
-										String error = jObj.getString("error");
 										String errorMessage = jObj.getString("error");
 										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 											HomeActivity.logoutUser(activity);

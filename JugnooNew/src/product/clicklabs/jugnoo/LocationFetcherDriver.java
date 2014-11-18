@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -23,7 +22,6 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	private final String TAG = this.getClass().getSimpleName();
 	private LocationClient locationclient;
 	private LocationRequest locationrequest;
-	public Location location; // location
 	private PendingIntent locationIntent;
 	
 	private long requestInterval;
@@ -113,9 +111,6 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected ********************************************************");
 		
-		//PRIORITY_BALANCED_POWER_ACCURACY
-		//PRIORITY_HIGH_ACCURACY
-		
 		locationrequest = LocationRequest.create();
 		locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 		locationrequest.setInterval(requestInterval);
@@ -123,7 +118,7 @@ public class LocationFetcherDriver implements GooglePlayServicesClient.Connectio
 		
 		
 		Intent intent = new Intent(context, LocationReceiverDriver.class);
-		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		locationclient.requestLocationUpdates(locationrequest, locationIntent);
 		
 		Log.e("locationrequest priority", "="+locationrequest.getPriority());

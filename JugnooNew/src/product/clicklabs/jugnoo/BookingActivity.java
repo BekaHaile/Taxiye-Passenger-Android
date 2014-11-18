@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -97,6 +98,7 @@ public class BookingActivity extends Activity{
 	
 	class ViewHolderBooking {
 		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue;
+		ImageView couponImg;
 		LinearLayout relative;
 		int id;
 	}
@@ -137,7 +139,7 @@ public class BookingActivity extends Activity{
 				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(getApplicationContext()));
 				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.regularFont(getApplicationContext()));
 				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-				
+				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				

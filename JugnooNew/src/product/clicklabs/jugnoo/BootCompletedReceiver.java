@@ -13,19 +13,21 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         Log.w(TAG, "starting service...");
         
         Database2 database2 = new Database2(context);
-        final String serviceRestartOnReboot = database2.getDriverServiceRestartOnReboot();
-        database2.updateDriverLastLocationTime();
-        
-    	if("yes".equalsIgnoreCase(serviceRestartOnReboot)){
-    		context.startService(new Intent(context, DriverLocationUpdateService.class));
-    	}
-    	else{
-//    		String jugnooOn = database2.getJugnooOn();
-//    		if("off".equalsIgnoreCase(jugnooOn)){
-//    			context.startService(new Intent(context, DriverLocationUpdateService.class));
-//    		}
-    	}
+        try{
+	        final String serviceRestartOnReboot = database2.getDriverServiceRun();
+	        database2.updateDriverLastLocationTime();
+	        
+	    	if(Database2.YES.equalsIgnoreCase(serviceRestartOnReboot)){
+	    		new DriverServiceOperations().startDriverService(context);
+	    	}
+	    	else if(Database2.NO.equalsIgnoreCase(serviceRestartOnReboot)){
+	    		new DriverServiceOperations().rescheduleDriverService(context);
+	    	}
+        } catch(Exception e){
+        	e.printStackTrace();
+        } finally{
+        	database2.close();
+        }
     	
-    	database2.close();
     }
 }

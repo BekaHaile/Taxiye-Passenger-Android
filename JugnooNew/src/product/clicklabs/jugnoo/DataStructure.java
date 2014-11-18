@@ -242,6 +242,8 @@ enum ApiResponseFlags {
 	PARAMETER_MISSING(100),
 	INVALID_ACCESS_TOKEN(101),
 	ERROR_IN_EXECUTION(102),
+	SHOW_ERROR_MESSAGE(103),
+	SHOW_MESSAGE(104),
 	ASSIGNING_DRIVERS(105),
 	NO_DRIVERS_AVAILABLE(106),
 	RIDE_ACCEPTED(107),
@@ -333,7 +335,8 @@ enum PushFlags {
 	WAITING_STARTED(9),
 	WAITING_ENDED(10),
 	CHANGE_STATE(20),
-	DISPLAY_MESSAGE(21)
+	DISPLAY_MESSAGE(21),
+	TOGGLE_LOCATION_UPDATES(22)
 	;
 
 	private int ordinal;
@@ -406,3 +409,40 @@ class CouponInfo{
 	
 }
 
+
+
+enum HelpSection {
+	MAIL_US(-2),
+	CALL_US(-1),
+	
+	ABOUT(0), 
+	FAQ(1),
+	PRIVACY(2),
+	TERMS(3)
+	;
+
+	private int ordinal;
+
+	private HelpSection(int ordinal) {
+		this.ordinal = ordinal;
+	}
+
+	public int getOrdinal() {
+		return ordinal;
+	}
+}
+
+
+class HelpItem{
+	HelpSection id;
+	String name;
+	public HelpItem(HelpSection id, String name){
+		this.id = id;
+		this.name = name;
+	}
+	
+	@Override
+	public String toString() {
+		return name + " " + id + " " + id.getOrdinal();
+	}
+}

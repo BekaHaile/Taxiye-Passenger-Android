@@ -1,8 +1,11 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.app.IntentService;
@@ -65,10 +68,10 @@ public class GCMIntentService extends IntentService {
 				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 				
-				Notification.Builder builder = new Notification.Builder(context);
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 				builder.setAutoCancel(true);
 				builder.setContentTitle("Jugnoo");
-				builder.setStyle(new Notification.BigTextStyle().bigText(message));
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
 				
@@ -115,10 +118,10 @@ public class GCMIntentService extends IntentService {
 				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 				
-				Notification.Builder builder = new Notification.Builder(context);
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 				builder.setAutoCancel(true);
 				builder.setContentTitle("Jugnoo");
-				builder.setStyle(new Notification.BigTextStyle().bigText(message));
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
 				
@@ -407,6 +410,15 @@ public class GCMIntentService extends IntentService {
 		    	    					 notificationManagerResume(this, ""+message1, false);
 	    	    					 }
 	    	    				 }
+	    	    				else if(PushFlags.TOGGLE_LOCATION_UPDATES.getOrdinal() == flag){
+	    	    					 int toggleLocation = jObj.getInt("toggle_location");
+	    	    					 if (1 == toggleLocation) {
+	    	    						 new DriverServiceOperations().startDriverService(GCMIntentService.this);
+	    	    					 }
+	    	    					 else{
+	    	    						 sendNullLocationToServerForDriver(GCMIntentService.this);
+	    	    					 }
+	    	    				 }
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 
@@ -428,6 +440,58 @@ public class GCMIntentService extends IntentService {
 	        GcmBroadcastReceiver.completeWakefulIntent(intent);
 	    }
 
+	    
+	    
+	    public void sendNullLocationToServerForDriver(final Context context){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Database2 database2 = new Database2(context);
+					try {
+						String accessToken = database2.getDLDAccessToken();
+						String deviceToken = database2.getDLDDeviceToken();
+						String serverUrl = database2.getDLDServerUrl();
+						
+						if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
+								ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+								nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+								nameValuePairs.add(new BasicNameValuePair("latitude", "0"));
+								nameValuePairs.add(new BasicNameValuePair("longitude", "0"));
+								nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
+					
+								HttpRequester simpleJSONParser = new HttpRequester();
+								String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
+											
+								Log.e("result in sending zero location on push", "=" + result);
+								
+								try{
+									//{"log":"Updated"}
+									JSONObject jObj = new JSONObject(result);
+									if(jObj.has("log")){
+										String log = jObj.getString("log");
+										if("Updated".equalsIgnoreCase(log)){
+											new DriverServiceOperations().stopAndScheduleDriverService(context);
+										}
+									}
+								} catch(Exception e){
+									e.printStackTrace();
+								}
+								
+								simpleJSONParser = null;
+								nameValuePairs = null;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					finally{
+						database2.close();
+					}
+				}
+			}).start();
+		}
+	    
+	    
+	    
 	    
 	    
 	    public static MediaPlayer mediaPlayer;

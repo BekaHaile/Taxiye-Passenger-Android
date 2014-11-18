@@ -1,12 +1,9 @@
 package product.clicklabs.jugnoo;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import org.apache.http.Header;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
@@ -487,12 +484,24 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				RequestParams params = new RequestParams();
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.deviceToken);
-				params.put("latitude", ""+Data.latitude);
-				params.put("longitude", ""+Data.longitude);
+				
+				Database2 database2 = new Database2(activity);
+				final String serviceRestartOnReboot = database2.getDriverServiceRun();
+				if(Database2.NO.equalsIgnoreCase(serviceRestartOnReboot)){
+					params.put("latitude", "0");
+					params.put("longitude", "0");
+				}
+				else{
+					params.put("latitude", ""+Data.latitude);
+					params.put("longitude", ""+Data.longitude);
+				}
+				database2.close();
+				
+				
 				params.put("app_version", ""+Data.appVersion);
 				params.put("device_type", "0");
 
-				new SingleLocationSender(SplashNewActivity.this, accessToken, Data.deviceToken, Data.SERVER_URL);
+//				new SingleLocationSender(SplashNewActivity.this, accessToken, Data.deviceToken, Data.SERVER_URL);
 				
 				Log.i("accessToken", "=" + accessToken);
 				Log.i("device_token", Data.deviceToken);
@@ -788,7 +797,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.otp_confirm_dialog);
+				dialog.setContentView(R.layout.edittext_confirm_dialog);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, true);
@@ -1034,7 +1043,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
     		public void onLocationChanged(Location loc) {
     			SingleLocationSender.this.location = loc;
     			new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, loc);
-    			new DriverLocationDispatcher().sendLocationToServer(SplashNewActivity.this, "LocationReciever");
+    			new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						new DriverLocationDispatcher().sendLocationToServer(SplashNewActivity.this, "LocationReciever");
+					}
+				}).start();
+    			
     		}
 
     		public void onProviderDisabled(String provider) {
