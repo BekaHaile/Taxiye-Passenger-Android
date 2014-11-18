@@ -1,12 +1,9 @@
 package product.clicklabs.jugnoo;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import org.apache.http.Header;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;

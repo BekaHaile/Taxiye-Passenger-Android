@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+
 public class Utils {
 	
 	/**
@@ -27,6 +28,7 @@ public class Utils {
 			}
 		}
 	}
+	
 	
 	
 }

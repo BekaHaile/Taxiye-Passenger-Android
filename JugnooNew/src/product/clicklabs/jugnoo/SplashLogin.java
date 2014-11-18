@@ -527,7 +527,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						public void onSuccess(int arg0, Header[] arg1,
 								byte[] arg2) {
 							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
+							Log.i("Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
@@ -670,7 +670,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						public void onSuccess(int arg0, Header[] arg1,
 								byte[] arg2) {
 							String response = new String(arg2);
-							Log.e("Server response", "response = " + response);
+							Log.i("Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);

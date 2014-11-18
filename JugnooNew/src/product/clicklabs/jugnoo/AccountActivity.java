@@ -16,8 +16,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -321,7 +321,6 @@ public class AccountActivity extends Activity{
 								try {
 									jObj = new JSONObject(response);
 									if(!jObj.isNull("error")){
-										int flag = jObj.getInt("flag");	
 										String errorMessage = jObj.getString("error");
 										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 											HomeActivity.logoutUser(activity);

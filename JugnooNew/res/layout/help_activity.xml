@@ -33,22 +33,64 @@
             android:textSize="48px" />
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:splitMotionEvents="false" >
-
+        android:splitMotionEvents="false" 
+        >
+        
         <ListView
-            android:id="@+id/listViewHelp"
+        android:id="@+id/listViewHelp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/black_translucent"
+        android:dividerHeight="1px"
+        android:listSelector="@drawable/transparent"
+        android:splitMotionEvents="false" >
+    </ListView>
+    
+        <RelativeLayout 
+            android:id="@+id/helpExpandedRl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/black_translucent"
-            android:dividerHeight="0px"
-            android:listSelector="@drawable/transparent"
-            android:splitMotionEvents="false" >
-        </ListView>
-    </LinearLayout>
+            android:background="@color/white"
+            android:visibility="gone"
+            
+            >
+            
+            <WebView 
+                android:id="@+id/helpWebview"
+   				android:layout_width="fill_parent"
+   				android:layout_height="fill_parent"
+                />
+            
+            
+            <ProgressBar 
+        android:id="@+id/progressBarHelp"
+        android:layout_width="140px"
+        android:layout_height="140px"
+        android:layout_centerInParent="true"
+        />
+        
+        
+            
+            
+        
+        <TextView
+        android:id="@+id/textViewInfoDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/button_text_size" />
+            
+            
+        </RelativeLayout>
+        
+        
+    </RelativeLayout>
 
 </LinearLayout>

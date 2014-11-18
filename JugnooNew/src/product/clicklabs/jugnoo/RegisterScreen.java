@@ -546,14 +546,11 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
 									}
-									else if(2 == flag){ // {"error": "email already registered","flag":2}/error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
 									else if(0 == flag){ // {"error": 'Please enter otp',"flag":0} //error
 										RegisterScreen.this.name = name;
 										RegisterScreen.this.referralCode = referralCode;
 										RegisterScreen.this.emailId = emailId;
-										RegisterScreen.this.phoneNo = phoneNo;
+										RegisterScreen.this.phoneNo = jObj.getString("phone_no");;
 										RegisterScreen.this.password = password;
 										otpFlag = 0;
 										sendToOtpScreen = true;
@@ -668,7 +665,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 						@Override
 						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
 							String response = new String(arg2);
-							Log.v("Server response", "response = " + response);
+							Log.i("Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
@@ -685,7 +682,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										}
 										else if(2 == flag){ // {"error": 'Please enter otp',"flag":2} 
 											RegisterScreen.this.referralCode = referralCode;
-											RegisterScreen.this.phoneNo = phoneNo;
+											RegisterScreen.this.phoneNo = jObj.getString("phone_no");
 											RegisterScreen.this.password = password;
 											otpFlag = 1;
 											sendToOtpScreen = true;

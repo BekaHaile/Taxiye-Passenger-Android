@@ -1,19 +1,36 @@
 package product.clicklabs.jugnoo;
 
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HelpActivity extends Activity{
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+public class HelpActivity extends FragmentActivity{
 	
 	
 	LinearLayout relative;
@@ -21,6 +38,19 @@ public class HelpActivity extends Activity{
 	Button backBtn;
 	TextView title;
 	
+	ListView listViewHelp;
+	RelativeLayout helpExpandedRl;
+	
+	ProgressBar progressBarHelp;
+	TextView textViewInfoDisplay;
+	WebView helpWebview;
+	
+	HelpListAdapter helpListAdapter;
+	
+	ArrayList<HelpItem> helpItems = new ArrayList<HelpItem>();
+	HelpItem selectedHelpItem;
+	
+	AsyncHttpClient fetchHelpDataClient;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,40 +61,20 @@ public class HelpActivity extends Activity{
 		new ASSL(HelpActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn); 
-		about1Text = (TextView) findViewById(R.id.about1Text); about1Text.setTypeface(Data.regularFont(getApplicationContext()));
-		about2Text = (TextView) findViewById(R.id.about2Text); about2Text.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		about3Text = (TextView) findViewById(R.id.about3Text); about3Text.setTypeface(Data.regularFont(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn);
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		listViewHelp = (ListView) findViewById(R.id.listViewHelp);
+		helpListAdapter = new HelpListAdapter();
+		listViewHelp.setAdapter(helpListAdapter);
+		
+		helpExpandedRl = (RelativeLayout) findViewById(R.id.helpExpandedRl);
+		helpExpandedRl.setVisibility(View.GONE);
 		
 		
-		
-		String str1 = getResources().getString(R.string.about_1_text) + "\nTo call a Jugnoo press the blue button on the map screen.";
-		
-		about1Text.setText(str1);
-		
-		
-		//To call a Jugnoo press the blue button on the map screen
-		
-		
-		String str3 = getResources().getString(R.string.about_2_text);
-		
-		about2Text.setText(str3);
-		
-		String str4 = getResources().getString(R.string.about_3_text);
-		
-		//First 2 kms: Rs.30\nAfter 2 kms: Rs. 10/km\nWaiting time: Rs.1.5/min after 15 minutes.
-		//Operation Hours: 7 am - 9 pm currently
-		try{
-			DecimalFormat decimalFormat = new DecimalFormat("#");
-			String str = "Operation Hours: 7 am - 9 pm currently \nFirst "+decimalFormat.format(HomeActivity.fareThresholdDistance)+" kms: Rs."+decimalFormat.format(HomeActivity.fareFixed)+"\nAfter "
-			+decimalFormat.format(HomeActivity.fareThresholdDistance)+" kms:" + " Rs. "+decimalFormat.format(HomeActivity.farePerKm)+"/km\nWaiting time: Rs.1.5/min after 15 minutes.";
-			about3Text.setText(str);
-		} catch(Exception e){
-			e.printStackTrace();
-			about3Text.setText(str4);
-		}
-		
-		
+		progressBarHelp = (ProgressBar) findViewById(R.id.progressBarHelp);
+		textViewInfoDisplay = (TextView) findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getApplicationContext()));
+		helpWebview = (WebView) findViewById(R.id.helpWebview);
 		
 		
 		
@@ -72,13 +82,139 @@ public class HelpActivity extends Activity{
 		
 			@Override
 			public void onClick(View v) {
-				finish();
-				overridePendingTransition(R.anim.left_in, R.anim.left_out);
+				performBackPressed();
 			}
 		});
 		
 		
+		textViewInfoDisplay.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(selectedHelpItem != null){
+					getHelpAsync(HelpActivity.this, selectedHelpItem);
+				}
+			}
+		});
+		
+		
+		helpItems.clear();
+		helpItems.add(new HelpItem(HelpSection.MAIL_US, "Send us mail"));
+		helpItems.add(new HelpItem(HelpSection.CALL_US, "Call us"));
+		helpItems.add(new HelpItem(HelpSection.ABOUT, "About"));
+		helpItems.add(new HelpItem(HelpSection.FAQ, "FAQs"));
+		helpItems.add(new HelpItem(HelpSection.TERMS, "Terms and Conditions"));
+		helpItems.add(new HelpItem(HelpSection.PRIVACY, "Privacy Policy"));
+		
+		
+		helpListAdapter.notifyDataSetChanged();
+		
+		
 	}
+	
+	
+	public void openHelpData(HelpItem helpItem, String data, boolean errorOccured) {
+		if (errorOccured) {
+			textViewInfoDisplay.setVisibility(View.VISIBLE);
+			textViewInfoDisplay.setText(data);
+			helpWebview.setVisibility(View.GONE);
+		} else {
+			textViewInfoDisplay.setVisibility(View.GONE);
+			helpWebview.setVisibility(View.VISIBLE);
+			loadHTMLContent(data);
+		}
+		selectedHelpItem = helpItem;
+		title.setText("" + helpItem.name);
+
+	}
+	
+	public void loadHTMLContent(String data){
+		final String mimeType = "text/html";
+        final String encoding = "UTF-8";
+        helpWebview.loadDataWithBaseURL("", data, mimeType, encoding, "");
+	}
+	
+	
+	class ViewHolderHelp {
+		TextView name;
+		LinearLayout relative;
+		int id;
+	}
+
+	class HelpListAdapter extends BaseAdapter {
+		LayoutInflater mInflater;
+		ViewHolderHelp holder;
+
+		public HelpListAdapter() {
+			mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		}
+
+		@Override
+		public int getCount() {
+			return helpItems.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				holder = new ViewHolderHelp();
+				convertView = mInflater.inflate(R.layout.help_list_item, null);
+				
+				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
+				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
+				
+				holder.relative.setTag(holder);
+				
+				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
+				ASSL.DoMagic(holder.relative);
+				
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolderHelp) convertView.getTag();
+			}
+			
+			holder.id = position;
+			
+			holder.name.setText(helpItems.get(position).name);
+			
+			holder.relative.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					holder = (ViewHolderHelp) v.getTag();
+					
+					switch(helpItems.get(holder.id).id){
+						case MAIL_US:
+							openMailIntentToSupport();
+							break;
+							
+						case CALL_US:
+							openCallIntent("+918556921929");
+							break;
+							
+						default:
+							getHelpAsync(HelpActivity.this, helpItems.get(holder.id));
+							
+					}
+				}
+			});
+			
+			
+			return convertView;
+		}
+
+	}
+	
 	
 	
 	public void openMailIntentToSupport(){
@@ -97,20 +233,115 @@ public class HelpActivity extends Activity{
 	}
 	
 	
+	/**
+	 * ASync for get rides from server
+	 */
+	public void getHelpAsync(final Activity activity, final HelpItem helpItem) {
+		if(fetchHelpDataClient == null){
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				
+				helpExpandedRl.setVisibility(View.VISIBLE);
+				progressBarHelp.setVisibility(View.VISIBLE);
+				textViewInfoDisplay.setVisibility(View.GONE);
+				helpWebview.setVisibility(View.GONE);
+				loadHTMLContent("");
+				
+				Log.e("helpItem", "="+helpItem);
+				
+				RequestParams params = new RequestParams();
+				params.put("section", ""+helpItem.id.getOrdinal());
+				
+				fetchHelpDataClient = Data.getClient();
+				fetchHelpDataClient.post(Data.SERVER_URL + "/get_information", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+	
+							@Override
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								progressBarHelp.setVisibility(View.GONE);
+								openHelpData(helpItem, "Some error occured. Tap to retry.", true);
+							}
+	
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								String response = new String(arg2);
+								Log.i("Server response faq ", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									if(!jObj.isNull("error")){
+										String errorMessage = jObj.getString("error");
+										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+											HomeActivity.logoutUser(activity);
+										}
+										else{
+											openHelpData(helpItem, "Some error occured. Tap to retry.", true);
+										}
+									}
+									else{
+										String data = jObj.getString("data");
+										openHelpData(helpItem, data, false);
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									openHelpData(helpItem, "Some error occured. Tap to retry.", true);
+								}
+								progressBarHelp.setVisibility(View.GONE);
+							}
+							
+							@Override
+							public void onFinish() {
+								super.onFinish();
+								fetchHelpDataClient = null;
+							}
+						});
+			}
+			else {
+				openHelpData(helpItem, "No internet connection. Tap to retry.", true);
+			}
+		}
+	}
+	
+	
+	public void performBackPressed(){
+		try {
+			if(fetchHelpDataClient != null){
+				fetchHelpDataClient.cancelAllRequests(true);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(helpExpandedRl.getVisibility() == View.VISIBLE){
+			helpExpandedRl.setVisibility(View.GONE);
+			title.setText("Help");
+		}
+		else{
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		}
+	}
+	
 	@Override
 	public void onBackPressed() {
-		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
-		super.onBackPressed();
+		performBackPressed();
 	}
 	
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		try {
+			if(fetchHelpDataClient != null){
+				fetchHelpDataClient.cancelAllRequests(true);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         ASSL.closeActivity(relative);
         System.gc();
 	}
-	
 
 }
+
