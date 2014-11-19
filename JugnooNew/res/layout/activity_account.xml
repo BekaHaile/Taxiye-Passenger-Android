@@ -34,21 +34,55 @@
     </RelativeLayout>
 
     <RelativeLayout
+                    android:id="@+id/relativeLayoutReferral"
+                    android:layout_width="match_parent"
+                    android:layout_height="100px"
+                    android:background="@color/black" >
+
+                    <TextView
+                        android:id="@+id/textViewWantMoreRides"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Want more free rides?"
+                        android:textColor="@color/white"
+                        android:textSize="36px"
+                        android:layout_marginLeft="20px"
+                        />
+
+                    <Button
+                        android:id="@+id/buttonReferUs"
+                        android:layout_width="200px"
+                        android:layout_height="60px"
+                        android:layout_centerVertical="true"
+                        android:text="Refer us"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@drawable/white_color_selector"
+                        android:background="@drawable/blue_btn_selector"
+                        android:textSize="36px"
+                        android:layout_marginRight="20px"
+                         />
+
+                    
+                </RelativeLayout>
+    
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:splitMotionEvents="false" >
 
-        <ListView
-            android:id="@+id/listViewCoupons"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/transparent"
-            android:dividerHeight="0px"
-            android:listSelector="@drawable/transparent"
-            android:splitMotionEvents="false"
-            android:layout_marginTop="20px" >
-        </ListView>
+
+                <ListView
+                    android:id="@+id/listViewCoupons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0px"
+                    android:divider="@drawable/transparent"
+                    android:dividerHeight="0px"
+                    android:listSelector="@drawable/transparent"
+                    android:splitMotionEvents="false" >
+                </ListView>
 
         <TextView
             android:id="@+id/textViewAccountInfo"

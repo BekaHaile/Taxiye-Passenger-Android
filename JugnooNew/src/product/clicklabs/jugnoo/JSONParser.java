@@ -32,7 +32,7 @@ public class JSONParser {
 		Data.termsAgreed = 1;
 		
 		Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-				userData.getString("user_image"), userData.getString("id"));
+				userData.getString("user_image"), userData.getString("id"), userData.getString("referral_code"));
 		
 		if(Data.termsAgreed == 1){
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -44,8 +44,6 @@ public class JSONParser {
 		
 		try{
 			int currentUserStatus = userData.getInt("current_user_status");
-			
-			
 			
 			if(currentUserStatus == 1){
 				new DriverServiceOperations().startDriverService(context);
@@ -167,7 +165,7 @@ public class JSONParser {
 		JSONObject userData = jLoginObject.getJSONObject("user_data");
 		
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
-				userData.getString("user_image"), id);
+				userData.getString("user_image"), id, userData.getString("referral_code"));
 		
 		try{
 			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");

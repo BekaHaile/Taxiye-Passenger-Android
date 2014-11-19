@@ -1,5 +1,10 @@
 package product.clicklabs.jugnoo;
 
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
 
 public class Utils {
 	
@@ -30,5 +35,57 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * Expands ListView for fixed height of item inside a ScrollView
+	 */
+	public static void expandListForFixedHeight(ListView list) {
+		try {
+			if (list.getCount() > 0) {
+				ListAdapter listAdap = list.getAdapter();
+				int totalHeight = 0;
+				
+				View listItem = listAdap.getView(0, null, list);
+				listItem.measure(0, 0);
+				int singleHeight = listItem.getMeasuredHeight();
+				totalHeight = singleHeight * list.getCount();
+				
+//				for (int i = 0; i < listAdap.getCount(); i++) {
+//					View listItem = listAdap.getView(i, null, list);
+//					listItem.measure(0, 0);
+//					totalHeight += listItem.getMeasuredHeight();
+//				}
+				ViewGroup.LayoutParams params = list.getLayoutParams();
+				params.height = totalHeight + (list.getDividerHeight() * (list.getCount() - 1));
+				list.setLayoutParams(params);
+				list.requestLayout();
+			}
+		} catch (Exception e) {
+			Log.e("Exception in expanding list ", "," + e.toString());
+		}
+	}
+	
+	/**
+	 * Expands ListView for variable height of item inside a ScrollView
+	 */
+	public static void expandListForVariableHeight(ListView list) {
+		try {
+			if (list.getCount() > 0) {
+				ListAdapter listAdap = list.getAdapter();
+				int totalHeight = 0;
+				
+				for (int i = 0; i < listAdap.getCount(); i++) {
+					View listItem = listAdap.getView(i, null, list);
+					listItem.measure(0, 0);
+					totalHeight += listItem.getMeasuredHeight();
+				}
+				ViewGroup.LayoutParams params = list.getLayoutParams();
+				params.height = totalHeight + (list.getDividerHeight() * (list.getCount() - 1));
+				list.setLayoutParams(params);
+				list.requestLayout();
+			}
+		} catch (Exception e) {
+			Log.e("Exception in expanding list ", "," + e.toString());
+		}
+	}
 	
 }

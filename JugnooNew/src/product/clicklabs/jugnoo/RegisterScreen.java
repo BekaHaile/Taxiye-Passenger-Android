@@ -93,7 +93,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLogin().openFacebookSession(RegisterScreen.this, facebookLoginCallback);
+				new FacebookLogin().openFacebookSession(RegisterScreen.this, facebookLoginCallback, true);
 			}
 		});
 		

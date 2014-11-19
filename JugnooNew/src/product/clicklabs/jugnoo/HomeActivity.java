@@ -898,7 +898,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLogin().openFacebookSession(HomeActivity.this, facebookLoginCallback);
+				startActivity(new Intent(HomeActivity.this, ShareActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
@@ -5518,14 +5519,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	
-	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
-		@Override
-		public void facebookLoginDone() {
-			new FacebookLogin().openAppInviteDialog(HomeActivity.this);
-		}
-	};
 	
 	
 	

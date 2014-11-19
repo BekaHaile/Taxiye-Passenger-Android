@@ -132,13 +132,11 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
-				if(pleaseWaitText.getVisibility() == View.GONE){
-					if(RegisterScreen.facebookLogin){
-						initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
-					}
-					else{
-						initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
-					}
+				stopWaitingTimer();
+				if (RegisterScreen.facebookLogin) {
+					initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
+				} else {
+					initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
 				}
 			}
 		});
@@ -219,7 +217,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 					});
 				}
 			};
-			updateCallMeUI(false);
+			pleaseWaitText.setVisibility(View.VISIBLE);
 			timerCount = 30;
 			waitingTimer.scheduleAtFixedRate(waitingTimerTask, 1000, 1000);
 		} catch(Exception e){
@@ -243,22 +241,10 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			waitingTimerTask = null;
 			waitingTimer = null;
 			timerCount = 30;
-			updateCallMeUI(true);
+			pleaseWaitText.setVisibility(View.GONE);
 		}
 	}
 	
-	public void updateCallMeUI(boolean enable){
-		if(enable){
-			pleaseWaitText.setVisibility(View.GONE);
-			callMeBtn.setEnabled(true);
-			weWillCallText.setEnabled(true);
-		}
-		else{
-			pleaseWaitText.setVisibility(View.VISIBLE);
-			callMeBtn.setEnabled(false);
-			weWillCallText.setEnabled(false);
-		}
-	}
 	
 	
 	

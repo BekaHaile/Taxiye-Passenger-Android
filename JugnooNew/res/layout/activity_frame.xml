@@ -199,7 +199,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="42px"
-                            android:text="@string/invite_friends"
+                            android:text="Invite &amp; Get FREE Rides"
                             android:textColor="@color/white"
                             android:textSize="34px" />
 

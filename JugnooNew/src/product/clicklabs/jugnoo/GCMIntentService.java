@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,6 +30,7 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GCMIntentService extends IntentService {
@@ -240,6 +243,8 @@ public class GCMIntentService extends IntentService {
 		    	    					 double longitude = jObj.getDouble("longitude");
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
+		    	    					 
+		    	    					 sendFlurryEvent(engagementId, startTime, new DateOperations().getCurrentTime());
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
 
@@ -555,6 +560,27 @@ public class GCMIntentService extends IntentService {
 
 	    
 	    
+		
+		
+		
+		public void sendFlurryEvent(String engagementId, String startTime, String receivedTime){
+			try{
+				Map<String, String> articleParams = new HashMap<String, String>();
+				articleParams.put("engagement_id", engagementId);
+				articleParams.put("start_time", startTime);
+				articleParams.put("received_time", receivedTime);
+				FlurryAgent.logEvent("Request push received", articleParams);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
 	    
 	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
 	    		String startTime, String address){
