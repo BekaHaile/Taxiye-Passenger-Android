@@ -3,7 +3,7 @@
     android:id="@+id/relative"
     android:layout_width="720px"
     android:layout_height="1134px"
-    android:background="@color/white"
+    android:background="@drawable/common_bg"
     android:orientation="vertical"
     android:splitMotionEvents="false" >
 
@@ -33,15 +33,6 @@
             android:textSize="48px" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:splitMotionEvents="false" >
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,76 +42,91 @@
                 <RelativeLayout 
                     android:id="@+id/shareImgRl"
                     android:layout_width="match_parent"
-                    android:layout_height="600px"
+                    android:layout_height="740px"
                     >
                 
-                <ImageView 
-                    android:id="@+id/shareImg"
-                    android:layout_width="match_parent"
-                    android:layout_height="600px"
-                    android:tag="mwar"
-                    />
+                    <ImageView 
+        android:id="@+id/jugnooImg"
+        android:layout_width="288px"
+        android:layout_height="288px"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/jugnoo_img"
+        android:tag="mwar"
+        android:layout_marginTop="60px"
+        
+        />
+                    
+                    <ImageView 
+        android:id="@+id/jugnooTextImg"
+        android:layout_width="420px"
+        android:layout_height="136px"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10px"
+        android:src="@drawable/jugnoo_text"
+        android:tag="mwar"
+        android:layout_below="@+id/jugnooImg"
+        
+        />
+                    
+                    
                 
-                <RelativeLayout 
-                    android:layout_width="match_parent"
+                <LinearLayout 
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="40px"
+                    android:layout_centerHorizontal="true"
+                    android:splitMotionEvents="false"
+                    
                     >
                     
-                    <Button 
+                    <ImageView 
                         android:id="@+id/shareFacebookImg"
-                    android:layout_width="80px"
-                    android:layout_height="80px"
-                    android:background="@drawable/blue_btn_selector"
-                    android:layout_marginLeft="40px"
+                    android:layout_width="88px"
+                    android:layout_height="88px"
+                    android:src="@drawable/share_fb_selector"
                     android:tag="mwar"
-                    android:text="F"
-                    android:textColor="@drawable/white_color_selector"
                         />
                     
                     
-                    <Button 
+                    <ImageView 
                         android:id="@+id/shareWhatsappImg"
-                    android:layout_width="80px"
-                    android:layout_height="80px"
-                    android:layout_toRightOf="@+id/shareFacebookImg"
-                    android:layout_marginLeft="110px"
-                    android:background="@drawable/blue_btn_selector"
+                    android:layout_width="88px"
+                    android:layout_height="88px"
+                    android:src="@drawable/share_whatsapp_selector"
                     android:tag="mwar"
-                    android:text="W"
-                    android:textColor="@drawable/white_color_selector"
+                    android:layout_marginLeft="80px"
                         />
                     
-                    <Button 
+                    <ImageView 
                         android:id="@+id/shareSMSImg"
-                    android:layout_width="80px"
-                    android:layout_height="80px"
-                    android:layout_toLeftOf="@+id/shareEMailImg"
-                    android:layout_marginRight="110px"
-                    android:background="@drawable/blue_btn_selector"
+                    android:layout_width="88px"
+                    android:layout_height="88px"
+                    android:src="@drawable/share_sms_selector"
                     android:tag="mwar"
-                    android:text="S"
-                    android:textColor="@drawable/white_color_selector"
+                    android:layout_marginLeft="80px"
                         />
                     
-                    <Button 
+                    <ImageView 
                         android:id="@+id/shareEMailImg"
                     android:layout_width="80px"
                     android:layout_height="80px"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/blue_btn_selector"
-                    android:layout_marginRight="40px"
+                    android:src="@drawable/share_mail_selector"
                     android:tag="mwar"
-                    android:text="E"
-                    android:textColor="@drawable/white_color_selector"
+                    android:layout_marginLeft="80px"
                         />
                     
-                </RelativeLayout>
+                </LinearLayout>
                 
                 </RelativeLayout>
                 
-                
+                <LinearLayout 
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    >
                 
                 <TextView
                         android:id="@+id/textViewSharePromo"
@@ -130,31 +136,16 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="20px"
                         android:layout_marginRight="20px"
-                        android:layout_marginTop="20px"
+                        android:layout_marginTop="30px"
                         android:gravity="center"
                         android:text="Share your promo code 12345678"
                         android:textColor="@color/black"
-                        android:textSize="40px"
+                        android:textSize="36px"
                         />
                 
-                
-                <TextView
-                        android:id="@+id/textViewSharePromo2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textViewReferUs"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="20px"
-                        android:layout_marginRight="20px"
-                        android:gravity="center"
-                        android:text=" with friends and they will get a free ride because of your referral and once they have used Jugnoo, you will earn a free ride (upto Rs. 100) as well."
-                        android:textColor="@color/black"
-                        android:textSize="40px"
-                        />
+                </LinearLayout>
                 
                 
             </LinearLayout>
-        </ScrollView>
-    </RelativeLayout>
 
 </LinearLayout>

@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
@@ -28,16 +30,18 @@ public class ShareActivity extends Activity{
 	Button backBtn;
 	TextView title;
 	
-	Button shareFacebookImg, shareWhatsappImg, shareSMSImg, shareEMailImg;
-	TextView textViewSharePromo, textViewSharePromo2;
+	ImageView shareFacebookImg, shareWhatsappImg, shareSMSImg, shareEMailImg;
+	TextView textViewSharePromo;
 	
 	
-	String str1 = "Share your promo code ",
-			str2 = " with friends and they will get a free ride because of your referral and once they have used Jugnoo, " +
-					"you will earn a free ride (upto Rs. 100) as well.";
+	String str1 = "Share your referral code ",
+			str2 = " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, " +
+					"you will earn a FREE ride (upto Rs. 100) as well.";
 	
-	String shareStr1 = "Hey, \n\nTry Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
-	String shareStr2 = " to get free ride upto Rs. 100.\nDownload it from here: http://smarturl.it/jugnoo";
+	String shareStr1 = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
+	String shareStr11 = "Use Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
+	String shareStr2 = " to get FREE ride upto Rs. 100.\nDownload it from here: http://smarturl.it/jugnoo";
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,22 +55,23 @@ public class ShareActivity extends Activity{
 		backBtn = (Button) findViewById(R.id.backBtn); 
 		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
 		
-		shareFacebookImg = (Button) findViewById(R.id.shareFacebookImg);
-		shareWhatsappImg = (Button) findViewById(R.id.shareWhatsappImg);
-		shareSMSImg = (Button) findViewById(R.id.shareSMSImg);
-		shareEMailImg = (Button) findViewById(R.id.shareEMailImg);
+		shareFacebookImg = (ImageView) findViewById(R.id.shareFacebookImg);
+		shareWhatsappImg = (ImageView) findViewById(R.id.shareWhatsappImg);
+		shareSMSImg = (ImageView) findViewById(R.id.shareSMSImg);
+		shareEMailImg = (ImageView) findViewById(R.id.shareEMailImg);
 		
 		textViewSharePromo = (TextView) findViewById(R.id.textViewSharePromo); textViewSharePromo.setTypeface(Data.regularFont(getApplicationContext()));
-		textViewSharePromo2 = (TextView) findViewById(R.id.textViewSharePromo2); textViewSharePromo2.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		SpannableString sstr = new SpannableString(Data.userData.referralCode);
 		final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-		sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+		final ForegroundColorSpan clrs = new ForegroundColorSpan(Color.parseColor("#FAA31C"));
+		sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sstr.setSpan(clrs, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		
 		textViewSharePromo.setText("");
 		textViewSharePromo.append(str1);
 		textViewSharePromo.append(sstr);
-		textViewSharePromo2.setText(str2);
+		textViewSharePromo.append(str2);
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
 		
@@ -82,7 +87,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLogin().openFacebookSessionForPublush(ShareActivity.this, facebookLoginCallback);
+				new FacebookLogin().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
 			}
 		});
 		
@@ -118,7 +123,9 @@ public class ShareActivity extends Activity{
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
 		public void facebookLoginDone() {
-			new FacebookLogin().shareMessage(ShareActivity.this, shareStr1 + Data.userData.referralCode + shareStr2);
+			new FacebookLogin().publishFeedDialog(ShareActivity.this, 
+					shareStr11 + Data.userData.referralCode + shareStr2, 
+					"Use " + Data.userData.referralCode + " as code & get a FREE ride");
 		}
 	};
 	
@@ -153,7 +160,7 @@ public class ShareActivity extends Activity{
 	public void openMailIntent(String referralCode){
 		Intent email = new Intent(Intent.ACTION_SEND);
 		email.putExtra(Intent.EXTRA_EMAIL, new String[] { "" });
-		email.putExtra(Intent.EXTRA_SUBJECT, "");
+		email.putExtra(Intent.EXTRA_SUBJECT, "Jugnoo Invite");
 		email.putExtra(Intent.EXTRA_TEXT, shareStr1 + referralCode + shareStr2);
 		email.setType("message/rfc822");
 		startActivity(Intent.createChooser(email, "Choose an Email client:"));

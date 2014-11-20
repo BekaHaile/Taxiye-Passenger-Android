@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -897,7 +897,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/upLayout"
@@ -1542,7 +1542,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="42px"
-                            android:text="@string/invite_friends"
+                            android:text="Invite &amp; Get FREE Rides"
                             android:textColor="@color/white"
                             android:textSize="34px" />
 

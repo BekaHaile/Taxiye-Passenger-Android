@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
 import com.facebook.HttpMethod;
 import com.facebook.LoggingBehavior;
 import com.facebook.Request;
@@ -25,7 +26,7 @@ public class FacebookLogin {
 
 	private static Session session;
 	
-	public void openFacebookSessionForPublush(final Activity activity, final FacebookLoginCallback facebookLoginCallback){
+	public void openFacebookSessionForPublish(final Activity activity, final FacebookLoginCallback facebookLoginCallback){
 		if (!AppStatus.getInstance(activity).isOnline(activity)) {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		} else {
@@ -55,23 +56,24 @@ public class FacebookLogin {
 	
 	}
 	
-	public void openFacebookSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback){
+	public void openFacebookSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback,
+			final boolean fetchFBData){
 		if (!AppStatus.getInstance(activity).isOnline(activity)) {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		} else {
 			session = Session.getActiveSession();
 			Log.i("session", "="+session);
 			if(session == null){
-				callOpenActiveSession(activity, facebookLoginCallback);
+				callOpenActiveSession(activity, facebookLoginCallback, fetchFBData);
 			}
 			else{
 				if(session.getState() == SessionState.OPENED || session.getState() == SessionState.OPENED_TOKEN_UPDATED){
-					callRequestMeAsync(session, activity, facebookLoginCallback);
+					callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
 				}
 				else{
 					Session.setActiveSession(session);	
 					session.closeAndClearTokenInformation();	
-					callOpenActiveSession(activity, facebookLoginCallback);
+					callOpenActiveSession(activity, facebookLoginCallback, fetchFBData);
 				}
 			}
 			
@@ -81,20 +83,23 @@ public class FacebookLogin {
 	}
 	
 	
-	public void callOpenActiveSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback){
+	public void callOpenActiveSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback, 
+			final boolean fetchFBData){
 		Session.openActiveSession(activity, true, new Session.StatusCallback() {
 			@Override
 			public void call(final Session session, SessionState state, Exception exception) {
 				if(session.isOpened()){
 					FacebookLogin.session = session;
 					Session.setActiveSession(session);
-					callRequestMeAsync(session, activity, facebookLoginCallback);
+					callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
 				}
 			}
 		});
 	}
 	
-	public void callRequestMeAsync(Session session, final Activity activity, final FacebookLoginCallback facebookLoginCallback){
+	public void callRequestMeAsync(Session session, final Activity activity, final FacebookLoginCallback facebookLoginCallback, 
+			final boolean fetchFBData){
+		if(fetchFBData){
 			Data.fbAccessToken = session.getAccessToken();
 			Log.e("fbAccessToken===", "="+Data.fbAccessToken);
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -140,7 +145,10 @@ public class FacebookLogin {
 						}
 					}
 				}).executeAsync();
-		
+		}
+		else{
+			facebookLoginCallback.facebookLoginDone();
+		}
 	}
 	
 	
@@ -208,7 +216,46 @@ public class FacebookLogin {
 		request.executeAsync();
 	        
 	}
+	
+	public void publishFeedDialog(final Activity activity, String shareString, String shareString2) {
+		
+		//http://i58.tinypic.com/db9j8.png
+		
+	    Bundle params = new Bundle();
+	    params.putString("name", "Jugnoo - autos on demand");
+	    params.putString("caption", shareString);
+	    params.putString("description", shareString2);
+	    params.putString("link", "https://jugnoo.in");
+	    params.putString("picture", "http://i58.tinypic.com/db9j8.png");
+
+	    WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(activity, Session.getActiveSession(), params))
+	        .setOnCompleteListener(new OnCompleteListener() {
+
+	            @Override
+	            public void onComplete(Bundle values,
+	                FacebookException error) {
+	                if (error == null) {
+	                    final String postId = values.getString("post_id");
+	                    if (postId != null) {
+	                        Toast.makeText(activity, "Posted successfully", Toast.LENGTH_SHORT).show();
+	                    } else {
+	                        Toast.makeText(activity.getApplicationContext(), "Publish cancelled", Toast.LENGTH_SHORT).show();
+	                    }
+	                } else if (error instanceof FacebookOperationCanceledException) {
+	                    Toast.makeText(activity.getApplicationContext(), "Publish cancelled", Toast.LENGTH_SHORT).show();
+	                } else {
+	                    Toast.makeText(activity.getApplicationContext(), "Error posting story", Toast.LENGTH_SHORT).show();
+	                }
+	            }
+
+	        })
+	        .build();
+	    feedDialog.show();
+	}
+	
 }
+
+
 
 
 interface FacebookLoginCallback{

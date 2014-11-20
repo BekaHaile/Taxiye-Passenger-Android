@@ -7,10 +7,33 @@
     android:orientation="vertical"
         android:splitMotionEvents="false" >
 
-    <RelativeLayout 
+        <RelativeLayout
+        android:id="@+id/topRl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="90px"
+        android:splitMotionEvents="false" >
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="82px"
+            android:layout_centerVertical="true"
+            android:text="Back"
+            android:background="@drawable/transparent"
+            android:textColor="@drawable/blue_alpha_color_selector"
+            android:textSize="@dimen/button_text_size"
+             />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="REGISTER"
+            android:textColor="@color/blue_btn"
+            android:textSize="@dimen/button_text_size" />
+    </RelativeLayout>
     
     <ScrollView 
         android:id="@+id/scroll"
@@ -31,7 +54,7 @@
             android:id="@+id/registerWithFacebookBtn"
             android:layout_width="648px"
             android:layout_height="99px"
-            android:layout_marginTop="110px"
+            android:layout_marginTop="20px"
             android:background="@drawable/blue_dark_btn_selector"
             android:text="REGISTER WITH FACEBOOK"
             android:textColor="@drawable/white_color_selector"
@@ -225,33 +248,6 @@
     </LinearLayout>
     </ScrollView>
     
-    <RelativeLayout
-        android:id="@+id/topRl"
-        android:layout_width="match_parent"
-        android:layout_height="90px"
-        android:splitMotionEvents="false" >
 
-        <Button
-            android:id="@+id/backBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="82px"
-            android:layout_centerVertical="true"
-            android:text="Back"
-            android:background="@drawable/transparent"
-            android:textColor="@drawable/blue_alpha_color_selector"
-            android:textSize="@dimen/button_text_size"
-             />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="REGISTER"
-            android:textColor="@color/blue_btn"
-            android:textSize="@dimen/button_text_size" />
-    </RelativeLayout>
-    </RelativeLayout>
 
 </LinearLayout>

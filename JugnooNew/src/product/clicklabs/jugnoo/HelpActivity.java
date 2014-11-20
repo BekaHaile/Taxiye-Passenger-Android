@@ -99,11 +99,11 @@ public class HelpActivity extends FragmentActivity{
 		
 		
 		helpItems.clear();
-		helpItems.add(new HelpItem(HelpSection.MAIL_US, "Send us mail"));
-		helpItems.add(new HelpItem(HelpSection.CALL_US, "Call us"));
+		helpItems.add(new HelpItem(HelpSection.MAIL_US, "Send Us an Email"));
+		helpItems.add(new HelpItem(HelpSection.CALL_US, "Call Us"));
 		helpItems.add(new HelpItem(HelpSection.ABOUT, "About"));
 		helpItems.add(new HelpItem(HelpSection.FAQ, "FAQs"));
-		helpItems.add(new HelpItem(HelpSection.TERMS, "Terms and Conditions"));
+		helpItems.add(new HelpItem(HelpSection.TERMS, "Terms of Use"));
 		helpItems.add(new HelpItem(HelpSection.PRIVACY, "Privacy Policy"));
 		
 		
@@ -199,7 +199,7 @@ public class HelpActivity extends FragmentActivity{
 							break;
 							
 						case CALL_US:
-							openCallIntent("+918556921929");
+							openCallIntent("+919023121121");
 							break;
 							
 						default:

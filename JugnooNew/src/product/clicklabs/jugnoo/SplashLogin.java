@@ -229,7 +229,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			@Override
 			public void onClick(View v) {
 				loginDataFetched = false;
-				new FacebookLogin().openFacebookSession(SplashLogin.this, facebookLoginCallback);
+				new FacebookLogin().openFacebookSession(SplashLogin.this, facebookLoginCallback, true);
 			}
 		});
 		

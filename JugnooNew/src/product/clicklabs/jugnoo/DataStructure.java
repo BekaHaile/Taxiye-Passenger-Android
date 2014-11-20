@@ -150,14 +150,16 @@ class DriverRideRequest{
 class RideInfo{
 	
 	String id, fromLocation, toLocation, fare, distance, time;
+	int couponUsed;
 	
-	public RideInfo(String id, String fromLocation, String toLocation, String fare, String distance, String time){
+	public RideInfo(String id, String fromLocation, String toLocation, String fare, String distance, String time, int couponUsed){
 		this.id = id;
 		this.fromLocation = fromLocation;
 		this.toLocation = toLocation;
 		this.fare = fare;
 		this.distance = distance;
 		this.time = time;
+		this.couponUsed = couponUsed;
 	}
 	
 	@Override

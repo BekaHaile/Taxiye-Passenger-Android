@@ -194,6 +194,12 @@ public class DriverRidesFragment extends Fragment {
 			holder.timeValue.setText(dateOperations.convertDate(dateOperations.utcToLocal(booking.time)));
 			holder.fareValue.setText("Rs. "+booking.fare);
 			
+			if(1 == booking.couponUsed){
+				holder.couponImg.setVisibility(View.VISIBLE);
+			}
+			else{
+				holder.couponImg.setVisibility(View.GONE);
+			}
 			
 			return convertView;
 		}
@@ -252,7 +258,7 @@ public class DriverRidesFragment extends Fragment {
 												JSONObject booData = bookingData.getJSONObject(i);
 												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
 														booData.getString("to"), booData.getString("fare"), decimalFormat.format(booData.getDouble("distance")),
-														booData.getString("time")));
+														booData.getString("time"), booData.getInt("coupon_used")));
 											}
 										}
 										updateListData("No rides currently", false);
