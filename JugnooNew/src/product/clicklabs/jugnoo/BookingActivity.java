@@ -166,6 +166,13 @@ public class BookingActivity extends Activity{
 			holder.timeValue.setText(dateOperations.convertDate(dateOperations.utcToLocal(booking.time)));
 			holder.fareValue.setText("Rs. "+booking.fare);
 			
+			if(1 == booking.couponUsed){
+				holder.couponImg.setVisibility(View.VISIBLE);
+			}
+			else{
+				holder.couponImg.setVisibility(View.GONE);
+			}
+			
 			dateOperations = null;
 			
 			
@@ -249,7 +256,7 @@ public class BookingActivity extends Activity{
 												JSONObject booData = bookingData.getJSONObject(i);
 												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
 														booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
-														booData.getString("time")));
+														booData.getString("time"), booData.getInt("coupon_used")));
 											}
 										}
 									}

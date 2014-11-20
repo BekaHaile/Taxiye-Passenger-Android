@@ -13,20 +13,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.EditorInfo;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -46,9 +53,13 @@ public class AccountActivity extends Activity{
 	ListView listViewCoupons;
 	CouponsListAdapter couponsListAdapter;
 	
-	RelativeLayout relativeLayoutReferral;
 	TextView textViewWantMoreRides;
 	Button buttonReferUs;
+	
+	TextView textViewEnterCouponCode;
+	EditText editTextPromoCode;
+	Button buttonApplyPromoCode;
+	
 	
 	
 	
@@ -77,13 +88,16 @@ public class AccountActivity extends Activity{
 		couponsListAdapter = new CouponsListAdapter(AccountActivity.this);
 		listViewCoupons.setAdapter(couponsListAdapter);
 		
-		relativeLayoutReferral = (RelativeLayout) findViewById(R.id.relativeLayoutReferral);
 		textViewWantMoreRides = (TextView) findViewById(R.id.textViewWantMoreRides); textViewWantMoreRides.setTypeface(Data.regularFont(getApplicationContext()));
 		buttonReferUs = (Button) findViewById(R.id.buttonReferUs); buttonReferUs.setTypeface(Data.regularFont(getApplicationContext()));
 
+		textViewEnterCouponCode = (TextView) findViewById(R.id.textViewEnterCouponCode); textViewEnterCouponCode.setTypeface(Data.regularFont(getApplicationContext()));
+		editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode); editTextPromoCode.setTypeface(Data.regularFont(getApplicationContext()));
+		buttonApplyPromoCode = (Button) findViewById(R.id.buttonApplyPromoCode); buttonApplyPromoCode.setTypeface(Data.regularFont(getApplicationContext()));
+		buttonApplyPromoCode.setVisibility(View.GONE);
+		
 		textViewAccountInfo.setVisibility(View.GONE);
 		progressBarAccount.setVisibility(View.GONE);
-		relativeLayoutReferral.setVisibility(View.GONE);
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +127,77 @@ public class AccountActivity extends Activity{
 			}
 		});
 		
+		buttonApplyPromoCode.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String promoCode = editTextPromoCode.getText().toString().trim();
+				if(promoCode.length() > 0){
+					applyPromoCodeAPI(AccountActivity.this, promoCode);
+				}
+				else{
+					editTextPromoCode.requestFocus();
+					editTextPromoCode.setError("Code can't be empty");
+				}
+			}
+		});
+		
+		editTextPromoCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				editTextPromoCode.setError(null);
+			}
+		});
+		
+		editTextPromoCode.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				int result = actionId & EditorInfo.IME_MASK_ACTION;
+				switch (result) {
+					case EditorInfo.IME_ACTION_DONE:
+						buttonApplyPromoCode.performClick();
+						return false;
+
+					case EditorInfo.IME_ACTION_NEXT:
+						return false;
+
+					default:
+						return false;
+				}
+			}
+		});
+		
+		editTextPromoCode.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(s.length() > 0){
+					if(buttonApplyPromoCode.getVisibility() == View.GONE){
+						buttonApplyPromoCode.setVisibility(View.VISIBLE);
+					}
+				}
+				else{
+					if(buttonApplyPromoCode.getVisibility() == View.VISIBLE){
+						buttonApplyPromoCode.setVisibility(View.GONE);
+					}
+				}
+			}
+		});
+		
 		getAccountInfoAsync(AccountActivity.this);
+		
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 	}
 	
@@ -144,17 +228,14 @@ public class AccountActivity extends Activity{
 			
 			couponInfosList.clear();
 			couponsListAdapter.notifyDataSetChanged();
-			relativeLayoutReferral.setVisibility(View.GONE);
 		}
 		else{
 			if(couponInfosList.size() == 0){
 				textViewAccountInfo.setText(message);
 				textViewAccountInfo.setVisibility(View.VISIBLE);
-				relativeLayoutReferral.setVisibility(View.GONE);
 			}
 			else{
 				textViewAccountInfo.setVisibility(View.GONE);
-				relativeLayoutReferral.setVisibility(View.VISIBLE);
 			}
 			couponsListAdapter.notifyDataSetChanged();
 		}
@@ -320,6 +401,8 @@ public class AccountActivity extends Activity{
 		if(fetchAccountInfoClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				progressBarAccount.setVisibility(View.VISIBLE);
+				couponInfosList.clear();
+				couponsListAdapter.notifyDataSetChanged();
 				textViewAccountInfo.setVisibility(View.GONE);
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
@@ -440,4 +523,71 @@ public class AccountActivity extends Activity{
 
 	}
 
+	/**
+	 * API call for applying promo code to server
+	 */
+	public void applyPromoCodeAPI(final Activity activity, final String promoCode) {
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				
+				RequestParams params = new RequestParams();
+				
+				params.put("access_token", Data.userData.accessToken);
+				params.put("code", promoCode);
+			
+				AsyncHttpClient asyncHttpClient = Data.getClient();
+				asyncHttpClient.post(Data.SERVER_URL + "/enter_code", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+	
+							@Override
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								DialogPopup.dismissLoadingDialog();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+							
+	
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								String response = new String(arg2);
+								Log.i("Server response", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									if (!jObj.isNull("error")) {
+										String errorMessage = jObj.getString("error");
+										if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+											HomeActivity.logoutUser(activity);
+										} else {
+											new DialogPopup().alertPopup(activity, "", errorMessage);
+										}
+									} else {
+										int flag = jObj.getInt("flag");
+										if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+											new DialogPopup().alertPopup(activity, "", jObj.getString("message"));
+											getAccountInfoAsync(activity);
+										}
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									
+								}
+								DialogPopup.dismissLoadingDialog();
+							}
+							
+							@Override
+							public void onFinish() {
+								super.onFinish();
+							}
+							
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+	}
+	
 }

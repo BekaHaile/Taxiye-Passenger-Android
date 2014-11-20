@@ -2565,7 +2565,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				searchLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.VISIBLE);
-				inRideRideInProgress.setVisibility(View.GONE);
+				inRideRideInProgress.setText("Please wait while Jugnoo is coming...");
 				
 				
 				menuBtn.setVisibility(View.VISIBLE);
@@ -2618,7 +2618,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				searchLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.GONE);
-				inRideRideInProgress.setVisibility(View.VISIBLE);
+				inRideRideInProgress.setText("Ride in progress...");
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -7765,12 +7765,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if("".equalsIgnoreCase(Data.cSessionId)){
 									nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "0"));
+									if(myLocation != null && myLocation.hasAccuracy()){
+										nameValuePairs.add(new BasicNameValuePair("location_accuracy", ""+myLocation.getAccuracy()));
+									}
 								}
 								else{
 									nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "1"));
 								}
 								
-								
+								Log.i("nameValuePairs of request_ride", "="+nameValuePairs);
 								String response = new HttpRequester().getJSONFromUrlParams(Data.SERVER_URL+"/request_ride", nameValuePairs);
 								
 								Log.e("response of request_ride", "="+response);

@@ -189,7 +189,7 @@
         android:id="@+id/couponImg"
             android:layout_width="72px"
             android:layout_height="47px"
-            android:src="@drawable/free_rides_icon"
+            android:src="@drawable/free_ride_icon"
             android:tag="mwar"
             android:layout_below="@+id/fareValue"
             android:layout_marginTop="40px"
