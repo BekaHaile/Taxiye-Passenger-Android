@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -51,6 +52,19 @@ public class HelpActivity extends FragmentActivity{
 	HelpItem selectedHelpItem;
 	
 	AsyncHttpClient fetchHelpDataClient;
+	
+	// *****************************Used for flurry work***************//
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

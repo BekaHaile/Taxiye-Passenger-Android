@@ -3,18 +3,32 @@ package product.clicklabs.jugnoo;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.Context;
+
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.model.LatLng;
 
 public class FlurryEventLogger {
 
-	public static void requestPushReceived(String engagementId, String startTime, String receivedTime){
+	public static void appStarted(String deviceToken){
 		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("device_token", deviceToken);
+			FlurryAgent.logEvent("App started", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void requestPushReceived(Context context, String engagementId, String startTime, String receivedTime){
+		try{
+			FlurryAgent.onStartSession(context, Data.FLURRY_KEY);
 			Map<String, String> articleParams = new HashMap<String, String>();
 			articleParams.put("engagement_id", engagementId);
 			articleParams.put("start_time", startTime);
 			articleParams.put("received_time", receivedTime);
 			FlurryAgent.logEvent("Request push received", articleParams);
+			FlurryAgent.onEndSession(context);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -48,7 +62,7 @@ public class FlurryEventLogger {
 		try{
 			Map<String, String> articleParams = new HashMap<String, String>();
 			articleParams.put("access_token", accessToken);
-			articleParams.put("user_id", userId);
+			articleParams.put("driver_id", userId);
 			articleParams.put("phone_no", phoneNo);
 			FlurryAgent.logEvent("Call driver pressed", articleParams);
 		} catch(Exception e){
@@ -99,6 +113,16 @@ public class FlurryEventLogger {
 		}
 	}
 	
+	
+	public static void shareScreenOpenedThroughCoupons(String accessToken){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", accessToken);
+			FlurryAgent.logEvent("Share screen opened through coupons", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	public static void couponsScreenOpened(String accessToken){
 		try{
@@ -176,6 +200,30 @@ public class FlurryEventLogger {
 		}
 	}
 	
+	public static void promoCodeApplied(String accessToken, String promoCode, String message){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", accessToken);
+			articleParams.put("promo_code", promoCode);
+			articleParams.put("message", message);
+			FlurryAgent.logEvent("Promo code applied", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void couponInfoOpened(String accessToken, int couponType){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", accessToken);
+			articleParams.put("coupon_type", ""+couponType);
+			FlurryAgent.logEvent("Coupon info opened", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	public static void sharedViaFacebook(String accessToken){
 		try{
 			Map<String, String> articleParams = new HashMap<String, String>();
@@ -247,5 +295,122 @@ public class FlurryEventLogger {
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static void forgotPasswordClicked(String email){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("email", email);
+			FlurryAgent.logEvent("Forgot password clicked", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void otpConfirmClick(String otp){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("otp_text", otp);
+			FlurryAgent.logEvent("OTP entered", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void otpThroughCall(String phoneNo){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("phone_no", phoneNo);
+			FlurryAgent.logEvent("OTP through call clicked", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void facebookSignupClicked(String email){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("email", email);
+			FlurryAgent.logEvent("Signup clicked via Facebook", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void emailSignupClicked(String email){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("email", email);
+			FlurryAgent.logEvent("Signup clicked via Email", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void referralCodeAtFBSignup(String email, String referralCode){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("email", email);
+			articleParams.put("referral_code", referralCode);
+			FlurryAgent.logEvent("Referral code at Facebook Signup", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void referralCodeAtEmailSignup(String email, String referralCode){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("email", email);
+			articleParams.put("referral_code", referralCode);
+			FlurryAgent.logEvent("Referral code at Email Signup", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void registerViaFBClicked(String fbId){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("fb_id", fbId);
+			FlurryAgent.logEvent("Facebook button pressed from Register screen", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public static void facebookLoginClicked(String fbId){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("fb_id", fbId);
+			FlurryAgent.logEvent("Facebook button pressed from Login screen", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void emailLoginClicked(String email){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("email", email);
+			FlurryAgent.logEvent("Email login button pressed", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 }

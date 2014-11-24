@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.facebook.Session;
+import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -54,6 +55,20 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		loginDataFetched = false;
 		sendToOtpScreen = false;
 		otpFlag = 0;
+	}
+	
+	// *****************************Used for flurry work***************//
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+		FlurryAgent.onEvent("Register started");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
 	}
 	
 	
@@ -233,10 +248,19 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 																	emailId = "";
 																}
 																sendFacebookSignupValues(RegisterScreen.this, referralCode, phoneNo, password);
+																FlurryEventLogger.facebookSignupClicked(Data.fbUserEmail);
+																if(!"".equalsIgnoreCase(referralCode)){
+																	FlurryEventLogger.referralCodeAtFBSignup(Data.fbUserEmail, referralCode);
+																}
 															}
 															else{
 																sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password);
+																FlurryEventLogger.emailSignupClicked(emailId);
+																if(!"".equalsIgnoreCase(referralCode)){
+																	FlurryEventLogger.referralCodeAtEmailSignup(emailId, referralCode);
+																}
 															}
+															
 															
 														}
 														else{
@@ -397,6 +421,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			
 			nameEt.setEnabled(false);
 			emailIdEt.setEnabled(false);
+			FlurryEventLogger.registerViaFBClicked(Data.fbId);
 		}
 	};
 

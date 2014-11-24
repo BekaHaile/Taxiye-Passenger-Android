@@ -244,7 +244,7 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 FlurryEventLogger.requestPushReceived(engagementId, new DateOperations().utcToLocal(startTime), new DateOperations().getCurrentTime());
+		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, new DateOperations().utcToLocal(startTime), new DateOperations().getCurrentTime());
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
 

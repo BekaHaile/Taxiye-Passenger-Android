@@ -21,8 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.inputmethod.EditorInfo;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,9 +32,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -66,6 +66,20 @@ public class AccountActivity extends Activity{
 	AsyncHttpClient fetchAccountInfoClient;
 	
 	ArrayList<CouponInfo> couponInfosList = new ArrayList<CouponInfo>();
+	
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +138,7 @@ public class AccountActivity extends Activity{
 			public void onClick(View v) {
 				startActivity(new Intent(AccountActivity.this, ShareActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
+				FlurryEventLogger.shareScreenOpenedThroughCoupons(Data.userData.accessToken);
 			}
 		});
 		
@@ -330,6 +344,7 @@ public class AccountActivity extends Activity{
 					CouponInfo couponInfo = couponInfosList.get(holder.id);
 					if(couponInfo.enabled){
 						alertPopup(AccountActivity.this, "", couponInfo.description);
+						FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.type);
 					}
 				}
 			});
@@ -568,8 +583,10 @@ public class AccountActivity extends Activity{
 									} else {
 										int flag = jObj.getInt("flag");
 										if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-											new DialogPopup().alertPopup(activity, "", jObj.getString("message"));
+											String message = jObj.getString("message");
+											new DialogPopup().alertPopup(activity, "", message);
 											getAccountInfoAsync(activity);
+											FlurryEventLogger.promoCodeApplied(Data.userData.accessToken, promoCode, message);
 										}
 									}
 								}  catch (Exception exception) {

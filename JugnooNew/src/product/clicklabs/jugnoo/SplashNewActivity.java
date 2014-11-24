@@ -44,6 +44,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -66,6 +67,20 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	GoogleCloudMessaging gcm;
 	String regid;
+	
+	// *****************************Used for flurry work***************//
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+		FlurryAgent.onEvent("Splash started");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +175,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			@Override
 			public boolean onLongClick(View v) {
 				confirmDebugPasswordPopup(SplashNewActivity.this);
+				FlurryEventLogger.debugPressed("no_token");
 				return false;
 			}
 		});
@@ -230,7 +246,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		
 		
-		
 	    
 	}
 	
@@ -291,6 +306,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					    }
 					    else{
 					    	accessTokenLogin(SplashNewActivity.this);
+					    	FlurryEventLogger.appStarted(regid);
 					    }
 					}
 					else{
@@ -363,6 +379,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	        	Log.e("msg  ===== ","="+msg);
 	    		progressBar1.setVisibility(View.GONE);
 	    		accessTokenLogin(SplashNewActivity.this);
+	    		FlurryEventLogger.appStarted(regid);
 	        	//=Device registered, registration ID=APA91bHaLnaJLjUGLXDKcW39Gke0eK78tFRe1ByJsj8rmFS2boJ2_HNzvxkS39tfo0z6IahCUPyV49gpHx-2M3WzWmpHv4u4O0cGuYxN-aKuPx1SG4Gy-2WHBg8o3sSP_GtJgfThb3G36miecVxQ1xGafeKMgbV2sO9EP1aaVDyXI3t6bgS7gmQ
 	        }
 	    }.execute(null, null, null);
