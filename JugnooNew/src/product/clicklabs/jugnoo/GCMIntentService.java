@@ -244,7 +244,7 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 sendFlurryEvent(engagementId, startTime, new DateOperations().getCurrentTime());
+		    	    					 FlurryEventLogger.requestPushReceived(engagementId, new DateOperations().utcToLocal(startTime), new DateOperations().getCurrentTime());
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
 
@@ -563,17 +563,7 @@ public class GCMIntentService extends IntentService {
 		
 		
 		
-		public void sendFlurryEvent(String engagementId, String startTime, String receivedTime){
-			try{
-				Map<String, String> articleParams = new HashMap<String, String>();
-				articleParams.put("engagement_id", engagementId);
-				articleParams.put("start_time", startTime);
-				articleParams.put("received_time", receivedTime);
-				FlurryAgent.logEvent("Request push received", articleParams);
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-		}
+		
 		
 		
 		

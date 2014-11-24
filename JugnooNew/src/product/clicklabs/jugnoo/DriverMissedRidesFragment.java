@@ -259,11 +259,20 @@ public class DriverMissedRidesFragment extends Fragment {
 											for(int i=missedRidesData.length()-1; i>=0; i--){
 												JSONObject rideData = missedRidesData.getJSONObject(i);
 												Log.e("rideData"+i, "="+rideData);
-												missedRideInfos.add(new MissedRideInfo(rideData.getString("engagement_id"),
-														rideData.getString("pickup_location_address"),
-														rideData.getString("timestamp"),
-														rideData.getString("user_name"),
-														decimalFormat.format(rideData.getDouble("distance"))));
+												if(rideData.has("user_name")){
+													missedRideInfos.add(new MissedRideInfo(rideData.getString("engagement_id"),
+															rideData.getString("pickup_location_address"),
+															rideData.getString("timestamp"),
+															rideData.getString("user_name"),
+															decimalFormat.format(rideData.getDouble("distance"))));
+												}
+												else{
+													missedRideInfos.add(new MissedRideInfo(rideData.getString("engagement_id"),
+															rideData.getString("pickup_location_address"),
+															rideData.getString("timestamp"),
+															"",
+															decimalFormat.format(rideData.getDouble("distance"))));
+												}
 											}
 										}
 										updateListData("No missed rides currently", false);

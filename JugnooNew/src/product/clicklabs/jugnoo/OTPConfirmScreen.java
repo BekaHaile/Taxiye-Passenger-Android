@@ -93,6 +93,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			public void onClick(View v) {
 				String otpCode = otpEt.getText().toString().trim();
 				if(otpCode.length() > 0){
+					stopWaitingTimer();
+					callMeBtn.setBackgroundResource(R.drawable.blue_btn_selector);
 					if(RegisterScreen.facebookLogin){
 						sendFacebookSignupValues(OTPConfirmScreen.this, otpCode);
 					}
@@ -213,6 +215,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 							}
 							if(timerCount <= 0){
 								stopWaitingTimer();
+								callMeBtn.setBackgroundResource(R.drawable.blue_btn_selector);
 							}
 							timerCount--;
 						}
@@ -244,7 +247,6 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			waitingTimer = null;
 			timerCount = 30;
 			pleaseWaitText.setVisibility(View.GONE);
-			callMeBtn.setBackgroundResource(R.drawable.blue_btn_selector);
 		}
 	}
 	

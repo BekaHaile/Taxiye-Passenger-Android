@@ -124,6 +124,7 @@ public class AccountActivity extends Activity{
 			public void onClick(View v) {
 				startActivity(new Intent(AccountActivity.this, ShareActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
 			}
 		});
 		
@@ -134,6 +135,7 @@ public class AccountActivity extends Activity{
 				String promoCode = editTextPromoCode.getText().toString().trim();
 				if(promoCode.length() > 0){
 					applyPromoCodeAPI(AccountActivity.this, promoCode);
+					FlurryEventLogger.promoCodeTried(Data.userData.accessToken, promoCode);
 				}
 				else{
 					editTextPromoCode.requestFocus();

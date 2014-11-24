@@ -196,14 +196,17 @@ public class HelpActivity extends FragmentActivity{
 					switch(helpItems.get(holder.id).id){
 						case MAIL_US:
 							openMailIntentToSupport();
+							FlurryEventLogger.mailToSupportPressed(Data.userData.accessToken);
 							break;
 							
 						case CALL_US:
 							openCallIntent("+919023121121");
+							FlurryEventLogger.callToSupportPressed(Data.userData.accessToken);
 							break;
 							
 						default:
 							getHelpAsync(HelpActivity.this, helpItems.get(holder.id));
+							FlurryEventLogger.particularHelpOpened(helpItems.get(holder.id).name, Data.userData.accessToken);
 							
 					}
 				}

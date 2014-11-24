@@ -2,8 +2,10 @@ package product.clicklabs.jugnoo;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -813,6 +815,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 				
 				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
 				return false;
 			}
@@ -823,6 +826,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public boolean onLongClick(View v) {
 				confirmDebugPasswordPopup(HomeActivity.this);
+				FlurryEventLogger.debugPressed(Data.userData.accessToken);
 				return false;
 			}
 		});
@@ -857,10 +861,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Log.e("userMode","="+userMode);
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
 					changeDriverModeAsync(HomeActivity.this, 0);
+					FlurryEventLogger.switchedToDriverMode(Data.userData.accessToken, 0);
 				}
 				else if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 					changeDriverModeAsync(HomeActivity.this, 1);
+					FlurryEventLogger.switchedToDriverMode(Data.userData.accessToken, 1);
 				}
+				
 			}
 		});
 		
@@ -900,6 +907,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				startActivity(new Intent(HomeActivity.this, ShareActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
 			}
 		});
 		
@@ -909,6 +917,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
 			}
 		});
 		
@@ -919,6 +928,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				startActivity(new Intent(HomeActivity.this, HelpActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
 			}
 		});
 		
@@ -946,6 +956,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					startActivity(new Intent(HomeActivity.this, BookingActivity.class));
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
+				FlurryEventLogger.rideScreenOpened(Data.userData.accessToken);
 			}
 		});
 		
@@ -961,9 +972,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_INITIAL)) 
 						|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
 					logoutPopup(HomeActivity.this);
+					FlurryEventLogger.logoutPressed(Data.userData.accessToken);
 				}
 				else{
 					new DialogPopup().alertPopup(activity, "", "Ride in progress. You can logout only after the ride ends.");
+					FlurryEventLogger.logoutPressedBetweenRide(Data.userData.accessToken);
 				}
 			}
 		});
@@ -1137,6 +1150,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Intent callIntent = new Intent(Intent.ACTION_VIEW);
 		        callIntent.setData(Uri.parse("tel:"+Data.assignedDriverInfo.phoneNumber));
 		        startActivity(callIntent);
+		        FlurryEventLogger.callDriverPressed(Data.userData.accessToken, Data.assignedDriverInfo.userId, 
+		        		Data.assignedDriverInfo.phoneNumber);
 			}
 		});
 		
@@ -1445,19 +1460,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				if(rating > 0){
 					if(userMode == UserMode.DRIVER){
 						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, ""+rating);
+						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.dEngagementId);
 					}
 					else if(userMode == UserMode.PASSENGER){
 						submitReviewAsync(HomeActivity.this, Data.cEngagementId, "1", Data.cDriverId, ""+rating);
+						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
 					}
 				}
 				else{
 					if(userMode == UserMode.DRIVER){
 						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, "5");
+						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.dEngagementId);
 					}
 					else if(userMode == UserMode.PASSENGER){
 						submitReviewAsync(HomeActivity.this, Data.cEngagementId, "1", Data.cDriverId, "5");
+						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
 					}
 				}
+				
 			}
 		});
 		
@@ -2823,137 +2843,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
-	
-//	public void updateTextViews(){
-//		Resources resources = getResources();
-//		
-//		driverModeText.setText(resources.getString(R.string.driver_mode));
-//		jugnooONText.setText(resources.getString(R.string.jugnoo_on));
-//		driverTypeText.setText(resources.getString(R.string.driver_type));
-//		inviteFriendText.setText(resources.getString(R.string.invite_friends));
-//		bookingsText.setText(resources.getString(R.string.rides));
-//		aboutText.setText(resources.getString(R.string.about));
-//		supportText.setText(resources.getString(R.string.support));
-//		sosText.setText(resources.getString(R.string.sos));
-//		languagePrefrencesText.setText(resources.getString(R.string.language_preferences));
-//		logoutText.setText(resources.getString(R.string.logout));
-//		
-//		searchEt.setHint(resources.getString(R.string.search));
-//		
-//		
-//		
-//		
-//		
-//		if(passengerScreenMode == PassengerScreenMode.P_INITIAL){
-//			requestRideBtn.setText(resources.getString(R.string.request_ride));
-//		}
-//		else if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-//			requestRideBtn.setText(resources.getString(R.string.assigning_driver));
-//		}
-//		
-//		initialCancelRideBtn.setText(resources.getString(R.string.cancel_ride));
-//		
-//		try{
-//		if(Data.assignedDriverInfo != null){
-//			if(Locale.getDefault().getLanguage().equalsIgnoreCase("hi")){
-//				driverTime.setText(Data.assignedDriverInfo.durationToReach + " "+ resources.getString(R.string.will_arrive_in));
-//	 		}
-//	 		else{
-//	 			driverTime.setText(resources.getString(R.string.will_arrive_in) +" "+ Data.assignedDriverInfo.durationToReach);
-//	 		}
-//		}
-//		} catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		
-//		callDriverBtn.setText(resources.getString(R.string.call_driver));
-//		
-//		inRideRideInProgress.setText(resources.getString(R.string.ride_in_progress));
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		driverAcceptRideBtn.setText(resources.getString(R.string.accept_ride));
-//		driverCancelRequestBtn.setText(resources.getString(R.string.cancel_request));
-//		
-//
-//		if(Data.assignedCustomerInfo != null){
-//			double rateingD = 4;
-//			try{
-//				rateingD = Double.parseDouble(Data.assignedCustomerInfo.rating);
-//			} catch(Exception e){
-//				e.printStackTrace();
-//			}
-//			driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+resources.getString(R.string.rating));
-//		}
-//		
-//		driverPassengerCallText.setText(resources.getString(R.string.call));
-//		
-//		driverStartRideBtn.setText(resources.getString(R.string.start_ride));
-//		driverCancelRideBtn.setText(resources.getString(R.string.cancel_ride));
-//		
-//		
-//		
-//		
-//		
-//		driverIRDistanceText.setText(resources.getString(R.string.distance));
-//		driverIRFareText.setText(resources.getString(R.string.fare));
-//		driverRideTimeText.setText(resources.getString(R.string.ride_time));
-//		
-//		
-//		
-//		
-//		
-//		try {
-//			if(waitStart == 2){ 
-//				driverWaitText.setText(resources.getString(R.string.start_wait));
-//			}
-//			else{
-//				if(waitStart == 1){
-//					driverWaitText.setText(resources.getString(R.string.stop_wait));
-//				}
-//				else if(waitStart == 0){
-//					driverWaitText.setText(resources.getString(R.string.start_wait));
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		driverEndRideBtn.setText(resources.getString(R.string.end_ride));
-//		
-//		
-//		
-//		
-//		
-//		
-//		reviewReachedDestinationText.setText(resources.getString(R.string.reached_destination));
-//		reviewDistanceText.setText(resources.getString(R.string.distance));
-//		reviewWaitText.setText(resources.getString(R.string.wait_time));
-//		reviewFareText.setText(resources.getString(R.string.fare));
-//		
-//		reviewSubmitBtn.setText(resources.getString(R.string.submit));
-//		
-//		
-//		
-//		if(userMode == UserMode.DRIVER){
-//			reviewRatingText.setText(resources.getString(R.string.customer_rating));
-//		}
-//		else{
-//			reviewRatingText.setText(resources.getString(R.string.driver_rating));
-//		}
-//		
-//		
-//		
-//		
-//		
-//		
-//	}
 	
 	
 	
@@ -4423,7 +4312,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												myLocation.getLongitude()), false);
 										getDistanceTimeAddress.execute();
 									}
-									
+									FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -7765,12 +7654,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if("".equalsIgnoreCase(Data.cSessionId)){
 									nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "0"));
+									if(myLocation != null && myLocation.hasAccuracy()){
+										nameValuePairs.add(new BasicNameValuePair("location_accuracy", ""+myLocation.getAccuracy()));
+									}
 								}
 								else{
 									nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "1"));
 								}
 								
-								
+								Log.i("nameValuePairs of request_ride", "="+nameValuePairs);
 								String response = new HttpRequester().getJSONFromUrlParams(Data.SERVER_URL+"/request_ride", nameValuePairs);
 								
 								Log.e("response of request_ride", "="+response);
@@ -7895,6 +7787,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			};
 			
 			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, requestPeriod);
+			FlurryEventLogger.requestRidePressed(Data.userData.accessToken, Data.pickupLatLng);
 			startAssigningDriversAnimation();
 			
 		} catch (Exception e) {
@@ -7948,6 +7841,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
 	
 	
 	

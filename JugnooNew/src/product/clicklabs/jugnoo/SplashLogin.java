@@ -828,19 +828,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
         System.gc();
 	}
 	
-	// *****************************Used for flurry work***************//
-	@Override
-	protected void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
-		FlurryAgent.onEvent("Application started");
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {

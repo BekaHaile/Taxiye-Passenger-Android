@@ -88,6 +88,7 @@ public class ShareActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				new FacebookLogin().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
+				FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);
 			}
 		});
 		
@@ -96,6 +97,7 @@ public class ShareActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				shareToWhatsapp(Data.userData.referralCode);
+				FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);
 			}
 		});
 
@@ -104,6 +106,7 @@ public class ShareActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				sendSMSIntent(Data.userData.referralCode);
+				FlurryEventLogger.sharedViaSMS(Data.userData.accessToken);
 			}
 		});
 
@@ -112,6 +115,7 @@ public class ShareActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				openMailIntent(Data.userData.referralCode);
+				FlurryEventLogger.sharedViaEmail(Data.userData.accessToken);
 			}
 		});
 		
