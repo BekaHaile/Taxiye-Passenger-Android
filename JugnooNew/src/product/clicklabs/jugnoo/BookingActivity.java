@@ -97,7 +97,7 @@ public class BookingActivity extends Activity{
 	
 	
 	class ViewHolderBooking {
-		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue;
+		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue, balanceValue;
 		ImageView couponImg;
 		LinearLayout relative;
 		int id;
@@ -139,6 +139,7 @@ public class BookingActivity extends Activity{
 				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(getApplicationContext()));
 				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.regularFont(getApplicationContext()));
 				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+				holder.balanceValue = (TextView) convertView.findViewById(R.id.balanceValue); holder.balanceValue.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
@@ -165,6 +166,7 @@ public class BookingActivity extends Activity{
 			holder.distanceValue.setText(booking.distance + " km");
 			holder.timeValue.setText(dateOperations.convertDate(dateOperations.utcToLocal(booking.time)));
 			holder.fareValue.setText("Rs. "+booking.fare);
+			holder.balanceValue.setVisibility(View.GONE);
 			
 			if(1 == booking.couponUsed){
 				holder.couponImg.setVisibility(View.VISIBLE);
@@ -256,7 +258,7 @@ public class BookingActivity extends Activity{
 												JSONObject booData = bookingData.getJSONObject(i);
 												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
 														booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
-														booData.getString("time"), booData.getInt("coupon_used")));
+														booData.getString("time"), "", booData.getInt("coupon_used")));
 											}
 										}
 									}

@@ -68,6 +68,8 @@ public class FareInfoActivity extends FragmentActivity{
 			}
 		});
 		
+		getFareDetailsAsync(FareInfoActivity.this);
+		
 	}
 	
 	
@@ -103,10 +105,10 @@ public class FareInfoActivity extends FragmentActivity{
 				loadHTMLContent("");
 				
 				RequestParams params = new RequestParams();
-				params.put("access_token", Data.userData.accessToken);
+				params.put("section", ""+HelpSection.FARE_DETAILS.getOrdinal());
 				
 				fetchHelpDataClient = Data.getClient();
-				fetchHelpDataClient.post(Data.SERVER_URL + "/get_fare_details", params,
+				fetchHelpDataClient.post(Data.SERVER_URL + "/get_information", params,
 						new AsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	

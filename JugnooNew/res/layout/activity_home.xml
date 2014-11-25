@@ -545,7 +545,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
@@ -822,11 +822,12 @@
 
                             <RelativeLayout
                                 android:id="@+id/driverIRDistanceRl"
-                                android:layout_width="210px"
+                                android:layout_width="180px"
                                 android:layout_height="120px"
                                 android:layout_above="@+id/driverEndRideBtn"
+                                android:layout_centerHorizontal="true"
                                 android:layout_marginBottom="20px"
-                                android:layout_marginLeft="40px" >
+                                android:layout_marginLeft="20px" >
 
                                 <TextView
                                     android:id="@+id/driverIRDistanceText"
@@ -837,33 +838,38 @@
                                     android:textColor="@color/black"
                                     android:textSize="30px" />
 
-                                <TextView
-                                    android:id="@+id/driverIRDistanceValue"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/driverIRDistanceText"
                                     android:layout_marginTop="10px"
-                                    android:maxWidth="250px"
-                                    android:text="0"
-                                    android:textColor="@color/black"
-                                    android:textSize="50px" />
+                                    android:orientation="horizontal" >
 
-                                <TextView
-                                    android:id="@+id/driverIRDistanceKmText"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/driverIRDistanceText"
-                                    android:layout_marginLeft="10px"
-                                    android:layout_marginTop="25px"
-                                    android:layout_toRightOf="@+id/driverIRDistanceValue"
-                                    android:text="km"
-                                    android:textColor="@color/black"
-                                    android:textSize="30px" />
+                                    <TextView
+                                        android:id="@+id/driverIRDistanceValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:maxWidth="250px"
+                                        android:text="0"
+                                        android:textColor="@color/black"
+                                        android:textSize="40px" />
+
+                                    <TextView
+                                        android:id="@+id/driverIRDistanceKmText"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10px"
+                                        android:layout_marginTop="0px"
+                                        android:layout_toRightOf="@+id/driverIRDistanceValue"
+                                        android:text="km"
+                                        android:textColor="@color/black"
+                                        android:textSize="30px" />
+                                </LinearLayout>
                             </RelativeLayout>
 
                             <RelativeLayout
                                 android:id="@+id/driverIRFareRl"
-                                android:layout_width="210px"
+                                android:layout_width="180px"
                                 android:layout_height="120px"
                                 android:layout_above="@+id/driverEndRideBtn"
                                 android:layout_alignParentRight="true"
@@ -874,35 +880,41 @@
                                     android:id="@+id/driverIRFareText"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
                                     android:layout_marginTop="10px"
                                     android:text="@string/fare"
                                     android:textColor="@color/black"
                                     android:textSize="30px" />
 
-                                <TextView
-                                    android:id="@+id/driverIRFareRsText"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_below="@+id/driverIRFareText"
-                                    android:layout_marginRight="10px"
-                                    android:layout_marginTop="25px"
-                                    android:layout_toLeftOf="@+id/driverIRFareValue"
-                                    android:text="Rs"
-                                    android:textColor="@color/black"
-                                    android:textSize="30px" />
-
-                                <TextView
-                                    android:id="@+id/driverIRFareValue"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
                                     android:layout_below="@+id/driverIRFareText"
                                     android:layout_marginTop="10px"
-                                    android:maxWidth="250px"
-                                    android:text="0"
-                                    android:textColor="@color/black"
-                                    android:textSize="50px" />
+                                    android:orientation="horizontal" >
+
+                                    <TextView
+                                        android:id="@+id/driverIRFareRsText"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/driverIRFareText"
+                                        android:layout_marginRight="10px"
+                                        android:layout_marginTop="0px"
+                                        android:layout_toLeftOf="@+id/driverIRFareValue"
+                                        android:text="Rs"
+                                        android:textColor="@color/black"
+                                        android:textSize="30px" />
+
+                                    <TextView
+                                        android:id="@+id/driverIRFareValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_below="@+id/driverIRFareText"
+                                        android:maxWidth="250px"
+                                        android:text="0"
+                                        android:textColor="@color/black"
+                                        android:textSize="40px" />
+                                </LinearLayout>
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -910,15 +922,16 @@
                                 android:layout_width="210px"
                                 android:layout_height="120px"
                                 android:layout_above="@+id/driverEndRideBtn"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginBottom="20px" >
+                                android:layout_marginBottom="20px"
+                                android:layout_marginLeft="40px"
+                                android:background="@drawable/white_bg_rounded_bordered" >
 
                                 <TextView
                                     android:id="@+id/driverRideTimeText"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerHorizontal="true"
-                                    android:layout_marginTop="10px"
+                                    android:layout_marginTop="15px"
                                     android:text="@string/ride_time"
                                     android:textColor="@color/black"
                                     android:textSize="30px" />
@@ -929,9 +942,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentBottom="true"
                                     android:layout_centerHorizontal="true"
-                                    android:layout_marginBottom="10px"
+                                    android:layout_marginBottom="20px"
                                     android:textColor="@color/black"
-                                    android:textSize="50px" />
+                                    android:textSize="40px" />
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -963,7 +976,7 @@
                                     android:layout_centerHorizontal="true"
                                     android:layout_marginBottom="10px"
                                     android:textColor="@color/white"
-                                    android:textSize="50px" />
+                                    android:textSize="40px" />
                             </RelativeLayout>
 
                             <Button
@@ -984,6 +997,11 @@
                                 android:layout_height="120px"
                                 android:layout_alignParentBottom="true"
                                 android:background="@color/white_translucent" >
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="2px"
+                                    android:background="@drawable/shadow_up" />
 
                                 <LinearLayout
                                     android:id="@+id/inrideMinFareLinear"
@@ -1068,7 +1086,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/upLayout"

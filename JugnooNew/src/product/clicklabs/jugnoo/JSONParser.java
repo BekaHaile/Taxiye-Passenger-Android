@@ -75,19 +75,28 @@ public class JSONParser {
 			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 		}
 		
+		parseFareDetails(userData);
+		
+	}
+	
+	
+	public void parseFareDetails(JSONObject userData){
 		try{
 			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
 			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
+			double farePerMin = 0;
+			if(fareDetails0.has("fare_per_min")){
+				farePerMin = fareDetails0.getDouble("fare_per_min");
+			}
 			Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"), 
 					fareDetails0.getDouble("fare_threshold_distance"), 
 					fareDetails0.getDouble("fare_per_km"), 
-					fareDetails0.getDouble("fare_per_min"));
+					farePerMin);
 		} catch(Exception e){
 			e.printStackTrace();
-			Data.fareStructure = new FareStructure(30, 2, 10, 1);
+			Data.fareStructure = new FareStructure(25, 2, 6, 1);
 		}
 	}
-	
 	
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
@@ -101,17 +110,7 @@ public class JSONParser {
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
 				userData.getString("user_image"), id, userData.getString("referral_code"));
 		
-		try{
-			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
-			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
-			Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"), 
-					fareDetails0.getDouble("fare_threshold_distance"), 
-					fareDetails0.getDouble("fare_per_km"), 
-					fareDetails0.getDouble("fare_per_min"));
-		} catch(Exception e){
-			e.printStackTrace();
-			Data.fareStructure = new FareStructure(30, 2, 10, 1);
-		}
+		parseFareDetails(userData);
 		
 		//current_user_status = 1 driver or 2 user
 		int currentUserStatus = userData.getInt("current_user_status");

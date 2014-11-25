@@ -910,7 +910,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
-		
 		helpRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -1150,6 +1149,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				startActivity(new Intent(HomeActivity.this, FareInfoActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.fareDetailsOpened(Data.userData.accessToken);
 			}
 		});
 		
@@ -4535,7 +4535,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void driverAcceptRideAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
-			DialogPopup.showLoadingDialog(activity, "Fetching customer data...");
+			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();
 			 
@@ -6544,7 +6544,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							
 							driverScreenMode = DriverScreenMode.D_RIDE_END;
 							
-				        	driverEndRideAsync(activity, myLocation.getLatitude(), myLocation.getLongitude(), waitMinutes, 
+				        	driverEndRideAsync(activity, myLocation.getLatitude(), myLocation.getLongitude(), 0, 
 				        			rideTimeMinutes);
 						}
 						else{

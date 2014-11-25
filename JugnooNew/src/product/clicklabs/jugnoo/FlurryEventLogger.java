@@ -445,4 +445,15 @@ public class FlurryEventLogger {
 	}
 	
 	
+	public static void fareDetailsOpened(String accessToken){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", accessToken);
+			FlurryAgent.logEvent("Fare Details screen opened", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
 }
