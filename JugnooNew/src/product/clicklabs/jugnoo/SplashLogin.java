@@ -85,6 +85,20 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		otpFlag = 0;
 	}
 	
+	// *****************************Used for flurry work***************//
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+		FlurryAgent.onEvent("Login started");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -161,6 +175,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						if(isEmailValid(email)){
 							enteredEmail = email;
 							sendLoginValues(SplashLogin.this, email, password);
+							FlurryEventLogger.emailLoginClicked(email);
 						}
 						else{
 							emailEt.requestFocus();
@@ -316,6 +331,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		@Override
 		public void facebookLoginDone() {
 			sendFacebookLoginValues(SplashLogin.this);
+			FlurryEventLogger.facebookLoginClicked(Data.fbId);
 		}
 	};
 	
@@ -828,19 +844,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
         System.gc();
 	}
 	
-	// *****************************Used for flurry work***************//
-	@Override
-	protected void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
-		FlurryAgent.onEvent("Application started");
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {

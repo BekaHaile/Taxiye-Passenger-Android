@@ -17,8 +17,8 @@
 
         <RelativeLayout
             android:id="@+id/rlt"
-            android:layout_width="wrap_content"
-            android:layout_height="250px"
+            android:layout_width="240px"
+            android:layout_height="240px"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@drawable/loading_corner"
@@ -29,7 +29,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                android:layout_centerHorizontal="true"
-               android:minWidth="250px"
                android:layout_marginTop="50px"
                 android:gravity="center"
                 android:paddingLeft="20px"
@@ -38,7 +37,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#ffffff"
                 android:singleLine="true"
-                android:textSize="28px"
+                android:textSize="26px"
                 android:textStyle="bold" 
                 />
 

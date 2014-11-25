@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -51,6 +52,19 @@ public class HelpActivity extends FragmentActivity{
 	HelpItem selectedHelpItem;
 	
 	AsyncHttpClient fetchHelpDataClient;
+	
+	// *****************************Used for flurry work***************//
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +115,9 @@ public class HelpActivity extends FragmentActivity{
 		helpItems.clear();
 		helpItems.add(new HelpItem(HelpSection.MAIL_US, "Send Us an Email"));
 		helpItems.add(new HelpItem(HelpSection.CALL_US, "Call Us"));
-		helpItems.add(new HelpItem(HelpSection.ABOUT, "About"));
+		helpItems.add(new HelpItem(HelpSection.FARE_DETAILS, "Fare Details"));
 		helpItems.add(new HelpItem(HelpSection.FAQ, "FAQs"));
+		helpItems.add(new HelpItem(HelpSection.ABOUT, "About Jugnoo"));
 		helpItems.add(new HelpItem(HelpSection.TERMS, "Terms of Use"));
 		helpItems.add(new HelpItem(HelpSection.PRIVACY, "Privacy Policy"));
 		
@@ -196,14 +211,17 @@ public class HelpActivity extends FragmentActivity{
 					switch(helpItems.get(holder.id).id){
 						case MAIL_US:
 							openMailIntentToSupport();
+							FlurryEventLogger.mailToSupportPressed(Data.userData.accessToken);
 							break;
 							
 						case CALL_US:
 							openCallIntent("+919023121121");
+							FlurryEventLogger.callToSupportPressed(Data.userData.accessToken);
 							break;
 							
 						default:
 							getHelpAsync(HelpActivity.this, helpItems.get(holder.id));
+							FlurryEventLogger.particularHelpOpened(helpItems.get(holder.id).name, Data.userData.accessToken);
 							
 					}
 				}

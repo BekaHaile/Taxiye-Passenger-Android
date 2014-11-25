@@ -149,10 +149,11 @@ class DriverRideRequest{
 
 class RideInfo{
 	
-	String id, fromLocation, toLocation, fare, distance, time;
+	String id, fromLocation, toLocation, fare, distance, time, balance;
 	int couponUsed;
 	
-	public RideInfo(String id, String fromLocation, String toLocation, String fare, String distance, String time, int couponUsed){
+	public RideInfo(String id, String fromLocation, String toLocation, String fare, String distance, String time, 
+			String balance, int couponUsed){
 		this.id = id;
 		this.fromLocation = fromLocation;
 		this.toLocation = toLocation;
@@ -160,6 +161,7 @@ class RideInfo{
 		this.distance = distance;
 		this.time = time;
 		this.couponUsed = couponUsed;
+		this.balance = balance;
 	}
 	
 	@Override
@@ -421,7 +423,8 @@ enum HelpSection {
 	ABOUT(0), 
 	FAQ(1),
 	PRIVACY(2),
-	TERMS(3)
+	TERMS(3),
+	FARE_DETAILS(4)
 	;
 
 	private int ordinal;
@@ -447,5 +450,28 @@ class HelpItem{
 	@Override
 	public String toString() {
 		return name + " " + id + " " + id.getOrdinal();
+	}
+}
+
+
+
+class FareStructure{
+	double fixedFare;
+	double thresholdDistance;
+	double farePerKm;
+	double farePerMin;
+	
+	public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin){
+		this.fixedFare = fixedFare;
+		this.thresholdDistance = thresholdDistance;
+		this.farePerKm = farePerKm;
+		this.farePerMin = farePerMin;
+	}
+	
+	public double calculateFare(double totalDistanceInKm, double totalTimeInMin){
+		double fareOfRideTime = totalTimeInMin * farePerMin;
+		double fare = fareOfRideTime + fixedFare + ((totalDistanceInKm <= thresholdDistance) ? (0) : ((totalDistanceInKm - thresholdDistance)* farePerKm));
+		fare = Math.ceil(fare);
+		return fare;
 	}
 }

@@ -146,10 +146,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		}
 	}
 
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		Log.e(TAG, "onConnected");
-		
+	public void connect(){
 		locationrequest = LocationRequest.create();
 		
 		if(priority == 0){
@@ -166,6 +163,13 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		locationrequest.setInterval(requestInterval);
 		
 		locationclient.requestLocationUpdates(locationrequest, LocationFetcher.this);
+		Log.i("connected with priority", "="+priority);
+	}
+	
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		Log.e(TAG, "onConnected");
+		connect();
 	}
 
 	@Override

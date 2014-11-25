@@ -75,90 +75,33 @@ public class JSONParser {
 			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 		}
 		
+		parseFareDetails(userData);
+		
+	}
+	
+	
+	public void parseFareDetails(JSONObject userData){
 		try{
 			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
 			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
-			HomeActivity.fareFixed = fareDetails0.getInt("fare_fixed");
-			HomeActivity.farePerKm = fareDetails0.getInt("fare_per_km");
-			HomeActivity.fareThresholdDistance = fareDetails0.getInt("fare_threshold_distance");
+			double farePerMin = 0;
+			if(fareDetails0.has("fare_per_min")){
+				farePerMin = fareDetails0.getDouble("fare_per_min");
+			}
+			Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"), 
+					fareDetails0.getDouble("fare_threshold_distance"), 
+					fareDetails0.getDouble("fare_per_km"), 
+					farePerMin);
 		} catch(Exception e){
 			e.printStackTrace();
-			HomeActivity.fareFixed = 30;
-			HomeActivity.farePerKm = 10;
-			HomeActivity.fareThresholdDistance = 2;
+			Data.fareStructure = new FareStructure(25, 2, 6, 1);
 		}
 	}
 	
 	
-	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
 		
-//		{
-//		    "login": {
-//		        "user_data": {
-//		            "user_name": "Driver 4",
-//		            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
-//		            "current_user_status": 1,
-//		            "access_token": "8ea868daf0e7379ece46787e1684cf8c2dc17877f4cc0a6af5a65ae33c355792",
-//		            "fare_details": [
-//		                {
-//		                    "fare_fixed": 30,
-//		                    "fare_per_km": 10,
-//		                    "fare_threshold_distance": 2
-//		                }
-//		            ],
-//		            "exceptional_driver": 0
-//		        },
-//		        "popup": 0
-//		    },
-//		    "status": {
-//		        "active_requests": [],
-//		        "flag": 133
-//		    },
-//		    "drivers": {
-//		        "data": [
-//		            {
-//		                "user_name": "Driver 4",
-//		                "phone_no": "+919999999999",
-//		                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
-//		                "driver_car_image": "",
-//		                "latitude": 30.718804,
-//		                "longitude": 76.810166,
-//		                "user_id": 214,
-//		                "distance": 0.05,
-//		                "rating": 5
-//		            },
-//		            {
-//		                "user_name": "Driver 8",
-//		                "phone_no": "+919999999999",
-//		                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
-//		                "driver_car_image": "",
-//		                "latitude": 30.71884,
-//		                "longitude": 76.810131,
-//		                "user_id": 233,
-//		                "distance": 5.17,
-//		                "rating": null
-//		            },
-//		            {
-//		                "user_name": "Driver 3",
-//		                "phone_no": "+919999999999",
-//		                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
-//		                "driver_car_image": "",
-//		                "latitude": 30.719284,
-//		                "longitude": 76.810869,
-//		                "user_id": 231,
-//		                "distance": 85.84,
-//		                "rating": 5
-//		            }
-//		        ]
-//		    }
-//		}
-		
 		JSONObject jObj = new JSONObject(response);
-		
-		
-		
-		
 		
 		//Fetching login data
 		JSONObject jLoginObject = jObj.getJSONObject("login");
@@ -167,18 +110,7 @@ public class JSONParser {
 		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
 				userData.getString("user_image"), id, userData.getString("referral_code"));
 		
-		try{
-			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
-			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
-			HomeActivity.fareFixed = fareDetails0.getInt("fare_fixed");
-			HomeActivity.farePerKm = fareDetails0.getInt("fare_per_km");
-			HomeActivity.fareThresholdDistance = fareDetails0.getInt("fare_threshold_distance");
-		} catch(Exception e){
-			e.printStackTrace();
-			HomeActivity.fareFixed = 30;
-			HomeActivity.farePerKm = 10;
-			HomeActivity.fareThresholdDistance = 2;
-		}
+		parseFareDetails(userData);
 		
 		//current_user_status = 1 driver or 2 user
 		int currentUserStatus = userData.getInt("current_user_status");
@@ -207,20 +139,9 @@ public class JSONParser {
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		//Fetching user current status
 		JSONObject jUserStatusObject = jObj.getJSONObject("status");
 		String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
-		
-				
 				
 		return resp;
 	}
@@ -640,10 +561,12 @@ public class JSONParser {
 					String SP_C_TOTAL_DISTANCE = pref.getString(Data.SP_C_TOTAL_DISTANCE, "0");
 					String SP_C_TOTAL_FARE = pref.getString(Data.SP_C_TOTAL_FARE, "0");
 					String SP_C_WAIT_TIME = pref.getString(Data.SP_C_WAIT_TIME, "0");
+					String SP_C_RIDE_TIME = pref.getString(Data.SP_C_RIDE_TIME, "0");
 					
 					Data.totalDistance = Double.parseDouble(SP_C_TOTAL_DISTANCE);
 					Data.totalFare = Double.parseDouble(SP_C_TOTAL_FARE);
 					Data.waitTime = SP_C_WAIT_TIME;
+					Data.rideTime = SP_C_RIDE_TIME;
 					
 					
 					HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
@@ -702,6 +625,7 @@ public class JSONParser {
 		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
 		editor.putString(Data.SP_C_TOTAL_FARE, "0");
 		editor.putString(Data.SP_C_WAIT_TIME, "0");
+		editor.putString(Data.SP_C_RIDE_TIME, "0");
 
 		editor.commit();
 

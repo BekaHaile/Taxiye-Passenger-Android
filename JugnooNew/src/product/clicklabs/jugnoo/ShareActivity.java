@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
+import com.flurry.android.FlurryAgent;
 
 public class ShareActivity extends Activity{
 	
@@ -42,6 +43,17 @@ public class ShareActivity extends Activity{
 	String shareStr11 = "Use Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
 	String shareStr2 = " to get FREE ride upto Rs. 100.\nDownload it from here: http://smarturl.it/jugnoo";
 	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +100,7 @@ public class ShareActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				new FacebookLogin().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
+				FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);
 			}
 		});
 		
@@ -96,6 +109,7 @@ public class ShareActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				shareToWhatsapp(Data.userData.referralCode);
+				FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);
 			}
 		});
 
@@ -104,6 +118,7 @@ public class ShareActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				sendSMSIntent(Data.userData.referralCode);
+				FlurryEventLogger.sharedViaSMS(Data.userData.accessToken);
 			}
 		});
 
@@ -112,6 +127,7 @@ public class ShareActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				openMailIntent(Data.userData.referralCode);
+				FlurryEventLogger.sharedViaEmail(Data.userData.accessToken);
 			}
 		});
 		

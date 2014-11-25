@@ -121,7 +121,7 @@ public class DriverRidesFragment extends Fragment {
 
 	
 	class ViewHolderDriverRides {
-		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue;
+		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue, balanceValue;
 		ImageView couponImg;
 		LinearLayout relative;
 		int id;
@@ -164,6 +164,8 @@ public class DriverRidesFragment extends Fragment {
 				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(getActivity()));
 				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.regularFont(getActivity()));
 				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
+				holder.balanceValue = (TextView) convertView.findViewById(R.id.balanceValue); holder.balanceValue.setTypeface(Data.regularFont(getActivity()));
+				
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
 				
 				
@@ -199,6 +201,14 @@ public class DriverRidesFragment extends Fragment {
 			}
 			else{
 				holder.couponImg.setVisibility(View.GONE);
+			}
+			
+			if("0".equalsIgnoreCase(booking.balance)){
+				holder.balanceValue.setVisibility(View.GONE);
+			}
+			else{
+				holder.balanceValue.setVisibility(View.VISIBLE);
+				holder.balanceValue.setText("Bal: Rs. "+booking.balance);
 			}
 			
 			return convertView;
@@ -256,9 +266,21 @@ public class DriverRidesFragment extends Fragment {
 										if(bookingData.length() > 0){
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
+												String balance = "";
+												try{
+													if(booData.has("balance")){
+														balance = booData.getString("balance");
+													}
+													else{
+														balance = "0";
+													}
+												} catch(Exception e){
+													e.printStackTrace();
+													balance = "0";
+												}
 												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
 														booData.getString("to"), booData.getString("fare"), decimalFormat.format(booData.getDouble("distance")),
-														booData.getString("time"), booData.getInt("coupon_used")));
+														booData.getString("time"), balance, booData.getInt("coupon_used")));
 											}
 										}
 										updateListData("No rides currently", false);

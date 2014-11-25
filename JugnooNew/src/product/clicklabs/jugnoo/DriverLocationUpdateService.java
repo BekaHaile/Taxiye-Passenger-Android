@@ -61,7 +61,7 @@ public class DriverLocationUpdateService extends Service {
     				locationFetcherDriver.destroy();
     				locationFetcherDriver = null;
     			}
-    			serverUpdateTimePeriod = 1 * 60000;
+    			serverUpdateTimePeriod = 2 * 60000;
     			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     			if(gpsLocationFetcher != null){
     				gpsLocationFetcher.destroy();

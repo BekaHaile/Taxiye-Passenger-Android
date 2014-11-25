@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -46,6 +47,18 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	
 	String otpHelpStr = "Please enter the One Time Password you just received via SMS at ";
 	String waitStr = "Please wait for ";
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +110,11 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 					callMeBtn.setBackgroundResource(R.drawable.blue_btn_selector);
 					if(RegisterScreen.facebookLogin){
 						sendFacebookSignupValues(OTPConfirmScreen.this, otpCode);
+						FlurryEventLogger.otpConfirmClick(otpCode);
 					}
 					else{
 						sendSignupValues(OTPConfirmScreen.this, otpCode);
+						FlurryEventLogger.otpConfirmClick(otpCode);
 					}
 				}
 				else{
@@ -137,8 +152,10 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 				stopWaitingTimer();
 				if (RegisterScreen.facebookLogin) {
 					initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
+					FlurryEventLogger.otpThroughCall(facebookRegisterData.phoneNo);
 				} else {
 					initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
+					FlurryEventLogger.otpThroughCall(emailRegisterData.phoneNo);
 				}
 			}
 		});

@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -36,6 +37,19 @@ public class ForgotPasswordScreen extends Activity{
 	LinearLayout relative;
 	
 	static String emailAlready = "";
+	
+	// *****************************Used for flurry work***************//
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +108,7 @@ public class ForgotPasswordScreen extends Activity{
 				else{
 					if(isEmailValid(email)){
 						forgotPasswordAsync(ForgotPasswordScreen.this, email);
+						FlurryEventLogger.forgotPasswordClicked(email);
 					}
 					else{
 						emailEt.requestFocus();

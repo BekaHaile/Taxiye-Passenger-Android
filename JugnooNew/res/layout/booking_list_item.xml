@@ -195,6 +195,19 @@
             android:layout_marginTop="40px"
             android:visibility="gone"
              />
+    
+    <TextView
+            android:id="@+id/balanceValue"
+            android:layout_width="170px"
+            android:layout_height="wrap_content"
+            android:text="Rs. 2500"
+            android:textColor="@color/black"
+            android:gravity="center_vertical|right"
+            android:textSize="30px"
+            android:visibility="gone"
+            android:layout_marginTop="10px"
+             />
+    
     </LinearLayout>
     
     </RelativeLayout>

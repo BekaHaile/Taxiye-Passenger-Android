@@ -244,7 +244,7 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 sendFlurryEvent(engagementId, startTime, new DateOperations().getCurrentTime());
+		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, new DateOperations().utcToLocal(startTime), new DateOperations().getCurrentTime());
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
 
@@ -350,6 +350,13 @@ public class GCMIntentService extends IntentService {
 	    	    					 Data.totalDistance = jObj.getDouble("distance_travelled");
 	    	    					 Data.totalFare = jObj.getDouble("fare");
 	    	    					 Data.waitTime = jObj.getString("wait_time");
+	    	    					 try{
+	    	    						 Data.rideTime = jObj.getString("ride_time");
+	    	    					 } catch(Exception e){
+	    	    						 e.printStackTrace();
+	    	    						 Data.rideTime = "10";
+	    	    					 }
+	    	    					 
 	    	    					 
 	    	    					 if (HomeActivity.appInterruptHandler != null) {
 	    	    						 if(PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode){
@@ -364,13 +371,15 @@ public class GCMIntentService extends IntentService {
 	    	    								 P_RIDE_END = "P_RIDE_END",
 	    	    										 SP_C_TOTAL_DISTANCE = "c_total_distance",
 	    	    											SP_C_TOTAL_FARE = "c_total_fare", 
-	    	    											SP_C_WAIT_TIME = "c_wait_time";
+	    	    											SP_C_WAIT_TIME = "c_wait_time",
+	    	    											SP_C_RIDE_TIME = "c_ride_time";
 	    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
 	    	    						 Editor editor = pref.edit();
 	    	    						 editor.putString(SP_CUSTOMER_SCREEN_MODE, P_RIDE_END);
 	    	    						 editor.putString(SP_C_TOTAL_DISTANCE, ""+Data.totalDistance);
 	    	    						 editor.putString(SP_C_TOTAL_FARE, ""+Data.totalFare);
 	    	    						 editor.putString(SP_C_WAIT_TIME, Data.waitTime);
+	    	    						 editor.putString(SP_C_RIDE_TIME, Data.rideTime);
 	    	    						 editor.commit();
 	    	    						 
 	    	    						 
@@ -563,17 +572,7 @@ public class GCMIntentService extends IntentService {
 		
 		
 		
-		public void sendFlurryEvent(String engagementId, String startTime, String receivedTime){
-			try{
-				Map<String, String> articleParams = new HashMap<String, String>();
-				articleParams.put("engagement_id", engagementId);
-				articleParams.put("start_time", startTime);
-				articleParams.put("received_time", receivedTime);
-				FlurryAgent.logEvent("Request push received", articleParams);
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-		}
+		
 		
 		
 		
