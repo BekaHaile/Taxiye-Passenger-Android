@@ -49,5 +49,19 @@ public class PausableChronometer extends Chronometer {
 	  private void init() {
 	    this.eclipsedTime = 0l;
 	    this.isRunning = false;
+	    this.setOnChronometerTickListener(new OnChronometerTickListener() {
+			@Override
+			public void onChronometerTick(Chronometer cArg) {
+				long time = SystemClock.elapsedRealtime() - cArg.getBase();
+				PausableChronometer.this.eclipsedTime = time;
+				int h = (int) (time / 3600000);
+				int m = (int) (time - h * 3600000) / 60000;
+				int s = (int) (time - h * 3600000 - m * 60000) / 1000;
+				String hh = h < 10 ? "0" + h : "" + h;
+				String mm = m < 10 ? "0" + m : "" + m;
+				String ss = s < 10 ? "0" + s : "" + s;
+				cArg.setText(hh + ":" + mm + ":" + ss);
+			}
+		});
 	  }
 	}

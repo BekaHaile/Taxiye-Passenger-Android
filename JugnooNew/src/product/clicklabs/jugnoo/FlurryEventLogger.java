@@ -413,4 +413,36 @@ public class FlurryEventLogger {
 		}
 	}
 	
+	
+	public static void logRideData(String accessToken, String engagementId, LatLng latLng, double totalDistance){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", accessToken);
+			articleParams.put("engagement_id", engagementId);
+			articleParams.put("current_latitude", ""+latLng.latitude);
+			articleParams.put("current_longitude", ""+latLng.longitude);
+			articleParams.put("total_distance", ""+totalDistance);
+			FlurryAgent.logEvent("Ride Data", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void logRideDataGAPI(String accessToken, String engagementId, LatLng latLng1, LatLng latLng2, double totalDistance){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", accessToken);
+			articleParams.put("engagement_id", engagementId);
+			articleParams.put("latitude_1", ""+latLng1.latitude);
+			articleParams.put("longitude_1", ""+latLng1.longitude);
+			articleParams.put("latitude_2", ""+latLng2.latitude);
+			articleParams.put("longitude_2", ""+latLng2.longitude);
+			articleParams.put("total_distance", ""+totalDistance);
+			FlurryAgent.logEvent("Ride Data Google API", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
 }

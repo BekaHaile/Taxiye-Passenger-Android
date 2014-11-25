@@ -82,6 +82,15 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		FlurryAgent.onEndSession(this);
 	}
 	
+	public void assignFlurryKey(){
+		if(Data.DEV_SERVER_URL.equalsIgnoreCase(Data.SERVER_URL)){
+			Data.FLURRY_KEY = "abcd";
+		}
+		else{
+			Data.FLURRY_KEY = Data.STATIC_FLURRY_KEY;
+		}
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,7 +121,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
 			Data.SERVER_URL = Data.DEV_SERVER_URL;
 		}
-		
+
+		assignFlurryKey();
 		
 		
 		Locale locale = new Locale("en"); 
@@ -973,6 +983,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.commit();
 							
 							Data.SERVER_URL = Data.LIVE_SERVER_URL;
+
+							assignFlurryKey();
 							
 							dialog.dismiss();
 						}
@@ -987,7 +999,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.commit();
 							
 							Data.SERVER_URL = Data.DEV_SERVER_URL;
-							
+
+							assignFlurryKey();
 							dialog.dismiss();
 						}
 					});
@@ -1002,6 +1015,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.commit();
 							
 							Data.SERVER_URL = Data.TRIAL_SERVER_URL;
+
+							assignFlurryKey();
 							
 							dialog.dismiss();
 						}

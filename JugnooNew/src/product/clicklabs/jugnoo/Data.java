@@ -25,7 +25,11 @@ import com.loopj.android.http.AsyncHttpClient;
  */
 public class Data {
 	
-	public static final String FLURRY_KEY = "H8Y94ND8GPQTKKG5R2VY";
+	
+	//H8Y94ND8GPQTKKG5R2VY
+	public static final String STATIC_FLURRY_KEY = "abcd";
+	
+	public static String FLURRY_KEY = "abcd";
 	
 	public static final String INVALID_ACCESS_TOKEN = "invalid access token";
 	
@@ -71,7 +75,8 @@ public class Data {
 			
 			SP_C_TOTAL_DISTANCE = "c_total_distance",
 			SP_C_TOTAL_FARE = "c_total_fare",
-			SP_C_WAIT_TIME = "c_wait_time"
+			SP_C_WAIT_TIME = "c_wait_time",
+			SP_C_RIDE_TIME = "c_ride_time"
 			
 			;
 	
@@ -144,8 +149,6 @@ public class Data {
 	
 	
 	
-	
-	
 	public static String SERVER_URL = DEFAULT_SERVER_URL;
 	
 	
@@ -200,7 +203,7 @@ public class Data {
 	
 	
 	public static double totalDistance = 0, totalFare = 0;
-	public static String waitTime = "";
+	public static String waitTime = "", rideTime = "";
 	
 	
 	public static LatLng pickupLatLng;
@@ -210,7 +213,7 @@ public class Data {
 	
 	public static ArrayList<DriverType> driverTypes = new ArrayList<DriverType>();
 	
-	
+	public static FareStructure fareStructure;
 	
 	
 	

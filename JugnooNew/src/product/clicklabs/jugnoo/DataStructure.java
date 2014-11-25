@@ -449,3 +449,26 @@ class HelpItem{
 		return name + " " + id + " " + id.getOrdinal();
 	}
 }
+
+
+
+class FareStructure{
+	double fixedFare;
+	double thresholdDistance;
+	double farePerKm;
+	double farePerMin;
+	
+	public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin){
+		this.fixedFare = fixedFare;
+		this.thresholdDistance = thresholdDistance;
+		this.farePerKm = farePerKm;
+		this.farePerMin = farePerMin;
+	}
+	
+	public double calculateFare(double totalDistanceInKm, double totalTimeInMin){
+		double fareOfRideTime = totalTimeInMin * farePerMin;
+		double fare = fareOfRideTime + fixedFare + ((totalDistanceInKm <= thresholdDistance) ? (0) : ((totalDistanceInKm - thresholdDistance)* farePerKm));
+		fare = Math.ceil(fare);
+		return fare;
+	}
+}
