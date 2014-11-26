@@ -1655,7 +1655,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:splitMotionEvents="false" >
-
+        
         <LinearLayout
             android:layout_width="495px"
             android:layout_height="match_parent"
@@ -1887,6 +1887,30 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/fareDetailsRl"
+                        android:layout_width="match_parent"
+                        android:layout_height="84px"
+                        android:background="@drawable/menu_item_selector"
+                        android:splitMotionEvents="false" >
+
+                        <TextView
+                            android:id="@+id/fareDetailsText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="42px"
+                            android:text="Fare Details"
+                            android:textColor="@color/white"
+                            android:textSize="34px" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="3px"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/menu_divider" />
+                    </RelativeLayout>
+                    
+                    <RelativeLayout
                         android:id="@+id/helpRl"
                         android:layout_width="match_parent"
                         android:layout_height="84px"
@@ -1955,6 +1979,7 @@
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
+        
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

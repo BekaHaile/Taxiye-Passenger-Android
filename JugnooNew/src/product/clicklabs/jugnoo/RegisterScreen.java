@@ -588,9 +588,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								else{
 									new JSONParser().parseLoginData(activity, response);
 									
-									Database database22 = new Database(RegisterScreen.this);
-									database22.insertEmail(emailId);
-									database22.close();
+									Database.getInstance(RegisterScreen.this).insertEmail(emailId);
+									Database.getInstance(RegisterScreen.this).close();
 									
 									loginDataFetched = true;
 									
@@ -720,6 +719,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									else{
 										new JSONParser().parseLoginData(activity, response);
 										loginDataFetched = true;
+										Database.getInstance(RegisterScreen.this).insertEmail(Data.fbUserEmail);
+										Database.getInstance(RegisterScreen.this).close();
+										
 										DialogPopup.dismissLoadingDialog();
 									}
 								}
@@ -774,9 +776,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
-			Database2 database2 = new Database2(RegisterScreen.this);
-	        database2.updateDriverLastLocationTime();
-	        database2.close();
+			Database2.getInstance(RegisterScreen.this).updateDriverLastLocationTime();
+			Database2.getInstance(RegisterScreen.this).close();
 //			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
 			if(Data.termsAgreed == 1){
 				startActivity(new Intent(RegisterScreen.this, HomeActivity.class));

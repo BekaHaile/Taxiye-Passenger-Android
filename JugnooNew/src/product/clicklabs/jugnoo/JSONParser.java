@@ -85,16 +85,20 @@ public class JSONParser {
 			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
 			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
 			double farePerMin = 0;
+			double freeMinutes = 0;
 			if(fareDetails0.has("fare_per_min")){
 				farePerMin = fareDetails0.getDouble("fare_per_min");
+			}
+			if(fareDetails0.has("fare_threshold_time")){
+				freeMinutes = fareDetails0.getDouble("fare_threshold_time");
 			}
 			Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"), 
 					fareDetails0.getDouble("fare_threshold_distance"), 
 					fareDetails0.getDouble("fare_per_km"), 
-					farePerMin);
+					farePerMin, freeMinutes);
 		} catch(Exception e){
 			e.printStackTrace();
-			Data.fareStructure = new FareStructure(25, 2, 6, 1);
+			Data.fareStructure = new FareStructure(25, 2, 6, 1, 6);
 		}
 	}
 	
@@ -253,8 +257,7 @@ public class JSONParser {
 									
 									JSONArray jActiveRequests = jObject1.getJSONArray("active_requests");
 									
-									Database2 database2 = new Database2(context);
-									database2.deleteAllDriverRequests();
+									Database2.getInstance(context).deleteAllDriverRequests();
 									for(int i=0; i<jActiveRequests.length(); i++){
 										JSONObject jActiveRequest = jActiveRequests.getJSONObject(i);
 										 String requestEngagementId = jActiveRequest.getString("engagement_id");
@@ -264,13 +267,13 @@ public class JSONParser {
 		    	    					 String requestAddress = jActiveRequest.getString("pickup_location_address");
 		    	    					 String requestStartTime = new DateOperations().getSixtySecAfterCurrentTime();
 		    	    					 
-		    	    					 database2.insertDriverRequest(requestEngagementId, requestUserId, 
+		    	    					 Database2.getInstance(context).insertDriverRequest(requestEngagementId, requestUserId, 
 		    	    							 ""+requestLatitude, ""+requestLongitude, requestStartTime, requestAddress);
 		    	    					 
 		    	    					 Log.i("inserter in db", "insertDriverRequest = "+requestEngagementId);
 									}
 									
-									database2.close();
+									Database2.getInstance(context).close();
 									
 									if(jActiveRequests.length() == 0){
 										GCMIntentService.stopRing();
@@ -629,9 +632,8 @@ public class JSONParser {
 
 		editor.commit();
 
-		Database database = new Database(context);
-		database.deleteSavedPath();
-		database.close();
+		Database.getInstance(context).deleteSavedPath();
+		Database.getInstance(context).close();
 
 	}
 	

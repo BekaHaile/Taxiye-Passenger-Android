@@ -12,10 +12,9 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent arg1) {
         Log.w(TAG, "starting service...");
         
-        Database2 database2 = new Database2(context);
         try{
-	        final String serviceRestartOnReboot = database2.getDriverServiceRun();
-	        database2.updateDriverLastLocationTime();
+	        final String serviceRestartOnReboot = Database2.getInstance(context).getDriverServiceRun();
+	        Database2.getInstance(context).updateDriverLastLocationTime();
 	        
 	    	if(Database2.YES.equalsIgnoreCase(serviceRestartOnReboot)){
 	    		new DriverServiceOperations().startDriverService(context);
@@ -26,7 +25,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         } catch(Exception e){
         	e.printStackTrace();
         } finally{
-        	database2.close();
+        	Database2.getInstance(context).close();
         }
     	
     }

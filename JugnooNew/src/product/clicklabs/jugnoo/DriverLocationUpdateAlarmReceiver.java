@@ -14,11 +14,10 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 	public void onReceive(final Context context, Intent intent) {
 		String action = intent.getAction();
 		if (SEND_LOCATION.equals(action)) {
-			Database2 database2 = new Database2(context);
 			try {
-				long lastTime = database2.getDriverLastLocationTime();
-				String accessToken = database2.getDLDAccessToken();
-				database2.close();
+				long lastTime = Database2.getInstance(context).getDriverLastLocationTime();
+				String accessToken = Database2.getInstance(context).getDLDAccessToken();
+				Database2.getInstance(context).close();
 				if("".equalsIgnoreCase(accessToken)){
 					DriverLocationUpdateService.updateServerData(context);
 				}
@@ -41,7 +40,7 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 				e.printStackTrace();
 			}
 			finally{
-				database2.close();
+				Database2.getInstance(context).close();
 			}
 			
 			

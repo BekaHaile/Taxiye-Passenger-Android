@@ -15,13 +15,15 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class Database2 {																	// class for handling database related activities
 
+	private static Database2 dbInstance;
+	
 	private static final String DATABASE_NAME = "jugnoo_database2";						// declaring database variables
 
 	private static final int DATABASE_VERSION = 2;
 
 	private DbHelper dbHelper;
 
-	SQLiteDatabase database;
+	private SQLiteDatabase database;
 
 	public static final String YES = "yes", NO = "no", NEVER = "never";
 	
@@ -36,12 +38,14 @@ public class Database2 {																	// class for handling database related 
 	
 	private static final String TABLE_USER_MODE = "table_user_mode";
 	private static final String USER_MODE = "user_mode";
+	
 	public static final String UM_DRIVER = "driver";
 	public static final String UM_PASSENGER = "passenger";
 	public static final String UM_OFFLINE = "offline";
 	
 	private static final String TABLE_DRIVER_SCREEN_MODE = "table_driver_screen_mode";
 	private static final String DRIVER_SCREEN_MODE = "driver_screen_mode";
+	
 	public static final String VULNERABLE = "vulnerable";
 	public static final String NOT_VULNERABLE = "not_vulnerable";
 	
@@ -89,12 +93,11 @@ public class Database2 {																	// class for handling database related 
 		public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 			onCreate(database);
 		}
-		
 
 	}
 
 	
-	public static void createAllTables(SQLiteDatabase database){
+	private static void createAllTables(SQLiteDatabase database){
 		/****************************************** CREATING ALL THE TABLES *****************************************************/
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_FAST + " ("
@@ -140,15 +143,25 @@ public class Database2 {																	// class for handling database related 
 		
 	}
 	
+	public static Database2 getInstance(Context context) {
+		if (dbInstance == null) {
+			dbInstance = new Database2(context);
+		} 
+		else if (!dbInstance.database.isOpen()) {
+			dbInstance = null;
+			dbInstance = new Database2(context);
+		}
+		return dbInstance;
+	}
 	
-	
-	public Database2(Context context) {
+	private Database2(Context context) {
 		dbHelper = new DbHelper(context);
 		database = dbHelper.getWritableDatabase();
 		createAllTables(database);
 	}
 
 	public void close() {
+		database.close();
 		dbHelper.close();
 		System.gc();
 	}

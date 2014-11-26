@@ -134,13 +134,11 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 		
 		
-		Database database = new Database(SplashLogin.this);													// getting already logged in email strings for drop down
-		String[] emails = database.getEmails();
-		database.close();
+		String[] emails = Database.getInstance(this).getEmails();
+		Database.getInstance(this).close();
 		
-		Database2 database2 = new Database2(SplashLogin.this);
-		database2.updateDriverServiceFast("no");
-		database2.close();
+		Database2.getInstance(SplashLogin.this).updateDriverServiceFast("no");
+		Database2.getInstance(SplashLogin.this).close();
 		
 		ArrayAdapter<String> adapter;
 		
@@ -582,9 +580,8 @@ public class SplashLogin extends Activity implements LocationUpdate{
 										
 										new JSONParser().parseLoginData(activity, response);
 										
-										Database database22 = new Database(SplashLogin.this);
-										database22.insertEmail(emailId);
-										database22.close();
+										Database.getInstance(SplashLogin.this).insertEmail(emailId);
+										Database.getInstance(SplashLogin.this).close();
 										
 										loginDataFetched = true;
 										
@@ -719,6 +716,9 @@ public class SplashLogin extends Activity implements LocationUpdate{
 										new JSONParser().parseLoginData(activity, response);
 										loginDataFetched = true;
 										
+										Database.getInstance(SplashLogin.this).insertEmail(Data.fbUserEmail);
+										Database.getInstance(SplashLogin.this).close();
+										
 										DialogPopup.dismissLoadingDialog();
 										
 									}
@@ -788,9 +788,8 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 		if(hasFocus && loginDataFetched){
 			
-			Database2 database2 = new Database2(SplashLogin.this);
-	        database2.updateDriverLastLocationTime();
-	        database2.close();
+			Database2.getInstance(SplashLogin.this).updateDriverLastLocationTime();
+			Database2.getInstance(SplashLogin.this).close();
 	        
 			Map<String, String> articleParams = new HashMap<String, String>();
 			articleParams.put("username", Data.userData.userName);

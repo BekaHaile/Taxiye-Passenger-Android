@@ -48,9 +48,8 @@ public class DriverLocationUpdateService extends Service {
         	Log.i("Driver location update started", "=======");
         	updateServerData(this);
     		
-    		Database2 database2 = new Database2(this);
     		
-    		String fast = database2.getDriverServiceFast();
+    		String fast = Database2.getInstance(DriverLocationUpdateService.this).getDriverServiceFast();
     		
     		Log.e("fast", "="+fast);
     		
@@ -82,7 +81,7 @@ public class DriverLocationUpdateService extends Service {
     		}
         	
     		
-            database2.close();
+    		Database2.getInstance(DriverLocationUpdateService.this).close();
             
             setupLocationUpdateAlarm();
         	
@@ -97,8 +96,6 @@ public class DriverLocationUpdateService extends Service {
     	String SHARED_PREF_NAME = "myPref";
     	String SP_ACCESS_TOKEN_KEY = "access_token";
     	String accessToken = "", deviceToken = "", SERVER_URL = "";
-    	
-    	Database2 database2 = new Database2(context);
     	
     	//TODO Toggle live to trial
 		String DEV_SERVER_URL = "https://54.81.229.172:8012";
@@ -135,8 +132,8 @@ public class DriverLocationUpdateService extends Service {
     	
 		Log.e("SERVER_URL in updateService","="+SERVER_URL);
 		
-		database2.insertDriverLocData(accessToken, deviceToken, SERVER_URL);
-		database2.close();
+		Database2.getInstance(context).insertDriverLocData(accessToken, deviceToken, SERVER_URL);
+		Database2.getInstance(context).close();
     }
     
     
@@ -158,9 +155,8 @@ public class DriverLocationUpdateService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
     	try {
-    		Database2 database2 = new Database2(this);
-    		String serviceRestartOnReboot = database2.getDriverServiceRun();
-    		database2.close();
+    		String serviceRestartOnReboot = Database2.getInstance(DriverLocationUpdateService.this).getDriverServiceRun();
+    		Database2.getInstance(DriverLocationUpdateService.this).close();
     		Log.e("onTaskRemoved serviceRestartOnReboot =","="+serviceRestartOnReboot);
     		if(Database2.YES.equalsIgnoreCase(serviceRestartOnReboot)){
     			Log.e("onTaskRemoved","="+rootIntent);
@@ -291,9 +287,8 @@ class GPSLocationFetcher {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					Database2 database2 = new Database2(context);
-			    	database2.updateDriverCurrentLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
-			    	database2.close();
+					Database2.getInstance(context).updateDriverCurrentLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
+					Database2.getInstance(context).close();
 			    	Log.e("DriverLocationUpdateService location in GPS only fast ", "=="+loc);
 					new DriverLocationDispatcher().sendLocationToServer(context, "GPSReciever");
 				}

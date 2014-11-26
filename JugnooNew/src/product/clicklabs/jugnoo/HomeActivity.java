@@ -137,6 +137,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout bookingsRl;
 	TextView bookingsText;
 	
+	RelativeLayout fareDetailsRl;
+	TextView fareDetailsText;
+	
 	RelativeLayout helpRl;
 	TextView helpText;
 	
@@ -471,6 +474,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
 		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		fareDetailsRl = (RelativeLayout) findViewById(R.id.fareDetailsRl);
+		fareDetailsText = (TextView) findViewById(R.id.fareDetailsText); fareDetailsText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		helpRl = (RelativeLayout) findViewById(R.id.helpRl);
 		helpText = (TextView) findViewById(R.id.helpText); helpText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -910,6 +916,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
+		
+		fareDetailsRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				sendToFareDetails();
+			}
+		});
+		
+		
 		helpRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -1147,9 +1163,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, FareInfoActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.fareDetailsOpened(Data.userData.accessToken);
+				sendToFareDetails();
 			}
 		});
 		
@@ -1663,7 +1677,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
 		
 		
-		Database2 database2 = new Database2(HomeActivity.this);
 		try {
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			
@@ -1696,10 +1709,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
-		
 			
-			String jugnooOn = database2.getDriverServiceRun();
+			String jugnooOn = Database2.getInstance(HomeActivity.this).getDriverServiceRun();
 			
 			Log.e("onCreate", "=jugnooOn = "+jugnooOn);
 			if(Database2.YES.equalsIgnoreCase(jugnooOn)){
@@ -1712,12 +1723,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			changeExceptionalDriverUI();
 			
-			database2.insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
+			Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		database2.close();
+		Database2.getInstance(HomeActivity.this).close();
 	}
 	
 	
@@ -1736,6 +1747,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		else if(userMode == UserMode.DRIVER){
 			switchDriverScreen(driverScreenMode);
 		}
+	}
+	
+	
+	public void sendToFareDetails(){
+		startActivity(new Intent(HomeActivity.this, FareInfoActivity.class));
+		overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		FlurryEventLogger.fareDetailsOpened(Data.userData.accessToken);
 	}
 	
 	
@@ -2032,14 +2050,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			getDistanceTimeAddress = null;
 		}
 		
-		Database2 database2 = new Database2(HomeActivity.this);
 		
 		switch(mode){
 		
 			case DRIVER:
 				cancelTimerUpdateDrivers();
 				
-				database2.updateUserMode(Database2.UM_DRIVER);
+				Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_DRIVER);
 				
 				passengerMainLayout.setVisibility(View.GONE);
 				driverMainLayout.setVisibility(View.VISIBLE);
@@ -2057,7 +2074,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
-				database2.updateUserMode(Database2.UM_PASSENGER);
+				Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_PASSENGER);
 				
 				passengerMainLayout.setVisibility(View.VISIBLE);
 				driverMainLayout.setVisibility(View.GONE);
@@ -2075,16 +2092,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		}
 		
-		database2.close();
+		Database2.getInstance(HomeActivity.this).close();
 		
 	}
 	
 	
 	
 	public void updateDriverServiceFast(String choice){
-		Database2 database = new Database2(HomeActivity.this);
-		database.updateDriverServiceFast(choice);
-		database.close();
+		Database2.getInstance(HomeActivity.this).updateDriverServiceFast(choice);
+		Database2.getInstance(HomeActivity.this).close();
 	}
 	
 	
@@ -2335,20 +2351,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Database2 database2 = new Database2(HomeActivity.this);
 				try {
 					if(DriverScreenMode.D_INITIAL == mode){
-						database2.updateDriverScreenMode(Database2.VULNERABLE);
+						Database2.getInstance(HomeActivity.this).updateDriverScreenMode(Database2.VULNERABLE);
 					}
 					else{
-						database2.updateDriverScreenMode(Database2.NOT_VULNERABLE);
+						Database2.getInstance(HomeActivity.this).updateDriverScreenMode(Database2.NOT_VULNERABLE);
 					}
 				} catch (Exception e) {
-					database2.updateDriverScreenMode(Database2.NOT_VULNERABLE);
+					Database2.getInstance(HomeActivity.this).updateDriverScreenMode(Database2.NOT_VULNERABLE);
 					e.printStackTrace();
 				}
 				finally{
-					database2.close();
+					Database2.getInstance(HomeActivity.this).close();
 				}
 			}
 		}).start();
@@ -3181,13 +3196,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					        .color(MAP_PATH_COLOR).geodesic(true));
 							logPathDataToFlurry(currentLatLng, totalDistance);
 							
+							
+							
 							new Thread(new Runnable() {
 								
 								@Override
 								public void run() {
-									Database database = new Database(HomeActivity.this);
-									database.insertPolyLine(lastLatLng, currentLatLng);
-									database.close();
+									Database.getInstance(HomeActivity.this).insertPolyLine(lastLatLng, currentLatLng);
+									Database.getInstance(HomeActivity.this).close();
 								}
 							}).start();
 							
@@ -3223,9 +3239,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 										@Override
 										public void run() {
-											Database database = new Database(HomeActivity.this);
-											database.insertPolyLine(Data.startRidePreviousLatLng, currentLatLng);
-											database.close();
+											Database.getInstance(HomeActivity.this).insertPolyLine(Data.startRidePreviousLatLng, currentLatLng);
+											Database.getInstance(HomeActivity.this).close();
 										}
 									}).start();
 
@@ -3307,9 +3322,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void displayOldPath(){
 		
-		Database database = new Database(getApplicationContext());
-		ArrayList<Pair<LatLng, LatLng>> path = database.getSavedPath();
-		database.close();
+		ArrayList<Pair<LatLng, LatLng>> path = Database.getInstance(HomeActivity.this).getSavedPath();
+		Database.getInstance(HomeActivity.this).close();
 		
 		LatLng firstLatLng = null;
 		
@@ -3475,8 +3489,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			    	
 			    	totalDistance = totalDistance + distanceOfPath;
 			    	checkAndUpdateWaitTimeDistance(distanceOfPath);
-			    	
-			    	 Database database = new Database(HomeActivity.this);
 			    	 
 		           for(int z = 0; z<list.size()-1;z++){
 		                LatLng src= list.get(z);
@@ -3485,21 +3497,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
 		                .width(5)
 				        .color(MAP_PATH_COLOR).geodesic(true));
-						database.insertPolyLine(src, dest);
+		                Database.getInstance(this).insertPolyLine(src, dest);
 		            }
-		           database.close();
+		           Database.getInstance(this).close();
 	    	}
 	    	else{																									// displacement would be correct
 	    		totalDistance = totalDistance + displacementToCompare;
 	    		checkAndUpdateWaitTimeDistance(displacementToCompare);
 	    		
-	    		 Database database = new Database(HomeActivity.this);
 	    		 map.addPolyline(new PolylineOptions()
 	                .add(new LatLng(source.latitude, source.longitude), new LatLng(destination.latitude, destination.longitude))
 	                .width(5)
 			        .color(MAP_PATH_COLOR).geodesic(true));
-					database.insertPolyLine(source, destination);
-					database.close();
+	    		 Database.getInstance(this).insertPolyLine(source, destination);
+	    		 Database.getInstance(this).close();
 	    		
 	    	}
 	    	logPathDataToFlurryGAPI(source, destination, totalDistance);
@@ -4508,9 +4519,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Database2 database2 = new Database2(activity);
-				database2.deleteAllDriverRequests();
-				database2.close();
+				Database2.getInstance(activity).deleteAllDriverRequests();
+				Database2.getInstance(activity).close();
 			}
 		}).start();
 	}
@@ -4520,9 +4530,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Database2 database2 = new Database2(activity);
-				database2.deleteDriverRequest(engagementId);
-				database2.close();
+				Database2.getInstance(activity).deleteDriverRequest(engagementId);
+				Database2.getInstance(activity).close();
 			}
 		}).start();
 	}
@@ -4708,10 +4717,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Database2 database2 = new Database2(activity);
 				Data.driverRideRequests.clear();
-				Data.driverRideRequests.addAll(database2.getAllDriverRequests());
-				database2.close();
+				Data.driverRideRequests.addAll(Database2.getInstance(activity).getAllDriverRequests());
+				Database2.getInstance(activity).close();
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -4823,18 +4831,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	 * ASync for start ride in  driver mode from server
 	 */
 	public void driverStartRideAsync(final Activity activity, double pickupLatitude, double pickupLongitude) {
+		
+		lastLocation = null;
+		
+		HomeActivity.previousWaitTime = 0;
+		HomeActivity.previousRideTime = 0;
+		HomeActivity.totalDistance = -1;
+		
+		clearRideSPData();
+		
+		waitStart = 2;
+		
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			lastLocation = null;
-			
-			HomeActivity.previousWaitTime = 0;
-			HomeActivity.previousRideTime = 0;
-			HomeActivity.totalDistance = -1;
-			
-			clearRideSPData();
-			
-			waitStart = 2;
-			
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
@@ -6371,7 +6379,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.custom_two_btn_dialog);
+			dialog.setContentView(R.layout.call_an_auto_dialog);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -6386,6 +6394,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			
 			textHead.setVisibility(View.VISIBLE);
 			textHead.setText("Chalo Jugnoo Se");
 			textMessage.setText("Do you want to call an auto?");
@@ -6413,6 +6422,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 				
 			});
+			
 
 			dialog.show();
 		} catch (Exception e) {
@@ -6872,9 +6882,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						Database2 database2 = new Database2(HomeActivity.this);
-						database2.updateUserMode(Database2.UM_OFFLINE);
-						database2.close();
+						Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_OFFLINE);
+						Database2.getInstance(HomeActivity.this).close();
 					}
 				}).start();
 				
@@ -7240,9 +7249,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		editor.commit();
 
-		Database database = new Database(HomeActivity.this);
-		database.deleteSavedPath();
-		database.close();
+		Database.getInstance(this).deleteSavedPath();
+		Database.getInstance(this).close();
 	
 	}
 	
@@ -7290,9 +7298,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		editor.commit();
 
-		Database database = new Database(HomeActivity.this);
-		database.deleteSavedPath();
-		database.close();
+		Database.getInstance(this).deleteSavedPath();
+		Database.getInstance(this).close();
 
 	}
 	

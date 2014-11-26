@@ -25,7 +25,7 @@ import com.loopj.android.http.AsyncHttpClient;
  */
 public class Data {
 	
-	
+	//TODO change flurry key
 	//H8Y94ND8GPQTKKG5R2VY
 	public static final String STATIC_FLURRY_KEY = "abcd";
 	

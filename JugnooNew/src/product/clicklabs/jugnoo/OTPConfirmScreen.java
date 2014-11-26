@@ -372,9 +372,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 								else{
 									new JSONParser().parseLoginData(activity, response);
 									
-									Database database22 = new Database(OTPConfirmScreen.this);
-									database22.insertEmail(emailRegisterData.emailId);
-									database22.close();
+									Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
+									Database.getInstance(OTPConfirmScreen.this).close();
 									
 									loginDataFetched = true;
 									
@@ -499,6 +498,10 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 								else{
 									new JSONParser().parseLoginData(activity, response);
 									loginDataFetched = true;
+									
+									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.fbUserEmail);
+									Database.getInstance(OTPConfirmScreen.this).close();
+									
 									DialogPopup.dismissLoadingDialog();
 								}
 								}
@@ -603,9 +606,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		if(hasFocus && loginDataFetched){
 			stopWaitingTimer();
 			loginDataFetched = false;
-			Database2 database2 = new Database2(OTPConfirmScreen.this);
-	        database2.updateDriverLastLocationTime();
-	        database2.close();
+			Database2.getInstance(OTPConfirmScreen.this).updateDriverLastLocationTime();
+			Database2.getInstance(OTPConfirmScreen.this).close();
 			if(Data.termsAgreed == 1){
 				startActivity(new Intent(OTPConfirmScreen.this, HomeActivity.class));
 			}

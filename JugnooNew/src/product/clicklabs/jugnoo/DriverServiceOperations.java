@@ -49,10 +49,9 @@ public class DriverServiceOperations {
 	
 	
 	public void startDriverService(Context context){
-		Database2 database2 = new Database2(context);
 		try{
-			database2.updateDriverServiceRun(Database2.YES);
-			database2.updateDriverServiceTimeToRestart(0);
+			Database2.getInstance(context).updateDriverServiceRun(Database2.YES);
+			Database2.getInstance(context).updateDriverServiceTimeToRestart(0);
 			
 			context.stopService(new Intent(context, DriverLocationUpdateService.class));
 			context.startService(new Intent(context, DriverLocationUpdateService.class));
@@ -62,7 +61,7 @@ public class DriverServiceOperations {
 			e.printStackTrace();
 		}
 		finally{
-			database2.close();
+			Database2.getInstance(context).close();
 		}
 	}
 	
@@ -74,20 +73,19 @@ public class DriverServiceOperations {
 	
 	
 	public void stopAndScheduleDriverService(Context context){
-		Database2 database2 = new Database2(context);
 		try{
-			database2.updateDriverServiceRun(Database2.NO);
+			Database2.getInstance(context).updateDriverServiceRun(Database2.NO);
 			
 			context.stopService(new Intent(context, DriverLocationUpdateService.class));
 			Calendar calendar = getRestartSetCalendar();
 			setupAlarm(context, calendar.getTimeInMillis());
-			database2.updateDriverServiceTimeToRestart(calendar.getTimeInMillis());
+			Database2.getInstance(context).updateDriverServiceTimeToRestart(calendar.getTimeInMillis());
 			Log.e("stopAndScheduleDriverService", "=current = "+ System.currentTimeMillis() + " adv = " + getRestartSetCalendar().getTimeInMillis());
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 		finally{
-			database2.close();
+			Database2.getInstance(context).close();
 		}
 	}
 	
@@ -100,9 +98,8 @@ public class DriverServiceOperations {
 	
 	
 	public void rescheduleDriverService(Context context){
-		Database2 database2 = new Database2(context);
 		try{
-			long timeToRestartService = database2.getDriverServiceTimeToRestart();
+			long timeToRestartService = Database2.getInstance(context).getDriverServiceTimeToRestart();
 			
 			context.stopService(new Intent(context, DriverLocationUpdateService.class));
 			
@@ -111,7 +108,7 @@ public class DriverServiceOperations {
 			e.printStackTrace();
 		}
 		finally{
-			database2.close();
+			Database2.getInstance(context).close();
 		}
 	}
 	
@@ -120,25 +117,23 @@ public class DriverServiceOperations {
 	
 	
 	public void stopService(Context context){
-		Database2 database2 = new Database2(context);
 		try{
 			cancelAlarm(context);
 			context.stopService(new Intent(context, DriverLocationUpdateService.class));
-			database2.updateDriverServiceRun(Database2.NEVER);
+			Database2.getInstance(context).updateDriverServiceRun(Database2.NEVER);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 		finally{
-			database2.close();
+			Database2.getInstance(context).close();
 		}
 	}
 	
 	
 	
 	public void checkStartService(Context context){
-		Database2 database2 = new Database2(context);
 		try{
-			final String serviceRestartOnReboot = database2.getDriverServiceRun();
+			final String serviceRestartOnReboot = Database2.getInstance(context).getDriverServiceRun();
 			if(Database2.YES.equalsIgnoreCase(serviceRestartOnReboot)){
 				context.stopService(new Intent(context, DriverLocationUpdateService.class));
 				context.startService(new Intent(context, DriverLocationUpdateService.class));
@@ -149,7 +144,7 @@ public class DriverServiceOperations {
 			e.printStackTrace();
 		}
 		finally{
-			database2.close();
+			Database2.getInstance(context).close();
 		}
 	}
 	

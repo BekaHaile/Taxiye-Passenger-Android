@@ -115,7 +115,6 @@ public class HelpActivity extends FragmentActivity{
 		helpItems.clear();
 		helpItems.add(new HelpItem(HelpSection.MAIL_US, "Send Us an Email"));
 		helpItems.add(new HelpItem(HelpSection.CALL_US, "Call Us"));
-		helpItems.add(new HelpItem(HelpSection.FARE_DETAILS, "Fare Details"));
 		helpItems.add(new HelpItem(HelpSection.FAQ, "FAQs"));
 		helpItems.add(new HelpItem(HelpSection.ABOUT, "About Jugnoo"));
 		helpItems.add(new HelpItem(HelpSection.TERMS, "Terms of Use"));

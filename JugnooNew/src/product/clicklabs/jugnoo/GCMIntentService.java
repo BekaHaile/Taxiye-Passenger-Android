@@ -460,11 +460,10 @@ public class GCMIntentService extends IntentService {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					Database2 database2 = new Database2(context);
 					try {
-						String accessToken = database2.getDLDAccessToken();
-						String deviceToken = database2.getDLDDeviceToken();
-						String serverUrl = database2.getDLDServerUrl();
+						String accessToken = Database2.getInstance(context).getDLDAccessToken();
+						String deviceToken = Database2.getInstance(context).getDLDDeviceToken();
+						String serverUrl = Database2.getInstance(context).getDLDServerUrl();
 						
 						if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
 								ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -498,7 +497,7 @@ public class GCMIntentService extends IntentService {
 						e.printStackTrace();
 					}
 					finally{
-						database2.close();
+						Database2.getInstance(context).close();
 					}
 				}
 			}).start();
@@ -584,9 +583,8 @@ public class GCMIntentService extends IntentService {
 	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
 	    		String startTime, String address){
 	    	try {
-				Database2 database2 = new Database2(context);
-				 database2.insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
-				 database2.close();
+	    		Database2.getInstance(context).insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
+	    		Database2.getInstance(context).close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -594,9 +592,8 @@ public class GCMIntentService extends IntentService {
 	    
 	    public int deleteDriverRideRequest(Context context, String engagementId){
 	    	try {
-				Database2 database2 = new Database2(context);
-				int count = database2.deleteDriverRequest(engagementId);
-				database2.close();
+				int count = Database2.getInstance(context).deleteDriverRequest(engagementId);
+				Database2.getInstance(context).close();
 				return count;
 			} catch (Exception e) {
 				e.printStackTrace();

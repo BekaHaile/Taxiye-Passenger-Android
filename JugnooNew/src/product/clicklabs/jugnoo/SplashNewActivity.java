@@ -47,6 +47,7 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.drive.internal.ac;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -512,8 +513,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.deviceToken);
 				
-				Database2 database2 = new Database2(activity);
-				final String serviceRestartOnReboot = database2.getDriverServiceRun();
+				final String serviceRestartOnReboot = Database2.getInstance(activity).getDriverServiceRun();
 				if(Database2.NO.equalsIgnoreCase(serviceRestartOnReboot)){
 					params.put("latitude", "0");
 					params.put("longitude", "0");
@@ -522,7 +522,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					params.put("latitude", ""+Data.latitude);
 					params.put("longitude", ""+Data.longitude);
 				}
-				database2.close();
+				Database2.getInstance(activity).close();
 				
 				
 				params.put("app_version", ""+Data.appVersion);
@@ -1105,11 +1105,10 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	public static boolean isLastLocationUpdateFine(Activity activity){
 		try {
-			Database2 database2 = new Database2(activity);
-			String userMode = database2.getUserMode();
-			String driverScreenMode = database2.getDriverScreenMode();
-			long lastLocationUpdateTime = database2.getDriverLastLocationTime();
-			database2.close();
+			String userMode = Database2.getInstance(activity).getUserMode();
+			String driverScreenMode = Database2.getInstance(activity).getDriverScreenMode();
+			long lastLocationUpdateTime = Database2.getInstance(activity).getDriverLastLocationTime();
+			Database2.getInstance(activity).close();
 			
 			long currentTime = System.currentTimeMillis();
 			

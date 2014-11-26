@@ -16,13 +16,15 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Database {																	// class for handling database related activities
 
+	private static Database dbInstance;
+	
 	private static final String DATABASE_NAME = "jugnoo_database";						// declaring database variables
 
 	private static final int DATABASE_VERSION = 2;
 
 	private DbHelper dbHelper;
 
-	SQLiteDatabase database;
+	private SQLiteDatabase database;
 
 	// ***************** table_email_suggestions table columns
 	// **********************//
@@ -62,7 +64,7 @@ public class Database {																	// class for handling database related a
 
 	}
 	
-	public static void createAllTables(SQLiteDatabase database){
+	private static void createAllTables(SQLiteDatabase database){
 		// table_email_suggestions
 					database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_EMAILS + " ("
 							+ EMAIL + " TEXT NOT NULL" + ");");
@@ -77,13 +79,25 @@ public class Database {																	// class for handling database related a
 	}
 	
 
-	public Database(Context context) {
+	public static Database getInstance(Context context) {
+		if (dbInstance == null) {
+			dbInstance = new Database(context);
+		} 
+		else if (!dbInstance.database.isOpen()) {
+			dbInstance = null;
+			dbInstance = new Database(context);
+		}
+		return dbInstance;
+	}
+	
+	private Database(Context context) {
 		dbHelper = new DbHelper(context);
 		database = dbHelper.getWritableDatabase();
 		createAllTables(database);
 	}
 
 	public void close() {
+		database.close();
 		dbHelper.close();
 		System.gc();
 	}
