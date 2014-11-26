@@ -377,18 +377,18 @@ public class JSONParser {
 					
 					HomeActivity.waitStart = 2;
 					
+					String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
+					String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+					
+					Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
+					
+					Log.e("Data on app restart", "-----");
+					Log.i("HomeActivity.totalDistance", "="+HomeActivity.totalDistance);
+					Log.i("Data.startRidePreviousLatLng", "="+Data.startRidePreviousLatLng);
+					Log.e("----------", "-----");
+					
 					if(Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0){
-						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
-						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-						
-						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
 						HomeActivity.totalDistance = -1;
-					}
-					else{
-						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
-						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-						
-						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
 					}
 					
 				}
@@ -554,7 +554,6 @@ public class JSONParser {
 					else{
 						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
 						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-						
 						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
 					}
 					

@@ -266,6 +266,7 @@ public class DriverRidesFragment extends Fragment {
 										if(bookingData.length() > 0){
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
+												Log.e("booData"+i, "="+booData);
 												String balance = "";
 												try{
 													if(booData.has("balance")){

@@ -2,10 +2,8 @@ package product.clicklabs.jugnoo;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,7 +42,6 @@ import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -67,8 +64,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -391,10 +386,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
+	//TODO check final variables
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
+	public static final int MAP_PATH_COLOR = Color.RED;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600; //in meters
@@ -1856,6 +1851,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 	}
 	
+	
+	
+	
 	public void sendMyLocationToServerForDriver(){
 		runOnUiThread(new Runnable() {
 			@Override
@@ -2899,149 +2897,148 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void saveDataOnPause(final boolean stopWait){
-		
 		new Thread(new Runnable() {
-			
 			@Override
 			public void run() {
-		
-        try {
-			if(userMode == UserMode.DRIVER){
-				
-				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-				Editor editor = pref.edit();
-				
-				if(driverScreenMode == DriverScreenMode.D_START_RIDE){
-					
-					editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_START_RIDE);
-					
-					editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
-					editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
-					
-					editor.putString(Data.SP_D_LATITUDE, ""+Data.dCustLatLng.latitude);
-					editor.putString(Data.SP_D_LONGITUDE, ""+Data.dCustLatLng.longitude);
-					
-					editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
-					editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
-					editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
-					editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
-					
-				}
-				else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
-					
-					if(stopWait){
-						if(waitChronometer.isRunning){
-							stopWait();
+		        try {
+					if(userMode == UserMode.DRIVER){
+						
+						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+						Editor editor = pref.edit();
+						
+						if(driverScreenMode == DriverScreenMode.D_START_RIDE){
+							
+							editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_START_RIDE);
+							
+							editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
+							editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
+							
+							editor.putString(Data.SP_D_LATITUDE, ""+Data.dCustLatLng.latitude);
+							editor.putString(Data.SP_D_LONGITUDE, ""+Data.dCustLatLng.longitude);
+							
+							editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
+							editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
+							editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
+							editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
+							
 						}
-						if(rideTimeChronometer.isRunning){
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									try{
-										rideTimeChronometer.stop();
-									} catch(Exception e){
-					        			e.printStackTrace();
-					        		}
+						else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
+							
+							if(stopWait){
+								if(waitChronometer.isRunning){
+									stopWait();
 								}
-							});
+								if(rideTimeChronometer.isRunning){
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											try{
+												rideTimeChronometer.stop();
+											} catch(Exception e){
+							        			e.printStackTrace();
+							        		}
+										}
+									});
+								}
+							}
+							
+							editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
+							
+							editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
+							editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
+							
+							editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
+							editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
+							editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
+							editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
+							
+							long elapsedMillis = waitChronometer.eclipsedTime;
+					    	
+							editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
+							editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
+							
+							long elapsedRideTime = rideTimeChronometer.eclipsedTime;
+							editor.putString(Data.SP_RIDE_TIME, ""+elapsedRideTime);
+							
+							if(HomeActivity.this.lastLocation != null){
+								editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.this.lastLocation.getLatitude());
+					    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.this.lastLocation.getLongitude());
+							}
+							
+							Log.e("Data on app paused", "-----");
+							Log.i("HomeActivity.totalDistance", "="+HomeActivity.totalDistance);
+							Log.i("lastLocation", "="+lastLocation);
+							Log.e("----------", "-----");
+							
 						}
+						else{
+							editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
+						}
+						
+						
+						editor.commit();
+						
 					}
-					
-					editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
-					
-					editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
-					editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
-					
-					editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
-					editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
-					editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
-					editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
-					
-					long elapsedMillis = waitChronometer.eclipsedTime;
-			    	
-					editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
-					editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
-					
-					Log.e("Data.SP_TOTAL_DISTANCE", "=="+totalDistance);
-					
-					long elapsedRideTime = rideTimeChronometer.eclipsedTime;
-					editor.putString(Data.SP_RIDE_TIME, ""+elapsedRideTime);
-					
-					if(HomeActivity.myLocation != null){
-						editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
-			    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
+					else if(userMode == UserMode.PASSENGER){
+					    
+						
+						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+						Editor editor = pref.edit();
+						
+						if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+							
+							editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
+							
+							editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
+							editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
+							editor.putString(Data.SP_C_LATITUDE, ""+Data.assignedDriverInfo.latLng.latitude);
+							editor.putString(Data.SP_C_LONGITUDE, ""+Data.assignedDriverInfo.latLng.longitude);
+							editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
+							editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
+							editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
+							editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+							editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
+							editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
+							editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
+							
+							
+						}
+						else if(passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
+							
+							editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_IN_RIDE);
+							
+							editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
+							editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
+							editor.putString(Data.SP_C_LATITUDE, ""+Data.assignedDriverInfo.latLng.latitude);
+							editor.putString(Data.SP_C_LONGITUDE, ""+Data.assignedDriverInfo.latLng.longitude);
+							editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
+							editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
+							editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
+							editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
+							editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
+							editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
+							editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
+							
+							
+							editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
+							
+							if(HomeActivity.this.lastLocation != null){
+								editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.this.lastLocation.getLatitude());
+					    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.this.lastLocation.getLongitude());
+							}
+							
+						
+						}
+						else{
+							editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
+						}
+						
+						editor.commit();
+						
 					}
-					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				else{
-					editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
-				}
-				
-				
-				editor.commit();
-				
-			}
-			else if(userMode == UserMode.PASSENGER){
-			    
-				
-				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-				Editor editor = pref.edit();
-				
-				if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
-					
-					editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
-					
-					editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
-					editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
-					editor.putString(Data.SP_C_LATITUDE, ""+Data.assignedDriverInfo.latLng.latitude);
-					editor.putString(Data.SP_C_LONGITUDE, ""+Data.assignedDriverInfo.latLng.longitude);
-					editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
-					editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
-					editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
-					editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
-					editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
-					editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
-					editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
-					
-					
-				}
-				else if(passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
-					
-					editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_IN_RIDE);
-					
-					editor.putString(Data.SP_C_ENGAGEMENT_ID, Data.cEngagementId);
-					editor.putString(Data.SP_C_DRIVER_ID, Data.cDriverId);
-					editor.putString(Data.SP_C_LATITUDE, ""+Data.assignedDriverInfo.latLng.latitude);
-					editor.putString(Data.SP_C_LONGITUDE, ""+Data.assignedDriverInfo.latLng.longitude);
-					editor.putString(Data.SP_C_DRIVER_NAME, Data.assignedDriverInfo.name);
-					editor.putString(Data.SP_C_DRIVER_IMAGE, Data.assignedDriverInfo.image);
-					editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, Data.assignedDriverInfo.carImage);
-					editor.putString(Data.SP_C_DRIVER_PHONE, Data.assignedDriverInfo.phoneNumber);
-					editor.putString(Data.SP_C_DRIVER_RATING, Data.assignedDriverInfo.rating);
-					editor.putString(Data.SP_C_DRIVER_DISTANCE, Data.assignedDriverInfo.distanceToReach);
-					editor.putString(Data.SP_C_DRIVER_DURATION, Data.assignedDriverInfo.durationToReach);
-					
-					
-					editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
-					
-					if(HomeActivity.myLocation != null){
-						editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
-			    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
-					}
-					
-				
-				}
-				else{
-					editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
-				}
-				
-				editor.commit();
-				
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 			}
 		}).start();
 	
@@ -3165,14 +3162,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		try {
 			if(map != null){
+				HomeActivity.myLocation = location;
 				zoomToCurrentLocationAtFirstLocationFix(location);
 			
-			HomeActivity.myLocation = location;
 			updatePickupLocation(location);
 			
 				if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
-					
-					saveDataOnPause(false);
 					
 					final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 					Log.i("lastLocation", "="+lastLocation);
@@ -3183,36 +3178,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						
 						final LatLng lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
 						
-						double displacement = distance(lastLatLng, currentLatLng);
-						Log.i("displacement", "="+displacement);
-						
-						if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
-							
-							totalDistance = totalDistance + displacement;
-							checkAndUpdateWaitTimeDistance(displacement);
-							map.addPolyline(new PolylineOptions()
-					        .add(lastLatLng, currentLatLng)
-					        .width(5)
-					        .color(MAP_PATH_COLOR).geodesic(true));
-							logPathDataToFlurry(currentLatLng, totalDistance);
-							
-							
-							
-							new Thread(new Runnable() {
-								
-								@Override
-								public void run() {
-									Database.getInstance(HomeActivity.this).insertPolyLine(lastLatLng, currentLatLng);
-									Database.getInstance(HomeActivity.this).close();
-								}
-							}).start();
-							
-							updateDistanceFareTexts();
-							
-						}
-						else{
-							new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement).execute();
-						}
+						addLatLngPathToDistance(lastLatLng, currentLatLng);
 						
 					}
 					else if(lastLocation == null){
@@ -3220,44 +3186,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						if(Utils.compareDouble(totalDistance, -1.0) == 0){
 							totalDistance = 0;
 						}
-							try{
-								displayOldPath();
-								
-								double displacement = distance(Data.startRidePreviousLatLng, currentLatLng);
-								Log.e("displacement", "="+displacement);
-								
-								if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
-									totalDistance = totalDistance + displacement;
-									checkAndUpdateWaitTimeDistance(displacement);
-									map.addPolyline(new PolylineOptions()
-							        .add(Data.startRidePreviousLatLng, currentLatLng)
-							        .width(5)
-							        .color(MAP_PATH_COLOR).geodesic(true));
-									logPathDataToFlurry(currentLatLng, totalDistance);
-									
-									new Thread(new Runnable() {
-										
-										@Override
-										public void run() {
-											Database.getInstance(HomeActivity.this).insertPolyLine(Data.startRidePreviousLatLng, currentLatLng);
-											Database.getInstance(HomeActivity.this).close();
-										}
-									}).start();
-
-									updateDistanceFareTexts();
-									
-								}
-								else{
-									new CreatePathAsyncTask(Data.startRidePreviousLatLng, currentLatLng, displacement).execute();
-								}
-								
-							} catch(Exception e){
-								e.printStackTrace();
-							}
+						
+						displayOldPath();
+						
+						addLatLngPathToDistance(Data.startRidePreviousLatLng, currentLatLng);
 						
 					}
 					
 					lastLocation = location;
+					
+					saveDataOnPause(false);
 				}
 				
 				
@@ -3267,6 +3205,48 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	
 	}
+	
+	
+	public void addLatLngPathToDistance(final LatLng lastLatLng, final LatLng currentLatLng){
+		try {
+			double displacement = distance(lastLatLng, currentLatLng);
+			Log.i("displacement", "="+displacement);
+			
+			if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
+				
+				totalDistance = totalDistance + displacement;
+				
+				checkAndUpdateWaitTimeDistance(displacement);
+				
+				map.addPolyline(new PolylineOptions()
+			    .add(lastLatLng, currentLatLng)
+			    .width(5)
+			    .color(MAP_PATH_COLOR).geodesic(true));
+				
+				logPathDataToFlurry(currentLatLng, totalDistance);
+				
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Database.getInstance(HomeActivity.this).insertPolyLine(lastLatLng, currentLatLng);
+						Database.getInstance(HomeActivity.this).close();
+					}
+				}).start();
+				
+				updateDistanceFareTexts();
+				
+			}
+			else{
+				new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement).execute();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 	
 	
 	
@@ -3322,40 +3302,44 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void displayOldPath(){
 		
-		ArrayList<Pair<LatLng, LatLng>> path = Database.getInstance(HomeActivity.this).getSavedPath();
-		Database.getInstance(HomeActivity.this).close();
-		
-		LatLng firstLatLng = null;
-		
-		PolylineOptions polylineOptions = new PolylineOptions();
-		polylineOptions.width(5);
-		polylineOptions.color(MAP_PATH_COLOR);
-		polylineOptions.geodesic(true);
-		
-		for(Pair<LatLng, LatLng> pair : path){
-			LatLng src = pair.first;
-            LatLng dest = pair.second;
-            
-			if(firstLatLng == null){
-				firstLatLng = src;
+		try {
+			ArrayList<Pair<LatLng, LatLng>> path = Database.getInstance(HomeActivity.this).getSavedPath();
+			Database.getInstance(HomeActivity.this).close();
+			
+			LatLng firstLatLng = null;
+			
+			PolylineOptions polylineOptions = new PolylineOptions();
+			polylineOptions.width(5);
+			polylineOptions.color(MAP_PATH_COLOR);
+			polylineOptions.geodesic(true);
+			
+			for(Pair<LatLng, LatLng> pair : path){
+				LatLng src = pair.first;
+			    LatLng dest = pair.second;
+			    
+				if(firstLatLng == null){
+					firstLatLng = src;
+				}
+				
+				polylineOptions.add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude));
 			}
 			
-			polylineOptions.add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude));
-		}
-		
-		map.addPolyline(polylineOptions);
-		
-		if(firstLatLng == null){
-			firstLatLng = Data.startRidePreviousLatLng;
-		}
-		
-		if(firstLatLng != null){
-			MarkerOptions markerOptions = new MarkerOptions();
-			markerOptions.snippet("");
-			markerOptions.title("start ride location");
-			markerOptions.position(firstLatLng);
-			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
-			map.addMarker(markerOptions);
+			map.addPolyline(polylineOptions);
+			
+			if(firstLatLng == null){
+				firstLatLng = Data.startRidePreviousLatLng;
+			}
+			
+			if(firstLatLng != null){
+				MarkerOptions markerOptions = new MarkerOptions();
+				markerOptions.snippet("");
+				markerOptions.title("start ride location");
+				markerOptions.position(firstLatLng);
+				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
+				map.addMarker(markerOptions);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 	}
@@ -4898,6 +4882,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 								}
 								else{
+									
 									
 //									{"log":"ride_started"}
 
@@ -6546,8 +6531,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							driverWaitText.setText(getResources().getString(R.string.start_wait));
 							waitStart = 0;
 							
-							long waitSeconds = waitChronometer.eclipsedTime / 1000;
-							double waitMinutes = Math.ceil(((double)waitSeconds) / 60.0);
+//							long waitSeconds = waitChronometer.eclipsedTime / 1000;
+//							double waitMinutes = Math.ceil(((double)waitSeconds) / 60.0);
 							
 							long rideTimeSeconds = rideTimeChronometer.eclipsedTime / 1000;
 							double rideTimeMinutes = Math.ceil(((double)rideTimeSeconds) / 60.0);
@@ -7550,16 +7535,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode != PassengerScreenMode.P_IN_RIDE))){
 			if(priority == 0){
 				if(location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK){
-					zoomToCurrentLocationAtFirstLocationFix(location);
 					HomeActivity.myLocation = location;
+					zoomToCurrentLocationAtFirstLocationFix(location);
 					updatePickupLocation(location);
 				}
 			}
 			else if(priority == 2){
 				destroyLowPowerFusedLocationFetcher();
 				if(location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK){
-					zoomToCurrentLocationAtFirstLocationFix(location);
 					HomeActivity.myLocation = location;
+					zoomToCurrentLocationAtFirstLocationFix(location);
 					updatePickupLocation(location);
 				}
 			}
@@ -7568,7 +7553,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void zoomToCurrentLocationAtFirstLocationFix(Location location){
-		HomeActivity.myLocation = location;
 		try {
 			if(map != null){
 				if(!zoomedToMyLocation){
@@ -7659,7 +7643,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //	SELECT * FROM `tb_updated_user_location` WHERE `user_id`=231 and `location_updated_timestamp` >= '2014-10-18' and `location_updated_timestamp` < '2014-10-20'
 	
 	
-	//TODO new Request ride timerTask
 	//Customer's timer
     Timer timerRequestRide;
 	TimerTask timerTaskRequestRide;
@@ -7984,7 +7967,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 					});
 				}
-				//TODO refresh application on connection lost
 			}
 		}).start();
 	}
