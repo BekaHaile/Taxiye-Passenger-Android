@@ -137,6 +137,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout bookingsRl;
 	TextView bookingsText;
 	
+	RelativeLayout fareDetailsRl;
+	TextView fareDetailsText;
+	
 	RelativeLayout helpRl;
 	TextView helpText;
 	
@@ -471,6 +474,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
 		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		fareDetailsRl = (RelativeLayout) findViewById(R.id.fareDetailsRl);
+		fareDetailsText = (TextView) findViewById(R.id.fareDetailsText); fareDetailsText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		helpRl = (RelativeLayout) findViewById(R.id.helpRl);
 		helpText = (TextView) findViewById(R.id.helpText); helpText.setTypeface(Data.regularFont(getApplicationContext()));
@@ -910,6 +916,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
+		
+		fareDetailsRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				sendToFareDetails();
+			}
+		});
+		
+		
 		helpRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -1147,9 +1163,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, FareInfoActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.fareDetailsOpened(Data.userData.accessToken);
+				sendToFareDetails();
 			}
 		});
 		
@@ -1736,6 +1750,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		else if(userMode == UserMode.DRIVER){
 			switchDriverScreen(driverScreenMode);
 		}
+	}
+	
+	
+	public void sendToFareDetails(){
+		startActivity(new Intent(HomeActivity.this, FareInfoActivity.class));
+		overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		FlurryEventLogger.fareDetailsOpened(Data.userData.accessToken);
 	}
 	
 	
@@ -6371,7 +6392,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.custom_two_btn_dialog);
+			dialog.setContentView(R.layout.call_an_auto_dialog);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -6386,6 +6407,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			
 			textHead.setVisibility(View.VISIBLE);
 			textHead.setText("Chalo Jugnoo Se");
 			textMessage.setText("Do you want to call an auto?");
@@ -6413,6 +6435,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 				
 			});
+			
 
 			dialog.show();
 		} catch (Exception e) {

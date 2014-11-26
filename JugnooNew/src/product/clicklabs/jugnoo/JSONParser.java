@@ -85,16 +85,20 @@ public class JSONParser {
 			JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
 			JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
 			double farePerMin = 0;
+			double freeMinutes = 0;
 			if(fareDetails0.has("fare_per_min")){
 				farePerMin = fareDetails0.getDouble("fare_per_min");
+			}
+			if(fareDetails0.has("fare_threshold_time")){
+				freeMinutes = fareDetails0.getDouble("fare_threshold_time");
 			}
 			Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"), 
 					fareDetails0.getDouble("fare_threshold_distance"), 
 					fareDetails0.getDouble("fare_per_km"), 
-					farePerMin);
+					farePerMin, freeMinutes);
 		} catch(Exception e){
 			e.printStackTrace();
-			Data.fareStructure = new FareStructure(25, 2, 6, 1);
+			Data.fareStructure = new FareStructure(25, 2, 6, 1, 6);
 		}
 	}
 	
