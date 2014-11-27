@@ -126,7 +126,7 @@ public class DateOperations {
 	}
 	
 	
-	public String getCurrentTime() {
+	public static String getCurrentTime() {
 	    long foo = System.currentTimeMillis();
 	    Date date = new Date(foo);
 	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -401,6 +402,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;  //in meters
+	public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 180, WAIT_FOR_ACCURACY_LOWER_BOUND = 160;  //in meters
 	
 	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000; //in milliseconds
 	
@@ -408,6 +410,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final double MAX_WAIT_TIME_ALLOWED_DISTANCE = 200; //in meters
 	
+	public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
 	
 	
 	public static final String REQUEST_RIDE_BTN_NORMAL_TEXT = "Call an auto", REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT = "Assigning driver...";
@@ -1088,7 +1091,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				if(!"".equalsIgnoreCase(Data.cSessionId)){
+				if("".equalsIgnoreCase(Data.cSessionId)){
+					if(checkForGPSAccuracyTimer != null){
+						if(checkForGPSAccuracyTimer.isRunning){
+							checkForGPSAccuracyTimer.stopTimer();
+							customerUIBackToInitialAfterCancel();
+						}
+					}
+				}
+				else{
 					cancelCustomerRequestAsync(HomeActivity.this);
 				}
 			}
@@ -1786,10 +1797,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void initiateRequestRide(boolean newRequest){
 		
+		//TODO add gps accuracy check
+		
 		if(newRequest){
 			Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 			Data.cSessionId = "";
 			Data.cEngagementId = "";
+			
+			checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
 		}
 		else{
 			if(myLocation == null){
@@ -1800,9 +1815,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			Data.cEngagementId = "";
+			
+			switchRequestRideUI();
+			startTimerRequestRide();
 		}
 		
-		
+	}
+	
+	
+	
+	public void switchRequestRideUI(){
 		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		Editor editor = pref.edit();
 		editor.putString(Data.SP_C_SESSION_ID, Data.cSessionId);
@@ -1815,12 +1837,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
 		switchPassengerScreen(passengerScreenMode);
-		
-		startTimerRequestRide();
 	}
-	
-	
-	
 	
 	
 	
@@ -2956,6 +2973,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					    	
 							editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
 							editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
+							Log.writePathLogToFile(Data.dEngagementId, "Saved in SP totalDistance = "+totalDistance);
 							
 							long elapsedRideTime = rideTimeChronometer.eclipsedTime;
 							editor.putString(Data.SP_RIDE_TIME, ""+elapsedRideTime);
@@ -2963,6 +2981,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							if(HomeActivity.this.lastLocation != null){
 								editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.this.lastLocation.getLatitude());
 					    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.this.lastLocation.getLongitude());
+					    		
+					    		Log.writePathLogToFile(Data.dEngagementId, "Saved in SP lastLocation = "+lastLocation);
+					    		
 							}
 							
 							Log.e("Data on app paused", "-----");
@@ -3158,6 +3179,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
 	public void drawLocationChanged(Location location){
 		
 		try {
@@ -3165,7 +3187,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				HomeActivity.myLocation = location;
 				zoomToCurrentLocationAtFirstLocationFix(location);
 			
-			updatePickupLocation(location);
+				updatePickupLocation(location);
 			
 				if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
 					
@@ -3173,6 +3195,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					Log.i("lastLocation", "="+lastLocation);
 					Log.i("totalDistance", "="+totalDistance);
 					
+					writePathLogToFile("lastLocation = "+lastLocation);
+					writePathLogToFile("totalDistance = "+totalDistance);
 					
 					if(lastLocation != null){
 						
@@ -3188,6 +3212,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 						
 						displayOldPath();
+						
+						writePathLogToFile("Data.startRidePreviousLatLng = "+Data.startRidePreviousLatLng);
 						
 						addLatLngPathToDistance(Data.startRidePreviousLatLng, currentLatLng);
 						
@@ -3207,10 +3233,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	public void writePathLogToFile(String text){
+		try{
+			if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
+				Log.writePathLogToFile(Data.dEngagementId, text);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void addLatLngPathToDistance(final LatLng lastLatLng, final LatLng currentLatLng){
 		try {
 			double displacement = distance(lastLatLng, currentLatLng);
 			Log.i("displacement", "="+displacement);
+			
+			writePathLogToFile("lastLatLng = "+lastLatLng+", currentLatLng = "+currentLatLng);
+			writePathLogToFile("displacement = "+displacement);
 			
 			if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
 				
@@ -3497,6 +3537,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    		 Database.getInstance(this).close();
 	    		
 	    	}
+	    	writePathLogToFile("totalDistance after GAPI = "+totalDistance);
 	    	logPathDataToFlurryGAPI(source, destination, totalDistance);
 	           
 	    } 
@@ -4350,20 +4391,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 								}
 								else{
-									cancelTimerRequestRide();
-									
-									passengerScreenMode = PassengerScreenMode.P_INITIAL;
-									switchPassengerScreen(passengerScreenMode);
-									
-									if(map != null && pickupLocationMarker != null){
-										pickupLocationMarker.remove();
-									}
-										
-									if(myLocation != null){
-										getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-												myLocation.getLongitude()), false);
-										getDistanceTimeAddress.execute();
-									}
+									customerUIBackToInitialAfterCancel();
 									FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
 								}
 							}  catch (Exception exception) {
@@ -4382,6 +4410,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	public void customerUIBackToInitialAfterCancel(){
+		cancelTimerRequestRide();
+		
+		passengerScreenMode = PassengerScreenMode.P_INITIAL;
+		switchPassengerScreen(passengerScreenMode);
+		
+		if(map != null && pickupLocationMarker != null){
+			pickupLocationMarker.remove();
+		}
+			
+		if(myLocation != null){
+			getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
+					myLocation.getLongitude()), false);
+			getDistanceTimeAddress.execute();
+		}
+	}
 	
 	
 	
@@ -4814,7 +4858,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	/**
 	 * ASync for start ride in  driver mode from server
 	 */
-	public void driverStartRideAsync(final Activity activity, double pickupLatitude, double pickupLongitude) {
+	public void driverStartRideAsync(final Activity activity, final LatLng driverAtPickupLatLng) {
 		
 		lastLocation = null;
 		
@@ -4836,14 +4880,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			params.put("access_token", Data.userData.accessToken);
 			params.put("engagement_id", Data.dEngagementId);
 			params.put("customer_id", Data.dCustomerId);
-			params.put("pickup_latitude", ""+pickupLatitude);
-			params.put("pickup_longitude", ""+pickupLongitude);
+			params.put("pickup_latitude", ""+driverAtPickupLatLng.latitude);
+			params.put("pickup_longitude", ""+driverAtPickupLatLng.longitude);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("engagement_id", "=" + Data.dEngagementId);
 			Log.i("customer_id", "=" + Data.dCustomerId);
-			Log.i("pickup_latitude", "=" + pickupLatitude);
-			Log.i("pickup_longitude", "=" + pickupLongitude);
+			Log.i("pickup_latitude", "=" + driverAtPickupLatLng.latitude);
+			Log.i("pickup_longitude", "=" + driverAtPickupLatLng.longitude);
 			
 			
 		
@@ -4891,15 +4935,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 									
 									
-									if(HomeActivity.myLocation != null){
-										Data.startRidePreviousLatLng = new LatLng(HomeActivity.myLocation.getLatitude(),
-												HomeActivity.myLocation.getLongitude());
-										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-										Editor editor = pref.edit();
-										editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.myLocation.getLatitude());
-							    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.myLocation.getLongitude());
-							    		editor.commit();
-									}
+									Data.startRidePreviousLatLng = driverAtPickupLatLng;
+									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+									Editor editor = pref.edit();
+									editor.putString(Data.SP_LAST_LATITUDE, "" + driverAtPickupLatLng.latitude);
+									editor.putString(Data.SP_LAST_LONGITUDE, "" + driverAtPickupLatLng.longitude);
+									editor.commit();
+									Log.e("driverAtPickupLatLng in start_ride", "=" + driverAtPickupLatLng);
+									writePathLogToFile("on Start driverAtPickupLatLng"+driverAtPickupLatLng);
 									
 						        	driverScreenMode = DriverScreenMode.D_IN_RIDE;
 									switchDriverScreen(driverScreenMode);
@@ -5148,6 +5191,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						        	driverScreenMode = DriverScreenMode.D_RIDE_END;
 									switchDriverScreen(driverScreenMode);
 									
+									driverUploadPathDataFileAsync(activity, Data.dEngagementId);
+									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -5166,6 +5211,59 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			rideTimeChronometer.start();
 		}
 
+	}
+	
+	
+	
+	/**
+	 * ASync for uploading path data file to server
+	 */
+	public void driverUploadPathDataFileAsync(final Activity activity, final String engagementId) {
+
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				
+				RequestParams params = new RequestParams();
+				
+				params.put("access_token", Data.userData.accessToken);
+				params.put("engagement_id", engagementId);
+				
+				File pathLogFile = null;
+				try{
+					pathLogFile = Log.getPathLogFile(engagementId);
+					if(pathLogFile != null){
+						params.put("path_log_file", pathLogFile);
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				if(pathLogFile != null){
+				
+				Log.e("access_token", "=" + Data.userData.accessToken);
+				Log.e("engagement_id", "=" + engagementId);
+				Log.e("pathLogFile", "=" + pathLogFile);
+				
+			
+				AsyncHttpClient client = Data.getClient();
+				client.post(Data.SERVER_URL + "/upload_path_log_file", params,
+						new AsyncHttpResponseHandler() {
+						private JSONObject jObj;
+
+							@Override
+							public void onFailure(int arg0, Header[] arg1,
+									byte[] arg2, Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+							}
+
+							@Override
+							public void onSuccess(int arg0, Header[] arg1,
+									byte[] arg2) {
+								String response = new String(arg2);
+								Log.e("Server response on upload path file", "response = " + response);
+							}
+						});
+				}
+			}
 	}
 	
 	
@@ -6289,7 +6387,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								@Override
 								public void run() {
-									if(myLocation.getSpeed() >= 1 && myLocation.getBearing() != 0){
+									if(myLocation.getBearing() != 0){
 										CameraPosition cameraPosition = new CameraPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 
 													map.getCameraPosition().zoom, 
 													map.getCameraPosition().tilt,
@@ -6452,14 +6550,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				public void onClick(View view) {
 					if(myLocation != null){
 						dialog.dismiss();
-
-			        	double displacement = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), Data.dCustLatLng);
+						LatLng driverAtPickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+			        	double displacement = distance(driverAtPickupLatLng, Data.dCustLatLng);
 			        	
 			        	if(displacement <= DRIVER_START_RIDE_CHECK_METERS){
 			        		buildAlertMessageNoGps();
 				        	
 				        	GCMIntentService.clearNotifications(activity);
-				        	driverStartRideAsync(activity, myLocation.getLatitude(), myLocation.getLongitude());
+				        	driverStartRideAsync(activity, driverAtPickupLatLng);
 			        	}
 			        	else{
 			        		new DialogPopup().alertPopup(activity, "", "You must be present near the customer pickup location to start ride.");
@@ -7839,6 +7937,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			};
 			
 			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, requestPeriod);
+			textViewAssigningInProgress.setText("Assigning driver could take upto 3 minutes...");
 			FlurryEventLogger.requestRidePressed(Data.userData.accessToken, Data.pickupLatLng);
 			startAssigningDriversAnimation();
 			
@@ -7970,6 +8069,175 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		}).start();
 	}
+	
+	
+	
+	class CheckForGPSAccuracyTimer{
+    	
+    	public Timer timer;
+    	public TimerTask timerTask;
+    	
+    	public long startTime, lifeTime, endTime, period, executionTime;
+    	public boolean isRunning = false;
+    	
+    	public CheckForGPSAccuracyTimer(Context context, long delay, long period, long startTime, long lifeTime){
+    		Log.i("CheckForGPSAccuracyTimer before start myLocation = ", "="+myLocation);
+    		isRunning = false;
+    		if(myLocation != null){
+	    		if(myLocation.hasAccuracy()){
+	    			float accuracy = myLocation.getAccuracy();
+	    			if(accuracy > HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND){
+	    				displayLessAccurateToast(context);
+	    			}
+	    			else if(accuracy <= HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND 
+	    					&& accuracy > HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND){
+	    				startTimer(context, delay, period, startTime, lifeTime);
+	    				HomeActivity.this.switchRequestRideUI();
+	    			}
+	    			else if(accuracy <= HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND){
+	    				HomeActivity.this.switchRequestRideUI();
+	    				HomeActivity.this.startTimerRequestRide();
+	    			}
+	    			else{
+	    				displayLessAccurateToast(context);
+	    			}
+	    		}
+	    		else{
+	    			displayLessAccurateToast(context);
+	    		}
+    		}
+    		else{
+    			displayLessAccurateToast(context);
+    		}
+    	}
+    	
+    	
+    	
+    	public void displayLessAccurateToast(Context context){
+    		Toast.makeText(context, "Please wait for sometime. We need to get your more accurate location.", Toast.LENGTH_LONG).show();
+    	}
+    	
+    	public void initRequestRideUi(){
+    		stopTimer();
+			HomeActivity.this.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+    				HomeActivity.this.startTimerRequestRide();
+				}
+			});
+    	}
+    	
+    	public void stopRequest(Context context){
+    		displayLessAccurateToast(context);
+			stopTimer();
+			HomeActivity.this.customerUIBackToInitialAfterCancel();
+    	}
+    	
+    	public void startTimer(final Context context, long delay, long period, long startTime, long lifeTime){
+    		stopTimer();
+    		isRunning = true;
+    		
+    		this.startTime = startTime;
+    		this.lifeTime = lifeTime;
+    		this.endTime = startTime + lifeTime;
+    		this.period = period;
+    		this.executionTime = -1;
+    		
+    		timer = new Timer();
+    		timerTask = new TimerTask() {
+    			@Override
+    			public void run() {
+    				HomeActivity.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								long start = System.currentTimeMillis();
+								if(executionTime == -1){
+									executionTime = CheckForGPSAccuracyTimer.this.startTime;
+								}
+								
+								if(executionTime >= CheckForGPSAccuracyTimer.this.endTime){
+									//Timer finished
+									if(myLocation != null){
+										if(myLocation.hasAccuracy()){
+											float accuracy = myLocation.getAccuracy();
+											if(accuracy > HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND){
+												stopRequest(context);
+							    			}
+											else{
+												initRequestRideUi();
+											}
+										}
+										else{
+											stopRequest(context);
+										}
+									}
+									else{
+										stopRequest(context);
+									}
+								}
+								else{
+									//Check for location accuracy
+									Log.i("CheckForGPSAccuracyTimer myLocation = ", "="+myLocation);
+									if(myLocation != null){
+										if(myLocation.hasAccuracy()){
+											float accuracy = myLocation.getAccuracy();
+											if(accuracy <= HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND){
+												initRequestRideUi();
+											}
+										}
+									}
+								}
+								long stop = System.currentTimeMillis();
+								long elapsedTime = stop - start;
+								if(executionTime != -1){
+									if(elapsedTime >= CheckForGPSAccuracyTimer.this.period){
+										executionTime = executionTime + elapsedTime;
+									}
+									else{
+										executionTime = executionTime + CheckForGPSAccuracyTimer.this.period;
+									}
+								}
+								Log.i("WaitForGPSAccuracyTimerTask execution", "="+(CheckForGPSAccuracyTimer.this.endTime - executionTime));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+    			}
+    		};
+    		timer.scheduleAtFixedRate(timerTask, delay, period);
+    		isRunning = true;
+    		//textViewAssigningInProgress
+    		textViewAssigningInProgress.setText("Assigning driver could take upto 4 minutes...");
+    	}
+    	
+    	public void stopTimer(){
+    		try{
+    			isRunning = false;
+    			Log.e("WaitForGPSAccuracyTimerTask","stopTimer");
+    			startTime = 0;
+    			lifeTime = 0;
+    			if(timerTask != null){
+    				timerTask.cancel();
+    				timerTask = null;
+    			}
+    			if(timer != null){
+    				timer.cancel();
+    				timer.purge();
+    				timer = null;
+    			}
+    		} catch(Exception e){
+    			e.printStackTrace();
+    		}
+    	}
+    	
+    	
+    }
+	
+	
+	
+	
 	
 	
 	

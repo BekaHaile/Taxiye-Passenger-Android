@@ -387,6 +387,9 @@ public class JSONParser {
 					Log.i("Data.startRidePreviousLatLng", "="+Data.startRidePreviousLatLng);
 					Log.e("----------", "-----");
 					
+					Log.writePathLogToFile(Data.dEngagementId, "Got from SP totalDistance = "+HomeActivity.totalDistance);
+					Log.writePathLogToFile(Data.dEngagementId, "Got from SP Data.startRidePreviousLatLng = "+Data.startRidePreviousLatLng);
+					
 					if(Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0){
 						HomeActivity.totalDistance = -1;
 					}
