@@ -3,6 +3,8 @@ package product.clicklabs.jugnoo;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -211,6 +213,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	//Schedule layout
+	RelativeLayout scheduleLayout;
+	
+	RelativeLayout scheduleOptionsMainRl;
+	TextView scheduleRideText;
+	Button scheduleCrossBtn;
+	LinearLayout schedulePickupLocationLinear;
+	TextView schedulePickupLocationText, schedulePickupLocationValue;
+	LinearLayout scheduleDateTimeLinear;
+	TextView scheduleDateTimeText, scheduleDateTimeValue;
+	Button scheduleBtn;
+	
+	RelativeLayout scheduleSetPickupLocationRl;
+	Button schedulePickupLocationBackBtn, scheduleMyLocationBtn, pickThisLocationBtn;
+	ImageView schedulePickupLocationCentrePin;
+	
+	CustomDateTimePicker customDateTimePicker;
 	
 	
 	
@@ -598,6 +617,35 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		searchList = (ListView) findViewById(R.id.searchList);
 		searchListAdapter = new SearchListAdapter();
 		searchList.setAdapter(searchListAdapter);
+		
+		
+		
+		
+		
+		
+		
+		
+		//Schedule layout
+		scheduleLayout = (RelativeLayout) findViewById(R.id.scheduleLayout);
+		
+		scheduleOptionsMainRl = (RelativeLayout) findViewById(R.id.scheduleOptionsMainRl);
+		scheduleRideText = (TextView) findViewById(R.id.scheduleRideText); scheduleRideText.setTypeface(Data.regularFont(getApplicationContext()));
+		scheduleCrossBtn = (Button) findViewById(R.id.scheduleCrossBtn);
+		schedulePickupLocationLinear = (LinearLayout) findViewById(R.id.schedulePickupLocationLinear);
+		schedulePickupLocationText = (TextView) findViewById(R.id.schedulePickupLocationText); schedulePickupLocationText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		schedulePickupLocationValue = (TextView) findViewById(R.id.schedulePickupLocationValue); schedulePickupLocationValue.setTypeface(Data.regularFont(getApplicationContext()));
+		scheduleDateTimeLinear = (LinearLayout) findViewById(R.id.scheduleDateTimeLinear);
+		scheduleDateTimeText = (TextView) findViewById(R.id.scheduleDateTimeText); scheduleDateTimeText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		scheduleDateTimeValue = (TextView) findViewById(R.id.scheduleDateTimeValue); scheduleDateTimeValue.setTypeface(Data.regularFont(getApplicationContext()));
+		scheduleBtn = (Button) findViewById(R.id.scheduleBtn); scheduleBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		scheduleSetPickupLocationRl = (RelativeLayout) findViewById(R.id.scheduleSetPickupLocationRl);
+		schedulePickupLocationBackBtn = (Button) findViewById(R.id.schedulePickupLocationBackBtn);
+		scheduleMyLocationBtn = (Button) findViewById(R.id.scheduleMyLocationBtn);
+		pickThisLocationBtn = (Button) findViewById(R.id.pickThisLocationBtn); pickThisLocationBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		
+		
 		
 		
 		
@@ -1202,6 +1250,94 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		//schedule layout
+		scheduleOptionsMainRl.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+		scheduleCrossBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				stopSchedulePickupLocationAddressFetcherThread();
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+			}
+		});
+		
+		schedulePickupLocationLinear.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				scheduleOptionsMainRl.setVisibility(View.GONE);
+				scheduleSetPickupLocationRl.setVisibility(View.VISIBLE);
+			}
+		});
+		
+		scheduleDateTimeLinear.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				customDateTimePicker.set24HourFormat(false);
+		        customDateTimePicker.setDate(Calendar.getInstance());
+		        customDateTimePicker.setTimePickerIntervalInMinutes(5);
+				customDateTimePicker.showDialog();
+			}
+		});
+
+		scheduleBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+		
+
+		
+		schedulePickupLocationBackBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				scheduleOptionsMainRl.setVisibility(View.VISIBLE);
+				scheduleSetPickupLocationRl.setVisibility(View.GONE);
+			}
+		});
+
+		pickThisLocationBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(map != null){
+					getSchedulePickupLocationAddress(map.getCameraPosition().target);
+					schedulePickupLocationBackBtn.performClick();
+				}
+			}
+		});
+		
+		customDateTimePicker = new CustomDateTimePicker(this,
+                new CustomDateTimePicker.ICustomDateTimeListener() {
+
+                    @Override
+                    public void onSet(Dialog dialog, Calendar calendarSelected,
+                            Date dateSelected, int year, String monthFullName,
+                            String monthShortName, int monthNumber, int date,
+                            String weekDayFullName, String weekDayShortName,
+                            int hour24, int hour12, int min, int sec,
+                            String AM_PM) {
+                    	String dayShortName = calendarSelected.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+                    	scheduleDateTimeValue.setText(dayShortName + ", " + date + " " + monthShortName + " " + year + ", "+hour12 + ":" + min  + " " + AM_PM);
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
 		
 		
 		
@@ -1671,6 +1807,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			driverStartRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			driverEndRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
+			scheduleMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			
 		}
 		
@@ -2481,6 +2618,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
+				scheduleLayout.setVisibility(View.GONE);
 				
 				searchBarLayout.setVisibility(View.GONE);
 				
@@ -2510,6 +2648,34 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				break;
 				
 				
+			case P_SCHEDULE:
+				
+				if(map != null){
+					map.clear();
+					getSchedulePickupLocationAddress(map.getCameraPosition().target);
+					schedulePickupLocationBackBtn.performClick();
+				}
+				
+				cancelTimerUpdateDrivers();
+				try{pickupLocationMarker.remove();} catch(Exception e){}
+				try{driverLocationMarker.remove();} catch(Exception e){}
+				
+				if(getDistanceTimeAddress != null){
+					getDistanceTimeAddress.cancel(true);
+					getDistanceTimeAddress = null;
+				}
+				
+				
+				initialLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.GONE);
+				searchLayout.setVisibility(View.GONE);
+				scheduleLayout.setVisibility(View.VISIBLE);
+				
+				scheduleOptionsMainRl.setVisibility(View.VISIBLE);
+				scheduleSetPickupLocationRl.setVisibility(View.GONE);
+				
+				break;
+				
 			case P_ASSIGNING:
 				
 				requestRideBtn.setText(REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT);
@@ -2519,6 +2685,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
+				scheduleLayout.setVisibility(View.GONE);
 				
 				searchBarLayout.setVisibility(View.GONE);
 				
@@ -2554,6 +2721,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.VISIBLE);
+				scheduleLayout.setVisibility(View.GONE);
 				
 				
 				menuBtn.setVisibility(View.GONE);
@@ -2630,6 +2798,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.VISIBLE);
 //				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
+				scheduleLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.VISIBLE);
 				inRideRideInProgress.setText("Please wait while Jugnoo is coming...");
@@ -2684,6 +2853,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.VISIBLE);
 //				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
+				scheduleLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.GONE);
 				inRideRideInProgress.setText("Ride in progress...");
@@ -2705,6 +2875,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
+				scheduleLayout.setVisibility(View.GONE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -2723,6 +2894,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				endRideReviewRl.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
+				scheduleLayout.setVisibility(View.GONE);
 				
 				
 				menuBtn.setVisibility(View.VISIBLE);
@@ -4058,34 +4230,36 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void showDriverMarkersAndPanMap(LatLng userLatLng){
-		if(map != null){
-			map.clear();
-			addCurrentLocationAddressMarker(userLatLng);
-			LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-			for(int i=0; i<Data.driverInfos.size(); i++){
-				addDriverMarkerForCustomer(Data.driverInfos.get(i));
-				boundsBuilder.include(Data.driverInfos.get(i).latLng);
-			}
-			boundsBuilder.include(new LatLng(userLatLng.latitude, userLatLng.longitude));
-			try {
-				final LatLngBounds bounds = boundsBuilder.build();
-				final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							if(!mapTouchedOnce){
-								map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(180*minScaleRatio)), 1000, null);
+		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+			if(map != null){
+				map.clear();
+				addCurrentLocationAddressMarker(userLatLng);
+				LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+				for(int i=0; i<Data.driverInfos.size(); i++){
+					addDriverMarkerForCustomer(Data.driverInfos.get(i));
+					boundsBuilder.include(Data.driverInfos.get(i).latLng);
+				}
+				boundsBuilder.include(new LatLng(userLatLng.latitude, userLatLng.longitude));
+				try {
+					final LatLngBounds bounds = boundsBuilder.build();
+					final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								if(!mapTouchedOnce){
+									map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(180*minScaleRatio)), 1000, null);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
+							mapTouchedOnce = true;
 						}
-						mapTouchedOnce = true;
-					}
-				}, 1000);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
+					}, 1000);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -4205,15 +4379,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
-	String getAddress(double curLatitude, double curLongitude) {
+	public String getAddress(LatLng latLng) {
     	String fullAddress = "Unnamed";
-
         try {
-        	Log.i("curLatitude ",">"+curLatitude);
-        	Log.i("curLongitude ",">"+curLongitude);
         	
             JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?" +
-            		"latlng=" + curLatitude + "," + curLongitude 
+            		"latlng=" + latLng.latitude + "," + latLng.longitude 
             		+ "&sensor=true"));
             
             String status = jsonObj.getString("status");
@@ -4297,7 +4468,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 						
 						fullAddress = "";
-						Log.e("selectedAddressComponentsArr in getAddress = ", "="+selectedAddressComponentsArr);
 						if(selectedAddressComponentsArr.size() > 0){
 							for(int i=0; i<selectedAddressComponentsArr.size(); i++){
 								if(i<selectedAddressComponentsArr.size()-1){
@@ -4320,10 +4490,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 else{
                 	fullAddress = zero.getString("formatted_address");
                 }
-                
-                Log.e("Results.length() ==","="+Results.length());
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6464,8 +6631,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.call_an_auto_dialog);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
+			new ASSL(activity, (FrameLayout)dialog.findViewById(R.id.rv), 1134, 720, true);
 			
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
@@ -6502,8 +6668,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
+					switchToScheduleScreen();
 				}
 				
+			});
+			
+			
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				}
+			});
+			
+			dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
 			});
 			
 
@@ -6514,6 +6696,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	
+	void switchToScheduleScreen(){
+		passengerScreenMode = PassengerScreenMode.P_SCHEDULE;
+		switchPassengerScreen(passengerScreenMode);
+	}
 	
 	
 	
@@ -8236,8 +8423,43 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 	
 	
+	public void setSchedulePickupLocationAddress(final String address){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				schedulePickupLocationValue.setText(address);
+			}
+		});
+	}
 	
+	Thread schedulePickupLocationAddressFetcherThread;
+	public void getSchedulePickupLocationAddress(final LatLng schedulePickupLatLng){
+		stopSchedulePickupLocationAddressFetcherThread();
+		setSchedulePickupLocationAddress("Loading address...");
+		try{
+			schedulePickupLocationAddressFetcherThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					setSchedulePickupLocationAddress(getAddress(schedulePickupLatLng));
+				}
+			});
+			schedulePickupLocationAddressFetcherThread.start();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
 	
+	public void stopSchedulePickupLocationAddressFetcherThread(){
+		try{
+			if(schedulePickupLocationAddressFetcherThread != null){
+				schedulePickupLocationAddressFetcherThread.interrupt();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		schedulePickupLocationAddressFetcherThread = null;
+	}
 	
 	
 	

@@ -10,6 +10,8 @@
    
    
    <color name="white_translucent">#D8FFFFFF</color>
+   <color name="white_more_translucent">#66FFFFFF</color>
+   
    <color name="black_translucent">#77000000</color>
     <color name="black_translucent_level_2">#55000000</color>
    
@@ -32,6 +34,7 @@
     <color name="green_btn">#66BB66</color>
     <color name="green_btn_pressed">#669966</color>
     
+    <color name="grey_light">#AEAEAE</color>
     <color name="grey_btn">#8E8E8E</color>
     <color name="grey_btn_pressed">#7E7E7E</color>
     
