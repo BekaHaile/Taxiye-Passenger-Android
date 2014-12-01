@@ -3,9 +3,14 @@ package product.clicklabs.jugnoo;
 import java.io.IOException;
 import java.util.Locale;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
@@ -47,10 +52,8 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.drive.internal.ac;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class SplashNewActivity extends Activity implements LocationUpdate{
@@ -541,12 +544,11 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				
 				AsyncHttpClient client = Data.getClient();
 				client.post(Data.SERVER_URL + "/start_app_using_access_token", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -554,9 +556,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							}
 
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.e("Server response of access_token", "response = " + response);
 		
 								try {

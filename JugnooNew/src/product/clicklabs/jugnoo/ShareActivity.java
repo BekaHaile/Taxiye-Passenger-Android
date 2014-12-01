@@ -1,5 +1,9 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
+import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
@@ -99,7 +103,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLogin().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
+				new FacebookLoginCreator().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
 				FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);
 			}
 		});
@@ -139,7 +143,7 @@ public class ShareActivity extends Activity{
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
 		public void facebookLoginDone() {
-			new FacebookLogin().publishFeedDialog(ShareActivity.this, 
+			new FacebookLoginCreator().publishFeedDialog(ShareActivity.this, 
 					shareStr11 + Data.userData.referralCode + shareStr2, 
 					"Use " + Data.userData.referralCode + " as code & get a FREE ride");
 		}
@@ -154,6 +158,7 @@ public class ShareActivity extends Activity{
 			String text = shareStr1 + referralCode + shareStr2;
 
 			PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+			Log.d("info", "="+info);
 			waIntent.setPackage("com.whatsapp");
 
 			waIntent.putExtra(Intent.EXTRA_TEXT, text);

@@ -22,7 +22,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@drawable/loading_corner"
-        android:splitMotionEvents="false" >
+        android:splitMotionEvents="false" 
+        android:tag="mwar"
+        >
 
             <TextView
                 android:id="@+id/textView1"

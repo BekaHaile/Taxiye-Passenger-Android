@@ -1,8 +1,9 @@
 package product.clicklabs.jugnoo;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.os.Bundle;
@@ -16,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class FareInfoActivity extends FragmentActivity{
@@ -109,21 +109,18 @@ public class FareInfoActivity extends FragmentActivity{
 				
 				fetchHelpDataClient = Data.getClient();
 				fetchHelpDataClient.post(Data.SERVER_URL + "/get_information", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								progressBar.setVisibility(View.GONE);
 								openHelpData("Some error occured. Tap to retry.", true);
 							}
 	
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.i("Server response faq ", "response = " + response);
 								try {
 									jObj = new JSONObject(response);

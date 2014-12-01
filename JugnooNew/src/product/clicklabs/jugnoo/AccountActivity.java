@@ -2,10 +2,14 @@ package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
@@ -36,7 +40,6 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class AccountActivity extends Activity{
@@ -425,21 +428,18 @@ public class AccountActivity extends Activity{
 				params.put("access_token", Data.userData.accessToken);
 				fetchAccountInfoClient = Data.getClient();
 				fetchAccountInfoClient.post(Data.SERVER_URL + "/get_coupons", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								progressBarAccount.setVisibility(View.GONE);
 								updateListData("Some error occurred. Tap to retry", true);
 							}
 	
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.e("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
@@ -554,12 +554,11 @@ public class AccountActivity extends Activity{
 			
 				AsyncHttpClient asyncHttpClient = Data.getClient();
 				asyncHttpClient.post(Data.SERVER_URL + "/enter_code", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -567,9 +566,7 @@ public class AccountActivity extends Activity{
 							
 	
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.i("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);

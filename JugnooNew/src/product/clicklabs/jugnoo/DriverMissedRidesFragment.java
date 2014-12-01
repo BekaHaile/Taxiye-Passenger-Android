@@ -3,10 +3,12 @@ package product.clicklabs.jugnoo;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class DriverMissedRidesFragment extends Fragment {
@@ -210,12 +211,11 @@ public class DriverMissedRidesFragment extends Fragment {
 				params.put("access_token", Data.userData.accessToken);
 				fetchMissedRidesClient = Data.getClient();
 				fetchMissedRidesClient.post(Data.SERVER_URL + "/get_missed_rides", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								progressBarMissedRides.setVisibility(View.GONE);
 								updateListData("Some error occurred. Tap to retry", true);
@@ -223,9 +223,7 @@ public class DriverMissedRidesFragment extends Fragment {
 	
 							
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.e("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);

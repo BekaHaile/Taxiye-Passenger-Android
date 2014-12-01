@@ -4,9 +4,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
+import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -40,7 +46,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class SplashLogin extends Activity implements LocationUpdate{
@@ -242,7 +247,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			@Override
 			public void onClick(View v) {
 				loginDataFetched = false;
-				new FacebookLogin().openFacebookSession(SplashLogin.this, facebookLoginCallback, true);
+				new FacebookLoginCreator().openFacebookSession(SplashLogin.this, facebookLoginCallback, true);
 			}
 		});
 		
@@ -525,12 +530,11 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/email_login", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -538,9 +542,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
 	
 							try {
@@ -668,21 +670,18 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/customer_fb_registeration_form", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
 	
 							try {

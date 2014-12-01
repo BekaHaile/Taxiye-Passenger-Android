@@ -1,5 +1,6 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
+import product.clicklabs.jugnoo.R;
 import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;

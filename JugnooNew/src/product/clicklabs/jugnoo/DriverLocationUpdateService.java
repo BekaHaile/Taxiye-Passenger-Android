@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.Log;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;

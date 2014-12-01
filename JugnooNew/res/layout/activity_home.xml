@@ -27,7 +27,7 @@
                     android:id="@+id/map"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    class="product.clicklabs.jugnoo.TouchableMapFragment" />
+                    class="product.clicklabs.jugnoo.utils.TouchableMapFragment" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -1137,7 +1137,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="30px" />
 
-                                <product.clicklabs.jugnoo.PausableChronometer
+                                <product.clicklabs.jugnoo.utils.PausableChronometer
                                     android:id="@+id/rideTimeChronometer"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -1169,7 +1169,7 @@
                                     android:textColor="@drawable/white_color_selector"
                                     android:textSize="30px" />
 
-                                <product.clicklabs.jugnoo.PausableChronometer
+                                <product.clicklabs.jugnoo.utils.PausableChronometer
                                     android:id="@+id/waitChronometer"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"

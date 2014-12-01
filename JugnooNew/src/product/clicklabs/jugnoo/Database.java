@@ -191,7 +191,7 @@ public class Database {																	// class for handling database related a
 			contentValues.put(Database.DLNG, dlatLng.longitude);
 			database.insert(Database.TABLE_PREVIOUS_PATH, null, contentValues);
 		} catch(Exception e){
-			Log.e("e","="+e);
+			e.printStackTrace();
 		}
 	}
 	

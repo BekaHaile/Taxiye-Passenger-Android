@@ -1,8 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,6 +8,10 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -54,6 +56,7 @@ public class GCMIntentService extends IntentService {
 		
 
 	  
+		@SuppressWarnings("deprecation")
 		private void notificationManager(Context context, String message, boolean ring) {
 	    	
 			try {
@@ -105,6 +108,7 @@ public class GCMIntentService extends IntentService {
 			
 		}
 
+		@SuppressWarnings("deprecation")
 		private void notificationManagerResume(Context context, String message, boolean ring) {
 			
 			try {
@@ -242,7 +246,7 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, new DateOperations().utcToLocal(startTime), new DateOperations().getCurrentTime());
+		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, new DateOperations().utcToLocal(startTime), DateOperations.getCurrentTime());
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
 

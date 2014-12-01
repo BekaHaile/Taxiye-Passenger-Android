@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +60,7 @@ public class Utils {
 				list.requestLayout();
 			}
 		} catch (Exception e) {
-			Log.e("Exception in expanding list ", "," + e.toString());
+			e.printStackTrace();
 		}
 	}
 	
@@ -84,7 +84,7 @@ public class Utils {
 				list.requestLayout();
 			}
 		} catch (Exception e) {
-			Log.e("Exception in expanding list ", "," + e.toString());
+			e.printStackTrace();
 		}
 	}
 	

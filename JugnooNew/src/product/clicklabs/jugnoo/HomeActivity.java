@@ -10,13 +10,27 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.CustomDateTimePicker;
+import product.clicklabs.jugnoo.utils.CustomInfoWindow;
+import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapStateListener;
+import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.PausableChronometer;
+import product.clicklabs.jugnoo.utils.TouchableMapFragment;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -32,11 +46,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources.NotFoundException;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -92,10 +103,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.BlurTransform;
+import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
+import com.squareup.picasso.RoundBorderTransform;
 
 @SuppressLint("DefaultLocale")
 public class HomeActivity extends FragmentActivity implements AppInterruptHandler, LocationUpdate {
@@ -436,6 +449,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final String REQUEST_RIDE_BTN_NORMAL_TEXT = "Call an auto", REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT = "Assigning driver...";
 	
+	public ASSL assl;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -458,7 +473,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		
 		
-		new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
+		assl = new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
 		
 		
 		
@@ -1995,14 +2010,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		if(mode == JugnooDriverMode.ON){
 			if(myLocation != null){
-				sendMyLocationToServerForDriver();
+				sendMyLocationToServerForDriver(1, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 			}
 			else{
 				Toast.makeText(HomeActivity.this, "Waiting for location...", Toast.LENGTH_SHORT).show();
 			}
 		}
 		else{
-			sendNullLocationToServerForDriver();
+			sendMyLocationToServerForDriver(0, new LatLng(0, 0));
 		}
 		
 	}
@@ -2010,7 +2025,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void sendMyLocationToServerForDriver(){
+	public void sendMyLocationToServerForDriver(final int jugnooOnFlag, final LatLng latLng){
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -2023,8 +2038,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				try {
 					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-					nameValuePairs.add(new BasicNameValuePair("latitude", ""+myLocation.getLatitude()));
-					nameValuePairs.add(new BasicNameValuePair("longitude", ""+myLocation.getLongitude()));
+					nameValuePairs.add(new BasicNameValuePair("latitude", ""+latLng.latitude));
+					nameValuePairs.add(new BasicNameValuePair("longitude", ""+latLng.longitude));
 					nameValuePairs.add(new BasicNameValuePair("device_token", Data.deviceToken));
 					
 					Log.e("nameValuePairs in sending null loc","="+nameValuePairs);
@@ -2042,14 +2057,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					if(jObj.has("log")){
 						String log = jObj.getString("log");
 						if("Updated".equalsIgnoreCase(log)){
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									DialogPopup.dismissLoadingDialog();
-									new DriverServiceOperations().startDriverService(HomeActivity.this);
-									jugnooONToggle.setImageResource(R.drawable.on);
-								}
-							});
+							if(jugnooOnFlag == 1){
+								switchJugnooOn();
+							}
+							else{
+								switchJugnooOff();
+							}
 						}
 					}
 				} catch (Exception e) {
@@ -2060,68 +2073,43 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public void sendNullLocationToServerForDriver(){
+	
+	
+	public void switchJugnooOn(){
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+				DialogPopup.dismissLoadingDialog();
+				new DriverServiceOperations().startDriverService(HomeActivity.this);
+				jugnooONToggle.setImageResource(R.drawable.on);
 			}
 		});
-		new Thread(new Runnable() {
+	}
+	
+	public void switchJugnooOff(){
+		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				try {
+				DialogPopup.dismissLoadingDialog();
+				jugnooONToggle.setImageResource(R.drawable.off);
+				new DriverServiceOperations().stopAndScheduleDriverService(HomeActivity.this);
+				
+				jugnooDriverOnHandler = null;
+				jugnooDriverOnRunnable = null;
+				
+				jugnooDriverOnHandler = new Handler();
+				jugnooDriverOnRunnable = new Runnable() {
 					
-					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-					nameValuePairs.add(new BasicNameValuePair("latitude", "0"));
-					nameValuePairs.add(new BasicNameValuePair("longitude", "0"));
-					nameValuePairs.add(new BasicNameValuePair("device_token", Data.deviceToken));
-					
-					Log.e("nameValuePairs in sending null loc","="+nameValuePairs);
-					
-					HttpRequester simpleJSONParser = new HttpRequester();
-					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/update_driver_location", nameValuePairs);
-					
-					Log.e("result ","="+result);
-					
-					simpleJSONParser = null;
-					nameValuePairs = null;
-					
-					//{"log":"Updated"}
-					JSONObject jObj = new JSONObject(result);
-					if(jObj.has("log")){
-						String log = jObj.getString("log");
-						if("Updated".equalsIgnoreCase(log)){
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									DialogPopup.dismissLoadingDialog();
-									jugnooONToggle.setImageResource(R.drawable.off);
-									new DriverServiceOperations().stopAndScheduleDriverService(HomeActivity.this);
-									
-									jugnooDriverOnHandler = null;
-									jugnooDriverOnRunnable = null;
-									
-									jugnooDriverOnHandler = new Handler();
-									jugnooDriverOnRunnable = new Runnable() {
-										
-										@Override
-										public void run() {
-											changeJugnooONUI(JugnooDriverMode.ON);
-										}
-									};
-									jugnooDriverOnHandler.postDelayed(jugnooDriverOnRunnable, SERVICE_RESTART_TIMER);
-								}
-							});
-						}
+					@Override
+					public void run() {
+						changeJugnooONUI(JugnooDriverMode.ON);
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				};
+				jugnooDriverOnHandler.postDelayed(jugnooDriverOnRunnable, SERVICE_RESTART_TIMER);
 			}
-		}).start();
+		});
 	}
+	
 	
 	
 	public void changeExceptionalDriverUI(){
@@ -2379,7 +2367,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					markerOptionsCustomerPickupLocation.title(Data.dEngagementId);
 					markerOptionsCustomerPickupLocation.snippet("");
 					markerOptionsCustomerPickupLocation.position(Data.dCustLatLng);
-					markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+					markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPassengerMarkerBitmap(HomeActivity.this, assl)));
 					
 					map.addMarker(markerOptionsCustomerPickupLocation);
 				}
@@ -2696,7 +2684,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					markerOptions.title("pickup location");
 					markerOptions.snippet("");
 					markerOptions.position(Data.pickupLatLng);
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
 					
 					pickupLocationMarker = map.addMarker(markerOptions);
 				}
@@ -2765,7 +2753,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					markerOptions.title("pickup location");
 					markerOptions.snippet("");
 					markerOptions.position(Data.pickupLatLng);
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
 					
 					pickupLocationMarker = map.addMarker(markerOptions);
 					
@@ -2773,7 +2761,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					markerOptions1.title("driver position");
 					markerOptions1.snippet("");
 					markerOptions1.position(Data.assignedDriverInfo.latLng);
-					markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
+					markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
 					markerOptions1.anchor(0.5f, 0.7f);
 					
 					driverLocationMarker = map.addMarker(markerOptions1);
@@ -3420,7 +3408,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void addLatLngPathToDistance(final LatLng lastLatLng, final LatLng currentLatLng){
 		try {
-			double displacement = distance(lastLatLng, currentLatLng);
+			double displacement = MapUtils.distance(lastLatLng, currentLatLng);
 			Log.i("displacement", "="+displacement);
 			
 			writePathLogToFile("lastLatLng = "+lastLatLng+", currentLatLng = "+currentLatLng);
@@ -3549,7 +3537,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				markerOptions.snippet("");
 				markerOptions.title("start ride location");
 				markerOptions.position(firstLatLng);
-				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
+				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
 				map.addMarker(markerOptions);
 			}
 		} catch (Exception e) {
@@ -3560,83 +3548,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public Bitmap createCarMarkerBitmap(){
-		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
-		int width = (int)(70.0f * scale);
-		int height = (int)(70.0f * scale);
-		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = getResources().getDrawable(R.drawable.car_android);
-		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
-		shape.draw(canvas);
-		return mDotMarkerBitmap;
-	}
-	
-	public Bitmap createPassengerMarkerBitmap(){
-		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
-		int width = (int)(50.0f * scale);
-		int height = (int)(69.0f * scale);
-		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = getResources().getDrawable(R.drawable.passenger);
-		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
-		shape.draw(canvas);
-		return mDotMarkerBitmap;
-	}
-	
-	
-	public Bitmap createPinMarkerBitmap(){
-		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
-		int width = (int)(44.0f * scale);
-		int height = (int)(70.0f * scale);
-		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = getResources().getDrawable(R.drawable.pin_ball);
-		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
-		shape.draw(canvas);
-		return mDotMarkerBitmap;
-	}
-	
-	
-	
-	double distance(LatLng start, LatLng end) {
-		try {
-			Location location1 = new Location("locationA");
-			location1.setLatitude(start.latitude);
-			location1.setLongitude(start.longitude);
-			Location location2 = new Location("locationA");
-			location2.setLatitude(end.latitude);
-			location2.setLongitude(end.longitude);
-
-			double distance = location1.distanceTo(location2);
-			double distanceFormated = Double.parseDouble(decimalFormat.format(distance));
-			return distanceFormated;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-
-	}
 	
 
-	
-	//http://maps.googleapis.com/maps/api/directions/json?origin=30.7342187,76.78088307&destination=30.74571777,76.78635478&sensor=false&mode=driving&alternatives=false
-	public String makeURLPath(LatLng source, LatLng destination){
-        StringBuilder urlString = new StringBuilder();
-        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
-        urlString.append("?origin=");// from
-        urlString.append(Double.toString(source.latitude));
-        urlString.append(",");
-        urlString
-                .append(Double.toString(source.longitude));
-        urlString.append("&destination=");// to
-        urlString
-                .append(Double.toString(destination.latitude));
-        urlString.append(",");
-        urlString.append(Double.toString(destination.longitude));
-        urlString.append("&sensor=false&mode=driving&alternatives=false");
-        return urlString.toString();
-	}
 
 	
 	class CreatePathAsyncTask extends AsyncTask<Void, Void, String>{
@@ -3646,7 +3559,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    CreatePathAsyncTask(LatLng source, LatLng destination, double displacementToCompare){
 	    	this.source = source;
 	    	this.destination = destination;
-	        this.url = makeURLPath(source, destination);
+	        this.url = MapUtils.makeDirectionsURL(source, destination);
 	        this.displacementToCompare = displacementToCompare;
 	    }
 	    
@@ -3683,7 +3596,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		           JSONObject routes = routeArray.getJSONObject(0);
 		           JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
 		           String encodedString = overviewPolylines.getString("points");
-		           List<LatLng> list = decodePoly(encodedString);
+		           List<LatLng> list = MapUtils.decodeDirectionsPolyline(encodedString);
 			    	
 			    	totalDistance = totalDistance + distanceOfPath;
 			    	checkAndUpdateWaitTimeDistance(distanceOfPath);
@@ -3720,40 +3633,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    }
 	} 
 	
-	
-	
-	private List<LatLng> decodePoly(String encoded) {
-
-	    List<LatLng> poly = new ArrayList<LatLng>();
-	    int index = 0, len = encoded.length();
-	    int lat = 0, lng = 0;
-
-	    while (index < len) {
-	        int bInt, shift = 0, result = 0;
-	        do {
-	            bInt = encoded.charAt(index++) - 63;
-	            result |= (bInt & 0x1f) << shift;
-	            shift += 5;
-	        } while (bInt >= 0x20);
-	        int dlat = ((result & 1) == 0 ? (result >> 1) : ~(result >> 1));
-	        lat += dlat;
-
-	        shift = 0;
-	        result = 0;
-	        do {
-	            bInt = encoded.charAt(index++) - 63;
-	            result |= (bInt & 0x1f) << shift;
-	            shift += 5;
-	        } while (bInt >= 0x20);
-	        int dlng = ((result & 1) == 0 ? (result >> 1) : ~(result >> 1));
-	        lng += dlng;
-
-	        LatLng pLatLng = new LatLng( (((double) lat / 1E5)),
-	                 (((double) lng / 1E5) ));
-	        poly.add(pLatLng);
-	    }
-	    return poly;
-	}
 	
 	
 	
@@ -3914,13 +3793,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			holder.textViewRequestAddress.setText(driverRideRequest.address);
 			
 			
-			long timeDiff = getDateOperations().getTimeDifference(getDateOperations().getCurrentTime(), driverRideRequest.startTime);
+			long timeDiff = getDateOperations().getTimeDifference(DateOperations.getCurrentTime(), driverRideRequest.startTime);
 			long timeDiffInSec = timeDiff / 1000;
 			holder.textViewRequestTime.setText(""+timeDiffInSec + " sec left");
 			
 			if(myLocation != null){
 				holder.textViewRequestDistance.setVisibility(View.VISIBLE);
-				double distance = distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), driverRideRequest.latLng);
+				double distance = MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), driverRideRequest.latLng);
 				if(distance >= 1000){
 					holder.textViewRequestDistance.setText(""+decimalFormat.format(distance/1000)+" km away");
 				}
@@ -3972,25 +3851,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 
-	//https://maps.googleapis.com/maps/api/distancematrix/json?origins=30.75,76.78&destinations=30.78,76.79&language=EN&sensor=false
-	
-	public String makeURL(LatLng source, LatLng destination){
-        StringBuilder urlString = new StringBuilder();
-        urlString.append("https://maps.googleapis.com/maps/api/distancematrix/json");
-        urlString.append("?origins=");// from
-        urlString.append(Double.toString(source.latitude));
-        urlString.append(",");
-        urlString
-                .append(Double.toString(source.longitude));
-        urlString.append("&destinations=");// to
-        urlString
-                .append(Double.toString(destination.latitude));
-        urlString.append(",");
-        urlString.append(Double.toString(destination.longitude));
-        urlString.append("&language=EN&sensor=false&alternatives=false");
-        return urlString.toString();
-	}
-	
 	
 	
 	
@@ -4069,8 +3929,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    		if(!driverAcceptPushRecieved){
 		    			double minDistance = 999999999;
 			    		for(int i=0; i<Data.driverInfos.size(); i++){
-			    			if(distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
-			    				minDistance = distance(destination, Data.driverInfos.get(i).latLng);
+			    			if(MapUtils.distance(destination, Data.driverInfos.get(i).latLng) < minDistance){
+			    				minDistance = MapUtils.distance(destination, Data.driverInfos.get(i).latLng);
 			    				source = Data.driverInfos.get(i).latLng;
 			    			}
 			    		}
@@ -4097,7 +3957,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			    			return "error";
 			    		}
 			    			
-			    		this.url = makeURL(source, destination);
+			    		this.url = MapUtils.makeDistanceMatrixURL(source, destination);
 				    	HttpRequester jParser = new HttpRequester();
 				    	String response = jParser.getJSONFromUrl(url);
 				    	JSONObject jsonObject = new JSONObject(response);
@@ -4202,7 +4062,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		markerOptions.title("driver shown to customer");
 		markerOptions.snippet(""+driverInfo.userId);
 		markerOptions.position(driverInfo.latLng);
-		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCarMarkerBitmap()));
+		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
 		markerOptions.anchor(0.5f, 0.7f);
 		
 		map.addMarker(markerOptions);
@@ -4223,7 +4083,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			markerOptions.title("customer_current_location");
 			markerOptions.snippet("");
 			markerOptions.position(latLng);
-			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPinMarkerBitmap()));
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
 			currentLocationMarker = map.addMarker(markerOptions);
 		} catch (Exception e) {
 		}
@@ -4291,11 +4151,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		ignr2 = ignr2.replaceAll(" ", "%20");
 
 		AsyncHttpClient client = Data.getClient();
-		client.post(ignr2, params, new AsyncHttpResponseHandler() {
+		client.post(ignr2, params, new product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler() {
 
 			@Override
-			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-					Throwable arg3) {
+			public void onFailure(Throwable arg3) {
 				try {
 					Log.e("request fail", arg3.getMessage().toString());
 				} catch (Exception e) {
@@ -4305,8 +4164,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 
 			@Override
-			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-				String response = new String(arg2);
+			public void onSuccess(String response) {
 				Log.e("request result", response);
 				try {
 					JSONArray info = null;
@@ -4319,7 +4177,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					Log.v("info.len....", "" + info.length());
 					for (int i = 0; i < info.length(); i++) {
-						// printing the values to the logcat
 						try {
 							SearchResult searchResult = new SearchResult(info.getJSONObject(i).getString("name"),
 									info.getJSONObject(i).getString("formatted_address"), 
@@ -4380,125 +4237,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
-	public String getAddress(LatLng latLng) {
-    	String fullAddress = "Unnamed";
-        try {
-        	
-            JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?" +
-            		"latlng=" + latLng.latitude + "," + latLng.longitude 
-            		+ "&sensor=true"));
-            
-            String status = jsonObj.getString("status");
-            if (status.equalsIgnoreCase("OK")) {
-                JSONArray Results = jsonObj.getJSONArray("results");
-                JSONObject zero = Results.getJSONObject(0);
-                
-                String streetNumber = "", route = "", subLocality2 = "", subLocality1 = "", locality = "", administrativeArea2 = "", 
-                		administrativeArea1 = "", country = "", postalCode = "";
-                
-                if(zero.has("address_components")){
-                	try {
-                		
-                		ArrayList<String> selectedAddressComponentsArr = new ArrayList<String>();
-						JSONArray addressComponents = zero.getJSONArray("address_components");
-						
-						for(int i=0; i<addressComponents.length(); i++){
-							
-							JSONObject iObj = addressComponents.getJSONObject(i);
-							JSONArray jArr = iObj.getJSONArray("types");
-							
-							ArrayList<String> addressTypes = new ArrayList<String>();
-							for(int j=0; j<jArr.length(); j++){
-								addressTypes.add(jArr.getString(j));
-							}
-							
-							if("".equalsIgnoreCase(streetNumber) && addressTypes.contains("street_number")){
-								streetNumber = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(streetNumber) && !selectedAddressComponentsArr.toString().contains(streetNumber)){
-									selectedAddressComponentsArr.add(streetNumber);
-								}
-							}
-							if("".equalsIgnoreCase(route) && addressTypes.contains("route")){
-								route = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(route) && !selectedAddressComponentsArr.toString().contains(route)){
-									selectedAddressComponentsArr.add(route);
-								}
-							}
-							if("".equalsIgnoreCase(subLocality2) && addressTypes.contains("sublocality_level_2")){
-								subLocality2 = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(subLocality2) && !selectedAddressComponentsArr.toString().contains(subLocality2)){
-									selectedAddressComponentsArr.add(subLocality2);
-								}
-							}
-							if("".equalsIgnoreCase(subLocality1) && addressTypes.contains("sublocality_level_1")){
-								subLocality1 = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(subLocality1) && !selectedAddressComponentsArr.toString().contains(subLocality1)){
-									selectedAddressComponentsArr.add(subLocality1);
-								}
-							}
-							if("".equalsIgnoreCase(locality) && addressTypes.contains("locality")){
-								locality = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(locality) && !selectedAddressComponentsArr.toString().contains(locality)){
-									selectedAddressComponentsArr.add(locality);
-								}
-							}
-							if("".equalsIgnoreCase(administrativeArea2) && addressTypes.contains("administrative_area_level_2")){
-								administrativeArea2 = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(administrativeArea2) && !selectedAddressComponentsArr.toString().contains(administrativeArea2)){
-									selectedAddressComponentsArr.add(administrativeArea2);
-								}
-							}
-							if("".equalsIgnoreCase(administrativeArea1) && addressTypes.contains("administrative_area_level_1")){
-								administrativeArea1 = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(administrativeArea1) && !selectedAddressComponentsArr.toString().contains(administrativeArea1)){
-									selectedAddressComponentsArr.add(administrativeArea1);
-								}
-							}
-							if("".equalsIgnoreCase(country) && addressTypes.contains("country")){
-								country = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(country) && !selectedAddressComponentsArr.toString().contains(country)){
-									selectedAddressComponentsArr.add(country);
-								}
-							}
-							if("".equalsIgnoreCase(postalCode) && addressTypes.contains("postal_code")){
-								postalCode = iObj.getString("long_name");
-								if(!"".equalsIgnoreCase(postalCode) && !selectedAddressComponentsArr.toString().contains(postalCode)){
-									selectedAddressComponentsArr.add(postalCode);
-								}
-							}
-						}
-						
-						fullAddress = "";
-						if(selectedAddressComponentsArr.size() > 0){
-							for(int i=0; i<selectedAddressComponentsArr.size(); i++){
-								if(i<selectedAddressComponentsArr.size()-1){
-									fullAddress = fullAddress + selectedAddressComponentsArr.get(i) + ", ";
-								}
-								else{
-									fullAddress = fullAddress + selectedAddressComponentsArr.get(i);
-								}
-							}
-						}
-						else{
-							fullAddress = zero.getString("formatted_address");
-						}
-						
-					} catch (Exception e) {
-						e.printStackTrace();
-						fullAddress = zero.getString("formatted_address");
-					}
-                }
-                else{
-                	fullAddress = zero.getString("formatted_address");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return fullAddress;
-    }
 
 	
 	
@@ -4515,7 +4253,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();
-		
 			
 			params.put("access_token", Data.userData.accessToken);
 			params.put("session_id", Data.cSessionId);
@@ -4523,15 +4260,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("session_id", "="+Data.cSessionId);
 			
-		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/cancel_the_request", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
-
+					
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -4539,25 +4274,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.e("Server response", "response = " + response);
 	
 							try {
 								jObj = new JSONObject(response);
 								
 								if(!jObj.isNull("error")){
-									
 									String errorMessage = jObj.getString("error");
-									
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 										HomeActivity.logoutUser(activity);
 									}
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-									
 								}
 								else{
 									customerUIBackToInitialAfterCancel();
@@ -4618,21 +4348,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/switch_to_driver_mode", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -4767,12 +4494,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/accept_a_request", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							DialogPopup.dismissLoadingDialog();
@@ -4780,9 +4506,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) 
-						{
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.v("accept ride api Server response", "response = " + response);
 	
 							try {
@@ -4951,21 +4675,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 				AsyncHttpClient client = Data.getClient();
 				client.post(Data.SERVER_URL + "/reject_a_request", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							}
 
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.v("Server response", "response = " + response);
 		
 								try {
@@ -5062,12 +4783,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/start_ride", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 	
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -5075,9 +4795,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) 
-						{
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -5160,12 +4878,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 				AsyncHttpClient client = Data.getClient();
 				client.post(Data.SERVER_URL + "/cancel_the_ride", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
 //								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -5173,9 +4890,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							}
 
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.v("Server response", "response = " + response);
 		
 								try {
@@ -5271,12 +4986,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/end_ride", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							driverScreenMode = DriverScreenMode.D_IN_RIDE;
 							DialogPopup.dismissLoadingDialog();
@@ -5285,9 +4999,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.e("Server response", "response = " + response);
 	
 							try {
@@ -5415,19 +5127,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 				AsyncHttpClient client = Data.getClient();
 				client.post(Data.SERVER_URL + "/upload_path_log_file", params,
-						new AsyncHttpResponseHandler() {
-						private JSONObject jObj;
+						new CustomAsyncHttpResponseHandler() {
 
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 							}
 
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.e("Server response on upload path file", "response = " + response);
 							}
 						});
@@ -5496,21 +5204,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/rating", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 	
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -5667,21 +5372,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/fav_locations", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 	
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -5752,21 +5454,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL+"/logout", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -5860,19 +5559,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/start_end_wait", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -6050,18 +5746,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/request_now", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 						}
 					});
@@ -6147,21 +5840,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 				AsyncHttpClient client = Data.getClient();
 				client.post(Data.SERVER_URL + "/make_me_driver_request", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							}
 
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.v("Server response", "response = " + response);
 
 								try {
@@ -6385,7 +6075,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									if(driverScreenMode == DriverScreenMode.D_START_RIDE){
 										LatLng source = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-										String url = makeURLPath(source, Data.dCustLatLng);
+										String url = MapUtils.makeDirectionsURL(source, Data.dCustLatLng);
 										String result = new HttpRequester().getJSONFromUrl(url);
 										
 										if(result != null){
@@ -6404,7 +6094,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 																markerOptionsCustomerPickupLocation.title(Data.dEngagementId);
 																markerOptionsCustomerPickupLocation.snippet("");
 																markerOptionsCustomerPickupLocation.position(Data.dCustLatLng);
-																markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+																markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPassengerMarkerBitmap(HomeActivity.this, assl)));
 															}
 															
 															map.addMarker(markerOptionsCustomerPickupLocation);
@@ -6609,7 +6299,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		     JSONObject routes = routeArray.getJSONObject(0);
 		     JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
 		     String encodedString = overviewPolylines.getString("points");
-		     List<LatLng> list = decodePoly(encodedString);
+		     List<LatLng> list = MapUtils.decodeDirectionsPolyline(encodedString);
 		     return list;
 	    } 
 	    catch (Exception e) {
@@ -6742,7 +6432,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					if(myLocation != null){
 						dialog.dismiss();
 						LatLng driverAtPickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-			        	double displacement = distance(driverAtPickupLatLng, Data.dCustLatLng);
+			        	double displacement = MapUtils.distance(driverAtPickupLatLng, Data.dCustLatLng);
 			        	
 			        	if(displacement <= DRIVER_START_RIDE_CHECK_METERS){
 			        		buildAlertMessageNoGps();
@@ -7407,7 +7097,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						markerOptions.title(Data.driverRideRequests.get(i).engagementId);
 						markerOptions.snippet("");
 						markerOptions.position(Data.driverRideRequests.get(i).latLng);
-						markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createPassengerMarkerBitmap()));
+						markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPassengerMarkerBitmap(HomeActivity.this, assl)));
 						
 						map.addMarker(markerOptions);
 						
@@ -8459,7 +8149,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			schedulePickupLocationAddressFetcherThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					setSchedulePickupLocationAddress(getAddress(schedulePickupLatLng));
+					setSchedulePickupLocationAddress(MapUtils.getGAPIAddress(schedulePickupLatLng));
 					selectedScheduleLatLng = schedulePickupLatLng;
 				}
 			});
@@ -8507,12 +8197,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/insert_pickup_schedule", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -8520,9 +8209,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
 	
 							try {
@@ -8556,6 +8243,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							}
 	
 							DialogPopup.dismissLoadingDialog();
+							scheduleCrossBtn.performClick();
 						}
 					});
 		}

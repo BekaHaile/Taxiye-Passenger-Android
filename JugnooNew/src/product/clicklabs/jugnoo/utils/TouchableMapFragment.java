@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

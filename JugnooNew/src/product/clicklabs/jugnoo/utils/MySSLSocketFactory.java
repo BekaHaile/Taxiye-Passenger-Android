@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 import java.io.IOException;
 import java.net.Socket;

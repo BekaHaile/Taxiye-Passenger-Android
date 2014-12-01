@@ -1,5 +1,7 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,7 +28,7 @@ public class DialogPopup {
 	}
 	
 	Dialog dialog;
-	void alertPopup(Activity activity, String title, String message) {
+	public void alertPopup(Activity activity, String title, String message) {
 		try {
 			try{
 				if(dialog != null && dialog.isShowing()){

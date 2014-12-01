@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package com.squareup.picasso;
 
 /**
  * Picasso's(ImageLoaderLibrary) class to crop bitmap in circular shape

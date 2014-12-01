@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.Log;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,7 +37,7 @@ public class DateOperations {
 			String localDate = sdf.format(myDate);
 			return localDate;
 		} catch (Exception e1) {
-			Log.e("e1","="+e1);
+			e1.printStackTrace();
 			return utcTime;
 		}
 	}
@@ -151,8 +151,6 @@ public class DateOperations {
 	
 	public long getTimeDifference(String time1, String time2){
 		try {
-			Log.e("time1", "="+time1);
-			Log.e("time2", "="+time2);
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(time1);
 			Date date2 = format.parse(time2);
@@ -166,7 +164,6 @@ public class DateOperations {
 	
 	public long getMilliseconds(String time1){
 		try {
-			Log.e("time1", "="+time1);
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(time1);
 			long millis = date1.getTime();

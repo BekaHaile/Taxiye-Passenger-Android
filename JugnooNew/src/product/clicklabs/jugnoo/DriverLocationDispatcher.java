@@ -6,6 +6,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
 import android.content.Context;
 import android.location.Location;
 import android.os.PowerManager;
@@ -44,7 +47,7 @@ public class DriverLocationDispatcher {
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
 						Log.e("result in DLD", "=" + result);
-						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
+						Log.writeLogToFile(filePrefix, "Server result "+DateOperations.getCurrentTime()+" = "+result);
 						
 						try{
 							//{"log":"Updated"}
@@ -72,7 +75,7 @@ public class DriverLocationDispatcher {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
+			Log.writeLogToFile(filePrefix, "Exception in sending to server "+DateOperations.getCurrentTime()+" = "+e);
 		}
 		finally{
 			Database2.getInstance(context).close();

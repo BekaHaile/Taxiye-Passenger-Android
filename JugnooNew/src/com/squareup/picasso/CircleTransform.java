@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package com.squareup.picasso;
 
 /**
  * Picasso's(ImageLoaderLibrary) class to crop bitmap in circular shape
@@ -8,12 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
 
 import com.squareup.picasso.Transformation;
  
-public class RoundBorderTransform implements Transformation {
+public class CircleTransform implements Transformation {
 	@Override
 	public Bitmap transform(Bitmap source) {
 		Bitmap source1 = source;
@@ -36,11 +34,8 @@ public class RoundBorderTransform implements Transformation {
 			paint.setShader(shader);
 			paint.setAntiAlias(true);
 	 
-			final Rect rect = new Rect(0, 0, size, size);
-		    final RectF rectF = new RectF(rect);
-		    final float roundPx = 10;
-			
-		    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+			float r = size / 2f;
+			canvas.drawCircle(r, r, r, paint);
 	 
 			squaredBitmap.recycle();
 			return bitmap;

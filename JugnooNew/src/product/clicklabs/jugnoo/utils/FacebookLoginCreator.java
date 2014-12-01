@@ -1,7 +1,8 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 import java.util.Arrays;
 
+import product.clicklabs.jugnoo.Data;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +23,7 @@ import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.Builder;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 
-public class FacebookLogin {
+public class FacebookLoginCreator {
 
 	private static Session session;
 	
@@ -89,7 +90,7 @@ public class FacebookLogin {
 			@Override
 			public void call(final Session session, SessionState state, Exception exception) {
 				if(session.isOpened()){
-					FacebookLogin.session = session;
+					FacebookLoginCreator.session = session;
 					Session.setActiveSession(session);
 					callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
 				}
@@ -253,11 +254,4 @@ public class FacebookLogin {
 	    feedDialog.show();
 	}
 	
-}
-
-
-
-
-interface FacebookLoginCallback{
-	public void facebookLoginDone();
 }

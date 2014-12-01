@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import java.util.Calendar;
 
+import product.clicklabs.jugnoo.utils.Log;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;

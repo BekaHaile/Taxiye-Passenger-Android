@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Log;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +23,7 @@ public class LocationReceiverDriver extends BroadcastReceiver {
 					Database2.getInstance(context).updateDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
 					Database2.getInstance(context).close();
 			    	Log.e("DriverLocationUpdateService location in pi reciever ", "=="+location);
-			    	Log.writeLogToFile("LocationReciever", "Receiver "+new DateOperations().getCurrentTime()+" = "+location 
+			    	Log.writeLogToFile("LocationReciever", "Receiver "+DateOperations.getCurrentTime()+" = "+location 
 			    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));
 					new DriverLocationDispatcher().sendLocationToServer(context, "LocationReciever");
 				}

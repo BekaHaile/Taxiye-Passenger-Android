@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 /**
  * This file is used by all the other classes to check Internet connection 
@@ -40,7 +40,6 @@ public class AppStatus {
 		} catch (Exception e) {
 			System.out
 					.println("CheckConnectivity Exception: " + e.getMessage());
-			Log.v("connectivity", e.toString());
 		}
 		return connected;
 	}

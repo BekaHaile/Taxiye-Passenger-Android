@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,8 +17,8 @@ import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
-import android.widget.Toast;
 import android.widget.TimePicker.OnTimeChangedListener;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 public class CustomDateTimePicker implements OnClickListener {

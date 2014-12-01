@@ -2,9 +2,11 @@ package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -28,7 +30,6 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class HelpActivity extends FragmentActivity{
@@ -270,21 +271,18 @@ public class HelpActivity extends FragmentActivity{
 				
 				fetchHelpDataClient = Data.getClient();
 				fetchHelpDataClient.post(Data.SERVER_URL + "/get_information", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								progressBarHelp.setVisibility(View.GONE);
 								openHelpData(helpItem, "Some error occured. Tap to retry.", true);
 							}
 	
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.i("Server response faq ", "response = " + response);
 								try {
 									jObj = new JSONObject(response);

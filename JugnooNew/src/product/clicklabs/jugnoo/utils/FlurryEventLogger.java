@@ -1,7 +1,9 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import product.clicklabs.jugnoo.Data;
 
 import android.content.Context;
 
@@ -450,6 +452,17 @@ public class FlurryEventLogger {
 			Map<String, String> articleParams = new HashMap<String, String>();
 			articleParams.put("access_token", accessToken);
 			FlurryAgent.logEvent("Fare Details screen opened", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void connectionFailure(String error){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("error_description", error);
+			FlurryAgent.logEvent("Connection Failure", articleParams);
 		} catch(Exception e){
 			e.printStackTrace();
 		}

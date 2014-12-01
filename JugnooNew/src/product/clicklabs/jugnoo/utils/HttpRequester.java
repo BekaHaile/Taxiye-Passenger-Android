@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,7 +48,7 @@ import android.util.Log;
 
 public class HttpRequester {
 
-	static String SERVER_TIMEOUT = "SERVER_TIMEOUT";
+	public static String SERVER_TIMEOUT = "SERVER_TIMEOUT";
 	static int TIMEOUT_CONNECTION = 30000, TIMEOUT_SOCKET = 30000, RETRY_COUNT = 0, SLEEP_BETWEEN_RETRY = 0;
 
 	// constructor
