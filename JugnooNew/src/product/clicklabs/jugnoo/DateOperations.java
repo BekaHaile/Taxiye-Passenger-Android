@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -128,6 +129,13 @@ public class DateOperations {
 	
 	public static String getCurrentTime() {
 	    long foo = System.currentTimeMillis();
+	    Date date = new Date(foo);
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    return formatter.format(date);
+	}
+	
+	public static String getCalendarInTimeStampFormat(Calendar calendar) {
+	    long foo = calendar.getTimeInMillis();
 	    Date date = new Date(foo);
 	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    return formatter.format(date);

@@ -230,6 +230,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	ImageView schedulePickupLocationCentrePin;
 	
 	CustomDateTimePicker customDateTimePicker;
+	Calendar selectedScheduleCalendar;
+	LatLng selectedScheduleLatLng;
 	
 	
 	
@@ -1112,12 +1114,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						if(checkWorkingTime()){
 							if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 								if(myLocation != null){
-									if(Data.driverInfos.size() > 0){
-										callAnAutoPopup(HomeActivity.this);
-									}
-									else{
-										noDriverAvailablePopup(HomeActivity.this, true, "");
-									}
+									callAnAutoPopup(HomeActivity.this);
 								}
 								else{
 									Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
@@ -1284,6 +1281,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				customDateTimePicker.set24HourFormat(false);
 		        customDateTimePicker.setDate(Calendar.getInstance());
 		        customDateTimePicker.setTimePickerIntervalInMinutes(5);
+		        customDateTimePicker.setDate(selectedScheduleCalendar);
 				customDateTimePicker.showDialog();
 			}
 		});
@@ -1292,7 +1290,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				
+				if(selectedScheduleLatLng != null){
+					insertScheduleRideAsync(activity, selectedScheduleCalendar, selectedScheduleLatLng);
+				}
+				else{
+					Toast.makeText(HomeActivity.this, "Please while we get your pickup address", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 		
@@ -1329,8 +1332,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             String weekDayFullName, String weekDayShortName,
                             int hour24, int hour12, int min, int sec,
                             String AM_PM) {
-                    	String dayShortName = calendarSelected.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-                    	scheduleDateTimeValue.setText(dayShortName + ", " + date + " " + monthShortName + " " + year + ", "+hour12 + ":" + min  + " " + AM_PM);
+                    	selectedScheduleCalendar = calendarSelected;
+                    	setScheduleDateTimeValue(selectedScheduleCalendar);
                     }
 
                     @Override
@@ -1340,8 +1343,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 });
 		
 		
-		
-		
+		selectedScheduleCalendar = Calendar.getInstance();
 		
 		
 		
@@ -6668,6 +6670,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
+					selectedScheduleCalendar = Calendar.getInstance();
+					setScheduleDateTimeValue(selectedScheduleCalendar);
 					switchToScheduleScreen();
 				}
 				
@@ -8432,8 +8436,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		});
 	}
 	
+	public void setScheduleDateTimeValue(final Calendar calendar){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				String dayLongName = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+				String monthShortName = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+				String amOrPm = calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault());
+				String minuteLongName = (calendar.get(Calendar.MINUTE) < 10)?"0"+calendar.get(Calendar.MINUTE):""+calendar.get(Calendar.MINUTE);
+            	scheduleDateTimeValue.setText(dayLongName + ", " + calendar.get(Calendar.DATE) + " " + monthShortName + " " + calendar.get(Calendar.YEAR) 
+            			+ ", " + calendar.get(Calendar.HOUR) + ":" + minuteLongName  + " " + amOrPm);
+			}
+		});
+	}
+	
 	Thread schedulePickupLocationAddressFetcherThread;
 	public void getSchedulePickupLocationAddress(final LatLng schedulePickupLatLng){
+		selectedScheduleLatLng = null;
 		stopSchedulePickupLocationAddressFetcherThread();
 		setSchedulePickupLocationAddress("Loading address...");
 		try{
@@ -8441,6 +8460,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void run() {
 					setSchedulePickupLocationAddress(getAddress(schedulePickupLatLng));
+					selectedScheduleLatLng = schedulePickupLatLng;
 				}
 			});
 			schedulePickupLocationAddressFetcherThread.start();
@@ -8460,6 +8480,90 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		schedulePickupLocationAddressFetcherThread = null;
 	}
+	
+	
+	
+	/**
+	 * ASync for inserting schedule ride event to server
+	 */
+	public void insertScheduleRideAsync(final Activity activity, Calendar selectedCalendar, LatLng selectedLatLng) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("latitude", ""+selectedLatLng.latitude);
+			params.put("longitude", ""+selectedLatLng.longitude);
+			params.put("pickup_time", ""+DateOperations.getCalendarInTimeStampFormat(selectedCalendar));
+
+			Log.e("Server hit=", "=" + Data.SERVER_URL + "/insert_pickup_schedule");
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("latitude", "="+selectedLatLng.latitude);
+			Log.i("longitude", "="+selectedLatLng.longitude);
+			Log.i("pickup_time", "="+DateOperations.getCalendarInTimeStampFormat(selectedCalendar));
+			
+			AsyncHttpClient client = Data.getClient();
+			client.post(Data.SERVER_URL + "/insert_pickup_schedule", params,
+					new AsyncHttpResponseHandler() {
+					private JSONObject jObj;
+
+						@Override
+						public void onFailure(int arg0, Header[] arg1,
+								byte[] arg2, Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+						
+
+						@Override
+						public void onSuccess(int arg0, Header[] arg1,
+								byte[] arg2) {
+							String response = new String(arg2);
+							Log.i("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+										new DialogPopup().alertPopup(activity, "", jObj.getString("message"));
+									}
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+	}
+	
 	
 	
 	

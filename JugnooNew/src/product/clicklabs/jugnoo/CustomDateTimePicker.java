@@ -338,14 +338,14 @@ public class CustomDateTimePicker implements OnClickListener {
 				int year = datePicker.getYear();
 				int day = datePicker.getDayOfMonth();
 				
-				int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-				int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
+				calendar_date.set(year, month, day, selectedHour,
+						selectedMinute);
 				
-				if((selectedHour >= currentHour) && (selectedMinute >= currentMinute)){
-
-					calendar_date.set(year, month, day, selectedHour,
-							selectedMinute);
-	
+				Date currDate = Calendar.getInstance().getTime();
+			    Date selectedDate = calendar_date.getTime();
+			    long diff = selectedDate.getTime() - currDate.getTime();
+				
+				if(diff > 0){
 					iCustomDateTimeListener.onSet(dialog, calendar_date,
 							calendar_date.getTime(), calendar_date
 									.get(Calendar.YEAR),
