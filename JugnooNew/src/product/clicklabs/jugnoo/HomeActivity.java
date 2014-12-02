@@ -1020,7 +1020,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 				else if(userMode == UserMode.PASSENGER){
-					startActivity(new Intent(HomeActivity.this, BookingActivity.class));
+					startActivity(new Intent(HomeActivity.this, RidesActivity.class));
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 				FlurryEventLogger.rideScreenOpened(Data.userData.accessToken);
@@ -2939,7 +2939,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	/**
 	 * Hides keyboard
-	 * @param context
+	 * @param activity
 	 */
 	public void hideSoftKeyboard() {
 		try{

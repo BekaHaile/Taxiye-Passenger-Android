@@ -32,9 +32,9 @@ import com.loopj.android.http.RequestParams;
 
 public class DriverMissedRidesFragment extends Fragment {
 
-	ProgressBar progressBarMissedRides;
+	ProgressBar progressBar;
 	TextView textViewInfoDisplay;
-	ListView listViewMissedRides;
+	ListView listView;
 	
 	DriverMissedRidesListAdapter driverMissedRidesListAdapter;
 	
@@ -51,20 +51,20 @@ public class DriverMissedRidesFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		missedRideInfos.clear();
-		View rootView = inflater.inflate(R.layout.fragment_missed_rides, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
 		main = (RelativeLayout) rootView.findViewById(R.id.main);
 		main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		ASSL.DoMagic(main);
 
-		progressBarMissedRides = (ProgressBar) rootView.findViewById(R.id.progressBarMissedRides);
+		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
-		listViewMissedRides = (ListView) rootView.findViewById(R.id.listViewMissedRides);
+		listView = (ListView) rootView.findViewById(R.id.listView);
 		
 		driverMissedRidesListAdapter = new DriverMissedRidesListAdapter();
-		listViewMissedRides.setAdapter(driverMissedRidesListAdapter);
+		listView.setAdapter(driverMissedRidesListAdapter);
 		
-		progressBarMissedRides.setVisibility(View.GONE);
+		progressBar.setVisibility(View.GONE);
 		textViewInfoDisplay.setVisibility(View.GONE);
 		
 		textViewInfoDisplay.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +205,7 @@ public class DriverMissedRidesFragment extends Fragment {
 	public void getMissedRidesAsync(final Activity activity) {
 		if(fetchMissedRidesClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				progressBarMissedRides.setVisibility(View.VISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
 				textViewInfoDisplay.setVisibility(View.GONE);
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
@@ -217,7 +217,7 @@ public class DriverMissedRidesFragment extends Fragment {
 							@Override
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
-								progressBarMissedRides.setVisibility(View.GONE);
+								progressBar.setVisibility(View.GONE);
 								updateListData("Some error occurred. Tap to retry", true);
 							}
 	
@@ -279,7 +279,7 @@ public class DriverMissedRidesFragment extends Fragment {
 									exception.printStackTrace();
 									updateListData("Some error occurred. Tap to retry", true);
 								}
-								progressBarMissedRides.setVisibility(View.GONE);
+								progressBar.setVisibility(View.GONE);
 							}
 							
 							@Override

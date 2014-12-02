@@ -36,7 +36,7 @@ public class FareInfoActivity extends FragmentActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fare_info_activity);
+		setContentView(R.layout.activity_fare_info);
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(FareInfoActivity.this, relative, 1134, 720, false);

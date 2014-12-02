@@ -55,5 +55,12 @@
     
     <color name="yellow_jugnoo">#FAA31C</color>
     
+    
+        
+    <color name="yellow_status">#F89414</color>    
+    <color name="green_status">#2EA058</color>    
+    <color name="red_status">#F53C37</color>
+    
+    
    
 </resources>

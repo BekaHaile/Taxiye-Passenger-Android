@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -31,13 +30,13 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
-public class DriverRidesFragment extends Fragment {
+public class RideHistoryFragment extends Fragment {
 
 	ProgressBar progressBar;
 	TextView textViewInfoDisplay;
 	ListView listView;
 	
-	DriverRidesListAdapter driverRidesListAdapter;
+	RideHistoryListAdapter rideHistoryListAdapter;
 	
 	RelativeLayout main;
 	
@@ -45,7 +44,7 @@ public class DriverRidesFragment extends Fragment {
 
 	ArrayList<RideInfo> rides = new ArrayList<RideInfo>();
 	
-	public DriverRidesFragment() {
+	public RideHistoryFragment() {
 	}
 	
 
@@ -63,8 +62,8 @@ public class DriverRidesFragment extends Fragment {
 		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
 		listView = (ListView) rootView.findViewById(R.id.listView);
 		
-		driverRidesListAdapter = new DriverRidesListAdapter();
-		listView.setAdapter(driverRidesListAdapter);
+		rideHistoryListAdapter = new RideHistoryListAdapter(getActivity());
+		listView.setAdapter(rideHistoryListAdapter);
 		
 		progressBar.setVisibility(View.GONE);
 		textViewInfoDisplay.setVisibility(View.GONE);
@@ -88,7 +87,7 @@ public class DriverRidesFragment extends Fragment {
 			textViewInfoDisplay.setVisibility(View.VISIBLE);
 			
 			rides.clear();
-			driverRidesListAdapter.notifyDataSetChanged();
+			rideHistoryListAdapter.notifyDataSetChanged();
 		}
 		else{
 			if(rides.size() == 0){
@@ -98,7 +97,7 @@ public class DriverRidesFragment extends Fragment {
 			else{
 				textViewInfoDisplay.setVisibility(View.GONE);
 			}
-			driverRidesListAdapter.notifyDataSetChanged();
+			rideHistoryListAdapter.notifyDataSetChanged();
 		}
 	}
 	
@@ -121,20 +120,20 @@ public class DriverRidesFragment extends Fragment {
 	}
 
 	
-	class ViewHolderDriverRides {
+	class ViewHolderRideHistory {
 		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue, balanceValue;
 		ImageView couponImg;
 		LinearLayout relative;
 		int id;
 	}
 
-	class DriverRidesListAdapter extends BaseAdapter {
+	class RideHistoryListAdapter extends BaseAdapter {
 		LayoutInflater mInflater;
-		ViewHolderDriverRides holder;
-		DateOperations dateOperations;
-		public DriverRidesListAdapter() {
-			mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			dateOperations = new DateOperations();
+		ViewHolderRideHistory holder;
+		Context context;
+		public RideHistoryListAdapter(Context context) {
+			this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			this.context = context;
 		}
 
 		@Override
@@ -155,20 +154,18 @@ public class DriverRidesFragment extends Fragment {
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				holder = new ViewHolderDriverRides();
+				holder = new ViewHolderRideHistory();
 				convertView = mInflater.inflate(R.layout.list_item_ride_history, null);
 				
-				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
-				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.regularFont(getActivity()));
-				holder.toText = (TextView) convertView.findViewById(R.id.toText); holder.toText.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
-				holder.toValue = (TextView) convertView.findViewById(R.id.toValue); holder.toValue.setTypeface(Data.regularFont(getActivity()));
-				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(getActivity()));
-				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.regularFont(getActivity()));
-				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
-				holder.balanceValue = (TextView) convertView.findViewById(R.id.balanceValue); holder.balanceValue.setTypeface(Data.regularFont(getActivity()));
-				
+				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.regularFont(context), Typeface.BOLD);
+				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.regularFont(context));
+				holder.toText = (TextView) convertView.findViewById(R.id.toText); holder.toText.setTypeface(Data.regularFont(context), Typeface.BOLD);
+				holder.toValue = (TextView) convertView.findViewById(R.id.toValue); holder.toValue.setTypeface(Data.regularFont(context));
+				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(context));
+				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.regularFont(context));
+				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.regularFont(context), Typeface.BOLD);
+				holder.balanceValue = (TextView) convertView.findViewById(R.id.balanceValue); holder.balanceValue.setTypeface(Data.regularFont(context), Typeface.BOLD);
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
-				
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
@@ -179,15 +176,13 @@ public class DriverRidesFragment extends Fragment {
 				
 				convertView.setTag(holder);
 			} else {
-				holder = (ViewHolderDriverRides) convertView.getTag();
+				holder = (ViewHolderRideHistory) convertView.getTag();
 			}
 			
 			
 			RideInfo booking = rides.get(position);
 			
-			if(dateOperations == null){
-				dateOperations = new DateOperations();
-			}
+			DateOperations dateOperations = new DateOperations();
 			
 			holder.id = position;
 			
@@ -196,6 +191,7 @@ public class DriverRidesFragment extends Fragment {
 			holder.distanceValue.setText(booking.distance + " km");
 			holder.timeValue.setText(dateOperations.convertDate(dateOperations.utcToLocal(booking.time)));
 			holder.fareValue.setText("Rs. "+booking.fare);
+			holder.balanceValue.setVisibility(View.GONE);
 			
 			if(1 == booking.couponUsed){
 				holder.couponImg.setVisibility(View.VISIBLE);
@@ -204,13 +200,8 @@ public class DriverRidesFragment extends Fragment {
 				holder.couponImg.setVisibility(View.GONE);
 			}
 			
-			if("0".equalsIgnoreCase(booking.balance)){
-				holder.balanceValue.setVisibility(View.GONE);
-			}
-			else{
-				holder.balanceValue.setVisibility(View.VISIBLE);
-				holder.balanceValue.setText("Bal: Rs. "+booking.balance);
-			}
+			dateOperations = null;
+			
 			
 			return convertView;
 		}
@@ -229,7 +220,7 @@ public class DriverRidesFragment extends Fragment {
 				textViewInfoDisplay.setVisibility(View.GONE);
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
-				params.put("current_mode", "1");
+				params.put("current_mode", "0");
 				fetchRidesClient = Data.getClient();
 				fetchRidesClient.post(Data.SERVER_URL + "/booking_history", params,
 						new CustomAsyncHttpResponseHandler() {
@@ -260,26 +251,12 @@ public class DriverRidesFragment extends Fragment {
 									else{
 										JSONArray bookingData = jObj.getJSONArray("booking_data");
 										rides.clear();
-										DecimalFormat decimalFormat = new DecimalFormat("#.#");
 										if(bookingData.length() > 0){
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
-												Log.e("booData"+i, "="+booData);
-												String balance = "";
-												try{
-													if(booData.has("balance")){
-														balance = booData.getString("balance");
-													}
-													else{
-														balance = "0";
-													}
-												} catch(Exception e){
-													e.printStackTrace();
-													balance = "0";
-												}
 												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
-														booData.getString("to"), booData.getString("fare"), decimalFormat.format(booData.getDouble("distance")),
-														booData.getString("time"), balance, booData.getInt("coupon_used")));
+														booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
+														booData.getString("time"), "", booData.getInt("coupon_used")));
 											}
 										}
 										updateListData("No rides currently", false);

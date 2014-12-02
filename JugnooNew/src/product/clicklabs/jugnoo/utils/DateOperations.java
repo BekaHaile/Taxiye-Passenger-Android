@@ -27,7 +27,7 @@ public class DateOperations {
 	 * @return Local time String
 	 */
 	@SuppressLint("SimpleDateFormat")
-	public String utcToLocal(String utcTime) {
+	public static String utcToLocal(String utcTime) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -48,7 +48,7 @@ public class DateOperations {
 	 * @param dateTime 
 	 * @return
 	 */
-	public String convertDate(String dateTime){
+	public static String convertDate(String dateTime){
 		try{
 		String date = dateTime.split(" ")[0];
 		
