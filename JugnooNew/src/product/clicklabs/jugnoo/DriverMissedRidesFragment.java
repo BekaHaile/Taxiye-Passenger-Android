@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.MissedRideInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -127,10 +128,8 @@ public class DriverMissedRidesFragment extends Fragment {
 	class DriverMissedRidesListAdapter extends BaseAdapter {
 		LayoutInflater mInflater;
 		ViewHolderDriverMissedRides holder;
-		DateOperations dateOperations;
 		public DriverMissedRidesListAdapter() {
 			mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			dateOperations = new DateOperations();
 		}
 
 		@Override
@@ -179,16 +178,13 @@ public class DriverMissedRidesFragment extends Fragment {
 				holder = (ViewHolderDriverMissedRides) convertView.getTag();
 			}
 			
-			if(dateOperations == null){
-				dateOperations = new DateOperations();
-			}
 			
 			MissedRideInfo missedRideInfo = missedRideInfos.get(position);
 			
 			holder.id = position;
 			
 			holder.textViewMissedRideFromValue.setText(missedRideInfo.pickupLocationAddress);
-			holder.textViewMissedRideTime.setText(dateOperations.convertDate(dateOperations.utcToLocal(missedRideInfo.timestamp)));
+			holder.textViewMissedRideTime.setText(DateOperations.convertDate(DateOperations.utcToLocal(missedRideInfo.timestamp)));
 			
 			holder.textViewMissedRideCustomerNameValue.setText(missedRideInfo.customerName);
 			holder.textViewMissedRideCustomerDistanceValue.setText(missedRideInfo.customerDistance+" km");

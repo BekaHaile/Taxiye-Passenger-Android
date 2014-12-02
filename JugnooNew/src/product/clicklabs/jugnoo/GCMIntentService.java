@@ -8,6 +8,10 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -246,7 +250,7 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, new DateOperations().utcToLocal(startTime), DateOperations.getCurrentTime());
+		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), DateOperations.getCurrentTime());
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
 

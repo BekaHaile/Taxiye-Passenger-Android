@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -182,14 +183,12 @@ public class RideHistoryFragment extends Fragment {
 			
 			RideInfo booking = rides.get(position);
 			
-			DateOperations dateOperations = new DateOperations();
-			
 			holder.id = position;
 			
 			holder.fromValue.setText(booking.fromLocation);
 			holder.toValue.setText(booking.toLocation);
 			holder.distanceValue.setText(booking.distance + " km");
-			holder.timeValue.setText(dateOperations.convertDate(dateOperations.utcToLocal(booking.time)));
+			holder.timeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(booking.time)));
 			holder.fareValue.setText("Rs. "+booking.fare);
 			holder.balanceValue.setVisibility(View.GONE);
 			
@@ -199,8 +198,6 @@ public class RideHistoryFragment extends Fragment {
 			else{
 				holder.couponImg.setVisibility(View.GONE);
 			}
-			
-			dateOperations = null;
 			
 			
 			return convertView;

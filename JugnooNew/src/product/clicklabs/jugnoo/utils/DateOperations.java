@@ -42,6 +42,19 @@ public class DateOperations {
 		}
 	}
 
+	
+	public static Calendar getCalendarFromTimeStamp(String timeStamp){
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(timeStamp);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date1);
+			return calendar;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	/**
 	 * Converts date string from 2014-01-12 00:00 to 12 Jan, 2014 12:00 AM
@@ -134,12 +147,19 @@ public class DateOperations {
 	    return formatter.format(date);
 	}
 	
-	public static String getCalendarInTimeStampFormat(Calendar calendar) {
+	
+	public static String getTimeStampfromCalendar(Calendar calendar) {
 	    long foo = calendar.getTimeInMillis();
 	    Date date = new Date(foo);
 	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    return formatter.format(date);
 	}
+	
+	
+	
+	
+	
+	
 	
 	public String getSixtySecAfterCurrentTime() {
 	    long foo = System.currentTimeMillis() + 60000;

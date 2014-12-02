@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

@@ -5,6 +5,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.datastructure.CustomerInfo;
+import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
+import product.clicklabs.jugnoo.datastructure.DriverType;
+import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 import android.content.Context;

@@ -3,8 +3,6 @@ package product.clicklabs.jugnoo;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -16,9 +14,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AppMode;
+import product.clicklabs.jugnoo.datastructure.CustomerInfo;
+import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
+import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
+import product.clicklabs.jugnoo.datastructure.ExceptionalDriver;
+import product.clicklabs.jugnoo.datastructure.JugnooDriverMode;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
-import product.clicklabs.jugnoo.utils.CustomDateTimePicker;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -226,25 +234,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	//Schedule layout
-	RelativeLayout scheduleLayout;
-	
-	RelativeLayout scheduleOptionsMainRl;
-	TextView scheduleRideText;
-	Button scheduleCrossBtn;
-	LinearLayout schedulePickupLocationLinear;
-	TextView schedulePickupLocationText, schedulePickupLocationValue;
-	LinearLayout scheduleDateTimeLinear;
-	TextView scheduleDateTimeText, scheduleDateTimeValue;
-	Button scheduleBtn;
-	
-	RelativeLayout scheduleSetPickupLocationRl;
-	Button schedulePickupLocationBackBtn, scheduleMyLocationBtn, pickThisLocationBtn;
-	ImageView schedulePickupLocationCentrePin;
-	
-	CustomDateTimePicker customDateTimePicker;
-	Calendar selectedScheduleCalendar;
-	LatLng selectedScheduleLatLng;
 	
 	
 	
@@ -641,25 +630,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
-		//Schedule layout
-		scheduleLayout = (RelativeLayout) findViewById(R.id.scheduleLayout);
-		
-		scheduleOptionsMainRl = (RelativeLayout) findViewById(R.id.scheduleOptionsMainRl);
-		scheduleRideText = (TextView) findViewById(R.id.scheduleRideText); scheduleRideText.setTypeface(Data.regularFont(getApplicationContext()));
-		scheduleCrossBtn = (Button) findViewById(R.id.scheduleCrossBtn);
-		schedulePickupLocationLinear = (LinearLayout) findViewById(R.id.schedulePickupLocationLinear);
-		schedulePickupLocationText = (TextView) findViewById(R.id.schedulePickupLocationText); schedulePickupLocationText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		schedulePickupLocationValue = (TextView) findViewById(R.id.schedulePickupLocationValue); schedulePickupLocationValue.setTypeface(Data.regularFont(getApplicationContext()));
-		scheduleDateTimeLinear = (LinearLayout) findViewById(R.id.scheduleDateTimeLinear);
-		scheduleDateTimeText = (TextView) findViewById(R.id.scheduleDateTimeText); scheduleDateTimeText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		scheduleDateTimeValue = (TextView) findViewById(R.id.scheduleDateTimeValue); scheduleDateTimeValue.setTypeface(Data.regularFont(getApplicationContext()));
-		scheduleBtn = (Button) findViewById(R.id.scheduleBtn); scheduleBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		
-		scheduleSetPickupLocationRl = (RelativeLayout) findViewById(R.id.scheduleSetPickupLocationRl);
-		schedulePickupLocationBackBtn = (Button) findViewById(R.id.schedulePickupLocationBackBtn);
-		scheduleMyLocationBtn = (Button) findViewById(R.id.scheduleMyLocationBtn);
-		pickThisLocationBtn = (Button) findViewById(R.id.pickThisLocationBtn); pickThisLocationBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
 		
@@ -1262,103 +1232,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		//schedule layout
-		scheduleOptionsMainRl.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				
-			}
-		});
-		
-		scheduleCrossBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				stopSchedulePickupLocationAddressFetcherThread();
-				passengerScreenMode = PassengerScreenMode.P_INITIAL;
-				switchPassengerScreen(passengerScreenMode);
-			}
-		});
-		
-		schedulePickupLocationLinear.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				scheduleOptionsMainRl.setVisibility(View.GONE);
-				scheduleSetPickupLocationRl.setVisibility(View.VISIBLE);
-			}
-		});
-		
-		scheduleDateTimeLinear.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				customDateTimePicker.set24HourFormat(false);
-		        customDateTimePicker.setDate(Calendar.getInstance());
-		        customDateTimePicker.setTimePickerIntervalInMinutes(5);
-		        customDateTimePicker.setDate(selectedScheduleCalendar);
-				customDateTimePicker.showDialog();
-			}
-		});
-
-		scheduleBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(selectedScheduleLatLng != null){
-					insertScheduleRideAsync(activity, selectedScheduleCalendar, selectedScheduleLatLng);
-				}
-				else{
-					Toast.makeText(HomeActivity.this, "Please while we get your pickup address", Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-		
-		
-
-		
-		schedulePickupLocationBackBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				scheduleOptionsMainRl.setVisibility(View.VISIBLE);
-				scheduleSetPickupLocationRl.setVisibility(View.GONE);
-			}
-		});
-
-		pickThisLocationBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(map != null){
-					getSchedulePickupLocationAddress(map.getCameraPosition().target);
-					schedulePickupLocationBackBtn.performClick();
-				}
-			}
-		});
-		
-		customDateTimePicker = new CustomDateTimePicker(this,
-                new CustomDateTimePicker.ICustomDateTimeListener() {
-
-                    @Override
-                    public void onSet(Dialog dialog, Calendar calendarSelected,
-                            Date dateSelected, int year, String monthFullName,
-                            String monthShortName, int monthNumber, int date,
-                            String weekDayFullName, String weekDayShortName,
-                            int hour24, int hour12, int min, int sec,
-                            String AM_PM) {
-                    	selectedScheduleCalendar = calendarSelected;
-                    	setScheduleDateTimeValue(selectedScheduleCalendar);
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-		
-		
-		selectedScheduleCalendar = Calendar.getInstance();
 		
 		
 		
@@ -1824,7 +1697,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			driverStartRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			driverEndRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
-			scheduleMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			
 		}
 		
@@ -2608,7 +2480,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
-				scheduleLayout.setVisibility(View.GONE);
 				
 				searchBarLayout.setVisibility(View.GONE);
 				
@@ -2638,34 +2509,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				break;
 				
 				
-			case P_SCHEDULE:
-				
-				if(map != null){
-					map.clear();
-					getSchedulePickupLocationAddress(map.getCameraPosition().target);
-					schedulePickupLocationBackBtn.performClick();
-				}
-				
-				cancelTimerUpdateDrivers();
-				try{pickupLocationMarker.remove();} catch(Exception e){}
-				try{driverLocationMarker.remove();} catch(Exception e){}
-				
-				if(getDistanceTimeAddress != null){
-					getDistanceTimeAddress.cancel(true);
-					getDistanceTimeAddress = null;
-				}
-				
-				
-				initialLayout.setVisibility(View.GONE);
-				requestFinalLayout.setVisibility(View.GONE);
-				searchLayout.setVisibility(View.GONE);
-				scheduleLayout.setVisibility(View.VISIBLE);
-				
-				scheduleOptionsMainRl.setVisibility(View.VISIBLE);
-				scheduleSetPickupLocationRl.setVisibility(View.GONE);
-				
-				break;
-				
 			case P_ASSIGNING:
 				
 				requestRideBtn.setText(REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT);
@@ -2675,7 +2518,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
-				scheduleLayout.setVisibility(View.GONE);
 				
 				searchBarLayout.setVisibility(View.GONE);
 				
@@ -2711,7 +2553,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.VISIBLE);
-				scheduleLayout.setVisibility(View.GONE);
 				
 				
 				menuBtn.setVisibility(View.GONE);
@@ -2788,7 +2629,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.VISIBLE);
 //				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
-				scheduleLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.VISIBLE);
 				inRideRideInProgress.setText("Please wait while Jugnoo is coming...");
@@ -2843,7 +2683,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.VISIBLE);
 //				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
-				scheduleLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.GONE);
 				inRideRideInProgress.setText("Ride in progress...");
@@ -2865,7 +2704,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.GONE);
 				searchLayout.setVisibility(View.GONE);
-				scheduleLayout.setVisibility(View.GONE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
@@ -2884,7 +2722,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				endRideReviewRl.setVisibility(View.GONE);
 //				centreLocationRl.setVisibility(View.VISIBLE);
 				searchLayout.setVisibility(View.GONE);
-				scheduleLayout.setVisibility(View.GONE);
 				
 				
 				menuBtn.setVisibility(View.VISIBLE);
@@ -2939,7 +2776,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	/**
 	 * Hides keyboard
-	 * @param activity
+	 * @param context
 	 */
 	public void hideSoftKeyboard() {
 		try{
@@ -3673,7 +3510,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			if (convertView == null) {
 				
 				holder = new ViewHolderSearch();
-				convertView = mInflater.inflate(R.layout.search_list_item, null);
+				convertView = mInflater.inflate(R.layout.list_item_search, null);
 				
 				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
@@ -6360,9 +6197,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					selectedScheduleCalendar = Calendar.getInstance();
-					setScheduleDateTimeValue(selectedScheduleCalendar);
-					switchToScheduleScreen();
+					switchToScheduleScreen(activity);
 				}
 				
 			});
@@ -6391,9 +6226,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	void switchToScheduleScreen(){
-		passengerScreenMode = PassengerScreenMode.P_SCHEDULE;
-		switchPassengerScreen(passengerScreenMode);
+	void switchToScheduleScreen(Activity activity){
+		activity.startActivity(new Intent(activity, ScheduleRideActivity.class));
+		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 	
 	
@@ -8115,142 +7950,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     	
     	
     }
-	
-	
-	public void setSchedulePickupLocationAddress(final String address){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				schedulePickupLocationValue.setText(address);
-			}
-		});
-	}
-	
-	public void setScheduleDateTimeValue(final Calendar calendar){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				String dayLongName = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-				String monthShortName = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
-				String amOrPm = calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault());
-				String minuteLongName = (calendar.get(Calendar.MINUTE) < 10)?"0"+calendar.get(Calendar.MINUTE):""+calendar.get(Calendar.MINUTE);
-            	scheduleDateTimeValue.setText(dayLongName + ", " + calendar.get(Calendar.DATE) + " " + monthShortName + " " + calendar.get(Calendar.YEAR) 
-            			+ ", " + calendar.get(Calendar.HOUR) + ":" + minuteLongName  + " " + amOrPm);
-			}
-		});
-	}
-	
-	Thread schedulePickupLocationAddressFetcherThread;
-	public void getSchedulePickupLocationAddress(final LatLng schedulePickupLatLng){
-		selectedScheduleLatLng = null;
-		stopSchedulePickupLocationAddressFetcherThread();
-		setSchedulePickupLocationAddress("Loading address...");
-		try{
-			schedulePickupLocationAddressFetcherThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					setSchedulePickupLocationAddress(MapUtils.getGAPIAddress(schedulePickupLatLng));
-					selectedScheduleLatLng = schedulePickupLatLng;
-				}
-			});
-			schedulePickupLocationAddressFetcherThread.start();
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public void stopSchedulePickupLocationAddressFetcherThread(){
-		try{
-			if(schedulePickupLocationAddressFetcherThread != null){
-				schedulePickupLocationAddressFetcherThread.interrupt();
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		schedulePickupLocationAddressFetcherThread = null;
-	}
-	
-	
-	
-	/**
-	 * ASync for inserting schedule ride event to server
-	 */
-	public void insertScheduleRideAsync(final Activity activity, Calendar selectedCalendar, LatLng selectedLatLng) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-		
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("latitude", ""+selectedLatLng.latitude);
-			params.put("longitude", ""+selectedLatLng.longitude);
-			params.put("pickup_time", ""+DateOperations.getCalendarInTimeStampFormat(selectedCalendar));
-
-			Log.e("Server hit=", "=" + Data.SERVER_URL + "/insert_pickup_schedule");
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("latitude", "="+selectedLatLng.latitude);
-			Log.i("longitude", "="+selectedLatLng.longitude);
-			Log.i("pickup_time", "="+DateOperations.getCalendarInTimeStampFormat(selectedCalendar));
-			
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/insert_pickup_schedule", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-						
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-								}
-								else{
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", jObj.getString("message"));
-									}
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-							scheduleCrossBtn.performClick();
-						}
-					});
-		}
-		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-	}
 	
 	
 	

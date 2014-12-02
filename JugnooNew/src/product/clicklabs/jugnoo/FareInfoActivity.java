@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import rmn.androidscreenlibrary.ASSL;

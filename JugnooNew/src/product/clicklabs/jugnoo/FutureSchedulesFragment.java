@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.R.color;
+import product.clicklabs.jugnoo.datastructure.FutureSchedule;
+import product.clicklabs.jugnoo.datastructure.ScheduleStatus;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -13,7 +14,7 @@ import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,8 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -196,7 +197,7 @@ public class FutureSchedulesFragment extends Fragment {
 			holder.id = position;
 			
 			holder.pickupLocationValue.setText(futureSchedule.pickupAddress);
-			holder.pickupDateTimeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(futureSchedule.pickupTime)));
+			holder.pickupDateTimeValue.setText(DateOperations.convertDate(futureSchedule.pickupTime));
 			holder.scheduleStatusValue.setText(futureSchedule.scheduleStatusStr);
 			
 			if(ScheduleStatus.IN_PROCESS.getOrdinal() == futureSchedule.scheduleStatusFlag){
@@ -226,7 +227,7 @@ public class FutureSchedulesFragment extends Fragment {
 					holder = (ViewHolderFutureSchedule) v.getTag();
 					FutureSchedule futureSchedule = futureSchedules.get(holder.id);
 					if(futureSchedule.isChangeable == 1){
-						showFutureScheduleOperations(activity);
+						showFutureScheduleOperations(activity, futureSchedule);
 					}
 				}
 			});
@@ -239,7 +240,7 @@ public class FutureSchedulesFragment extends Fragment {
 	
 
 	
-	void showFutureScheduleOperations(final Activity activity) {
+	void showFutureScheduleOperations(final Activity activity, final FutureSchedule futureSchedule) {
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -260,18 +261,21 @@ public class FutureSchedulesFragment extends Fragment {
 			TextView textExtra = (TextView) dialog.findViewById(R.id.textExtra); textExtra.setTypeface(Data.regularFont(activity));
 			
 			textHead.setText("Future Ride");
-			textMessage.setText("Do you want to modify your scheduled ride?");
+			textMessage.setText("Do you want to change your scheduled ride?");
 			textExtra.setText("Terms and Conditions");
 			
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("Modify");
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity)); btnCancel.setText("Cancel");
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("Reschedule");
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity)); btnCancel.setText("Remove");
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					
+					dialog.dismiss();
+					ScheduleRideActivity.selectedScheduleCalendar = DateOperations.getCalendarFromTimeStamp(futureSchedule.pickupTime);
+					ScheduleRideActivity.selectedScheduleLatLng = futureSchedule.pickupLatLng;
+					switchToScheduleScreen(activity);
 				}
 			});
 			
@@ -317,6 +321,13 @@ public class FutureSchedulesFragment extends Fragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public void switchToScheduleScreen(Activity activity){
+		startActivity(new Intent(activity, ScheduleRideActivity.class));
+		activity.finish();
+		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 	
 

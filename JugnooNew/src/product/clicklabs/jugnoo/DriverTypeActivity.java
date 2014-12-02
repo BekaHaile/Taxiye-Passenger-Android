@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.datastructure.DriverType;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;

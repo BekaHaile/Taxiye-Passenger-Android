@@ -7,6 +7,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -225,6 +227,46 @@ public class MapUtils {
 			e.printStackTrace();
 		}
 		return fullAddress;
+	}
+	
+	
+	
+	/**
+	 * To search addresses related to particular address available on google
+	 */
+	public static ArrayList<SearchResult> getSearchResultsFromGooglePlaces(String searchText) {
+		ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
+		try{
+			String ignr2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location="
+					+ ""
+					+ ","
+					+ ""
+					+ "&radius=50000"
+					+ "&query="
+					+ searchText
+					+ "&sensor=true&key="+Data.MAPS_BROWSER_KEY;
+			// "https://maps.googleapis.com/maps/api/place/textsearch/json?location=%f,%f&radius=2bb0000&query=%@&sensor=true&key=%@";
+
+			ignr2 = ignr2.replaceAll(" ", "%20");
+			
+			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
+
+			Log.writeLogToFile("search", jsonObj.toString());
+			
+			JSONArray info = null;
+			info = jsonObj.getJSONArray("results");
+			for (int i = 0; i < info.length(); i++) {
+				SearchResult searchResult = new SearchResult(info.getJSONObject(i).getString("name"), 
+						info.getJSONObject(i).getString("formatted_address"),
+						new LatLng(info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+								info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
+
+				searchResults.add(searchResult);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return searchResults;
 	}
 	
 }

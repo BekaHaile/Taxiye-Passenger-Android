@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -131,10 +132,8 @@ public class DriverRidesFragment extends Fragment {
 	class DriverRidesListAdapter extends BaseAdapter {
 		LayoutInflater mInflater;
 		ViewHolderDriverRides holder;
-		DateOperations dateOperations;
 		public DriverRidesListAdapter() {
 			mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			dateOperations = new DateOperations();
 		}
 
 		@Override
@@ -185,16 +184,13 @@ public class DriverRidesFragment extends Fragment {
 			
 			RideInfo booking = rides.get(position);
 			
-			if(dateOperations == null){
-				dateOperations = new DateOperations();
-			}
 			
 			holder.id = position;
 			
 			holder.fromValue.setText(booking.fromLocation);
 			holder.toValue.setText(booking.toLocation);
 			holder.distanceValue.setText(booking.distance + " km");
-			holder.timeValue.setText(dateOperations.convertDate(dateOperations.utcToLocal(booking.time)));
+			holder.timeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(booking.time)));
 			holder.fareValue.setText("Rs. "+booking.fare);
 			
 			if(1 == booking.couponUsed){

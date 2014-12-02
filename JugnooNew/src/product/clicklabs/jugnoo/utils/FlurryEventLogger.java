@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.Data;
-
 import android.content.Context;
 
 import com.flurry.android.FlurryAgent;

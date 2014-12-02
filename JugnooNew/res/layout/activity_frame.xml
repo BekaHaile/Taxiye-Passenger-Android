@@ -4,6 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
+    
+    
+    
     <RelativeLayout
                     android:id="@+id/scheduleLayout"
                     android:layout_width="match_parent"
@@ -17,7 +20,9 @@
                         android:layout_height="match_parent"
                         android:background="@color/white_more_translucent"
                         android:splitMotionEvents="false"
-                        android:visibility="visible" >
+                        android:visibility="visible" 
+                        android:layout_marginTop="90px"
+                        >
 
                         <LinearLayout
                             android:id="@+id/scheduleOptionsInnerLinear"
@@ -90,8 +95,8 @@
                                     android:layout_marginRight="30px"
                                     android:layout_marginTop="5px"
                                     android:gravity="center_vertical"
-                                    android:text="Sector 28, Madhyamarg"
                                     android:singleLine="true"
+                                    android:text="Sector 28, Madhyamarg"
                                     android:textColor="@color/black"
                                     android:textSize="34px" />
                             </LinearLayout>
@@ -203,6 +208,44 @@
                             android:layout_marginTop="420px"
                             android:background="@drawable/pin_ball" />
                     </RelativeLayout>
+                    
+                    
+                    <RelativeLayout
+                android:id="@+id/topRl"
+                android:layout_width="match_parent"
+                android:layout_height="90px"
+                android:background="@color/bg_grey"
+                android:splitMotionEvents="false" >
+
+                <Button
+                    android:id="@+id/backBtn"
+                    android:layout_width="82px"
+                    android:layout_height="82px"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/back_btn_selector"
+                    android:tag="mwar"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/jugnooLogo"
+                    android:layout_width="185px"
+                    android:layout_height="60px"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/jugnoo_text_small"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="540px"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text=" "
+                    android:textColor="@color/white"
+                    android:textSize="40px"
+                    android:visibility="gone" />
+            </RelativeLayout>
+                    
                 </RelativeLayout>
     
 
