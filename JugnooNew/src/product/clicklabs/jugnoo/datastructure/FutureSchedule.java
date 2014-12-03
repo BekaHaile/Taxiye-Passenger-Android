@@ -4,24 +4,23 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class FutureSchedule {
 	
-	public String scheduleId, pickupAddress, pickupTime, scheduleStatusStr;
+	public String pickupId, pickupAddress, pickupTime;
 	public LatLng pickupLatLng;
-	public int isChangeable, scheduleStatusFlag;
+	public int modifiable, status;
 	
 	
-	public FutureSchedule(String scheduleId, String pickupAddress, String pickupTime, String scheduleStatusStr, LatLng pickupLatLng, int isChangeable, int scheduleStatusFlag){
-		this.scheduleId = scheduleId;
+	public FutureSchedule(String pickupId, String pickupAddress, String pickupTime, LatLng pickupLatLng, int modifiable, int status){
+		this.pickupId = pickupId;
 		this.pickupAddress = pickupAddress;
 		this.pickupTime = pickupTime;
-		this.scheduleStatusStr = scheduleStatusStr;
 		this.pickupLatLng = pickupLatLng;
-		this.isChangeable = isChangeable;
-		this.scheduleStatusFlag = scheduleStatusFlag;
+		this.modifiable = modifiable;
+		this.status = status;
 	}
 	
 	@Override
 	public String toString() {
-		return scheduleId + " " + pickupLatLng + " " + pickupTime + " " + scheduleStatusStr + " " + isChangeable;
+		return pickupId + " " + pickupLatLng + " " + pickupTime + " " + status;
 	}
 	
 }

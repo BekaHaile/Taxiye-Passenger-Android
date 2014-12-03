@@ -23,7 +23,8 @@ public enum ApiResponseFlags {
 	NO_ACTIVE_SESSION(131),
 	ENGAGEMENT_DATA(132),
 	ACTIVE_REQUESTS(133),
-	COUPONS(140)
+	COUPONS(140),
+	SCHEDULED_PICKUPS(141)
 	;
 
 	private int ordinal;

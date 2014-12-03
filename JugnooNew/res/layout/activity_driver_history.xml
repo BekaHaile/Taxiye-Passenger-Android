@@ -42,7 +42,7 @@
         <LinearLayout
             android:id="@+id/linearLayoutHistoryTabs"
             android:layout_width="match_parent"
-            android:layout_height="73px"
+            android:layout_height="72px"
             android:orientation="vertical"
             
              >
@@ -73,7 +73,7 @@
                     <ImageView
                         android:id="@+id/imageViewRides"
                         android:layout_width="200px"
-                        android:layout_height="5px"
+                        android:layout_height="4px"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:background="@drawable/bg_tab_grey_selector" />

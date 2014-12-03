@@ -57,7 +57,6 @@ import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -119,7 +118,7 @@ import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.RoundBorderTransform;
 
 @SuppressLint("DefaultLocale")
-public class HomeActivity extends FragmentActivity implements AppInterruptHandler, LocationUpdate {
+public class HomeActivity extends FragmentActivity implements AppInterruptHandler, LocationUpdate, GPSLocationUpdate {
 
 	
 	
@@ -368,7 +367,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	LocationManager locationManager;
+	GPSForegroundLocationFetcher gpsForegroundLocationFetcher;
 
 	static UserMode userMode;
 	static PassengerScreenMode passengerScreenMode;
@@ -413,7 +412,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	//TODO check final variables
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.RED;
+	public static final int MAP_PATH_COLOR = Color.BLUE;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600; //in meters
@@ -425,7 +424,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;  //in meters
-	public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 180, WAIT_FOR_ACCURACY_LOWER_BOUND = 160;  //in meters
+	public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 150, WAIT_FOR_ACCURACY_LOWER_BOUND = 100;  //in meters
 	
 	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000; //in milliseconds
 	
@@ -1704,9 +1703,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		gpsListener = new CustomLocationListener();
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
+		gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
 		
 		
 		try {
@@ -2795,29 +2792,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	class CustomLocationListener implements LocationListener{
-		
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-		
-		@Override
-		public void onProviderEnabled(String provider) {
-		}
-		
-		@Override
-		public void onProviderDisabled(String provider) {
-		}
-		
-		@Override
-		public void onLocationChanged(Location location) {
-			drawLocationChanged(location);
-		}
-		
+	
+	@Override
+	public void onGPSLocationChanged(Location location) {
+		drawLocationChanged(location);
 	}
 	
-	
-	LocationListener gpsListener = new CustomLocationListener();
 	
 
 	
@@ -2888,18 +2868,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    
 		    try{
 		    	if(userMode == UserMode.PASSENGER){
-		    		if(locationManager == null){
-		    			gpsListener = new CustomLocationListener();
-		    			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
+		    		if(gpsForegroundLocationFetcher == null){
+		    			gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
 		    		}
 		    	}
 		    	else if(userMode == UserMode.DRIVER){
-		    		if(locationManager == null){
-			    		gpsListener = new CustomLocationListener();
-			    		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			    		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_TIME_PERIOD, 0, gpsListener);
-			    	}
+		    		if(gpsForegroundLocationFetcher == null){
+		    			gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
+		    		}
 		    	}
 		    } catch(Exception e){
 		    	e.printStackTrace();
@@ -3076,18 +3052,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try{
 			if(userMode == UserMode.PASSENGER){
 				cancelTimerUpdateDrivers();
-				if(locationManager != null && gpsListener != null){
-					locationManager.removeUpdates(gpsListener);
-					gpsListener = null;
-					locationManager = null;
+				if(gpsForegroundLocationFetcher != null){
+					gpsForegroundLocationFetcher.destroy();
+					gpsForegroundLocationFetcher = null;
 				}
 			}
 			else if(userMode == UserMode.DRIVER){
 	    		if(driverScreenMode != DriverScreenMode.D_IN_RIDE){
-	    			if(locationManager != null && gpsListener != null){
-						locationManager.removeUpdates(gpsListener);
-						gpsListener = null;
-						locationManager = null;
+	    			if(gpsForegroundLocationFetcher != null){
+						gpsForegroundLocationFetcher.destroy();
+						gpsForegroundLocationFetcher = null;
 					}
 	    		}
 	    	}
@@ -3149,13 +3123,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		GCMIntentService.stopRing();
     		
     		try{
-    			if(locationManager != null && gpsListener != null){
-    				locationManager.removeUpdates(gpsListener);
-    				gpsListener = null;
-    				locationManager = null;
-    			}
+    			if(gpsForegroundLocationFetcher != null){
+					gpsForegroundLocationFetcher.destroy();
+				}
     		} catch(Exception e){
     			e.printStackTrace();
+    		} finally{
+    			gpsForegroundLocationFetcher = null;
     		}
     		
     		destroyFusedLocationFetchers();
@@ -4937,45 +4911,36 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	 * ASync for uploading path data file to server
 	 */
 	public void driverUploadPathDataFileAsync(final Activity activity, final String engagementId) {
-
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				
-				RequestParams params = new RequestParams();
-				
-				params.put("access_token", Data.userData.accessToken);
-				params.put("engagement_id", engagementId);
-				
 				File pathLogFile = null;
 				try{
 					pathLogFile = Log.getPathLogFile(engagementId);
 					if(pathLogFile != null){
+						RequestParams params = new RequestParams();
+						params.put("access_token", Data.userData.accessToken);
+						params.put("engagement_id", engagementId);
 						params.put("path_log_file", pathLogFile);
+						Log.e("access_token", "=" + Data.userData.accessToken);
+						Log.e("engagement_id", "=" + engagementId);
+						Log.e("pathLogFile", "=" + pathLogFile);
+					
+						AsyncHttpClient client = Data.getClient();
+						client.post(Data.SERVER_URL + "/upload_path_log_file", params,
+								new CustomAsyncHttpResponseHandler() {
+
+									@Override
+									public void onFailure(Throwable arg3) {
+										Log.e("request fail", arg3.toString());
+									}
+
+									@Override
+									public void onSuccess(String response) {
+										Log.e("Server response on upload path file", "response = " + response);
+									}
+								});
 					}
 				} catch(Exception e){
 					e.printStackTrace();
-				}
-				
-				if(pathLogFile != null){
-				
-				Log.e("access_token", "=" + Data.userData.accessToken);
-				Log.e("engagement_id", "=" + engagementId);
-				Log.e("pathLogFile", "=" + pathLogFile);
-				
-			
-				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/upload_path_log_file", params,
-						new CustomAsyncHttpResponseHandler() {
-
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-							}
-
-							@Override
-							public void onSuccess(String response) {
-								Log.e("Server response on upload path file", "response = " + response);
-							}
-						});
 				}
 			}
 	}

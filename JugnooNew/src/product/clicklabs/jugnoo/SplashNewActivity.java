@@ -799,14 +799,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onDestroy() {
-		try{
-			if(Data.locationFetcher != null){
-				Data.locationFetcher.destroy();
-				Data.locationFetcher = null;
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();
@@ -1099,6 +1091,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
+		Data.latitude = location.getLatitude();
+		Data.longitude = location.getLongitude();
 		new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, location);
 	}
 	

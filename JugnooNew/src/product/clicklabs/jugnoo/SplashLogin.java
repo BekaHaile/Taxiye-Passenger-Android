@@ -517,6 +517,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			params.put("app_version", Data.appVersion);
 			params.put("os_version", Data.osVersion);
 
+			Log.i("Server uRL", "=" + Data.SERVER_URL);
 			Log.i("email", "=" + emailId);
 			Log.i("password", "=" + password);
 			Log.e("device_token", "=" + Data.deviceToken);
@@ -828,16 +829,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onDestroy() {
-		try{
-			if(Data.locationFetcher != null){
-				Data.locationFetcher.destroy();
-				Data.locationFetcher = null;
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 		super.onDestroy();
-		
         ASSL.closeActivity(relative);
         System.gc();
 	}
@@ -845,6 +837,8 @@ public class SplashLogin extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
+		Data.latitude = location.getLatitude();
+		Data.longitude = location.getLongitude();
 		new DriverLocationDispatcher().saveLocationToDatabase(SplashLogin.this, location);
 	}
 	

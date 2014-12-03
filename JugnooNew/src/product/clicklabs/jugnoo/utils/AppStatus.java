@@ -31,15 +31,13 @@ public class AppStatus {
 			connectManager = (ConnectivityManager) con
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-			NetworkInfo networkInfo = connectManager
-					.getActiveNetworkInfo();
+			NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
 			connected = networkInfo != null && networkInfo.isAvailable()
 					&& networkInfo.isConnected();
 			return connected;
 
 		} catch (Exception e) {
-			System.out
-					.println("CheckConnectivity Exception: " + e.getMessage());
+			System.out.println("CheckConnectivity Exception: " + e.getMessage());
 		}
 		return connected;
 	}

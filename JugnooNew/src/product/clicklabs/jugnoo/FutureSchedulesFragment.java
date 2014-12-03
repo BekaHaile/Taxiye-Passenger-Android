@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.ScheduleStatus;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -55,6 +56,7 @@ public class FutureSchedulesFragment extends Fragment {
 	public FutureSchedulesFragment() {
 	}
 	
+	String terms = "";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,13 +86,7 @@ public class FutureSchedulesFragment extends Fragment {
 		});
 		
 		
-		futureSchedules.add(new FutureSchedule("1", "1097, Madhya Marg, 28B, Sector 28, Chandigarh 160102", "2014-12-02 06:11:11", "Request in Progress", new LatLng(0, 0), 1, 0));
-		futureSchedules.add(new FutureSchedule("1", "1097, Madhya Marg, 28B, Sector 28, Chandigarh 160102", "2014-12-02 06:15:11", "Request confirmed", new LatLng(0, 0), 0, 1));
-		futureSchedules.add(new FutureSchedule("1", "1097, Madhya Marg, 28B, Sector 28, Chandigarh 160102", "2014-12-02 06:19:11", "Request canceled", new LatLng(0, 0), 0, 2));
-		
-		futureSchedulesListAdapter.notifyDataSetChanged();
-		
-//		getFutureSchedulesAsync(getActivity());
+		getFutureSchedulesAsync(getActivity());
 		
 		return rootView;
 	}
@@ -198,19 +194,21 @@ public class FutureSchedulesFragment extends Fragment {
 			
 			holder.pickupLocationValue.setText(futureSchedule.pickupAddress);
 			holder.pickupDateTimeValue.setText(DateOperations.convertDate(futureSchedule.pickupTime));
-			holder.scheduleStatusValue.setText(futureSchedule.scheduleStatusStr);
 			
-			if(ScheduleStatus.IN_PROCESS.getOrdinal() == futureSchedule.scheduleStatusFlag){
+			if(ScheduleStatus.IN_QUEUE.getOrdinal() == futureSchedule.status){
 				holder.scheduleStatusValue.setTextColor(activity.getResources().getColor(R.color.yellow_status));
+				holder.scheduleStatusValue.setText(ScheduleStatus.IN_QUEUE.getStatusString());
 			}
-			else if(ScheduleStatus.CONFIRMED.getOrdinal() == futureSchedule.scheduleStatusFlag){
+			else if(ScheduleStatus.IN_PROCESS.getOrdinal() == futureSchedule.status){
 				holder.scheduleStatusValue.setTextColor(activity.getResources().getColor(R.color.green_status));
+				holder.scheduleStatusValue.setText(ScheduleStatus.IN_PROCESS.getStatusString());
 			}
-			else{
+			else if(ScheduleStatus.PROCESSED.getOrdinal() == futureSchedule.status){
 				holder.scheduleStatusValue.setTextColor(activity.getResources().getColor(R.color.red_status));
+				holder.scheduleStatusValue.setText(ScheduleStatus.PROCESSED.getStatusString());
 			}
 			
-			if(futureSchedule.isChangeable == 1){
+			if(futureSchedule.modifiable == 1){
 				holder.relative.setBackgroundResource(R.drawable.list_white_selector);
 				holder.forwardImage.setVisibility(View.VISIBLE);
 			}
@@ -226,7 +224,7 @@ public class FutureSchedulesFragment extends Fragment {
 				public void onClick(View v) {
 					holder = (ViewHolderFutureSchedule) v.getTag();
 					FutureSchedule futureSchedule = futureSchedules.get(holder.id);
-					if(futureSchedule.isChangeable == 1){
+					if(futureSchedule.modifiable == 1){
 						showFutureScheduleOperations(activity, futureSchedule);
 					}
 				}
@@ -344,7 +342,7 @@ public class FutureSchedulesFragment extends Fragment {
 				params.put("access_token", Data.userData.accessToken);
 				
 				fetchFutureSchedulesClient = Data.getClient();
-				fetchFutureSchedulesClient.post(Data.SERVER_URL + "/future_schedules", params,
+				fetchFutureSchedulesClient.post(Data.SERVER_URL + "/show_pickup_schedules", params,
 						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
@@ -362,31 +360,39 @@ public class FutureSchedulesFragment extends Fragment {
 								try {
 									jObj = new JSONObject(response);
 									if(!jObj.isNull("error")){
+										int flag = jObj.getInt("flag");
 										String errorMessage = jObj.getString("error");
 										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
 											HomeActivity.logoutUser(activity);
+										}
+										else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+											updateListData(errorMessage, true);
 										}
 										else{
 											updateListData("Some error occurred. Tap to retry", true);
 										}
 									}
 									else{
-										JSONArray futureSchedulesArray = jObj.getJSONArray("future_schedules");
-										futureSchedules.clear();
-										if(futureSchedulesArray.length() > 0){
-											for(int i=0; i<futureSchedulesArray.length(); i++){
-												JSONObject futureScheduleData = futureSchedulesArray.getJSONObject(i);
-												futureSchedules.add(new FutureSchedule(futureScheduleData.getString("schedule_id"), 
-														futureScheduleData.getString("pickup_address"), 
-														futureScheduleData.getString("pickup_time"), 
-														futureScheduleData.getString("status_string"), 
-														new LatLng(futureScheduleData.getDouble("pickup_latitude"), futureScheduleData.getDouble("pickup_longitude")), 
-														futureScheduleData.getInt("is_changeable"),
-														futureScheduleData.getInt("status_flag")));
+										int flag = jObj.getInt("flag");
+										if(ApiResponseFlags.SCHEDULED_PICKUPS.getOrdinal() == flag){
+											JSONArray futureSchedulesArray = jObj.getJSONArray("schedules");
+											futureSchedules.clear();
+											if(futureSchedulesArray.length() > 0){
+												for(int i=0; i<futureSchedulesArray.length(); i++){
+													JSONObject futureScheduleData = futureSchedulesArray.getJSONObject(i);
+													futureSchedules.add(new FutureSchedule(futureScheduleData.getString("pickup_id"), 
+															futureScheduleData.getString("address"), 
+															futureScheduleData.getString("time"), 
+															new LatLng(futureScheduleData.getDouble("latitude"), futureScheduleData.getDouble("longitude")), 
+															futureScheduleData.getInt("modifiable"),
+															futureScheduleData.getInt("status")));
+												}
 											}
+											terms = jObj.getString("terms");
 										}
 										updateListData("No future schedules", false);
 									}
+									updateListData("No future schedules", false);
 								}  catch (Exception exception) {
 									exception.printStackTrace();
 									updateListData("Some error occurred. Tap to retry", true);
@@ -399,9 +405,6 @@ public class FutureSchedulesFragment extends Fragment {
 								fetchFutureSchedulesClient = null;
 								super.onFinish();
 							}
-							
-							
-							
 						});
 			}
 			else {
