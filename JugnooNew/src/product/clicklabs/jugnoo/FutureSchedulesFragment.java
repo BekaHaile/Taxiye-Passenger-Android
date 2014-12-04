@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
+import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleStatus;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -57,8 +58,6 @@ public class FutureSchedulesFragment extends Fragment {
 	
 	public FutureSchedulesFragment() {
 	}
-	
-	String terms = "";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -294,7 +293,8 @@ public class FutureSchedulesFragment extends Fragment {
 				
 				@Override
 				public void onClick(View v) {
-					
+					dialog.dismiss();
+					sendToTandC(activity);
 				}
 			});
 			
@@ -329,10 +329,16 @@ public class FutureSchedulesFragment extends Fragment {
 	
 	
 	public void switchToScheduleScreen(Activity activity){
-		startActivity(new Intent(activity, ScheduleRideActivity.class));
-		activity.finish();
+		activity.startActivity(new Intent(activity, ScheduleRideActivity.class));
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
+	
+	public void sendToTandC(Activity activity){
+		HelpParticularActivity.helpSection = HelpSection.SCHEDULES_TNC;
+		activity.startActivity(new Intent(activity, HelpParticularActivity.class));
+		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+	}
+	
 	
 
 	/**
@@ -396,7 +402,6 @@ public class FutureSchedulesFragment extends Fragment {
 															futureScheduleData.getInt("status")));
 												}
 											}
-											terms = jObj.getString("terms");
 										}
 										updateListData("No future schedules", false);
 									}

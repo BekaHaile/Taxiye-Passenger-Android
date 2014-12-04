@@ -5,6 +5,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.Data;
 import android.content.Context;
+import android.location.Location;
 
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.model.LatLng;
@@ -467,5 +468,26 @@ public class FlurryEventLogger {
 		}
 	}
 	
+	
+	public static void locationLog(Location location){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", Data.userData.accessToken);
+			articleParams.put("latitude", ""+location.getLatitude());
+			articleParams.put("longitude", ""+location.getLongitude());
+			FlurryAgent.logEvent("Location Log", articleParams);
+		} catch(Exception e){
+		}
+	}
+	
+	public static void locationRestart(String cause){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", Data.userData.accessToken);
+			articleParams.put("cause", cause);
+			FlurryAgent.logEvent("Location Restart", articleParams);
+		} catch(Exception e){
+		}
+	}
 	
 }

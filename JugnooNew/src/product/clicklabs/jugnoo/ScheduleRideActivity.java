@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
+import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleScreenMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -23,6 +24,7 @@ import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
@@ -73,6 +75,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 	LinearLayout scheduleDateTimeLinear;
 	TextView scheduleDateTimeText, scheduleDateTimeValue;
 	Button scheduleBtn;
+	TextView textTerms;
 
 	RelativeLayout scheduleSetPickupLocationRl;
 	Button scheduleMyLocationBtn, pickThisLocationBtn;
@@ -138,6 +141,8 @@ public class ScheduleRideActivity extends FragmentActivity{
 		scheduleDateTimeText = (TextView) findViewById(R.id.scheduleDateTimeText); scheduleDateTimeText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 		scheduleDateTimeValue = (TextView) findViewById(R.id.scheduleDateTimeValue); scheduleDateTimeValue.setTypeface(Data.regularFont(getApplicationContext()));
 		scheduleBtn = (Button) findViewById(R.id.scheduleBtn); scheduleBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		textTerms = (TextView) findViewById(R.id.textTerms); textTerms.setTypeface(Data.regularFont(getApplicationContext()));
+		
 		
 		scheduleSetPickupLocationRl = (RelativeLayout) findViewById(R.id.scheduleSetPickupLocationRl);
 		scheduleMyLocationBtn = (Button) findViewById(R.id.scheduleMyLocationBtn);
@@ -261,6 +266,16 @@ public class ScheduleRideActivity extends FragmentActivity{
 				} else {
 					Toast.makeText(ScheduleRideActivity.this, "Please while we get your pickup address", Toast.LENGTH_SHORT).show();
 				}
+			}
+		});
+		
+		textTerms.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				HelpParticularActivity.helpSection = HelpSection.SCHEDULES_TNC;
+				startActivity(new Intent(ScheduleRideActivity.this, HelpParticularActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 

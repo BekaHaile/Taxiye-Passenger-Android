@@ -4,10 +4,12 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -400,6 +402,15 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
+		new DeviceTokenGenerator(this).generateDeviceToken(this, new IDeviceTokenReceiver() {
+			
+			@Override
+			public void deviceTokenReceived(final String regId) {
+				Data.deviceToken = regId;
+				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+			}
+		});
 		
 
 		

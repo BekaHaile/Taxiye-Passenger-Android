@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,23 +7,21 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -44,7 +41,6 @@ import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
@@ -77,7 +73,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	
 	
 	
-	GoogleCloudMessaging gcm;
 	
 	String enteredEmail = "";
 	
@@ -304,14 +299,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			gcm = GoogleCloudMessaging.getInstance(this);
-			Data.deviceToken = getRegistrationId(this);
-	
-		    Log.i("deviceToken", Data.deviceToken + "..");
-		    
-		    if (Data.deviceToken.isEmpty()) {
-		        registerInBackground();
-		    }
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
@@ -327,6 +314,17 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+		new DeviceTokenGenerator(this).generateDeviceToken(this, new IDeviceTokenReceiver() {
+			
+			@Override
+			public void deviceTokenReceived(final String regId) {
+				Data.deviceToken = regId;
+				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+			}
+		});
+		
 		
 	}
 	
@@ -400,89 +398,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
-	
-	
-	public static final String EXTRA_MESSAGE = "message";
-    public static final String PROPERTY_REG_ID = "registration_id";
-    private static final String PROPERTY_APP_VERSION = "appVersion";
-	
-	private String getRegistrationId(Context context) {
-	    final SharedPreferences prefs = getGCMPreferences(context);
-	    String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-	    if (registrationId.isEmpty()) {
-	        Log.i("dfs", "Registration not found.");
-	        return "";
-	    }
-	    // Check if app was updated; if so, it must clear the registration ID
-	    // since the existing regID is not guaranteed to work with the new
-	    // app version.
-	    int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-	    int currentVersion = getAppVersion(context);
-	    if (registeredVersion != currentVersion) {
-	        Log.i("sdfs", "App version changed.");
-	        return "";
-	    }
-	    return registrationId;
-	}
-	
-	private void setRegistrationId(Context context, String regId) {
-	    final SharedPreferences prefs = getGCMPreferences(context);
-	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putString(PROPERTY_REG_ID, regId);
-	    editor.putInt(PROPERTY_APP_VERSION, getAppVersion(context));
-	    editor.commit();
-	}
-	
-	/**
-	 * @return Application's {@code SharedPreferences}.
-	 */
-	private SharedPreferences getGCMPreferences(Context context) {
-	    // This sample app persists the registration ID in shared preferences, but
-	    // how you store the regID in your app is up to you.
-	    return getSharedPreferences(SplashLogin.class.getSimpleName(),
-	            Context.MODE_PRIVATE);
-	}
-	
-	private static int getAppVersion(Context context) {
-	    try {
-	        PackageInfo packageInfo = context.getPackageManager()
-	                .getPackageInfo(context.getPackageName(), 0);
-	        return packageInfo.versionCode;
-	    } catch (NameNotFoundException e) {
-	        // should never happen
-	        throw new RuntimeException("Could not get package name: " + e);
-	    }
-	}
-	
-	
-	
-	
-	private void registerInBackground() {
-	    new AsyncTask<String, Integer, String>() {
-	        @Override
-	        protected String doInBackground(String... params) {
-	            String msg = "";
-	            try {
-	                if (gcm == null) {
-	                    gcm = GoogleCloudMessaging.getInstance(SplashLogin.this);
-	                }
-	                Data.deviceToken = gcm.register(Data.GOOGLE_PROJECT_ID);
-	                msg = "Device registered, registration ID=" + Data.deviceToken;
-	                
-	                setRegistrationId(SplashLogin.this, Data.deviceToken);
-	            } catch (IOException ex) {
-	                msg = "Error :" + ex.getMessage();
-	            }
-	            return msg;
-	        }
-
-	        @Override
-	        protected void onPostExecute(String msg) {
-	        	Log.e("msg  ===== ","="+msg);
-	        }
-	    }.execute(null, null, null);
-	}
-	
 
 	
 	

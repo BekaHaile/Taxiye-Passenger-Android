@@ -24,7 +24,8 @@
             android:layout_marginTop="90px"
             android:background="@color/white_more_translucent"
             android:splitMotionEvents="false"
-            android:visibility="gone" >
+            android:visibility="visible"
+             >
 
             <LinearLayout
                 android:id="@+id/scheduleOptionsInnerLinear"
@@ -148,12 +149,28 @@
                     android:layout_width="300px"
                     android:layout_height="80px"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="40px"
+                    android:layout_marginBottom="20px"
                     android:layout_marginTop="40px"
                     android:background="@drawable/blue_btn_selector"
                     android:text="SCHEDULE"
                     android:textColor="@drawable/white_color_selector"
                     android:textSize="@dimen/button_text_size" />
+                
+                <TextView
+	                android:id="@+id/textTerms"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_horizontal"
+	                android:layout_marginTop="10px"
+	                android:layout_marginBottom="20px"
+	                android:gravity="center"
+	                android:maxHeight="800px"
+	                android:paddingLeft="20px"
+	                android:paddingRight="20px"
+	                android:text="Terms and Conditions"
+	                android:textColor="@drawable/blue_alpha_color_selector"
+	                android:textSize="34px" />
+                
             </LinearLayout>
         </RelativeLayout>
 
@@ -162,7 +179,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:splitMotionEvents="false"
-            android:visibility="visible" >
+            android:visibility="gone" >
 
 
             <Button
@@ -211,6 +228,7 @@
                 android:layout_marginTop="90px"
                 android:orientation="vertical"
                 android:background="@color/white_translucent"
+                android:visibility="gone"
                 
                 
                  >

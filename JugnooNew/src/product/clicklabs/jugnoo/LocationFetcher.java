@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Log;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -62,6 +63,15 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			Log.e("Google Play Service Error ","="+resp);
 		}
 		startCheckingLocationUpdates();
+	}
+	
+	public void waitAndConnect(){
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				connect();
+			}
+		}, 1000);
 	}
 	
 	private void saveLatLngToSP(double latitude, double longitude){
@@ -224,15 +234,18 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			@Override
 			public void run() {
 				Log.i("LocationFetcher.this.location in handler runnable", "=="+LocationFetcher.this.location);
+				FlurryEventLogger.locationLog(LocationFetcher.this.location);
 				if(LocationFetcher.this.location == null){
 					destroy();
-					connect();
+					waitAndConnect();
+					FlurryEventLogger.locationRestart("null location");
 				}
 				else{
 					long timeSinceLastLocationFix = System.currentTimeMillis() - LocationFetcher.this.location.getTime();
 					if(timeSinceLastLocationFix > LAST_LOCATON_TIME_THRESHOLD){
 						destroy();
-						connect();
+						waitAndConnect();
+						FlurryEventLogger.locationRestart("old location");
 					}
 					else{
 						checkLocationUpdateStartedHandler.postDelayed(checkLocationUpdateStartedRunnable, CHECK_LOCATION_INTERVAL);

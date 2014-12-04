@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Log;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -57,6 +58,15 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		startCheckingLocationUpdates();
 	}
 	
+	public void waitAndConnect(){
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				connect();
+			}
+		}, 1000);
+	}
+	
 	public void destroy(){
 		try{
 			this.location = null;
@@ -103,15 +113,18 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 			@Override
 			public void run() {
 				Log.i("GPSForegroundLocationFetcher.this.location in handler runnable", "=="+GPSForegroundLocationFetcher.this.location);
+				FlurryEventLogger.locationLog(GPSForegroundLocationFetcher.this.location);
 				if(GPSForegroundLocationFetcher.this.location == null){
 					destroy();
-					connect();
+					waitAndConnect();
+					FlurryEventLogger.locationRestart("null location");
 				}
 				else{
 					long timeSinceLastLocationFix = System.currentTimeMillis() - GPSForegroundLocationFetcher.this.location.getTime();
 					if(timeSinceLastLocationFix > LAST_LOCATON_TIME_THRESHOLD){
 						destroy();
-						connect();
+						waitAndConnect();
+						FlurryEventLogger.locationRestart("old location");
 					}
 					else{
 						checkLocationUpdateStartedHandler.postDelayed(checkLocationUpdateStartedRunnable, CHECK_LOCATION_INTERVAL);

@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.ExceptionalDriver;
+import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.JugnooDriverMode;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
@@ -414,7 +415,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	//TODO check final variables
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.BLUE;
+	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600; //in meters
@@ -426,7 +427,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;  //in meters
-	public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 150, WAIT_FOR_ACCURACY_LOWER_BOUND = 100;  //in meters
+	public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 2000, WAIT_FOR_ACCURACY_LOWER_BOUND = 200;  //in meters
 	
 	public static final long AUTO_RATING_DELAY = 5 * 60 * 1000; //in milliseconds
 	
@@ -1505,7 +1506,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				GCMIntentService.clearNotifications(HomeActivity.this);
-				int rating = (int)reviewRatingBar.getRating();
+				int rating = (int) reviewRatingBar.getRating();
 				
 				if(rating > 0){
 					if(userMode == UserMode.DRIVER){
@@ -1782,7 +1783,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void sendToFareDetails(){
-		startActivity(new Intent(HomeActivity.this, FareInfoActivity.class));
+		HelpParticularActivity.helpSection = HelpSection.FARE_DETAILS;
+		startActivity(new Intent(HomeActivity.this, HelpParticularActivity.class));
 		overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		FlurryEventLogger.fareDetailsOpened(Data.userData.accessToken);
 	}
@@ -1821,8 +1823,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void initiateRequestRide(boolean newRequest){
-		
-		//TODO add gps accuracy check
 		
 		if(newRequest){
 			Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
@@ -5961,7 +5961,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	//TODO
 	public void updateInRideData(){
 		if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
 			if(myLocation != null){
@@ -6186,11 +6185,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			});
 			
 			
+			dialog.findViewById(R.id.crossbtn).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			
+			
 			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 				}
 			});
+			
 			
 			dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
 				
@@ -7018,6 +7026,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			});
 		}
 	}
+	
+	
+	@Override
+	public void onManualPatchPushReceived() {
+		try {
+			if(userMode == UserMode.DRIVER ){
+				handleConnectionLost();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 
 	public void clearRideSPData(){

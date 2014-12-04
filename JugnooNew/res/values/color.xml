@@ -16,8 +16,6 @@
     <color name="black_translucent_level_2">#55000000</color>
    
    
-   <color name="red_bright">#D82B27</color>
-   <color name="red_dark">#C11310</color>
    
    
    
@@ -44,10 +42,9 @@
     
     
     
-    <color name="red_btn">#9F3A28</color>
-    <color name="red_btn_pressed">#7F1A08</color>
+    <color name="red_btn">#8E8E8E</color>
+    <color name="red_btn_pressed">#7E7E7E</color>
     
-    <color name="red_dark_btn">#9F3527</color>
     
     
     <color name="favorite_bg">#393E44</color>

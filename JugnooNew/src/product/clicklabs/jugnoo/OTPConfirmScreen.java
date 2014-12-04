@@ -8,8 +8,10 @@ import org.json.JSONObject;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -187,6 +189,15 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			callMeBtn.setBackgroundResource(R.drawable.blue_btn_selector);
 		}
 		
+		
+		new DeviceTokenGenerator(this).generateDeviceToken(this, new IDeviceTokenReceiver() {
+			
+			@Override
+			public void deviceTokenReceived(final String regId) {
+				Data.deviceToken = regId;
+				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+			}
+		});
 	}
 	
 	
