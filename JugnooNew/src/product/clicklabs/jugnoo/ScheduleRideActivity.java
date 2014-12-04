@@ -8,6 +8,8 @@ import java.util.Locale;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.FutureSchedule;
+import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleScreenMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -108,6 +110,10 @@ public class ScheduleRideActivity extends FragmentActivity{
 	
 	ScheduleSearchListAdapter scheduleSearchListAdapter;
 	
+	public static FutureSchedule editableFutureSchedule;
+	
+	public static ScheduleOperationMode scheduleOperationMode = ScheduleOperationMode.INSERT;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +154,15 @@ public class ScheduleRideActivity extends FragmentActivity{
 		
 		scheduleSearchListAdapter = new ScheduleSearchListAdapter();
 		searchListView.setAdapter(scheduleSearchListAdapter);
+		
+		if(ScheduleOperationMode.MODIFY == scheduleOperationMode){
+			scheduleRideText.setText("Modify Schedule");
+			scheduleBtn.setText("RESCHEDULE");
+		}
+		else{
+			scheduleRideText.setText("Schedule Ride");
+			scheduleBtn.setText("SCHEDULE");
+		}
 		
 		
 		LatLng latLng;
@@ -235,7 +250,14 @@ public class ScheduleRideActivity extends FragmentActivity{
 			@Override
 			public void onClick(View v) {
 				if (selectedScheduleLatLng != null) {
-					insertScheduleRideAsync(ScheduleRideActivity.this, selectedScheduleCalendar, selectedScheduleLatLng);
+					if(ScheduleOperationMode.MODIFY == scheduleOperationMode){
+						if(editableFutureSchedule != null){
+							modifyScheduleRideAsync(ScheduleRideActivity.this, editableFutureSchedule.pickupId, selectedScheduleCalendar, selectedScheduleLatLng);
+						}
+					}
+					else{
+						insertScheduleRideAsync(ScheduleRideActivity.this, selectedScheduleCalendar, selectedScheduleLatLng);
+					}
 				} else {
 					Toast.makeText(ScheduleRideActivity.this, "Please while we get your pickup address", Toast.LENGTH_SHORT).show();
 				}
@@ -259,6 +281,8 @@ public class ScheduleRideActivity extends FragmentActivity{
 			
 			@Override
 			public void onClick(View v) {
+				scheduleScreenMode = ScheduleScreenMode.SEARCH;
+				switchScheduleScreen(scheduleScreenMode);
 				getSearchResults(searchBarEditText.getText().toString().trim());
 			}
 		});
@@ -404,11 +428,15 @@ public class ScheduleRideActivity extends FragmentActivity{
 			switchScheduleScreen(scheduleScreenMode);
 		}
 		else{
-			finish();
-			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+			backFinish();
 		}
 	}
 	
+	
+	public void backFinish(){
+		finish();
+		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+	}
 	
 	OnMyLocationChangeListener onMyLocationChangeListener = new OnMyLocationChangeListener() {
 		
@@ -528,9 +556,13 @@ public class ScheduleRideActivity extends FragmentActivity{
 				String dayLongName = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
 				String monthShortName = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
 				String amOrPm = calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault());
+				String hourLongName = (calendar.get(Calendar.HOUR) < 10)?"0"+calendar.get(Calendar.HOUR):""+calendar.get(Calendar.HOUR);
+				if(calendar.get(Calendar.HOUR) == 0){
+					hourLongName = "12";
+				}
 				String minuteLongName = (calendar.get(Calendar.MINUTE) < 10)?"0"+calendar.get(Calendar.MINUTE):""+calendar.get(Calendar.MINUTE);
             	scheduleDateTimeValue.setText(dayLongName + ", " + calendar.get(Calendar.DATE) + " " + monthShortName + " " + calendar.get(Calendar.YEAR) 
-            			+ ", " + calendar.get(Calendar.HOUR) + ":" + minuteLongName  + " " + amOrPm);
+            			+ ", " + hourLongName + ":" + minuteLongName  + " " + amOrPm);
 			}
 		});
 	}
@@ -688,6 +720,86 @@ public class ScheduleRideActivity extends FragmentActivity{
 		}
 	}
 	
+	
+	/**
+	 * ASync for modifying schedule ride event to server
+	 */
+	public void modifyScheduleRideAsync(final Activity activity, String pickupId, Calendar selectedCalendar, LatLng selectedLatLng) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("pickup_id", ""+pickupId);
+			params.put("latitude", ""+selectedLatLng.latitude);
+			params.put("longitude", ""+selectedLatLng.longitude);
+			params.put("pickup_time", ""+DateOperations.getTimeStampfromCalendar(selectedCalendar));
+
+			Log.e("Server hit=", "=" + Data.SERVER_URL + "/insert_pickup_schedule");
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("pickup_id", "="+pickupId);
+			Log.i("latitude", "="+selectedLatLng.latitude);
+			Log.i("longitude", "="+selectedLatLng.longitude);
+			Log.i("pickup_time", "="+DateOperations.getTimeStampfromCalendar(selectedCalendar));
+			
+			AsyncHttpClient client = Data.getClient();
+			client.post(Data.SERVER_URL + "/modify_pickup_schedule", params,
+					new CustomAsyncHttpResponseHandler() {
+					private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+						
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+										new DialogPopup().alertPopup(activity, "", jObj.getString("message"));
+									}
+									
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+	
+							DialogPopup.dismissLoadingDialog();
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+	}
 	
 	@Override
 	public void onBackPressed() {

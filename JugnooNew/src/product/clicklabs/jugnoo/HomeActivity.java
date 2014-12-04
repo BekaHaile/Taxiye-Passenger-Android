@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -23,6 +24,7 @@ import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.ExceptionalDriver;
 import product.clicklabs.jugnoo.datastructure.JugnooDriverMode;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -2197,6 +2199,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 				
 				getAndShowAllDriverRequests(HomeActivity.this);
+				cancelMapAnimateAndUpdateRideDataTimer();
 				
 				break;
 				
@@ -2214,6 +2217,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverEngagedLayout.setVisibility(View.GONE);
 				
 				cancelCustomerPathUpdateTimer();
+				cancelMapAnimateAndUpdateRideDataTimer();
 				
 			
 				break;
@@ -2264,6 +2268,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				startCustomerPathUpdateTimer();
+				cancelMapAnimateAndUpdateRideDataTimer();
 				
 				
 				break;
@@ -2277,7 +2282,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				cancelCustomerPathUpdateTimer();
 				
-				startMapAnimateTimer();
+				startMapAnimateAndUpdateRideDataTimer();
 				
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				
@@ -2336,7 +2341,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				updateDriverServiceFast("no");
 				
-				cancelMapAnimateTimer();
+				cancelMapAnimateAndUpdateRideDataTimer();
 
 				stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 				startService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
@@ -2660,7 +2665,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				cancelDriverLocationUpdateTimer();
 				
-				startMapAnimateTimer();
+				startMapAnimateAndUpdateRideDataTimer();
 				
 				if(map != null){
 					map.clear();
@@ -2695,7 +2700,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 			case P_RIDE_END:
 				
-				cancelMapAnimateTimer();
+				cancelMapAnimateAndUpdateRideDataTimer();
 				
 				initialLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
@@ -5956,6 +5961,33 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	//TODO
+	public void updateInRideData(){
+		if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
+			if(myLocation != null){
+				double totalDistanceInKm = Math.abs(totalDistance/1000.0);
+				
+				long rideTimeSeconds = rideTimeChronometer.eclipsedTime / 1000;
+				double rideTimeMinutes = Math.ceil(((double)rideTimeSeconds) / 60.0);
+				
+				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+				nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.dEngagementId));
+				nameValuePairs.add(new BasicNameValuePair("current_latitude", ""+myLocation.getLatitude()));
+				nameValuePairs.add(new BasicNameValuePair("current_longitude", ""+myLocation.getLongitude()));
+				nameValuePairs.add(new BasicNameValuePair("distance_travelled", decimalFormat.format(totalDistanceInKm)));
+				nameValuePairs.add(new BasicNameValuePair("ride_time", decimalFormatNoDecimal.format(rideTimeMinutes)));
+				nameValuePairs.add(new BasicNameValuePair("wait_time", "0"));
+				
+				Log.i("update_in_ride_data nameValuePairs", "="+nameValuePairs);
+				
+				HttpRequester simpleJSONParser = new HttpRequester();
+				String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/update_in_ride_data", nameValuePairs);
+				Log.i("update_in_ride_data result", "="+result);
+			}
+		}
+	}
+	
 	
 	
 	
@@ -6013,35 +6045,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	//Both driver and customer
-	Timer timerMapAnimate;
-	TimerTask timerTaskMapAnimate;
+	Timer timerMapAnimateAndUpdateRideData;
+	TimerTask timerTaskMapAnimateAndUpdateRideData;
 	
 	
-	public void startMapAnimateTimer() {
-
+	public void startMapAnimateAndUpdateRideDataTimer() {
+		cancelMapAnimateAndUpdateRideDataTimer();
 		try {
-			if (timerTaskMapAnimate != null) {
-				timerTaskMapAnimate.cancel();
-				timerTaskMapAnimate = null;
-			}
+			timerMapAnimateAndUpdateRideData = new Timer();
 
-			if (timerMapAnimate != null) {
-				timerMapAnimate.cancel();
-				timerMapAnimate.purge();
-				timerMapAnimate = null;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			timerMapAnimate = new Timer();
-
-			timerTaskMapAnimate = new TimerTask() {
+			timerTaskMapAnimateAndUpdateRideData = new TimerTask() {
 
 				@Override
 				public void run() {
 					try {
+						updateInRideData();
 						if (myLocation != null && map != null) {
 
 							runOnUiThread(new Runnable() {
@@ -6065,24 +6083,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			};
 
-			timerMapAnimate.scheduleAtFixedRate(timerTaskMapAnimate, 30000, 30000);
+			timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 60000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 	
-	public void cancelMapAnimateTimer(){
+	public void cancelMapAnimateAndUpdateRideDataTimer(){
 		try{
-			if(timerTaskMapAnimate != null){
-				timerTaskMapAnimate.cancel();
-				timerTaskMapAnimate = null;
+			if(timerTaskMapAnimateAndUpdateRideData != null){
+				timerTaskMapAnimateAndUpdateRideData.cancel();
+				timerTaskMapAnimateAndUpdateRideData = null;
 			}
 			
-			if(timerMapAnimate != null){
-				timerMapAnimate.cancel();
-				timerMapAnimate.purge();
-				timerMapAnimate = null;
+			if(timerMapAnimateAndUpdateRideData != null){
+				timerMapAnimateAndUpdateRideData.cancel();
+				timerMapAnimateAndUpdateRideData.purge();
+				timerMapAnimateAndUpdateRideData = null;
 			}
 			
 		} catch(Exception e){
@@ -6192,6 +6210,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	void switchToScheduleScreen(Activity activity){
+		ScheduleRideActivity.selectedScheduleCalendar = Calendar.getInstance();
+		ScheduleRideActivity.selectedScheduleLatLng = null;
+		ScheduleRideActivity.scheduleOperationMode = ScheduleOperationMode.INSERT;
 		activity.startActivity(new Intent(activity, ScheduleRideActivity.class));
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
@@ -6318,8 +6339,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							
 							driverScreenMode = DriverScreenMode.D_RIDE_END;
 							
-				        	driverEndRideAsync(activity, myLocation.getLatitude(), myLocation.getLongitude(), 0, 
-				        			rideTimeMinutes);
+				        	driverEndRideAsync(activity, myLocation.getLatitude(), myLocation.getLongitude(), 0, rideTimeMinutes);
 						}
 						else{
 							Toast.makeText(activity, "Waiting for location...", Toast.LENGTH_SHORT).show();

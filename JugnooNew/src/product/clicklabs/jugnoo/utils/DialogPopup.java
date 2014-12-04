@@ -45,7 +45,7 @@ public class DialogPopup {
 			dialog.setContentView(R.layout.custom_message_dialog);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
+			new ASSL(activity, frameLayout, 1134, 720, false);
 			
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
@@ -106,7 +106,7 @@ public class DialogPopup {
 			progressDialog.setContentView(R.layout.loading_box);
 			
 			FrameLayout frameLayout = (FrameLayout) progressDialog.findViewById(R.id.rv);
-			new ASSL((Activity)context, frameLayout, 1134, 720, true);
+			new ASSL((Activity)context, frameLayout, 1134, 720, false);
 			
 			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.regularFont(context));
 			messageText.setText(message); 

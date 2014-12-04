@@ -1,11 +1,8 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
@@ -14,7 +11,6 @@ import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import android.app.IntentService;
 import android.app.Notification;
@@ -436,7 +432,7 @@ public class GCMIntentService extends IntentService {
 	    	    						 new DriverServiceOperations().startDriverService(GCMIntentService.this);
 	    	    					 }
 	    	    					 else{
-	    	    						 sendNullLocationToServerForDriver(GCMIntentService.this);
+	    	    						 new DriverServiceOperations().stopAndScheduleDriverService(GCMIntentService.this);
 	    	    					 }
 	    	    				 }
 	    	    				 
@@ -461,53 +457,6 @@ public class GCMIntentService extends IntentService {
 	    }
 
 	    
-	    
-	    public void sendNullLocationToServerForDriver(final Context context){
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						String accessToken = Database2.getInstance(context).getDLDAccessToken();
-						String deviceToken = Database2.getInstance(context).getDLDDeviceToken();
-						String serverUrl = Database2.getInstance(context).getDLDServerUrl();
-						
-						if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
-								ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-								nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-								nameValuePairs.add(new BasicNameValuePair("latitude", "0"));
-								nameValuePairs.add(new BasicNameValuePair("longitude", "0"));
-								nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-					
-								HttpRequester simpleJSONParser = new HttpRequester();
-								String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
-											
-								Log.e("result in sending zero location on push", "=" + result);
-								
-								try{
-									//{"log":"Updated"}
-									JSONObject jObj = new JSONObject(result);
-									if(jObj.has("log")){
-										String log = jObj.getString("log");
-										if("Updated".equalsIgnoreCase(log)){
-											new DriverServiceOperations().stopAndScheduleDriverService(context);
-										}
-									}
-								} catch(Exception e){
-									e.printStackTrace();
-								}
-								
-								simpleJSONParser = null;
-								nameValuePairs = null;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					finally{
-						Database2.getInstance(context).close();
-					}
-				}
-			}).start();
-		}
 	    
 	    
 	    

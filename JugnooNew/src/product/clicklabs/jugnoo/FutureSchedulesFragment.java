@@ -7,10 +7,12 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
+import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleStatus;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
@@ -123,6 +125,7 @@ public class FutureSchedulesFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		getFutureSchedulesAsync(getActivity());
 	}
 
 	@Override
@@ -273,6 +276,8 @@ public class FutureSchedulesFragment extends Fragment {
 					dialog.dismiss();
 					ScheduleRideActivity.selectedScheduleCalendar = DateOperations.getCalendarFromTimeStamp(futureSchedule.pickupTime);
 					ScheduleRideActivity.selectedScheduleLatLng = futureSchedule.pickupLatLng;
+					ScheduleRideActivity.editableFutureSchedule = futureSchedule;
+					ScheduleRideActivity.scheduleOperationMode = ScheduleOperationMode.MODIFY;
 					switchToScheduleScreen(activity);
 				}
 			});
@@ -280,7 +285,8 @@ public class FutureSchedulesFragment extends Fragment {
 			btnCancel.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					
+					dialog.dismiss();
+					removeScheduledRideAPI(activity, futureSchedule.pickupId);
 				}
 			});
 			
@@ -335,6 +341,7 @@ public class FutureSchedulesFragment extends Fragment {
 	public void getFutureSchedulesAsync(final Activity activity) {
 		if(fetchFutureSchedulesClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				listView.setVisibility(View.GONE);
 				progressBar.setVisibility(View.VISIBLE);
 				textViewInfoDisplay.setVisibility(View.GONE);
 				
@@ -350,6 +357,7 @@ public class FutureSchedulesFragment extends Fragment {
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								progressBar.setVisibility(View.GONE);
+								listView.setVisibility(View.VISIBLE);
 								updateListData("Some error occurred. Tap to retry", true);
 							}
 	
@@ -392,12 +400,12 @@ public class FutureSchedulesFragment extends Fragment {
 										}
 										updateListData("No future schedules", false);
 									}
-									updateListData("No future schedules", false);
 								}  catch (Exception exception) {
 									exception.printStackTrace();
 									updateListData("Some error occurred. Tap to retry", true);
 								}
 								progressBar.setVisibility(View.GONE);
+								listView.setVisibility(View.VISIBLE);
 							}
 							
 							@Override
@@ -415,5 +423,77 @@ public class FutureSchedulesFragment extends Fragment {
 	}
 	
 	
+	
+	/**
+	 * ASync for removing scheduled ride from server
+	 */
+	public void removeScheduledRideAPI(final Activity activity, String pickupId) {
+		if (AppStatus.getInstance(activity).isOnline(activity)) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			params.put("access_token", Data.userData.accessToken);
+			params.put("pickup_id", pickupId);
+			
+			Log.i("remove_pickup_schedule api", ">");
+			Log.i("pickup_id", ">"+pickupId);
+		
+			AsyncHttpClient client = Data.getClient();
+			client.post(Data.SERVER_URL + "/remove_pickup_schedule", params,
+					new CustomAsyncHttpResponseHandler() {
+					private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+
+								if(!jObj.isNull("error")){
+									String errorMessage = jObj.getString("error");
+									int flag = jObj.getInt("flag");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+								else{
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+										String message = jObj.getString("message");
+										new DialogPopup().alertPopup(activity, "", message);
+										getFutureSchedulesAsync(activity);
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
+							}
+						}
+					});
+		}
+		else {
+			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
 
 }

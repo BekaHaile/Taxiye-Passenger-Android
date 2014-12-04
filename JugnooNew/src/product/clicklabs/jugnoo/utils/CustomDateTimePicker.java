@@ -4,10 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.graphics.Typeface;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
@@ -26,9 +32,9 @@ public class CustomDateTimePicker implements OnClickListener {
 	private TimePicker timePicker;
 	private ViewSwitcher viewSwitcher;
 
-	private final int SET_DATE = 100, SET_TIME = 101, SET = 102, CANCEL = 103;
+	private final int SET = 102, CANCEL = 103;
 
-	private Button btn_setDate, btn_setTime, btn_set, btn_cancel;
+	private Button  btn_set, btn_cancel;
 
 	private Calendar calendar_date = null;
 
@@ -56,7 +62,7 @@ public class CustomDateTimePicker implements OnClickListener {
 		activity = a;
 		iCustomDateTimeListener = customDateTimeListener;
 
-		dialog = new Dialog(activity);
+		dialog = new Dialog(activity, android.R.style.Theme_Holo_Light_Dialog_NoActionBar);
 		dialog.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss(DialogInterface dialog) {
@@ -70,9 +76,13 @@ public class CustomDateTimePicker implements OnClickListener {
 	}
 
 	public View getDateTimePickerLayout() {
-		LinearLayout.LayoutParams linear_match_wrap = new LinearLayout.LayoutParams(
+		LinearLayout.LayoutParams linear_match_match = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT,
 				LinearLayout.LayoutParams.MATCH_PARENT);
+		LinearLayout.LayoutParams linear_match_wrap = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+		linear_match_wrap.setMargins(0, 5, 0, 0);
 		LinearLayout.LayoutParams linear_wrap_wrap = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.WRAP_CONTENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -84,7 +94,7 @@ public class CustomDateTimePicker implements OnClickListener {
 				0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
 
 		LinearLayout linear_main = new LinearLayout(activity);
-		linear_main.setLayoutParams(linear_match_wrap);
+		linear_main.setLayoutParams(linear_match_match);
 		linear_main.setOrientation(LinearLayout.VERTICAL);
 		linear_main.setGravity(Gravity.CENTER);
 
@@ -93,22 +103,17 @@ public class CustomDateTimePicker implements OnClickListener {
 		linear_child.setOrientation(LinearLayout.VERTICAL);
 
 		LinearLayout linear_top = new LinearLayout(activity);
-		linear_top.setLayoutParams(linear_match_wrap);
+		linear_top.setLayoutParams(linear_match_match);
 
-		btn_setDate = new Button(activity);
-		btn_setDate.setLayoutParams(button_params);
-		btn_setDate.setText("Set Date");
-		btn_setDate.setId(SET_DATE);
-		btn_setDate.setOnClickListener(this);
-
-		btn_setTime = new Button(activity);
-		btn_setTime.setLayoutParams(button_params);
-		btn_setTime.setText("Set Time");
-		btn_setTime.setId(SET_TIME);
-		btn_setTime.setOnClickListener(this);
-
-		linear_top.addView(btn_setDate);
-		linear_top.addView(btn_setTime);
+		TextView textViewTitle = new TextView(activity);
+		textViewTitle.setText("Select Date and Time");
+		textViewTitle.setTextColor(activity.getResources().getColor(R.color.blue_btn));
+		textViewTitle.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+		textViewTitle.setLayoutParams(linear_match_match);
+		textViewTitle.setGravity(Gravity.CENTER);
+		textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+		
+		linear_top.addView(textViewTitle);
 
 		viewSwitcher = new ViewSwitcher(activity);
 		viewSwitcher.setLayoutParams(frame_match_wrap);
@@ -163,30 +168,40 @@ public class CustomDateTimePicker implements OnClickListener {
 		});
 		
 
-		viewSwitcher.addView(datePicker);
-		viewSwitcher.addView(timePicker);
-
 		LinearLayout linear_bottom = new LinearLayout(activity);
-		linear_match_wrap.topMargin = 8;
-		linear_bottom.setLayoutParams(linear_match_wrap);
+		linear_match_match.topMargin = 8;
+		linear_bottom.setLayoutParams(linear_match_match);
+		linear_bottom.setPadding(5, 5, 5, 5);
 
 		btn_set = new Button(activity);
+		button_params.setMargins(5, 0, 0, 0);
 		btn_set.setLayoutParams(button_params);
 		btn_set.setText("Set");
 		btn_set.setId(SET);
 		btn_set.setOnClickListener(this);
+		btn_set.setTypeface(Data.regularFont(activity));
+		btn_set.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+		btn_set.setTextColor(activity.getResources().getColor(R.drawable.white_color_selector));
+		btn_set.setBackgroundResource(R.drawable.blue_btn_selector);
+		
+		
 
 		btn_cancel = new Button(activity);
 		btn_cancel.setLayoutParams(button_params);
 		btn_cancel.setText("Cancel");
 		btn_cancel.setId(CANCEL);
 		btn_cancel.setOnClickListener(this);
+		btn_cancel.setTypeface(Data.regularFont(activity));
+		btn_cancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+		btn_cancel.setTextColor(activity.getResources().getColor(R.drawable.white_color_selector));
+		btn_cancel.setBackgroundResource(R.drawable.red_btn_selector);
 
-		linear_bottom.addView(btn_set);
 		linear_bottom.addView(btn_cancel);
+		linear_bottom.addView(btn_set);
 
 		linear_child.addView(linear_top);
-		linear_child.addView(viewSwitcher);
+		linear_child.addView(datePicker);
+		linear_child.addView(timePicker);
 		linear_child.addView(linear_bottom);
 
 		linear_main.addView(linear_child);
@@ -229,8 +244,6 @@ public class CustomDateTimePicker implements OnClickListener {
 					calendar_date.get(Calendar.DATE));
 
 			dialog.show();
-			btn_setDate.performClick();
-			
 		}
 	}
 
@@ -320,18 +333,6 @@ public class CustomDateTimePicker implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case SET_DATE:
-			btn_setTime.setEnabled(true);
-			btn_setDate.setEnabled(false);
-			viewSwitcher.setDisplayedChild(0);
-			break;
-
-		case SET_TIME:
-			btn_setTime.setEnabled(false);
-			btn_setDate.setEnabled(true);
-			viewSwitcher.setDisplayedChild(1);
-			break;
-
 		case SET:
 			if (iCustomDateTimeListener != null) {
 				int month = datePicker.getMonth();
