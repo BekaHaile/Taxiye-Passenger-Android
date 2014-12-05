@@ -41,6 +41,15 @@
                 android:paddingRight="20px"
                 
                 />
+            
+            <ImageView 
+                android:layout_width="580px"
+                android:layout_height="1px"
+                android:background="@color/grey_light"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
+                android:layout_marginBottom="20px"
+                />
 		 
             
             
@@ -86,14 +95,13 @@
             android:layout_height="62px"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-           android:text="X"
-           android:textSize="40px"
-           android:textColor="@drawable/white_color_selector"
-            android:background="@drawable/blue_btn_selector"
+            android:background="@drawable/cross_circle"
             android:singleLine="true" 
-            android:layout_marginRight="1px"
-            android:layout_marginTop="2px"
-                android:tag="mwar"/>
+            android:layout_marginRight="20px"
+            android:layout_marginTop="20px"
+                android:tag="mwar"
+                
+                />
     </RelativeLayout>
 
 </FrameLayout>

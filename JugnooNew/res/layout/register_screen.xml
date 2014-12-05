@@ -207,7 +207,7 @@
                 android:id="@+id/referralCodeEt"
                 android:layout_width="650px"
                 android:layout_height="100px"
-                android:hint="Referral Code (Optional)"
+                android:hint="Referral / Promo Code (Optional)"
                 android:singleLine="true"
                 android:textSize="34px" 
                 android:textColor="@color/black"

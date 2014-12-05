@@ -39,7 +39,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	private Handler checkLocationUpdateStartedHandler;
 	private Runnable checkLocationUpdateStartedRunnable;
 	
-	private static final long CHECK_LOCATION_INTERVAL = 10000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
+	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 5 * 60000;
 	
 	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval, int priority){
 			this.locationUpdate = locationUpdate;
@@ -71,7 +71,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			public void run() {
 				connect();
 			}
-		}, 1000);
+		}, 2000);
 	}
 	
 	private void saveLatLngToSP(double latitude, double longitude){

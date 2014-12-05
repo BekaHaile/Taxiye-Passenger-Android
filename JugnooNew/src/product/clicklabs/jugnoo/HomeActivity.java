@@ -294,6 +294,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView driverPassengerRatingValue;
 	RelativeLayout driverPassengerCallRl;
 	TextView driverPassengerCallText;
+	TextView driverScheduledRideText;
 	
 	//Start ride layout
 	RelativeLayout driverStartRideMainRl;
@@ -649,6 +650,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverMainLayout = (RelativeLayout) findViewById(R.id.driverMainLayout);
 		
 		
+		
 		//Driver initial layout
 		driverInitialLayout = (RelativeLayout) findViewById(R.id.driverInitialLayout);
 		driverNewRideRequestRl = (RelativeLayout) findViewById(R.id.driverNewRideRequestRl);
@@ -681,6 +683,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue); driverPassengerRatingValue.setTypeface(Data.regularFont(getApplicationContext()));
 		driverPassengerCallRl = (RelativeLayout) findViewById(R.id.driverPassengerCallRl);
 		driverPassengerCallText = (TextView) findViewById(R.id.driverPassengerCallText); driverPassengerCallText.setTypeface(Data.regularFont(getApplicationContext()));
+		driverScheduledRideText = (TextView) findViewById(R.id.driverScheduledRideText); driverScheduledRideText.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		driverPassengerRatingValue.setVisibility(View.GONE);
 		
@@ -1704,9 +1707,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
-		
-		gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
+		connectGPSListener();
 		
 		
 		try {
@@ -2030,9 +2031,30 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			else{
 				Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
+				reconnectLocationFetchers();
 			}
 		}
 	};
+	
+	
+	Handler reconnectionHandler = null;;
+	
+	public void reconnectLocationFetchers(){
+		if(reconnectionHandler == null){
+			disconnectGPSListener();
+			destroyFusedLocationFetchers();
+			reconnectionHandler = new Handler();
+			reconnectionHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					connectGPSListener();
+					initializeFusedLocationFetchers();
+					reconnectionHandler.removeCallbacks(this);
+					reconnectionHandler = null;
+				}
+			}, 2000);
+		}
+	}
 	
 	
 	public void setUserData(){
@@ -2852,6 +2874,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	public void connectGPSListener(){
+		disconnectGPSListener();
+		try {
+			if(gpsForegroundLocationFetcher == null){
+				gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void disconnectGPSListener(){
+		try {
+			if(gpsForegroundLocationFetcher != null){
+				gpsForegroundLocationFetcher.destroy();
+				gpsForegroundLocationFetcher = null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			gpsForegroundLocationFetcher = null;
+		}
+	}
+	
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -2872,16 +2919,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    }
 		    
 		    try{
-		    	if(userMode == UserMode.PASSENGER){
-		    		if(gpsForegroundLocationFetcher == null){
-		    			gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
-		    		}
-		    	}
-		    	else if(userMode == UserMode.DRIVER){
-		    		if(gpsForegroundLocationFetcher == null){
-		    			gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
-		    		}
-		    	}
+		    	connectGPSListener();
 		    } catch(Exception e){
 		    	e.printStackTrace();
 		    }
@@ -3057,17 +3095,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try{
 			if(userMode == UserMode.PASSENGER){
 				cancelTimerUpdateDrivers();
-				if(gpsForegroundLocationFetcher != null){
-					gpsForegroundLocationFetcher.destroy();
-					gpsForegroundLocationFetcher = null;
-				}
+				disconnectGPSListener();
 			}
 			else if(userMode == UserMode.DRIVER){
 	    		if(driverScreenMode != DriverScreenMode.D_IN_RIDE){
-	    			if(gpsForegroundLocationFetcher != null){
-						gpsForegroundLocationFetcher.destroy();
-						gpsForegroundLocationFetcher = null;
-					}
+	    			disconnectGPSListener();
 	    		}
 	    	}
 		} catch(Exception e){
@@ -3127,15 +3159,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		GCMIntentService.clearNotifications(HomeActivity.this);
     		GCMIntentService.stopRing();
     		
-    		try{
-    			if(gpsForegroundLocationFetcher != null){
-					gpsForegroundLocationFetcher.destroy();
-				}
-    		} catch(Exception e){
-    			e.printStackTrace();
-    		} finally{
-    			gpsForegroundLocationFetcher = null;
-    		}
+    		disconnectGPSListener();
     		
     		destroyFusedLocationFetchers();
 	        
@@ -4086,7 +4110,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							handleConnectionLost();
+							callAndHandleStateRestoreAPI();
 						}
 
 						@Override
@@ -4318,7 +4342,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							Log.e("request fail", arg3.toString());
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							DialogPopup.dismissLoadingDialog();
-							handleConnectionLost();
+							callAndHandleStateRestoreAPI();
 						}
 
 						@Override
@@ -4607,7 +4631,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 //							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							handleConnectionLost();
+							callAndHandleStateRestoreAPI();
 						}
 
 						@Override
@@ -4702,7 +4726,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
 //								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-								handleConnectionLost();
+								callAndHandleStateRestoreAPI();
 							}
 
 							@Override
@@ -4924,13 +4948,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						RequestParams params = new RequestParams();
 						params.put("access_token", Data.userData.accessToken);
 						params.put("engagement_id", engagementId);
-						params.put("path_log_file", pathLogFile);
+						params.put("ride_path", pathLogFile);
+						params.put("file_type", "0");
+						
 						Log.e("access_token", "=" + Data.userData.accessToken);
 						Log.e("engagement_id", "=" + engagementId);
 						Log.e("pathLogFile", "=" + pathLogFile);
 					
 						AsyncHttpClient client = Data.getClient();
-						client.post(Data.SERVER_URL + "/upload_path_log_file", params,
+						client.post(Data.SERVER_URL + "/upload_file", params,
 								new CustomAsyncHttpResponseHandler() {
 
 									@Override
@@ -5961,33 +5987,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void updateInRideData(){
-		if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
-			if(myLocation != null){
-				double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-				
-				long rideTimeSeconds = rideTimeChronometer.eclipsedTime / 1000;
-				double rideTimeMinutes = Math.ceil(((double)rideTimeSeconds) / 60.0);
-				
-				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-				nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.dEngagementId));
-				nameValuePairs.add(new BasicNameValuePair("current_latitude", ""+myLocation.getLatitude()));
-				nameValuePairs.add(new BasicNameValuePair("current_longitude", ""+myLocation.getLongitude()));
-				nameValuePairs.add(new BasicNameValuePair("distance_travelled", decimalFormat.format(totalDistanceInKm)));
-				nameValuePairs.add(new BasicNameValuePair("ride_time", decimalFormatNoDecimal.format(rideTimeMinutes)));
-				nameValuePairs.add(new BasicNameValuePair("wait_time", "0"));
-				
-				Log.i("update_in_ride_data nameValuePairs", "="+nameValuePairs);
-				
-				HttpRequester simpleJSONParser = new HttpRequester();
-				String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/update_in_ride_data", nameValuePairs);
-				Log.i("update_in_ride_data result", "="+result);
-			}
-		}
-	}
-	
-	
 	
 	
 
@@ -6039,7 +6038,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
+	public void updateInRideData(){
+		if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
+			if(myLocation != null){
+				double totalDistanceInKm = Math.abs(totalDistance/1000.0);
+				
+				long rideTimeSeconds = rideTimeChronometer.eclipsedTime / 1000;
+				double rideTimeMinutes = Math.ceil(((double)rideTimeSeconds) / 60.0);
+				
+				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+				nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.dEngagementId));
+				nameValuePairs.add(new BasicNameValuePair("current_latitude", ""+myLocation.getLatitude()));
+				nameValuePairs.add(new BasicNameValuePair("current_longitude", ""+myLocation.getLongitude()));
+				nameValuePairs.add(new BasicNameValuePair("distance_travelled", decimalFormat.format(totalDistanceInKm)));
+				nameValuePairs.add(new BasicNameValuePair("ride_time", decimalFormatNoDecimal.format(rideTimeMinutes)));
+				nameValuePairs.add(new BasicNameValuePair("wait_time", "0"));
+				
+				Log.i("update_in_ride_data nameValuePairs", "="+nameValuePairs);
+				
+				HttpRequester simpleJSONParser = new HttpRequester();
+				String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/update_in_ride_data", nameValuePairs);
+				Log.i("update_in_ride_data result", "="+result);
+			}
+		}
+	}
 	
 	
 	
@@ -6060,21 +6083,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					try {
 						updateInRideData();
 						if (myLocation != null && map != null) {
-
 							runOnUiThread(new Runnable() {
 								
 								@Override
 								public void run() {
-									if(myLocation.getBearing() != 0){
-										CameraPosition cameraPosition = new CameraPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 
-													map.getCameraPosition().zoom, 
-													map.getCameraPosition().tilt,
-													myLocation.getBearing());
-										map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-									}
+									CameraPosition cameraPosition = new CameraPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 
+												map.getCameraPosition().zoom, 
+												map.getCameraPosition().tilt,
+												myLocation.getBearing());
+									map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 								}
 							});
-							
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -6179,7 +6198,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					switchToScheduleScreen(activity);
+//					switchToScheduleScreen(activity);
 				}
 				
 			});
@@ -7029,10 +7048,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	@Override
-	public void onManualPatchPushReceived() {
+	public void onManualDispatchPushReceived() {
 		try {
 			if(userMode == UserMode.DRIVER ){
-				handleConnectionLost();
+				callAndHandleStateRestoreAPI();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -7136,7 +7155,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onChangeStatePushReceived() {
 		try{
-			handleConnectionLost();
+			callAndHandleStateRestoreAPI();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -7749,7 +7768,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 
 	
-	public void handleConnectionLost() {
+	public void callAndHandleStateRestoreAPI() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {

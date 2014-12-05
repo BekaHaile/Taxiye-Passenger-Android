@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -545,7 +545,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
@@ -663,33 +663,67 @@
                     android:splitMotionEvents="false"
                     android:visibility="visible" >
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:id="@+id/driverPassengerInfoRl"
                         android:layout_width="match_parent"
-                        android:layout_height="110px"
+                        android:layout_height="wrap_content"
                         android:background="@color/white_translucent"
+                        android:orientation="vertical"
                         android:splitMotionEvents="false" >
 
-                        <TextView
-                            android:id="@+id/driverPassengerName"
-                            android:layout_width="400px"
+                        <RelativeLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="40px"
-                            android:layout_marginTop="20px"
-                            android:gravity="center_vertical"
-                            android:singleLine="true"
-                            android:text=" "
-                            android:textColor="@color/bg_grey_opaque"
-                            android:textSize="40px" />
+                            android:layout_marginBottom="20px"
+                            android:layout_marginTop="20px" >
+
+                            <TextView
+                                android:id="@+id/driverPassengerName"
+                                android:layout_width="380px"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="40px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="@color/bg_grey_opaque"
+                                android:textSize="40px" />
+
+                            <RelativeLayout
+                                android:id="@+id/driverPassengerCallRl"
+                                android:layout_width="250px"
+                                android:layout_height="70px"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="40px"
+                                android:background="@drawable/blue_btn_selector" >
+
+                                <ImageView
+                                    android:id="@+id/driverCallIcon"
+                                    android:layout_width="45px"
+                                    android:layout_height="45px"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="35px"
+                                    android:src="@drawable/call_icon_selector" />
+
+                                <TextView
+                                    android:id="@+id/driverPassengerCallText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="115px"
+                                    android:text="@string/call"
+                                    android:textColor="@drawable/white_color_selector"
+                                    android:textSize="42px" />
+                            </RelativeLayout>
+                        </RelativeLayout>
 
                         <RelativeLayout
                             android:id="@+id/driverPassengerRatingRl"
                             android:layout_width="420px"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/driverPassengerName"
+                            android:layout_marginBottom="20px"
                             android:layout_marginLeft="40px"
-                            android:layout_marginTop="10px"
                             android:splitMotionEvents="false"
                             android:visibility="gone" >
 
@@ -712,34 +746,20 @@
                                 android:textSize="38px" />
                         </RelativeLayout>
 
-                        <RelativeLayout
-                            android:id="@+id/driverPassengerCallRl"
-                            android:layout_width="250px"
-                            android:layout_height="70px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
+                        <TextView
+                            android:id="@+id/driverScheduledRideText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20px"
+                            android:layout_marginLeft="40px"
                             android:layout_marginRight="40px"
-                            android:background="@drawable/blue_btn_selector" >
-
-                            <ImageView
-                                android:id="@+id/driverCallIcon"
-                                android:layout_width="45px"
-                                android:layout_height="45px"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="35px"
-                                android:src="@drawable/call_icon_selector" />
-
-                            <TextView
-                                android:id="@+id/driverPassengerCallText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="115px"
-                                android:text="@string/call"
-                                android:textColor="@drawable/white_color_selector"
-                                android:textSize="42px" />
-                        </RelativeLayout>
-                    </RelativeLayout>
+                            android:gravity="center_vertical"
+                            android:singleLine="true"
+                            android:text="Scheduled Ride Pickup: "
+                            android:textColor="@color/bg_grey_opaque"
+                            android:textSize="40px"
+                            android:visibility="gone" />
+                    </LinearLayout>
 
                     <ImageView
                         android:layout_width="match_parent"

@@ -349,7 +349,7 @@ public class AccountActivity extends Activity{
 					holder = (ViewHolderCoupon) v.getTag();
 					CouponInfo couponInfo = couponInfosList.get(holder.id);
 					if(couponInfo.enabled){
-						alertPopup(AccountActivity.this, "", couponInfo.description);
+						alertPopup(AccountActivity.this, couponInfo.description);
 						FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.type);
 					}
 				}
@@ -362,7 +362,7 @@ public class AccountActivity extends Activity{
 	
 	Dialog dialog;
 	
-	void alertPopup(Activity activity, String title, String message) {
+	void alertPopup(Activity activity, String message) {
 		try {
 			try{
 				if(dialog != null && dialog.isShowing()){
@@ -370,9 +370,6 @@ public class AccountActivity extends Activity{
 				}
 			}catch(Exception e){
 				
-			}
-			if("".equalsIgnoreCase(title)){
-				title = activity.getResources().getString(R.string.alert);
 			}
 			
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -395,7 +392,7 @@ public class AccountActivity extends Activity{
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
-			textHead.setText(title);
+			textHead.setText("");
 			textMessage.setText(message);
 			
 			textHead.setVisibility(View.GONE);

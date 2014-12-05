@@ -4,14 +4,12 @@
     android:id="@+id/rv"
     android:layout_width="720px"
     android:layout_height="1134px"
-    android:background="#0000"
+    android:background="@color/transparent"
         android:splitMotionEvents="false" >
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#0000" 
-        android:padding="20px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:splitMotionEvents="false"
         >
 
@@ -26,12 +24,17 @@
         android:tag="mwar"
         >
 
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                >
+            
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-               android:layout_centerHorizontal="true"
-               android:layout_marginTop="50px"
                 android:gravity="center"
                 android:paddingLeft="20px"
                 android:paddingRight="20px"
@@ -41,16 +44,19 @@
                 android:singleLine="true"
                 android:textSize="26px"
                 android:textStyle="bold" 
+                android:layout_gravity="center_horizontal"
                 />
 
             <ProgressBar
                 android:id="@+id/progressBar1"
                 android:layout_width="86px"
                 android:layout_height="86px"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/textView1"
                 android:layout_marginTop="15px"
+                android:layout_gravity="center_horizontal"
                 />
+            </LinearLayout>
+            
+            
         </RelativeLayout>
     </RelativeLayout>
 

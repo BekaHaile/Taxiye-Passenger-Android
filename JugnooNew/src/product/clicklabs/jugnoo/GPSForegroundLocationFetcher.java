@@ -23,7 +23,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	private Handler checkLocationUpdateStartedHandler;
 	private Runnable checkLocationUpdateStartedRunnable;
 
-	private static final long CHECK_LOCATION_INTERVAL = 10000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
+	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 5 * 60000;
 	
 	public GPSForegroundLocationFetcher(GPSLocationUpdate gpsLocationUpdate, long requestInterval){
 		this.context = (Context) gpsLocationUpdate;
@@ -64,7 +64,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 			public void run() {
 				connect();
 			}
-		}, 1000);
+		}, 2000);
 	}
 	
 	public void destroy(){

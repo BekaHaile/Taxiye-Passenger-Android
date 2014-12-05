@@ -440,7 +440,7 @@ public class GCMIntentService extends IntentService {
 	    	    					startRingWithStopHandler(this);
 	    	    					String message1 = jObj.getString("message");
 	    	    					if (HomeActivity.appInterruptHandler != null) {
-										HomeActivity.appInterruptHandler.onManualPatchPushReceived();
+										HomeActivity.appInterruptHandler.onManualDispatchPushReceived();
 										notificationManagerResume(this, message1, true);
 									} else {
 										notificationManager(this, message1, true);
