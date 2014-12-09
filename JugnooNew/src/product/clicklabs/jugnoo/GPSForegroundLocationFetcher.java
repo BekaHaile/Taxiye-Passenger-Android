@@ -23,7 +23,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	private Handler checkLocationUpdateStartedHandler;
 	private Runnable checkLocationUpdateStartedRunnable;
 
-	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 5 * 60000;
+	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
 	
 	public GPSForegroundLocationFetcher(GPSLocationUpdate gpsLocationUpdate, long requestInterval){
 		this.context = (Context) gpsLocationUpdate;
@@ -51,6 +51,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	
 	
 	public void connect(){
+		destroy();
 		if(isLocationEnabled(context)){
 			this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 			this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, this.requestInterval, 0, this);
@@ -58,7 +59,8 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		startCheckingLocationUpdates();
 	}
 	
-	public void waitAndConnect(){
+	public void destroyWaitAndConnect(){
+		destroy();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -115,15 +117,13 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 				Log.i("GPSForegroundLocationFetcher.this.location in handler runnable", "=="+GPSForegroundLocationFetcher.this.location);
 				FlurryEventLogger.locationLog(GPSForegroundLocationFetcher.this.location);
 				if(GPSForegroundLocationFetcher.this.location == null){
-					destroy();
-					waitAndConnect();
+					destroyWaitAndConnect();
 					FlurryEventLogger.locationRestart("null location");
 				}
 				else{
 					long timeSinceLastLocationFix = System.currentTimeMillis() - GPSForegroundLocationFetcher.this.location.getTime();
 					if(timeSinceLastLocationFix > LAST_LOCATON_TIME_THRESHOLD){
-						destroy();
-						waitAndConnect();
+						destroyWaitAndConnect();
 						FlurryEventLogger.locationRestart("old location");
 					}
 					else{

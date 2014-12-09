@@ -39,7 +39,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	private Handler checkLocationUpdateStartedHandler;
 	private Runnable checkLocationUpdateStartedRunnable;
 	
-	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 5 * 60000;
+	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
 	
 	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval, int priority){
 			this.locationUpdate = locationUpdate;
@@ -50,6 +50,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	}
 	
 	public void connect(){
+		destroy();
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 		if(resp == ConnectionResult.SUCCESS){														// google play services working
 			if(isLocationEnabled(context)){															// location fetching enabled
@@ -65,7 +66,8 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		startCheckingLocationUpdates();
 	}
 	
-	public void waitAndConnect(){
+	public void destroyWaitAndConnect(){
+		destroy();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -236,15 +238,13 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 				Log.i("LocationFetcher.this.location in handler runnable", "=="+LocationFetcher.this.location);
 				FlurryEventLogger.locationLog(LocationFetcher.this.location);
 				if(LocationFetcher.this.location == null){
-					destroy();
-					waitAndConnect();
+					destroyWaitAndConnect();
 					FlurryEventLogger.locationRestart("null location");
 				}
 				else{
 					long timeSinceLastLocationFix = System.currentTimeMillis() - LocationFetcher.this.location.getTime();
 					if(timeSinceLastLocationFix > LAST_LOCATON_TIME_THRESHOLD){
-						destroy();
-						waitAndConnect();
+						destroyWaitAndConnect();
 						FlurryEventLogger.locationRestart("old location");
 					}
 					else{

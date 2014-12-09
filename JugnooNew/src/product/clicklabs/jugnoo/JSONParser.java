@@ -404,10 +404,6 @@ public class JSONParser {
 					Log.writePathLogToFile(Data.dEngagementId, "Got from SP totalDistance = "+HomeActivity.totalDistance);
 					Log.writePathLogToFile(Data.dEngagementId, "Got from SP Data.startRidePreviousLatLng = "+Data.startRidePreviousLatLng);
 					
-					if(Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0){
-						HomeActivity.totalDistance = -1;
-					}
-					
 				}
 				else{
 					HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
@@ -566,7 +562,6 @@ public class JSONParser {
 					
 					if(Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0){
 						Data.startRidePreviousLatLng = Data.pickupLatLng;
-						HomeActivity.totalDistance = -1;
 					}
 					else{
 						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");

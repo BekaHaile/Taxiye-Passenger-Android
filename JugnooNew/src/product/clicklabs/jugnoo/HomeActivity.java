@@ -362,7 +362,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	DecimalFormat decimalFormat = new DecimalFormat("#.#");
 	DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 	
-	static double totalDistance = -1, totalFare = 0, previousWaitTime = 0, previousRideTime = 0;
+	static double totalDistance = -1, totalFare = 0, previousWaitTime = 0, previousRideTime = 0, lastDeltaDistance = 0;
 	
 	static String waitTime = "", rideTime = "";
 	
@@ -2918,11 +2918,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    	}
 		    }
 		    
-		    try{
-		    	connectGPSListener();
-		    } catch(Exception e){
-		    	e.printStackTrace();
-		    }
+		    connectGPSListener();
 		    
 		    initializeFusedLocationFetchers();
 		}
@@ -2991,7 +2987,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					    	
 							editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
 							editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
-							Log.writePathLogToFile(Data.dEngagementId, "Saved in SP totalDistance = "+totalDistance);
 							
 							long elapsedRideTime = rideTimeChronometer.eclipsedTime;
 							editor.putString(Data.SP_RIDE_TIME, ""+elapsedRideTime);
@@ -2999,9 +2994,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							if(HomeActivity.this.lastLocation != null){
 								editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.this.lastLocation.getLatitude());
 					    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.this.lastLocation.getLongitude());
-					    		
-					    		Log.writePathLogToFile(Data.dEngagementId, "Saved in SP lastLocation = "+lastLocation);
-					    		
 							}
 							
 							Log.e("Data on app paused", "-----");
@@ -3153,7 +3145,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
     public void onDestroy() {
         try{
-        	
+        	if(createPathAsyncTasks != null){
+        		createPathAsyncTasks.clear();
+        	}
         	saveDataOnPause(true);
         	
     		GCMIntentService.clearNotifications(HomeActivity.this);
@@ -3183,7 +3177,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void drawLocationChanged(Location location){
-		
 		try {
 			if(map != null){
 				HomeActivity.myLocation = location;
@@ -3191,7 +3184,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 				updatePickupLocation(location);
 			
-				if(driverScreenMode == DriverScreenMode.D_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
+				if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_IN_RIDE)) 
+						|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_IN_RIDE))){
 					
 					final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 					Log.i("lastLocation", "="+lastLocation);
@@ -3201,31 +3195,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					writePathLogToFile("totalDistance = "+totalDistance);
 					
 					if(lastLocation != null){
-						
 						final LatLng lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-						
 						addLatLngPathToDistance(lastLatLng, currentLatLng);
-						
 					}
 					else if(lastLocation == null){
-						
 						if(Utils.compareDouble(totalDistance, -1.0) == 0){
 							totalDistance = 0;
 						}
-						
 						displayOldPath();
-						
 						writePathLogToFile("Data.startRidePreviousLatLng = "+Data.startRidePreviousLatLng);
-						
 						addLatLngPathToDistance(Data.startRidePreviousLatLng, currentLatLng);
-						
 					}
 					
 					lastLocation = location;
 					
 					saveDataOnPause(false);
 				}
-				
 				
 			}
 		} catch (Exception e) {
@@ -3256,7 +3241,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
 				
-				totalDistance = totalDistance + displacement;
+//				totalDistance = totalDistance + displacement;
+				updateTotalDistance(displacement);
 				
 				checkAndUpdateWaitTimeDistance(displacement);
 				
@@ -3280,7 +3266,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 			}
 			else{
-				new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement).execute();
+				callGooglePathAPI(lastLatLng, currentLatLng, displacement);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3288,8 +3274,61 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	ArrayList<CreatePathAsyncTask> createPathAsyncTasks = new ArrayList<HomeActivity.CreatePathAsyncTask>();
 	
+	public void callGooglePathAPI(LatLng lastLatLng, LatLng currentLatLng, double displacement){
+		if(createPathAsyncTasks == null){
+			createPathAsyncTasks = new ArrayList<HomeActivity.CreatePathAsyncTask>();
+		}
+		CreatePathAsyncTask createPathAsyncTask = new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement);
+		if(!createPathAsyncTasks.contains(createPathAsyncTask)){
+			createPathAsyncTasks.add(createPathAsyncTask);
+			createPathAsyncTask.execute();
+		}
+	}
 	
+	class CreatePathAsyncTask extends AsyncTask<Void, Void, String>{
+	    String url;
+	    double displacementToCompare;
+	    LatLng source, destination;
+	    CreatePathAsyncTask(LatLng source, LatLng destination, double displacementToCompare){
+	    	this.source = source;
+	    	this.destination = destination;
+	        this.url = MapUtils.makeDirectionsURL(source, destination);
+	        this.displacementToCompare = displacementToCompare;
+	    }
+	    
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	    }
+	    @Override
+	    protected String doInBackground(Void... params) {
+	    	return new HttpRequester().getJSONFromUrl(url);
+	    }
+	    @Override
+	    protected void onPostExecute(String result) {
+	        super.onPostExecute(result);   
+	        if(result!=null){
+	            drawPath(result, displacementToCompare, source, destination);
+				updateDistanceFareTexts();
+	        }
+	        createPathAsyncTasks.remove(this);
+	    }
+	    
+	    
+	    @Override
+	    public boolean equals(Object o) {
+	    	try{
+	    		if((((CreatePathAsyncTask)o).source == this.source) && (((CreatePathAsyncTask)o).destination == this.destination)){
+	    			return true;
+	    		}
+	    	} catch(Exception e){
+	    		e.printStackTrace();
+	    	}
+	    	return false;
+	    }
+	}
 	
 	
 	
@@ -3390,45 +3429,25 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 
-
 	
-	class CreatePathAsyncTask extends AsyncTask<Void, Void, String>{
-	    String url;
-	    double displacementToCompare;
-	    LatLng source, destination;
-	    CreatePathAsyncTask(LatLng source, LatLng destination, double displacementToCompare){
-	    	this.source = source;
-	    	this.destination = destination;
-	        this.url = MapUtils.makeDirectionsURL(source, destination);
-	        this.displacementToCompare = displacementToCompare;
-	    }
-	    
-	    @Override
-	    protected void onPreExecute() {
-	        super.onPreExecute();
-	    }
-	    @Override
-	    protected String doInBackground(Void... params) {
-	    	return new HttpRequester().getJSONFromUrl(url);
-	    }
-	    @Override
-	    protected void onPostExecute(String result) {
-	        super.onPostExecute(result);   
-	        if(result!=null){
-	            drawPath(result, displacementToCompare, source, destination);
-				updateDistanceFareTexts();
-	        }
-	    }
+	public void updateTotalDistance(double deltaDistance){
+		if(Utils.compareDouble(lastDeltaDistance, deltaDistance) != 0){
+			totalDistance = totalDistance + deltaDistance;
+			lastDeltaDistance = deltaDistance;
+		}
 	}
+	
 	
 	
 	public void drawPath(String result, double displacementToCompare, LatLng source, LatLng destination) {
 	    try {
-	    	
+	        writePathLogToFile("GAPI source = "+source+", destination = "+destination);
 	    	 final JSONObject json = new JSONObject(result);
 	    	
 	    	JSONObject leg0 = json.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
 	    	double distanceOfPath = leg0.getJSONObject("distance").getDouble("value");
+	    	
+	    	 writePathLogToFile("GAPI distanceOfPath = "+distanceOfPath);
 	    	
 	    	if(Utils.compareDouble(distanceOfPath, (displacementToCompare*1.8)) <= 0){														// distance would be approximately correct
 
@@ -3438,7 +3457,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		           String encodedString = overviewPolylines.getString("points");
 		           List<LatLng> list = MapUtils.decodeDirectionsPolyline(encodedString);
 			    	
-			    	totalDistance = totalDistance + distanceOfPath;
+//			    	totalDistance = totalDistance + distanceOfPath;
+		           updateTotalDistance(distanceOfPath);
 			    	checkAndUpdateWaitTimeDistance(distanceOfPath);
 			    	 
 		           for(int z = 0; z<list.size()-1;z++){
@@ -3453,7 +3473,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		           Database.getInstance(this).close();
 	    	}
 	    	else{																									// displacement would be correct
-	    		totalDistance = totalDistance + displacementToCompare;
+//	    		totalDistance = totalDistance + displacementToCompare;
+		        updateTotalDistance(displacementToCompare);
 	    		checkAndUpdateWaitTimeDistance(displacementToCompare);
 	    		
 	    		 map.addPolyline(new PolylineOptions()
@@ -4583,22 +4604,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	
-	/**
-	 * ASync for start ride in  driver mode from server
-	 */
-	public void driverStartRideAsync(final Activity activity, final LatLng driverAtPickupLatLng) {
+	public void initializeStartRideVariables(){
+		if(createPathAsyncTasks != null){
+    		createPathAsyncTasks.clear();
+    	}
 		
 		lastLocation = null;
 		
 		HomeActivity.previousWaitTime = 0;
 		HomeActivity.previousRideTime = 0;
 		HomeActivity.totalDistance = -1;
+		HomeActivity.lastDeltaDistance = 0;
 		
 		clearRideSPData();
 		
 		waitStart = 2;
+	}
+	
+	
+	
+	
+	/**
+	 * ASync for start ride in  driver mode from server
+	 */
+	public void driverStartRideAsync(final Activity activity, final LatLng driverAtPickupLatLng) {
+		initializeStartRideVariables();
 		
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
@@ -4795,6 +4825,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void driverEndRideAsync(final Activity activity, double dropLatitude, double dropLongitude, double waitMinutes, 
 			double rideMinutes) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			if(createPathAsyncTasks != null){
+        		createPathAsyncTasks.clear();
+        	}
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
@@ -6198,7 +6232,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-//					switchToScheduleScreen(activity);
+					//TODO 
+					switchToScheduleScreen(activity);
 				}
 				
 			});
@@ -6732,13 +6767,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					@Override
 					public void run() {
 						Log.i("in in herestartRideForCustomer  run class","=");
-						
-						lastLocation = null;
-						
-						HomeActivity.totalDistance = -1;
-						clearRideSPData();
-						
-						
+						initializeStartRideVariables();
 						passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
 						switchPassengerScreen(passengerScreenMode);
 					}
@@ -6904,7 +6933,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					driverImage, driverCarImage, driverPhone, driverRating);
 			
 			Data.startRidePreviousLatLng = Data.pickupLatLng;
-			HomeActivity.totalDistance = -1;
+			initializeStartRideVariables();
 			
 			runOnUiThread(new Runnable() {
 				@Override
@@ -7388,6 +7417,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					updatePickupLocation(location);
 				}
 			}
+		}
+		else{
+			destroyFusedLocationFetchers();
 		}
 	}
 	
