@@ -416,7 +416,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	//TODO check final variables
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
+	public static final int MAP_PATH_COLOR = Color.BLUE;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600; //in meters
@@ -1882,14 +1882,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		if(mode == JugnooDriverMode.ON){
 			if(myLocation != null){
-				sendMyLocationToServerForDriver(1, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+				switchJugnooOnThroughServer(1, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 			}
 			else{
 				Toast.makeText(HomeActivity.this, "Waiting for location...", Toast.LENGTH_SHORT).show();
 			}
 		}
 		else{
-			sendMyLocationToServerForDriver(0, new LatLng(0, 0));
+			switchJugnooOnThroughServer(0, new LatLng(0, 0));
 		}
 		
 	}
@@ -1897,7 +1897,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void sendMyLocationToServerForDriver(final int jugnooOnFlag, final LatLng latLng){
+	public void switchJugnooOnThroughServer(final int jugnooOnFlag, final LatLng latLng){
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -1912,12 +1912,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 					nameValuePairs.add(new BasicNameValuePair("latitude", ""+latLng.latitude));
 					nameValuePairs.add(new BasicNameValuePair("longitude", ""+latLng.longitude));
-					nameValuePairs.add(new BasicNameValuePair("device_token", Data.deviceToken));
+					nameValuePairs.add(new BasicNameValuePair("flag", ""+jugnooOnFlag));
 					
 					Log.e("nameValuePairs in sending null loc","="+nameValuePairs);
 					
 					HttpRequester simpleJSONParser = new HttpRequester();
-					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/update_driver_location", nameValuePairs);
+					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/change_availability", nameValuePairs);
 					
 					Log.e("result ","="+result);
 					
@@ -1926,9 +1926,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 					//{"log":"Updated"}
 					JSONObject jObj = new JSONObject(result);
-					if(jObj.has("log")){
-						String log = jObj.getString("log");
-						if("Updated".equalsIgnoreCase(log)){
+					
+					if(jObj.has("flag")){
+						int flag = jObj.getInt("flag");
+						if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 							if(jugnooOnFlag == 1){
 								switchJugnooOn();
 							}
@@ -1936,6 +1937,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								switchJugnooOff();
 							}
 						}
+					}
+					if(jObj.has("message")){
+						String message = jObj.getString("message");
+						showDialogFromBackground(message);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1946,6 +1951,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	public void showDialogFromBackground(final String message){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				DialogPopup.dismissLoadingDialog();
+				new DialogPopup().alertPopup(HomeActivity.this, "", message);
+			}
+		});
+	}
 	
 	public void switchJugnooOn(){
 		runOnUiThread(new Runnable() {
@@ -3198,7 +3212,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						final LatLng lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
 						addLatLngPathToDistance(lastLatLng, currentLatLng);
 					}
-					else if(lastLocation == null){
+					else{
 						if(Utils.compareDouble(totalDistance, -1.0) == 0){
 							totalDistance = 0;
 						}
@@ -4691,6 +4705,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										map.clear();
 									}
 									
+									initializeStartRideVariables();
 									
 									Data.startRidePreviousLatLng = driverAtPickupLatLng;
 									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -6321,6 +6336,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			        		buildAlertMessageNoGps();
 				        	
 				        	GCMIntentService.clearNotifications(activity);
+				        	
 				        	driverStartRideAsync(activity, driverAtPickupLatLng);
 			        	}
 			        	else{

@@ -1,16 +1,22 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import android.app.IntentService;
 import android.app.Notification;
@@ -33,6 +39,7 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.maps.model.LatLng;
 
 public class GCMIntentService extends IntentService {
 	
@@ -180,9 +187,10 @@ public class GCMIntentService extends IntentService {
 		 
 	    @Override
 	    public void onHandleIntent(Intent intent) {
+	    	String currentTime = DateOperations.getCurrentTime();
 	        Bundle extras = intent.getExtras();
 	        
-	        Log.e("onHandleIntent extras","="+extras);
+	        Log.e(currentTime + "onHandleIntent extras","="+extras);
 	        
 	        Log.e("extras.isEmpty()", "="+extras.isEmpty());
 	        Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
@@ -247,7 +255,9 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), DateOperations.getCurrentTime());
+		    	    					 sendRequestAckToServer(this, engagementId, currentTime);
+		    	    					 
+		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), currentTime);
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
 
@@ -695,6 +705,54 @@ public class GCMIntentService extends IntentService {
 	    	
 	    	
 	    }
+	    
+	    
+	    
+	    
+		public void sendRequestAckToServer(final Context context, final String engagementId, final String actTimeStamp){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						String accessToken = Database2.getInstance(context).getDLDAccessToken();
+						Database2.getInstance(context).close();
+						if("".equalsIgnoreCase(accessToken)){
+							DriverLocationUpdateService.updateServerData(context);
+							accessToken = Database2.getInstance(context).getDLDAccessToken();
+						}
+						
+						String serverUrl = Database2.getInstance(context).getDLDServerUrl();
+						
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+						nameValuePairs.add(new BasicNameValuePair("engagement_id", engagementId));
+						nameValuePairs.add(new BasicNameValuePair("ack_timestamp", actTimeStamp));
+						
+						Log.e("nameValuePairs in sending ack to server","="+nameValuePairs);
+						
+						HttpRequester simpleJSONParser = new HttpRequester();
+						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_request", nameValuePairs);
+						
+						Log.e("result ","="+result);
+						
+						simpleJSONParser = null;
+						nameValuePairs = null;
+						
+						JSONObject jObj = new JSONObject(result);
+						if(jObj.has("flag")){
+							int flag = jObj.getInt("flag");
+							if(ApiResponseFlags.ACK_RECEIVED.getOrdinal() == flag){
+								String log = jObj.getString("log");
+								Log.e("ack to server successfull", "="+log);
+							}
+						}
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		}
 	    
 }
 
