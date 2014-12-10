@@ -416,7 +416,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	//TODO check final variables
 	public static AppMode appMode;
 	
-	public static final int MAP_PATH_COLOR = Color.BLUE;
+	public static final int MAP_PATH_COLOR = Color.TRANSPARENT;
 	public static final int D_TO_C_MAP_PATH_COLOR = Color.RED;
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600; //in meters
@@ -1762,6 +1762,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 		Database2.getInstance(HomeActivity.this).close();
+		
+		showManualPatchPushReceivedDialog();
 	}
 	
 	
@@ -2871,6 +2873,40 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
+	public Dialog timeDialogAlert;
+	
+    @SuppressWarnings("deprecation")
+	public void buildTimeSettingsAlertDialog(final Activity activity) {
+    	try {
+    		int autoTime = android.provider.Settings.System.getInt(activity.getContentResolver(), android.provider.Settings.System.AUTO_TIME);
+    		if(autoTime == 0){
+				if(timeDialogAlert != null && timeDialogAlert.isShowing()){
+			    }
+				else{
+					AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				    builder.setMessage("The app needs Network Provided Time to be enabled. Enable it from Settings.")
+				           .setCancelable(false)
+				           .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
+				               public void onClick(final DialogInterface dialog, final int id) {
+				            	   activity.startActivity(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS));
+				               }
+				           })
+				           ;
+				    timeDialogAlert = null;
+				    timeDialogAlert = builder.create();
+				    timeDialogAlert.show();
+				}
+			}
+			else{
+				if(timeDialogAlert != null && timeDialogAlert.isShowing()){
+					timeDialogAlert.dismiss();
+			    }
+			}
+    	} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 	
@@ -2916,7 +2952,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	protected void onResume() {
 		super.onResume();
-	    
+		
+		
 		if(!checkIfUserDataNull(HomeActivity.this)){
 			setUserData();
 	//		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
@@ -2935,6 +2972,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    connectGPSListener();
 		    
 		    initializeFusedLocationFetchers();
+		    
+		    if(UserMode.DRIVER == userMode){
+				buildTimeSettingsAlertDialog(this);
+			}
 		}
 	}
 	
@@ -4286,6 +4327,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 										getAndShowAllDriverRequests(activity);
 										new DriverServiceOperations().startDriverService(HomeActivity.this);
+										
+										if(UserMode.DRIVER == userMode){
+											buildTimeSettingsAlertDialog(activity);
+										}
+										
 									}
 									else{
 										new DriverServiceOperations().stopService(HomeActivity.this);
@@ -6247,8 +6293,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					//TODO 
-					switchToScheduleScreen(activity);
+					//TODO on or off 
+//					switchToScheduleScreen(activity);
 				}
 				
 			});
@@ -7096,7 +7142,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void onManualDispatchPushReceived() {
 		try {
 			if(userMode == UserMode.DRIVER ){
-				callAndHandleStateRestoreAPI();
+				callStateRestoreAPIOnManualPatchPushReceived();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -7859,6 +7905,158 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		}).start();
 	}
+	
+	
+	public String manualPatchPushStateRestoreResponse = "";
+	public void callStateRestoreAPIOnManualPatchPushReceived() {
+		manualPatchPushStateRestoreResponse = "";
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if(Data.userData != null){
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+							}
+						});
+						int currentUserStatus = 0;
+						if(UserMode.DRIVER == userMode){
+							currentUserStatus = 1;
+						}
+						else if(UserMode.PASSENGER == userMode){
+							currentUserStatus = 2;
+						}
+						if(currentUserStatus != 0){
+							manualPatchPushStateRestoreResponse = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
+							if(manualPatchPushStateRestoreResponse.contains(HttpRequester.SERVER_TIMEOUT)){
+								manualPatchPushStateRestoreResponse = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
+								if(manualPatchPushStateRestoreResponse.contains(HttpRequester.SERVER_TIMEOUT)){
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											new DialogPopup().alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+										}
+									});
+								}
+							}
+						}
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								DialogPopup.dismissLoadingDialog();
+								startUIAfterGettingUserStatus();
+								
+								if(!manualPatchPushStateRestoreResponse.contains(HttpRequester.SERVER_TIMEOUT)){
+									showManualPatchPushReceivedDialog();
+								}
+								
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+	
+	
+	//TODO manual patch dialog
+	public void showManualPatchPushReceivedDialog(){
+		try {
+			if(UserMode.DRIVER == userMode && DriverScreenMode.D_START_RIDE == driverScreenMode){
+				if(Data.assignedCustomerInfo != null){
+					String manualPatchPushReceived = Database2.getInstance(HomeActivity.this).getDriverManualPatchPushReceived();
+					if(Database2.YES.equalsIgnoreCase(manualPatchPushReceived)){
+						new DialogPopup().alertPopupWithListener(HomeActivity.this, "", "You have been manually connected. Pick the customer.", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								GCMIntentService.stopRing();
+								Database2.getInstance(HomeActivity.this).updateDriverManualPatchPushReceived(Database2.NO);
+								Database2.getInstance(HomeActivity.this).close();
+								manualPatchPushAckAPI(HomeActivity.this);
+							}
+						});
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Database2.getInstance(HomeActivity.this).close();
+	}
+	
+	
+	/**
+	 * ASync for acknowledging the server about manual patch push received
+	 */
+	public void manualPatchPushAckAPI(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			
+			RequestParams params = new RequestParams();
+			
+			params.put("access_token", Data.userData.accessToken);
+			params.put("engagement_id", Data.dEngagementId);
+			params.put("customer_id", Data.assignedCustomerInfo.userId);
+
+			Log.i("server call", "=" + Data.SERVER_URL + "/acknowledge_manual_engagement");
+			Log.i("access_token", "=" + Data.userData.accessToken);
+			Log.i("engagement_id", Data.dEngagementId);
+			Log.i("customer_id", Data.assignedCustomerInfo.userId);
+		
+			AsyncHttpClient client = Data.getClient();
+			client.post(Data.SERVER_URL + "/acknowledge_manual_engagement", params,
+					new CustomAsyncHttpResponseHandler() {
+					private JSONObject jObj;
+	
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							manualPatchPushAckAPI(activity);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.v("Server response acknowledge_manual_engagement", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+								
+								if(!jObj.isNull("error")){
+									int flag = jObj.getInt("flag");	
+									String errorMessage = jObj.getString("error");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+								}
+								else{
+									if(jObj.has("flag")){
+										int flag = jObj.getInt("flag");	
+										if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+											
+										}
+									}
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+							}
+						}
+					});
+		}
+
+	}
+	
+	
+	
+	
 	
 	
 	

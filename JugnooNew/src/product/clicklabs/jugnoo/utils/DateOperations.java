@@ -147,6 +147,14 @@ public class DateOperations {
 	    return formatter.format(date);
 	}
 	
+	public static String getCurrentTimeInUTC() {
+	    long foo = System.currentTimeMillis();
+	    Date date = new Date(foo);
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+	    return formatter.format(date);
+	}
+	
 	
 	public static String getTimeStampfromCalendar(Calendar calendar) {
 	    long foo = calendar.getTimeInMillis();

@@ -188,6 +188,8 @@ public class GCMIntentService extends IntentService {
 	    @Override
 	    public void onHandleIntent(Intent intent) {
 	    	String currentTime = DateOperations.getCurrentTime();
+	    	String currentTimeUTC = DateOperations.getCurrentTimeInUTC();
+	    	
 	        Bundle extras = intent.getExtras();
 	        
 	        Log.e(currentTime + "onHandleIntent extras","="+extras);
@@ -255,7 +257,7 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 sendRequestAckToServer(this, engagementId, currentTime);
+		    	    					 sendRequestAckToServer(this, engagementId, currentTimeUTC);
 		    	    					 
 		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), currentTime);
 		    	    					 
@@ -446,7 +448,9 @@ public class GCMIntentService extends IntentService {
 	    	    						 new DriverServiceOperations().stopAndScheduleDriverService(GCMIntentService.this);
 	    	    					 }
 	    	    				 }
-	    	    				else if(PushFlags.MANUAL_DISPATCH.getOrdinal() == flag){
+	    	    				else if(PushFlags.MANUAL_ENGAGEMENT.getOrdinal() == flag){
+	    	    					Database2.getInstance(this).updateDriverManualPatchPushReceived(Database2.YES);
+	    	    					Database2.getInstance(this).close();
 	    	    					startRingWithStopHandler(this);
 	    	    					String message1 = jObj.getString("message");
 	    	    					if (HomeActivity.appInterruptHandler != null) {

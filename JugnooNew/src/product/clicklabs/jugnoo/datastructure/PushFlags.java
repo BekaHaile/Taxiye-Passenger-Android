@@ -15,7 +15,7 @@ public enum PushFlags {
 	CHANGE_STATE(20),
 	DISPLAY_MESSAGE(21),
 	TOGGLE_LOCATION_UPDATES(22),
-	MANUAL_DISPATCH(23)
+	MANUAL_ENGAGEMENT(23)
 	;
 
 	private int ordinal;

@@ -74,6 +74,9 @@ public class Database2 {																	// class for handling database related 
 	private static final String TABLE_DRIVER_SERVICE_TIME_TO_RESTART = "table_driver_service_time_to_restart";
 	private static final String TIME_TO_RESTART = "time_to_restart";
 	
+	private static final String TABLE_DRIVER_MANUAL_PATCH = "table_driver_manual_patch";
+	private static final String DRIVER_MANUAL_PATCH_PUSH_RECEIVED = "driver_manual_patch_push_received";
+	
 	/**
 	 * Creates and opens database for the application use 
 	 * @author shankar
@@ -141,6 +144,9 @@ public class Database2 {																	// class for handling database related 
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_TIME_TO_RESTART + " ("
 				+ TIME_TO_RESTART + " TEXT" + ");");
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_MANUAL_PATCH + " ("
+				+ DRIVER_MANUAL_PATCH_PUSH_RECEIVED + " TEXT" + ");");
 		
 	}
 	
@@ -660,6 +666,53 @@ public class Database2 {																	// class for handling database related 
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public String getDriverManualPatchPushReceived() {
+		try {
+			String[] columns = new String[] { Database2.DRIVER_MANUAL_PATCH_PUSH_RECEIVED };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_MANUAL_PATCH, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				String choice = cursor.getString(cursor.getColumnIndex(Database2.DRIVER_MANUAL_PATCH_PUSH_RECEIVED));
+				return choice;
+			} else {
+				return NO;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return NO;
+		}
+	}
+	
+	public void updateDriverManualPatchPushReceived(String choice) {
+		try{
+			deleteDriverManualPatchPushReceived();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.DRIVER_MANUAL_PATCH_PUSH_RECEIVED, choice);
+			database.insert(Database2.TABLE_DRIVER_MANUAL_PATCH, null, contentValues);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void deleteDriverManualPatchPushReceived(){
+		try{
+			database.delete(Database2.TABLE_DRIVER_MANUAL_PATCH, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	
 	
