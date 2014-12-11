@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -285,7 +286,7 @@ public class FutureSchedulesFragment extends Fragment {
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					removeScheduledRideAPI(activity, futureSchedule.pickupId);
+					removeConfirmDialog(activity, "Remove schedule", "Do you want to remove this schedule ride?", futureSchedule);
 				}
 			});
 			
@@ -337,6 +338,77 @@ public class FutureSchedulesFragment extends Fragment {
 		HelpParticularActivity.helpSection = HelpSection.SCHEDULES_TNC;
 		activity.startActivity(new Intent(activity, HelpParticularActivity.class));
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+	}
+	
+	
+	/**
+	 * Displays appUpdatePopup dialog
+	 */
+	public void removeConfirmDialog(final Activity activity, String title, String message, final FutureSchedule futureSchedule) {
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.custom_two_btn_dialog_with_title);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, false);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			
+			textHead.setVisibility(View.VISIBLE);
+			textHead.setText(title);
+			textMessage.setText(message);
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("No");
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity)); btnCancel.setText("Yes");
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
+			crossbtn.setVisibility(View.GONE);
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+			});
+			
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					removeScheduledRideAPI(activity, futureSchedule.pickupId);
+				}
+			});
+			
+			dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+				}
+			});
+
+			frameLayout.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

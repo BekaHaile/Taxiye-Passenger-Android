@@ -37,8 +37,8 @@ public class CustomMapMarkerCreator {
 	
 	public static Bitmap createPinMarkerBitmap(Activity activity, ASSL assl){
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
-		int width = (int)(44.0f * scale);
-		int height = (int)(70.0f * scale);
+		int width = (int)(40.0f * scale);
+		int height = (int)(63.0f * scale);
 		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(mDotMarkerBitmap);
 		Drawable shape = activity.getResources().getDrawable(R.drawable.pin_ball);

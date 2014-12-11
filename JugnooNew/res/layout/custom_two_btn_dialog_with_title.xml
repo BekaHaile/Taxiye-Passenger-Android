@@ -35,7 +35,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_alignParentTop="true"
                 android:gravity="center"
-                android:text="@string/update"
+                android:text="Title"
                 android:textColor="@color/blue_btn"
                 android:textSize="50px" 
                 android:paddingLeft="20px"
@@ -111,6 +111,22 @@
             
             
         </LinearLayout>
+        
+        <Button
+            android:id="@+id/crossbtn"
+            android:layout_width="62px"
+            android:layout_height="62px"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/cross_circle"
+            android:singleLine="true" 
+            android:layout_marginRight="20px"
+            android:layout_marginTop="20px"
+                android:tag="mwar"
+                android:visibility="visible"
+                
+                />
+        
     </RelativeLayout>
 
 </FrameLayout>

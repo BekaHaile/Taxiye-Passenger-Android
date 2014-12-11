@@ -57,7 +57,6 @@ public class TermsConditionsActivity extends Activity{
 				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 				Editor editor = pref.edit();
 				editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-				editor.putString(Data.SP_ID_KEY, Data.userData.id);
 				editor.commit();
 				
 				startActivity(new Intent(TermsConditionsActivity.this, HomeActivity.class));
@@ -309,7 +308,6 @@ public class TermsConditionsActivity extends Activity{
 			SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 			Editor editor = pref.edit();
 			editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-			editor.putString(Data.SP_ID_KEY, Data.userData.id);
 			editor.commit();
 			
 			startActivity(new Intent(TermsConditionsActivity.this, HomeActivity.class));

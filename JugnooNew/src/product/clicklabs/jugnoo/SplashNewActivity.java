@@ -500,7 +500,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		final String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
-		final String id = pref.getString(Data.SP_ID_KEY, "");
 		if(!"".equalsIgnoreCase(accessToken)){
 			buttonLogin.setVisibility(View.GONE);
 			buttonRegister.setVisibility(View.GONE);
@@ -597,7 +596,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 										}
 										else{
 											
-											new AccessTokenDataParseAsync(activity, response, accessToken, id).execute();
+											new AccessTokenDataParseAsync(activity, response, accessToken).execute();
 											
 										}
 									}
@@ -625,19 +624,18 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String>{
 		
 		Activity activity;
-		String response, accessToken, id;
+		String response, accessToken;
 		
-		public AccessTokenDataParseAsync(Activity activity, String response, String accessToken, String id){
+		public AccessTokenDataParseAsync(Activity activity, String response, String accessToken){
 			this.activity = activity;
 			this.response = response;
 			this.accessToken = accessToken;
-			this.id = id;
 		}
 		
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				String resp = new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
+				String resp = new JSONParser().parseAccessTokenLoginData(activity, response, accessToken);
 				return resp;
 			} catch (Exception e) {
 				e.printStackTrace();

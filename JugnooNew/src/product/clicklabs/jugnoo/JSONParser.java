@@ -37,22 +37,14 @@ public class JSONParser {
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		
-		try{
-			Data.termsAgreed = userData.getInt("terms_agreed");
-			Data.termsAgreed = 1;
-		} catch(Exception e){
-			Data.termsAgreed = 1;
-		}
 		Data.termsAgreed = 1;
 		
-		Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-				userData.getString("user_image"), userData.getString("id"), userData.getString("referral_code"));
+		Data.userData = parseUserData(userData);
 		
 		if(Data.termsAgreed == 1){
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 			Editor editor = pref.edit();
 			editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-			editor.putString(Data.SP_ID_KEY, Data.userData.id);
 			editor.commit();
 		}
 		
@@ -117,7 +109,13 @@ public class JSONParser {
 	}
 	
 	
-	public String parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
+	public UserData parseUserData(JSONObject userData) throws Exception{
+		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
+				userData.getString("user_image"), userData.getString("referral_code"), 
+				userData.getInt("can_schedule"), userData.getInt("can_change_location"));
+	}
+	
+	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
 		
 		JSONObject jObj = new JSONObject(response);
 		
@@ -125,8 +123,7 @@ public class JSONParser {
 		JSONObject jLoginObject = jObj.getJSONObject("login");
 		JSONObject userData = jLoginObject.getJSONObject("user_data");
 		
-		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
-				userData.getString("user_image"), id, userData.getString("referral_code"));
+		Data.userData = parseUserData(userData);
 		
 		parseFareDetails(userData);
 		
@@ -224,7 +221,7 @@ public class JSONParser {
 			String screenMode = "";
 			
 			int engagementStatus = -1;
-			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "";
+			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "", schedulePickupTime = "";
 			
 			try{
 							
@@ -310,9 +307,9 @@ public class JSONParser {
 										customerImage = jObject.getString("user_image");
 										customerPhone = jObject.getString("phone_no");
 										customerRating = jObject.getString("rating");
-									}
-									else{
-										
+										if(jObject.has("schedule_pickup_time")){
+											schedulePickupTime = jObject.getString("schedule_pickup_time");
+										}
 									}
 								}
 							
@@ -362,6 +359,8 @@ public class JSONParser {
 					String rating = customerRating;
 					
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
+					Data.assignedCustomerInfo.schedulePickupTime = schedulePickupTime;
+					
 				}
 				else if(Data.D_IN_RIDE.equalsIgnoreCase(screenMode)){
 					
@@ -484,9 +483,6 @@ public class JSONParser {
 										driverRating = jObject.getString("rating");
 										pickupLatitude = jObject.getString("pickup_latitude");
 										pickupLongitude = jObject.getString("pickup_longitude");
-									}
-									else{
-										
 									}
 								}
 							

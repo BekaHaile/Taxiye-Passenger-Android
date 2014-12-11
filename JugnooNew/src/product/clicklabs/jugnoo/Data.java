@@ -44,7 +44,7 @@ public class Data {
 	public static final String DEBUG_PASSWORD = "3131";
 	
 	public static final String SHARED_PREF_NAME = "myPref", SETTINGS_SHARED_PREF_NAME = "settingsPref";
-	public static final String SP_ACCESS_TOKEN_KEY = "access_token", SP_ID_KEY = "session_id",
+	public static final String SP_ACCESS_TOKEN_KEY = "access_token",
 			
 			SP_TOTAL_DISTANCE = "total_distance", 
 			SP_WAIT_TIME = "wait_time",

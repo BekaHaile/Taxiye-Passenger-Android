@@ -140,6 +140,36 @@ public class DateOperations {
 	}
 	
 	
+	public static String getTimeAMPM(String dateTime){
+		try{
+		String time = dateTime.split(" ")[1];
+		
+		String hour = time.split(":")[0];
+		String min = time.split(":")[1];
+		
+		String amOrpm = Integer.parseInt(hour)>=12?"PM":"AM";
+		String newHour = "";
+		
+		if(Integer.parseInt(hour)==0){
+			newHour = "12";
+		}
+		else if(Integer.parseInt(hour)<=12){
+			newHour = hour;
+		}
+		else{
+			newHour = ""+(Integer.parseInt(hour) - 12);
+		}
+		
+		String finalTime = ""+ newHour + ":" + min + " " + amOrpm; 
+		
+		return finalTime;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
 	public static String getCurrentTime() {
 	    long foo = System.currentTimeMillis();
 	    Date date = new Date(foo);

@@ -34,15 +34,15 @@
                 android:id="@+id/passengerMainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
+                android:layout_marginTop="90px"
                     android:visibility="gone" >
 
                     <TextView
@@ -64,63 +64,6 @@
                         android:layout_height="6px"
                         android:layout_below="@+id/textViewAssigningInProgress"
                         android:background="@drawable/shadow_down" />
-
-                    <RelativeLayout
-                        android:id="@+id/searchBarLayout"
-                        android:layout_width="707px"
-                        android:layout_height="95px"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="34px"
-                        android:background="@drawable/white_bg_rounded_bordered"
-                        android:splitMotionEvents="false"
-                        android:tag="mwar"
-                        android:visibility="gone" >
-
-                        <ImageView
-                            android:id="@+id/locImg"
-                            android:layout_width="27px"
-                            android:layout_height="36px"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"
-                            android:background="@drawable/location_icon"
-                            android:tag="mwar" />
-
-                        <EditText
-                            android:id="@+id/searchEt"
-                            android:layout_width="560px"
-                            android:layout_height="95px"
-                            android:layout_marginLeft="66px"
-                            android:background="#0000"
-                            android:hint="@string/search"
-                            android:singleLine="true"
-                            android:textSize="34px" />
-
-                        <RelativeLayout
-                            android:id="@+id/searchRl"
-                            android:layout_width="66px"
-                            android:layout_height="95px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="0px"
-                            android:splitMotionEvents="false" >
-
-                            <ImageView
-                                android:id="@+id/searchImg"
-                                android:layout_width="36px"
-                                android:layout_height="36px"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="20px"
-                                android:background="@drawable/search_icon"
-                                android:tag="mwar" />
-
-                            <Button
-                                android:id="@+id/search"
-                                android:layout_width="66px"
-                                android:layout_height="95px"
-                                android:background="@color/transparent" />
-                        </RelativeLayout>
-                    </RelativeLayout>
 
                     <Button
                         android:id="@+id/myLocationBtn"
@@ -203,6 +146,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
+                android:layout_marginTop="90px"
                     android:visibility="gone" >
 
                     <Button
@@ -440,102 +384,25 @@
 
                 <RelativeLayout
                     android:id="@+id/centreLocationRl"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="560px"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
-
-                    <ProgressBar
-                        android:id="@+id/centreInfoProgress"
-                        android:layout_width="60px"
-                        android:layout_height="60px"
-                        android:layout_centerInParent="true" />
-
-                    <!-- android:layout_marginTop="330px" -->
-
-                    <RelativeLayout
-                        android:id="@+id/centreInfoRl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:splitMotionEvents="false"
-                        android:visibility="invisible" >
-
-                        <RelativeLayout
-                            android:id="@+id/bgLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/white_map_place_info_bg"
-                            android:padding="15px"
-                            android:splitMotionEvents="false" >
-
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:splitMotionEvents="false" >
-
-                                <TextView
-                                    android:id="@+id/centreLocationSnippet"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/centreLocationTitle"
-                                    android:layout_centerVertical="true"
-                                    android:gravity="center"
-                                    android:maxWidth="500px"
-                                    android:minWidth="200px"
-                                    android:text="Snippet"
-                                    android:textColor="@color/white"
-                                    android:textSize="30px" />
-
-                                <Button
-                                    android:id="@+id/setFavoriteBtn"
-                                    android:layout_width="62px"
-                                    android:layout_height="62px"
-                                    android:layout_centerVertical="true"
-                                    android:layout_toRightOf="@+id/centreLocationSnippet"
-                                    android:background="@drawable/fav_btn_selector" />
-                            </RelativeLayout>
-                        </RelativeLayout>
-
-                        <ImageView
-                            android:id="@+id/triangleBorder"
-                            android:layout_width="40px"
-                            android:layout_height="40px"
-                            android:layout_below="@+id/bgLayout"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="-4px"
-                            android:background="@drawable/triangle_borderd"
-                            android:rotation="180" />
-                    </RelativeLayout>
+                    android:visibility="visible" >
 
                     <ImageView
-                        android:id="@+id/centrePin"
+                        android:id="@+id/centreLocationPin"
                         android:layout_width="40px"
                         android:layout_height="63px"
-                        android:layout_below="@+id/centreInfoRl"
+                        android:layout_above="@+id/centreLocationPivot"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="-22px"
                         android:background="@drawable/pin_ball"
                         android:tag="mwar" />
-                </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/searchLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:padding="20px"
-                    android:splitMotionEvents="false"
-                    android:visibility="gone" >
-
-                    <ListView
-                        android:id="@+id/searchList"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-                    </ListView>
+                    <ImageView
+                        android:id="@+id/centreLocationPivot"
+                        android:layout_width="1px"
+                        android:layout_height="1px"
+                        android:layout_centerInParent="true" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -545,7 +412,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"

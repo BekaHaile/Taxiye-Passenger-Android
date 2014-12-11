@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,8 +49,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -296,9 +298,40 @@ public class ScheduleRideActivity extends FragmentActivity{
 			
 			@Override
 			public void onClick(View v) {
-				scheduleScreenMode = ScheduleScreenMode.SEARCH;
-				switchScheduleScreen(scheduleScreenMode);
-				getSearchResults(searchBarEditText.getText().toString().trim());
+				String searchText = searchBarEditText.getText().toString().trim();
+				if(searchText.length() > 0){
+					scheduleScreenMode = ScheduleScreenMode.SEARCH;
+					switchScheduleScreen(scheduleScreenMode);
+					searchResults.clear();
+					scheduleSearchListAdapter.notifyDataSetChanged();
+					
+					searchText = searchBarEditText.getText().toString().trim();
+					try {
+						searchText = URLEncoder.encode(searchText, "utf-8");
+						getSearchResults(searchText);
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+						searchBarEditText.requestFocus();
+						searchBarEditText.setError("Invalid search text");
+					}
+				}
+				else{
+					searchBarEditText.requestFocus();
+					searchBarEditText.setError("Search cannot be empty");
+				}
+				
+				
+			}
+		});
+		
+		
+		searchBarEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(hasFocus){
+					searchBarEditText.setError(null);
+				}
 			}
 		});
 		
@@ -408,6 +441,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 			scheduleOptionsMainRl.setVisibility(View.VISIBLE);
 			scheduleSetPickupLocationRl.setVisibility(View.GONE);
 			
+			backBtn.setVisibility(View.VISIBLE);
 			cancelBtn.setVisibility(View.GONE);
 			break;
 			
@@ -416,7 +450,8 @@ public class ScheduleRideActivity extends FragmentActivity{
 			scheduleSetPickupLocationRl.setVisibility(View.VISIBLE);
 			searchListRl.setVisibility(View.GONE);
 
-			cancelBtn.setVisibility(View.GONE);
+			backBtn.setVisibility(View.GONE);
+			cancelBtn.setVisibility(View.VISIBLE);
 			break;
 			
 		case SEARCH:
@@ -424,8 +459,8 @@ public class ScheduleRideActivity extends FragmentActivity{
 			scheduleSetPickupLocationRl.setVisibility(View.VISIBLE);
 			searchListRl.setVisibility(View.VISIBLE);
 
+			backBtn.setVisibility(View.GONE);
 			cancelBtn.setVisibility(View.VISIBLE);
-			searchResults.clear();
 			
 			break;
 			
@@ -554,13 +589,17 @@ public class ScheduleRideActivity extends FragmentActivity{
 				public void onClick(View v) {
 					holder = (ViewHolderScheduleSearch) v.getTag();
 					SearchResult searchResult = searchResults.get(holder.id);
-					scheduleScreenMode = ScheduleScreenMode.PICK_LOCATION;
-					switchScheduleScreen(scheduleScreenMode);
-					map.animateCamera(CameraUpdateFactory.newLatLng(searchResult.latLng), 1000, null);
+					if(searchResult.latLng != null){
+						searchBarEditText.setText(searchResult.address);
+						scheduleScreenMode = ScheduleScreenMode.PICK_LOCATION;
+						switchScheduleScreen(scheduleScreenMode);
+						map.animateCamera(CameraUpdateFactory.newLatLng(searchResult.latLng), 1000, null);
+					}
 				}
 			});
 			return convertView;
 		}
+		
 	}
 	
 	
@@ -635,6 +674,11 @@ public class ScheduleRideActivity extends FragmentActivity{
 			public void run() {
 				searchBtn.setVisibility(View.VISIBLE);
 				progressBarSearch.setVisibility(View.GONE);
+				
+				if(searchResults.size() == 0){
+					searchResults.add(new SearchResult("No results found", "", null));
+				}
+				
 				scheduleSearchListAdapter.notifyDataSetChanged();
 			}
 		});

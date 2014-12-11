@@ -49,7 +49,6 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -85,7 +84,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -204,9 +202,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	//Initial layout
 	RelativeLayout initialLayout;
 	TextView textViewAssigningInProgress;
-	RelativeLayout searchBarLayout;
-	EditText searchEt;
-	Button search, myLocationBtn, requestRideBtn, initialCancelRideBtn;
+	Button myLocationBtn, requestRideBtn, initialCancelRideBtn;
 	RelativeLayout nearestDriverRl;
 	TextView nearestDriverText;
 	ProgressBar nearestDriverProgress;
@@ -226,24 +222,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	
-	//Search layout
-	RelativeLayout searchLayout;
-	ListView searchList;
-	SearchListAdapter searchListAdapter;
-	
-	
-	
-	
-	
-	
-	
 	//Center Location Layout
-//	RelativeLayout centreLocationRl, centreInfoRl;
-//	ProgressBar centreInfoProgress;
-//	TextView centreLocationSnippet;
-//	Button setFavoriteBtn;
+	RelativeLayout centreLocationRl;
+	ImageView centreLocationPin;
 	
 	
 	
@@ -436,6 +417,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final double MAX_WAIT_TIME_ALLOWED_DISTANCE = 200; //in meters
 	
+	public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
+	
 	public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
 	
 	
@@ -559,11 +542,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		//Initial layout 
 		initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
 		textViewAssigningInProgress = (TextView) findViewById(R.id.textViewAssigningInProgress); textViewAssigningInProgress.setTypeface(Data.regularFont(getApplicationContext()));
-		searchBarLayout = (RelativeLayout) findViewById(R.id.searchBarLayout);
-		searchBarLayout.setVisibility(View.GONE);
-		
-		searchEt = (EditText) findViewById(R.id.searchEt); searchEt.setTypeface(Data.regularFont(getApplicationContext()));
-		search = (Button) findViewById(R.id.search);
 		
 		myLocationBtn = (Button) findViewById(R.id.myLocationBtn);
 		requestRideBtn = (Button) findViewById(R.id.requestRideBtn); requestRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
@@ -608,24 +586,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		//Center location layout
-//		centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
-//		centreInfoRl = (RelativeLayout) findViewById(R.id.centreInfoRl);
-//		centreInfoProgress = (ProgressBar) findViewById(R.id.centreInfoProgress);
-//		centreLocationSnippet = (TextView) findViewById(R.id.centreLocationSnippet); centreLocationSnippet.setTypeface(Data.regularFont(getApplicationContext()));
-//		setFavoriteBtn = (Button) findViewById(R.id.setFavoriteBtn);
-//		
-//		centreLocationSnippet.setMinimumWidth((int)(200.0 * ASSL.Xscale()));
-//		centreLocationSnippet.setMaxWidth((int)(500.0 * ASSL.Xscale()));
+		centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
+		centreLocationPin = (ImageView) findViewById(R.id.centreLocationPin);
 		
 		
 		
 		
 		
-		//Search Layout
-		searchLayout = (RelativeLayout) findViewById(R.id.searchLayout);
-		searchList = (ListView) findViewById(R.id.searchList);
-		searchListAdapter = new SearchListAdapter();
-		searchList.setAdapter(searchListAdapter);
 		
 		
 		
@@ -1060,41 +1027,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		// Customer initial layout events
-		search.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String searchPlace = searchEt.getText().toString();
-				
-				if(searchPlace.length() > 0){
-					searchGooglePlaces(searchPlace);
-					hideSoftKeyboard();
-				}
-			}
-		});
-		
-		
-		searchEt.setOnEditorActionListener(new OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						search.performClick();
-					break;
-
-					case EditorInfo.IME_ACTION_NEXT:
-					break;
-
-					default:
-				}
-				return true;
-			}
-		});
-		
-		
-		
 		requestRideBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -1667,25 +1599,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				  public void onMapUnsettled() {
 				    // Map unsettled
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						  
 						  if(getDistanceTimeAddress != null){
 							  getDistanceTimeAddress.cancel(true);
 							  getDistanceTimeAddress = null;
 						  }
 					  }
 				  }
-
-				  
 				  
 				  @Override
 				  public void onMapSettled() {
 				    // Map settled
 					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						  if(myLocation != null){
+						  if(Data.userData.canChangeLocation == 1){
+							  Data.pickupLatLng = map.getCameraPosition().target;
 							  if(!dontCallRefreshDriver){
-								  getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-										  myLocation.getLongitude()), false);
+								  getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, false);
 								  getDistanceTimeAddress.execute();
+							  }
+						  }
+						  else{
+							  if(myLocation != null){
+								  Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+								  if(!dontCallRefreshDriver){
+									  getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, false);
+									  getDistanceTimeAddress.execute();
+								  }
 							  }
 						  }
 					  }
@@ -1828,11 +1766,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void initiateRequestRide(boolean newRequest){
 		
 		if(newRequest){
-			Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 			Data.cSessionId = "";
 			Data.cEngagementId = "";
 			
-			checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
+			if(Data.userData.canChangeLocation == 1){
+				double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+				if(MAP_PAN_DISTANCE_CHECK > distance){
+					switchRequestRideUI();
+					startTimerRequestRide();
+				}
+				else{
+					checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
+				}
+			}
+			else{
+				checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
+			}
 		}
 		else{
 			if(myLocation == null){
@@ -1843,6 +1792,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			Data.cEngagementId = "";
+			
+			
 			
 			switchRequestRideUI();
 			startTimerRequestRide();
@@ -2300,6 +2251,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.VISIBLE);
 				
+				if("".equalsIgnoreCase(Data.assignedCustomerInfo.schedulePickupTime)){
+					driverScheduledRideText.setVisibility(View.GONE);
+				}
+				else{
+					String time = DateOperations.getTimeAMPM(DateOperations.utcToLocal(Data.assignedCustomerInfo.schedulePickupTime));
+					if("".equalsIgnoreCase(time)){
+						driverScheduledRideText.setVisibility(View.GONE);
+					}
+					else{
+						driverScheduledRideText.setVisibility(View.VISIBLE);
+						driverScheduledRideText.setText("Scheduled Ride Pickup: "+time);
+					}
+					
+				}
+				
 				
 				driverStartRideMainRl.setVisibility(View.VISIBLE);
 				driverInRideMainRl.setVisibility(View.GONE);
@@ -2367,6 +2333,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverRequestAcceptLayout.setVisibility(View.GONE);
 				driverEngagedLayout.setVisibility(View.VISIBLE);
 				
+				driverScheduledRideText.setVisibility(View.GONE);
 				
 				driverStartRideMainRl.setVisibility(View.GONE);
 				driverInRideMainRl.setVisibility(View.VISIBLE);
@@ -2518,10 +2485,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				initialLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
-//				centreLocationRl.setVisibility(View.VISIBLE);
-				searchLayout.setVisibility(View.GONE);
 				
-				searchBarLayout.setVisibility(View.GONE);
+				if (Data.userData.canChangeLocation == 1) {
+					centreLocationRl.setVisibility(View.VISIBLE);
+				} else {
+					centreLocationRl.setVisibility(View.GONE);
+				}
 				
 				nearestDriverRl.setVisibility(View.VISIBLE);
 				initialCancelRideBtn.setVisibility(View.GONE);
@@ -2531,7 +2500,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				jugnooLogo.setVisibility(View.VISIBLE);
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
-//				favBtn.setVisibility(View.VISIBLE);
 				
 				Log.e("Data.latitude", "="+Data.latitude);
 				Log.e("myLocation", "="+myLocation);
@@ -2551,15 +2519,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 			case P_ASSIGNING:
 				
+				centreLocationRl.setVisibility(View.GONE);
+				
 				requestRideBtn.setText(REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT);
 				requestRideBtn.setBackgroundResource(R.drawable.blue_btn_normal);
 				
 				initialLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
-//				centreLocationRl.setVisibility(View.GONE);
-				searchLayout.setVisibility(View.GONE);
-				
-				searchBarLayout.setVisibility(View.GONE);
 				
 				if(map != null){
 					MarkerOptions markerOptions = new MarkerOptions();
@@ -2580,31 +2546,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				jugnooLogo.setVisibility(View.VISIBLE);
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
-//				favBtn.setVisibility(View.VISIBLE);
 
 				cancelTimerUpdateDrivers();
-				
-				break;
-				
-		
-			case P_SEARCH:
-
-				initialLayout.setVisibility(View.GONE);
-				requestFinalLayout.setVisibility(View.GONE);
-//				centreLocationRl.setVisibility(View.VISIBLE);
-				searchLayout.setVisibility(View.VISIBLE);
-				
-				
-				menuBtn.setVisibility(View.GONE);
-				jugnooLogo.setVisibility(View.GONE);
-				backBtn.setVisibility(View.VISIBLE);
-				title.setVisibility(View.VISIBLE);
-//				favBtn.setVisibility(View.GONE);
-				
-				title.setText(getResources().getString(R.string.search_results));
-				
-				searchListAdapter.notifyDataSetChanged();
-
 				
 				break;
 				
@@ -2667,8 +2610,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				initialLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
-//				centreLocationRl.setVisibility(View.GONE);
-				searchLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.VISIBLE);
 				inRideRideInProgress.setText("Please wait while Jugnoo is coming...");
@@ -2721,8 +2662,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				initialLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
-//				centreLocationRl.setVisibility(View.GONE);
-				searchLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.GONE);
 				inRideRideInProgress.setText("Ride in progress...");
@@ -2742,14 +2681,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				initialLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
-//				centreLocationRl.setVisibility(View.GONE);
-				searchLayout.setVisibility(View.GONE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
-//				favBtn.setVisibility(View.GONE);
 
 				
 				break;
@@ -2760,15 +2696,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				initialLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
 				endRideReviewRl.setVisibility(View.GONE);
-//				centreLocationRl.setVisibility(View.VISIBLE);
-				searchLayout.setVisibility(View.GONE);
 				
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
-//				favBtn.setVisibility(View.VISIBLE);
 				
 		}
 		
@@ -2776,6 +2709,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		
 	}
+	
 	
 	
 	public void setTextToFareInfoTextViews(TextView minFareValue, TextView fareAfterValue, TextView fareAfterText){
@@ -2812,21 +2746,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
-	
-	
-	/**
-	 * Hides keyboard
-	 * @param context
-	 */
-	public void hideSoftKeyboard() {
-		try{
-			InputMethodManager mgr = (InputMethodManager) HomeActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
-			mgr.hideSoftInputFromWindow(searchEt.getWindowToken(), 0);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-
-	}
 	
 	
 	
@@ -3172,15 +3091,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.addCategory(Intent.CATEGORY_HOME);
 					startActivity(intent);
-				}
-				else{
-					super.onBackPressed();
-				}
-			}
-			else if(userMode == UserMode.PASSENGER){
-				if(passengerScreenMode == PassengerScreenMode.P_SEARCH){
-					passengerScreenMode = PassengerScreenMode.P_INITIAL;
-					switchPassengerScreen(passengerScreenMode);
 				}
 				else{
 					super.onBackPressed();
@@ -3553,86 +3463,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	class ViewHolderSearch {
-		TextView name;
-		LinearLayout relative;
-		int id;
-	}
-
-	class SearchListAdapter extends BaseAdapter {
-		LayoutInflater mInflater;
-		ViewHolderSearch holder;
-
-		public SearchListAdapter() {
-			mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		}
-
-		@Override
-		public int getCount() {
-			return searchResults.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return position;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			
-			if (convertView == null) {
-				
-				holder = new ViewHolderSearch();
-				convertView = mInflater.inflate(R.layout.list_item_search, null);
-				
-				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
-				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
-				
-				holder.relative.setTag(holder);
-				
-				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
-				ASSL.DoMagic(holder.relative);
-				
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolderSearch) convertView.getTag();
-			}
-			
-			
-			holder.id = position;
-			
-			holder.name.setText(""+searchResults.get(position).name + "\n" + searchResults.get(position).address);
-			
-			holder.relative.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					holder = (ViewHolderSearch) v.getTag();
-					
-					passengerScreenMode = PassengerScreenMode.P_INITIAL;
-					switchPassengerScreen(passengerScreenMode);
-					
-					SearchResult searchResult = searchResults.get(holder.id);
-					
-					
-					Log.e("searchResult.latLng ==",">"+searchResult.latLng);
-					
-					map.animateCamera(CameraUpdateFactory.newLatLng(searchResult.latLng), 1000, null);
-					
-				}
-			});
-			
-			
-			return convertView;
-		}
-
-	}
 	
 	
 	
@@ -3823,6 +3653,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+destination.latitude));
 		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+destination.longitude));
+		    			
+		    			Log.e("nameValuePairs in find_a_driver", "="+nameValuePairs);
+		    			
 		    			HttpRequester simpleJSONParser = new HttpRequester();
 		    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
 		    			simpleJSONParser = null;
@@ -3934,10 +3767,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				        	nearestDriverText.setText(distanceString);
 				        }
 				        
-				        if(!driverAcceptPushRecieved){
-				        	Data.pickupLatLng = destination;
-				        }
-				        else if (driverAcceptPushRecieved) {
+				        if (driverAcceptPushRecieved) {
 							SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 							Editor editor = pref.edit();
 							editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, Data.P_REQUEST_FINAL);
@@ -3980,27 +3810,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		markerOptions.position(driverInfo.latLng);
 		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
 		markerOptions.anchor(0.5f, 0.7f);
-		
 		map.addMarker(markerOptions);
-//		CircleOptions circleOptions = new CircleOptions();
-//		circleOptions.center(driverInfo.latLng);
-//		circleOptions.fillColor(Color.argb(20, 0, 0, 255));
-//		circleOptions.radius(5000);
-//		circleOptions.strokeWidth(0);
-//		map.addCircle(circleOptions);
 	}
 	
 	public void addCurrentLocationAddressMarker(LatLng latLng){
 		try {
-			if(currentLocationMarker != null){
-				currentLocationMarker.remove();
+			if (Data.userData.canChangeLocation == 0) {
+				if(currentLocationMarker != null){
+					currentLocationMarker.remove();
+				}
+				MarkerOptions markerOptions = new MarkerOptions();
+				markerOptions.title("customer_current_location");
+				markerOptions.snippet("");
+				markerOptions.position(latLng);
+				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+				currentLocationMarker = map.addMarker(markerOptions);
 			}
-			MarkerOptions markerOptions = new MarkerOptions();
-			markerOptions.title("customer_current_location");
-			markerOptions.snippet("");
-			markerOptions.position(latLng);
-			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
-			currentLocationMarker = map.addMarker(markerOptions);
 		} catch (Exception e) {
 		}
 	}
@@ -4043,88 +3868,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	/**
-	 * To search addresses related to particular address available on google
-	 */
-	public void searchGooglePlaces(String searchPlace) {
-		
-		final ProgressDialog dialog = ProgressDialog.show(HomeActivity.this, "","Searching... ", true);
-		
-		RequestParams params = new RequestParams();
-
-		searchResults.clear();
-
-		String ignr2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location="
-				+ ""
-				+ ","
-				+ ""
-				+ "&radius=50000"
-				+ "&query="
-				+ searchPlace
-				+ "&sensor=true&key="+Data.MAPS_BROWSER_KEY;
-		// "https://maps.googleapis.com/maps/api/place/textsearch/json?location=%f,%f&radius=2bb0000&query=%@&sensor=true&key=%@";
-
-		ignr2 = ignr2.replaceAll(" ", "%20");
-
-		AsyncHttpClient client = Data.getClient();
-		client.post(ignr2, params, new product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler() {
-
-			@Override
-			public void onFailure(Throwable arg3) {
-				try {
-					Log.e("request fail", arg3.getMessage().toString());
-				} catch (Exception e) {
-					Log.e("moving from", e.toString());
-				}
-				dialog.dismiss();
-			}
-
-			@Override
-			public void onSuccess(String response) {
-				Log.e("request result", response);
-				try {
-					JSONArray info = null;
-					JSONObject jj = new JSONObject(response);
-					info = jj.getJSONArray("results");
-					Log.v("converted", info + "");
-					for (int a = 0; a < info.length(); a++) {
-						JSONObject first = info.getJSONObject(a);
-						Log.e("first" + a, "" + first);
-					}
-					Log.v("info.len....", "" + info.length());
-					for (int i = 0; i < info.length(); i++) {
-						try {
-							SearchResult searchResult = new SearchResult(info.getJSONObject(i).getString("name"),
-									info.getJSONObject(i).getString("formatted_address"), 
-									new LatLng(
-									info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
-									info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng")
-									));
-							
-							searchResults.add(searchResult);
-							
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
-					for (int i = 0; i < searchResults.size(); i++) {
-						Log.i("Results name : ....", "" + searchResults.get(i).name);
-					}
-					passengerScreenMode = PassengerScreenMode.P_SEARCH;
-					switchPassengerScreen(passengerScreenMode);
-					
-					Toast.makeText(getApplicationContext(), ""+searchResults.size() + " results found.", Toast.LENGTH_LONG).show();
-					
-				} catch (JSONException e) {
-					e.printStackTrace();
-					Log.e("errorr at response", "" + e.toString());
-				}
-				
-				dialog.dismiss();
-			}
-			
-		});
-	}
 	
 	
 	
@@ -5374,11 +5117,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("id", Data.userData.id);
 
 			Log.i("access_token", "="+Data.userData.accessToken);
-			Log.i("id", "="+Data.userData.id);
-			
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL+"/logout", params,
@@ -6294,9 +6034,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				public void onClick(View view) {
 					dialog.dismiss();
 					//TODO on or off 
-//					switchToScheduleScreen(activity);
+					if(Data.userData != null){
+						if(Data.userData.canSchedule == 1){
+							switchToScheduleScreen(activity);
+						}
+					}
 				}
-				
 			});
 			
 			
@@ -7637,6 +7380,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 								nameValuePairs.add(new BasicNameValuePair("latitude", ""+Data.pickupLatLng.latitude));
 								nameValuePairs.add(new BasicNameValuePair("longitude", "" + Data.pickupLatLng.longitude));
+								if(myLocation != null){
+									nameValuePairs.add(new BasicNameValuePair("current_latitude", ""+myLocation.getLatitude()));
+									nameValuePairs.add(new BasicNameValuePair("current_longitude", "" + myLocation.getLongitude()));
+								}
+								else{
+									nameValuePairs.add(new BasicNameValuePair("current_latitude", ""+Data.pickupLatLng.latitude));
+									nameValuePairs.add(new BasicNameValuePair("current_longitude", "" + Data.pickupLatLng.longitude));
+								}
 								
 								if("".equalsIgnoreCase(Data.cSessionId)){
 									nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "0"));
@@ -7970,7 +7721,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				if(Data.assignedCustomerInfo != null){
 					String manualPatchPushReceived = Database2.getInstance(HomeActivity.this).getDriverManualPatchPushReceived();
 					if(Database2.YES.equalsIgnoreCase(manualPatchPushReceived)){
-						new DialogPopup().alertPopupWithListener(HomeActivity.this, "", "You have been manually connected. Pick the customer.", new View.OnClickListener() {
+						new DialogPopup().alertPopupWithListener(HomeActivity.this, "", "A pickup has been assigned to you. Please pick the customer.", new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								GCMIntentService.stopRing();

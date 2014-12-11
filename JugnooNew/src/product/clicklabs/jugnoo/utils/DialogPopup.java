@@ -249,6 +249,15 @@ public class DialogPopup {
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	AlertDialog locationAlertDialog;
 	/**
 	 * Function to show settings alert dialog

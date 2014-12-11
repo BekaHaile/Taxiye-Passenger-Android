@@ -24,7 +24,7 @@
             android:layout_marginTop="90px"
             android:background="@color/white_more_translucent"
             android:splitMotionEvents="false"
-            android:visibility="visible"
+            android:visibility="gone"
              >
 
             <LinearLayout
@@ -179,7 +179,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:splitMotionEvents="false"
-            android:visibility="gone" >
+            android:visibility="visible" >
 
 
             <Button
@@ -209,7 +209,6 @@
                 android:layout_height="63px"
                 android:layout_above="@+id/schedulePickupLocationCentrePivot"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="420px"
                 android:background="@drawable/pin_ball"
                 android:tag="mwar" />
 
@@ -227,7 +226,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="90px"
                 android:orientation="vertical"
-                android:background="@color/white_translucent"
+                android:background="@color/white"
                 android:visibility="gone"
                 
                 

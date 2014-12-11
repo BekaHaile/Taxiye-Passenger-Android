@@ -1,17 +1,14 @@
 package product.clicklabs.jugnoo.datastructure;
 
 public class UserData {
-	public String accessToken;
-	public String userName;
-	public String userImage;
-	public String id;
-	public String referralCode;
-	
-	public UserData(String accessToken, String userName, String userImage, String id, String referralCode){
+	public String accessToken, userName, userImage, referralCode;
+	public int canSchedule, canChangeLocation;
+	public UserData(String accessToken, String userName, String userImage, String referralCode, int canSchedule, int canChangeLocation){
 		this.accessToken = accessToken;
 		this.userName = userName;
 		this.userImage = userImage;
-		this.id = id;
 		this.referralCode = referralCode;
+		this.canSchedule = canSchedule;
+		this.canChangeLocation = canChangeLocation;
 	}
 }

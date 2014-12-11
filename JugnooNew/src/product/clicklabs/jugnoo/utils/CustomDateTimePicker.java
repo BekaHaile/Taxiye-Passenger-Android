@@ -6,12 +6,10 @@ import java.util.Date;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
-import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -21,7 +19,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
@@ -105,16 +102,6 @@ public class CustomDateTimePicker implements OnClickListener {
 		LinearLayout linear_top = new LinearLayout(activity);
 		linear_top.setLayoutParams(linear_match_match);
 
-		TextView textViewTitle = new TextView(activity);
-		textViewTitle.setText("Select Date and Time");
-		textViewTitle.setTextColor(activity.getResources().getColor(R.color.blue_btn));
-		textViewTitle.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-		textViewTitle.setLayoutParams(linear_match_match);
-		textViewTitle.setGravity(Gravity.CENTER);
-		textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-		
-		linear_top.addView(textViewTitle);
-
 		viewSwitcher = new ViewSwitcher(activity);
 		viewSwitcher.setLayoutParams(frame_match_wrap);
 
@@ -124,6 +111,7 @@ public class CustomDateTimePicker implements OnClickListener {
 		calendar.add(Calendar.DAY_OF_MONTH, 7);
 		datePicker.setMaxDate(calendar.getTimeInMillis());
 		datePicker.setCalendarViewShown(false);
+		
 		timePicker = new TimePicker(activity);
 		timePicker.setOnTimeChangedListener(new OnTimeChangedListener() {
 			@Override
@@ -161,9 +149,7 @@ public class CustomDateTimePicker implements OnClickListener {
 					selectedHour = hourOfDay;
 					selectedMinute = minute;
 				}
-				
 				setTimeIn24HourFormat(selectedHour, selectedMinute);
-				
 			}
 		});
 		
@@ -180,7 +166,7 @@ public class CustomDateTimePicker implements OnClickListener {
 		btn_set.setId(SET);
 		btn_set.setOnClickListener(this);
 		btn_set.setTypeface(Data.regularFont(activity));
-		btn_set.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+		btn_set.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
 		btn_set.setTextColor(activity.getResources().getColor(R.drawable.white_color_selector));
 		btn_set.setBackgroundResource(R.drawable.blue_btn_selector);
 		
@@ -192,7 +178,7 @@ public class CustomDateTimePicker implements OnClickListener {
 		btn_cancel.setId(CANCEL);
 		btn_cancel.setOnClickListener(this);
 		btn_cancel.setTypeface(Data.regularFont(activity));
-		btn_cancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+		btn_cancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
 		btn_cancel.setTextColor(activity.getResources().getColor(R.drawable.white_color_selector));
 		btn_cancel.setBackgroundResource(R.drawable.red_btn_selector);
 
@@ -205,6 +191,7 @@ public class CustomDateTimePicker implements OnClickListener {
 		linear_child.addView(linear_bottom);
 
 		linear_main.addView(linear_child);
+		
 
 		return linear_main;
 	}
