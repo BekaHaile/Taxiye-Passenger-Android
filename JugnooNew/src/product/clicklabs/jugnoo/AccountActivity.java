@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,6 +11,8 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.CouponStatus;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DateComparator;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Log;
@@ -265,7 +268,7 @@ public class AccountActivity extends Activity{
 	
 	
 	class ViewHolderCoupon {
-		TextView textViewCouponYouHave, textViewCouponTitle, textViewCouponSubTitle;
+		TextView textViewYouHave, textViewCouponTitle, textViewCouponSubTitle, textViewExpiryDate;
 		RelativeLayout relative;
 		int id;
 	}
@@ -300,9 +303,10 @@ public class AccountActivity extends Activity{
 				holder = new ViewHolderCoupon();
 				convertView = mInflater.inflate(R.layout.list_item_coupon, null);
 				
-				holder.textViewCouponYouHave = (TextView) convertView.findViewById(R.id.textViewCouponYouHave); holder.textViewCouponYouHave.setTypeface(Data.museoSlab(context), Typeface.BOLD);
+				holder.textViewYouHave = (TextView) convertView.findViewById(R.id.textViewYouHave); holder.textViewYouHave.setTypeface(Data.museoSlab(context), Typeface.BOLD);
 				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Data.museoSlab(context), Typeface.BOLD);
-				holder.textViewCouponSubTitle = (TextView) convertView.findViewById(R.id.textViewCouponSubTitle); holder.textViewCouponSubTitle.setTypeface(Data.museoSlab(context));
+				holder.textViewCouponSubTitle = (TextView) convertView.findViewById(R.id.textViewCouponSubTitle); holder.textViewCouponSubTitle.setTypeface(Data.museoSlab(context), Typeface.BOLD);
+				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Data.museoSlab(context));
 				
 				holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative); 
 				
@@ -321,21 +325,25 @@ public class AccountActivity extends Activity{
 			CouponInfo couponInfo = couponInfosList.get(position);
 			
 			if(couponInfo.enabled){
+				holder.textViewYouHave.setVisibility(View.GONE);
 				if(couponInfo.count > 1){
 					holder.textViewCouponTitle.setText(couponInfo.count + " " + couponInfo.title + "s");
 				}
 				else{
 					holder.textViewCouponTitle.setText(couponInfo.count + " " + couponInfo.title);
 				}
-				holder.textViewCouponSubTitle.setText(couponInfo.subtitle);
 				holder.textViewCouponSubTitle.setVisibility(View.VISIBLE);
-				holder.textViewCouponYouHave.setAlpha(1.0f);
+				holder.textViewExpiryDate.setVisibility(View.VISIBLE);
+				holder.textViewCouponSubTitle.setText(couponInfo.subtitle);
+				holder.textViewExpiryDate.setText("Expiring on "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
 				holder.textViewCouponTitle.setAlpha(1.0f);
 			}
 			else{
+				holder.textViewYouHave.setVisibility(View.VISIBLE);
 				holder.textViewCouponTitle.setText("0 Free rides");
 				holder.textViewCouponSubTitle.setVisibility(View.GONE);
-				holder.textViewCouponYouHave.setAlpha(0.5f);
+				holder.textViewExpiryDate.setVisibility(View.GONE);
+				holder.textViewYouHave.setAlpha(0.5f);
 				holder.textViewCouponTitle.setAlpha(0.5f);
 				
 			}
@@ -498,6 +506,9 @@ public class AccountActivity extends Activity{
 														}
 													}
 												}
+												
+												Collections.sort(couponInfosList, new DateComparator());
+												
 											}
 										}
 										else{
@@ -514,7 +525,6 @@ public class AccountActivity extends Activity{
 											couponInfo.enabled = false;
 											couponInfosList.add(couponInfo);
 										}
-										
 										
 										updateListData("Account info fetched", false);
 									}

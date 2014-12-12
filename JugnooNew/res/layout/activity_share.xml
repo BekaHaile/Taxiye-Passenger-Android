@@ -69,13 +69,31 @@
         />
                     
                     
+                    <TextView
+                        android:id="@+id/textViewReferralCodeDisplay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/linearLayoutShareBtns"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="20px"
+                        android:layout_marginRight="20px"
+                        android:layout_marginBottom="30px"
+                        android:singleLine="true"
+                        android:gravity="center"
+                        android:text="Your Referral Code is 12345678"
+                        android:textColor="@color/white"
+                        android:textSize="36px"
+                        />
+                    
+                    
                 
                 <LinearLayout 
+                    android:id="@+id/linearLayoutShareBtns"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="40px"
+                    android:layout_marginBottom="30px"
                     android:layout_centerHorizontal="true"
                     android:splitMotionEvents="false"
                     
@@ -129,7 +147,7 @@
                     >
                 
                 <TextView
-                        android:id="@+id/textViewSharePromo"
+                        android:id="@+id/textViewShareReferral"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textViewReferUs"
@@ -138,7 +156,7 @@
                         android:layout_marginRight="20px"
                         android:layout_marginTop="30px"
                         android:gravity="center"
-                        android:text="Share your promo code 12345678"
+                        android:text="Share your referral code 12345678"
                         android:textColor="@color/black"
                         android:textSize="36px"
                         />

@@ -33,7 +33,7 @@ public class CouponInfo {
 	@Override
 	public boolean equals(Object o) {
 		try{
-			if(((CouponInfo)o).type == this.type){
+			if((((CouponInfo)o).type == this.type) && (((CouponInfo)o).expiryDate.equalsIgnoreCase(this.expiryDate))){
 				return true;
 			}
 			else{

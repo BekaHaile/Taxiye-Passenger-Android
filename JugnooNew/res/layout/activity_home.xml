@@ -147,7 +147,7 @@
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
                 android:layout_marginTop="90px"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <Button
                         android:id="@+id/customerInRideMyLocationBtn"
@@ -266,7 +266,7 @@
                         android:id="@+id/callDriverBtn"
                         android:layout_width="648px"
                         android:layout_height="99px"
-                        android:layout_above="@+id/fareInfoRl"
+                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="27px"
                         android:background="@drawable/blue_btn_selector"
@@ -278,14 +278,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="6px"
                         android:layout_above="@+id/fareInfoRl"
-                        android:background="@drawable/shadow_up" />
+                        android:background="@drawable/shadow_up"
+                        android:visibility="gone"
+                         />
 
                     <RelativeLayout
                         android:id="@+id/fareInfoRl"
                         android:layout_width="match_parent"
                         android:layout_height="120px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/white_translucent" >
+                        android:background="@color/white_translucent"
+                        android:visibility="gone"
+                         >
 
                         <LinearLayout
                             android:id="@+id/minFareLinear"
@@ -387,7 +391,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <ImageView
                         android:id="@+id/centreLocationPin"

@@ -26,7 +26,7 @@
 
                 
                 <TextView
-                    android:id="@+id/textViewCouponYouHave"
+                    android:id="@+id/textViewYouHave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -36,8 +36,8 @@
                     android:singleLine="true"
                     android:text="You have"
                     android:textColor="@color/black"
+                    android:layout_marginTop="0px"
                     android:textSize="50px" />
-                
                 
                 <TextView
                     android:id="@+id/textViewCouponTitle"
@@ -50,7 +50,7 @@
                     android:singleLine="true"
                     android:text="1 Free Ride"
                     android:textColor="@color/black"
-                    android:layout_marginTop="20px"
+                    android:layout_marginTop="0px"
                     android:textSize="50px" />
 
                 <TextView
@@ -65,7 +65,22 @@
                     android:singleLine="true"
                     android:text="of upto Rs. 100/-"
                     android:textColor="@color/black"
-                    android:textSize="30px" />
+                    android:textSize="34px" />
+                
+                <TextView
+                    android:id="@+id/textViewExpiryDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="20px"
+                    android:layout_marginTop="20px"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="Expiring on 10th Jan, 2015"
+                    android:textColor="@color/black"
+                    android:textSize="24px" />
+                
             </LinearLayout>
 
             

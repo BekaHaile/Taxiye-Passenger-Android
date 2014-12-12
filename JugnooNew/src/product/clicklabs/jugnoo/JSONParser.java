@@ -110,9 +110,16 @@ public class JSONParser {
 	
 	
 	public UserData parseUserData(JSONObject userData) throws Exception{
+		int canSchedule = 0, canChangeLocation = 0;
+		if(userData.has("can_schedule")){
+			canSchedule = userData.getInt("can_schedule");
+		}
+		if(userData.has("can_change_location")){
+			canChangeLocation = userData.getInt("can_change_location");
+		}
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), 
-				userData.getInt("can_schedule"), userData.getInt("can_change_location"));
+				canSchedule, canChangeLocation);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
