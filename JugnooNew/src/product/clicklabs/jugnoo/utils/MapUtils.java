@@ -240,10 +240,10 @@ public class MapUtils {
 		ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
 		try{
 			String ignr2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location="
-					+ ""
+					+ "30.75"
 					+ ","
-					+ ""
-					+ "&radius=50000"
+					+ "76.78"
+					+ "&radius=50"
 					+ "&query="
 					+ searchText
 					+ "&sensor=true&key="+Data.MAPS_BROWSER_KEY;

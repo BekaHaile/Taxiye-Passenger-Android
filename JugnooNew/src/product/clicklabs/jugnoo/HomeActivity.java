@@ -2263,7 +2263,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						driverScheduledRideText.setVisibility(View.VISIBLE);
 						driverScheduledRideText.setText("Scheduled Ride Pickup: "+time);
 					}
-					
 				}
 				
 				
@@ -4238,8 +4237,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											phoneNo = "";
 										}
 										
+										
+										int isScheduled = 0;
+										String pickupTime = "";
+										if(jObj.has("is_scheduled")){
+											isScheduled = jObj.getInt("is_scheduled");
+											if(isScheduled == 1 && jObj.has("pickup_time")){
+												pickupTime = jObj.getString("pickup_time");
+											}
+										}
+										
 										Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, userName,
 												userImage, phoneNo, rating);
+										Data.assignedCustomerInfo.schedulePickupTime = pickupTime;
 										
 										Data.driverRideRequests.clear();
 										

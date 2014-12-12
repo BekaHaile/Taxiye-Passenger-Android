@@ -290,6 +290,8 @@ public class JSONParser {
 										GCMIntentService.stopRing();
 									}
 									
+
+									
 								}
 								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
 									JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
@@ -307,8 +309,13 @@ public class JSONParser {
 										customerImage = jObject.getString("user_image");
 										customerPhone = jObject.getString("phone_no");
 										customerRating = jObject.getString("rating");
-										if(jObject.has("schedule_pickup_time")){
-											schedulePickupTime = jObject.getString("schedule_pickup_time");
+										
+										int isScheduled = 0;
+										if(jObject.has("is_scheduled")){
+											isScheduled = jObject.getInt("is_scheduled");
+											if(isScheduled == 1 && jObject.has("pickup_time")){
+												schedulePickupTime = jObject.getString("pickup_time");
+											}
 										}
 									}
 								}

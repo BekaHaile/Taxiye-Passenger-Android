@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
@@ -469,6 +470,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 	
 	
 	public void performBackPressed(){
+		Utils.hideSoftKeyboard(ScheduleRideActivity.this, searchBarEditText);
 		if(ScheduleScreenMode.SEARCH == scheduleScreenMode){
 			scheduleScreenMode = ScheduleScreenMode.PICK_LOCATION;
 			switchScheduleScreen(scheduleScreenMode);
