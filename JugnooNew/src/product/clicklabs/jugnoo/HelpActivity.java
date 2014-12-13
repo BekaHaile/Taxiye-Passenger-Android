@@ -2,9 +2,12 @@ package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -28,7 +31,6 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class HelpActivity extends FragmentActivity{
@@ -48,8 +50,8 @@ public class HelpActivity extends FragmentActivity{
 	
 	HelpListAdapter helpListAdapter;
 	
-	ArrayList<HelpItem> helpItems = new ArrayList<HelpItem>();
-	HelpItem selectedHelpItem;
+	ArrayList<HelpSection> helpSections = new ArrayList<HelpSection>();
+	HelpSection selectedHelpSection;
 	
 	AsyncHttpClient fetchHelpDataClient;
 	
@@ -105,20 +107,20 @@ public class HelpActivity extends FragmentActivity{
 			
 			@Override
 			public void onClick(View v) {
-				if(selectedHelpItem != null){
-					getHelpAsync(HelpActivity.this, selectedHelpItem);
+				if(selectedHelpSection != null){
+					getHelpAsync(HelpActivity.this, selectedHelpSection);
 				}
 			}
 		});
 		
 		
-		helpItems.clear();
-		helpItems.add(new HelpItem(HelpSection.MAIL_US, "Send Us an Email"));
-		helpItems.add(new HelpItem(HelpSection.CALL_US, "Call Us"));
-		helpItems.add(new HelpItem(HelpSection.FAQ, "FAQs"));
-		helpItems.add(new HelpItem(HelpSection.ABOUT, "About Jugnoo"));
-		helpItems.add(new HelpItem(HelpSection.TERMS, "Terms of Use"));
-		helpItems.add(new HelpItem(HelpSection.PRIVACY, "Privacy Policy"));
+		helpSections.clear();
+		helpSections.add(HelpSection.MAIL_US);
+		helpSections.add(HelpSection.CALL_US);
+		helpSections.add(HelpSection.FAQ);
+		helpSections.add(HelpSection.ABOUT);
+		helpSections.add(HelpSection.TERMS);
+		helpSections.add(HelpSection.PRIVACY);
 		
 		
 		helpListAdapter.notifyDataSetChanged();
@@ -127,7 +129,7 @@ public class HelpActivity extends FragmentActivity{
 	}
 	
 	
-	public void openHelpData(HelpItem helpItem, String data, boolean errorOccured) {
+	public void openHelpData(HelpSection helpSection, String data, boolean errorOccured) {
 		if (errorOccured) {
 			textViewInfoDisplay.setVisibility(View.VISIBLE);
 			textViewInfoDisplay.setText(data);
@@ -137,8 +139,8 @@ public class HelpActivity extends FragmentActivity{
 			helpWebview.setVisibility(View.VISIBLE);
 			loadHTMLContent(data);
 		}
-		selectedHelpItem = helpItem;
-		title.setText("" + helpItem.name);
+		selectedHelpSection = helpSection;
+		title.setText("" + helpSection.getName());
 
 	}
 	
@@ -165,7 +167,7 @@ public class HelpActivity extends FragmentActivity{
 
 		@Override
 		public int getCount() {
-			return helpItems.size();
+			return helpSections.size();
 		}
 
 		@Override
@@ -199,7 +201,7 @@ public class HelpActivity extends FragmentActivity{
 			
 			holder.id = position;
 			
-			holder.name.setText(helpItems.get(position).name);
+			holder.name.setText(helpSections.get(position).getName());
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
 				
@@ -207,7 +209,7 @@ public class HelpActivity extends FragmentActivity{
 				public void onClick(View v) {
 					holder = (ViewHolderHelp) v.getTag();
 					
-					switch(helpItems.get(holder.id).id){
+					switch(helpSections.get(holder.id)){
 						case MAIL_US:
 							openMailIntentToSupport();
 							FlurryEventLogger.mailToSupportPressed(Data.userData.accessToken);
@@ -219,8 +221,8 @@ public class HelpActivity extends FragmentActivity{
 							break;
 							
 						default:
-							getHelpAsync(HelpActivity.this, helpItems.get(holder.id));
-							FlurryEventLogger.particularHelpOpened(helpItems.get(holder.id).name, Data.userData.accessToken);
+							getHelpAsync(HelpActivity.this, helpSections.get(holder.id));
+							FlurryEventLogger.particularHelpOpened(helpSections.get(holder.id).getName(), Data.userData.accessToken);
 							
 					}
 				}
@@ -253,7 +255,7 @@ public class HelpActivity extends FragmentActivity{
 	/**
 	 * ASync for get rides from server
 	 */
-	public void getHelpAsync(final Activity activity, final HelpItem helpItem) {
+	public void getHelpAsync(final Activity activity, final HelpSection helpSection) {
 		if(fetchHelpDataClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				
@@ -263,28 +265,25 @@ public class HelpActivity extends FragmentActivity{
 				helpWebview.setVisibility(View.GONE);
 				loadHTMLContent("");
 				
-				Log.e("helpItem", "="+helpItem);
+				Log.e("helpSection", "="+helpSection);
 				
 				RequestParams params = new RequestParams();
-				params.put("section", ""+helpItem.id.getOrdinal());
+				params.put("section", ""+helpSection.getOrdinal());
 				
 				fetchHelpDataClient = Data.getClient();
 				fetchHelpDataClient.post(Data.SERVER_URL + "/get_information", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								progressBarHelp.setVisibility(View.GONE);
-								openHelpData(helpItem, "Some error occured. Tap to retry.", true);
+								openHelpData(helpSection, "Some error occured. Tap to retry.", true);
 							}
 	
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.i("Server response faq ", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
@@ -294,16 +293,16 @@ public class HelpActivity extends FragmentActivity{
 											HomeActivity.logoutUser(activity);
 										}
 										else{
-											openHelpData(helpItem, "Some error occured. Tap to retry.", true);
+											openHelpData(helpSection, "Some error occured. Tap to retry.", true);
 										}
 									}
 									else{
 										String data = jObj.getString("data");
-										openHelpData(helpItem, data, false);
+										openHelpData(helpSection, data, false);
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									openHelpData(helpItem, "Some error occured. Tap to retry.", true);
+									openHelpData(helpSection, "Some error occured. Tap to retry.", true);
 								}
 								progressBarHelp.setVisibility(View.GONE);
 							}
@@ -316,7 +315,7 @@ public class HelpActivity extends FragmentActivity{
 						});
 			}
 			else {
-				openHelpData(helpItem, "No internet connection. Tap to retry.", true);
+				openHelpData(helpSection, "No internet connection. Tap to retry.", true);
 			}
 		}
 	}

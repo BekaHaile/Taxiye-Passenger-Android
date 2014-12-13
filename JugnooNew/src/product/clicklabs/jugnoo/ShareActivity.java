@@ -1,5 +1,9 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
+import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
@@ -31,13 +35,16 @@ public class ShareActivity extends Activity{
 	Button backBtn;
 	TextView title;
 	
+	TextView textViewReferralCodeDisplay;
 	ImageView shareFacebookImg, shareWhatsappImg, shareSMSImg, shareEMailImg;
-	TextView textViewSharePromo;
+	TextView textViewShareReferral;
 	
 	
 	String str1 = "Share your referral code ",
 			str2 = " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, " +
-					"you will earn a FREE ride (upto Rs. 100) as well.";
+					"you will earn a FREE ride (upto Rs. 100) as well.",
+					str3 = "Your Referral Code is ";
+	
 	
 	String shareStr1 = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
 	String shareStr11 = "Use Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
@@ -67,12 +74,14 @@ public class ShareActivity extends Activity{
 		backBtn = (Button) findViewById(R.id.backBtn); 
 		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
 		
+		textViewReferralCodeDisplay = (TextView) findViewById(R.id.textViewReferralCodeDisplay); textViewReferralCodeDisplay.setTypeface(Data.regularFont(getApplicationContext()));
+		
 		shareFacebookImg = (ImageView) findViewById(R.id.shareFacebookImg);
 		shareWhatsappImg = (ImageView) findViewById(R.id.shareWhatsappImg);
 		shareSMSImg = (ImageView) findViewById(R.id.shareSMSImg);
 		shareEMailImg = (ImageView) findViewById(R.id.shareEMailImg);
 		
-		textViewSharePromo = (TextView) findViewById(R.id.textViewSharePromo); textViewSharePromo.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewShareReferral = (TextView) findViewById(R.id.textViewShareReferral); textViewShareReferral.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		SpannableString sstr = new SpannableString(Data.userData.referralCode);
 		final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
@@ -80,10 +89,16 @@ public class ShareActivity extends Activity{
 		sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		sstr.setSpan(clrs, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		
-		textViewSharePromo.setText("");
-		textViewSharePromo.append(str1);
-		textViewSharePromo.append(sstr);
-		textViewSharePromo.append(str2);
+		textViewShareReferral.setText("");
+		textViewShareReferral.append(str1);
+		textViewShareReferral.append(sstr);
+		textViewShareReferral.append(str2);
+		
+		textViewReferralCodeDisplay.setText("");
+		textViewReferralCodeDisplay.append(str3);
+		textViewReferralCodeDisplay.append(sstr);
+		
+		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
 		
@@ -99,7 +114,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLogin().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
+				new FacebookLoginCreator().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
 				FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);
 			}
 		});
@@ -139,7 +154,7 @@ public class ShareActivity extends Activity{
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
 		public void facebookLoginDone() {
-			new FacebookLogin().publishFeedDialog(ShareActivity.this, 
+			new FacebookLoginCreator().publishFeedDialog(ShareActivity.this, 
 					shareStr11 + Data.userData.referralCode + shareStr2, 
 					"Use " + Data.userData.referralCode + " as code & get a FREE ride");
 		}
@@ -154,6 +169,7 @@ public class ShareActivity extends Activity{
 			String text = shareStr1 + referralCode + shareStr2;
 
 			PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+			Log.d("info", "="+info);
 			waIntent.setPackage("com.whatsapp");
 
 			waIntent.putExtra(Intent.EXTRA_TEXT, text);

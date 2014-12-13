@@ -1,8 +1,16 @@
 package product.clicklabs.jugnoo;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
+import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +35,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class RegisterScreen extends Activity implements LocationUpdate{
@@ -108,7 +115,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLogin().openFacebookSession(RegisterScreen.this, facebookLoginCallback, true);
+				new FacebookLoginCreator().openFacebookSession(RegisterScreen.this, facebookLoginCallback, true);
 			}
 		});
 		
@@ -396,6 +403,15 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
+		new DeviceTokenGenerator(this).generateDeviceToken(this, new IDeviceTokenReceiver() {
+			
+			@Override
+			public void deviceTokenReceived(final String regId) {
+				Data.deviceToken = regId;
+				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+			}
+		});
+		
 
 		
 //		nameEt.setText("Test");
@@ -539,21 +555,18 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/customer_registeration", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
 	
 							try {
@@ -588,9 +601,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								else{
 									new JSONParser().parseLoginData(activity, response);
 									
-									Database database22 = new Database(RegisterScreen.this);
-									database22.insertEmail(emailId);
-									database22.close();
+									Database.getInstance(RegisterScreen.this).insertEmail(emailId);
+									Database.getInstance(RegisterScreen.this).close();
 									
 									loginDataFetched = true;
 									
@@ -676,20 +688,18 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/customer_fb_registeration_form", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
-						public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-							String response = new String(arg2);
+						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
 	
 							try {
@@ -720,6 +730,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 									else{
 										new JSONParser().parseLoginData(activity, response);
 										loginDataFetched = true;
+										Database.getInstance(RegisterScreen.this).insertEmail(Data.fbUserEmail);
+										Database.getInstance(RegisterScreen.this).close();
+										
 										DialogPopup.dismissLoadingDialog();
 									}
 								}
@@ -774,9 +787,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
-			Database2 database2 = new Database2(RegisterScreen.this);
-	        database2.updateDriverLastLocationTime();
-	        database2.close();
+			Database2.getInstance(RegisterScreen.this).updateDriverLastLocationTime();
+			Database2.getInstance(RegisterScreen.this).close();
 //			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
 			if(Data.termsAgreed == 1){
 				startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
@@ -835,18 +847,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onDestroy() {
-		try{
-		if(Data.locationFetcher != null){
-			Data.locationFetcher.destroy();
-			Data.locationFetcher = null;
-		}
-	} catch(Exception e){
-		e.printStackTrace();
-	}
 		super.onDestroy();
-        
         ASSL.closeActivity(relative);
-        
         System.gc();
 	}
 
@@ -854,6 +856,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	@Override
 	public void onLocationChanged(Location location, int priority) {
 		// TODO Auto-generated method stub
+		Data.latitude = location.getLatitude();
+		Data.longitude = location.getLongitude();
 		new DriverLocationDispatcher().saveLocationToDatabase(RegisterScreen.this, location);
 	}
 	

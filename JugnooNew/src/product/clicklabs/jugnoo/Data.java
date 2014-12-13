@@ -5,6 +5,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.datastructure.CustomerInfo;
+import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
+import product.clicklabs.jugnoo.datastructure.DriverType;
+import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -36,7 +44,7 @@ public class Data {
 	public static final String DEBUG_PASSWORD = "3131";
 	
 	public static final String SHARED_PREF_NAME = "myPref", SETTINGS_SHARED_PREF_NAME = "settingsPref";
-	public static final String SP_ACCESS_TOKEN_KEY = "access_token", SP_ID_KEY = "session_id",
+	public static final String SP_ACCESS_TOKEN_KEY = "access_token",
 			
 			SP_TOTAL_DISTANCE = "total_distance", 
 			SP_WAIT_TIME = "wait_time",
@@ -135,7 +143,7 @@ public class Data {
 	//TODO
 	public static final String DEV_SERVER_URL = "https://54.81.229.172:8012";
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
-	public static final String TRIAL_SERVER_URL = "http://54.81.229.172:8200";
+	public static final String TRIAL_SERVER_URL = "https://54.81.229.172:8200";
 	
 	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 	

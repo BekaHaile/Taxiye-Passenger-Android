@@ -2,26 +2,29 @@ package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
 
-import com.google.android.gms.maps.model.LatLng;
-
+import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Handles database related work
  */
 public class Database2 {																	// class for handling database related activities
 
+	private static Database2 dbInstance;
+	
 	private static final String DATABASE_NAME = "jugnoo_database2";						// declaring database variables
 
 	private static final int DATABASE_VERSION = 2;
 
 	private DbHelper dbHelper;
 
-	SQLiteDatabase database;
+	private SQLiteDatabase database;
 
 	public static final String YES = "yes", NO = "no", NEVER = "never";
 	
@@ -36,12 +39,14 @@ public class Database2 {																	// class for handling database related 
 	
 	private static final String TABLE_USER_MODE = "table_user_mode";
 	private static final String USER_MODE = "user_mode";
+	
 	public static final String UM_DRIVER = "driver";
 	public static final String UM_PASSENGER = "passenger";
 	public static final String UM_OFFLINE = "offline";
 	
 	private static final String TABLE_DRIVER_SCREEN_MODE = "table_driver_screen_mode";
 	private static final String DRIVER_SCREEN_MODE = "driver_screen_mode";
+	
 	public static final String VULNERABLE = "vulnerable";
 	public static final String NOT_VULNERABLE = "not_vulnerable";
 	
@@ -69,6 +74,9 @@ public class Database2 {																	// class for handling database related 
 	private static final String TABLE_DRIVER_SERVICE_TIME_TO_RESTART = "table_driver_service_time_to_restart";
 	private static final String TIME_TO_RESTART = "time_to_restart";
 	
+	private static final String TABLE_DRIVER_MANUAL_PATCH = "table_driver_manual_patch";
+	private static final String DRIVER_MANUAL_PATCH_PUSH_RECEIVED = "driver_manual_patch_push_received";
+	
 	/**
 	 * Creates and opens database for the application use 
 	 * @author shankar
@@ -89,12 +97,11 @@ public class Database2 {																	// class for handling database related 
 		public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 			onCreate(database);
 		}
-		
 
 	}
 
 	
-	public static void createAllTables(SQLiteDatabase database){
+	private static void createAllTables(SQLiteDatabase database){
 		/****************************************** CREATING ALL THE TABLES *****************************************************/
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_FAST + " ("
@@ -138,17 +145,30 @@ public class Database2 {																	// class for handling database related 
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SERVICE_TIME_TO_RESTART + " ("
 				+ TIME_TO_RESTART + " TEXT" + ");");
 		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_MANUAL_PATCH + " ("
+				+ DRIVER_MANUAL_PATCH_PUSH_RECEIVED + " TEXT" + ");");
+		
 	}
 	
+	public static Database2 getInstance(Context context) {
+		if (dbInstance == null) {
+			dbInstance = new Database2(context);
+		} 
+		else if (!dbInstance.database.isOpen()) {
+			dbInstance = null;
+			dbInstance = new Database2(context);
+		}
+		return dbInstance;
+	}
 	
-	
-	public Database2(Context context) {
+	private Database2(Context context) {
 		dbHelper = new DbHelper(context);
 		database = dbHelper.getWritableDatabase();
 		createAllTables(database);
 	}
 
 	public void close() {
+		database.close();
 		dbHelper.close();
 		System.gc();
 	}
@@ -646,6 +666,53 @@ public class Database2 {																	// class for handling database related 
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public String getDriverManualPatchPushReceived() {
+		try {
+			String[] columns = new String[] { Database2.DRIVER_MANUAL_PATCH_PUSH_RECEIVED };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_MANUAL_PATCH, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				String choice = cursor.getString(cursor.getColumnIndex(Database2.DRIVER_MANUAL_PATCH_PUSH_RECEIVED));
+				return choice;
+			} else {
+				return NO;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return NO;
+		}
+	}
+	
+	public void updateDriverManualPatchPushReceived(String choice) {
+		try{
+			deleteDriverManualPatchPushReceived();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.DRIVER_MANUAL_PATCH_PUSH_RECEIVED, choice);
+			database.insert(Database2.TABLE_DRIVER_MANUAL_PATCH, null, contentValues);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void deleteDriverManualPatchPushReceived(){
+		try{
+			database.delete(Database2.TABLE_DRIVER_MANUAL_PATCH, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	
 	

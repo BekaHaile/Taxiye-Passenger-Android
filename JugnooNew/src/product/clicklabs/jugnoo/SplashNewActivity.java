@@ -1,11 +1,17 @@
 package product.clicklabs.jugnoo;
 
-import java.io.IOException;
 import java.util.Locale;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,7 +19,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -47,13 +52,10 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class SplashNewActivity extends Activity implements LocationUpdate{
-	
 	
 	LinearLayout relative;
 	
@@ -65,8 +67,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	boolean loginDataFetched = false, loginFailed = false;
 	
-	GoogleCloudMessaging gcm;
-	String regid;
+//	GoogleCloudMessaging gcm;
 	
 	// *****************************Used for flurry work***************//
 	@Override
@@ -204,20 +205,18 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
 			
-			Data.deviceToken = getRegistrationId(this);
 			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
 		
-		gcm = GoogleCloudMessaging.getInstance(this);
-	    regid = getRegistrationId(this);
-	    Data.deviceToken = regid;
 
-	    Log.i("deviceToken", Data.deviceToken + "..");
-	    
-	    noNetFirstTime = false;
+		noNetFirstTime = false;
 		noNetSecondTime = false;
+	    
+	    
+	    
+	    
 	    
 		if(getIntent().hasExtra("no_anim")){
 			jugnooImg.clearAnimation();
@@ -226,7 +225,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			layoutParams.setMargins(0, (int)(150 * ASSL.Yscale()), 0, 0);
 			jugnooImg.setLayoutParams(layoutParams);
 			jugnooTextImg.setVisibility(View.VISIBLE);
-			callFirstAttempt();
+			noNetFirstTime = true;
+			getDeviceToken();
 		}
 		else{
 			Animation animation = new TranslateAnimation(0, 0, 0, (int)(438*ASSL.Yscale()));
@@ -248,15 +248,34 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				if(!loginDataFetched){
 					noNetFirstTime = false;
 					noNetSecondTime = false;
-					callFirstAttempt();
+					getDeviceToken();
 				}
 			}
 		});
 		
 		
-		
-		
 	    
+	}
+	
+	public void getDeviceToken(){
+	    progressBar1.setVisibility(View.VISIBLE);
+		new DeviceTokenGenerator(SplashNewActivity.this).generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
+			
+			@Override
+			public void deviceTokenReceived(final String regId) {
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Data.deviceToken = regId;
+						Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+						callFirstAttempt();
+						progressBar1.setVisibility(View.GONE);
+					}
+				});
+				
+			}
+		});
 	}
 	
 	
@@ -311,13 +330,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					
 					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 						noNetSecondTime = false;
-						if (regid.isEmpty()){
-					        registerInBackground();
-					    }
-					    else{
-					    	accessTokenLogin(SplashNewActivity.this);
-					    	FlurryEventLogger.appStarted(regid);
-					    }
+					    accessTokenLogin(SplashNewActivity.this);
+					    FlurryEventLogger.appStarted(Data.deviceToken);
 					}
 					else{
 						new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
@@ -334,100 +348,99 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
-	public static final String EXTRA_MESSAGE = "message";
-    public static final String PROPERTY_REG_ID = "registration_id";
-    private static final String PROPERTY_APP_VERSION = "appVersion";
-	
-	private String getRegistrationId(Context context) {
-	    final SharedPreferences prefs = getGCMPreferences(context);
-	    String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-	    if (registrationId.isEmpty()) {
-	        Log.i("dfs", "Registration not found.");
-	        return "";
-	    }
-	    // Check if app was updated; if so, it must clear the registration ID
-	    // since the existing regID is not guaranteed to work with the new
-	    // app version.
-	    int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-	    int currentVersion = getAppVersion(context);
-	    if (registeredVersion != currentVersion) {
-	        Log.i("sdfs", "App version changed.");
-	        return "";
-	    }
-	    return registrationId;
-	}
-	
-	private void registerInBackground() {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-	    new AsyncTask<String, Integer, String>() {
-
-	        @Override
-	    	protected void onPreExecute() {
-	    		progressBar1.setVisibility(View.VISIBLE);
-	    	};
-	    	
-	        @Override
-	        protected String doInBackground(String... params) {
-	            String msg = "";
-	            try {
-	                if (gcm == null) {
-	                    gcm = GoogleCloudMessaging.getInstance(SplashNewActivity.this);
-	                }
-	                regid = gcm.register(Data.GOOGLE_PROJECT_ID);
-	                Data.deviceToken = regid;
-	                msg = "Device registered, registration ID=" + regid;
-	                
-	                setRegistrationId(SplashNewActivity.this, regid);
-	            } catch (IOException ex) {
-	                msg = "Error :" + ex.getMessage();
-	            }
-	            return msg;
-	        }
-
-	        @Override
-	        protected void onPostExecute(String msg) {
-	        	Log.e("msg  ===== ","="+msg);
-	    		progressBar1.setVisibility(View.GONE);
-	    		accessTokenLogin(SplashNewActivity.this);
-	    		FlurryEventLogger.appStarted(regid);
-	        	//=Device registered, registration ID=APA91bHaLnaJLjUGLXDKcW39Gke0eK78tFRe1ByJsj8rmFS2boJ2_HNzvxkS39tfo0z6IahCUPyV49gpHx-2M3WzWmpHv4u4O0cGuYxN-aKuPx1SG4Gy-2WHBg8o3sSP_GtJgfThb3G36miecVxQ1xGafeKMgbV2sO9EP1aaVDyXI3t6bgS7gmQ
-	        }
-	    }.execute(null, null, null);
-		}
-		else{
-			new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
-		}
-	}
-	
-	
-	private void setRegistrationId(Context context, String regId) {
-	    final SharedPreferences prefs = getGCMPreferences(context);
-	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putString(PROPERTY_REG_ID, regId);
-	    editor.putInt(PROPERTY_APP_VERSION, getAppVersion(context));
-	    editor.commit();
-	}
-	
-	/**
-	 * @return Application's {@code SharedPreferences}.
-	 */
-	private SharedPreferences getGCMPreferences(Context context) {
-	    // This sample app persists the registration ID in shared preferences, but
-	    // how you store the regID in your app is up to you.
-	    return getSharedPreferences(SplashLogin.class.getSimpleName(),
-	            Context.MODE_PRIVATE);
-	}
-	
-	private static int getAppVersion(Context context) {
-	    try {
-	        PackageInfo packageInfo = context.getPackageManager()
-	                .getPackageInfo(context.getPackageName(), 0);
-	        return packageInfo.versionCode;
-	    } catch (NameNotFoundException e) {
-	        // should never happen
-	        throw new RuntimeException("Could not get package name: " + e);
-	    }
-	}
+//	public static final String EXTRA_MESSAGE = "message";
+//    public static final String PROPERTY_REG_ID = "registration_id";
+//    private static final String PROPERTY_APP_VERSION = "appVersion";
+//	
+//	private String getRegistrationId(Context context) {
+//	    final SharedPreferences prefs = getGCMPreferences(context);
+//	    String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+//	    if (registrationId.isEmpty()) {
+//	        Log.i("dfs", "Registration not found.");
+//	        return "";
+//	    }
+//	    // Check if app was updated; if so, it must clear the registration ID
+//	    // since the existing regID is not guaranteed to work with the new
+//	    // app version.
+//	    int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+//	    int currentVersion = getAppVersion(context);
+//	    if (registeredVersion != currentVersion) {
+//	        Log.i("sdfs", "App version changed.");
+//	        return "";
+//	    }
+//	    return registrationId;
+//	}
+//	
+//	private void registerInBackground() {
+//		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+//	    new AsyncTask<String, Integer, String>() {
+//
+//	        @Override
+//	    	protected void onPreExecute() {
+//	    		progressBar1.setVisibility(View.VISIBLE);
+//	    	};
+//	    	
+//	        @Override
+//	        protected String doInBackground(String... params) {
+//	            String msg = "";
+//	            try {
+//	                if (gcm == null) {
+//	                    gcm = GoogleCloudMessaging.getInstance(SplashNewActivity.this);
+//	                }
+//	                Data.deviceToken = gcm.register(Data.GOOGLE_PROJECT_ID);
+//	                msg = "Device registered, registration ID";
+//	                
+//	                setRegistrationId(SplashNewActivity.this, Data.deviceToken);
+//	            } catch (IOException ex) {
+//	                msg = "Error :" + ex.getMessage();
+//	            }
+//	            return msg;
+//	        }
+//
+//	        @Override
+//	        protected void onPostExecute(String msg) {
+//	        	Log.e("msg  ===== ","="+msg);
+//	    		progressBar1.setVisibility(View.GONE);
+//	    		accessTokenLogin(SplashNewActivity.this);
+//	    		FlurryEventLogger.appStarted(Data.deviceToken);
+//	        	//=Device registered, registration ID=APA91bHaLnaJLjUGLXDKcW39Gke0eK78tFRe1ByJsj8rmFS2boJ2_HNzvxkS39tfo0z6IahCUPyV49gpHx-2M3WzWmpHv4u4O0cGuYxN-aKuPx1SG4Gy-2WHBg8o3sSP_GtJgfThb3G36miecVxQ1xGafeKMgbV2sO9EP1aaVDyXI3t6bgS7gmQ
+//	        }
+//	    }.execute(null, null, null);
+//		}
+//		else{
+//			new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+//		}
+//	}
+//	
+//	
+//	private void setRegistrationId(Context context, String regId) {
+//	    final SharedPreferences prefs = getGCMPreferences(context);
+//	    SharedPreferences.Editor editor = prefs.edit();
+//	    editor.putString(PROPERTY_REG_ID, regId);
+//	    editor.putInt(PROPERTY_APP_VERSION, getAppVersion(context));
+//	    editor.commit();
+//	}
+//	
+//	/**
+//	 * @return Application's {@code SharedPreferences}.
+//	 */
+//	private SharedPreferences getGCMPreferences(Context context) {
+//	    // This sample app persists the registration ID in shared preferences, but
+//	    // how you store the regID in your app is up to you.
+//	    return getSharedPreferences(SplashLogin.class.getSimpleName(),
+//	            Context.MODE_PRIVATE);
+//	}
+//	
+//	private static int getAppVersion(Context context) {
+//	    try {
+//	        PackageInfo packageInfo = context.getPackageManager()
+//	                .getPackageInfo(context.getPackageName(), 0);
+//	        return packageInfo.versionCode;
+//	    } catch (NameNotFoundException e) {
+//	        // should never happen
+//	        throw new RuntimeException("Could not get package name: " + e);
+//	    }
+//	}
 	
 	
 	class ShowAnimListener implements AnimationListener{
@@ -451,9 +464,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			jugnooTextImg.setVisibility(View.VISIBLE);
 			
-//			if(SplashNewActivity.isLastLocationUpdateFine(SplashNewActivity.this)){
-			callFirstAttempt();
-//			}
+			noNetFirstTime = true;
+			getDeviceToken();
 			
 		}
 
@@ -471,17 +483,10 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		public void run() {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				noNetFirstTime = false;
-				Log.e("regid.isEmpty()", "+"+regid.isEmpty());
-				if (regid.isEmpty()){
-			        registerInBackground();
-			    }
-			    else{
-			    	accessTokenLogin(SplashNewActivity.this);
-			    }
+			    accessTokenLogin(SplashNewActivity.this);
 			}
 			else{
 				new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
-				noNetFirstTime = true;
 			}
 		}
 		});
@@ -495,7 +500,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		final String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
-		final String id = pref.getString(Data.SP_ID_KEY, "");
 		if(!"".equalsIgnoreCase(accessToken)){
 			buttonLogin.setVisibility(View.GONE);
 			buttonRegister.setVisibility(View.GONE);
@@ -512,8 +516,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.deviceToken);
 				
-				Database2 database2 = new Database2(activity);
-				final String serviceRestartOnReboot = database2.getDriverServiceRun();
+				final String serviceRestartOnReboot = Database2.getInstance(activity).getDriverServiceRun();
 				if(Database2.NO.equalsIgnoreCase(serviceRestartOnReboot)){
 					params.put("latitude", "0");
 					params.put("longitude", "0");
@@ -522,7 +525,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					params.put("latitude", ""+Data.latitude);
 					params.put("longitude", ""+Data.longitude);
 				}
-				database2.close();
+				Database2.getInstance(activity).close();
 				
 				
 				params.put("app_version", ""+Data.appVersion);
@@ -541,12 +544,11 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				
 				AsyncHttpClient client = Data.getClient();
 				client.post(Data.SERVER_URL + "/start_app_using_access_token", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -554,9 +556,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							}
 
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.e("Server response of access_token", "response = " + response);
 		
 								try {
@@ -596,7 +596,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 										}
 										else{
 											
-											new AccessTokenDataParseAsync(activity, response, accessToken, id).execute();
+											new AccessTokenDataParseAsync(activity, response, accessToken).execute();
 											
 										}
 									}
@@ -624,19 +624,18 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String>{
 		
 		Activity activity;
-		String response, accessToken, id;
+		String response, accessToken;
 		
-		public AccessTokenDataParseAsync(Activity activity, String response, String accessToken, String id){
+		public AccessTokenDataParseAsync(Activity activity, String response, String accessToken){
 			this.activity = activity;
 			this.response = response;
 			this.accessToken = accessToken;
-			this.id = id;
 		}
 		
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				String resp = new JSONParser().parseAccessTokenLoginData(activity, response, accessToken, id);
+				String resp = new JSONParser().parseAccessTokenLoginData(activity, response, accessToken);
 				return resp;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -799,14 +798,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onDestroy() {
-		try{
-			if(Data.locationFetcher != null){
-				Data.locationFetcher.destroy();
-				Data.locationFetcher = null;
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();
@@ -1099,17 +1090,18 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
+		Data.latitude = location.getLatitude();
+		Data.longitude = location.getLongitude();
 		new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, location);
 	}
 	
 	
 	public static boolean isLastLocationUpdateFine(Activity activity){
 		try {
-			Database2 database2 = new Database2(activity);
-			String userMode = database2.getUserMode();
-			String driverScreenMode = database2.getDriverScreenMode();
-			long lastLocationUpdateTime = database2.getDriverLastLocationTime();
-			database2.close();
+			String userMode = Database2.getInstance(activity).getUserMode();
+			String driverScreenMode = Database2.getInstance(activity).getDriverScreenMode();
+			long lastLocationUpdateTime = Database2.getInstance(activity).getDriverLastLocationTime();
+			Database2.getInstance(activity).close();
 			
 			long currentTime = System.currentTimeMillis();
 			

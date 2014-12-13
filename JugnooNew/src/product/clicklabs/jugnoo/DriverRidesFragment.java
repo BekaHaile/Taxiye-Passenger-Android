@@ -3,14 +3,13 @@ package product.clicklabs.jugnoo;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
+import product.clicklabs.jugnoo.datastructure.RideInfo;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -30,11 +29,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+
 public class DriverRidesFragment extends Fragment {
 
-	ProgressBar progressBarRides;
+	ProgressBar progressBar;
 	TextView textViewInfoDisplay;
-	ListView listViewRides;
+	ListView listView;
 	
 	DriverRidesListAdapter driverRidesListAdapter;
 	
@@ -52,20 +54,20 @@ public class DriverRidesFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		rides.clear();
-		View rootView = inflater.inflate(R.layout.fragment_rides, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
 		main = (RelativeLayout) rootView.findViewById(R.id.main);
 		main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		ASSL.DoMagic(main);
 
-		progressBarRides = (ProgressBar) rootView.findViewById(R.id.progressBarRides);
+		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
-		listViewRides = (ListView) rootView.findViewById(R.id.listViewRides);
+		listView = (ListView) rootView.findViewById(R.id.listView);
 		
 		driverRidesListAdapter = new DriverRidesListAdapter();
-		listViewRides.setAdapter(driverRidesListAdapter);
+		listView.setAdapter(driverRidesListAdapter);
 		
-		progressBarRides.setVisibility(View.GONE);
+		progressBar.setVisibility(View.GONE);
 		textViewInfoDisplay.setVisibility(View.GONE);
 		
 		textViewInfoDisplay.setOnClickListener(new View.OnClickListener() {
@@ -130,10 +132,8 @@ public class DriverRidesFragment extends Fragment {
 	class DriverRidesListAdapter extends BaseAdapter {
 		LayoutInflater mInflater;
 		ViewHolderDriverRides holder;
-		DateOperations dateOperations;
 		public DriverRidesListAdapter() {
 			mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			dateOperations = new DateOperations();
 		}
 
 		@Override
@@ -155,7 +155,7 @@ public class DriverRidesFragment extends Fragment {
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				holder = new ViewHolderDriverRides();
-				convertView = mInflater.inflate(R.layout.booking_list_item, null);
+				convertView = mInflater.inflate(R.layout.list_item_ride_history, null);
 				
 				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
 				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.regularFont(getActivity()));
@@ -184,16 +184,13 @@ public class DriverRidesFragment extends Fragment {
 			
 			RideInfo booking = rides.get(position);
 			
-			if(dateOperations == null){
-				dateOperations = new DateOperations();
-			}
 			
 			holder.id = position;
 			
 			holder.fromValue.setText(booking.fromLocation);
 			holder.toValue.setText(booking.toLocation);
 			holder.distanceValue.setText(booking.distance + " km");
-			holder.timeValue.setText(dateOperations.convertDate(dateOperations.utcToLocal(booking.time)));
+			holder.timeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(booking.time)));
 			holder.fareValue.setText("Rs. "+booking.fare);
 			
 			if(1 == booking.couponUsed){
@@ -224,28 +221,25 @@ public class DriverRidesFragment extends Fragment {
 	public void getRidesAsync(final Activity activity) {
 		if(fetchRidesClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				progressBarRides.setVisibility(View.VISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
 				textViewInfoDisplay.setVisibility(View.GONE);
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("current_mode", "1");
 				fetchRidesClient = Data.getClient();
 				fetchRidesClient.post(Data.SERVER_URL + "/booking_history", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
-								progressBarRides.setVisibility(View.GONE);
+								progressBar.setVisibility(View.GONE);
 								updateListData("Some error occurred. Tap to retry", true);
 							}
 	
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.d("Server response", "response = " + response);
 								
 								try {
@@ -266,6 +260,7 @@ public class DriverRidesFragment extends Fragment {
 										if(bookingData.length() > 0){
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
+												Log.e("booData"+i, "="+booData);
 												String balance = "";
 												try{
 													if(booData.has("balance")){
@@ -289,7 +284,7 @@ public class DriverRidesFragment extends Fragment {
 									exception.printStackTrace();
 									updateListData("Some error occurred. Tap to retry", true);
 								}
-								progressBarRides.setVisibility(View.GONE);
+								progressBar.setVisibility(View.GONE);
 							}
 							
 							@Override

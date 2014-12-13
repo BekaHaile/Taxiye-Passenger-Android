@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Log;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,18 +17,17 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 	public void onReceive(final Context context, Intent intent) {
 		String action = intent.getAction();
 		if (SEND_LOCATION.equals(action)) {
-			Database2 database2 = new Database2(context);
 			try {
-				long lastTime = database2.getDriverLastLocationTime();
-				String accessToken = database2.getDLDAccessToken();
-				database2.close();
+				long lastTime = Database2.getInstance(context).getDriverLastLocationTime();
+				String accessToken = Database2.getInstance(context).getDLDAccessToken();
+				Database2.getInstance(context).close();
 				if("".equalsIgnoreCase(accessToken)){
 					DriverLocationUpdateService.updateServerData(context);
 				}
 				long currentTime = System.currentTimeMillis();
 				
 				Log.e("currentTime - lastTime", "="+((currentTime - lastTime)/1000));
-		    	Log.writeLogToFile("AlarmReceiver", "Receiver "+new DateOperations().getCurrentTime()+" = "+(currentTime - lastTime) 
+		    	Log.writeLogToFile("AlarmReceiver", "Receiver "+DateOperations.getCurrentTime()+" = "+(currentTime - lastTime) 
 		    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));
 				
 				if(currentTime >= (lastTime + MAX_TIME_BEFORE_LOCATION_UPDATE)){
@@ -41,7 +43,7 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 				e.printStackTrace();
 			}
 			finally{
-				database2.close();
+				Database2.getInstance(context).close();
 			}
 			
 			

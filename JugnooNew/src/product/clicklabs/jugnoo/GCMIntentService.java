@@ -1,8 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,6 +8,15 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -24,13 +31,12 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
-import com.flurry.android.FlurryAgent;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GCMIntentService extends IntentService {
@@ -56,6 +62,7 @@ public class GCMIntentService extends IntentService {
 		
 
 	  
+		@SuppressWarnings("deprecation")
 		private void notificationManager(Context context, String message, boolean ring) {
 	    	
 			try {
@@ -107,6 +114,7 @@ public class GCMIntentService extends IntentService {
 			
 		}
 
+		@SuppressWarnings("deprecation")
 		private void notificationManagerResume(Context context, String message, boolean ring) {
 			
 			try {
@@ -177,9 +185,12 @@ public class GCMIntentService extends IntentService {
 		 
 	    @Override
 	    public void onHandleIntent(Intent intent) {
+	    	String currentTime = DateOperations.getCurrentTime();
+	    	String currentTimeUTC = DateOperations.getCurrentTimeInUTC();
+	    	
 	        Bundle extras = intent.getExtras();
 	        
-	        Log.e("onHandleIntent extras","="+extras);
+	        Log.e(currentTime + "onHandleIntent extras","="+extras);
 	        
 	        Log.e("extras.isEmpty()", "="+extras.isEmpty());
 	        Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
@@ -244,7 +255,9 @@ public class GCMIntentService extends IntentService {
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
 		    	    					 
-		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, new DateOperations().utcToLocal(startTime), new DateOperations().getCurrentTime());
+		    	    					 sendRequestAckToServer(this, engagementId, currentTimeUTC);
+		    	    					 
+		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), currentTime);
 		    	    					 
 		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
 
@@ -430,8 +443,20 @@ public class GCMIntentService extends IntentService {
 	    	    						 new DriverServiceOperations().startDriverService(GCMIntentService.this);
 	    	    					 }
 	    	    					 else{
-	    	    						 sendNullLocationToServerForDriver(GCMIntentService.this);
+	    	    						 new DriverServiceOperations().stopAndScheduleDriverService(GCMIntentService.this);
 	    	    					 }
+	    	    				 }
+	    	    				else if(PushFlags.MANUAL_ENGAGEMENT.getOrdinal() == flag){
+	    	    					Database2.getInstance(this).updateDriverManualPatchPushReceived(Database2.YES);
+	    	    					Database2.getInstance(this).close();
+	    	    					startRingWithStopHandler(this);
+	    	    					String message1 = jObj.getString("message");
+	    	    					if (HomeActivity.appInterruptHandler != null) {
+										HomeActivity.appInterruptHandler.onManualDispatchPushReceived();
+										notificationManagerResume(this, message1, true);
+									} else {
+										notificationManager(this, message1, true);
+									}
 	    	    				 }
 	    	    				 
 	    		    		 } catch(Exception e){
@@ -455,54 +480,6 @@ public class GCMIntentService extends IntentService {
 	    }
 
 	    
-	    
-	    public void sendNullLocationToServerForDriver(final Context context){
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					Database2 database2 = new Database2(context);
-					try {
-						String accessToken = database2.getDLDAccessToken();
-						String deviceToken = database2.getDLDDeviceToken();
-						String serverUrl = database2.getDLDServerUrl();
-						
-						if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
-								ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-								nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-								nameValuePairs.add(new BasicNameValuePair("latitude", "0"));
-								nameValuePairs.add(new BasicNameValuePair("longitude", "0"));
-								nameValuePairs.add(new BasicNameValuePair("device_token", deviceToken));
-					
-								HttpRequester simpleJSONParser = new HttpRequester();
-								String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
-											
-								Log.e("result in sending zero location on push", "=" + result);
-								
-								try{
-									//{"log":"Updated"}
-									JSONObject jObj = new JSONObject(result);
-									if(jObj.has("log")){
-										String log = jObj.getString("log");
-										if("Updated".equalsIgnoreCase(log)){
-											new DriverServiceOperations().stopAndScheduleDriverService(context);
-										}
-									}
-								} catch(Exception e){
-									e.printStackTrace();
-								}
-								
-								simpleJSONParser = null;
-								nameValuePairs = null;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					finally{
-						database2.close();
-					}
-				}
-			}).start();
-		}
 	    
 	    
 	    
@@ -548,6 +525,52 @@ public class GCMIntentService extends IntentService {
 			}
 		}
 		
+		public static void startRingWithStopHandler(Context context){
+			try {
+				stopRing();
+				vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+				if(vibrator.hasVibrator()){
+					long[] pattern = {0, 1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900, 
+											1350, 3900 };
+					vibrator.vibrate(pattern, -1);
+				}
+				AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+//				am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+				am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+				mediaPlayer = MediaPlayer.create(context, R.raw.telephone_ring);
+				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+				    @Override
+				    public void onCompletion(MediaPlayer mp) {
+						mediaPlayer.stop();
+				    	mediaPlayer.reset();
+				    	mediaPlayer.release();
+				    	vibrator.cancel();
+				    }
+				});
+				mediaPlayer.start();
+				
+				new Handler().postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						stopRing();
+					}
+				}, 20000);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 		public static void stopRing(){
 			try {
@@ -584,9 +607,8 @@ public class GCMIntentService extends IntentService {
 	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
 	    		String startTime, String address){
 	    	try {
-				Database2 database2 = new Database2(context);
-				 database2.insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
-				 database2.close();
+	    		Database2.getInstance(context).insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
+	    		Database2.getInstance(context).close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -594,9 +616,8 @@ public class GCMIntentService extends IntentService {
 	    
 	    public int deleteDriverRideRequest(Context context, String engagementId){
 	    	try {
-				Database2 database2 = new Database2(context);
-				int count = database2.deleteDriverRequest(engagementId);
-				database2.close();
+				int count = Database2.getInstance(context).deleteDriverRequest(engagementId);
+				Database2.getInstance(context).close();
 				return count;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -686,6 +707,54 @@ public class GCMIntentService extends IntentService {
 	    	
 	    	
 	    }
+	    
+	    
+	    
+	    
+		public void sendRequestAckToServer(final Context context, final String engagementId, final String actTimeStamp){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						String accessToken = Database2.getInstance(context).getDLDAccessToken();
+						Database2.getInstance(context).close();
+						if("".equalsIgnoreCase(accessToken)){
+							DriverLocationUpdateService.updateServerData(context);
+							accessToken = Database2.getInstance(context).getDLDAccessToken();
+						}
+						
+						String serverUrl = Database2.getInstance(context).getDLDServerUrl();
+						
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
+						nameValuePairs.add(new BasicNameValuePair("engagement_id", engagementId));
+						nameValuePairs.add(new BasicNameValuePair("ack_timestamp", actTimeStamp));
+						
+						Log.e("nameValuePairs in sending ack to server","="+nameValuePairs);
+						
+						HttpRequester simpleJSONParser = new HttpRequester();
+						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_request", nameValuePairs);
+						
+						Log.e("result ","="+result);
+						
+						simpleJSONParser = null;
+						nameValuePairs = null;
+						
+						JSONObject jObj = new JSONObject(result);
+						if(jObj.has("flag")){
+							int flag = jObj.getInt("flag");
+							if(ApiResponseFlags.ACK_RECEIVED.getOrdinal() == flag){
+								String log = jObj.getString("log");
+								Log.e("ack to server successfull", "="+log);
+							}
+						}
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		}
 	    
 }
 

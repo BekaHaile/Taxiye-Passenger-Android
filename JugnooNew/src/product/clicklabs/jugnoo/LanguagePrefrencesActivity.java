@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.datastructure.LanguageInfo;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;

@@ -6,6 +6,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
 import android.content.Context;
 import android.location.Location;
 import android.os.PowerManager;
@@ -16,24 +19,23 @@ import com.google.android.gms.maps.model.LatLng;
 public class DriverLocationDispatcher {
 
 	public void sendLocationToServer(Context context, String filePrefix){
-		Database2 database2 = new Database2(context);
 		
 		double LOCATION_TOLERANCE = 0.0001;
 		
 		try {
-			String userMode = database2.getUserMode();
+			String userMode = Database2.getInstance(context).getUserMode();
 			
 			if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 				PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 				WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
 				wakeLock.acquire();
 				
-				String accessToken = database2.getDLDAccessToken();
-				String deviceToken = database2.getDLDDeviceToken();
-				String serverUrl = database2.getDLDServerUrl();
+				String accessToken = Database2.getInstance(context).getDLDAccessToken();
+				String deviceToken = Database2.getInstance(context).getDLDDeviceToken();
+				String serverUrl = Database2.getInstance(context).getDLDServerUrl();
 				
 				if((!"".equalsIgnoreCase(accessToken)) && (!"".equalsIgnoreCase(deviceToken)) && (!"".equalsIgnoreCase(serverUrl))){
-					LatLng latLng = database2.getDriverCurrentLocation();
+					LatLng latLng = Database2.getInstance(context).getDriverCurrentLocation();
 					if((Math.abs(latLng.latitude) > LOCATION_TOLERANCE) && (Math.abs(latLng.longitude) > LOCATION_TOLERANCE)){
 						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
@@ -45,7 +47,7 @@ public class DriverLocationDispatcher {
 						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_driver_location", nameValuePairs);
 									
 						Log.e("result in DLD", "=" + result);
-						Log.writeLogToFile(filePrefix, "Server result "+new DateOperations().getCurrentTime()+" = "+result);
+						Log.writeLogToFile(filePrefix, "Server result "+DateOperations.getCurrentTime()+" = "+result);
 						
 						try{
 							//{"log":"Updated"}
@@ -53,7 +55,7 @@ public class DriverLocationDispatcher {
 							if(jObj.has("log")){
 								String log = jObj.getString("log");
 								if("Updated".equalsIgnoreCase(log)){
-									database2.updateDriverLastLocationTime();
+									Database2.getInstance(context).updateDriverLastLocationTime();
 								}
 							}
 						} catch(Exception e){
@@ -68,15 +70,15 @@ public class DriverLocationDispatcher {
 				wakeLock.release();
 			}
 
-			database2.close();
+			Database2.getInstance(context).close();
 			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Log.writeLogToFile(filePrefix, "Exception in sending to server "+new DateOperations().getCurrentTime()+" = "+e);
+			Log.writeLogToFile(filePrefix, "Exception in sending to server "+DateOperations.getCurrentTime()+" = "+e);
 		}
 		finally{
-    		database2.close();
+			Database2.getInstance(context).close();
     	}
 	}
 
@@ -87,9 +89,12 @@ public class DriverLocationDispatcher {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Database2 database2 = new Database2(context);
-		    	database2.updateDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-		    	database2.close();
+				try {
+					Database2.getInstance(context).updateDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+					Database2.getInstance(context).close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}).start();
 	}

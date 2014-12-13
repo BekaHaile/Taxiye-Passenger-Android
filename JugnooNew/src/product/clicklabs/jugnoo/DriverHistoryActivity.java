@@ -164,7 +164,6 @@ public class DriverHistoryActivity extends FragmentActivity{
 
 		@Override
 		public Fragment getItem(int index) {
-			Log.i("LeaderboardTabsAdapter","notify");
 			switch (index) {
 			case 0:
 				return getRidesFrag();

@@ -2,10 +2,14 @@ package product.clicklabs.jugnoo;
 
 import java.util.ArrayList;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.FavoriteLocation;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -24,7 +28,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class FavoriteActivity extends Activity{
@@ -225,20 +228,17 @@ public class FavoriteActivity extends Activity{
 				Log.i("access_token", "=" + Data.userData.accessToken);
 				fetchFavoritesClient = Data.getClient();
 				fetchFavoritesClient.post(Data.SERVER_URL + "/get_fav_locations", params,
-						new AsyncHttpResponseHandler() {
+						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
 							@Override
-							public void onFailure(int arg0, Header[] arg1,
-									byte[] arg2, Throwable arg3) {
+							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								updateListData("Some error occurred. Tap to retry", true);
 							}
 	
 							@Override
-							public void onSuccess(int arg0, Header[] arg1,
-									byte[] arg2) {
-								String response = new String(arg2);
+							public void onSuccess(String response) {
 								Log.v("Server response", "response = " + response);
 		
 								try {
@@ -308,13 +308,11 @@ public class FavoriteActivity extends Activity{
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/delete_fav_locations", params,
-					new AsyncHttpResponseHandler() {
+					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
-						@Override
-						public void onSuccess(int arg0, Header[] arg1,
-								byte[] arg2) {
-							String response = new String(arg2);
+					@Override
+					public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
 	
 							try {
@@ -354,8 +352,7 @@ public class FavoriteActivity extends Activity{
 						}
 						
 						@Override
-						public void onFailure(int arg0, Header[] arg1,
-								byte[] arg2, Throwable arg3) {
+						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
 							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);

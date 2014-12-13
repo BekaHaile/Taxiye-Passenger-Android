@@ -7,6 +7,20 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.CustomerInfo;
+import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.ExceptionalDriver;
+import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -23,22 +37,14 @@ public class JSONParser {
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		
-		try{
-			Data.termsAgreed = userData.getInt("terms_agreed");
-			Data.termsAgreed = 1;
-		} catch(Exception e){
-			Data.termsAgreed = 1;
-		}
 		Data.termsAgreed = 1;
 		
-		Data.userData = new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-				userData.getString("user_image"), userData.getString("id"), userData.getString("referral_code"));
+		Data.userData = parseUserData(userData);
 		
 		if(Data.termsAgreed == 1){
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 			Editor editor = pref.edit();
 			editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-			editor.putString(Data.SP_ID_KEY, Data.userData.id);
 			editor.commit();
 		}
 		
@@ -103,7 +109,27 @@ public class JSONParser {
 	}
 	
 	
-	public String parseAccessTokenLoginData(Context context, String response, String accessToken, String id) throws Exception{
+	
+	
+	public UserData parseUserData(JSONObject userData) throws Exception{
+		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0;
+		if(userData.has("can_schedule")){
+			canSchedule = userData.getInt("can_schedule");
+		}
+		if(userData.has("can_change_location")){
+			canChangeLocation = userData.getInt("can_change_location");
+		}
+		
+		if(userData.has("scheduling_limit")){
+			schedulingLimitMinutes = userData.getInt("scheduling_limit");
+		}
+		
+		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
+				userData.getString("user_image"), userData.getString("referral_code"), 
+				canSchedule, canChangeLocation, schedulingLimitMinutes);
+	}
+	
+	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
 		
 		JSONObject jObj = new JSONObject(response);
 		
@@ -111,8 +137,7 @@ public class JSONParser {
 		JSONObject jLoginObject = jObj.getJSONObject("login");
 		JSONObject userData = jLoginObject.getJSONObject("user_data");
 		
-		Data.userData = new UserData(accessToken, userData.getString("user_name"), 
-				userData.getString("user_image"), id, userData.getString("referral_code"));
+		Data.userData = parseUserData(userData);
 		
 		parseFareDetails(userData);
 		
@@ -210,7 +235,7 @@ public class JSONParser {
 			String screenMode = "";
 			
 			int engagementStatus = -1;
-			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "";
+			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "", schedulePickupTime = "";
 			
 			try{
 							
@@ -257,8 +282,7 @@ public class JSONParser {
 									
 									JSONArray jActiveRequests = jObject1.getJSONArray("active_requests");
 									
-									Database2 database2 = new Database2(context);
-									database2.deleteAllDriverRequests();
+									Database2.getInstance(context).deleteAllDriverRequests();
 									for(int i=0; i<jActiveRequests.length(); i++){
 										JSONObject jActiveRequest = jActiveRequests.getJSONObject(i);
 										 String requestEngagementId = jActiveRequest.getString("engagement_id");
@@ -268,17 +292,19 @@ public class JSONParser {
 		    	    					 String requestAddress = jActiveRequest.getString("pickup_location_address");
 		    	    					 String requestStartTime = new DateOperations().getSixtySecAfterCurrentTime();
 		    	    					 
-		    	    					 database2.insertDriverRequest(requestEngagementId, requestUserId, 
+		    	    					 Database2.getInstance(context).insertDriverRequest(requestEngagementId, requestUserId, 
 		    	    							 ""+requestLatitude, ""+requestLongitude, requestStartTime, requestAddress);
 		    	    					 
 		    	    					 Log.i("inserter in db", "insertDriverRequest = "+requestEngagementId);
 									}
 									
-									database2.close();
+									Database2.getInstance(context).close();
 									
 									if(jActiveRequests.length() == 0){
 										GCMIntentService.stopRing();
 									}
+									
+
 									
 								}
 								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
@@ -297,9 +323,14 @@ public class JSONParser {
 										customerImage = jObject.getString("user_image");
 										customerPhone = jObject.getString("phone_no");
 										customerRating = jObject.getString("rating");
-									}
-									else{
 										
+										int isScheduled = 0;
+										if(jObject.has("is_scheduled")){
+											isScheduled = jObject.getInt("is_scheduled");
+											if(isScheduled == 1 && jObject.has("pickup_time")){
+												schedulePickupTime = jObject.getString("pickup_time");
+											}
+										}
 									}
 								}
 							
@@ -349,6 +380,8 @@ public class JSONParser {
 					String rating = customerRating;
 					
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
+					Data.assignedCustomerInfo.schedulePickupTime = schedulePickupTime;
+					
 				}
 				else if(Data.D_IN_RIDE.equalsIgnoreCase(screenMode)){
 					
@@ -378,19 +411,18 @@ public class JSONParser {
 					
 					HomeActivity.waitStart = 2;
 					
-					if(Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0){
-						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
-						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-						
-						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
-						HomeActivity.totalDistance = -1;
-					}
-					else{
-						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
-						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-						
-						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
-					}
+					String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
+					String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+					
+					Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
+					
+					Log.e("Data on app restart", "-----");
+					Log.i("HomeActivity.totalDistance", "="+HomeActivity.totalDistance);
+					Log.i("Data.startRidePreviousLatLng", "="+Data.startRidePreviousLatLng);
+					Log.e("----------", "-----");
+					
+					Log.writePathLogToFile(Data.dEngagementId, "Got from SP totalDistance = "+HomeActivity.totalDistance);
+					Log.writePathLogToFile(Data.dEngagementId, "Got from SP Data.startRidePreviousLatLng = "+Data.startRidePreviousLatLng);
 					
 				}
 				else{
@@ -473,9 +505,6 @@ public class JSONParser {
 										pickupLatitude = jObject.getString("pickup_latitude");
 										pickupLongitude = jObject.getString("pickup_longitude");
 									}
-									else{
-										
-									}
 								}
 							
 							}
@@ -550,12 +579,10 @@ public class JSONParser {
 					
 					if(Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0){
 						Data.startRidePreviousLatLng = Data.pickupLatLng;
-						HomeActivity.totalDistance = -1;
 					}
 					else{
 						String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
 						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-						
 						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
 					}
 					
@@ -633,9 +660,8 @@ public class JSONParser {
 
 		editor.commit();
 
-		Database database = new Database(context);
-		database.deleteSavedPath();
-		database.close();
+		Database.getInstance(context).deleteSavedPath();
+		Database.getInstance(context).close();
 
 	}
 	
