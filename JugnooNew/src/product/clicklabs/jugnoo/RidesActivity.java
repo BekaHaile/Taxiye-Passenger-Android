@@ -23,6 +23,7 @@ public class RidesActivity extends FragmentActivity{
 	Button backBtn;
 	TextView title;
 	
+	LinearLayout linearLayoutRidesTabs;
 	RelativeLayout relativeLayoutRideHistory, relativeLayoutFutureRides;
 	TextView textViewRideHistory, textViewFutureRides;
 	ImageView imageViewRideHistory, imageViewFutureRides;
@@ -30,7 +31,6 @@ public class RidesActivity extends FragmentActivity{
 	ViewPager viewPagerRides;
 	
 	RidesTabsAdapter ridesTabsAdapter;
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,8 @@ public class RidesActivity extends FragmentActivity{
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
 		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		linearLayoutRidesTabs = (LinearLayout) findViewById(R.id.linearLayoutRidesTabs);
 		
 		relativeLayoutRideHistory = (RelativeLayout) findViewById(R.id.relativeLayoutRideHistory);
 		relativeLayoutFutureRides = (RelativeLayout) findViewById(R.id.relativeLayoutFutureRides);
@@ -96,6 +98,15 @@ public class RidesActivity extends FragmentActivity{
 			public void onPageScrollStateChanged(int arg0) {
 			}
 		});
+		
+		
+		if(Data.userData.canSchedule == 1){
+			linearLayoutRidesTabs.setVisibility(View.VISIBLE);
+		}
+		else{
+			linearLayoutRidesTabs.setVisibility(View.GONE);
+		}
+		
 		
 		viewPagerRides.setCurrentItem(0, true);
 		switchTabs(0);
@@ -162,7 +173,12 @@ public class RidesActivity extends FragmentActivity{
 
 		@Override
 		public int getCount() {
-			return 2;
+			if(Data.userData.canSchedule == 1){
+				return 2;
+			}
+			else{
+				return 1;
+			}
 		}
 		
 		public void clearFragments(){

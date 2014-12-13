@@ -422,7 +422,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
 	
 	
-	public static final String REQUEST_RIDE_BTN_NORMAL_TEXT = "Call an auto", REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT = "Assigning driver...";
+	public static final String REQUEST_RIDE_BTN_NORMAL_TEXT = "Get an auto", REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT = "Assigning driver...";
 	
 	public ASSL assl;
 	
@@ -6008,6 +6008,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	void callAnAutoPopup(final Activity activity) {
 		try {
+			final String getAuto = "Do you want an auto to pick you up?";
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.call_an_auto_dialog);
@@ -6032,21 +6033,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Data.pickupLatLng = map.getCameraPosition().target;
 				double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 				if(distance > MAP_PAN_DISTANCE_CHECK){
-					textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want to call an auto at this pickup location?");
+					textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
 				}
 				else{
-					textMessage.setText("Do you want to call an auto?");
+					textMessage.setText(getAuto);
 				}
 			}
 			else{
-				textMessage.setText("Do you want to call an auto?");
+				textMessage.setText(getAuto);
 			}
 			
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
 			
-			btnOk.setText("Now");
+			btnOk.setText("Get Now");
 			btnCancel.setText("Later");
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {

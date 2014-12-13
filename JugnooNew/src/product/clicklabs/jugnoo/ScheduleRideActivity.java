@@ -399,8 +399,24 @@ public class ScheduleRideActivity extends FragmentActivity{
 							String weekDayFullName, String weekDayShortName,
 							int hour24, int hour12, int min, int sec,
 							String AM_PM) {
-						selectedScheduleCalendar = calendarSelected;
-						setScheduleDateTimeValue(selectedScheduleCalendar);
+						
+						Calendar currentCalendar = Calendar.getInstance();
+						
+						if(Data.userData != null){
+							currentCalendar.add(Calendar.MINUTE, Data.userData.schedulingLimitMinutes);
+						}
+						
+						Date currentOffsetDate = currentCalendar.getTime();
+					    Date selectedDate = calendarSelected.getTime();
+					    long diff = selectedDate.getTime() - currentOffsetDate.getTime();
+						
+					    if(diff > 0){
+							selectedScheduleCalendar = calendarSelected;
+							setScheduleDateTimeValue(selectedScheduleCalendar);
+					    }
+					    else{
+					    	Toast.makeText(ScheduleRideActivity.this, "Schedule time must be after "+Data.userData.schedulingLimitMinutes+" minutes than current time", Toast.LENGTH_SHORT).show();
+					    }
 					}
 
 					@Override
