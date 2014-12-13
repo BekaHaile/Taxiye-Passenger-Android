@@ -1770,8 +1770,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Data.cEngagementId = "";
 			
 			if(Data.userData.canChangeLocation == 1){
+				if(Data.pickupLatLng == null){
+					Data.pickupLatLng = map.getCameraPosition().target;
+				}
 				double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-				if(MAP_PAN_DISTANCE_CHECK > distance){
+				if(distance > MAP_PAN_DISTANCE_CHECK){
 					switchRequestRideUI();
 					startTimerRequestRide();
 				}
@@ -6024,7 +6027,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			textHead.setVisibility(View.VISIBLE);
 			textHead.setText("Chalo Jugnoo Se");
-			textMessage.setText("Do you want to call an auto?");
+			
+			if(Data.userData.canChangeLocation == 1){
+				Data.pickupLatLng = map.getCameraPosition().target;
+				double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+				if(distance > MAP_PAN_DISTANCE_CHECK){
+					textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want to call an auto at this pickup location?");
+				}
+				else{
+					textMessage.setText("Do you want to call an auto?");
+				}
+			}
+			else{
+				textMessage.setText("Do you want to call an auto?");
+			}
 			
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
@@ -6089,7 +6105,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	void switchToScheduleScreen(Activity activity){
-		ScheduleRideActivity.selectedScheduleCalendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR_OF_DAY, 1);
+		calendar.add(Calendar.MINUTE, 5);
+		ScheduleRideActivity.selectedScheduleCalendar = calendar;
 		ScheduleRideActivity.selectedScheduleLatLng = null;
 		ScheduleRideActivity.scheduleOperationMode = ScheduleOperationMode.INSERT;
 		activity.startActivity(new Intent(activity, ScheduleRideActivity.class));

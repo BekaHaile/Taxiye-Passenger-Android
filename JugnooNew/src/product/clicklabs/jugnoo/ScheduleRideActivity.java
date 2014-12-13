@@ -246,7 +246,6 @@ public class ScheduleRideActivity extends FragmentActivity{
 			@Override
 			public void onClick(View v) {
 				customDateTimePicker.set24HourFormat(false);
-				customDateTimePicker.setDate(Calendar.getInstance());
 				customDateTimePicker.setTimePickerIntervalInMinutes(5);
 				customDateTimePicker.setDate(selectedScheduleCalendar);
 				customDateTimePicker.showDialog();
@@ -763,7 +762,14 @@ public class ScheduleRideActivity extends FragmentActivity{
 								else{
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", jObj.getString("message"));
+										new DialogPopup().alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
+											
+											@Override
+											public void onClick(View v) {
+												activity.finish();
+												activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+											}
+										});
 									}
 									
 								}
@@ -844,7 +850,14 @@ public class ScheduleRideActivity extends FragmentActivity{
 								else{
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", jObj.getString("message"));
+										new DialogPopup().alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
+											
+											@Override
+											public void onClick(View v) {
+												activity.finish();
+												activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+											}
+										});
 									}
 									
 								}

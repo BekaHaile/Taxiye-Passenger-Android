@@ -43,7 +43,7 @@ public class ShareActivity extends Activity{
 	String str1 = "Share your referral code ",
 			str2 = " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, " +
 					"you will earn a FREE ride (upto Rs. 100) as well.",
-					str3 = "Your Referral Code is";
+					str3 = "Your Referral Code is ";
 	
 	
 	String shareStr1 = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
@@ -95,7 +95,7 @@ public class ShareActivity extends Activity{
 		textViewShareReferral.append(str2);
 		
 		textViewReferralCodeDisplay.setText("");
-		textViewReferralCodeDisplay.append(str2);
+		textViewReferralCodeDisplay.append(str3);
 		textViewReferralCodeDisplay.append(sstr);
 		
 		
