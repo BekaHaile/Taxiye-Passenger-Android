@@ -417,13 +417,14 @@
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
                 android:visibility="gone" >
-
+                
+                
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <RelativeLayout
                         android:id="@+id/driverNewRideRequestRl"
@@ -474,6 +475,31 @@
                         android:layout_marginLeft="40px"
                         android:background="@drawable/mylocation_btn_selector"
                         android:tag="mwar" />
+                    
+                    
+                    <RelativeLayout
+                    android:id="@+id/jugnooOffLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:splitMotionEvents="false"
+                    android:background="@color/white_translucent"
+                    android:visibility="gone"
+                    >
+                        
+                        <TextView
+                            android:id="@+id/jugnooOffText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_centerInParent="true"
+                            android:text="Jugnoo is OFF now."
+                            android:textColor="@color/black"
+                            android:textSize="44px" />
+                        
+                        
+                        </RelativeLayout>
+                    
+                    
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -1358,7 +1384,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="60px"
                             android:gravity="center"
-                            android:text="Rs. 1000"
+                            android:text="Rs. 0"
                             android:textColor="@color/black"
                             android:textSize="38px" />
                     </LinearLayout>

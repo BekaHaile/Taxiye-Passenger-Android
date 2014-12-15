@@ -21,9 +21,7 @@ import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
-import product.clicklabs.jugnoo.datastructure.ExceptionalDriver;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
-import product.clicklabs.jugnoo.datastructure.JugnooDriverMode;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -258,6 +256,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView driverNewRideRequestText;
 	TextView driverNewRideRequestClickText;
 	Button driverInitialMyLocationBtn;
+	RelativeLayout jugnooOffLayout;
+	TextView jugnooOffText;
 	
 	DriverRequestListAdapter driverRequestListAdapter;
 	
@@ -343,7 +343,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	DecimalFormat decimalFormat = new DecimalFormat("#.#");
 	DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 	
-	static double totalDistance = -1, totalFare = 0, previousWaitTime = 0, previousRideTime = 0, lastDeltaDistance = 0;
+	static double totalDistance = -1, totalFare = 0, lastDeltaDistance = 0;
+	static long previousWaitTime = 0, previousRideTime = 0;
 	
 	static String waitTime = "", rideTime = "";
 	
@@ -358,9 +359,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	static PassengerScreenMode passengerScreenMode;
 	static DriverScreenMode driverScreenMode;
 	
-	
-	static JugnooDriverMode jugnooDriverMode;
-	static ExceptionalDriver exceptionalDriver = ExceptionalDriver.NO;
 	
 	
 	
@@ -625,6 +623,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverNewRideRequestText = (TextView) findViewById(R.id.driverNewRideRequestText); driverNewRideRequestText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText); driverNewRideRequestClickText.setTypeface(Data.regularFont(getApplicationContext()));
 		driverInitialMyLocationBtn = (Button) findViewById(R.id.driverInitialMyLocationBtn);
+		jugnooOffLayout = (RelativeLayout) findViewById(R.id.jugnooOffLayout);
+		jugnooOffText = (TextView) findViewById(R.id.jugnooOffText); jugnooOffText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
 		
 		driverNewRideRequestRl.setVisibility(View.GONE);
 		driverRideRequestsList.setVisibility(View.GONE);
@@ -853,6 +853,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		
 		// menu events\
 		driverModeToggle.setOnClickListener(new View.OnClickListener() {
 			
@@ -877,14 +878,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-					Log.e("jugnooDriverMode onClick", "="+jugnooDriverMode);
-					if(jugnooDriverMode == JugnooDriverMode.ON){
-						jugnooDriverMode = JugnooDriverMode.OFF;
-						changeJugnooON(jugnooDriverMode);
+					Log.e("jugnooDriverMode onClick", "="+Data.userData.isAvailable);
+					if(Data.userData.isAvailable == 1){
+						changeJugnooON(0);
 					}
 					else{
-						jugnooDriverMode = JugnooDriverMode.ON;
-						changeJugnooON(jugnooDriverMode);
+						changeJugnooON(1);
 					}
 				}
 			}
@@ -1230,8 +1229,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
-		
-		
+		jugnooOffLayout.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				drawerLayout.openDrawer(menuLayout);
+			}
+		});
 		
 		
 		
@@ -1651,8 +1655,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			
-			
-			
 	
 			
 			if(userMode == null){
@@ -1678,19 +1680,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			startUIAfterGettingUserStatus();
 		
-		
-		
 			
-			String jugnooOn = Database2.getInstance(HomeActivity.this).getDriverServiceRun();
 			
-			Log.e("onCreate", "=jugnooOn = "+jugnooOn);
-			if(Database2.YES.equalsIgnoreCase(jugnooOn)){
-				jugnooDriverMode = JugnooDriverMode.ON;
-			}
-			else{
-				jugnooDriverMode = JugnooDriverMode.OFF;
-			}
-			changeJugnooONUI(jugnooDriverMode);
+			changeJugnooONUI(Data.userData.isAvailable);
 			
 			changeExceptionalDriverUI();
 			
@@ -1823,20 +1815,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	Handler jugnooDriverOnHandler;
-	Runnable jugnooDriverOnRunnable;
-	
-	public void changeJugnooON(JugnooDriverMode mode){
-		
-		try{
-			if(jugnooDriverOnHandler != null && jugnooDriverOnRunnable != null){
-				jugnooDriverOnHandler.removeCallbacks(jugnooDriverOnRunnable);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		if(mode == JugnooDriverMode.ON){
+	public void changeJugnooON(int mode){
+		if(mode == 1){
 			if(myLocation != null){
 				switchJugnooOnThroughServer(1, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 			}
@@ -1847,7 +1827,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		else{
 			switchJugnooOnThroughServer(0, new LatLng(0, 0));
 		}
-		
 	}
 	
 	
@@ -1887,9 +1866,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						int flag = jObj.getInt("flag");
 						if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 							if(jugnooOnFlag == 1){
+								Data.userData.isAvailable = 1;
 								switchJugnooOn();
 							}
 							else{
+								Data.userData.isAvailable = 0;
 								switchJugnooOff();
 							}
 						}
@@ -1923,7 +1904,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void run() {
 				DialogPopup.dismissLoadingDialog();
 				new DriverServiceOperations().startDriverService(HomeActivity.this);
-				jugnooONToggle.setImageResource(R.drawable.on);
+				changeJugnooONUI(1);
 			}
 		});
 	}
@@ -1933,21 +1914,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void run() {
 				DialogPopup.dismissLoadingDialog();
-				jugnooONToggle.setImageResource(R.drawable.off);
 				new DriverServiceOperations().stopAndScheduleDriverService(HomeActivity.this);
-				
-				jugnooDriverOnHandler = null;
-				jugnooDriverOnRunnable = null;
-				
-				jugnooDriverOnHandler = new Handler();
-				jugnooDriverOnRunnable = new Runnable() {
-					
-					@Override
-					public void run() {
-						changeJugnooONUI(JugnooDriverMode.ON);
-					}
-				};
-				jugnooDriverOnHandler.postDelayed(jugnooDriverOnRunnable, SERVICE_RESTART_TIMER);
+				changeJugnooONUI(0);
 			}
 		});
 	}
@@ -1956,7 +1924,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void changeExceptionalDriverUI(){
 		
-		if(exceptionalDriver == ExceptionalDriver.YES){
+		if(Data.userData.exceptionalDriver == 1){
 			jugnooONRl.setVisibility(View.VISIBLE);
 			driverModeRl.setVisibility(View.GONE);
 			logoutRl.setVisibility(View.GONE);
@@ -1971,14 +1939,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void changeJugnooONUI(JugnooDriverMode mode){
-		if(mode == JugnooDriverMode.ON){
-			jugnooDriverMode = JugnooDriverMode.ON;
+	public void changeJugnooONUI(int mode){
+		if(mode == 1){
 			jugnooONToggle.setImageResource(R.drawable.on);
+			jugnooOffLayout.setVisibility(View.GONE);
 		}
 		else{
-			jugnooDriverMode = JugnooDriverMode.OFF;
 			jugnooONToggle.setImageResource(R.drawable.off);
+			jugnooOffLayout.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -4052,14 +4020,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									if(flag == 1){
 										try {
 											int excepInt = jObj.getInt("exceptional_driver");
-											if(1 == excepInt){
-												HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
-											}
-											else{
-												HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-											}
+											Data.userData.exceptionalDriver = excepInt;
 										} catch (Exception e) {
-											HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
+											Data.userData.exceptionalDriver = 0;
 											e.printStackTrace();
 										}
 										
@@ -4642,18 +4605,29 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	/**
 	 * ASync for start ride in  driver mode from server
 	 */
-	public void driverEndRideAsync(final Activity activity, double dropLatitude, double dropLongitude, double waitMinutes, 
-			double rideMinutes) {
+	public void driverEndRideAsync(final Activity activity, double dropLatitude, double dropLongitude, double waitMinutes, double rideMinutes) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			if(createPathAsyncTasks != null){
         		createPathAsyncTasks.clear();
         	}
+
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();
 		
+			SharedPreferences pref = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+			long rideStartTime = Long.parseLong(pref.getString(Data.SP_RIDE_START_TIME, ""+System.currentTimeMillis()));
+			long timeDiffToAdd = System.currentTimeMillis() - rideStartTime;
+			long rideTimeSeconds = timeDiffToAdd / 1000;
+			double rideTimeMinutes = Math.ceil(((double)rideTimeSeconds) / 60.0);
+			Log.e("System.currentTimeMillis() - rideStartTime", "="+System.currentTimeMillis() + " - " +  rideStartTime);
+			Log.e("timeDiffToAdd", "="+rideTimeMinutes);
+			if(rideTimeMinutes > 0){
+				rideMinutes = rideTimeMinutes;
+			}
+			
 			rideTime = decimalFormatNoDecimal.format(rideMinutes);
 			waitTime = decimalFormatNoDecimal.format(waitMinutes);
 			
@@ -6704,8 +6678,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			String driverCarImage = jObj.getString("driver_car_image");
 			double latitude = jObj.getDouble("current_location_latitude");
 			double longitude = jObj.getDouble("current_location_longitude");
+			double pickupLatitude = jObj.getDouble("pickup_latitude");
+			double pickupLongitude = jObj.getDouble("pickup_longitude");
 			String driverRating = jObj.getString("rating");
 			
+			Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
 			
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName, 
 					driverImage, driverCarImage, driverPhone, driverRating);
@@ -6936,6 +6913,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
 		editor.putString(Data.SP_WAIT_TIME, "0");
 		editor.putString(Data.SP_RIDE_TIME, "0");
+		editor.putString(Data.SP_RIDE_START_TIME, ""+System.currentTimeMillis());
 		editor.putString(Data.SP_LAST_LATITUDE, "0");
 		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 
@@ -6965,6 +6943,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
 		editor.putString(Data.SP_WAIT_TIME, "0");
 		editor.putString(Data.SP_RIDE_TIME, "0");
+		editor.putString(Data.SP_RIDE_START_TIME, ""+System.currentTimeMillis());
 		editor.putString(Data.SP_LAST_LATITUDE, "0");
 		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 

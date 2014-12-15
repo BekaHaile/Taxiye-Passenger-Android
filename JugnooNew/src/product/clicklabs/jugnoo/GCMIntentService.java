@@ -36,6 +36,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.TelephonyManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -710,6 +711,18 @@ public class GCMIntentService extends IntentService {
 	    
 	    
 	    
+	    public String getNetworkName(Context context){
+	    	try {
+				TelephonyManager telephonyManager =((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+				String simOperatorName = telephonyManager.getSimOperatorName();
+				String operatorName = telephonyManager.getNetworkOperatorName();
+				return simOperatorName + " " + operatorName;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    	return "not found";
+	    }
+	    
 	    
 		public void sendRequestAckToServer(final Context context, final String engagementId, final String actTimeStamp){
 			new Thread(new Runnable() {
@@ -725,10 +738,14 @@ public class GCMIntentService extends IntentService {
 						
 						String serverUrl = Database2.getInstance(context).getDLDServerUrl();
 						
+						String networkName = getNetworkName(context);
+						
+						
 						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 						nameValuePairs.add(new BasicNameValuePair("engagement_id", engagementId));
 						nameValuePairs.add(new BasicNameValuePair("ack_timestamp", actTimeStamp));
+						nameValuePairs.add(new BasicNameValuePair("network_name", networkName));
 						
 						Log.e("nameValuePairs in sending ack to server","="+nameValuePairs);
 						

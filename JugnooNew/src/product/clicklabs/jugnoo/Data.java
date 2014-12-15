@@ -49,6 +49,7 @@ public class Data {
 			SP_TOTAL_DISTANCE = "total_distance", 
 			SP_WAIT_TIME = "wait_time",
 			SP_RIDE_TIME = "ride_time", 
+			SP_RIDE_START_TIME = "ride_start_time", 
 			SP_LAST_LATITUDE = "last_latitude",
 			SP_LAST_LONGITUDE = "last_longitude",
 			
@@ -145,7 +146,7 @@ public class Data {
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 	public static final String TRIAL_SERVER_URL = "https://54.81.229.172:8200";
 	
-	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 	
 	
 	
