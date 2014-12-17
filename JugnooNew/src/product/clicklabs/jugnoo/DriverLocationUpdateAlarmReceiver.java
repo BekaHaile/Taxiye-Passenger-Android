@@ -15,6 +15,7 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(final Context context, Intent intent) {
+    	GCMHeartbeatRefresher.refreshGCMHeartbeat(context);
 		String action = intent.getAction();
 		if (SEND_LOCATION.equals(action)) {
 			try {

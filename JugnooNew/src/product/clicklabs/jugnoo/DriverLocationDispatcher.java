@@ -26,6 +26,7 @@ public class DriverLocationDispatcher {
 			String userMode = Database2.getInstance(context).getUserMode();
 			
 			if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
+				
 				PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 				WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
 				wakeLock.acquire();

@@ -1849,7 +1849,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					nameValuePairs.add(new BasicNameValuePair("longitude", ""+latLng.longitude));
 					nameValuePairs.add(new BasicNameValuePair("flag", ""+jugnooOnFlag));
 					
-					Log.e("nameValuePairs in sending null loc","="+nameValuePairs);
+					Log.e("nameValuePairs in sending loc on jugnoo toggle","="+nameValuePairs);
 					
 					HttpRequester simpleJSONParser = new HttpRequester();
 					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/change_availability", nameValuePairs);
@@ -1867,11 +1867,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 							if(jugnooOnFlag == 1){
 								Data.userData.isAvailable = 1;
-								switchJugnooOn();
+								changeJugnooONUI(1);
 							}
 							else{
 								Data.userData.isAvailable = 0;
-								switchJugnooOff();
+								changeJugnooONUI(0);
 							}
 						}
 					}
@@ -1904,7 +1904,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void run() {
 				DialogPopup.dismissLoadingDialog();
 				new DriverServiceOperations().startDriverService(HomeActivity.this);
-				changeJugnooONUI(1);
+				jugnooONToggle.setImageResource(R.drawable.on);
+				jugnooOffLayout.setVisibility(View.GONE);
 			}
 		});
 	}
@@ -1915,7 +1916,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void run() {
 				DialogPopup.dismissLoadingDialog();
 				new DriverServiceOperations().stopAndScheduleDriverService(HomeActivity.this);
-				changeJugnooONUI(0);
+				jugnooONToggle.setImageResource(R.drawable.off);
+				jugnooOffLayout.setVisibility(View.VISIBLE);
 			}
 		});
 	}
@@ -1923,7 +1925,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void changeExceptionalDriverUI(){
-		
 		if(Data.userData.exceptionalDriver == 1){
 			jugnooONRl.setVisibility(View.VISIBLE);
 			driverModeRl.setVisibility(View.GONE);
@@ -1934,19 +1935,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			driverModeRl.setVisibility(View.VISIBLE);
 			logoutRl.setVisibility(View.VISIBLE);
 		}
-		
 	}
 	
 	
 	
 	public void changeJugnooONUI(int mode){
+		Log.e("homeac changeJugnooONUI ====", "="+mode);
 		if(mode == 1){
-			jugnooONToggle.setImageResource(R.drawable.on);
-			jugnooOffLayout.setVisibility(View.GONE);
+			switchJugnooOn();
 		}
 		else{
-			jugnooONToggle.setImageResource(R.drawable.off);
-			jugnooOffLayout.setVisibility(View.VISIBLE);
+			switchJugnooOff();
 		}
 	}
 	

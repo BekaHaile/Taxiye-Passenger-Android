@@ -186,15 +186,10 @@ public class GCMIntentService extends IntentService {
 		 
 	    @Override
 	    public void onHandleIntent(Intent intent) {
-	    	String currentTime = DateOperations.getCurrentTime();
 	    	String currentTimeUTC = DateOperations.getCurrentTimeInUTC();
+	    	String currentTime = DateOperations.getCurrentTime();
 	    	
 	        Bundle extras = intent.getExtras();
-	        
-	        Log.e(currentTime + "onHandleIntent extras","="+extras);
-	        
-	        Log.e("extras.isEmpty()", "="+extras.isEmpty());
-	        Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
 	        
 	        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 	        // The getMessageType() intent parameter must be the intent you received
@@ -459,6 +454,14 @@ public class GCMIntentService extends IntentService {
 										notificationManager(this, message1, true);
 									}
 	    	    				 }
+	    	    				else if(PushFlags.HEARTBEAT.getOrdinal() == flag){
+	    	    					try{
+	    	    						String uuid = jObj.getString("uuid");
+	    	    						sendHeartbeatAckToServer(this, uuid, currentTimeUTC);
+	    	    					} catch(Exception e){
+	    	    						e.printStackTrace();
+	    	    					}
+	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 
@@ -773,6 +776,42 @@ public class GCMIntentService extends IntentService {
 			}).start();
 		}
 	    
+		
+		
+		public void sendHeartbeatAckToServer(final Context context, final String uuid, final String ackTimeStamp){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						String serverUrl = Database2.getInstance(context).getDLDServerUrl();
+						
+						String networkName = getNetworkName(context);
+						
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("uuid", uuid));
+						nameValuePairs.add(new BasicNameValuePair("timestamp", ackTimeStamp));
+						nameValuePairs.add(new BasicNameValuePair("network_name", networkName));
+						
+//						Log.e("nameValuePairs in sending ack to server","="+nameValuePairs);
+						
+						HttpRequester simpleJSONParser = new HttpRequester();
+						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_heartbeat", nameValuePairs);
+						
+//						Log.e("result ","="+result);
+						
+						simpleJSONParser = null;
+						nameValuePairs = null;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		}
+		
+		
+		//context.sendBroadcast(new Intent("com.google.android.intent.action.GTALK_HEARTBEAT"));
+		//context.sendBroadcast(new Intent("com.google.android.intent.action.MCS_HEARTBEAT"));
+		
 }
 
 
