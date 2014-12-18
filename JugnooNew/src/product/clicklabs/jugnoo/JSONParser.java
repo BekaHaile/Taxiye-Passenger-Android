@@ -38,7 +38,7 @@ public class JSONParser {
 		
 		Data.termsAgreed = 1;
 		
-		Data.userData = parseUserData(userData);
+		Data.userData = parseUserData(context, userData);
 		
 		if(Data.termsAgreed == 1){
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -96,11 +96,14 @@ public class JSONParser {
 	
 	
 	
-	public UserData parseUserData(JSONObject userData) throws Exception{
-		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0;
+	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
+		
+		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1;
+		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
 		}
+		
 		if(userData.has("can_change_location")){
 			canChangeLocation = userData.getInt("can_change_location");
 		}
@@ -117,9 +120,21 @@ public class JSONParser {
 			exceptionalDriver = userData.getInt("exceptional_driver");
 		}
 		
+		try{
+			if(userData.has("gcm_intent")){
+				gcmIntent = userData.getInt("gcm_intent");
+				Database2.getInstance(context).updateDriverGcmIntent(gcmIntent);
+				Database2.getInstance(context).close();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		//"gcm_intent": 0,
+		
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), 
-				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver);
+				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
@@ -130,7 +145,7 @@ public class JSONParser {
 		JSONObject jLoginObject = jObj.getJSONObject("login");
 		JSONObject userData = jLoginObject.getJSONObject("user_data");
 		
-		Data.userData = parseUserData(userData);
+		Data.userData = parseUserData(context, userData);
 		
 		parseFareDetails(userData);
 		

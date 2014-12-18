@@ -1493,6 +1493,11 @@
             <RelativeLayout
                 android:id="@+id/topRl"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:splitMotionEvents="false" >
+                
+                <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="90px"
                 android:background="@color/bg_grey"
                 android:splitMotionEvents="false" >
@@ -1560,6 +1565,7 @@
                     android:background="@drawable/fav_btn_selector"
                     android:tag="mwar"
                     android:visibility="gone" />
+                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>

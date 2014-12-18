@@ -1613,24 +1613,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				  @Override
 				  public void onMapSettled() {
 				    // Map settled
-					  if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						  if(Data.userData.canChangeLocation == 1){
-							  Data.pickupLatLng = map.getCameraPosition().target;
-							  if(!dontCallRefreshDriver){
-								  getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, false);
-								  getDistanceTimeAddress.execute();
-							  }
-						  }
-						  else{
-							  if(myLocation != null){
-								  Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-								  if(!dontCallRefreshDriver){
-									  getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, false);
-									  getDistanceTimeAddress.execute();
-								  }
-							  }
-						  }
-					  }
+					  callMapTouchedRefreshDrivers();
 				  }
 				};
 			
@@ -1694,6 +1677,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Database2.getInstance(HomeActivity.this).close();
 		
 		showManualPatchPushReceivedDialog();
+	}
+	
+	
+	public void callMapTouchedRefreshDrivers(){
+		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+			  if(Data.userData.canChangeLocation == 1){
+				  Data.pickupLatLng = map.getCameraPosition().target;
+				  if(!dontCallRefreshDriver){
+					  getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, false);
+					  getDistanceTimeAddress.execute();
+				  }
+			  }
+			  else{
+				  if(myLocation != null){
+					  Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+					  if(!dontCallRefreshDriver){
+						  getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, false);
+						  getDistanceTimeAddress.execute();
+					  }
+				  }
+			  }
+		  }
 	}
 	
 	
@@ -3950,11 +3955,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			pickupLocationMarker.remove();
 		}
 			
-		if(myLocation != null){
-			getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-					myLocation.getLongitude()), false);
-			getDistanceTimeAddress.execute();
-		}
+		callMapTouchedRefreshDrivers();
 	}
 	
 	
@@ -6613,13 +6614,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void run() {
 				try {
-					if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						if(myLocation != null){
-							getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-									myLocation.getLongitude()), false);
-							getDistanceTimeAddress.execute();
-						}
-					}
+					callMapTouchedRefreshDrivers();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -6635,12 +6630,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		try {
 			if(userMode == UserMode.PASSENGER){
-				if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-					if(jObj.getString("session_id").equalsIgnoreCase(Data.cSessionId)){
-						cancelTimerUpdateDrivers();
-						cancelTimerRequestRide();
-						fetchAcceptedDriverInfoAndChangeState(jObj);
-					}
+				if(jObj.getString("session_id").equalsIgnoreCase(Data.cSessionId)){
+					cancelTimerUpdateDrivers();
+					cancelTimerRequestRide();
+					fetchAcceptedDriverInfoAndChangeState(jObj);
 				}
 			}
 		} catch (Exception e) {
@@ -6697,8 +6690,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						getDistanceTimeAddress.cancel(true);
 					}
 					if(myLocation != null){
-						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-								myLocation.getLongitude()), true);
+						getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, true);
 						getDistanceTimeAddress.execute();
 					}
 				}
@@ -7246,11 +7238,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				if(!zoomedToMyLocation){
 					map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
 					zoomedToMyLocation = true;
-					if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(location.getLatitude(), 
-								location.getLongitude()), false);
-						getDistanceTimeAddress.execute();
-					}
+					callMapTouchedRefreshDrivers();
 				}
 			}
 		} catch (Exception e) {
@@ -7283,8 +7271,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						getDistanceTimeAddress = null;
 					}
 					if(myLocation != null){
-						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-								myLocation.getLongitude()), false);
+						getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, false);
 						getDistanceTimeAddress.execute();
 					}
 				}
@@ -7296,8 +7283,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					if(myLocation != null){
 						Data.assignedDriverInfo.durationToReach = "no";
-						getDistanceTimeAddress = new GetDistanceTimeAddress(new LatLng(myLocation.getLatitude(), 
-								myLocation.getLongitude()), true);
+						getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, true);
 						getDistanceTimeAddress.execute();
 					}
 				}

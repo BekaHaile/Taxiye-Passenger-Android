@@ -15,7 +15,6 @@ public class LocationReceiverDriver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-    	GCMHeartbeatRefresher.refreshGCMHeartbeat(context);
     	final Location location = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
     	if(location != null){
 	    	new Thread(new Runnable() {
