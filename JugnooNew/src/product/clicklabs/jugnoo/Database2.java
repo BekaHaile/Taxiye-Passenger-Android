@@ -77,6 +77,9 @@ public class Database2 {																	// class for handling database related 
 	private static final String TABLE_DRIVER_MANUAL_PATCH = "table_driver_manual_patch";
 	private static final String DRIVER_MANUAL_PATCH_PUSH_RECEIVED = "driver_manual_patch_push_received";
 	
+	private static final String TABLE_DRIVER_GCM_INTENT = "table_driver_gcm_intent";
+	private static final String DRIVER_GCM_INTENT = "driver_gcm_intent";
+	
 	/**
 	 * Creates and opens database for the application use 
 	 * @author shankar
@@ -147,6 +150,9 @@ public class Database2 {																	// class for handling database related 
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_MANUAL_PATCH + " ("
 				+ DRIVER_MANUAL_PATCH_PUSH_RECEIVED + " TEXT" + ");");
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_GCM_INTENT + " ("
+				+ DRIVER_GCM_INTENT + " INTEGER" + ");");
 		
 	}
 	
@@ -716,5 +722,54 @@ public class Database2 {																	// class for handling database related 
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public int getDriverGcmIntent() {
+		try {
+			String[] columns = new String[] { Database2.DRIVER_GCM_INTENT };
+			Cursor cursor = database.query(Database2.TABLE_DRIVER_GCM_INTENT, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				int choice = cursor.getInt(cursor.getColumnIndex(Database2.DRIVER_GCM_INTENT));
+				return choice;
+			} else {
+				return 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 1;
+		}
+	}
+	
+	public void updateDriverGcmIntent(int choice) {
+		try{
+			deleteDriverGcmIntent();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.DRIVER_GCM_INTENT, choice);
+			database.insert(Database2.TABLE_DRIVER_GCM_INTENT, null, contentValues);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void deleteDriverGcmIntent(){
+		try{
+			database.delete(Database2.TABLE_DRIVER_GCM_INTENT, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 }

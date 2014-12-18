@@ -81,7 +81,6 @@ public class DriverLocationUpdateService extends Service {
     			gpsLocationFetcher = new GPSLocationFetcher(DriverLocationUpdateService.this, serverUpdateTimePeriod);
     		}
         	
-    		
     		Database2.getInstance(DriverLocationUpdateService.this).close();
             
             setupLocationUpdateAlarm();
@@ -104,6 +103,7 @@ public class DriverLocationUpdateService extends Service {
 		String TRIAL_SERVER_URL = "https://54.81.229.172:8200";
 		
 		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+		
 		
 		
 		

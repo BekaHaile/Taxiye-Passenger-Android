@@ -49,6 +49,7 @@ public class Data {
 			SP_TOTAL_DISTANCE = "total_distance", 
 			SP_WAIT_TIME = "wait_time",
 			SP_RIDE_TIME = "ride_time", 
+			SP_RIDE_START_TIME = "ride_start_time", 
 			SP_LAST_LATITUDE = "last_latitude",
 			SP_LAST_LONGITUDE = "last_longitude",
 			

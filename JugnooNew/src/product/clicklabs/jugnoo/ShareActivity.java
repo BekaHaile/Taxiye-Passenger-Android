@@ -119,6 +119,7 @@ public class ShareActivity extends Activity{
 			}
 		});
 		
+		
 		shareWhatsappImg.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -127,7 +128,8 @@ public class ShareActivity extends Activity{
 				FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);
 			}
 		});
-
+		
+		
 		shareSMSImg.setOnClickListener(new View.OnClickListener() {
 			
 			@Override

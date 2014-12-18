@@ -12,7 +12,6 @@ import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
-import product.clicklabs.jugnoo.datastructure.ExceptionalDriver;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.UserData;
@@ -39,7 +38,7 @@ public class JSONParser {
 		
 		Data.termsAgreed = 1;
 		
-		Data.userData = parseUserData(userData);
+		Data.userData = parseUserData(context, userData);
 		
 		if(Data.termsAgreed == 1){
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -55,30 +54,16 @@ public class JSONParser {
 				new DriverServiceOperations().startDriverService(context);
 				HomeActivity.userMode = UserMode.DRIVER;
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
-				try {
-					int excepInt = userData.getInt("exceptional_driver");
-					if(1 == excepInt){
-						HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
-					}
-					else{
-						HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-					}
-				} catch (Exception e) {
-					HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-					e.printStackTrace();
-				}
 			}
 			else if(currentUserStatus == 2){
 				new DriverServiceOperations().stopService(context);
 				HomeActivity.userMode = UserMode.PASSENGER;
 				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-				HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 			HomeActivity.userMode = UserMode.PASSENGER;
 			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
 		}
 		
 		parseFareDetails(userData);
@@ -111,11 +96,14 @@ public class JSONParser {
 	
 	
 	
-	public UserData parseUserData(JSONObject userData) throws Exception{
-		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0;
+	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
+		
+		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0;
+		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
 		}
+		
 		if(userData.has("can_change_location")){
 			canChangeLocation = userData.getInt("can_change_location");
 		}
@@ -124,9 +112,37 @@ public class JSONParser {
 			schedulingLimitMinutes = userData.getInt("scheduling_limit");
 		}
 		
+		if(userData.has("is_available")){
+			isAvailable = userData.getInt("is_available");
+		}
+		
+		if(userData.has("exceptional_driver")){
+			exceptionalDriver = userData.getInt("exceptional_driver");
+		}
+		
+		try{
+			if(userData.has("gcm_intent")){
+				gcmIntent = userData.getInt("gcm_intent");
+				Database2.getInstance(context).updateDriverGcmIntent(gcmIntent);
+				Database2.getInstance(context).close();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		try{
+			if(userData.has("christmas_icon_enable")){
+				christmasIconEnable = userData.getInt("christmas_icon_enable");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		//"gcm_intent": 0, christmas_icon_enable
+		
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), 
-				canSchedule, canChangeLocation, schedulingLimitMinutes);
+				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
@@ -137,30 +153,13 @@ public class JSONParser {
 		JSONObject jLoginObject = jObj.getJSONObject("login");
 		JSONObject userData = jLoginObject.getJSONObject("user_data");
 		
-		Data.userData = parseUserData(userData);
+		Data.userData = parseUserData(context, userData);
 		
 		parseFareDetails(userData);
 		
 		//current_user_status = 1 driver or 2 user
 		int currentUserStatus = userData.getInt("current_user_status");
-		if(currentUserStatus == 1){
-			try{
-				int excepInt = userData.getInt("exceptional_driver");
-				if(1 == excepInt){
-					HomeActivity.exceptionalDriver = ExceptionalDriver.YES;
-				}
-				else{
-					HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-				}
-			} catch(Exception e){
-				e.printStackTrace();
-				HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-			}
-		}
-		else{
-			HomeActivity.exceptionalDriver = ExceptionalDriver.NO;
-			
-			
+		if(currentUserStatus == 2){
 			//Fetching drivers info
 			JSONObject jDriversObject = jObj.getJSONObject("drivers");
 			parseDriversToShow(jDriversObject, "data");
@@ -406,8 +405,19 @@ public class JSONParser {
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
-					HomeActivity.previousWaitTime = Double.parseDouble(pref.getString(Data.SP_WAIT_TIME, "0"));
-					HomeActivity.previousRideTime = Double.parseDouble(pref.getString(Data.SP_RIDE_TIME, "0"));
+					HomeActivity.previousWaitTime = Long.parseLong(pref.getString(Data.SP_WAIT_TIME, "0"));
+					
+//					double previousRideTime = Double.parseDouble(pref.getString(Data.SP_RIDE_TIME, "0"));
+					long rideStartTime = Long.parseLong(pref.getString(Data.SP_RIDE_START_TIME, ""+System.currentTimeMillis()));
+					long timeDiffToAdd = System.currentTimeMillis() - rideStartTime;
+					if(timeDiffToAdd > 0){
+						HomeActivity.previousRideTime = timeDiffToAdd;
+					}
+					else{
+						HomeActivity.previousRideTime = 0;
+					}
+					
+					
 					
 					HomeActivity.waitStart = 2;
 					
@@ -430,6 +440,7 @@ public class JSONParser {
 				}
 				
 			}
+			
 			
 			
 		}
@@ -635,6 +646,7 @@ public class JSONParser {
 		editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
 		editor.putString(Data.SP_WAIT_TIME, "0");
 		editor.putString(Data.SP_RIDE_TIME, "0");
+		editor.putString(Data.SP_RIDE_START_TIME, ""+System.currentTimeMillis());
 		editor.putString(Data.SP_LAST_LATITUDE, "0");
 		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 

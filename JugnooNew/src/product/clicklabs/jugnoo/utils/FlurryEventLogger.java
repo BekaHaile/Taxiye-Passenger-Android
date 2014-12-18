@@ -490,4 +490,24 @@ public class FlurryEventLogger {
 		}
 	}
 	
+	public static void christmasScreenOpened(String accessToken){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", accessToken);
+			FlurryAgent.logEvent("Christmas screen opened", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void christmasScreenContinuePressed(String accessToken){
+		try{
+			Map<String, String> articleParams = new HashMap<String, String>();
+			articleParams.put("access_token", accessToken);
+			FlurryAgent.logEvent("Christmas screen Continue pressed", articleParams);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 }
