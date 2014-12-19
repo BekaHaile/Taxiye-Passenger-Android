@@ -1,12 +1,16 @@
 package product.clicklabs.jugnoo;
 
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import rmn.androidscreenlibrary.ASSL;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
@@ -14,9 +18,11 @@ public class PMGPromoActivity extends FragmentActivity{
 	
 	LinearLayout relative;
 	
-	Button backBtn;
+	ImageView backBtn;
 	
-	Button proceedBtn;
+	TextView promoText, promoDeliverText, tncText, tncDescText;
+	
+	Button continueBtn;
 	
 	// *****************************Used for flurry work***************//
 	@Override
@@ -40,9 +46,23 @@ public class PMGPromoActivity extends FragmentActivity{
 		new ASSL(PMGPromoActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn);
+		backBtn = (ImageView) findViewById(R.id.backBtn);
 		
-		proceedBtn = (Button) findViewById(R.id.proceedBtn); proceedBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		continueBtn = (Button) findViewById(R.id.continueBtn); continueBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		promoText = (TextView) findViewById(R.id.promoText); promoText.setTypeface(Data.regularFont(getApplicationContext()));
+		promoDeliverText = (TextView) findViewById(R.id.promoDeliverText); promoDeliverText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		tncText = (TextView) findViewById(R.id.tncText); tncText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		tncDescText = (TextView) findViewById(R.id.tncDescText); tncDescText.setTypeface(Data.regularFont(getApplicationContext()));
+		
+		
+		promoText.setText("It's vacation time. Show your love for your near and dear ones by gifting them a cake and a greeting card. Sit back and relax while Jugnoo delivers your order the very same day.");
+		promoDeliverText.setText("\"To ab deliver karwao, Jugnoo Se!\"");
+		
+		tncText.setText("Terms and Conditions:");
+		tncDescText.setText("1. Same day delivery valid only for delivery addresses in Chandigarh, Panchkula and Mohali." +
+				"\n2. Same day delivery valid for orders received before 3 pm. Order after 3 pm would be delivered the next day.");
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
@@ -53,11 +73,12 @@ public class PMGPromoActivity extends FragmentActivity{
 			}
 		});
 		
-		proceedBtn.setOnClickListener(new View.OnClickListener() {
+		continueBtn.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
 				CustomAppLauncher.launchApp(PMGPromoActivity.this, "product.clicklabs.postmygreetings");
+				FlurryEventLogger.christmasScreenContinuePressed(Data.userData.accessToken);
 			}
 		});
 		
@@ -68,7 +89,7 @@ public class PMGPromoActivity extends FragmentActivity{
 	
 	public void performBackPressed(){
 		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
 	}
 	
 	@Override

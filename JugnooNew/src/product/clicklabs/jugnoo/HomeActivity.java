@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.PausableChronometer;
+import product.clicklabs.jugnoo.utils.SoundMediaPlayer;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -79,8 +80,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -183,6 +186,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView title;
 	ImageView jugnooLogo;
 	Button checkServerBtn, toggleDebugModeBtn;
+	Button christmasButton;
+	ImageView christmasBell1, christmasBell2;
 	
 	
 	
@@ -353,7 +358,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	GPSForegroundLocationFetcher gpsForegroundLocationFetcher;
 
 	static UserMode userMode;
 	static PassengerScreenMode passengerScreenMode;
@@ -508,6 +512,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 //		favBtn = (Button) findViewById(R.id.favBtn);
+		christmasButton = (Button) findViewById(R.id.christmasButton);
+		christmasBell1 = (ImageView) findViewById(R.id.christmasBell1);
+		christmasBell2 = (ImageView) findViewById(R.id.christmasBell2);
+		
 		
 		
 		menuBtn.setVisibility(View.VISIBLE);
@@ -831,7 +839,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
-		
+		christmasButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(Data.userData != null){
+		    		if(Data.userData.christmasIconEnable == 1){
+		    			SoundMediaPlayer.startSound(HomeActivity.this, R.raw.bell_sound);
+		    			startActivity(new Intent(HomeActivity.this, PMGPromoActivity.class));
+						overridePendingTransition(R.anim.top_in, R.anim.top_out);
+						FlurryEventLogger.christmasScreenOpened(Data.userData.accessToken);
+		    		}
+				}
+			}
+		});
 		
 		
 		
@@ -1659,6 +1680,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverModeToggle.setImageResource(R.drawable.off);
 			}
 			
+			enableChristmasUI();
+			
 			switchUserScreen(userMode);
 			
 			startUIAfterGettingUserStatus();
@@ -1677,6 +1700,34 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Database2.getInstance(HomeActivity.this).close();
 		
 		showManualPatchPushReceivedDialog();
+	}
+	
+	
+	public void enableChristmasUI(){
+		if(UserMode.PASSENGER == userMode){
+			if(Data.userData != null){
+	    		if(Data.userData.christmasIconEnable == 1){
+	    			christmasButton.setVisibility(View.VISIBLE);
+	    			christmasBell1.setVisibility(View.VISIBLE);
+	    			christmasBell2.setVisibility(View.VISIBLE);
+	    		}
+	    		else{
+	    			christmasButton.setVisibility(View.GONE);
+	    			christmasBell1.setVisibility(View.GONE);
+	    			christmasBell2.setVisibility(View.GONE);
+	    		}
+			}
+			else{
+				christmasButton.setVisibility(View.GONE);
+				christmasBell1.setVisibility(View.GONE);
+				christmasBell2.setVisibility(View.GONE);
+			}
+		}
+		else{
+			christmasButton.setVisibility(View.GONE);
+			christmasBell1.setVisibility(View.GONE);
+			christmasBell2.setVisibility(View.GONE);
+		}
 	}
 	
 	
@@ -2375,7 +2426,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void switchPassengerScreen(PassengerScreenMode mode){
 		if(userMode == UserMode.PASSENGER){
-			
+			stopService(new Intent(HomeActivity.this, DriverLocationUpdateService.class));
 			initializeFusedLocationFetchers();
 			
 			if(currentLocationMarker != null){
@@ -2483,8 +2534,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				} else if (myLocation != null) {
 					showDriverMarkersAndPanMap(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 				}
-				
-				dontCallRefreshDriver = true;
 				
 				startTimerUpdateDrivers();
 				
@@ -2733,7 +2782,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	@Override
-	public void onGPSLocationChanged(Location location) {
+	public synchronized void onGPSLocationChanged(Location location) {
 		drawLocationChanged(location);
 	}
 	
@@ -2823,9 +2872,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void connectGPSListener(){
 		disconnectGPSListener();
 		try {
-			if(gpsForegroundLocationFetcher == null){
-				gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
-			}
+			GPSForegroundLocationFetcher.getInstance(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2833,14 +2880,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void disconnectGPSListener(){
 		try {
-			if(gpsForegroundLocationFetcher != null){
-				gpsForegroundLocationFetcher.destroy();
-				gpsForegroundLocationFetcher = null;
-			}
+			GPSForegroundLocationFetcher.getInstance(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD).destroy();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally{
-			gpsForegroundLocationFetcher = null;
 		}
 	}
 	
@@ -2872,6 +2914,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    if(UserMode.DRIVER == userMode){
 				buildTimeSettingsAlertDialog(this);
 			}
+		    
+		    startBellsAnim();
 		}
 	}
 	
@@ -3051,6 +3095,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		destroyFusedLocationFetchers();
 		
+		stopBellsAnim();
+		
 		super.onPause();
 		
 	}
@@ -3118,7 +3164,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void drawLocationChanged(Location location){
+	public synchronized void drawLocationChanged(Location location){
 		try {
 			if(map != null){
 				HomeActivity.myLocation = location;
@@ -3173,7 +3219,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public void addLatLngPathToDistance(final LatLng lastLatLng, final LatLng currentLatLng){
+	public synchronized void addLatLngPathToDistance(final LatLng lastLatLng, final LatLng currentLatLng){
 		try {
 			double displacement = MapUtils.distance(lastLatLng, currentLatLng);
 			Log.i("displacement", "="+displacement);
@@ -3218,7 +3264,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	ArrayList<CreatePathAsyncTask> createPathAsyncTasks = new ArrayList<HomeActivity.CreatePathAsyncTask>();
 	
-	public void callGooglePathAPI(LatLng lastLatLng, LatLng currentLatLng, double displacement){
+	public synchronized void callGooglePathAPI(LatLng lastLatLng, LatLng currentLatLng, double displacement){
 		if(createPathAsyncTasks == null){
 			createPathAsyncTasks = new ArrayList<HomeActivity.CreatePathAsyncTask>();
 		}
@@ -3294,7 +3340,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
-	public void checkAndUpdateWaitTimeDistance(final double distance){
+	public synchronized void checkAndUpdateWaitTimeDistance(final double distance){
 		try {
 			if(waitStart == 1){
 				distanceAfterWaitStarted = distanceAfterWaitStarted + distance;
@@ -3309,7 +3355,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void updateDistanceFareTexts(){
+	public synchronized void updateDistanceFareTexts(){
 		double totalDistanceInKm = Math.abs(totalDistance/1000.0);
 		
 		int h = (int) (rideTimeChronometer.eclipsedTime / 3600000);
@@ -3323,7 +3369,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void displayOldPath(){
+	public synchronized void displayOldPath(){
 		
 		try {
 			ArrayList<Pair<LatLng, LatLng>> path = Database.getInstance(HomeActivity.this).getSavedPath();
@@ -3372,7 +3418,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 
 	
-	public void updateTotalDistance(double deltaDistance){
+	public synchronized void updateTotalDistance(double deltaDistance){
 		if(Utils.compareDouble(lastDeltaDistance, deltaDistance) != 0){
 			totalDistance = totalDistance + deltaDistance;
 			lastDeltaDistance = deltaDistance;
@@ -3381,7 +3427,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void drawPath(String result, double displacementToCompare, LatLng source, LatLng destination) {
+	public synchronized void drawPath(String result, double displacementToCompare, LatLng source, LatLng destination) {
 	    try {
 	        writePathLogToFile("GAPI source = "+source+", destination = "+destination);
 	    	 final JSONObject json = new JSONObject(result);
@@ -4045,15 +4091,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 									}
 									else{
+										
+										GCMIntentService.stopRing();
+										
 										new DriverServiceOperations().stopService(HomeActivity.this);
 										userMode = UserMode.PASSENGER;
 										driverModeToggle.setImageResource(R.drawable.off);
+										
 										
 										switchUserScreen(userMode);
 										
 										passengerScreenMode = PassengerScreenMode.P_INITIAL;
 										switchPassengerScreen(passengerScreenMode);
 									}
+									
+									enableChristmasUI();
 									
 								}
 							}  catch (Exception exception) {
@@ -6670,8 +6722,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			String driverCarImage = jObj.getString("driver_car_image");
 			double latitude = jObj.getDouble("current_location_latitude");
 			double longitude = jObj.getDouble("current_location_longitude");
-			double pickupLatitude = jObj.getDouble("pickup_latitude");
-			double pickupLongitude = jObj.getDouble("pickup_longitude");
+			double pickupLatitude, pickupLongitude;
+			if(jObj.has("pickup_latitude")){
+				pickupLatitude = jObj.getDouble("pickup_latitude");
+				pickupLongitude = jObj.getDouble("pickup_longitude");
+			}
+			else{
+				if(myLocation != null){
+					pickupLatitude = myLocation.getLatitude();
+					pickupLongitude = myLocation.getLongitude();
+				}
+				else{
+					pickupLatitude = map.getCameraPosition().target.latitude;
+					pickupLongitude = map.getCameraPosition().target.longitude;
+				}
+			}
+			
 			String driverRating = jObj.getString("rating");
 			
 			Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
@@ -7207,7 +7273,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 
 	@Override
-	public void onLocationChanged(Location location, int priority) {
+	public synchronized void onLocationChanged(Location location, int priority) {
 		if(((userMode == UserMode.DRIVER) && (driverScreenMode != DriverScreenMode.D_IN_RIDE)) 
 				|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode != PassengerScreenMode.P_IN_RIDE))){
 			if(priority == 0){
@@ -7971,7 +8037,43 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     	
     }
 	
-	
+    public void startBellsAnim(){
+    	if(Data.userData != null){
+    		if(Data.userData.christmasIconEnable == 1){
+		    	try {
+					Animation rotateAnim = new RotateAnimation(-30, 30, Animation.RELATIVE_TO_SELF, 0.1f, Animation.RELATIVE_TO_SELF, 0);
+					rotateAnim.setDuration(1000);
+					rotateAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+					rotateAnim.setRepeatCount(Animation.INFINITE);
+					rotateAnim.setRepeatMode(Animation.REVERSE);
+					
+					Animation rotateAnimInv = new RotateAnimation(30, -30, Animation.RELATIVE_TO_SELF, 0.65f, Animation.RELATIVE_TO_SELF, 0);
+					rotateAnimInv.setDuration(1300);
+					rotateAnimInv.setInterpolator(new AccelerateDecelerateInterpolator());
+					rotateAnimInv.setRepeatCount(Animation.INFINITE);
+					rotateAnimInv.setRepeatMode(Animation.REVERSE);
+					
+					christmasBell1.startAnimation(rotateAnim);
+					christmasBell2.startAnimation(rotateAnimInv);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+    		}
+    	}
+    }
+    
+    public void stopBellsAnim(){
+    	if(Data.userData != null){
+    		if(Data.userData.christmasIconEnable == 1){
+		    	try {
+					christmasBell1.clearAnimation();
+					christmasBell2.clearAnimation();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+    		}
+    	}
+    }
 	
 	
 }

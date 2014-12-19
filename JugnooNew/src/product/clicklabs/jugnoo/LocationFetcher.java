@@ -49,7 +49,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			connect();
 	}
 	
-	public void connect(){
+	public synchronized void connect(){
 		destroy();
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 		if(resp == ConnectionResult.SUCCESS){														// google play services working
@@ -66,7 +66,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		startCheckingLocationUpdates();
 	}
 	
-	public void destroyWaitAndConnect(){
+	public synchronized void destroyWaitAndConnect(){
 		destroy();
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -76,7 +76,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		}, 2000);
 	}
 	
-	private void saveLatLngToSP(double latitude, double longitude){
+	private synchronized void saveLatLngToSP(double latitude, double longitude){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putString(LOCATION_LAT, ""+latitude);
@@ -85,14 +85,14 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	}
 	
 	
-	private double getSavedLatFromSP(){
+	private synchronized double getSavedLatFromSP(){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String latitude = preferences.getString(LOCATION_LAT, ""+ 0);
 		Log.d("saved last lat", "=="+latitude);
 		return Double.parseDouble(latitude);
 	}
 	
-	private double getSavedLngFromSP(){
+	private synchronized double getSavedLngFromSP(){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String longitude = preferences.getString(LOCATION_LNG, ""+0);
 		return Double.parseDouble(longitude);
@@ -106,7 +106,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	 * @param context application context
 	 * @return true if any location provider is enabled else false
 	 */
-	private boolean isLocationEnabled(Context context) {
+	private synchronized boolean isLocationEnabled(Context context) {
 		try{
 			ContentResolver contentResolver = context.getContentResolver();
 			boolean gpsStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
@@ -126,7 +126,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	/**
 	 * Function to get latitude
 	 * */
-	public double getLatitude(){
+	public synchronized double getLatitude(){
 		try{
 			if(location != null){
 				Log.d("loc not null","="+location);
@@ -139,7 +139,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	/**
 	 * Function to get longitude
 	 * */
-	public double getLongitude(){
+	public synchronized double getLongitude(){
 		try{
 			if(location != null){
 				return location.getLongitude();
@@ -152,7 +152,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 
 	
 	
-	public void destroy(){
+	public synchronized void destroy(){
 		try{
 			this.location = null;
 			Log.e("location","destroy");
@@ -172,7 +172,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	}
 	
 
-	private void startRequest(){
+	private synchronized void startRequest(){
 		try {
 			locationrequest = LocationRequest.create();
 			
@@ -230,7 +230,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 
 	
 	
-	private void startCheckingLocationUpdates(){
+	private synchronized void startCheckingLocationUpdates(){
 		checkLocationUpdateStartedHandler = new Handler();
 		checkLocationUpdateStartedRunnable = new Runnable() {
 			@Override
@@ -256,7 +256,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		checkLocationUpdateStartedHandler.postDelayed(checkLocationUpdateStartedRunnable, CHECK_LOCATION_INTERVAL);
 	}
 	
-	public void stopCheckingLocationUpdates(){
+	public synchronized void stopCheckingLocationUpdates(){
 		try{
 			if(checkLocationUpdateStartedHandler != null && checkLocationUpdateStartedRunnable != null){
 				checkLocationUpdateStartedHandler.removeCallbacks(checkLocationUpdateStartedRunnable);
