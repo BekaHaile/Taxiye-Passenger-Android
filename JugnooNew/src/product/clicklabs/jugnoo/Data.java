@@ -191,7 +191,8 @@ public class Data {
 	public static LocationFetcher locationFetcher;
 	
 
-	public static String deviceToken = "", country = "", deviceName = "", osVersion = "";
+	public static final String DEVICE_TYPE = "0";
+	public static String deviceToken = "", country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
 	public static int appVersion;
 	
 	

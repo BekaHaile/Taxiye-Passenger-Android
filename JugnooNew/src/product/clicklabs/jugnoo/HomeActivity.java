@@ -825,6 +825,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
+				//TODO
+				startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
+				overridePendingTransition(R.anim.top_in, R.anim.top_out);
+				
 				return false;
 			}
 		});
@@ -851,6 +855,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						FlurryEventLogger.christmasScreenOpened(Data.userData.accessToken);
 		    		}
 				}
+				
 			}
 		});
 		
@@ -6089,7 +6094,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					//TODO on or off 
 					if(Data.userData != null){
 						if(Data.userData.canSchedule == 1){
 							switchToScheduleScreen(activity);
@@ -7777,7 +7781,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	//TODO manual patch dialog
 	public void showManualPatchPushReceivedDialog(){
 		try {
 			if(UserMode.DRIVER == userMode && DriverScreenMode.D_START_RIDE == driverScreenMode){
