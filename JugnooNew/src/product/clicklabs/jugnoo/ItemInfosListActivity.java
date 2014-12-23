@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ItemInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -12,6 +13,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
@@ -47,13 +50,18 @@ public class ItemInfosListActivity extends Activity{
 	ListView listView;
 	ItemInfoListAdapter itemInfoListAdapter;
 	
-	
+	RelativeLayout relativeLayoutCheckout;
+	TextView textViewSelectedItemsCount, textViewCheckout;
 	
 	
 	AsyncHttpClient fetchItemInfosClient;
 	
-	ArrayList<ItemInfo> itemInfosList = new ArrayList<ItemInfo>();
+	public static ArrayList<ItemInfo> itemInfosList = new ArrayList<ItemInfo>();
+	public static String terms = "";
+	public static ItemInfo selectedItemInfo = null;
 	
+	//TODO
+	public static String SERVER_URL = Data.SERVER_URL.substring(0, Data.SERVER_URL.length()-4)+"5000";
 	
 	@Override
 	protected void onStart() {
@@ -76,6 +84,8 @@ public class ItemInfosListActivity extends Activity{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(ItemInfosListActivity.this, relative, 1134, 720, false);
 		
+		SERVER_URL = Data.SERVER_URL.substring(0, Data.SERVER_URL.length()-4)+"5000";
+		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
 		infoBtn = (Button) findViewById(R.id.infoBtn);
@@ -89,6 +99,11 @@ public class ItemInfosListActivity extends Activity{
 		listView = (ListView) findViewById(R.id.listView);
 		itemInfoListAdapter = new ItemInfoListAdapter(ItemInfosListActivity.this);
 		listView.setAdapter(itemInfoListAdapter);
+		
+		relativeLayoutCheckout = (RelativeLayout) findViewById(R.id.relativeLayoutCheckout);
+		
+		textViewSelectedItemsCount = (TextView) findViewById(R.id.textViewSelectedItemsCount); textViewSelectedItemsCount.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewCheckout = (TextView) findViewById(R.id.textViewCheckout); textViewCheckout.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		textViewInfo.setVisibility(View.GONE);
 		progressBar.setVisibility(View.GONE);
@@ -106,10 +121,27 @@ public class ItemInfosListActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				
+				Intent intent = new Intent(ItemInfosListActivity.this, ItemsCheckoutTNCActivity.class);
+				intent.putExtra("only_info", "yes");
+				startActivity(intent);
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		
+		relativeLayoutCheckout.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int totalItems = updateCheckoutItemsCount(false);
+				if(totalItems > 0){
+					startActivity(new Intent(ItemInfosListActivity.this, ItemsCheckoutActivity.class));
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
+				else{
+					Toast.makeText(ItemInfosListActivity.this, "Please select some items first.", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 		
 		textViewInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -120,20 +152,38 @@ public class ItemInfosListActivity extends Activity{
 		
 		
 		
-//		getItemInfosAsync(ItemInfosListActivity.this);
+		getItemInfosAsync(ItemInfosListActivity.this);
 		
-		
-		itemInfosList.add(new ItemInfo(1, "Cherry Cake", "100", "Cherry Cake", "http://www.divianaalchemy.com/storage/Lucuma-Cake-IMG_4573.jpg"));
-		itemInfosList.add(new ItemInfo(2, "Gelato Cake", "150", "Gelato Cake", "http://www.frostgelato.com/images/cake_img.png"));
-		itemInfosList.add(new ItemInfo(3, "Rum Cake", "100", "Rum Cake", "http://www.matthews1812house.com/cgi-local/db_images/products/cache/57-image-335-290-crop.jpg"));
-		itemInfosList.add(new ItemInfo(4, "Pineapple Cake", "100", "Pineapple Cake", "http://hostedmedia.reimanpub.com/TOH/Images/Photos/37/300x300/exps12159_QC10107C49.jpg"));
-		
-		itemInfoListAdapter.notifyDataSetChanged();
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 	}
 	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		itemInfoListAdapter.notifyDataSetChanged();
+	}
+	
+	public int updateCheckoutItemsCount(boolean setText){
+		int totalCount = 0;
+		for(ItemInfo itemInfo : itemInfosList){
+			if(itemInfo.countSelected > 0){
+				totalCount++;
+			}
+		}
+		if(setText){
+			if(totalCount > 0){
+				textViewSelectedItemsCount.setText(""+totalCount);
+			}
+			else{
+				textViewSelectedItemsCount.setText("0");
+			}
+		}
+		return totalCount;
+	}
 	
 	public void performBackPressed(){
 		finish();
@@ -248,7 +298,7 @@ public class ItemInfosListActivity extends Activity{
 			holder.textViewItemPrice.setText("Rs. "+itemInfo.price);
 			
 			
-			try{Picasso.with(context).load(itemInfo.image).into(holder.imageViewItem);}catch(Exception e){}
+			try{Picasso.with(context).load(itemInfo.image).placeholder(R.drawable.item_placeholder).into(holder.imageViewItem);}catch(Exception e){}
 			
 			if(itemInfo.countSelected > 0){
 				holder.textViewItemCount.setText(""+itemInfo.countSelected);
@@ -287,16 +337,28 @@ public class ItemInfosListActivity extends Activity{
 				@Override
 				public void onClick(View v) {
 					holder = (ViewHolderItemInfo) v.getTag();
-					ItemInfo itemInfo = itemInfosList.get(holder.id);
-					
+					sendIntentToDescription(itemInfosList.get(holder.id));
 				}
 			});
 			
 			return convertView;
 		}
 
+		
+		@Override
+		public void notifyDataSetChanged() {
+			super.notifyDataSetChanged();
+			updateCheckoutItemsCount(true);
+		}
+		
 	}
 	
+	
+	public void sendIntentToDescription(ItemInfo itemInfo){
+		selectedItemInfo = itemInfo;
+		startActivity(new Intent(ItemInfosListActivity.this, ItemInfoDescriptionActivity.class));
+		overridePendingTransition(R.anim.right_in, R.anim.right_out);
+	}
 	
 	/**
 	 * ASync for get Account info from server
@@ -311,7 +373,7 @@ public class ItemInfosListActivity extends Activity{
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				fetchItemInfosClient = Data.getClient();
-				fetchItemInfosClient.post(Data.SERVER_URL + "/get_items", params,
+				fetchItemInfosClient.post(ItemInfosListActivity.SERVER_URL + "/list_all_items", params,
 						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
@@ -356,18 +418,25 @@ public class ItemInfosListActivity extends Activity{
 										
 										itemInfosList.clear();
 										
-										if(jObj.has("items")){
-											JSONArray itemsData = jObj.getJSONArray("items");
-											if(itemsData.length() > 0){
-												for(int i=0; i<itemsData.length(); i++){
-													JSONObject itemData = itemsData.getJSONObject(i);
-													
-													itemInfosList.add(new ItemInfo(itemData.getInt("id"), itemData.getString("name"), itemData.getString("price"), 
-															itemData.getString("description"), itemData.getString("image")));
+										if(jObj.has("flag")){
+											int flag = jObj.getInt("flag");
+											if(ApiResponseFlags.COMPLETE_INVENTORY.getOrdinal() == flag){
+												if(jObj.has("inventory")){
+													JSONArray itemsData = jObj.getJSONArray("inventory");
+													if(itemsData.length() > 0){
+														for(int i=0; i<itemsData.length(); i++){
+															JSONObject itemData = itemsData.getJSONObject(i);
+															itemInfosList.add(new ItemInfo(itemData.getInt("item_id"), itemData.getString("name"), itemData.getInt("price"), 
+																	itemData.getString("description"), itemData.getString("image")));
+														}
+													}
+												}
+												if(jObj.has("terms")){
+													terms = jObj.getString("terms");
 												}
 											}
 										}
-										updateListData("No items there", false);
+										updateListData("No items", false);
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();

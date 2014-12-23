@@ -189,6 +189,24 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
+        
+             <activity
+            android:name="product.clicklabs.jugnoo.ItemInfoDescriptionActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+             <activity
+            android:name="product.clicklabs.jugnoo.ItemsCheckoutActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+             <activity
+            android:name="product.clicklabs.jugnoo.ItemsCheckoutTNCActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
           
           
         <service

@@ -123,7 +123,6 @@ public class MapUtils {
 									+ ","
 									+ latLng.longitude + "&sensor=true"));
 
-			Log.e("GAPI address result", "="+jsonObj);
 			
 			String status = jsonObj.getString("status");
 			if (status.equalsIgnoreCase("OK")) {

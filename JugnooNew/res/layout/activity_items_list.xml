@@ -19,7 +19,7 @@
             android:layout_width="82px"
             android:layout_height="82px"
             android:layout_centerVertical="true"
-            android:background="@drawable/back_btn_selector"
+            android:background="@drawable/back_inv_btn_selector"
             android:tag="mwar" />
 
         <TextView
@@ -28,41 +28,37 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="Items"
-            android:textColor="@color/white"
-            android:textSize="48px" />
-        
+            android:text="SHOP"
+            android:textColor="@color/orange_text"
+            android:textSize="34px" />
+
         <Button
             android:id="@+id/infoBtn"
             android:layout_width="75px"
             android:layout_height="75px"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10px"
-            android:layout_alignParentRight="true"
             android:background="@drawable/info_yellow_selector"
             android:tag="mwar" />
-        
     </RelativeLayout>
-    
-    
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="932px"
         android:orientation="vertical"
-        android:splitMotionEvents="false"
-         >
+        android:splitMotionEvents="false" >
 
-
-                <ListView
-                    android:id="@+id/listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0px"
-                    android:divider="@drawable/transparent"
-                    android:dividerHeight="0px"
-                    android:listSelector="@drawable/transparent"
-                    android:splitMotionEvents="false" >
-                </ListView>
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0px"
+            android:divider="@color/white"
+            android:dividerHeight="10px"
+            android:listSelector="@drawable/transparent"
+            android:splitMotionEvents="false" >
+        </ListView>
 
         <TextView
             android:id="@+id/textViewInfo"
@@ -71,13 +67,59 @@
             android:layout_centerInParent="true"
             android:text="TextView"
             android:textColor="@color/black"
-            android:textSize="48px" />
+            android:textSize="34px" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="140px"
             android:layout_height="140px"
             android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutCheckout"
+        android:layout_width="match_parent"
+        android:layout_height="112px"
+        android:background="@drawable/orange_bg_selector" >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSelectedItemsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25px" >
+
+            <ImageView
+                android:id="@+id/imageViewSelectedItemsCount"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:src="@drawable/ring_orange_dark"
+                android:tag="mwar" />
+
+            <TextView
+                android:id="@+id/textViewSelectedItemsCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="34px" />
+        </RelativeLayout>
+        
+        
+        <TextView 
+                        android:id="@+id/textViewCheckout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="34px"
+                        android:textColor="@drawable/white_color_selector"
+                        android:text="CHECKOUT"
+                        android:singleLine="true"
+                        android:layout_centerInParent="true"
+                        />
+        
+        
     </RelativeLayout>
 
 </LinearLayout>

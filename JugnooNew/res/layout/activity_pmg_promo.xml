@@ -65,7 +65,7 @@
             android:layout_marginTop="5px"
             android:gravity="center"
             android:text="To ab deliver karwao, Jugnoo Se!"
-            android:textColor="@color/orange"
+            android:textColor="@color/orange_text"
             android:textSize="40px" />
 
         <Button

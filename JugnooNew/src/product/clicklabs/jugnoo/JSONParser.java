@@ -98,7 +98,8 @@ public class JSONParser {
 	
 	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
 		
-		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0;
+		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0, nukkadEnable = 0;
+		String phoneNo = "";
 		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
@@ -138,11 +139,23 @@ public class JSONParser {
 			e.printStackTrace();
 		}
 		
+		if(userData.has("phone_no")){
+			phoneNo = userData.getString("phone_no");
+		}
+		
+		try{
+			if(userData.has("nukkad_enable")){
+				nukkadEnable = userData.getInt("nukkad_enable");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		//"gcm_intent": 0, christmas_icon_enable
 		
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
-				userData.getString("user_image"), userData.getString("referral_code"), 
-				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable);
+				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
+				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{

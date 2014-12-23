@@ -825,9 +825,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
-				//TODO
-				startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
-				overridePendingTransition(R.anim.top_in, R.anim.top_out);
 				
 				return false;
 			}
@@ -848,11 +845,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				if(Data.userData != null){
-		    		if(Data.userData.christmasIconEnable == 1){
+		    		if(Data.userData.nukkadEnable == 1){
 		    			SoundMediaPlayer.startSound(HomeActivity.this, R.raw.bell_sound);
-		    			startActivity(new Intent(HomeActivity.this, PMGPromoActivity.class));
-						overridePendingTransition(R.anim.top_in, R.anim.top_out);
-						FlurryEventLogger.christmasScreenOpened(Data.userData.accessToken);
+		    			startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
 		    		}
 				}
 				
@@ -1711,7 +1708,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void enableChristmasUI(){
 		if(UserMode.PASSENGER == userMode){
 			if(Data.userData != null){
-	    		if(Data.userData.christmasIconEnable == 1){
+	    		if(Data.userData.nukkadEnable == 1){
 	    			christmasButton.setVisibility(View.VISIBLE);
 	    			christmasBell1.setVisibility(View.VISIBLE);
 	    			christmasBell2.setVisibility(View.VISIBLE);
@@ -3086,6 +3083,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		try{
 			if(userMode == UserMode.PASSENGER){
+				new DriverServiceOperations().stopService(this);
 				cancelTimerUpdateDrivers();
 				disconnectGPSListener();
 			}
@@ -8042,7 +8040,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
     public void startBellsAnim(){
     	if(Data.userData != null){
-    		if(Data.userData.christmasIconEnable == 1){
+    		if(Data.userData.nukkadEnable == 1){
 		    	try {
 					Animation rotateAnim = new RotateAnimation(-30, 30, Animation.RELATIVE_TO_SELF, 0.1f, Animation.RELATIVE_TO_SELF, 0);
 					rotateAnim.setDuration(1000);
@@ -8067,7 +8065,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     
     public void stopBellsAnim(){
     	if(Data.userData != null){
-    		if(Data.userData.christmasIconEnable == 1){
+    		if(Data.userData.nukkadEnable == 1){
 		    	try {
 					christmasBell1.clearAnimation();
 					christmasBell2.clearAnimation();

@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:background="@color/red_status"
+                android:background="@color/transparent"
                 android:tag="mwar"
                  />
             
@@ -58,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="30px"
                         android:textColor="@drawable/white_color_selector"
-                        android:text="Rs. 20"
+                        android:text="Rs. 0"
                         android:singleLine="true"
                         />
                     
@@ -110,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="34px"
                         android:textColor="@color/white"
-                        android:text="10"
+                        android:text="0"
                         android:singleLine="true"
                         android:layout_centerInParent="true"
                         />
