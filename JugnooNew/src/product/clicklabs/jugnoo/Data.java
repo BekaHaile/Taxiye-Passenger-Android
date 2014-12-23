@@ -142,9 +142,9 @@ public class Data {
 	
 	
 	//TODO
-	public static final String DEV_SERVER_URL = "https://54.81.229.172:8012";
+	public static final String DEV_SERVER_URL = "https://test.jugnoo.in:8012";
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
-	public static final String TRIAL_SERVER_URL = "https://54.81.229.172:8200";
+	public static final String TRIAL_SERVER_URL = "https://test.jugnoo.in:8200";
 	
 	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 	
@@ -191,7 +191,8 @@ public class Data {
 	public static LocationFetcher locationFetcher;
 	
 
-	public static String deviceToken = "", country = "", deviceName = "", osVersion = "";
+	public static final String DEVICE_TYPE = "0";
+	public static String deviceToken = "", country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
 	public static int appVersion;
 	
 	

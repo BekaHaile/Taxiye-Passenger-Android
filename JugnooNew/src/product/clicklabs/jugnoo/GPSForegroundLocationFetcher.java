@@ -13,6 +13,8 @@ import android.provider.Settings;
 
 public class GPSForegroundLocationFetcher implements LocationListener{
 	
+	private static GPSForegroundLocationFetcher instance;
+	
 	private LocationManager locationManager;
 	private Context context;
 	private GPSLocationUpdate gpsLocationUpdate;
@@ -25,19 +27,28 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 
 	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
 	
-	public GPSForegroundLocationFetcher(GPSLocationUpdate gpsLocationUpdate, long requestInterval){
+	private GPSForegroundLocationFetcher(GPSLocationUpdate gpsLocationUpdate, long requestInterval){
 		this.context = (Context) gpsLocationUpdate;
 		this.gpsLocationUpdate = gpsLocationUpdate;
 		this.requestInterval = requestInterval;
 		connect();
 	}
 	
+	
+	public static GPSForegroundLocationFetcher getInstance(GPSLocationUpdate gpsLocationUpdate, long requestInterval){
+		if(instance == null){
+			instance = new GPSForegroundLocationFetcher(gpsLocationUpdate, requestInterval);
+		}
+		return instance;
+	}
+	
+	
 	/**
 	 * Checks if location fetching is enabled in device or not
 	 * @param context application context
 	 * @return true if any location provider is enabled else false
 	 */
-	private boolean isLocationEnabled(Context context) {
+	private synchronized boolean isLocationEnabled(Context context) {
 		try{
 			ContentResolver contentResolver = context.getContentResolver();
 			boolean gpsStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
@@ -50,7 +61,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	}
 	
 	
-	public void connect(){
+	public synchronized void connect(){
 		destroy();
 		if(isLocationEnabled(context)){
 			this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -59,7 +70,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		startCheckingLocationUpdates();
 	}
 	
-	public void destroyWaitAndConnect(){
+	public synchronized void destroyWaitAndConnect(){
 		destroy();
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -69,7 +80,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		}, 2000);
 	}
 	
-	public void destroy(){
+	public synchronized void destroy(){
 		try{
 			this.location = null;
 			if(locationManager != null){
@@ -79,6 +90,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 			
 		} finally{
 			locationManager = null;
+			instance = null;
 		}
 		stopCheckingLocationUpdates();
 	}
@@ -109,7 +121,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		}
 	}
 	
-	private void startCheckingLocationUpdates(){
+	private synchronized void startCheckingLocationUpdates(){
 		checkLocationUpdateStartedHandler = new Handler();
 		checkLocationUpdateStartedRunnable = new Runnable() {
 			@Override
@@ -135,7 +147,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		checkLocationUpdateStartedHandler.postDelayed(checkLocationUpdateStartedRunnable, CHECK_LOCATION_INTERVAL);
 	}
 	
-	public void stopCheckingLocationUpdates(){
+	public synchronized void stopCheckingLocationUpdates(){
 		try{
 			if(checkLocationUpdateStartedHandler != null && checkLocationUpdateStartedRunnable != null){
 				checkLocationUpdateStartedHandler.removeCallbacks(checkLocationUpdateStartedRunnable);

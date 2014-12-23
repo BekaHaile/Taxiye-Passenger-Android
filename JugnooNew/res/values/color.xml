@@ -8,6 +8,8 @@
    <color name="black">#202020</color>
    <color name="black_light">#505050</color>
    
+   <color name="black_text_shop">#1C1C1C</color>
+   
    
    <color name="white_translucent">#D8FFFFFF</color>
    <color name="white_more_translucent">#66FFFFFF</color>
@@ -59,7 +61,11 @@
     <color name="red_status">#F53C37</color>
     
     
-    <color name="orange">#F47526</color>
+    <color name="orange_text">#FBBC12</color>
     
+    <color name="orange_btn">#F99613</color>
+    <color name="orange_btn_pressed">#E98603</color>
+    
+    <color name="orange_dark">#F96f01</color>
    
 </resources>

@@ -321,7 +321,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			params.put("email", emailRegisterData.emailId);
 			params.put("password", emailRegisterData.password);
 			params.put("otp", otp);
-			params.put("device_type", "0");
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("device_token", Data.deviceToken);
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
@@ -444,7 +445,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			params.put("app_version", Data.appVersion);
 			params.put("os_version", Data.osVersion);
 			params.put("device_name", Data.deviceName);
-			params.put("device_type", "0");
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("otp", otp);
 			params.put("ph_no", facebookRegisterData.phoneNo);
 			params.put("password", facebookRegisterData.password);
@@ -463,7 +465,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			Log.i("app_version", "="+Data.appVersion);
 			Log.i("os_version", "="+Data.osVersion);
 			Log.i("device_name", "="+Data.deviceName);
-			Log.i("device_type", "="+"0");
+			Log.i("device_type", "="+Data.DEVICE_TYPE);
+			Log.i("unique_device_id", Data.uniqueDeviceId);
 			Log.i("otp", "="+otp);
 			Log.i("ph_no", "="+facebookRegisterData.phoneNo);
 			Log.i("password", "="+facebookRegisterData.password);

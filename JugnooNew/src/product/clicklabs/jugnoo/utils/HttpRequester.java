@@ -62,7 +62,12 @@ public class HttpRequester {
 		// Making HTTP request
 		try {
 			// defaultHttpClient
-			DefaultHttpClient httpClient = new DefaultHttpClient();
+			//Added timeout
+	        HttpParams httpParameters = new BasicHttpParams();
+	        HttpConnectionParams.setConnectionTimeout(httpParameters, HttpRequester.TIMEOUT_CONNECTION);
+	        HttpConnectionParams.setSoTimeout(httpParameters, TIMEOUT_SOCKET);
+	        
+	        HttpClient httpClient = new DefaultHttpClient(httpParameters);
 			HttpPost httpPost = new HttpPost(url);
 
 			HttpResponse httpResponse = httpClient.execute(httpPost);
