@@ -63,6 +63,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	
 	public synchronized void connect(){
 		destroy();
+		Log.e("GPS", "connect");
 		if(isLocationEnabled(context)){
 			this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 			this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, this.requestInterval, 0, this);
@@ -81,6 +82,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	}
 	
 	public synchronized void destroy(){
+		Log.e("GPS", "destroy");
 		try{
 			this.location = null;
 			if(locationManager != null){

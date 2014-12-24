@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="PRODUCT DETAIL"
+            android:text="PRODUCT DETAILS"
             android:textColor="@color/orange_text"
             android:textSize="34px" />
     </RelativeLayout>
@@ -101,7 +101,7 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/orange_btn_round_selector"
                     android:tag="mwar"
-                    android:layout_marginTop="20px"
+                    android:layout_marginTop="60px"
                     android:textSize="34px"
                     android:textColor="@drawable/white_color_selector"
                     android:text="ADD TO CART"

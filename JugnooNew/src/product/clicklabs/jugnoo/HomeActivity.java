@@ -1511,6 +1511,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 																	// map object initialized
 		if(map != null){
+			map.getUiSettings().setZoomGesturesEnabled(false);
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setMyLocationEnabled(true);
 			map.getUiSettings().setTiltGesturesEnabled(false);
@@ -1548,7 +1549,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			
-			
+			map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+				
+				@Override
+				public void onMapClick(LatLng arg0) {
+					Log.e("arg0", "="+arg0);
+				}
+			});
 			
 			map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 				
@@ -3860,36 +3867,49 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void showDriverMarkersAndPanMap(LatLng userLatLng){
 		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-			if(map != null){
-				map.clear();
-				addCurrentLocationAddressMarker(userLatLng);
-				LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-				for(int i=0; i<Data.driverInfos.size(); i++){
-					addDriverMarkerForCustomer(Data.driverInfos.get(i));
-					boundsBuilder.include(Data.driverInfos.get(i).latLng);
-				}
-				boundsBuilder.include(new LatLng(userLatLng.latitude, userLatLng.longitude));
-				try {
-					final LatLngBounds bounds = boundsBuilder.build();
-					final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-					new Handler().postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								if(!mapTouchedOnce){
-									map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(180*minScaleRatio)), 1000, null);
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							mapTouchedOnce = true;
+//			if(!mapTouchedOnce){
+				if(map != null){
+					map.clear();
+					addCurrentLocationAddressMarker(userLatLng);
+					LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+					LatLng farthestLatLng = null;
+					double maxDistance = 0;
+					for(int i=0; i<Data.driverInfos.size(); i++){
+						addDriverMarkerForCustomer(Data.driverInfos.get(i));
+						if(MapUtils.distance(userLatLng, Data.driverInfos.get(i).latLng) > maxDistance){
+							maxDistance = MapUtils.distance(userLatLng, Data.driverInfos.get(i).latLng);
+							farthestLatLng = Data.driverInfos.get(i).latLng;
 						}
-					}, 1000);
+					}
+					if(farthestLatLng != null){
+						boundsBuilder.include(new LatLng(userLatLng.latitude, farthestLatLng.longitude));
+						boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
+						boundsBuilder.include(new LatLng(userLatLng.latitude, ((2*userLatLng.longitude) - farthestLatLng.longitude)));
+						boundsBuilder.include(new LatLng(((2*userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
+					}
 					
-				} catch (Exception e) {
-					e.printStackTrace();
+					boundsBuilder.include(userLatLng);
+					
+					try {
+						final LatLngBounds bounds = boundsBuilder.build();
+						final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								mapTouchedOnce = true;
+							}
+						}, 1000);
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-			}
+//			}
 		}
 	}
 	
