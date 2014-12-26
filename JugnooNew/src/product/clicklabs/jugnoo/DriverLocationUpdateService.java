@@ -102,7 +102,7 @@ public class DriverLocationUpdateService extends Service {
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 		String TRIAL_SERVER_URL = "https://test.jugnoo.in:8200";
 		
-		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 		
 		
 		

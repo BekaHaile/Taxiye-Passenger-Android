@@ -82,7 +82,6 @@ public class TouchableWrapper extends FrameLayout {
     	@Override
     	public boolean onScale(ScaleGestureDetector detector) {
     		float scaleFactor = detector.getScaleFactor();
-    		Log.e("scaleFactor", "="+scaleFactor);
     		if(scaleFactor > 1){
     			//Zoom in
     			if(Math.abs(scaleFactor - factor) > THRESHOLD){

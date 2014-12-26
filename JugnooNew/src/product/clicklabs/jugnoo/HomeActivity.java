@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.datastructure.LatLngPair;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -348,7 +349,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	DecimalFormat decimalFormat = new DecimalFormat("#.#");
 	DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 	
-	static double totalDistance = -1, totalFare = 0, lastDeltaDistance = 0;
+	static double totalDistance = -1, totalFare = 0;
+	public static ArrayList<LatLngPair> deltaLatLngPairs = new ArrayList<LatLngPair>();
+	
+	
 	static long previousWaitTime = 0, previousRideTime = 0;
 	
 	static String waitTime = "", rideTime = "";
@@ -427,6 +431,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final String REQUEST_RIDE_BTN_NORMAL_TEXT = "Get an auto", REQUEST_RIDE_BTN_ASSIGNING_DRIVER_TEXT = "Assigning driver...";
 	
 	public ASSL assl;
+	
+	public GPSForegroundLocationFetcher gpsForegroundLocationFetcher;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -2881,7 +2887,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void connectGPSListener(){
 		disconnectGPSListener();
 		try {
-			GPSForegroundLocationFetcher.getInstance(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
+			gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2889,11 +2895,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void disconnectGPSListener(){
 		try {
-			GPSForegroundLocationFetcher.getInstance(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD).destroy();
+			if(gpsForegroundLocationFetcher != null){
+				gpsForegroundLocationFetcher.destroy();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally{
+			gpsForegroundLocationFetcher = null;
 		}
 	}
+	
+	
+//	40796,41279,41488,41520,41743,42572,42770,45954,46076,46203,46928,47201,47218,47434,47617,47683,47956,48087
+
+//  43009,44467,44486,46465,47344,48274
 	
 	
 	@Override
@@ -3186,6 +3201,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_IN_RIDE))){
 					
 					final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+					
+					if(Utils.compareDouble(totalDistance, -1.0) == 0){
+						lastLocation = null;
+						Log.i("lastLocation made null", "="+lastLocation);
+					}
+					
 					Log.i("lastLocation", "="+lastLocation);
 					Log.i("totalDistance", "="+totalDistance);
 					
@@ -3239,29 +3260,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
 				
-//				totalDistance = totalDistance + displacement;
-				updateTotalDistance(displacement);
-				
-				checkAndUpdateWaitTimeDistance(displacement);
-				
-				map.addPolyline(new PolylineOptions()
-			    .add(lastLatLng, currentLatLng)
-			    .width(5)
-			    .color(MAP_PATH_COLOR).geodesic(true));
-				
-				logPathDataToFlurry(currentLatLng, totalDistance);
-				
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						Database.getInstance(HomeActivity.this).insertPolyLine(lastLatLng, currentLatLng);
-						Database.getInstance(HomeActivity.this).close();
-					}
-				}).start();
+				boolean validDistance = updateTotalDistance(lastLatLng, currentLatLng, displacement);
+				if(validDistance){
+					checkAndUpdateWaitTimeDistance(displacement);
+					map.addPolyline(new PolylineOptions()
+				    .add(lastLatLng, currentLatLng)
+				    .width(5)
+				    .color(MAP_PATH_COLOR).geodesic(true));
+					logPathDataToFlurry(currentLatLng, totalDistance);
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							Database.getInstance(HomeActivity.this).insertPolyLine(lastLatLng, currentLatLng);
+							Database.getInstance(HomeActivity.this).close();
+						}
+					}).start();
+				}
 				
 				updateDistanceFareTexts();
-				
 			}
 			else{
 				callGooglePathAPI(lastLatLng, currentLatLng, displacement);
@@ -3426,13 +3442,29 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
+	
 
 	
-	public synchronized void updateTotalDistance(double deltaDistance){
-		if(Utils.compareDouble(lastDeltaDistance, deltaDistance) != 0){
-			totalDistance = totalDistance + deltaDistance;
-			lastDeltaDistance = deltaDistance;
+	public synchronized boolean updateTotalDistance(LatLng lastLatLng, LatLng currentLatLng, double deltaDistance){
+		boolean validDistance = false;
+		if(deltaDistance > 0.0){
+			LatLngPair latLngPair = new LatLngPair(lastLatLng, currentLatLng, deltaDistance);
+			
+			Log.e("latLngPair to add", "="+latLngPair);
+			
+			if(HomeActivity.deltaLatLngPairs == null){
+				HomeActivity.deltaLatLngPairs = new ArrayList<LatLngPair>();
+			}
+			
+			if(!HomeActivity.deltaLatLngPairs.contains(latLngPair)){
+				totalDistance = totalDistance + deltaDistance;
+				HomeActivity.deltaLatLngPairs.add(latLngPair);
+				validDistance = true;
+			}
 		}
+		Log.e("HomeActivity.deltaLatLngPairs", "="+HomeActivity.deltaLatLngPairs);
+		return validDistance;
 	}
 	
 	
@@ -3456,31 +3488,35 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		           List<LatLng> list = MapUtils.decodeDirectionsPolyline(encodedString);
 			    	
 //			    	totalDistance = totalDistance + distanceOfPath;
-		           updateTotalDistance(distanceOfPath);
-			    	checkAndUpdateWaitTimeDistance(distanceOfPath);
-			    	 
-		           for(int z = 0; z<list.size()-1;z++){
-		                LatLng src= list.get(z);
-		                LatLng dest= list.get(z+1);
-		                map.addPolyline(new PolylineOptions()
-		                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-		                .width(5)
-				        .color(MAP_PATH_COLOR).geodesic(true));
-		                Database.getInstance(this).insertPolyLine(src, dest);
-		            }
-		           Database.getInstance(this).close();
+		           boolean validDistance = updateTotalDistance(source, destination, distanceOfPath);
+		           if(validDistance){
+				    	checkAndUpdateWaitTimeDistance(distanceOfPath);
+				    	 
+			           for(int z = 0; z<list.size()-1;z++){
+			                LatLng src= list.get(z);
+			                LatLng dest= list.get(z+1);
+			                map.addPolyline(new PolylineOptions()
+			                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+			                .width(5)
+					        .color(MAP_PATH_COLOR).geodesic(true));
+			                Database.getInstance(this).insertPolyLine(src, dest);
+			            }
+			           Database.getInstance(this).close();
+		           }
 	    	}
 	    	else{																									// displacement would be correct
 //	    		totalDistance = totalDistance + displacementToCompare;
-		        updateTotalDistance(displacementToCompare);
-	    		checkAndUpdateWaitTimeDistance(displacementToCompare);
-	    		
-	    		 map.addPolyline(new PolylineOptions()
-	                .add(new LatLng(source.latitude, source.longitude), new LatLng(destination.latitude, destination.longitude))
-	                .width(5)
-			        .color(MAP_PATH_COLOR).geodesic(true));
-	    		 Database.getInstance(this).insertPolyLine(source, destination);
-	    		 Database.getInstance(this).close();
+	    		boolean validDistance = updateTotalDistance(source, destination, displacementToCompare);
+	    		if(validDistance){
+		    		checkAndUpdateWaitTimeDistance(displacementToCompare);
+		    		
+		    		 map.addPolyline(new PolylineOptions()
+		                .add(new LatLng(source.latitude, source.longitude), new LatLng(destination.latitude, destination.longitude))
+		                .width(5)
+				        .color(MAP_PATH_COLOR).geodesic(true));
+		    		 Database.getInstance(this).insertPolyLine(source, destination);
+		    		 Database.getInstance(this).close();
+	    		}
 	    		
 	    	}
 	    	writePathLogToFile("totalDistance after GAPI = "+totalDistance);
@@ -3867,7 +3903,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void showDriverMarkersAndPanMap(LatLng userLatLng){
 		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-//			if(!mapTouchedOnce){
 				if(map != null){
 					map.clear();
 					addCurrentLocationAddressMarker(userLatLng);
@@ -3881,35 +3916,37 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							farthestLatLng = Data.driverInfos.get(i).latLng;
 						}
 					}
-					if(farthestLatLng != null){
-						boundsBuilder.include(new LatLng(userLatLng.latitude, farthestLatLng.longitude));
-						boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
-						boundsBuilder.include(new LatLng(userLatLng.latitude, ((2*userLatLng.longitude) - farthestLatLng.longitude)));
-						boundsBuilder.include(new LatLng(((2*userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
-					}
-					
-					boundsBuilder.include(userLatLng);
-					
-					try {
-						final LatLngBounds bounds = boundsBuilder.build();
-						final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-						new Handler().postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								try {
-									map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								mapTouchedOnce = true;
-							}
-						}, 1000);
+					if(!mapTouchedOnce){
+						if(farthestLatLng != null){
+							boundsBuilder.include(new LatLng(userLatLng.latitude, farthestLatLng.longitude));
+							boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
+							boundsBuilder.include(new LatLng(userLatLng.latitude, ((2*userLatLng.longitude) - farthestLatLng.longitude)));
+							boundsBuilder.include(new LatLng(((2*userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
+						}
 						
-					} catch (Exception e) {
-						e.printStackTrace();
+						boundsBuilder.include(userLatLng);
+						
+						try {
+							final LatLngBounds bounds = boundsBuilder.build();
+							final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									try {
+										map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+									mapTouchedOnce = true;
+								}
+							}, 1000);
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
+					
 				}
-//			}
 		}
 	}
 	
@@ -4471,7 +4508,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		HomeActivity.previousWaitTime = 0;
 		HomeActivity.previousRideTime = 0;
 		HomeActivity.totalDistance = -1;
-		HomeActivity.lastDeltaDistance = 0;
+		
+		if(HomeActivity.deltaLatLngPairs == null){
+			HomeActivity.deltaLatLngPairs = new ArrayList<LatLngPair>();
+		}
+		HomeActivity.deltaLatLngPairs.clear();
 		
 		clearRideSPData();
 		

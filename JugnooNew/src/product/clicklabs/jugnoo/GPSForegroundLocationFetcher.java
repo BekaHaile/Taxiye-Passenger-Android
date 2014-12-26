@@ -13,8 +13,6 @@ import android.provider.Settings;
 
 public class GPSForegroundLocationFetcher implements LocationListener{
 	
-	private static GPSForegroundLocationFetcher instance;
-	
 	private LocationManager locationManager;
 	private Context context;
 	private GPSLocationUpdate gpsLocationUpdate;
@@ -27,7 +25,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 
 	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
 	
-	private GPSForegroundLocationFetcher(GPSLocationUpdate gpsLocationUpdate, long requestInterval){
+	public GPSForegroundLocationFetcher(GPSLocationUpdate gpsLocationUpdate, long requestInterval){
 		this.context = (Context) gpsLocationUpdate;
 		this.gpsLocationUpdate = gpsLocationUpdate;
 		this.requestInterval = requestInterval;
@@ -35,12 +33,6 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	}
 	
 	
-	public static GPSForegroundLocationFetcher getInstance(GPSLocationUpdate gpsLocationUpdate, long requestInterval){
-		if(instance == null){
-			instance = new GPSForegroundLocationFetcher(gpsLocationUpdate, requestInterval);
-		}
-		return instance;
-	}
 	
 	
 	/**
@@ -72,6 +64,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	}
 	
 	public synchronized void destroyWaitAndConnect(){
+		Log.e("destroyWaitAndConnect", "=");
 		destroy();
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -92,7 +85,6 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 			
 		} finally{
 			locationManager = null;
-			instance = null;
 		}
 		stopCheckingLocationUpdates();
 	}
@@ -128,7 +120,6 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		checkLocationUpdateStartedRunnable = new Runnable() {
 			@Override
 			public void run() {
-				Log.i("GPSForegroundLocationFetcher.this.location in handler runnable", "=="+GPSForegroundLocationFetcher.this.location);
 				FlurryEventLogger.locationLog(GPSForegroundLocationFetcher.this.location);
 				if(GPSForegroundLocationFetcher.this.location == null){
 					destroyWaitAndConnect();

@@ -235,7 +235,6 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		checkLocationUpdateStartedRunnable = new Runnable() {
 			@Override
 			public void run() {
-				Log.i("LocationFetcher.this.location in handler runnable", "=="+LocationFetcher.this.location);
 				FlurryEventLogger.locationLog(LocationFetcher.this.location);
 				if(LocationFetcher.this.location == null){
 					destroyWaitAndConnect();
