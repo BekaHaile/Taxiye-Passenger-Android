@@ -464,7 +464,7 @@ public class GCMIntentService extends IntentService {
 	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){
-	    		    			 
+	    		    			 e.printStackTrace();
 	    		    		 }
 	    		    		 
 	    		    	 }

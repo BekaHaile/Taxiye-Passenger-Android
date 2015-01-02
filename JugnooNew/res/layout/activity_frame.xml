@@ -5,119 +5,118 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
-        android:id="@+id/driverInitialLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/feedbackLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="90px"
         android:splitMotionEvents="false"
         android:visibility="visible" >
 
-        <RelativeLayout
-            android:id="@+id/topRlOuter"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/feedbackRatingBarRl"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:splitMotionEvents="false" >
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:splitMotionEvents="false" 
+            android:layout_marginTop="50px"
+            
+            >
 
-            <RelativeLayout
-                android:id="@+id/topRl"
-                android:layout_width="match_parent"
-                android:layout_height="90px"
-                android:background="@color/bg_grey"
-                android:splitMotionEvents="false" >
+            <TextView
+                android:id="@+id/feedbackRatingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/reviewRatingBarRl"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10px"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Rate the driver?"
+                android:textColor="@color/black_light"
+                android:textSize="38px"
+                
+                 />
 
-                <Button
-                    android:id="@+id/menuBtn"
-                    android:layout_width="82px"
-                    android:layout_height="82px"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/menu_btn_selector"
-                    android:tag="mwar" />
-
-                <Button
-                    android:id="@+id/backBtn"
-                    android:layout_width="82px"
-                    android:layout_height="82px"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/back_btn_selector"
-                    android:tag="mwar"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/jugnooLogo"
-                    android:layout_width="185px"
-                    android:layout_height="60px"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/jugnoo_text_small"
-                    android:tag="mwar" />
-
-                <Button
-                    android:id="@+id/checkServerBtn"
-                    android:layout_width="82px"
-                    android:layout_height="82px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="270px"
-                    android:background="@drawable/transparent"
-                    android:longClickable="true" />
-
-                <Button
-                    android:id="@+id/toggleDebugModeBtn"
-                    android:layout_width="82px"
-                    android:layout_height="82px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="370px"
-                    android:background="@drawable/transparent"
-                    android:longClickable="true" />
-
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="540px"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:text=" "
-                    android:textColor="@color/white"
-                    android:textSize="40px"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/favBtn"
-                    android:layout_width="82px"
-                    android:layout_height="82px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/fav_btn_selector"
-                    android:tag="mwar"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/christmasBell1"
-                android:layout_width="27px"
-                android:layout_height="91px"
-                android:layout_alignParentRight="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="27px"
-                android:layout_marginTop="70px"
-                android:src="@drawable/bell_1" />
-
-            <ImageView
-                android:id="@+id/christmasBell2"
-                android:layout_width="27px"
-                android:layout_height="128px"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="43px"
-                android:layout_marginTop="70px"
-                android:src="@drawable/bell_2" />
-
-            <Button
-                android:id="@+id/christmasButton"
-                android:layout_width="78px"
-                android:layout_height="73px"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10px"
-                android:layout_marginTop="10px"
-                android:background="@drawable/christmas_gift_button_selector"
-                android:tag="mwar" />
+            <RatingBar
+                android:id="@+id/feedbackRatingBar"
+                style="@style/YellowRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:rating="1"
+                android:stepSize="1.0"
+                
+                 />
+        </LinearLayout>
+        
+        <RelativeLayout 
+            android:id="@+id/feedbackHelpRl"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:background="@color/white_less_dark"
+            android:layout_below="@+id/feedbackRatingBarRl"
+            android:layout_marginTop="10px"
+            
+            >
+            
+            <TextView
+                android:id="@+id/feedbackHelpText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Your feedback makes us serve better!"
+                android:textColor="@color/black"
+                android:textSize="34px"
+                
+                 />
+            
+            
         </RelativeLayout>
+        
+        <EditText 
+            android:id="@+id/feedbackEditText"
+            android:layout_width="648px"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="20px"
+            android:layout_above="@+id/feedbackSubmitBtn"
+            android:layout_below="@+id/feedbackHelpRl"
+            android:background="@drawable/edittext_background_grey"
+            android:padding="20px"
+            android:hint="Awesome!"
+            android:textSize="34px"
+            android:gravity="left"
+            
+            />
+        
+
+        <Button
+            android:id="@+id/feedbackSubmitBtn"
+            android:layout_width="648px"
+            android:layout_height="99px"
+            android:layout_above="@+id/feedbackSkipBtn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10px"
+            android:background="@drawable/blue_btn_selector"
+            android:text="Submit"
+            android:textColor="@drawable/white_color_selector"
+            android:textSize="@dimen/button_text_size" />
+
+        <Button
+            android:id="@+id/feedbackSkipBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="60px"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10px"
+            android:background="@drawable/transparent"
+            android:text="Skip >>"
+            android:textColor="@drawable/blue_alpha_color_selector"
+            android:textSize="30px" />
     </RelativeLayout>
 
 </FrameLayout>

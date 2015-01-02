@@ -443,6 +443,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			Log.i("device_name", "=" + Data.deviceName);
 			Log.i("app_version", "=" + Data.appVersion);
 			Log.i("os_version", "=" + Data.osVersion);
+			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
 			
 		
 			AsyncHttpClient client = Data.getClient();
@@ -582,7 +583,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			Log.i("os_version", "="+Data.osVersion);
 			Log.i("device_name", "="+Data.deviceName);
 			Log.i("device_type", "="+Data.DEVICE_TYPE);
-			Log.i("unique_device_id", Data.uniqueDeviceId);
+			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
 			Log.i("Server link", "="+Data.SERVER_URL + "/customer_fb_registeration_form");
 			
 			

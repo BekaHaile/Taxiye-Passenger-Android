@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
-import product.clicklabs.jugnoo.utils.DeviceUniqueID;
+import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -205,7 +205,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			Data.uniqueDeviceId = DeviceUniqueID.getUniqueId(this);
+			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
+			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
@@ -444,6 +445,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				Log.i("latitude", ""+Data.latitude);
 				Log.i("longitude", ""+Data.longitude);
 				Log.i("app_version", ""+Data.appVersion);
+				Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
 			
 				//start_app_using_access_token
 				//access_token

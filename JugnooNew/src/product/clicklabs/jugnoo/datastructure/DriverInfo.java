@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class DriverInfo {
 	
-	public String userId, name, image, carImage, phoneNumber, rating;
+	public String userId, name, image, carImage, phoneNumber, rating, carNumber;
 	public LatLng latLng;
 	
 	public String distanceToReach = "0", durationToReach = "";
@@ -14,7 +14,7 @@ public class DriverInfo {
 		this.latLng = new LatLng(latitude, longitude);
 	}
 	
-	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber, String rating){
+	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber, String rating, String carNumber){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -22,6 +22,7 @@ public class DriverInfo {
 		this.carImage = carImage;
 		this.phoneNumber = phoneNumber;
 		this.rating = rating;
+		this.carNumber = carNumber;
 	}
 	
 	@Override

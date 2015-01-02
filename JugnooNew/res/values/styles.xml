@@ -24,6 +24,12 @@
         <item name="android:maxHeight">56dip</item>
     </style>
     
+     <style name="YellowRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_star_yellow_selector</item>
+        <item name="android:minHeight">46dip</item>
+        <item name="android:maxHeight">46dip</item>
+    </style>
+    
      
      
       <style name="Animations" />

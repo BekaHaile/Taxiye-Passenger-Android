@@ -30,6 +30,7 @@ public class DriverLocationDispatcher {
 				PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 				WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag2");
 				wakeLock.acquire();
+
 				
 				String accessToken = Database2.getInstance(context).getDLDAccessToken();
 				String deviceToken = Database2.getInstance(context).getDLDDeviceToken();

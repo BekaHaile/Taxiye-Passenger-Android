@@ -106,7 +106,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -216,7 +215,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	//Request Final Layout
 	RelativeLayout requestFinalLayout;
 	ImageView driverImage, driverCarImage;
-	TextView driverName, driverTime;
+	TextView driverName, driverTime, driverCarNumberText;
 	Button callDriverBtn;
 	TextView inRideRideInProgress;
 	Button customerInRideMyLocationBtn;
@@ -231,6 +230,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	ImageView centreLocationPin;
 	
 	
+	//Feedback layout
+	RelativeLayout feedbackLayout;
+	TextView feedbackRatingText, feedbackHelpText;
+	RatingBar feedbackRatingBar;
+	EditText feedbackEditText;
+	Button feedbackSubmitBtn, feedbackSkipBtn;
 	
 	
 	
@@ -579,6 +584,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		driverName = (TextView) findViewById(R.id.driverName); driverName.setTypeface(Data.regularFont(getApplicationContext()));
 		driverTime = (TextView) findViewById(R.id.driverTime); driverTime.setTypeface(Data.regularFont(getApplicationContext()));
+		driverCarNumberText = (TextView) findViewById(R.id.driverCarNumberText); driverCarNumberText.setTypeface(Data.regularFont(getApplicationContext()));
 		callDriverBtn = (Button) findViewById(R.id.callDriverBtn); callDriverBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress); inRideRideInProgress.setTypeface(Data.regularFont(getApplicationContext()));
 		customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
@@ -602,10 +608,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		centreLocationPin = (ImageView) findViewById(R.id.centreLocationPin);
 		
 		
-		
-		
-		
-		
+		//Feedback layout
+		feedbackLayout = (RelativeLayout) findViewById(R.id.feedbackLayout);
+		feedbackRatingText = (TextView) findViewById(R.id.feedbackRatingText); feedbackRatingText.setTypeface(Data.regularFont(getApplicationContext()));
+		feedbackHelpText = (TextView) findViewById(R.id.feedbackHelpText); feedbackHelpText.setTypeface(Data.regularFont(getApplicationContext()));
+		feedbackRatingBar = (RatingBar) findViewById(R.id.feedbackRatingBar);
+		feedbackEditText = (EditText) findViewById(R.id.feedbackEditText); feedbackEditText.setTypeface(Data.regularFont(getApplicationContext()));
+		feedbackSubmitBtn = (Button) findViewById(R.id.feedbackSubmitBtn); feedbackSubmitBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		feedbackSkipBtn = (Button) findViewById(R.id.feedbackSkipBtn); feedbackSkipBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		
 		
 		
@@ -1228,6 +1238,49 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		// feedback events
+		feedbackSkipBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+			}
+		});
+		
+		feedbackSubmitBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int rating = (int) feedbackRatingBar.getRating();
+				String feedbackStr = feedbackEditText.getText().toString().trim();
+				if(rating > 0){
+					if(feedbackStr.length() > 300){
+						feedbackEditText.requestFocus();
+						feedbackEditText.setError("Review must be in 300 letters.");
+					}
+					else{
+						submitReviewAsync(HomeActivity.this, Data.cEngagementId, "1", Data.cDriverId, ""+rating, feedbackEditText.getText().toString().trim());
+						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
+					}
+				}
+				else{
+					Toast.makeText(getApplicationContext(), "Please rate the driver.", Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -1474,29 +1527,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				GCMIntentService.clearNotifications(HomeActivity.this);
-				int rating = (int) reviewRatingBar.getRating();
-				
-				if(rating > 0){
-					if(userMode == UserMode.DRIVER){
-						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, ""+rating);
-						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.dEngagementId);
-					}
-					else if(userMode == UserMode.PASSENGER){
-						submitReviewAsync(HomeActivity.this, Data.cEngagementId, "1", Data.cDriverId, ""+rating);
-						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
-					}
+				if(userMode == UserMode.PASSENGER){
+					passengerScreenMode = PassengerScreenMode.P_FEEDBACK;
+					switchPassengerScreen(passengerScreenMode);
 				}
 				else{
-					if(userMode == UserMode.DRIVER){
-						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, "5");
+					int rating = (int) reviewRatingBar.getRating();
+					if(rating > 0){
+						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, ""+rating, "");
 						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.dEngagementId);
 					}
-					else if(userMode == UserMode.PASSENGER){
-						submitReviewAsync(HomeActivity.this, Data.cEngagementId, "1", Data.cDriverId, "5");
-						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
+					else{
+						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, "5", "");
+						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.dEngagementId);
 					}
 				}
-				
 			}
 		});
 		
@@ -2525,12 +2570,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				initialLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
-				
 				if (Data.userData.canChangeLocation == 1) {
 					centreLocationRl.setVisibility(View.VISIBLE);
 				} else {
 					centreLocationRl.setVisibility(View.GONE);
 				}
+				feedbackLayout.setVisibility(View.GONE);
 				
 				nearestDriverRl.setVisibility(View.VISIBLE);
 				initialCancelRideBtn.setVisibility(View.GONE);
@@ -2563,6 +2608,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				initialLayout.setVisibility(View.VISIBLE);
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
+				feedbackLayout.setVisibility(View.GONE);
 				
 				if(map != null){
 					MarkerOptions markerOptions = new MarkerOptions();
@@ -2631,23 +2677,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 				
 				
-
-				driverName.setText(Data.assignedDriverInfo.name);
-				
-				updateAssignedDriverETA();
-				
-				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
-				
-				
-				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				setAssignedDriverData();
 				
 				setTextToFareInfoTextViews(minFareValue, fareAfterValue, fareAfterText);
 				
 				initialLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.GONE);
+				feedbackLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.VISIBLE);
 				inRideRideInProgress.setText("Please wait while Jugnoo is coming...");
@@ -2688,19 +2725,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					map.clear();
 				}
 				
-				driverName.setText(Data.assignedDriverInfo.name);
-				
-				Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
-				
-				Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
-				try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+				setAssignedDriverData();
 				
 				setTextToFareInfoTextViews(minFareValue, fareAfterValue, fareAfterText);
 				
 				initialLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.GONE);
+				feedbackLayout.setVisibility(View.GONE);
 				
 				driverTime.setVisibility(View.GONE);
 				inRideRideInProgress.setText("Ride in progress...");
@@ -2721,12 +2753,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				initialLayout.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
+				feedbackLayout.setVisibility(View.GONE);
 				
 				menuBtn.setVisibility(View.VISIBLE);
 				jugnooLogo.setVisibility(View.VISIBLE);
 				backBtn.setVisibility(View.GONE);
 				title.setVisibility(View.GONE);
 
+				
+				break;
+				
+			case P_FEEDBACK:
+				mapLayout.setVisibility(View.GONE);
+				initialLayout.setVisibility(View.GONE);
+				requestFinalLayout.setVisibility(View.GONE);
+				centreLocationRl.setVisibility(View.GONE);
+				feedbackLayout.setVisibility(View.VISIBLE);
+				
+				menuBtn.setVisibility(View.VISIBLE);
+				jugnooLogo.setVisibility(View.GONE);
+				backBtn.setVisibility(View.GONE);
+				title.setVisibility(View.VISIBLE);
+				title.setText("Feedback");
 				
 				break;
 				
@@ -2771,7 +2819,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	
+	public void setAssignedDriverData(){
+		driverName.setText(Data.assignedDriverInfo.name);
+		if(!"".equalsIgnoreCase(Data.assignedDriverInfo.carNumber)){
+			driverCarNumberText.setText(Data.assignedDriverInfo.carNumber);
+		}
+		else{
+			driverCarNumberText.setText("");
+		}
+		
+		updateAssignedDriverETA();
+		
+		Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
+		try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new RoundBorderTransform()).into(driverImage);}catch(Exception e){}
+		
+		
+		Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
+		try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+	}
 	
 	public void updateAssignedDriverETA(){
 		if("".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach) || "no".equalsIgnoreCase(Data.assignedDriverInfo.durationToReach)){
@@ -4805,30 +4870,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								else{
 									
 //									{"log":"ride_ended"}//result
-
-//									{
-//									    "flag": 4,
-//									    "fare": 30,
-//									    "to_pay": 0,
-//									    "discount": 30,
-//									    "distance_travelled": "0",
-//									    "wait_time": "0",
-//									    "coupon": {
-//									        "account_id": 1,
-//									        "user_id": 207,
-//									        "coupon_id": 1,
-//									        "redeemed_on": null,
-//									        "status": 1,
-//									        "expiry_date": "2014-11-07T18:29:59.000Z",
-//									        "title": "Free ride",
-//									        "description": "upte 100/-",
-//									        "discount": 100,
-//									        "maximum": 100,
-//									        "image": null,
-//									        "type": 0,
-//									        "subtitle": "upto Rs. 100"
-//									    }
-//									}
 									
 									try{
 										totalFare = jObj.getDouble("fare");
@@ -4923,6 +4964,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void displayCouponApplied(JSONObject jObj){
 		try {
+			
+//			{
+//		    "flag": 4,
+//		    "fare": 30,
+//		    "to_pay": 0,
+//		    "discount": 30,
+//		    "distance_travelled": "0",
+//		    "wait_time": "0",
+//		    "coupon": {
+//		        "account_id": 1,
+//		        "user_id": 207,
+//		        "coupon_id": 1,
+//		        "redeemed_on": null,
+//		        "status": 1,
+//		        "expiry_date": "2014-11-07T18:29:59.000Z",
+//		        "title": "Free ride",
+//		        "description": "upte 100/-",
+//		        "discount": 100,
+//		        "maximum": 100,
+//		        "image": null,
+//		        "type": 0,
+//		        "subtitle": "upto Rs. 100"
+//		    }
+//			}
+			
 			if(jObj.has("coupon")){
 				endRideInfoRl.setVisibility(View.GONE);
 				relativeLayoutCoupon.setVisibility(View.VISIBLE);
@@ -4959,7 +5025,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	/**
 	 * ASync for start ride in  driver mode from server
 	 */
-	public void submitReviewAsync(final Activity activity, String engagementId, final String flag, String ratingReceiverId, String givenRating) {
+	public void submitReviewAsync(final Activity activity, String engagementId, final String flag, String ratingReceiverId, String givenRating, String feedbackText) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -4971,12 +5037,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			params.put("flag", flag);
 			params.put("rating_receiver_id", ratingReceiverId);
 			params.put("given_rating", givenRating);
+			params.put("feedback", feedbackText);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("engagement_id", engagementId);
 			Log.i("flag", flag);
 			Log.i("rating_receiver_id", ratingReceiverId);
 			Log.i("given_rating", givenRating);
+			Log.i("feedback", feedbackText);
 			
 		
 			AsyncHttpClient client = Data.getClient();
@@ -6028,11 +6096,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								@Override
 								public void run() {
-									CameraPosition cameraPosition = new CameraPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 
-												map.getCameraPosition().zoom, 
-												map.getCameraPosition().tilt,
-												myLocation.getBearing());
-									map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+									map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
 								}
 							});
 						}
@@ -6800,13 +6864,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					pickupLongitude = map.getCameraPosition().target.longitude;
 				}
 			}
+			String carNumber = "";
+			if(jObj.has("driver_car_no")){
+				carNumber = jObj.getString("driver_car_no");
+			}
 			
 			String driverRating = jObj.getString("rating");
 			
 			Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
 			
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName, 
-					driverImage, driverCarImage, driverPhone, driverRating);
+					driverImage, driverCarImage, driverPhone, driverRating, carNumber);
 			
 			
 			
@@ -6863,9 +6931,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			double longitude = jObj.getDouble("current_location_longitude");
 			String driverRating = jObj.getString("rating");
 			
+			String carNumber = "";
+			if(jObj.has("driver_car_no")){
+				carNumber = jObj.getString("driver_car_no");
+			}
 			
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName, 
-					driverImage, driverCarImage, driverPhone, driverRating);
+					driverImage, driverCarImage, driverPhone, driverRating, carNumber);
 			
 			Data.startRidePreviousLatLng = Data.pickupLatLng;
 			initializeStartRideVariables();
@@ -7235,11 +7307,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void run() {
 							if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_RIDE_END){
 								GCMIntentService.clearNotifications(HomeActivity.this);
-								submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, "5");
+								driverScreenMode = DriverScreenMode.D_INITIAL;
+								switchDriverScreen(driverScreenMode);
 							}
 							else if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_RIDE_END){
 								GCMIntentService.clearNotifications(HomeActivity.this);
-								submitReviewAsync(HomeActivity.this, Data.cEngagementId, "1", Data.cDriverId, "5");
+								passengerScreenMode = PassengerScreenMode.P_INITIAL;
+								switchPassengerScreen(passengerScreenMode);
 							}
 						}
 					});

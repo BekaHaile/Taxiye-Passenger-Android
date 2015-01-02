@@ -346,6 +346,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			Log.i("app_version", "=" + Data.appVersion);
 			Log.i("os_version", "=" + Data.osVersion);
 			Log.i("referral_code", "=" + emailRegisterData.referralCode);
+			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
 			
 			
 		
@@ -466,11 +467,11 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			Log.i("os_version", "="+Data.osVersion);
 			Log.i("device_name", "="+Data.deviceName);
 			Log.i("device_type", "="+Data.DEVICE_TYPE);
-			Log.i("unique_device_id", Data.uniqueDeviceId);
 			Log.i("otp", "="+otp);
 			Log.i("ph_no", "="+facebookRegisterData.phoneNo);
 			Log.i("password", "="+facebookRegisterData.password);
 			Log.i("referral_code", "="+facebookRegisterData.referralCode);
+			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
 			
 			
 		

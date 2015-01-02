@@ -52,11 +52,13 @@ public class JSONParser {
 			
 			if(currentUserStatus == 1){
 				new DriverServiceOperations().startDriverService(context);
+				Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
 				HomeActivity.userMode = UserMode.DRIVER;
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
 			}
 			else if(currentUserStatus == 2){
 				new DriverServiceOperations().stopService(context);
+				Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
 				HomeActivity.userMode = UserMode.PASSENGER;
 				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			}
@@ -176,6 +178,10 @@ public class JSONParser {
 			//Fetching drivers info
 			JSONObject jDriversObject = jObj.getJSONObject("drivers");
 			parseDriversToShow(jDriversObject, "data");
+			Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
+		}
+		else if(currentUserStatus == 1){
+			Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
 		}
 		
 		
@@ -228,7 +234,11 @@ public class JSONParser {
 				String driverCarImage = dataI.getString("driver_car_image");
 				String phoneNo = dataI.getString("phone_no");
 				String rating = dataI.getString("rating");
-				Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating));
+				String carNumber = "";
+				if(dataI.has("driver_car_no")){
+					carNumber = dataI.getString("driver_car_no");
+				}
+				Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber));
 			}
 		}
 		catch(Exception e){
@@ -463,7 +473,7 @@ public class JSONParser {
 
 			int engagementStatus = -1;
 			String engagementId = "", sessionId = "",  userId = "", latitude = "", longitude = "", 
-					driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", 
+					driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", driverCarNumber = "", 
 					pickupLatitude = "", pickupLongitude = "";
 			
 			try{
@@ -528,6 +538,9 @@ public class JSONParser {
 										driverRating = jObject.getString("rating");
 										pickupLatitude = jObject.getString("pickup_latitude");
 										pickupLongitude = jObject.getString("pickup_longitude");
+										if(jObject.has("driver_car_no")){
+											driverCarNumber = jObject.getString("driver_car_no");
+										}
 									}
 								}
 							
@@ -585,7 +598,7 @@ public class JSONParser {
 				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
 				Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName, 
-						driverImage, driverCarImage, driverPhone, driverRating);
+						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber);
 				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
 				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
 				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;

@@ -551,6 +551,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			Log.i("app_version", "=" + Data.appVersion);
 			Log.i("os_version", "=" + Data.osVersion);
 			Log.i("referral_code", "="+referralCode);
+			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
 			
 			
 		
@@ -681,11 +682,11 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			Log.i("os_version", "="+Data.osVersion);
 			Log.i("device_name", "="+Data.deviceName);
 			Log.i("device_type", "="+Data.DEVICE_TYPE);
-			Log.i("unique_device_id", Data.uniqueDeviceId);
 			Log.i("otp", "="+"");
 			Log.i("ph_no", "="+phoneNo);
 			Log.i("password", "="+password);
 			Log.i("referral_code", "="+referralCode);
+			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
 			
 			
 		

@@ -47,43 +47,42 @@ public class DriverLocationUpdateService extends Service {
     public void onStart(Intent intent, int startId) {
         try{
         	Log.i("Driver location update started", "=======");
-        	updateServerData(this);
-    		
-    		
-    		String fast = Database2.getInstance(DriverLocationUpdateService.this).getDriverServiceFast();
-    		
-    		Log.e("fast", "="+fast);
-    		
-    		
-    		
-    		if(fast.equalsIgnoreCase(Database2.NO)){
-    			if(locationFetcherDriver != null){
-    				locationFetcherDriver.destroy();
-    				locationFetcherDriver = null;
-    			}
-    			serverUpdateTimePeriod = 2 * 60000;
-    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
-    			if(gpsLocationFetcher != null){
-    				gpsLocationFetcher.destroy();
-    				gpsLocationFetcher = null;
-    			}
+        	
+        	String userMode = Database2.getInstance(this).getUserMode();
+    		if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
+	        	updateServerData(this);
+	    		String fast = Database2.getInstance(DriverLocationUpdateService.this).getDriverServiceFast();
+	    		Log.e("fast", "="+fast);
+	    		if(fast.equalsIgnoreCase(Database2.NO)){
+	    			if(locationFetcherDriver != null){
+	    				locationFetcherDriver.destroy();
+	    				locationFetcherDriver = null;
+	    			}
+	    			serverUpdateTimePeriod = 2 * 60000;
+	    			locationFetcherDriver = new LocationFetcherDriver(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+	    			if(gpsLocationFetcher != null){
+	    				gpsLocationFetcher.destroy();
+	    				gpsLocationFetcher = null;
+	    			}
+	    		}
+	    		else{
+	    			serverUpdateTimePeriod = 15000;
+	    			if(locationFetcherDriver != null){
+	    				locationFetcherDriver.destroy();
+	    				locationFetcherDriver = null;
+	    			}
+	    			if(gpsLocationFetcher != null){
+	    				gpsLocationFetcher.destroy();
+	    				gpsLocationFetcher = null;
+	    			}
+	    			gpsLocationFetcher = new GPSLocationFetcher(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+	    		}
+	    		Database2.getInstance(DriverLocationUpdateService.this).close();
+	            setupLocationUpdateAlarm();
     		}
     		else{
-    			serverUpdateTimePeriod = 15000;
-    			if(locationFetcherDriver != null){
-    				locationFetcherDriver.destroy();
-    				locationFetcherDriver = null;
-    			}
-    			if(gpsLocationFetcher != null){
-    				gpsLocationFetcher.destroy();
-    				gpsLocationFetcher = null;
-    			}
-    			gpsLocationFetcher = new GPSLocationFetcher(DriverLocationUpdateService.this, serverUpdateTimePeriod);
+    			stopSelf();
     		}
-        	
-    		Database2.getInstance(DriverLocationUpdateService.this).close();
-            
-            setupLocationUpdateAlarm();
         	
         } catch(Exception e){
         	e.printStackTrace();
@@ -102,10 +101,7 @@ public class DriverLocationUpdateService extends Service {
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 		String TRIAL_SERVER_URL = "https://test.jugnoo.in:8200";
 		
-		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
-		
-		
-		
+		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 		
 		
 		String SETTINGS_SHARED_PREF_NAME = "settingsPref", SP_SERVER_LINK = "sp_server_link";
@@ -124,6 +120,7 @@ public class DriverLocationUpdateService extends Service {
 		else if(link.equalsIgnoreCase(DEV_SERVER_URL)){
 			SERVER_URL = DEV_SERVER_URL;
 		}
+
 		
 		SharedPreferences pref = context.getSharedPreferences(SHARED_PREF_NAME, 0);
 		accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
@@ -200,7 +197,7 @@ public class DriverLocationUpdateService extends Service {
 		}
         
         cancelLocationUpdateAlarm();
-        
+        super.onDestroy();
     }
     
     
