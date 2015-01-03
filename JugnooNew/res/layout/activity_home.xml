@@ -147,7 +147,7 @@
                     android:layout_height="fill_parent"
                     android:layout_marginTop="90px"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <Button
                         android:id="@+id/customerInRideMyLocationBtn"
@@ -395,6 +395,18 @@
                         android:layout_height="6px"
                         android:layout_below="@+id/inRideRideInProgress"
                         android:background="@drawable/shadow_down" />
+
+                    <ImageView
+                        android:id="@+id/passengerFreeRideIcon"
+                        android:layout_width="72px"
+                        android:layout_height="47px"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/inRideRideInProgress"
+                        android:layout_marginRight="20px"
+                        android:layout_marginTop="26px"
+                        android:src="@drawable/free_ride_icon"
+                        android:tag="mwar"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -426,8 +438,7 @@
                     android:layout_height="fill_parent"
                     android:layout_marginTop="90px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
-                     >
+                    android:visibility="gone" >
 
                     <LinearLayout
                         android:id="@+id/feedbackRatingBarRl"

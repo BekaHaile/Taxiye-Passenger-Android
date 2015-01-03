@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
+import product.clicklabs.jugnoo.utils.Log;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -300,6 +301,7 @@ public class Database2 {																	// class for handling database related 
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
 				String userMode = cursor.getString(cursor.getColumnIndex(Database2.USER_MODE));
+				Log.e("getuserMode", "="+userMode);
 				return userMode;
 			} else {
 				return Database2.UM_OFFLINE;
@@ -316,6 +318,7 @@ public class Database2 {																	// class for handling database related 
 		try {
 			deleteUserMode();
 			insertUserMode(userMode);
+			Log.e("updateUserMode", "="+userMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

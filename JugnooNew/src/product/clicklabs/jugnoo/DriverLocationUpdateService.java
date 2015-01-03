@@ -47,7 +47,6 @@ public class DriverLocationUpdateService extends Service {
     public void onStart(Intent intent, int startId) {
         try{
         	Log.i("Driver location update started", "=======");
-        	
         	String userMode = Database2.getInstance(this).getUserMode();
     		if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
 	        	updateServerData(this);
@@ -81,7 +80,7 @@ public class DriverLocationUpdateService extends Service {
 	            setupLocationUpdateAlarm();
     		}
     		else{
-    			stopSelf();
+    			new DriverServiceOperations().stopService(this);
     		}
         	
         } catch(Exception e){
@@ -153,16 +152,22 @@ public class DriverLocationUpdateService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
     	try {
-    		String serviceRestartOnReboot = Database2.getInstance(DriverLocationUpdateService.this).getDriverServiceRun();
-    		Database2.getInstance(DriverLocationUpdateService.this).close();
-    		Log.e("onTaskRemoved serviceRestartOnReboot =","="+serviceRestartOnReboot);
-    		if(Database2.YES.equalsIgnoreCase(serviceRestartOnReboot)){
-    			Log.e("onTaskRemoved","="+rootIntent);
-    			Intent restartService = new Intent(getApplicationContext(), this.getClass());
-    			restartService.setPackage(getPackageName());
-    			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
-    			AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-    			alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, restartServicePI);
+    		String userMode = Database2.getInstance(this).getUserMode();
+    		if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
+	    		String serviceRestartOnReboot = Database2.getInstance(DriverLocationUpdateService.this).getDriverServiceRun();
+	    		Database2.getInstance(DriverLocationUpdateService.this).close();
+	    		Log.e("onTaskRemoved serviceRestartOnReboot =","="+serviceRestartOnReboot);
+	    		if(Database2.YES.equalsIgnoreCase(serviceRestartOnReboot)){
+	    			Log.e("onTaskRemoved","="+rootIntent);
+	    			Intent restartService = new Intent(getApplicationContext(), this.getClass());
+	    			restartService.setPackage(getPackageName());
+	    			PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
+	    			AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+	    			alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, restartServicePI);
+	    		}
+    		}
+    		else{
+    			new DriverServiceOperations().stopService(this);
     		}
 		} catch (Exception e) {
 			e.printStackTrace();

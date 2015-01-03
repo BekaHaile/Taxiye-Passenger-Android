@@ -238,7 +238,7 @@ public class JSONParser {
 				if(dataI.has("driver_car_no")){
 					carNumber = dataI.getString("driver_car_no");
 				}
-				Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber));
+				Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0));
 			}
 		}
 		catch(Exception e){
@@ -475,6 +475,7 @@ public class JSONParser {
 			String engagementId = "", sessionId = "",  userId = "", latitude = "", longitude = "", 
 					driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", driverCarNumber = "", 
 					pickupLatitude = "", pickupLongitude = "";
+			int freeRide = 0;
 			
 			try{
 							
@@ -541,6 +542,9 @@ public class JSONParser {
 										if(jObject.has("driver_car_no")){
 											driverCarNumber = jObject.getString("driver_car_no");
 										}
+										if(jObject.has("free_ride")){
+											freeRide = jObject.getInt("free_ride");
+										}
 									}
 								}
 							
@@ -598,7 +602,7 @@ public class JSONParser {
 				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
 				Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName, 
-						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber);
+						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide);
 				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
 				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
 				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;

@@ -218,6 +218,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView driverName, driverTime, driverCarNumberText;
 	Button callDriverBtn;
 	TextView inRideRideInProgress;
+	ImageView passengerFreeRideIcon;
 	Button customerInRideMyLocationBtn;
 	TextView minFareText, minFareValue, fareAfterText, fareAfterValue;
 	Button fareInfoBtn;
@@ -587,6 +588,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverCarNumberText = (TextView) findViewById(R.id.driverCarNumberText); driverCarNumberText.setTypeface(Data.regularFont(getApplicationContext()));
 		callDriverBtn = (Button) findViewById(R.id.callDriverBtn); callDriverBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress); inRideRideInProgress.setTypeface(Data.regularFont(getApplicationContext()));
+		passengerFreeRideIcon = (ImageView) findViewById(R.id.passengerFreeRideIcon);
 		customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
 		
 		minFareText = (TextView) findViewById(R.id.minFareText); minFareText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
@@ -2836,6 +2838,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
 		try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
+		
+		if(1 == Data.assignedDriverInfo.freeRide){
+			passengerFreeRideIcon.setVisibility(View.VISIBLE);
+		}
+		else{
+			passengerFreeRideIcon.setVisibility(View.GONE);
+		}
+		
 	}
 	
 	public void updateAssignedDriverETA(){
@@ -4087,6 +4097,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							try {
 								jObj = new JSONObject(response);
 								
+								int flag = jObj.getInt("flag");
+								
 								if(!jObj.isNull("error")){
 									String errorMessage = jObj.getString("error");
 									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
@@ -4112,7 +4124,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		else {
 			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
-
 	}
 	
 	
@@ -5322,16 +5333,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									else{
 										new DialogPopup().alertPopup(activity, "", errorMessage);
 									}
-//									
-//									int flag = jObj.getInt("flag");	
-//									String errorMessage = jObj.getString("error");
-//									
-//									if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-//										new DialogPopup().alertPopup(activity, "", errorMessage);
-//									}
-//									else{
-//										new DialogPopup().alertPopup(activity, "", errorMessage);
-//									}
 								}
 								else{
 
@@ -6869,12 +6870,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				carNumber = jObj.getString("driver_car_no");
 			}
 			
+			int freeRide = 0;
+			if(jObj.has("free_ride")){
+				freeRide = jObj.getInt("free_ride");
+			}
+			
 			String driverRating = jObj.getString("rating");
 			
 			Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
 			
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName, 
-					driverImage, driverCarImage, driverPhone, driverRating, carNumber);
+					driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide);
 			
 			
 			
@@ -6936,8 +6942,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				carNumber = jObj.getString("driver_car_no");
 			}
 			
+			int freeRide = 0;
+			if(jObj.has("free_ride")){
+				freeRide = jObj.getInt("free_ride");
+			}
+			
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName, 
-					driverImage, driverCarImage, driverPhone, driverRating, carNumber);
+					driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide);
 			
 			Data.startRidePreviousLatLng = Data.pickupLatLng;
 			initializeStartRideVariables();
