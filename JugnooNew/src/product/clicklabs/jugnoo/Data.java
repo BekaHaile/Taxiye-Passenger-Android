@@ -5,6 +5,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
@@ -214,6 +216,7 @@ public class Data {
 	
 	public static double totalDistance = 0, totalFare = 0;
 	public static String waitTime = "", rideTime = "";
+	public static JSONObject couponJSON;
 	
 	
 	public static LatLng pickupLatLng;

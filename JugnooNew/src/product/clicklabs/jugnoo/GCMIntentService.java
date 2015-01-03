@@ -372,28 +372,25 @@ public class GCMIntentService extends IntentService {
 	    	    							 notificationManagerResume(this, "Your ride has ended.", false);
 		    	    						 HomeActivity.appInterruptHandler.customerEndRideInterrupt(jObj);
 	    	    						 }
-	    	    						
 	    	    					 }
 	    	    					 else{
-	    	    						 String SHARED_PREF_NAME = "myPref",
-	    	    						 SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
-	    	    								 P_RIDE_END = "P_RIDE_END",
-	    	    										 SP_C_TOTAL_DISTANCE = "c_total_distance",
-	    	    											SP_C_TOTAL_FARE = "c_total_fare", 
-	    	    											SP_C_WAIT_TIME = "c_wait_time",
-	    	    											SP_C_RIDE_TIME = "c_ride_time";
-	    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-	    	    						 Editor editor = pref.edit();
-	    	    						 editor.putString(SP_CUSTOMER_SCREEN_MODE, P_RIDE_END);
-	    	    						 editor.putString(SP_C_TOTAL_DISTANCE, ""+Data.totalDistance);
-	    	    						 editor.putString(SP_C_TOTAL_FARE, ""+Data.totalFare);
-	    	    						 editor.putString(SP_C_WAIT_TIME, Data.waitTime);
-	    	    						 editor.putString(SP_C_RIDE_TIME, Data.rideTime);
-	    	    						 editor.commit();
-	    	    						 
-	    	    						 
 	    	    						 notificationManager(this, "Your ride has ended.", false);
 	    	    					 }
+	    	    					 String SHARED_PREF_NAME = "myPref",
+		    	    						 SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
+		    	    								 P_RIDE_END = "P_RIDE_END",
+		    	    										 SP_C_TOTAL_DISTANCE = "c_total_distance",
+		    	    											SP_C_TOTAL_FARE = "c_total_fare", 
+		    	    											SP_C_WAIT_TIME = "c_wait_time",
+		    	    											SP_C_RIDE_TIME = "c_ride_time";
+		    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+		    	    						 Editor editor = pref.edit();
+		    	    						 editor.putString(SP_CUSTOMER_SCREEN_MODE, P_RIDE_END);
+		    	    						 editor.putString(SP_C_TOTAL_DISTANCE, ""+Data.totalDistance);
+		    	    						 editor.putString(SP_C_TOTAL_FARE, ""+Data.totalFare);
+		    	    						 editor.putString(SP_C_WAIT_TIME, Data.waitTime);
+		    	    						 editor.putString(SP_C_RIDE_TIME, Data.rideTime);
+		    	    						 editor.commit();
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag){
 	    	    					 if (HomeActivity.appInterruptHandler != null) {
@@ -464,7 +461,7 @@ public class GCMIntentService extends IntentService {
 	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){
-	    		    			 
+	    		    			 e.printStackTrace();
 	    		    		 }
 	    		    		 
 	    		    	 }

@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 
@@ -23,6 +24,8 @@ public abstract class MapStateListener {
         this.mMap = map;
         this.mActivity = activity;
 
+        
+        
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -33,6 +36,7 @@ public abstract class MapStateListener {
             }
         });
 
+        
         touchableMapFragment.setTouchListener(new TouchableWrapper.OnTouchListener() {
             @Override
             public void onTouch() {
@@ -45,7 +49,30 @@ public abstract class MapStateListener {
                 releaseMap();
                 runSettleTimer();
             }
+            
+            @Override
+            public void onDoubleTap() {
+            	mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            }
+            
+            @Override
+            public void onTwoFingerDoubleTap() {
+            	mMap.animateCamera(CameraUpdateFactory.zoomOut());
+            }
+            
+            @Override
+            public void pinchIn() {
+            	mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom-0.04f));
+            }
+            
+            @Override
+            public void pinchOut() {
+            	mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom+0.04f));
+            }
+            
         });
+        
+        
     }
 
     private void updateLastPosition() {

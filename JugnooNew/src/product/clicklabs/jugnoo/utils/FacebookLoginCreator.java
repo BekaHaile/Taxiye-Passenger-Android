@@ -138,12 +138,11 @@ public class FacebookLoginCreator {
 								Data.fbUserName = "";
 							}
 							Log.e("Data.userEmail after","="+Data.fbUserEmail);
-							
-							facebookLoginCallback.facebookLoginDone();
 						}
 						else{
 							new DialogPopup().alertPopup(activity, "Facebook Error", "Error in fetching information from Facebook.");
 						}
+						facebookLoginCallback.facebookLoginDone();
 					}
 				}).executeAsync();
 		}

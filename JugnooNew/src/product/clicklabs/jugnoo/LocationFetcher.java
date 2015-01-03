@@ -126,11 +126,11 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	/**
 	 * Function to get latitude
 	 * */
-	public synchronized double getLatitude(){
+	public double getLatitude(){
 		try{
-			if(location != null){
-				Log.d("loc not null","="+location);
-				return location.getLatitude();
+			Location loc = getLocation();
+			if(loc != null){
+				return loc.getLatitude();
 			}
 		} catch(Exception e){Log.e("e","="+e.toString());}
 		return getSavedLatFromSP();
@@ -139,13 +139,30 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	/**
 	 * Function to get longitude
 	 * */
-	public synchronized double getLongitude(){
+	public double getLongitude(){
 		try{
-			if(location != null){
-				return location.getLongitude();
+			Location loc = getLocation();
+			if(loc != null){
+				return loc.getLongitude();
 			}
 		} catch(Exception e){Log.e("e","="+e.toString());}
 		return getSavedLngFromSP();
+	}
+	
+	public Location getLocation(){
+		try{
+			if(location != null){
+				return location;
+			}
+			else{
+				if(locationclient != null && locationclient.isConnected()){
+					location = locationclient.getLastLocation();
+					Log.e("Fetching last fused location", "="+location);
+					return location;
+				}
+			}
+		} catch(Exception e){e.printStackTrace();}
+		return null;
 	}
 	
 	
@@ -199,6 +216,10 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected");
+		Location loc = getLocation();
+		if(loc != null){
+			locationUpdate.onLocationChanged(loc, priority);
+		}
 		startRequest();
 	}
 
@@ -235,7 +256,6 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 		checkLocationUpdateStartedRunnable = new Runnable() {
 			@Override
 			public void run() {
-				Log.i("LocationFetcher.this.location in handler runnable", "=="+LocationFetcher.this.location);
 				FlurryEventLogger.locationLog(LocationFetcher.this.location);
 				if(LocationFetcher.this.location == null){
 					destroyWaitAndConnect();

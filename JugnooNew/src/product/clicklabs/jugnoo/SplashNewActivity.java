@@ -5,14 +5,15 @@ import java.util.Locale;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
-import product.clicklabs.jugnoo.utils.DeviceUniqueID;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
@@ -205,7 +206,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			Data.uniqueDeviceId = DeviceUniqueID.getUniqueId(this);
+			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
+			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
@@ -444,6 +446,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				Log.i("latitude", ""+Data.latitude);
 				Log.i("longitude", ""+Data.longitude);
 				Log.i("app_version", ""+Data.appVersion);
+				Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
 			
 				//start_app_using_access_token
 				//access_token
@@ -711,6 +714,63 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
+	
+	public static void sendToCustomerAppPopup(String title, String message, final Activity activity) {
+		try {
+
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.customer_app_dialog);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, false);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			
+			textHead.setText(title);
+			textMessage.setText(message);
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			
+			frameLayout.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+			});
+			
+			dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+				}
+			});
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					CustomAppLauncher.launchApp(activity, "product.clicklabs.jugnoo");
+					activity.finish();
+				}
+			});
+			
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	
