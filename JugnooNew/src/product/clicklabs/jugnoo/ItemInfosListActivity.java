@@ -121,10 +121,12 @@ public class ItemInfosListActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(ItemInfosListActivity.this, ItemsCheckoutTNCActivity.class);
-				intent.putExtra("only_info", "yes");
-				startActivity(intent);
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				if(!"".equalsIgnoreCase(terms)){
+					Intent intent = new Intent(ItemInfosListActivity.this, ItemsCheckoutTNCActivity.class);
+					intent.putExtra("only_info", "yes");
+					startActivity(intent);
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
 			}
 		});
 		

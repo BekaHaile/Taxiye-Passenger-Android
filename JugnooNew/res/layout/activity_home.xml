@@ -55,7 +55,7 @@
                         android:gravity="center"
                         android:padding="25px"
                         android:singleLine="true"
-                        android:text="Assigning driver could take upto 3 minutes..."
+                        android:text="Assigning driver could take up to 3 minutes..."
                         android:textColor="@color/bg_grey_opaque"
                         android:textSize="32px" />
 
@@ -458,7 +458,7 @@
                             android:layout_marginBottom="10px"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="Rate the driver?"
+                            android:text="Rate the ride?"
                             android:textColor="@color/black_light"
                             android:textSize="38px" />
 
@@ -468,7 +468,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:numStars="5"
-                            android:rating="1"
+                            android:rating="3"
                             android:stepSize="1.0" />
                     </LinearLayout>
 
@@ -1470,7 +1470,7 @@
                             android:layout_marginTop="40px"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="of upto Rs. 100/-"
+                            android:text="of up to Rs. 100/-"
                             android:textColor="@color/black"
                             android:textSize="32px" />
                     </LinearLayout>
@@ -1684,33 +1684,13 @@
                         android:visibility="gone" />
                 </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/christmasBell1"
-                    android:layout_width="27px"
-                    android:layout_height="91px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginRight="27px"
-                    android:layout_marginTop="70px"
-                    android:src="@drawable/bell_1" />
-
-                <ImageView
-                    android:id="@+id/christmasBell2"
-                    android:layout_width="27px"
-                    android:layout_height="128px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="43px"
-                    android:layout_marginTop="70px"
-                    android:src="@drawable/bell_2" />
-
                 <Button
-                    android:id="@+id/christmasButton"
-                    android:layout_width="73px"
-                    android:layout_height="70px"
+                    android:id="@+id/jugnooShopButton"
+                    android:layout_width="90px"
+                    android:layout_height="90px"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="15px"
-                    android:layout_marginTop="10px"
-                    android:background="@drawable/christmas_gift_button_selector"
+                    android:layout_marginRight="5px"
+                    android:background="@drawable/gift_button_selector"
                     android:tag="mwar" />
             </RelativeLayout>
         </RelativeLayout>

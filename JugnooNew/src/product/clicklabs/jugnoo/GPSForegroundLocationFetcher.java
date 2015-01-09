@@ -1,7 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.Log;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.location.Location;
@@ -10,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 
 public class GPSForegroundLocationFetcher implements LocationListener{
 	
@@ -29,7 +28,6 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		this.context = (Context) gpsLocationUpdate;
 		this.gpsLocationUpdate = gpsLocationUpdate;
 		this.requestInterval = requestInterval;
-		connect();
 	}
 	
 	
@@ -57,6 +55,9 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		destroy();
 		Log.e("GPS", "connect");
 		if(isLocationEnabled(context)){
+			if(locationManager != null){
+				locationManager.removeUpdates(this);
+			}
 			this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 			this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, this.requestInterval, 0, this);
 		}
@@ -83,8 +84,6 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 			}
 		} catch(Exception e){
 			
-		} finally{
-			locationManager = null;
 		}
 		stopCheckingLocationUpdates();
 	}
@@ -106,7 +105,7 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 	public void onLocationChanged(Location location) {
 		try{
 			if(location!=null){
-				Log.i("GPS loc chanfged ________---------******","="+location);
+				Log.i("loc chanfged ________---------******","="+location);
 				this.location = location;
 				gpsLocationUpdate.onGPSLocationChanged(location);
 			}
@@ -120,16 +119,13 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		checkLocationUpdateStartedRunnable = new Runnable() {
 			@Override
 			public void run() {
-				FlurryEventLogger.locationLog(GPSForegroundLocationFetcher.this.location);
 				if(GPSForegroundLocationFetcher.this.location == null){
 					destroyWaitAndConnect();
-					FlurryEventLogger.locationRestart("null location");
 				}
 				else{
 					long timeSinceLastLocationFix = System.currentTimeMillis() - GPSForegroundLocationFetcher.this.location.getTime();
 					if(timeSinceLastLocationFix > LAST_LOCATON_TIME_THRESHOLD){
 						destroyWaitAndConnect();
-						FlurryEventLogger.locationRestart("old location");
 					}
 					else{
 						checkLocationUpdateStartedHandler.postDelayed(checkLocationUpdateStartedRunnable, CHECK_LOCATION_INTERVAL);
