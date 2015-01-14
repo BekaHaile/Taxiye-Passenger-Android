@@ -366,6 +366,14 @@ public class GCMIntentService extends IntentService {
 	    	    						 Data.rideTime = "10";
 	    	    					 }
 	    	    					 
+	    	    					 try{
+	    	    						 if(jObj.has("rate_app")){
+	    	    							 Data.customerRateApp = jObj.getInt("rate_app");
+	    	    						 }
+	    	    					 } catch(Exception e){
+	    	    						 e.printStackTrace();
+	    	    					 }
+	    	    					 
 	    	    					 
 	    	    					 if (HomeActivity.appInterruptHandler != null) {
 	    	    						 if(PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode){

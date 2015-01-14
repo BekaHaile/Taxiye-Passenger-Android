@@ -21,7 +21,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <fragment
                     android:id="@+id/map"
@@ -147,7 +147,7 @@
                     android:layout_height="fill_parent"
                     android:layout_marginTop="90px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <Button
                         android:id="@+id/customerInRideMyLocationBtn"
@@ -414,7 +414,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <ImageView
                         android:id="@+id/centreLocationPin"
@@ -1684,13 +1684,14 @@
                         android:visibility="gone" />
                 </RelativeLayout>
 
-                <Button
-                    android:id="@+id/jugnooShopButton"
-                    android:layout_width="90px"
-                    android:layout_height="90px"
+                <ImageView
+                    android:id="@+id/jugnooShopImageView"
+                    android:layout_width="80px"
+                    android:layout_height="80px"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="5px"
-                    android:background="@drawable/gift_button_selector"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10px"
+                    android:background="@drawable/transparent"
                     android:tag="mwar" />
             </RelativeLayout>
         </RelativeLayout>

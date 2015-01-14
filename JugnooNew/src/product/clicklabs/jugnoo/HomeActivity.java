@@ -184,7 +184,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView title;
 	ImageView jugnooLogo;
 	Button checkServerBtn, toggleDebugModeBtn;
-	Button jugnooShopButton;
+	ImageView jugnooShopImageView;
 	
 	
 	
@@ -522,7 +522,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 //		favBtn = (Button) findViewById(R.id.favBtn);
-		jugnooShopButton = (Button) findViewById(R.id.jugnooShopButton);
+		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
 		
 		
 		
@@ -854,7 +854,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
-		jugnooShopButton.setOnClickListener(new View.OnClickListener() {
+		jugnooShopImageView.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -1282,7 +1282,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						feedbackEditText.setError("Review must be in 300 letters.");
 					}
 					else{
-						submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId, ""+rating, feedbackStr);
+						submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr);
 						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
 					}
 				}
@@ -1624,14 +1624,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			
-			map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-				
-				@Override
-				public void onMapClick(LatLng arg0) {
-					Log.e("arg0", "="+arg0);
-				}
-			});
-			
 			map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 				
 				@Override
@@ -1790,18 +1782,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		if(UserMode.PASSENGER == userMode){
 			if(Data.userData != null){
 	    		if(Data.userData.nukkadEnable == 1){
-	    			jugnooShopButton.setVisibility(View.VISIBLE);
+	    			jugnooShopImageView.setVisibility(View.VISIBLE);
+	    			try{
+	    				if(!"".equalsIgnoreCase(Data.userData.nukkadIcon)){
+	    					Picasso.with(HomeActivity.this).load(Data.userData.nukkadIcon).into(jugnooShopImageView);
+	    				}
+	    				else{
+	    					jugnooShopImageView.setImageResource(R.drawable.gift_button_selector);
+	    				}
+	    			}catch(Exception e){}
 	    		}
 	    		else{
-	    			jugnooShopButton.setVisibility(View.GONE);
+	    			jugnooShopImageView.setVisibility(View.GONE);
 	    		}
 			}
 			else{
-				jugnooShopButton.setVisibility(View.GONE);
+				jugnooShopImageView.setVisibility(View.GONE);
 			}
 		}
 		else{
-			jugnooShopButton.setVisibility(View.GONE);
+			jugnooShopImageView.setVisibility(View.GONE);
 		}
 	}
 	
@@ -5154,7 +5154,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, String givenRating, String feedbackText) {
+	public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, final int givenRating, String feedbackText) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -5162,13 +5162,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("given_rating", givenRating);
+			params.put("given_rating", ""+givenRating);
 			params.put("engagement_id", engagementId);
 			params.put("driver_id", ratingReceiverId);
 			params.put("feedback", feedbackText);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("given_rating", givenRating);
+			Log.i("given_rating", ""+givenRating);
 			Log.i("engagement_id", engagementId);
 			Log.i("driver_id", ratingReceiverId);
 			Log.i("feedback", feedbackText);
@@ -5211,7 +5211,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									passengerScreenMode = PassengerScreenMode.P_INITIAL;
 									switchPassengerScreen(passengerScreenMode);
-									Toast.makeText(activity, "Feedback submitted", Toast.LENGTH_SHORT).show();
+									
+									Data.customerRateApp = 1;
+									if(givenRating >= 4 && Data.customerRateApp == 1){
+										rateAppPopup(activity);
+									}
 								}
 								else{
 									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -5900,6 +5904,57 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	}
 	
+	
+	public void acceptAppRatingRequestAPI(final Activity activity) {
+		try {
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				AsyncHttpClient client = Data.getClient();
+				client.post(Data.SERVER_URL + "/accept_app_rating_request", params,
+						new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+							@Override
+							public void onFailure(Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+							}
+
+							@Override
+							public void onSuccess(String response) {
+								Log.v("Server response", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+										String errorMessage = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+										String message = jObj.getString("message");
+										new DialogPopup().alertPopup(activity, "", message);
+									}
+									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+										
+									}
+									else{
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+								}
+							}
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 	
 	
 	
@@ -6632,6 +6687,82 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			}
 	
+		
+		
+		
+		/**
+		 * Displays popup to rate the app
+		 */
+		public void rateAppPopup(final Activity activity) {
+			try {
+				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.setContentView(R.layout.custom_two_btn_dialog_with_title);
+
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, false);
+				
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+				
+				
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+				
+				textHead.setVisibility(View.VISIBLE);
+				textHead.setText("Rate Us");
+				textMessage.setText("Liked our services!!! Please rate us on Play Store");
+				
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("RATE NOW");
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity)); btnCancel.setText("LATER");
+				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
+				crossbtn.setVisibility(View.GONE);
+				
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+						acceptAppRatingRequestAPI(activity);
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(Uri.parse("market://details?id=product.clicklabs.jugnoo"));
+						activity.startActivity(intent);
+					}
+				});
+				
+				btnCancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+				});
+				
+				dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+					}
+				});
+
+				frameLayout.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+
+				dialog.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 		
 		public void confirmDebugPasswordPopup(final Activity activity){

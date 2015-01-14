@@ -218,6 +218,7 @@ public class Data {
 	public static double totalDistance = 0, totalFare = 0;
 	public static String waitTime = "", rideTime = "";
 	public static JSONObject couponJSON;
+	public static int customerRateApp = 0;
 	
 	
 	public static LatLng pickupLatLng;
