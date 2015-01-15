@@ -839,7 +839,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
-				
 				return false;
 			}
 		});
@@ -3035,9 +3034,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				buildTimeSettingsAlertDialog(this);
 			}
 		    
+		    sendToShareScreen();
+		    
+		    Data.autoShare = 0;
 		}
 	}
 	
+	
+	public void sendToShareScreen(){
+		if(Data.autoShare == 1){
+	    	Data.autoShare = 0;
+	    	startActivity(new Intent(HomeActivity.this, ShareActivity.class));
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+	    }
+	}
 	
 	
 	

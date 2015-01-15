@@ -224,6 +224,7 @@ public class Data {
 	public static LatLng pickupLatLng;
 
 	public static String fbAccessToken = "", fbId = "", fbFirstName = "", fbLastName = "", fbUserName = "", fbUserEmail = "";
+	public static int autoShare = 0;
 	
 	
 	public static ArrayList<DriverType> driverTypes = new ArrayList<DriverType>();

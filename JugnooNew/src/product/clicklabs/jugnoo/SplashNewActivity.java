@@ -110,6 +110,25 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 //		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 //		}
 		
+		try {
+			Uri targetUri = getIntent().getData();
+			Log.e("targetUri =======********", "="+targetUri);
+			if(targetUri != null){
+				String autoShare = targetUri.getQueryParameter("autoshare");
+				if("1".equalsIgnoreCase(autoShare)){
+					Data.autoShare = 1;
+				}
+				else{
+					Data.autoShare = 0;
+				}
+			}
+			else{
+				Data.autoShare = 0;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			Data.autoShare = 0;
+		}
 		
 		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
 		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
@@ -314,6 +333,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 		super.onPause();
 	}
+	
 	
 	
 	
