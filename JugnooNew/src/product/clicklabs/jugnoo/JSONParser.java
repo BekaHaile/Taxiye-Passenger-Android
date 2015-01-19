@@ -101,8 +101,9 @@ public class JSONParser {
 	
 	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
 		
-		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0, nukkadEnable = 0;
-		String phoneNo = "";
+		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, 
+				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1;
+		String phoneNo = "", nukkadIcon = "", jugnooMealsURL = "https://play.google.com/store/apps/details?id=com.tindos";
 		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
@@ -154,11 +155,35 @@ public class JSONParser {
 			e.printStackTrace();
 		}
 		
-		//"gcm_intent": 0, christmas_icon_enable
+		try{
+			if(userData.has("nukkad_icon")){
+				nukkadIcon = userData.getString("nukkad_icon");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		try{
+			if(userData.has("enable_jugnoo_meals")){
+				enableJugnooMeals = userData.getInt("enable_jugnoo_meals");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		try{
+			if(userData.has("jugnoo_meals_url")){
+				jugnooMealsURL = userData.getString("jugnoo_meals_url");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
-				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable);
+				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
+				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsURL);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
@@ -192,7 +217,7 @@ public class JSONParser {
 //		        },
 //		        "popup": 0
 //		    },
-//		    "last_ride": {
+//		    "last_ride": {  or null
 //		        "engagement_id": 5982,
 //		        "fare": 25,
 //		        "to_pay": 25,
@@ -306,6 +331,14 @@ public class JSONParser {
 			Data.totalFare = jLastRideData.getDouble("fare");
 			Data.waitTime = jLastRideData.getString("wait_time");
 			Data.rideTime = jLastRideData.getString("ride_time");
+			
+			try{
+				if(jLastRideData.has("rate_app")){
+					Data.customerRateApp = jLastRideData.getInt("rate_app");
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
 			
 			HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 			
@@ -652,7 +685,7 @@ public class JSONParser {
 	
 									engagementStatus = jObject.getInt("status");
 									
-									if((1 == engagementStatus) || (2 == engagementStatus)){
+									if((EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus) || (EngagementStatus.STARTED.getOrdinal() == engagementStatus)){
 										engagementId = jObject.getString("engagement_id");
 										sessionId = jObject.getString("session_id");
 										userId = jObject.getString("driver_id");

@@ -63,7 +63,7 @@
                     android:layout_marginTop="20px"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="of upto Rs. 100/-"
+                    android:text="of up to Rs. 100/-"
                     android:textColor="@color/black"
                     android:textSize="34px" />
                 

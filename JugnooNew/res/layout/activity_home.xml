@@ -21,7 +21,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <fragment
                     android:id="@+id/map"
@@ -55,7 +55,7 @@
                         android:gravity="center"
                         android:padding="25px"
                         android:singleLine="true"
-                        android:text="Assigning driver could take upto 3 minutes..."
+                        android:text="Assigning driver could take up to 3 minutes..."
                         android:textColor="@color/bg_grey_opaque"
                         android:textSize="32px" />
 
@@ -147,7 +147,7 @@
                     android:layout_height="fill_parent"
                     android:layout_marginTop="90px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <Button
                         android:id="@+id/customerInRideMyLocationBtn"
@@ -414,7 +414,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <ImageView
                         android:id="@+id/centreLocationPin"
@@ -1470,7 +1470,7 @@
                             android:layout_marginTop="40px"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="of upto Rs. 100/-"
+                            android:text="of up to Rs. 100/-"
                             android:textColor="@color/black"
                             android:textSize="32px" />
                     </LinearLayout>
@@ -1605,7 +1605,7 @@
                         android:tag="mwar" />
                 </RelativeLayout>
             </RelativeLayout>
-
+            
             <RelativeLayout
                 android:id="@+id/topRlOuter"
                 android:layout_width="match_parent"
@@ -1683,36 +1683,41 @@
                         android:tag="mwar"
                         android:visibility="gone" />
                 </RelativeLayout>
+                
+                <LinearLayout 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10px"
+                    >
+                
+                <ImageView
+                    android:id="@+id/jugnooMealsImageView"
+                    android:layout_width="77px"
+                    android:layout_height="55px"
+                    android:layout_marginRight="10px"
+                    android:background="@drawable/jugnoo_meal_icon"
+                    android:tag="mwar" 
+                    android:layout_gravity="center_vertical"
+                    />
+                
 
                 <ImageView
-                    android:id="@+id/christmasBell1"
-                    android:layout_width="27px"
-                    android:layout_height="91px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginRight="27px"
-                    android:layout_marginTop="70px"
-                    android:src="@drawable/bell_1" />
-
-                <ImageView
-                    android:id="@+id/christmasBell2"
-                    android:layout_width="27px"
-                    android:layout_height="128px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="43px"
-                    android:layout_marginTop="70px"
-                    android:src="@drawable/bell_2" />
-
-                <Button
-                    android:id="@+id/christmasButton"
-                    android:layout_width="73px"
-                    android:layout_height="70px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15px"
-                    android:layout_marginTop="10px"
-                    android:background="@drawable/christmas_gift_button_selector"
-                    android:tag="mwar" />
+                    android:id="@+id/jugnooShopImageView"
+                    android:layout_width="80px"
+                    android:layout_height="80px"
+                    android:layout_marginRight="0px"
+                    android:background="@drawable/transparent"
+                    android:tag="mwar"
+                    android:layout_gravity="center_vertical"
+                     />
+                
+                </LinearLayout>
+                
             </RelativeLayout>
+            
         </RelativeLayout>
     </FrameLayout>
 

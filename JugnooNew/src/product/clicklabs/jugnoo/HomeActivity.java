@@ -39,7 +39,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.PausableChronometer;
-import product.clicklabs.jugnoo.utils.SoundMediaPlayer;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -65,6 +64,7 @@ import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -81,10 +81,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -186,8 +184,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView title;
 	ImageView jugnooLogo;
 	Button checkServerBtn, toggleDebugModeBtn;
-	Button christmasButton;
-	ImageView christmasBell1, christmasBell2;
+	ImageView jugnooShopImageView, jugnooMealsImageView;
 	
 	
 	
@@ -445,6 +442,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
+		initializeGPSForegroundLocationFetcher();
 		
 		HomeActivity.appInterruptHandler = HomeActivity.this;
 		
@@ -524,9 +522,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 //		favBtn = (Button) findViewById(R.id.favBtn);
-		christmasButton = (Button) findViewById(R.id.christmasButton);
-		christmasBell1 = (ImageView) findViewById(R.id.christmasBell1);
-		christmasBell2 = (ImageView) findViewById(R.id.christmasBell2);
+		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
+		jugnooMealsImageView = (ImageView) findViewById(R.id.jugnooMealsImageView);
 		
 		
 		
@@ -843,7 +840,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
-				
 				return false;
 			}
 		});
@@ -858,19 +854,35 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
-		christmasButton.setOnClickListener(new View.OnClickListener() {
+		jugnooShopImageView.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				if(Data.userData != null){
 		    		if(Data.userData.nukkadEnable == 1){
-		    			SoundMediaPlayer.startSound(HomeActivity.this, R.raw.bell_sound);
 		    			startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
 						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 						FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
 		    		}
 				}
 				
+			}
+		});
+		
+		jugnooMealsImageView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				try {
+					if(Data.userData != null){
+						if(Data.userData.enableJugnooMeals == 1){
+							Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Data.userData.jugnooMealsURL));
+							startActivity(browserIntent);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -1287,7 +1299,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						feedbackEditText.setError("Review must be in 300 letters.");
 					}
 					else{
-						submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId, ""+rating, feedbackStr);
+						submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr);
 						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
 					}
 				}
@@ -1629,14 +1641,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			
-			map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-				
-				@Override
-				public void onMapClick(LatLng arg0) {
-					Log.e("arg0", "="+arg0);
-				}
-			});
-			
 			map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 				
 				@Override
@@ -1742,7 +1746,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		connectGPSListener();
 		
 		
 		try {
@@ -1769,7 +1772,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverModeToggle.setImageResource(R.drawable.off);
 			}
 			
-			enableChristmasUI();
+			enableJugnooShopUI();
+			enableJugnooMealsUI();
 			
 			switchUserScreen(userMode);
 			
@@ -1791,30 +1795,51 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public void enableChristmasUI(){
+	
+	public void enableJugnooShopUI(){
 		if(UserMode.PASSENGER == userMode){
 			if(Data.userData != null){
 	    		if(Data.userData.nukkadEnable == 1){
-	    			christmasButton.setVisibility(View.VISIBLE);
-	    			christmasBell1.setVisibility(View.VISIBLE);
-	    			christmasBell2.setVisibility(View.VISIBLE);
+	    			jugnooShopImageView.setVisibility(View.VISIBLE);
+	    			try{
+	    				if(!"".equalsIgnoreCase(Data.userData.nukkadIcon)){
+	    					Picasso.with(HomeActivity.this).load(Data.userData.nukkadIcon).into(jugnooShopImageView);
+	    				}
+	    				else{
+	    					jugnooShopImageView.setImageResource(R.drawable.gift_button_selector);
+	    				}
+	    			}catch(Exception e){}
 	    		}
 	    		else{
-	    			christmasButton.setVisibility(View.GONE);
-	    			christmasBell1.setVisibility(View.GONE);
-	    			christmasBell2.setVisibility(View.GONE);
+	    			jugnooShopImageView.setVisibility(View.GONE);
 	    		}
 			}
 			else{
-				christmasButton.setVisibility(View.GONE);
-				christmasBell1.setVisibility(View.GONE);
-				christmasBell2.setVisibility(View.GONE);
+				jugnooShopImageView.setVisibility(View.GONE);
 			}
 		}
 		else{
-			christmasButton.setVisibility(View.GONE);
-			christmasBell1.setVisibility(View.GONE);
-			christmasBell2.setVisibility(View.GONE);
+			jugnooShopImageView.setVisibility(View.GONE);
+		}
+	}
+	
+	
+	public void enableJugnooMealsUI(){
+		if(UserMode.PASSENGER == userMode){
+			if(Data.userData != null){
+	    		if(Data.userData.enableJugnooMeals == 1){
+	    			jugnooMealsImageView.setVisibility(View.VISIBLE);
+	    		}
+	    		else{
+	    			jugnooMealsImageView.setVisibility(View.GONE);
+	    		}
+			}
+			else{
+				jugnooMealsImageView.setVisibility(View.GONE);
+			}
+		}
+		else{
+			jugnooMealsImageView.setVisibility(View.GONE);
 		}
 	}
 	
@@ -2991,10 +3016,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
+	public void initializeGPSForegroundLocationFetcher(){
+		if(gpsForegroundLocationFetcher == null){
+			gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
+		}
+	}
+	
 	public void connectGPSListener(){
 		disconnectGPSListener();
 		try {
-			gpsForegroundLocationFetcher = new GPSForegroundLocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
+			initializeGPSForegroundLocationFetcher();
+			gpsForegroundLocationFetcher.connect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3007,15 +3039,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally{
-			gpsForegroundLocationFetcher = null;
 		}
 	}
 	
 	
-//	40796,41279,41488,41520,41743,42572,42770,45954,46076,46203,46928,47201,47218,47434,47617,47683,47956,48087
-
-//  43009,44467,44486,46465,47344,48274
 	
 	
 	@Override
@@ -3046,10 +3073,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				buildTimeSettingsAlertDialog(this);
 			}
 		    
-		    startBellsAnim();
+		    sendToShareScreen();
+		    
+		    Data.autoShare = 0;
 		}
 	}
 	
+	
+	public void sendToShareScreen(){
+		if(Data.autoShare == 1){
+	    	Data.autoShare = 0;
+	    	startActivity(new Intent(HomeActivity.this, ShareActivity.class));
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+	    }
+	}
 	
 	
 	
@@ -3227,8 +3264,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		destroyFusedLocationFetchers();
 		
-		stopBellsAnim();
-		
 		super.onPause();
 		
 	}
@@ -3248,15 +3283,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					startActivity(intent);
 				}
 				else{
-					super.onBackPressed();
+					ActivityCompat.finishAffinity(this);
+//					super.onBackPressed();
 				}
 			}
 			else{
-				super.onBackPressed();
+				ActivityCompat.finishAffinity(this);
+//				super.onBackPressed();
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			super.onBackPressed();
+			ActivityCompat.finishAffinity(this);
+//			super.onBackPressed();
 		}
 	}
 	
@@ -4109,6 +4147,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Log.i("access_token", "=" + Data.userData.accessToken);
 			Log.i("session_id", "="+Data.cSessionId);
 			
+			
+			
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL + "/cancel_the_request", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -4128,8 +4168,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 							try {
 								jObj = new JSONObject(response);
-								
-								int flag = jObj.getInt("flag");
 								
 								if(!jObj.isNull("error")){
 									String errorMessage = jObj.getString("error");
@@ -4273,7 +4311,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										switchPassengerScreen(passengerScreenMode);
 									}
 									
-									enableChristmasUI();
+									enableJugnooShopUI();
+									enableJugnooMealsUI();
 									
 								}
 							}  catch (Exception exception) {
@@ -5028,7 +5067,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //		        "maximum": 100,
 //		        "image": null,
 //		        "type": 0,
-//		        "subtitle": "upto Rs. 100"
+//		        "subtitle": "up to Rs. 100"
 //		    }
 //			}
 			
@@ -5165,7 +5204,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, String givenRating, String feedbackText) {
+	public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, final int givenRating, String feedbackText) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -5173,13 +5212,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("given_rating", givenRating);
+			params.put("given_rating", ""+givenRating);
 			params.put("engagement_id", engagementId);
 			params.put("driver_id", ratingReceiverId);
 			params.put("feedback", feedbackText);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("given_rating", givenRating);
+			Log.i("given_rating", ""+givenRating);
 			Log.i("engagement_id", engagementId);
 			Log.i("driver_id", ratingReceiverId);
 			Log.i("feedback", feedbackText);
@@ -5222,7 +5261,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									
 									passengerScreenMode = PassengerScreenMode.P_INITIAL;
 									switchPassengerScreen(passengerScreenMode);
-									Toast.makeText(activity, "Feedback submitted", Toast.LENGTH_SHORT).show();
+									
+									if(givenRating >= 4 && Data.customerRateApp == 1){
+										rateAppPopup(activity);
+									}
 								}
 								else{
 									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -5911,6 +5953,57 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	}
 	
+	
+	public void acceptAppRatingRequestAPI(final Activity activity) {
+		try {
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				AsyncHttpClient client = Data.getClient();
+				client.post(Data.SERVER_URL + "/accept_app_rating_request", params,
+						new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+							@Override
+							public void onFailure(Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+							}
+
+							@Override
+							public void onSuccess(String response) {
+								Log.v("Server response", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+										String errorMessage = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", errorMessage);
+									}
+									else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+										String message = jObj.getString("message");
+										new DialogPopup().alertPopup(activity, "", message);
+									}
+									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+										
+									}
+									else{
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+								}
+							}
+						});
+			}
+			else {
+				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 	
 	
 	
@@ -6643,6 +6736,82 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			}
 	
+		
+		
+		
+		/**
+		 * Displays popup to rate the app
+		 */
+		public void rateAppPopup(final Activity activity) {
+			try {
+				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.setContentView(R.layout.custom_two_btn_dialog_with_title);
+
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, false);
+				
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+				
+				
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+				
+				textHead.setVisibility(View.VISIBLE);
+				textHead.setText("Rate Us");
+				textMessage.setText("Liked our services!!! Please rate us on Play Store");
+				
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("RATE NOW");
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity)); btnCancel.setText("LATER");
+				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
+				crossbtn.setVisibility(View.GONE);
+				
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+						acceptAppRatingRequestAPI(activity);
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(Uri.parse("market://details?id=product.clicklabs.jugnoo"));
+						activity.startActivity(intent);
+					}
+				});
+				
+				btnCancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+				});
+				
+				dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+					}
+				});
+
+				frameLayout.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+
+				dialog.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 		
 		public void confirmDebugPasswordPopup(final Activity activity){
@@ -7908,7 +8077,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			};
 			
 			timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, requestPeriod);
-			textViewAssigningInProgress.setText("Assigning driver could take upto 3 minutes...");
+			textViewAssigningInProgress.setText("Assigning driver could take up to 3 minutes...");
 			FlurryEventLogger.requestRidePressed(Data.userData.accessToken, Data.pickupLatLng);
 			startAssigningDriversAnimation();
 			
@@ -8331,7 +8500,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     		timer.scheduleAtFixedRate(timerTask, delay, period);
     		isRunning = true;
     		//textViewAssigningInProgress
-    		textViewAssigningInProgress.setText("Assigning driver could take upto 4 minutes...");
+    		textViewAssigningInProgress.setText("Assigning driver could take up to 4 minutes...");
     	}
     	
     	public void stopTimer(){
@@ -8356,44 +8525,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     	
     	
     }
-	
-    public void startBellsAnim(){
-    	if(Data.userData != null){
-    		if(Data.userData.nukkadEnable == 1){
-		    	try {
-					Animation rotateAnim = new RotateAnimation(-30, 30, Animation.RELATIVE_TO_SELF, 0.1f, Animation.RELATIVE_TO_SELF, 0);
-					rotateAnim.setDuration(1000);
-					rotateAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-					rotateAnim.setRepeatCount(Animation.INFINITE);
-					rotateAnim.setRepeatMode(Animation.REVERSE);
-					
-					Animation rotateAnimInv = new RotateAnimation(30, -30, Animation.RELATIVE_TO_SELF, 0.65f, Animation.RELATIVE_TO_SELF, 0);
-					rotateAnimInv.setDuration(1300);
-					rotateAnimInv.setInterpolator(new AccelerateDecelerateInterpolator());
-					rotateAnimInv.setRepeatCount(Animation.INFINITE);
-					rotateAnimInv.setRepeatMode(Animation.REVERSE);
-					
-					christmasBell1.startAnimation(rotateAnim);
-					christmasBell2.startAnimation(rotateAnimInv);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-    		}
-    	}
-    }
     
-    public void stopBellsAnim(){
-    	if(Data.userData != null){
-    		if(Data.userData.nukkadEnable == 1){
-		    	try {
-					christmasBell1.clearAnimation();
-					christmasBell2.clearAnimation();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-    		}
-    	}
-    }
 	
 	
 }

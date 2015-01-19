@@ -225,7 +225,7 @@ public class FacebookLoginCreator {
 	    params.putString("name", "Jugnoo - autos on demand");
 	    params.putString("caption", shareString);
 	    params.putString("description", shareString2);
-	    params.putString("link", "https://jugnoo.in");
+	    params.putString("link", "https://jugnoo.in?autoshare=1");
 	    params.putString("picture", "http://i58.tinypic.com/db9j8.png");
 
 	    WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(activity, Session.getActiveSession(), params))

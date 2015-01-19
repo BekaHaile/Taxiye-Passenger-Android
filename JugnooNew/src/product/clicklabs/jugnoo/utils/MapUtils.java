@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.utils;
 
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import android.location.Location;
 
@@ -115,7 +117,6 @@ public class MapUtils {
 	public static String getGAPIAddress(LatLng latLng) {
 		String fullAddress = "Unnamed";
 		try {
-
 			JSONObject jsonObj = new JSONObject(
 					new HttpRequester().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?"
 									+ "latlng="
@@ -232,12 +233,10 @@ public class MapUtils {
 	
 	
 	
-	/**
-	 * To search addresses related to particular address available on google
-	 */
 	public static ArrayList<SearchResult> getSearchResultsFromGooglePlaces(String searchText) {
 		ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
 		try{
+			searchText = URLEncoder.encode(searchText, "utf8");
 			String ignr2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location="
 					+ "30.75"
 					+ ","
@@ -252,8 +251,6 @@ public class MapUtils {
 			
 			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
 
-			Log.writeLogToFile("search", jsonObj.toString());
-			
 			JSONArray info = null;
 			info = jsonObj.getJSONArray("results");
 			for (int i = 0; i < info.length(); i++) {
@@ -270,4 +267,46 @@ public class MapUtils {
 		return searchResults;
 	}
 	
+	public static ArrayList<AutoCompleteSearchResult> getAutoCompleteSearchResultsFromGooglePlaces(String searchText) {
+		ArrayList<AutoCompleteSearchResult> searchResults = new ArrayList<AutoCompleteSearchResult>();
+		try{
+			searchText = URLEncoder.encode(searchText, "utf8");
+			String ignr2 = "https://maps.googleapis.com/maps/api/place/autocomplete/json?"+
+					"input="+ URLEncoder.encode(searchText, "utf8")
+					+"&type=address&location=" 
+					+ "" + "," + ""+ "&radius=500"
+					+"&key="+Data.MAPS_BROWSER_KEY;
+			//https://maps.googleapis.com/maps/api/place/autocomplete/json?input=pizza&type=address&location=30.75,76.78&radius=500&key=
+			//AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
+			ignr2 = ignr2.replaceAll(" ", "%20");
+			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
+			JSONArray info = null;
+			info = jsonObj.getJSONArray("predictions");
+			for (int i = 0; i < info.length(); i++) {
+				searchResults.add(new AutoCompleteSearchResult(info.getJSONObject(i).getString("description"), info.getJSONObject(i).getString("place_id")));
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return searchResults;
+	}
+	
+	
+	public static SearchResult getSearchResultsFromPlaceIdGooglePlaces(String placeId) {
+		try{
+			String ignr2 = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId +"&key="+Data.MAPS_BROWSER_KEY;
+			//https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJqX9P5SDtDzkR2oUORhzrAhs&key=AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
+			ignr2 = ignr2.replaceAll(" ", "%20");
+			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
+			JSONObject info = null;
+			info = jsonObj.getJSONObject("result");
+			SearchResult result = new SearchResult(info.getString("name"), info.getString("formatted_address"), 
+					new LatLng(info.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+							info.getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
+			return result;
+		} catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
