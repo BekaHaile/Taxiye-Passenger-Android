@@ -103,7 +103,7 @@ public class JSONParser {
 		
 		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, 
 				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1;
-		String phoneNo = "", nukkadIcon = "", jugnooMealsURL = "https://play.google.com/store/apps/details?id=com.tindos";
+		String phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk";
 		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
@@ -172,8 +172,8 @@ public class JSONParser {
 		}
 		
 		try{
-			if(userData.has("jugnoo_meals_url")){
-				jugnooMealsURL = userData.getString("jugnoo_meals_url");
+			if(userData.has("jugnoo_meals_package_name")){
+				jugnooMealsPackageName = userData.getString("jugnoo_meals_package_name");
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -183,7 +183,7 @@ public class JSONParser {
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
 				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
-				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsURL);
+				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{

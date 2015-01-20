@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -876,8 +877,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				try {
 					if(Data.userData != null){
 						if(Data.userData.enableJugnooMeals == 1){
-							Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Data.userData.jugnooMealsURL));
-							startActivity(browserIntent);
+							CustomAppLauncher.launchApp(HomeActivity.this, Data.userData.jugnooMealsPackageName);
 						}
 					}
 				} catch (Exception e) {
