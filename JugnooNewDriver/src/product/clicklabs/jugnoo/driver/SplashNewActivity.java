@@ -48,6 +48,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -1009,6 +1010,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					
 					
 					dialog.show();
+					Toast.makeText(activity, "SERVER_URL = "+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

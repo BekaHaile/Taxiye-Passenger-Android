@@ -60,6 +60,10 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 			}
 			this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 			this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, this.requestInterval, 0, this);
+			Location loc = getLocation();
+			if(loc != null){
+				gpsLocationUpdate.onGPSLocationChanged(loc);
+			}
 		}
 		startCheckingLocationUpdates();
 	}
@@ -87,6 +91,23 @@ public class GPSForegroundLocationFetcher implements LocationListener{
 		}
 		stopCheckingLocationUpdates();
 	}
+	
+	public Location getLocation(){
+		try{
+			if(location != null){
+				return location;
+			}
+			else{
+				if(locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+					location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					Log.e("Fetching last GPS location", "="+location);
+					return location;
+				}
+			}
+		} catch(Exception e){e.printStackTrace();}
+		return null;
+	}
+	
 	
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {

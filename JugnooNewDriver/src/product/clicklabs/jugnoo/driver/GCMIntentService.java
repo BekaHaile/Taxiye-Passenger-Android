@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.driver.utils.DateOperations;
 import product.clicklabs.jugnoo.driver.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.driver.utils.HttpRequester;
 import product.clicklabs.jugnoo.driver.utils.Log;
+import product.clicklabs.jugnoo.driver.utils.SoundMediaPlayer;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -462,13 +463,12 @@ public class GCMIntentService extends IntentService {
 	    	    				}
 	    	    				else if(PushFlags.STATION_CHANGED.getOrdinal() == flag){
 	    	    					String message1 = jObj.getString("message");
-	    	    					startRingWithStopHandler(this);
 	    	    					if (HomeActivity.appInterruptHandler != null) {
 										HomeActivity.appInterruptHandler.onStationChangedPushReceived();
-										notificationManagerResume(this, message1, true);
+										notificationManagerResume(this, message1, false);
 									}
 	    	    					else{
-	    	    						notificationManager(this, message1, true);
+	    	    						notificationManager(this, message1, false);
 	    	    					}
 	    	    				}
 	    	    				 

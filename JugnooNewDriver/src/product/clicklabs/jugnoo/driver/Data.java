@@ -140,6 +140,7 @@ public class Data {
 	//
 	// Dev new dispatcher :   https://54.81.229.172:8012
 	
+	//https://test.jugnoo.in:8012 to http://54.173.65.120:9000
 	
 	//TODO
 	public static final String DEV_SERVER_URL = "https://test.jugnoo.in:8012";

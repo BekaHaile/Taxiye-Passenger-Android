@@ -1,8 +1,5 @@
 package product.clicklabs.jugnoo.driver;
 
-import java.util.ArrayList;
-
-import product.clicklabs.jugnoo.driver.datastructure.DriverRideRequest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

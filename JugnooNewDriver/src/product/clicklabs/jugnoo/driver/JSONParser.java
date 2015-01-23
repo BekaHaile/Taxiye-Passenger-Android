@@ -163,6 +163,78 @@ public class JSONParser {
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
 		
+//		{
+//	    "login": {
+//	        "user_data": {
+//	            "user_name": "Driver 5",
+//	            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//	            "phone_no": "+919780298413",
+//	            "current_user_status": 2,
+//	            "access_token": "b1e785f46e944e89b11a5741579e4aeccfa5aa0ca832267ba236358b069bacdc",
+//	            "referral_code": "DRIVER65",
+//	            "can_change_location": 1,
+//	            "can_schedule": 1,
+//	            "scheduling_limit": 60,
+//	            "is_available": 1,
+//	            "gcm_intent": 1,
+//	            "nukkad_enable": 1,
+//	            "fare_details": [
+//	                {
+//	                    "id": 1,
+//	                    "fare_fixed": 25,
+//	                    "fare_per_km": 6,
+//	                    "fare_threshold_distance": 2,
+//	                    "fare_per_min": 1,
+//	                    "fare_threshold_time": 6
+//	                }
+//	            ],
+//	            "exceptional_driver": 0
+//	        },
+//	        "popup": 0
+//	    },
+//	    "last_ride": {  or null
+//	        "engagement_id": 5982,
+//	        "fare": 25,
+//	        "to_pay": 25,
+//	        "discount": 0,
+//	        "distance_travelled": 0,
+//	        "ride_time": 1,
+//	        "wait_time": 0,
+//	        "coupon": null,
+//	        "rate_us": 0,
+//	        "driver_info": {
+//	            "id": 234,
+//	            "name": "Driver 1",
+//	            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png"
+//	        }
+//	    },
+//	    "status": {
+//	        "log": "No active session",
+//	        "flag": 131
+//	    },
+//	    "drivers": {
+//	        "data": [
+//	            {
+//	                "user_name": "Driver 1",
+//	                "phone_no": "+919999999999",
+//	                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//	                "driver_car_image": "http://images.thecarconnection.com/lrg/krasnov-igor-muska-supercar-concept-rendering-006_100201743_l.jpg",
+//	                "latitude": 30.718959,
+//	                "longitude": 76.810215,
+//	                "user_id": 234,
+//	                "driver_id": 234,
+//	                "home_latitude": 0,
+//	                "home_longitude": 0,
+//	                "start_time": "02:30:00",
+//	                "end_time": "18:29:59",
+//	                "timing_id": 14,
+//	                "distance": 7.03,
+//	                "rating": 4.786516853932584
+//	            }
+//	        ]
+//	    }
+//	}
+		
 		JSONObject jObj = new JSONObject(response);
 		
 		//Fetching login data
@@ -305,7 +377,7 @@ public class JSONParser {
 		    	    					 double requestLatitude = jActiveRequest.getDouble("pickup_latitude");
 		    	    					 double requestLongitude = jActiveRequest.getDouble("pickup_longitude");
 		    	    					 String requestAddress = jActiveRequest.getString("pickup_location_address");
-		    	    					 String requestStartTime = new DateOperations().getSixtySecAfterCurrentTime();
+		    	    					 String requestStartTime = DateOperations.getSixtySecAfterCurrentTime();
 		    	    					 
 		    	    					 Data.driverRideRequests.add(new DriverRideRequest(requestEngagementId, requestUserId, 
 		    	    								new LatLng(requestLatitude, requestLongitude), requestStartTime, requestAddress));
@@ -318,8 +390,6 @@ public class JSONParser {
 									if(jActiveRequests.length() == 0){
 										GCMIntentService.stopRing();
 									}
-									
-
 									
 								}
 								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
@@ -374,7 +444,7 @@ public class JSONParser {
 			else{
 				screenMode = "";
 			}
-			
+
 			
 			if("".equalsIgnoreCase(screenMode)){
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;

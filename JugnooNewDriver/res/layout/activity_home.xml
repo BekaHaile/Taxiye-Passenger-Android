@@ -432,7 +432,6 @@
                         android:background="@color/white_translucent"
                         android:gravity="center"
                         android:padding="25px"
-                        android:singleLine="true"
                         android:text="Wait here..."
                         android:textColor="@color/bg_grey_opaque"
                         android:textSize="32px" 
@@ -1592,35 +1591,6 @@
                         android:tag="mwar"
                         android:visibility="gone" />
                 </RelativeLayout>
-
-                <ImageView
-                    android:id="@+id/christmasBell1"
-                    android:layout_width="27px"
-                    android:layout_height="91px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginRight="27px"
-                    android:layout_marginTop="70px"
-                    android:src="@drawable/bell_1" />
-
-                <ImageView
-                    android:id="@+id/christmasBell2"
-                    android:layout_width="27px"
-                    android:layout_height="128px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="43px"
-                    android:layout_marginTop="70px"
-                    android:src="@drawable/bell_2" />
-
-                <Button
-                    android:id="@+id/christmasButton"
-                    android:layout_width="73px"
-                    android:layout_height="70px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15px"
-                    android:layout_marginTop="10px"
-                    android:background="@drawable/christmas_gift_button_selector"
-                    android:tag="mwar" />
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>
