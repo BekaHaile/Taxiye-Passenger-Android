@@ -1,10 +1,12 @@
 package product.clicklabs.jugnoo.datastructure;
 
 public class UserData {
-	public String accessToken, userName, userImage, referralCode, phoneNo, nukkadIcon;
-	public int canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable;
+	public String accessToken, userName, userImage, referralCode, phoneNo, nukkadIcon, jugnooMealsPackageName;
+	public int canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, enableJugnooMeals,
+		freeRideIconDisable;
 	public UserData(String accessToken, String userName, String userImage, String referralCode, String phoneNo,
-			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, int nukkadEnable, String nukkadIcon){
+			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
+			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable){
 		this.accessToken = accessToken;
 		this.userName = userName;
 		this.userImage = userImage;
@@ -19,5 +21,8 @@ public class UserData {
 		this.christmasIconEnable = christmasIconEnable;
 		this.nukkadEnable = nukkadEnable;
 		this.nukkadIcon = nukkadIcon;
+		this.enableJugnooMeals = enableJugnooMeals;
+		this.jugnooMealsPackageName = jugnooMealsPackageName;
+		this.freeRideIconDisable = freeRideIconDisable;
 	}
 }

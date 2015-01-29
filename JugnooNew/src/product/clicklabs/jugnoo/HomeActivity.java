@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -184,7 +185,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView title;
 	ImageView jugnooLogo;
 	Button checkServerBtn, toggleDebugModeBtn;
-	ImageView jugnooShopImageView;
+	ImageView jugnooShopImageView, jugnooMealsImageView;
 	
 	
 	
@@ -523,6 +524,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 //		favBtn = (Button) findViewById(R.id.favBtn);
 		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
+		jugnooMealsImageView = (ImageView) findViewById(R.id.jugnooMealsImageView);
 		
 		
 		
@@ -865,6 +867,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    		}
 				}
 				
+			}
+		});
+		
+		jugnooMealsImageView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				try {
+					if(Data.userData != null){
+						if(Data.userData.enableJugnooMeals == 1){
+							CustomAppLauncher.launchApp(HomeActivity.this, Data.userData.jugnooMealsPackageName);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -1755,6 +1773,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			enableJugnooShopUI();
+			enableJugnooMealsUI();
 			
 			switchUserScreen(userMode);
 			
@@ -1801,6 +1820,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		else{
 			jugnooShopImageView.setVisibility(View.GONE);
+		}
+	}
+	
+	
+	public void enableJugnooMealsUI(){
+		if(UserMode.PASSENGER == userMode){
+			if(Data.userData != null){
+	    		if(Data.userData.enableJugnooMeals == 1){
+	    			jugnooMealsImageView.setVisibility(View.VISIBLE);
+	    		}
+	    		else{
+	    			jugnooMealsImageView.setVisibility(View.GONE);
+	    		}
+			}
+			else{
+				jugnooMealsImageView.setVisibility(View.GONE);
+			}
+		}
+		else{
+			jugnooMealsImageView.setVisibility(View.GONE);
 		}
 	}
 	
@@ -2857,11 +2896,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
 		try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).skipMemoryCache().transform(new RoundBorderTransform()).into(driverCarImage);}catch(Exception e){}
 		
-		if(1 == Data.assignedDriverInfo.freeRide){
-			passengerFreeRideIcon.setVisibility(View.VISIBLE);
+		if(1 == Data.userData.freeRideIconDisable){
+			passengerFreeRideIcon.setVisibility(View.GONE);
 		}
 		else{
-			passengerFreeRideIcon.setVisibility(View.GONE);
+			if(1 == Data.assignedDriverInfo.freeRide){
+				passengerFreeRideIcon.setVisibility(View.VISIBLE);
+			}
+			else{
+				passengerFreeRideIcon.setVisibility(View.GONE);
+			}
 		}
 		
 	}
@@ -4273,6 +4317,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 									
 									enableJugnooShopUI();
+									enableJugnooMealsUI();
 									
 								}
 							}  catch (Exception exception) {
@@ -5222,7 +5267,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									passengerScreenMode = PassengerScreenMode.P_INITIAL;
 									switchPassengerScreen(passengerScreenMode);
 									
-									Data.customerRateApp = 1;
 									if(givenRating >= 4 && Data.customerRateApp == 1){
 										rateAppPopup(activity);
 									}
@@ -5931,7 +5975,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 							@Override
 							public void onSuccess(String response) {
-								Log.v("Server response", "response = " + response);
+								Log.i("Server response accept_app_rating_request", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
 									int flag = jObj.getInt("flag");
@@ -5957,13 +6001,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							}
 						});
 			}
-			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	

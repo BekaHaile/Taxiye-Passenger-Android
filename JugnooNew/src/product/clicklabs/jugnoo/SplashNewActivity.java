@@ -110,6 +110,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 //		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 //		}
 		
+//		Data.getAccessToken(this);
+//		Data.removeAccessToken(this);
+		
 		try {
 			Uri targetUri = getIntent().getData();
 			Log.e("targetUri =======********", "="+targetUri);
@@ -796,7 +799,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
-	//TODO debug code confirm popup
 		public void confirmDebugPasswordPopup(final Activity activity){
 
 			try {
@@ -886,7 +888,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 	
 	
-		//TODO change server link popup
 		void changeServerLinkPopup(final Activity activity) {
 				try {
 					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -1197,5 +1198,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
 	
 }

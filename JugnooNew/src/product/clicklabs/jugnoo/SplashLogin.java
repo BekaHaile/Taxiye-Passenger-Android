@@ -375,7 +375,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
-		super.onBackPressed();
 	}
 	
 	

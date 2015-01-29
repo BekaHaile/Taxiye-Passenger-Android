@@ -266,7 +266,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 						insertScheduleRideAsync(ScheduleRideActivity.this, selectedScheduleCalendar, selectedScheduleLatLng);
 					}
 				} else {
-					Toast.makeText(ScheduleRideActivity.this, "Please while we get your pickup address", Toast.LENGTH_SHORT).show();
+					Toast.makeText(ScheduleRideActivity.this, "Please wait while we get your pickup address", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});

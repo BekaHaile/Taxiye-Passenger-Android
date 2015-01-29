@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.utils;
 
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import android.location.Location;
 
@@ -109,20 +112,16 @@ public class MapUtils {
 	
 	
 	
-	
-	
-	//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
-	public static String getGAPIAddress(LatLng latLng) {
-		String fullAddress = "Unnamed";
+	public static GAPIAddress getGAPIAddressObject(LatLng latLng){
+		GAPIAddress fullAddress = new GAPIAddress(new ArrayList<String>(), "Unnamed", "not_found");
 		try {
-
 			JSONObject jsonObj = new JSONObject(
 					new HttpRequester().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?"
 									+ "latlng="
 									+ latLng.latitude
 									+ ","
 									+ latLng.longitude + "&sensor=true"));
-
+			//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
 			
 			String status = jsonObj.getString("status");
 			if (status.equalsIgnoreCase("OK")) {
@@ -133,8 +132,8 @@ public class MapUtils {
 
 				if (zero.has("address_components")) {
 					try {
-
 						ArrayList<String> selectedAddressComponentsArr = new ArrayList<String>();
+						
 						JSONArray addressComponents = zero.getJSONArray("address_components");
 
 						for (int i = 0; i < addressComponents.length(); i++) {
@@ -202,26 +201,25 @@ public class MapUtils {
 								}
 							}
 						}
-
-						fullAddress = "";
-						if (selectedAddressComponentsArr.size() > 0) {
-							for (int i = 0; i < selectedAddressComponentsArr.size(); i++) {
-								if (i < selectedAddressComponentsArr.size() - 1) {
-									fullAddress = fullAddress + selectedAddressComponentsArr.get(i) + ", ";
+						fullAddress = new GAPIAddress(selectedAddressComponentsArr, zero.getString("formatted_address"), postalCode);
+						if (fullAddress.addressComponents.size() > 0) {
+							String lessRedundantformattedAddress = "";
+							for (int i = 0; i < fullAddress.addressComponents.size(); i++) {
+								if (i < fullAddress.addressComponents.size() - 1) {
+									lessRedundantformattedAddress = lessRedundantformattedAddress + fullAddress.addressComponents.get(i) + ", ";
 								} else {
-									fullAddress = fullAddress + selectedAddressComponentsArr.get(i);
+									lessRedundantformattedAddress = lessRedundantformattedAddress + fullAddress.addressComponents.get(i);
 								}
 							}
-						} else {
-							fullAddress = zero.getString("formatted_address");
+							fullAddress.formattedAddress = lessRedundantformattedAddress;
 						}
-
 					} catch (Exception e) {
 						e.printStackTrace();
-						fullAddress = zero.getString("formatted_address");
+						fullAddress.formattedAddress = zero.getString("formatted_address");
 					}
-				} else {
-					fullAddress = zero.getString("formatted_address");
+				}
+				else{
+					fullAddress.formattedAddress = zero.getString("formatted_address");
 				}
 			}
 		} catch (Exception e) {
@@ -232,12 +230,24 @@ public class MapUtils {
 	
 	
 	
-	/**
-	 * To search addresses related to particular address available on google
-	 */
+	public static String getGAPIAddress(LatLng latLng) {
+		String fullAddress = "Unnamed";
+		try {
+			GAPIAddress gapiAddress = getGAPIAddressObject(latLng);
+			fullAddress = gapiAddress.formattedAddress;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return fullAddress;
+	}
+	
+	
+	
+	
 	public static ArrayList<SearchResult> getSearchResultsFromGooglePlaces(String searchText) {
 		ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
 		try{
+			searchText = URLEncoder.encode(searchText, "utf8");
 			String ignr2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location="
 					+ "30.75"
 					+ ","
@@ -252,8 +262,6 @@ public class MapUtils {
 			
 			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
 
-			Log.writeLogToFile("search", jsonObj.toString());
-			
 			JSONArray info = null;
 			info = jsonObj.getJSONArray("results");
 			for (int i = 0; i < info.length(); i++) {
@@ -269,5 +277,66 @@ public class MapUtils {
 		}
 		return searchResults;
 	}
+	
+	public static ArrayList<AutoCompleteSearchResult> getAutoCompleteSearchResultsFromGooglePlaces(String searchText) {
+		ArrayList<AutoCompleteSearchResult> searchResults = new ArrayList<AutoCompleteSearchResult>();
+		try{
+			searchText = URLEncoder.encode(searchText, "utf8");
+			String ignr2 = "https://maps.googleapis.com/maps/api/place/autocomplete/json?"+
+					"input="+ URLEncoder.encode(searchText, "utf8")
+					+"&type=address&location=" 
+					+ "" + "," + ""+ "&radius=500"
+					+"&key="+Data.MAPS_BROWSER_KEY;
+			//https://maps.googleapis.com/maps/api/place/autocomplete/json?input=pizza&type=address&location=30.75,76.78&radius=500&key=
+			//AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
+			ignr2 = ignr2.replaceAll(" ", "%20");
+			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
+			JSONArray info = null;
+			info = jsonObj.getJSONArray("predictions");
+			for (int i = 0; i < info.length(); i++) {
+				searchResults.add(new AutoCompleteSearchResult(info.getJSONObject(i).getString("description"), info.getJSONObject(i).getString("place_id")));
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return searchResults;
+	}
+	
+	
+	public static SearchResult getSearchResultsFromPlaceIdGooglePlaces(String placeId) {
+		try{
+			String ignr2 = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId +"&key="+Data.MAPS_BROWSER_KEY;
+			//https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJqX9P5SDtDzkR2oUORhzrAhs&key=AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
+			ignr2 = ignr2.replaceAll(" ", "%20");
+			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
+			JSONObject info = null;
+			info = jsonObj.getJSONObject("result");
+			SearchResult result = new SearchResult(info.getString("name"), info.getString("formatted_address"), 
+					new LatLng(info.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+							info.getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
+			return result;
+		} catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	public static String getOSMZIPCodeForLatLng(LatLng latLng) {
+		try{
+			String link = "http://nominatim.openstreetmap.org/reverse?format=json&lat="
+					+ latLng.latitude + "&lon=" + latLng.longitude + "&zoom=18&addressdetails=1";
+			////http://nominatim.openstreetmap.org/reverse?format=json&lat=30.75&lon=76.75&zoom=18&addressdetails=1
+			link = link.replaceAll(" ", "%20");
+			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(link));
+			JSONObject address = jsonObj.getJSONObject("address");
+			String zipCode = address.getString("postcode");
+			return zipCode;
+		} catch(Exception e){
+			e.printStackTrace();
+			return "not_found";
+		}
+	}
+	
 	
 }

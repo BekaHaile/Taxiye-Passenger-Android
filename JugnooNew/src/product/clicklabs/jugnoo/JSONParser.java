@@ -101,8 +101,9 @@ public class JSONParser {
 	
 	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
 		
-		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0, nukkadEnable = 0;
-		String phoneNo = "", nukkadIcon = "";
+		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, 
+				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;;
+		String phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk";
 		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
@@ -162,11 +163,30 @@ public class JSONParser {
 			e.printStackTrace();
 		}
 		
-		//"gcm_intent": 0, christmas_icon_enable
+		try{
+			if(userData.has("enable_jugnoo_meals")){
+				enableJugnooMeals = userData.getInt("enable_jugnoo_meals");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		try{
+			if(userData.has("jugnoo_meals_package_name")){
+				jugnooMealsPackageName = userData.getString("jugnoo_meals_package_name");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		if(userData.has("free_ride_icon_disable")){
+			freeRideIconDisable = userData.getInt("free_ride_icon_disable");
+		}
 		
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
-				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, nukkadIcon);
+				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
+				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{

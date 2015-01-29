@@ -4,6 +4,8 @@ import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -24,6 +26,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.util.Base64;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
@@ -330,5 +333,54 @@ public class Data {
 		return mainClient;
 	}
 	
+	
+	
+	public static void getAccessToken(Context context) {
+		try {
+			Context myContext = context.createPackageContext("com.cdk23.nlk", Context.CONTEXT_IGNORE_SECURITY); 
+			SharedPreferences testPrefs = myContext.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+
+			String authKey = "";
+			
+			Map<String, ?> items = testPrefs.getAll();
+			Log.e("items.toString()",  "="+items.toString());
+			for (String s : items.keySet()) {
+				if("authKey".equalsIgnoreCase(s)){
+					authKey = testPrefs.getString("authKey", "");
+					break;
+				}
+			}
+			Toast.makeText(context, authKey, Toast.LENGTH_SHORT).show();
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void removeAccessToken(Context context) {
+		try {
+			Context myContext = context.createPackageContext("com.cdk23.nlk", Context.CONTEXT_IGNORE_SECURITY); 
+			SharedPreferences testPrefs = myContext.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+			SharedPreferences.Editor editor = testPrefs.edit();
+			editor.putString("authKey", "");
+			editor.commit();
+			editor.apply();
+			
+			String authKey = "";
+			
+			Map<String, ?> items = testPrefs.getAll();
+			Log.e("items.toString()",  "="+items.toString());
+			for (String s : items.keySet()) {
+				if("authKey".equalsIgnoreCase(s)){
+					authKey = testPrefs.getString("authKey", "");
+					break;
+				}
+			}
+			Toast.makeText(context, "removed"+authKey, Toast.LENGTH_SHORT).show();
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 }
