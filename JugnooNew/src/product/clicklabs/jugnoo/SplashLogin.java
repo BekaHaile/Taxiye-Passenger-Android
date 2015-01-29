@@ -714,12 +714,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			FlurryAgent.logEvent("App Login", articleParams);
 			
 			loginDataFetched = false;
-			if(Data.termsAgreed == 1){
-				startActivity(new Intent(SplashLogin.this, HomeActivity.class));
-			}
-			else{
-				startActivity(new Intent(SplashLogin.this, TermsConditionsActivity.class));
-			}
+			startActivity(new Intent(SplashLogin.this, HomeActivity.class));
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
@@ -757,7 +752,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	public void onLocationChanged(Location location, int priority) {
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(SplashLogin.this, location);
 	}
 	
 }

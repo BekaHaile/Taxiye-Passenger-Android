@@ -9,15 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
-import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -37,29 +34,18 @@ public class JSONParser {
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		
-		Data.termsAgreed = 1;
-		
 		Data.userData = parseUserData(context, userData);
 		
-		if(Data.termsAgreed == 1){
-			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			Editor editor = pref.edit();
-			editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-			editor.commit();
-		}
+		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		Editor editor = pref.edit();
+		editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
+		editor.commit();
 		
 		try{
 			int currentUserStatus = userData.getInt("current_user_status");
 			
-			if(currentUserStatus == 1){
-				Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
-				new DriverServiceOperations().startDriverService(context);
-				HomeActivity.userMode = UserMode.DRIVER;
-				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
-			}
-			else if(currentUserStatus == 2){
+			if(currentUserStatus == 2){
 				Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
-				new DriverServiceOperations().stopService(context);
 				HomeActivity.userMode = UserMode.PASSENGER;
 				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			}
@@ -281,7 +267,6 @@ public class JSONParser {
 			JSONObject jDriversObject = jObj.getJSONObject("drivers");
 			parseDriversToShow(jDriversObject, "data");
 			Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
-			new DriverServiceOperations().stopService(context);
 		}
 		else if(currentUserStatus == 1){
 			Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
@@ -417,220 +402,7 @@ public class JSONParser {
 		
 		String returnResponse = "";
 		
-		if(currentUserStatus == 1){
-			
-			String screenMode = "";
-			
-			int engagementStatus = -1;
-			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "", schedulePickupTime = "";
-			
-			try{
-							
-							if(jObject1.has("error")){
-								returnResponse = HttpRequester.SERVER_TIMEOUT;
-								return returnResponse;
-							}
-							else{
-							
-//							{
-//								"flag": constants.responseFlags.ACTIVE_REQUESTS,
-//								"active_requests":[
-//									{
-//								“engagement_id”, 
-//								“user_id”, 
-//								“pickup_latitude”, 
-//								“pickup_longitude”, 
-//								“pickup_location_address”, 
-//								“current_time”
-//								}
-//								]};
-							
-							
-							
-//							{
-//							"flag": constants.responseFlags.ENGAGEMENT_DATA,
-//							"last_engagement_info":[
-//							{
-//							“user_id“,
-//							“pickup_latitude“,
-//							“pickup_longitude“,
-//							“engagement_id“,
-//							“status“,
-//							“user_name“,
-//							“phone_no“,
-//							“user_image“,
-//							“rating“
-//							}
-//							]
-							
-								int flag = jObject1.getInt("flag");
-								
-								if(ApiResponseFlags.ACTIVE_REQUESTS.getOrdinal() == flag){
-									
-									JSONArray jActiveRequests = jObject1.getJSONArray("active_requests");
-									
-									Database2.getInstance(context).deleteAllDriverRequests();
-									for(int i=0; i<jActiveRequests.length(); i++){
-										JSONObject jActiveRequest = jActiveRequests.getJSONObject(i);
-										 String requestEngagementId = jActiveRequest.getString("engagement_id");
-		    	    					 String requestUserId = jActiveRequest.getString("user_id");
-		    	    					 double requestLatitude = jActiveRequest.getDouble("pickup_latitude");
-		    	    					 double requestLongitude = jActiveRequest.getDouble("pickup_longitude");
-		    	    					 String requestAddress = jActiveRequest.getString("pickup_location_address");
-		    	    					 String requestStartTime = new DateOperations().getSixtySecAfterCurrentTime();
-		    	    					 
-		    	    					 Database2.getInstance(context).insertDriverRequest(requestEngagementId, requestUserId, 
-		    	    							 ""+requestLatitude, ""+requestLongitude, requestStartTime, requestAddress);
-		    	    					 
-		    	    					 Log.i("inserter in db", "insertDriverRequest = "+requestEngagementId);
-									}
-									
-									Database2.getInstance(context).close();
-									
-									if(jActiveRequests.length() == 0){
-										GCMIntentService.stopRing();
-									}
-									
-								}
-								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
-									JSONArray lastEngInfoArr = jObject1.getJSONArray("last_engagement_info");
-									JSONObject jObject = lastEngInfoArr.getJSONObject(0);
-									
-									engagementStatus = jObject.getInt("status");
-									
-									if((EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus) || 
-											(EngagementStatus.STARTED.getOrdinal() == engagementStatus)){
-										engagementId = jObject.getString("engagement_id");
-										userId = jObject.getString("user_id");
-										latitude = jObject.getString("pickup_latitude");
-										longitude = jObject.getString("pickup_longitude");
-										customerName = jObject.getString("user_name");
-										customerImage = jObject.getString("user_image");
-										customerPhone = jObject.getString("phone_no");
-										customerRating = jObject.getString("rating");
-										
-										int isScheduled = 0;
-										if(jObject.has("is_scheduled")){
-											isScheduled = jObject.getInt("is_scheduled");
-											if(isScheduled == 1 && jObject.has("pickup_time")){
-												schedulePickupTime = jObject.getString("pickup_time");
-											}
-										}
-									}
-								}
-							
-							}
-			} catch(Exception e){
-				e.printStackTrace();
-				engagementStatus = -1;
-				returnResponse = HttpRequester.SERVER_TIMEOUT;
-				return returnResponse;
-			}
-			
-			
-			HomeActivity.userMode = UserMode.DRIVER;
-			
-			// 0 for request, 1 for accepted,2 for started,3 for ended, 4 for rejected by driver, 5 for rejected by user,6 for timeout, 7 for nullified by chrone
-			if(EngagementStatus.ACCEPTED.getOrdinal() == engagementStatus){
-				screenMode = Data.D_START_RIDE;
-			}
-			else if(EngagementStatus.STARTED.getOrdinal() == engagementStatus){
-				screenMode = Data.D_IN_RIDE;
-			}
-			else{
-				screenMode = "";
-			}
-			
-			
-			if("".equalsIgnoreCase(screenMode)){
-				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
-				clearSPData(context);
-			}
-			else{
-				
-				if(Data.D_START_RIDE.equalsIgnoreCase(screenMode)){
-					HomeActivity.driverScreenMode = DriverScreenMode.D_START_RIDE;
-					
-					Data.dEngagementId = engagementId;
-					Data.dCustomerId = userId;
-					
-					String lat = latitude;
-					String lng = longitude;
-					
-					Data.dCustLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-					
-					String name = customerName;
-					String image = customerImage;
-					String phone = customerPhone;
-					String rating = customerRating;
-					
-					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
-					Data.assignedCustomerInfo.schedulePickupTime = schedulePickupTime;
-					
-				}
-				else if(Data.D_IN_RIDE.equalsIgnoreCase(screenMode)){
-					
-					SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-					
-					HomeActivity.driverScreenMode = DriverScreenMode.D_IN_RIDE;
-					
-					Data.dEngagementId = engagementId;
-					Data.dCustomerId = userId;
-					
-					String lat = latitude;
-					String lng = longitude;
-					
-					Data.dCustLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-					
-					String name = customerName;
-					String image = customerImage;
-					String phone = customerPhone;
-					String rating = customerRating;
-					
-					
-					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
-					
-					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
-					HomeActivity.previousWaitTime = Long.parseLong(pref.getString(Data.SP_WAIT_TIME, "0"));
-					
-//					double previousRideTime = Double.parseDouble(pref.getString(Data.SP_RIDE_TIME, "0"));
-					long rideStartTime = Long.parseLong(pref.getString(Data.SP_RIDE_START_TIME, ""+System.currentTimeMillis()));
-					long timeDiffToAdd = System.currentTimeMillis() - rideStartTime;
-					if(timeDiffToAdd > 0){
-						HomeActivity.previousRideTime = timeDiffToAdd;
-					}
-					else{
-						HomeActivity.previousRideTime = 0;
-					}
-					
-					
-					
-					HomeActivity.waitStart = 2;
-					
-					String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
-					String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-					
-					Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
-					
-					Log.e("Data on app restart", "-----");
-					Log.i("HomeActivity.totalDistance", "="+HomeActivity.totalDistance);
-					Log.i("Data.startRidePreviousLatLng", "="+Data.startRidePreviousLatLng);
-					Log.e("----------", "-----");
-					
-					Log.writePathLogToFile(Data.dEngagementId, "Got from SP totalDistance = "+HomeActivity.totalDistance);
-					Log.writePathLogToFile(Data.dEngagementId, "Got from SP Data.startRidePreviousLatLng = "+Data.startRidePreviousLatLng);
-					
-				}
-				else{
-					HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
-				}
-				
-			}
-			
-			
-			
-		}
-		else{
+		if(currentUserStatus == 2){
 			
 			String screenMode = "";
 

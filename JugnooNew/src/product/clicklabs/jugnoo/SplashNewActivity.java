@@ -447,16 +447,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.deviceToken);
 				
-				final String serviceRestartOnReboot = Database2.getInstance(activity).getDriverServiceRun();
-				if(Database2.NO.equalsIgnoreCase(serviceRestartOnReboot)){
-					params.put("latitude", "0");
-					params.put("longitude", "0");
-				}
-				else{
-					params.put("latitude", ""+Data.latitude);
-					params.put("longitude", ""+Data.longitude);
-				}
-				Database2.getInstance(activity).close();
+				
+				params.put("latitude", ""+Data.latitude);
+				params.put("longitude", ""+Data.longitude);
 				
 				
 				params.put("app_version", ""+Data.appVersion);
@@ -664,7 +657,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
-//			textHead.setText(title);
 			textMessage.setText(message);
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
@@ -1019,188 +1011,11 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
-    class SingleLocationSender {
-
-    	public SingleLocationListener listener;
-    	public LocationManager locationManager;
-    	public Location location;
-    	public String accessToken, deviceToken, SERVER_URL;
-    	
-    	/**
-    	 * Initialize location fetcher object with selected listeners
-    	 * @param context
-    	 */
-		public SingleLocationSender(Context context, String accessToken, String deviceToken, String SERVER_URL) {
-			this.accessToken = accessToken;
-			this.deviceToken = deviceToken;
-			this.SERVER_URL = SERVER_URL;
-			locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-			if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-				listener = new SingleLocationListener();
-				locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, listener, null);
-			}
-		}
-    	
-    	public void destroy(){
-    		try{
-    			locationManager.removeUpdates(listener);
-    		}catch(Exception e){
-    		}
-    	}
-
-    	
-
-    	class SingleLocationListener implements LocationListener {
-
-    		public void onLocationChanged(Location loc) {
-    			SingleLocationSender.this.location = loc;
-    			new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, loc);
-    			new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						new DriverLocationDispatcher().sendLocationToServer(SplashNewActivity.this, "LocationReciever");
-					}
-				}).start();
-    			
-    		}
-
-    		public void onProviderDisabled(String provider) {
-    		}
-
-    		public void onProviderEnabled(String provider) {
-    		}
-
-    		public void onStatusChanged(String provider, int status, Bundle extras) {
-    		}
-    }
-    }
-
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, location);
 	}
-	
-	
-	public static boolean isLastLocationUpdateFine(Activity activity){
-		try {
-			String userMode = Database2.getInstance(activity).getUserMode();
-			String driverScreenMode = Database2.getInstance(activity).getDriverScreenMode();
-			long lastLocationUpdateTime = Database2.getInstance(activity).getDriverLastLocationTime();
-			Database2.getInstance(activity).close();
-			
-			long currentTime = System.currentTimeMillis();
-			
-			if(lastLocationUpdateTime == 0){
-				lastLocationUpdateTime = System.currentTimeMillis();
-			}
-			
-			long systemUpTime = SystemClock.uptimeMillis();
-			
-//			Log.e("isLastLocationUpdateFine lastLocationUpdateTime", "="+(currentTime - (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT)));
-//			Log.e("isLastLocationUpdateFine systemUpTime", "="+systemUpTime);
-//			Log.e("isLastLocationUpdateFine userMode", "="+userMode);
-//			Log.e("isLastLocationUpdateFine driverScreenMode", "="+driverScreenMode);
-			
-			
-			if(systemUpTime > HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT){
-//				Log.i("systemUpTime", "greater");
-				if(Database2.UM_DRIVER.equalsIgnoreCase(userMode) && 
-						(currentTime >= (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT))){
-					if(Database2.VULNERABLE.equalsIgnoreCase(driverScreenMode)){
-						showRestartPhonePopup(activity);
-						return false;
-					}
-					else{
-						dismissRestartPhonePopup();
-						return true;
-					}
-				}
-				else{
-					dismissRestartPhonePopup();
-					return true;
-				}
-			}
-			else{
-				dismissRestartPhonePopup();
-				return true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			dismissRestartPhonePopup();
-			return true;
-		}
-	}
-	
-	
-	public static Dialog restartPhoneDialog;
-	public static void showRestartPhonePopup(final Activity activity){
-		try {
-			if(restartPhoneDialog == null || !restartPhoneDialog.isShowing()){
-				restartPhoneDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				restartPhoneDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				restartPhoneDialog.setContentView(R.layout.no_driver_dialog);
-	
-				FrameLayout frameLayout = (FrameLayout) restartPhoneDialog.findViewById(R.id.rv);
-				new ASSL(activity, frameLayout, 1134, 720, true);
-	
-				WindowManager.LayoutParams layoutParams = restartPhoneDialog.getWindow().getAttributes();
-				layoutParams.dimAmount = 0.6f;
-				restartPhoneDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				restartPhoneDialog.setCancelable(false);
-				restartPhoneDialog.setCanceledOnTouchOutside(false);
-	
-				TextView textHead = (TextView) restartPhoneDialog.findViewById(R.id.textHead);
-				textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-				textHead.setVisibility(View.GONE);
-				TextView textMessage = (TextView) restartPhoneDialog.findViewById(R.id.textMessage);
-				textMessage.setTypeface(Data.regularFont(activity));
-	
-				textMessage.setMovementMethod(new ScrollingMovementMethod());
-				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
-				
-				textMessage.setText("Network Problem. Please Switch OFF and Switch ON your phone and wait for 5 minutes to continue using Jugnoo.");
-				
-	
-				Button btnOk = (Button) restartPhoneDialog.findViewById(R.id.btnOk);
-				btnOk.setTypeface(Data.regularFont(activity));
-				Button crossbtn = (Button) restartPhoneDialog
-						.findViewById(R.id.crossbtn);
-				crossbtn.setTypeface(Data.regularFont(activity));
-				crossbtn.setVisibility(View.GONE);
-	
-				btnOk.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						restartPhoneDialog.dismiss();
-						activity.finish();
-					}
-				});
-	
-				restartPhoneDialog.show();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	public static void dismissRestartPhonePopup(){
-		try{
-			if(restartPhoneDialog != null && restartPhoneDialog.isShowing()){
-				restartPhoneDialog.dismiss();
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	
 	
 }

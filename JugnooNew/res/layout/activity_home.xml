@@ -1786,105 +1786,13 @@
                     android:splitMotionEvents="false" >
 
                     <RelativeLayout
-                        android:id="@+id/driverModeRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:layout_marginTop="40px"
-                        android:background="@drawable/transparent"
-                        android:splitMotionEvents="false" >
-
-                        <TextView
-                            android:id="@+id/driverModeText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/driver_mode"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:id="@+id/driverModeToggle"
-                            android:layout_width="90px"
-                            android:layout_height="72px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"
-                            android:src="@drawable/on"
-                            android:tag="mwar" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/jugnooONRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/transparent"
-                        android:splitMotionEvents="false" >
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-
-                        <TextView
-                            android:id="@+id/jugnooONText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/jugnoo_on"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:id="@+id/jugnooONToggle"
-                            android:layout_width="90px"
-                            android:layout_height="72px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"
-                            android:src="@drawable/on"
-                            android:tag="mwar" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/driverTypeRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false"
-                        android:visibility="gone" >
-
-                        <TextView
-                            android:id="@+id/driverTypeText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/driver_type"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
                         android:id="@+id/couponsRl"
                         android:layout_width="match_parent"
                         android:layout_height="84px"
                         android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false" >
+                        android:splitMotionEvents="false"
+                		android:layout_marginTop="40px"
+                         >
 
                         <TextView
                             android:id="@+id/couponsText"
@@ -1998,31 +1906,6 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="42px"
                             android:text="Help"
-                            android:textColor="@color/white"
-                            android:textSize="34px" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="3px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@drawable/menu_divider" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/languagePrefrencesRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="84px"
-                        android:background="@drawable/menu_item_selector"
-                        android:splitMotionEvents="false"
-                        android:visibility="gone" >
-
-                        <TextView
-                            android:id="@+id/languagePrefrencesText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="42px"
-                            android:text="@string/language_preferences"
                             android:textColor="@color/white"
                             android:textSize="34px" />
 

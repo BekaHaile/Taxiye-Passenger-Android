@@ -793,13 +793,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			loginDataFetched = false;
 			Database2.getInstance(RegisterScreen.this).updateDriverLastLocationTime();
 			Database2.getInstance(RegisterScreen.this).close();
-//			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
-			if(Data.termsAgreed == 1){
-				startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
-			}
-			else{
-				startActivity(new Intent(RegisterScreen.this, TermsConditionsActivity.class));
-			}
+			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
 		}
@@ -859,10 +853,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		// TODO Auto-generated method stub
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(RegisterScreen.this, location);
 	}
 	
 }

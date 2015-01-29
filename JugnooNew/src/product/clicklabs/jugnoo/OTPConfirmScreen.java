@@ -619,12 +619,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			loginDataFetched = false;
 			Database2.getInstance(OTPConfirmScreen.this).updateDriverLastLocationTime();
 			Database2.getInstance(OTPConfirmScreen.this).close();
-			if(Data.termsAgreed == 1){
-				startActivity(new Intent(OTPConfirmScreen.this, HomeActivity.class));
-			}
-			else{
-				startActivity(new Intent(OTPConfirmScreen.this, TermsConditionsActivity.class));
-			}
+			startActivity(new Intent(OTPConfirmScreen.this, HomeActivity.class));
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
 		}
@@ -683,7 +678,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		new DriverLocationDispatcher().saveLocationToDatabase(OTPConfirmScreen.this, location);
+		Data.latitude = location.getLatitude();
+		Data.longitude = location.getLongitude();
 	}
 	
 }

@@ -4,7 +4,6 @@ import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -183,8 +182,6 @@ public class Data {
 	
 	
 	public static double latitude, longitude;
-	
-	public static int termsAgreed = 0;  // 0: not agreed,  1: agreed
 	
 	
 	public static ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
