@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverType;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 import android.content.Context;
@@ -36,6 +37,10 @@ import com.loopj.android.http.AsyncHttpClient;
  *
  */
 public class Data {
+	
+	public static final String CLIENT_ID = "EEBUOvQq7RRJBxJm";
+	public static final String CLIENT_SHARED_SECRET = "nqaK7HTwDT3epcpR5JuMWwojFv0KJnIv";
+	
 	
 	//TODO change flurry key
 	//H8Y94ND8GPQTKKG5R2VY
@@ -218,12 +223,12 @@ public class Data {
 	public static double totalDistance = 0, totalFare = 0;
 	public static String waitTime = "", rideTime = "";
 	public static JSONObject couponJSON;
-	public static int customerRateApp = 0;
+	public static int customerRateAppFlag = 0;
 	
 	
 	public static LatLng pickupLatLng;
 
-	public static String fbAccessToken = "", fbId = "", fbFirstName = "", fbLastName = "", fbUserName = "", fbUserEmail = "";
+	public static FacebookUserData facebookUserData;
 	public static int autoShare = 0;
 	
 	
@@ -242,13 +247,10 @@ public class Data {
 			cEngagementId = ""; cDriverId = "";
 			assignedDriverInfo = null;
 			pickupLatLng = null;
-			fbAccessToken = ""; fbId = ""; fbFirstName = ""; fbLastName = ""; fbUserName = ""; fbUserEmail = "";
+			facebookUserData = null;
 			
-			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			Editor editor = pref.edit();
-			editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
-			editor.clear();
-			editor.commit();
+			JSONParser.saveAuthKey(context, "");
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -332,6 +334,7 @@ public class Data {
 	
 	
 	
+	@SuppressWarnings("deprecation")
 	public static void getAccessToken(Context context) {
 		try {
 			Context myContext = context.createPackageContext("com.cdk23.nlk", Context.CONTEXT_IGNORE_SECURITY); 
@@ -354,6 +357,7 @@ public class Data {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void removeAccessToken(Context context) {
 		try {
 			Context myContext = context.createPackageContext("com.cdk23.nlk", Context.CONTEXT_IGNORE_SECURITY); 

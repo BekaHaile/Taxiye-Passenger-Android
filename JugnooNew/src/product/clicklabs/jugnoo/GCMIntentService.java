@@ -252,7 +252,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    					 try{
 	    	    						 if(jObj.has("rate_app")){
-	    	    							 Data.customerRateApp = jObj.getInt("rate_app");
+	    	    							 Data.customerRateAppFlag = jObj.getInt("rate_app");
 	    	    						 }
 	    	    					 } catch(Exception e){
 	    	    						 e.printStackTrace();

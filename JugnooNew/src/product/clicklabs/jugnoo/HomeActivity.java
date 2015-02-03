@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
@@ -3872,7 +3873,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void showDriverMarkersAndPanMap(LatLng userLatLng){
+	public void showDriverMarkersAndPanMap(final LatLng userLatLng){
 		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
 				if(map != null){
 					map.clear();
@@ -3893,27 +3894,40 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
 							boundsBuilder.include(new LatLng(userLatLng.latitude, ((2*userLatLng.longitude) - farthestLatLng.longitude)));
 							boundsBuilder.include(new LatLng(((2*userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
+							
+							boundsBuilder.include(userLatLng);
+							
+							try {
+								final LatLngBounds bounds = boundsBuilder.build();
+								final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+								new Handler().postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										try {
+											map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+										mapTouchedOnce = true;
+									}
+								}, 1000);
+								
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
-						
-						boundsBuilder.include(userLatLng);
-						
-						try {
-							final LatLngBounds bounds = boundsBuilder.build();
-							final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+						else{
 							new Handler().postDelayed(new Runnable() {
 								@Override
 								public void run() {
 									try {
-										map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
+										map.animateCamera(CameraUpdateFactory.newLatLng(userLatLng), 1000, null);
 									} catch (Exception e) {
 										e.printStackTrace();
 									}
 									mapTouchedOnce = true;
 								}
 							}, 1000);
-							
-						} catch (Exception e) {
-							e.printStackTrace();
 						}
 					}
 					
@@ -3988,6 +4002,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							callAndHandleStateRestoreAPI();
 						}
 
+						
 						@Override
 						public void onSuccess(String response) {
 							Log.e("Server response", "response = " + response);
@@ -5077,7 +5092,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									passengerScreenMode = PassengerScreenMode.P_INITIAL;
 									switchPassengerScreen(passengerScreenMode);
 									
-									if(givenRating >= 4 && Data.customerRateApp == 1){
+									if(givenRating >= 4 && Data.customerRateAppFlag == 1){
 										rateAppPopup(activity);
 									}
 								}
@@ -5367,12 +5382,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 									PicassoTools.clearCache(Picasso.with(HomeActivity.this));
 									
-									try {
-										Session.getActiveSession().closeAndClearTokenInformation();	
-									}
-									catch(Exception e) {
-										Log.v("Logout", "Error"+e);	
-									}
+									new FacebookLoginHelper().logoutFacebook();
 									
 									GCMIntentService.clearNotifications(HomeActivity.this);
 									
@@ -5381,7 +5391,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									userMode = UserMode.PASSENGER;
 									passengerScreenMode = PassengerScreenMode.P_INITIAL;
 									driverScreenMode = DriverScreenMode.D_INITIAL;
-									
 									
 									loggedOut = true;
 									
@@ -6957,7 +6966,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	// 0 = not found   1 = accept
 	@Override
 	public void rideRequestAcceptedInterrupt(JSONObject jObj) {
-
 		try {
 			if(userMode == UserMode.PASSENGER){
 				if(jObj.getString("session_id").equalsIgnoreCase(Data.cSessionId)){
@@ -6969,7 +6977,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	
@@ -7360,52 +7367,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
-	
-
-	static class FBLogoutNoIntent extends AsyncTask<Void, Void, String> {
-		
-		Activity act;
-		
-		public FBLogoutNoIntent(Activity act){
-			this.act = act;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
-		
-		protected String doInBackground(Void... urls) {
-			try {
-				try {	
-					Session.getActiveSession().closeAndClearTokenInformation();		
-				}
-				catch(Exception e) {
-					Log.v("Logout", "Error"+e);	
-				}
-			
-				SharedPreferences pref = act.getSharedPreferences("myPref", 0);
-				Editor editor = pref.edit();
-				editor.clear();
-				editor.commit();
-			} catch (Exception e) {
-				Log.v("e", e.toString());
-
-			}
-			
-			return "";
-		}
-
-		@Override
-		protected void onPostExecute(String text) {
-			
-		}
-	}
 
 	public static void logoutUser(final Activity cont){
 		try{
 			
-			new FBLogoutNoIntent(cont).execute();
+			new FacebookLoginHelper().logoutFacebook();
+			
+			SharedPreferences pref = cont.getSharedPreferences("myPref", 0);
+			Editor editor = pref.edit();
+			editor.clear();
+			editor.commit();
+			Data.clearDataOnLogout(cont);
 			
 			PicassoTools.clearCache(Picasso.with(cont));
 			
@@ -7413,11 +7385,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				@Override
 				public void run() {
-					SharedPreferences pref = cont.getSharedPreferences("myPref", 0);
-					Editor editor = pref.edit();
-					editor.clear();
-					editor.commit();
-					Data.clearDataOnLogout(cont);
 					
 					AlertDialog.Builder builder = new AlertDialog.Builder(cont);
 					builder.setMessage(cont.getResources().getString(R.string.your_login_session_expired)).setTitle(cont.getResources().getString(R.string.alert));

@@ -2,8 +2,8 @@ package product.clicklabs.jugnoo.utils;
 
 import java.util.Arrays;
 
-import product.clicklabs.jugnoo.Data;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,130 +23,140 @@ import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.Builder;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 
-public class FacebookLoginCreator {
+public class FacebookLoginHelper {
 
-	private static Session session;
-	
-	public void openFacebookSessionForPublish(final Activity activity, final FacebookLoginCallback facebookLoginCallback){
-		if (!AppStatus.getInstance(activity).isOnline(activity)) {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		} else {
-			session = new Session(activity);
-			Session.setActiveSession(session);
-			Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_RAW_RESPONSES);
-
-			Session.OpenRequest openRequest = null;
-			openRequest = new Session.OpenRequest(activity);
-			openRequest.setPermissions(Arrays.asList("publish_actions"));
-			openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
-
-			openRequest.setCallback(new Session.StatusCallback() {
-				@Override
-				public void call(Session session, SessionState state, Exception exception) {
-					Log.i("openRequest session", "="+session);
-					Log.i("openRequest state", "="+state);
-					Log.e("openRequest exception", "="+exception);
-					if (session.isOpened()) {
-						Session.setActiveSession(session);
-						facebookLoginCallback.facebookLoginDone();
-					}
-				}
-			});
-			session.openForPublish(openRequest);
-		}
-	
+	public FacebookLoginHelper(){
+		USER_DATA = null;
 	}
 	
-	public void openFacebookSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback,
-			final boolean fetchFBData){
-		if (!AppStatus.getInstance(activity).isOnline(activity)) {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		} else {
-			session = Session.getActiveSession();
-			Log.i("session", "="+session);
-			if(session == null){
-				callOpenActiveSession(activity, facebookLoginCallback, fetchFBData);
-			}
-			else{
-				if(session.getState() == SessionState.OPENED || session.getState() == SessionState.OPENED_TOKEN_UPDATED){
-					callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
-				}
-				else{
-					Session.setActiveSession(session);	
-					session.closeAndClearTokenInformation();	
-					callOpenActiveSession(activity, facebookLoginCallback, fetchFBData);
-				}
-			}
-			
-			
-		}
+	private Session session;
 	
-	}
+	public static FacebookUserData USER_DATA;
 	
-	
-	public void callOpenActiveSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback, 
-			final boolean fetchFBData){
-		Session.openActiveSession(activity, true, new Session.StatusCallback() {
+	public void openFacebookSessionForPublish(final Activity activity, final FacebookLoginCallback facebookLoginCallback, final boolean fetchFBData) {
+		session = new Session(activity);
+		Session.setActiveSession(session);
+		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_RAW_RESPONSES);
+
+		Session.OpenRequest openRequest = null;
+		openRequest = new Session.OpenRequest(activity);
+		openRequest.setPermissions(Arrays.asList("publish_actions"));
+		openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
+
+		openRequest.setCallback(new Session.StatusCallback() {
 			@Override
-			public void call(final Session session, SessionState state, Exception exception) {
-				if(session.isOpened()){
-					FacebookLoginCreator.session = session;
+			public void call(Session session, SessionState state,
+					Exception exception) {
+				Log.i("openRequest session", "=" + session);
+				Log.i("openRequest state", "=" + state);
+				Log.e("openRequest exception", "=" + exception);
+				if (session.isOpened()) {
 					Session.setActiveSession(session);
 					callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
 				}
 			}
 		});
+		session.openForPublish(openRequest);
+	}
+	
+	public void openFacebookSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback, final boolean fetchFBData) {
+		session = Session.getActiveSession();
+		Log.i("session", "=" + session);
+		if (session == null) {
+			callOpenActiveSession(activity, facebookLoginCallback, fetchFBData);
+		} else {
+			if (session.getState() == SessionState.OPENED
+					|| session.getState() == SessionState.OPENED_TOKEN_UPDATED) {
+				callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
+			} else {
+				Session.setActiveSession(session);
+				session.closeAndClearTokenInformation();
+				callOpenActiveSession(activity, facebookLoginCallback, fetchFBData);
+			}
+		}
+	}
+	
+	
+	public void callOpenActiveSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback, 
+			final boolean fetchFBData){
+		
+		session = new Session(activity);
+		Session.setActiveSession(session);
+		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_RAW_RESPONSES);
+
+		Session.OpenRequest openRequest = null;
+		openRequest = new Session.OpenRequest(activity);
+		openRequest.setPermissions(Arrays.asList("email"));
+		openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
+
+		openRequest.setCallback(new Session.StatusCallback() {
+			@Override
+			public void call(Session session, SessionState state,
+					Exception exception) {
+				Log.i("openRequest session", "=" + session);
+				Log.i("openRequest state", "=" + state);
+				Log.e("openRequest exception", "=" + exception);
+				if (session.isOpened()) {
+					Session.setActiveSession(session);
+					callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
+				}
+			}
+		});
+		session.openForRead(openRequest);
+		
 	}
 	
 	public void callRequestMeAsync(Session session, final Activity activity, final FacebookLoginCallback facebookLoginCallback, 
 			final boolean fetchFBData){
+		final String accessToken = session.getAccessToken();
 		if(fetchFBData){
-			Data.fbAccessToken = session.getAccessToken();
-			Log.e("fbAccessToken===", "="+Data.fbAccessToken);
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			showLoadingDialog(activity, "Loading...");
 			Request.newMeRequest(session, new Request.GraphUserCallback() {
 					@Override
 					public void onCompleted(GraphUser user, Response response) { // fetching user data from FaceBook
-						DialogPopup.dismissLoadingDialog();
+						dismissLoadingDialog();
 						if (user != null) {
 							Log.i("res", "="+response);
 							Log.i("user", "=" + user);
 							
-							Data.fbId = user.getId();
-							Data.fbFirstName = user.getFirstName();
-							Data.fbLastName = user.getLastName();
-							Data.fbUserName = user.getUsername();
+							String fbId = user.getId();
+							String firstName = user.getFirstName();
+							String lastName = user.getLastName();
+							String userName = user.getUsername();
 							
+							String userEmail = "";
 							try {
-								Data.fbUserEmail = ((String)user.asMap().get("email"));
-								Log.e("Data.userEmail before","="+Data.fbUserEmail);
+								userEmail = ((String)user.asMap().get("email"));
 							} catch (Exception e2) {
 								e2.printStackTrace();
 							}
 							finally{
-								if(Data.fbUserEmail == null || "".equalsIgnoreCase(Data.fbUserEmail)){
-									if(Data.fbUserName != null && !"".equalsIgnoreCase(Data.fbUserName)){
-										Data.fbUserEmail = Data.fbUserName + "@facebook.com";
+								if(userEmail == null || "".equalsIgnoreCase(userEmail)){
+									if(userName != null && !"".equalsIgnoreCase(userName)){
+										userEmail = userName + "@facebook.com";
 									}
 									else{
-										Data.fbUserEmail = Data.fbId + "@facebook.com";
+										userEmail = fbId + "@facebook.com";
 									}
 								}
 							}
 							
-							if(Data.fbUserName == null){
-								Data.fbUserName = "";
+							if(userName == null){
+								userName = "";
 							}
-							Log.e("Data.userEmail after","="+Data.fbUserEmail);
+							
+							USER_DATA = new FacebookUserData(accessToken, fbId, firstName, lastName, userName, userEmail);
+							Log.e("USER_DATA", "="+USER_DATA);
 						}
 						else{
-							new DialogPopup().alertPopup(activity, "Facebook Error", "Error in fetching information from Facebook.");
+							Log.e("Facebook Error", "Error in fetching information from Facebook.");
 						}
 						facebookLoginCallback.facebookLoginDone();
 					}
 				}).executeAsync();
 		}
 		else{
+			USER_DATA = new FacebookUserData(accessToken, "", "", "", "", "");
 			facebookLoginCallback.facebookLoginDone();
 		}
 	}
@@ -189,7 +199,7 @@ public class FacebookLoginCreator {
 	
 	
 	public void shareMessage(final Activity activity, String shareString){
-		DialogPopup.showLoadingDialog(activity, "Sharing...");
+		showLoadingDialog(activity, "Sharing...");
 		Bundle parameters = new Bundle();
 		parameters.putString("message", shareString);
 //		parameters.putString("name", "Get amazing offers and discounts at your favorite restaurants");
@@ -209,7 +219,7 @@ public class FacebookLoginCreator {
 				else{
 					Toast.makeText(activity, ""+response.getError().getErrorMessage(), Toast.LENGTH_SHORT).show();
 				}
-				DialogPopup.dismissLoadingDialog();
+				dismissLoadingDialog();
 				Log.e("Tests", "got response: " + response);
 			}
 		});
@@ -225,7 +235,7 @@ public class FacebookLoginCreator {
 	    params.putString("name", "Jugnoo - autos on demand");
 	    params.putString("caption", shareString);
 	    params.putString("description", shareString2);
-	    params.putString("link", "https://jugnoo.in?autoshare=1");
+	    params.putString("link", "https://jugnoo.in");
 	    params.putString("picture", "http://i58.tinypic.com/db9j8.png");
 
 	    WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(activity, Session.getActiveSession(), params))
@@ -251,6 +261,43 @@ public class FacebookLoginCreator {
 	        })
 	        .build();
 	    feedDialog.show();
+	}
+	
+	
+	public ProgressDialog progressDialog;
+	public void showLoadingDialog(Activity activity, String message){
+		try {
+			dismissLoadingDialog();
+			progressDialog = ProgressDialog.show(activity, "", message, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void dismissLoadingDialog(){
+		try {
+			if(progressDialog != null && progressDialog.isShowing()){
+				progressDialog.dismiss();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void logoutFacebook(){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					if(Session.getActiveSession() != null){
+						Session.getActiveSession().closeAndClearTokenInformation();
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 	
 }

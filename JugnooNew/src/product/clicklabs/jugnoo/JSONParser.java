@@ -15,12 +15,15 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.utils.AuthKeySaver;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -35,11 +38,6 @@ public class JSONParser {
 		JSONObject userData = jObj.getJSONObject("user_data");
 		
 		Data.userData = parseUserData(context, userData);
-		
-		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-		Editor editor = pref.edit();
-		editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-		editor.commit();
 		
 		try{
 			int currentUserStatus = userData.getInt("current_user_status");
@@ -169,13 +167,86 @@ public class JSONParser {
 			freeRideIconDisable = userData.getInt("free_ride_icon_disable");
 		}
 		
-		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
+		String authKey = userData.getString("auth_key");
+		JSONParser.saveAuthKey(context, authKey);
+		
+		String authSecret = authKey + Data.CLIENT_SHARED_SECRET;
+		String accessToken = SHA256Convertor.getSHA256String(authSecret);
+		
+		return new UserData(accessToken, authKey, userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
 				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
 				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable);
 	}
 	
-	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
+	
+	
+	@SuppressWarnings("deprecation")
+	public static void saveAuthKey(Context context, String authKey) {
+		AuthKeySaver.writeAuthToFile(authKey);
+		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+		Editor editor = pref.edit();
+		editor.putString("authKey", authKey);
+		editor.commit();
+	}
+	
+	
+	@SuppressWarnings("deprecation")
+	public static Pair<String, Integer> getAccessToken(Context context) {
+		
+		Pair<String, Integer> pair = new Pair<String, Integer>("", 1);
+		
+		Log.e("Data.userData", "="+Data.userData);
+		String authKey = "";
+		if(Data.userData == null){
+			authKey = AuthKeySaver.readAuthFromFile();
+		}
+		else{
+			if("".equalsIgnoreCase(Data.userData.accessToken)){
+				authKey = AuthKeySaver.readAuthFromFile();
+			}
+			else{
+				pair = new Pair<String, Integer>(Data.userData.accessToken, 1);
+				return pair;
+			}
+		}
+		
+		if("".equalsIgnoreCase(authKey)){																			// file returns empty
+			
+			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+			authKey = pref.getString("authKey", "");
+			
+			if("".equalsIgnoreCase(authKey)){																		// SP returns empty
+				
+				SharedPreferences pref1 = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);					// use old access token
+				final String accessToken = pref1.getString(Data.SP_ACCESS_TOKEN_KEY, "");
+				
+				pair = new Pair<String, Integer>(accessToken, 0);
+				return pair;
+			}
+			else{																									// SP return 
+				AuthKeySaver.writeAuthToFile(authKey);
+			}
+		}
+		
+		if("".equalsIgnoreCase(authKey)){																			// no auth key
+			pair = new Pair<String, Integer>("", 1);
+			return pair;
+		}
+		try {																										// auth key present
+			String authSecret = authKey + Data.CLIENT_SHARED_SECRET;
+			String accessToken = SHA256Convertor.getSHA256String(authSecret);
+			
+			pair = new Pair<String, Integer>(accessToken, 1);
+			return pair;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pair;
+	}
+	
+	
+	public String parseAccessTokenLoginData(Context context, String response) throws Exception{
 		
 //		{
 //		    "login": {
@@ -322,7 +393,7 @@ public class JSONParser {
 			
 			try{
 				if(jLastRideData.has("rate_app")){
-					Data.customerRateApp = jLastRideData.getInt("rate_app");
+					Data.customerRateAppFlag = jLastRideData.getInt("rate_app");
 				}
 			} catch(Exception e){
 				e.printStackTrace();
