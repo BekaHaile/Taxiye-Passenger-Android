@@ -20,6 +20,7 @@ import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -34,14 +35,12 @@ public class JSONParser {
 	}
 	
 	public void parseLoginData(Context context, String response) throws Exception{
-		JSONObject jObj = new JSONObject(response);
-		JSONObject userData = jObj.getJSONObject("user_data");
+		JSONObject userData = new JSONObject(response);
 		
 		Data.userData = parseUserData(context, userData);
 		
 		try{
 			int currentUserStatus = userData.getInt("current_user_status");
-			
 			if(currentUserStatus == 2){
 				Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
 				HomeActivity.userMode = UserMode.PASSENGER;
@@ -84,6 +83,35 @@ public class JSONParser {
 	
 	
 	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
+		
+//		{
+//	    "flag": 407,
+//	    "user_name": "Shankar54",
+//	    "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//	    "phone_no": "+919780111154",
+//	    "user_email": "shankar+54@jugnoo.in",
+//	    "referral_code": "SHANKAR54873",
+//	    "auth_key": "efc6b80a6e0b0c9fd3430081608e4f842b1fe7945913c22060d6bdc8b179c2dd",
+//	    "current_user_status": 2,
+//	    "is_available": 0,
+//	    "can_change_location": 0,
+//	    "can_schedule": 0,
+//	    "scheduling_limit": 60,
+//	    "gcm_intent": 1,
+//	    "christmas_icon_enable": 0,
+//	    "fare_details": [
+//	        {
+//	            "fare_fixed": 25,
+//	            "fare_per_km": 6,
+//	            "fare_threshold_distance": 2,
+//	            "fare_per_min": 1,
+//	            "fare_threshold_time": 0
+//	        }
+//	    ],
+//	    "exceptional_driver": 0,
+//	    "update_popup": 0,
+//	    "access_token": "84ca4036b01e461258bf527b17f7c2c60a3c731eddd96ce46bca98273817cdf3"
+//	}
 		
 		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, 
 				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;;
@@ -168,7 +196,7 @@ public class JSONParser {
 		}
 		
 		String authKey = userData.getString("auth_key");
-		JSONParser.saveAuthKey(context, authKey);
+		AccessTokenGenerator.saveAuthKey(context, authKey);
 		
 		String authSecret = authKey + Data.CLIENT_SHARED_SECRET;
 		String accessToken = SHA256Convertor.getSHA256String(authSecret);
@@ -179,71 +207,10 @@ public class JSONParser {
 				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable);
 	}
 	
+
 	
 	
-	@SuppressWarnings("deprecation")
-	public static void saveAuthKey(Context context, String authKey) {
-		AuthKeySaver.writeAuthToFile(authKey);
-		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
-		Editor editor = pref.edit();
-		editor.putString("authKey", authKey);
-		editor.commit();
-	}
 	
-	
-	@SuppressWarnings("deprecation")
-	public static Pair<String, Integer> getAccessToken(Context context) {
-		
-		Pair<String, Integer> pair = new Pair<String, Integer>("", 1);
-		
-		Log.e("Data.userData", "="+Data.userData);
-		String authKey = "";
-		if(Data.userData == null){
-			authKey = AuthKeySaver.readAuthFromFile();
-		}
-		else{
-			if("".equalsIgnoreCase(Data.userData.accessToken)){
-				authKey = AuthKeySaver.readAuthFromFile();
-			}
-			else{
-				pair = new Pair<String, Integer>(Data.userData.accessToken, 1);
-				return pair;
-			}
-		}
-		
-		if("".equalsIgnoreCase(authKey)){																			// file returns empty
-			
-			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
-			authKey = pref.getString("authKey", "");
-			
-			if("".equalsIgnoreCase(authKey)){																		// SP returns empty
-				
-				SharedPreferences pref1 = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);					// use old access token
-				final String accessToken = pref1.getString(Data.SP_ACCESS_TOKEN_KEY, "");
-				
-				pair = new Pair<String, Integer>(accessToken, 0);
-				return pair;
-			}
-			else{																									// SP return 
-				AuthKeySaver.writeAuthToFile(authKey);
-			}
-		}
-		
-		if("".equalsIgnoreCase(authKey)){																			// no auth key
-			pair = new Pair<String, Integer>("", 1);
-			return pair;
-		}
-		try {																										// auth key present
-			String authSecret = authKey + Data.CLIENT_SHARED_SECRET;
-			String accessToken = SHA256Convertor.getSHA256String(authSecret);
-			
-			pair = new Pair<String, Integer>(accessToken, 1);
-			return pair;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return pair;
-	}
 	
 	
 	public String parseAccessTokenLoginData(Context context, String response) throws Exception{
@@ -325,14 +292,13 @@ public class JSONParser {
 		
 		//Fetching login data
 		JSONObject jLoginObject = jObj.getJSONObject("login");
-		JSONObject userData = jLoginObject.getJSONObject("user_data");
 		
-		Data.userData = parseUserData(context, userData);
+		Data.userData = parseUserData(context, jLoginObject);
 		
-		parseFareDetails(userData);
+		parseFareDetails(jLoginObject);
 		
 		//current_user_status = 1 driver or 2 user
-		int currentUserStatus = userData.getInt("current_user_status");
+		int currentUserStatus = jLoginObject.getInt("current_user_status");
 		if(currentUserStatus == 2){
 			//Fetching drivers info
 			JSONObject jDriversObject = jObj.getJSONObject("drivers");

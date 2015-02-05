@@ -167,6 +167,7 @@ public class ItemInfosListActivity extends Activity{
 		super.onResume();
 		
 		itemInfoListAdapter.notifyDataSetChanged();
+		HomeActivity.checkForAccessTokenChange(this);
 	}
 	
 	public int updateCheckoutItemsCount(boolean setText){

@@ -19,7 +19,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -249,7 +248,7 @@ public class Data {
 			pickupLatLng = null;
 			facebookUserData = null;
 			
-			JSONParser.saveAuthKey(context, "");
+			AccessTokenGenerator.saveLogoutToken(context);
 			
 		} catch(Exception e){
 			e.printStackTrace();

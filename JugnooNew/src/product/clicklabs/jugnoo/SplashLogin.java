@@ -370,6 +370,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			new DialogPopup().showLocationSettingsAlert(SplashLogin.this);
 		}
 		
+		HomeActivity.checkForAccessTokenChange(this);
 	}
 	
 	@Override

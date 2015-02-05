@@ -493,6 +493,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		if(Data.locationFetcher == null){
 			Data.locationFetcher = new LocationFetcher(RegisterScreen.this, 1000, 1);
 		}
+		HomeActivity.checkForAccessTokenChange(this);
 		
 	}
 	

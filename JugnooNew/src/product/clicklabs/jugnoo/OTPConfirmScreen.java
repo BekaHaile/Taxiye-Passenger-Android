@@ -207,6 +207,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		if(Data.locationFetcher == null){
 			Data.locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000, 1);
 		}
+		HomeActivity.checkForAccessTokenChange(this);
 	}
 	
 	@Override

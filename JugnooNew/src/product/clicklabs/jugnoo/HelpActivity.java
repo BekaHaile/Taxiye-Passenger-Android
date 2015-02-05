@@ -69,6 +69,12 @@ public class HelpActivity extends FragmentActivity{
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		HomeActivity.checkForAccessTokenChange(this);
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.help_activity);

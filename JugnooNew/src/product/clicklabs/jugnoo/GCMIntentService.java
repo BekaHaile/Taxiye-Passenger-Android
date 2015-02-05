@@ -169,6 +169,7 @@ public class GCMIntentService extends IntentService {
 	    @Override
 	    public void onHandleIntent(Intent intent) {
 	        Bundle extras = intent.getExtras();
+	        Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
 	        
 	        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 	        // The getMessageType() intent parameter must be the intent you received
@@ -194,12 +195,6 @@ public class GCMIntentService extends IntentService {
 	                    MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 	                // This loop represents the service doing some work.
 
-	            	String SHARED_PREF_NAME1 = "myPref", SP_ACCESS_TOKEN_KEY = "access_token";
-	            	
-	            	SharedPreferences pref1 = getSharedPreferences(SHARED_PREF_NAME1, 0);
-	        		final String accessToken = pref1.getString(SP_ACCESS_TOKEN_KEY, "");
-	        		if(!"".equalsIgnoreCase(accessToken)){
-	            	
 	    	    	try{
 	    		    	 Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
 	    		    	 
@@ -345,8 +340,6 @@ public class GCMIntentService extends IntentService {
 	    	    		 Log.e("Recieved exception message arg1...", ","+intent);
 	    	    		 Log.e("exception", ","+e);
 	    	    	 }
-	        		}
-	    	         
 	    	    
 	            }
 	        }

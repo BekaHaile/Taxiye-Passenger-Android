@@ -72,6 +72,7 @@ public class ItemsCheckoutActivity extends Activity implements LocationUpdate{
 	}
 	
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -224,6 +225,7 @@ public class ItemsCheckoutActivity extends Activity implements LocationUpdate{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		HomeActivity.checkForAccessTokenChange(this);
 	}
 	
 	

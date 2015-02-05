@@ -2897,25 +2897,64 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		if(!checkIfUserDataNull(HomeActivity.this)){
-			setUserData();
-	//		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
-			
-			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
-				  startTimerUpdateDrivers();
+				setUserData();
+		//		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
+				
+				if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+					  startTimerUpdateDrivers();
+				}
+			    
+			    initializeFusedLocationFetchers();
+			    
+			    if(UserMode.DRIVER == userMode){
+					buildTimeSettingsAlertDialog(this);
+				}
+			    
+			    sendToShareScreen();
+			    
+			    Data.autoShare = 0;
+		}
+		
+		HomeActivity.checkForAccessTokenChange(this);
+	}
+	
+	
+	
+	public static void checkForAccessTokenChange(Activity activity){
+		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
+		if(!"".equalsIgnoreCase(pair.first)){
+			if(Data.userData == null){
+				logoutIntent(activity);
 			}
-		    
-		    initializeFusedLocationFetchers();
-		    
-		    if(UserMode.DRIVER == userMode){
-				buildTimeSettingsAlertDialog(this);
+			else{
+				if(!pair.first.equalsIgnoreCase(Data.userData.accessToken)){
+					logoutIntent(activity);
+				}
 			}
-		    
-		    sendToShareScreen();
-		    
-		    Data.autoShare = 0;
+		}
+		else{
+			if(Data.userData == null){
+				
+			}
+			else{
+				logoutIntent(activity);
+			}
 		}
 	}
 	
+	
+	public static void logoutIntent(Activity cont){
+		try {
+			new FacebookLoginHelper().logoutFacebook();
+			Data.userData = null;
+			Intent intent = new Intent(cont, SplashNewActivity.class);
+			cont.startActivity(intent);
+			cont.finish();
+			cont.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void sendToShareScreen(){
 		if(Data.autoShare == 1){
@@ -5346,11 +5385,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
+			params.put("is_access_token_new", ""+1);
+			params.put("client_id", Data.CLIENT_ID);
 
 			Log.i("access_token", "="+Data.userData.accessToken);
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL+"/logout", params,
+			client.post(Data.SERVER_URL+"/logout_user", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 

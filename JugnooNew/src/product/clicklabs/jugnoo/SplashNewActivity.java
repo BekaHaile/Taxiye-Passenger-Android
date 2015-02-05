@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
@@ -314,6 +315,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			new DialogPopup().showLocationSettingsAlert(SplashNewActivity.this);
 		}
 		
+		Data.userData = null;
 		
 		super.onResume();
 	}
@@ -423,7 +425,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	 */
 	public void accessTokenLogin(final Activity activity) {
 		
-		Pair<String, Integer> pair = JSONParser.getAccessToken(activity);
+		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
 		
 		if(!"".equalsIgnoreCase(pair.first)){
 			String accessToken = pair.first;
@@ -459,6 +461,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				Log.i("longitude", ""+Data.longitude);
 				Log.i("app_version", ""+Data.appVersion);
 				Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
+				
+				Log.e("params", "="+params);
 			
 				
 				AsyncHttpClient client = Data.getClient();
@@ -484,34 +488,23 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 									boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity);
 									
 									if(!newUpdate){
-										if(!jObj.isNull("error")){
-											
-											int flag = jObj.getInt("flag");	
-											String errorMessage = jObj.getString("error");
-											if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-												HomeActivity.logoutUser(activity);
-											}
-											else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-												new DialogPopup().alertPopup(activity, "", errorMessage);
-											}
-											else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
-												new DialogPopup().alertPopup(activity, "", errorMessage);
-											}
-											else if(8 == flag){ // {"error":"email not  registered","flag":1}//error
-												noNetFirstTime = false;
-												noNetSecondTime = false;
-												
-												loginFailed = true;
-											}
-											else{
-												new DialogPopup().alertPopup(activity, "", errorMessage);
-											}
+										int flag = jObj.getJSONObject("login").getInt("flag");
+										if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
+											HomeActivity.logoutUser(activity);
 											DialogPopup.dismissLoadingDialog();
 										}
-										else{
+										else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 											
 											new AccessTokenDataParseAsync(activity, response).execute();
 											
+											SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+											Editor editor = pref1.edit();
+											editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
+											editor.commit();
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+											DialogPopup.dismissLoadingDialog();
 										}
 									}
 								}  catch (Exception exception) {

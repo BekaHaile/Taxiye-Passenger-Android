@@ -4,37 +4,30 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import android.os.Environment;
 
 public class AuthKeySaver {
 	
+	public static final String NOT_FOUND = "not_found";
+	
 	public static File getAuthFolder(){
-		try {
-			String strFolder = Environment.getExternalStorageDirectory() + "/Android/data/.jugnoo_auth";
-			File folder = new File(strFolder);
-			if(!folder.exists()){
-				folder.mkdirs();
-			}
-			return folder;
-		} catch (Exception e) {
-			e.printStackTrace();
+		String strFolder = Environment.getExternalStorageDirectory() + "/Android/data/.jugnoo_auth";
+		File folder = new File(strFolder);
+		if(!folder.exists()){
+			folder.mkdirs();
 		}
-		return null;
+		return folder;
 	}
 	
-	public static File getAuthFile(){
-		try {
-			String fileName = getAuthFolder() + "/auth";
-			File gpxfile = new File(fileName);
-			if (!gpxfile.exists()) {
-				gpxfile.createNewFile();
-			}
-			return gpxfile;
-		} catch (Exception e) {
-			e.printStackTrace();
+	public static File getAuthFile() throws IOException{
+		String fileName = getAuthFolder() + "/auth";
+		File gpxfile = new File(fileName);
+		if (!gpxfile.exists()) {
+			gpxfile.createNewFile();
 		}
-		return null;
+		return gpxfile;
 	}
 	
 	
@@ -54,13 +47,16 @@ public class AuthKeySaver {
 	
 	
 	public static String readAuthFromFile() {
+		String authKey = "";
         StringBuilder stringBuilder = new StringBuilder();
         String line;
         BufferedReader in = null;
         try {
             in = new BufferedReader(new FileReader(getAuthFile()));
             while ((line = in.readLine()) != null) stringBuilder.append(line);
+            authKey = stringBuilder.toString();
         }catch (Exception e) {
+        	authKey = NOT_FOUND;
         } finally{
         	try {
 				in.close();
@@ -68,7 +64,7 @@ public class AuthKeySaver {
 				e.printStackTrace();
 			}
         }
-        return stringBuilder.toString();
+        return authKey;
     }
 	
 }

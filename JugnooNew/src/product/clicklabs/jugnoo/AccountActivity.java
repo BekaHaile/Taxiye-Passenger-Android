@@ -89,6 +89,11 @@ public class AccountActivity extends Activity{
 		FlurryAgent.onEndSession(this);
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		HomeActivity.checkForAccessTokenChange(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
