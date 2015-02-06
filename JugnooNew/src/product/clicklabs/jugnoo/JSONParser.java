@@ -15,16 +15,13 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
-import product.clicklabs.jugnoo.utils.AuthKeySaver;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -34,7 +31,7 @@ public class JSONParser {
 		
 	}
 	
-	public void parseLoginData(Context context, String response) throws Exception{
+	public void parseLoginData1(Context context, String response) throws Exception{
 		JSONObject userData = new JSONObject(response);
 		
 		Data.userData = parseUserData(context, userData);
@@ -301,8 +298,7 @@ public class JSONParser {
 		int currentUserStatus = jLoginObject.getInt("current_user_status");
 		if(currentUserStatus == 2){
 			//Fetching drivers info
-			JSONObject jDriversObject = jObj.getJSONObject("drivers");
-			parseDriversToShow(jDriversObject, "data");
+			parseDriversToShow(jObj, "drivers");
 			Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
 		}
 		else if(currentUserStatus == 1){

@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.SplashNewActivity.AccessTokenDataParseAsync;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -16,6 +17,8 @@ import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -366,32 +369,34 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 							try {
 								jObj = new JSONObject(response);
 								
-								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
-									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-										int flag = jObj.getInt("flag");
-										if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
-										}
-										else if(ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
-										}
-										else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-											new JSONParser().parseLoginData(activity, response);
+								int flag = jObj.getInt("flag");
+								
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
 											Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
 											Database.getInstance(OTPConfirmScreen.this).close();
 											loginDataFetched = true;
 										}
-										else{
-											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-										}
-										DialogPopup.dismissLoadingDialog();
 									}
+									else{
+										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
+									DialogPopup.dismissLoadingDialog();
 								}
 								else{
 									DialogPopup.dismissLoadingDialog();
 								}
+								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -483,32 +488,34 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 							try {
 								jObj = new JSONObject(response);
 								
-								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
-									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-										int flag = jObj.getInt("flag");
-										if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
-										}
-										else if(ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
-										}
-										else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-											new JSONParser().parseLoginData(activity, response);
+								int flag = jObj.getInt("flag");
+								
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
 											loginDataFetched = true;
 											Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
 											Database.getInstance(OTPConfirmScreen.this).close();
 										}
-										else{
-											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-										}
-										DialogPopup.dismissLoadingDialog();
 									}
+									else{
+										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
+									DialogPopup.dismissLoadingDialog();
 								}
 								else{
 									DialogPopup.dismissLoadingDialog();
 								}
+								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.dismissLoadingDialog();

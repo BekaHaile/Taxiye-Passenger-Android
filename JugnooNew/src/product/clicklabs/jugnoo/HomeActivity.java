@@ -2950,7 +2950,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Intent intent = new Intent(cont, SplashNewActivity.class);
 			cont.startActivity(intent);
 			cont.finish();
-			cont.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+			cont.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3185,6 +3185,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	        cancelTimerUpdateDrivers();
 	        
 	        appInterruptHandler = null;
+	        
+	        new FacebookLoginHelper().logoutFacebook();
 	        
 	        System.gc();
         }catch(Exception e){

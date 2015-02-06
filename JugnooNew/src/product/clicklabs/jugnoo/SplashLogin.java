@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.SplashNewActivity.AccessTokenDataParseAsync;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -19,6 +20,8 @@ import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.Rect;
@@ -473,39 +476,41 @@ public class SplashLogin extends Activity implements LocationUpdate{
 							try {
 								jObj = new JSONObject(response);
 								
-								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
-									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-										int flag = jObj.getInt("flag");
-										if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
-										}
-										else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
-										}
-										else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-											enteredEmail = emailId;
-											phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-											otpErrorMsg = jObj.getString("error");
-											otpFlag = 0;
-											sendToOtpScreen = true;
-										}
-										else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-											new JSONParser().parseLoginData(activity, response);
+								int flag = jObj.getInt("flag");
+								
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+										enteredEmail = emailId;
+										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+										otpErrorMsg = jObj.getString("error");
+										otpFlag = 0;
+										sendToOtpScreen = true;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
 											Database.getInstance(SplashLogin.this).insertEmail(emailId);
 											Database.getInstance(SplashLogin.this).close();
 											loginDataFetched = true;
 										}
-										else{
-											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-										}
-										DialogPopup.dismissLoadingDialog();
 									}
+									else{
+										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
+									DialogPopup.dismissLoadingDialog();
 								}
 								else{
 									DialogPopup.dismissLoadingDialog();
 								}
+								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -597,42 +602,42 @@ public class SplashLogin extends Activity implements LocationUpdate{
 							try {
 								jObj = new JSONObject(response);
 
-								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
-									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-										int flag = jObj.getInt("flag");
-										if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											facebookRegister = true;
-											notRegisteredMsg = error;
-										}
-										else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
-										}
-										else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-											phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-											otpErrorMsg = jObj.getString("error");
-											otpFlag = 1;
-											sendToOtpScreen = true;
-										}
-										else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-											
-											new JSONParser().parseLoginData(activity, response);
+								int flag = jObj.getInt("flag");
+								
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										facebookRegister = true;
+										notRegisteredMsg = error;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+										otpErrorMsg = jObj.getString("error");
+										otpFlag = 1;
+										sendToOtpScreen = true;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
 											loginDataFetched = true;
 											
 											Database.getInstance(SplashLogin.this).insertEmail(Data.facebookUserData.userEmail);
 											Database.getInstance(SplashLogin.this).close();
-											
 										}
-										else{
-											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-										}
-										DialogPopup.dismissLoadingDialog();
 									}
+									else{
+										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
+									DialogPopup.dismissLoadingDialog();
 								}
 								else{
 									DialogPopup.dismissLoadingDialog();
 								}
+								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);

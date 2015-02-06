@@ -37,6 +37,14 @@ public class AccessTokenGenerator {
 		
 		Pair<String, Integer> pair = new Pair<String, Integer>("", 1);
 		
+		SharedPreferences prefIni = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);					// use old access token
+		final String accessTokenIni = prefIni.getString(Data.SP_ACCESS_TOKEN_KEY, "");
+		if(!"".equalsIgnoreCase(accessTokenIni)){
+			pair = new Pair<String, Integer>(accessTokenIni, 0);
+			Log.e("Accesstoken previous pair", "=" + pair.first + " " + pair.second);
+			return pair;
+		}
+		
 		String authKey = "";
 		authKey = AuthKeySaver.readAuthFromFile();
 		Log.e("authKey", "="+authKey);
