@@ -2,12 +2,14 @@ package product.clicklabs.jugnoo;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
-import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
@@ -31,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
@@ -115,7 +118,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLoginCreator().openFacebookSession(RegisterScreen.this, facebookLoginCallback, true);
+				new FacebookLoginHelper().openFacebookSession(RegisterScreen.this, facebookLoginCallback, true);
 			}
 		});
 		
@@ -255,9 +258,9 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 																	emailId = "";
 																}
 																sendFacebookSignupValues(RegisterScreen.this, referralCode, phoneNo, password);
-																FlurryEventLogger.facebookSignupClicked(Data.fbUserEmail);
+																FlurryEventLogger.facebookSignupClicked(Data.facebookUserData.userEmail);
 																if(!"".equalsIgnoreCase(referralCode)){
-																	FlurryEventLogger.referralCodeAtFBSignup(Data.fbUserEmail, referralCode);
+																	FlurryEventLogger.referralCodeAtFBSignup(Data.facebookUserData.userEmail, referralCode);
 																}
 															}
 															else{
@@ -327,14 +330,14 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		
 		
 		if(facebookLogin){
-			nameEt.setText(Data.fbFirstName + " " + Data.fbLastName);
+			nameEt.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
 			nameEt.setEnabled(false);
-			if("".equalsIgnoreCase(Data.fbUserEmail)){
+			if("".equalsIgnoreCase(Data.facebookUserData.userEmail)){
 				emailIdEt.setText("");
 				emailIdEt.setEnabled(true);
 			}
 			else{
-				emailIdEt.setText(Data.fbUserEmail);
+				emailIdEt.setText(Data.facebookUserData.userEmail);
 				emailIdEt.setEnabled(false);
 			}
 		}
@@ -431,13 +434,21 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
 		public void facebookLoginDone() {
-			facebookLogin = true;
-			nameEt.setText(Data.fbFirstName + " " + Data.fbLastName);
-			emailIdEt.setText(Data.fbUserEmail);
-			
-			nameEt.setEnabled(false);
-			emailIdEt.setEnabled(false);
-			FlurryEventLogger.registerViaFBClicked(Data.fbId);
+			if(FacebookLoginHelper.USER_DATA != null){
+				Data.facebookUserData = new FacebookUserData(FacebookLoginHelper.USER_DATA.accessToken, FacebookLoginHelper.USER_DATA.fbId, 
+						FacebookLoginHelper.USER_DATA.firstName, FacebookLoginHelper.USER_DATA.lastName, FacebookLoginHelper.USER_DATA.userName, 
+						FacebookLoginHelper.USER_DATA.userEmail);
+				facebookLogin = true;
+				nameEt.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+				emailIdEt.setText(Data.facebookUserData.userEmail);
+				
+				nameEt.setEnabled(false);
+				emailIdEt.setEnabled(false);
+				FlurryEventLogger.registerViaFBClicked(Data.facebookUserData.fbId);
+			}
+			else{
+				Toast.makeText(getApplicationContext(), "Error occured during Facebook authentication", Toast.LENGTH_SHORT).show();
+			}
 		}
 	};
 
@@ -482,6 +493,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		if(Data.locationFetcher == null){
 			Data.locationFetcher = new LocationFetcher(RegisterScreen.this, 1000, 1);
 		}
+		HomeActivity.checkForAccessTokenChange(this);
 		
 	}
 	
@@ -507,8 +519,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	/**
 	 * ASync for register from server
 	 */
-	public void sendSignupValues(final Activity activity, final String name, final String referralCode, 
-			final String emailId, final String phoneNo, final String password) {
+	public void sendSignupValues(final Activity activity, final String name, final String referralCode, final String emailId, final String phoneNo, final String password) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -520,43 +531,42 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 				Data.longitude = Data.locationFetcher.getLongitude();
 			}
 
-		
 			params.put("user_name", name);
-			params.put("ph_no", phoneNo);
+			params.put("phone_no", phoneNo);
 			params.put("email", emailId);
 			params.put("password", password);
-			params.put("otp", "");
-			params.put("device_type", Data.DEVICE_TYPE);
-			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("device_token", Data.deviceToken);
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
-			params.put("country", Data.country);
+			params.put("device_token", Data.deviceToken);
+			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
-			params.put("app_version", Data.appVersion);
+			params.put("app_version", ""+Data.appVersion);
 			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("client_id", Data.CLIENT_ID);
 			params.put("referral_code", referralCode);
 			
 
-			Log.i("user_name", "=" + name);
-			Log.i("ph_no", "=" + phoneNo);
-			Log.i("email", "=" + emailId);
-			Log.i("password", "=" + password);
-			Log.i("otp", "=" + "");
-			Log.i("device_token", "=" + Data.deviceToken);
-			Log.i("latitude", "=" + Data.latitude);
-			Log.i("longitude", "=" + Data.longitude);
-			Log.i("country", "=" + Data.country);
-			Log.i("device_name", "=" + Data.deviceName);
-			Log.i("app_version", "=" + Data.appVersion);
-			Log.i("os_version", "=" + Data.osVersion);
-			Log.i("referral_code", "="+referralCode);
-			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
-			
+			Log.i("user_name", name);
+			Log.i("phone_no", phoneNo);
+			Log.i("email", emailId);
+			Log.i("password", password);
+			Log.i("latitude", ""+Data.latitude);
+			Log.i("longitude", ""+Data.longitude);
+			Log.i("device_token", Data.deviceToken);
+			Log.i("device_type", Data.DEVICE_TYPE);
+			Log.i("device_name", Data.deviceName);
+			Log.i("app_version", ""+Data.appVersion);
+			Log.i("os_version", Data.osVersion);
+			Log.i("country", Data.country);
+			Log.i("unique_device_id", Data.uniqueDeviceId);
+			Log.i("client_id", Data.CLIENT_ID);
+			Log.i("referral_code", referralCode);
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/customer_registeration", params,
+			client.post(Data.SERVER_URL + "/register_using_email", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -574,43 +584,31 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 							try {
 								jObj = new JSONObject(response);
 								
-
-								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
-								
-								if(!newUpdate){
-								
-								if(!jObj.isNull("error")){
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
+								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
+									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+										int flag = jObj.getInt("flag");
+										if(ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag){
+											String error = jObj.getString("error");
+											new DialogPopup().alertPopup(activity, "", error);
+										}
+										else if(ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag){
+											String error = jObj.getString("error");
+											new DialogPopup().alertPopup(activity, "", error);
+										}
+										else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+											RegisterScreen.this.name = name;
+											RegisterScreen.this.emailId = emailId;
+											RegisterScreen.this.phoneNo = jObj.getString("phone_no");
+											RegisterScreen.this.password = password;
+											RegisterScreen.this.referralCode = referralCode;
+											sendToOtpScreen = true;
+											otpFlag = 0;
+										}
+										else{
+											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										}
+										DialogPopup.dismissLoadingDialog();
 									}
-									else if(0 == flag){ // {"error": 'Please enter otp',"flag":0} //error
-										RegisterScreen.this.name = name;
-										RegisterScreen.this.referralCode = referralCode;
-										RegisterScreen.this.emailId = emailId;
-										RegisterScreen.this.phoneNo = jObj.getString("phone_no");;
-										RegisterScreen.this.password = password;
-										otpFlag = 0;
-										sendToOtpScreen = true;
-									}
-									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
-									}
-									DialogPopup.dismissLoadingDialog();
-								}
-								else{
-									new JSONParser().parseLoginData(activity, response);
-									
-									Database.getInstance(RegisterScreen.this).insertEmail(emailId);
-									Database.getInstance(RegisterScreen.this).close();
-									
-									loginDataFetched = true;
-									
-									DialogPopup.dismissLoadingDialog();
-									
-								}
 								}
 								else{
 									DialogPopup.dismissLoadingDialog();
@@ -620,8 +618,6 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
-	
-							
 						}
 					});
 		}
@@ -648,50 +644,52 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 				Data.longitude = Data.locationFetcher.getLongitude();
 			}
 
-		
-			params.put("user_fb_id", Data.fbId);
-			params.put("user_fb_name", Data.fbFirstName + " " + Data.fbLastName);
-			params.put("fb_access_token", Data.fbAccessToken);
-			params.put("username", Data.fbUserName);
-			params.put("fb_mail", Data.fbUserEmail);
-			params.put("latitude", ""+Data.latitude);
-			params.put("longitude", ""+Data.longitude);
-			params.put("device_token", Data.deviceToken);
-			params.put("country", Data.country);
-			params.put("app_version", Data.appVersion);
-			params.put("os_version", Data.osVersion);
-			params.put("device_name", Data.deviceName);
-			params.put("device_type", Data.DEVICE_TYPE);
-			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("otp", "");
-			params.put("ph_no", phoneNo);
+			params.put("user_fb_id", Data.facebookUserData.fbId);
+			params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+			params.put("fb_access_token", Data.facebookUserData.accessToken);
+			params.put("fb_mail", Data.facebookUserData.userEmail);
+			params.put("username", Data.facebookUserData.userName);
+			
+			params.put("phone_no", phoneNo);
 			params.put("password", password);
 			params.put("referral_code", referralCode);
 			
-
-			Log.i("user_fb_id", "="+Data.fbId);
-			Log.i("user_fb_name", "="+Data.fbFirstName + " " + Data.fbLastName);
-			Log.i("fb_access_token", "="+Data.fbAccessToken);
-			Log.i("username", "="+Data.fbUserName);
-			Log.i("fb_mail", "="+Data.fbUserEmail);
-			Log.i("latitude", "="+Data.latitude);
-			Log.i("longitude", "="+Data.longitude);
-			Log.i("device_token", "="+Data.deviceToken);
-			Log.i("country", "="+Data.country);
-			Log.i("app_version", "="+Data.appVersion);
-			Log.i("os_version", "="+Data.osVersion);
-			Log.i("device_name", "="+Data.deviceName);
-			Log.i("device_type", "="+Data.DEVICE_TYPE);
-			Log.i("otp", "="+"");
-			Log.i("ph_no", "="+phoneNo);
-			Log.i("password", "="+password);
-			Log.i("referral_code", "="+referralCode);
-			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
+			params.put("latitude", ""+Data.latitude);
+			params.put("longitude", ""+Data.longitude);
+			params.put("device_token", Data.deviceToken);
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", ""+Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("client_id", Data.CLIENT_ID);
 			
+			
+
+			Log.e("user_fb_id", Data.facebookUserData.fbId);
+			Log.e("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+			Log.e("fb_access_token", Data.facebookUserData.accessToken);
+			Log.e("fb_mail", Data.facebookUserData.userEmail);
+			Log.e("username", Data.facebookUserData.userName);
+			
+			Log.e("phone_no", phoneNo);
+			Log.e("password", password);
+			Log.e("latitude", ""+Data.latitude);
+			Log.e("longitude", ""+Data.longitude);
+			Log.e("device_token", Data.deviceToken);
+			Log.e("device_type", Data.DEVICE_TYPE);
+			Log.e("device_name", Data.deviceName);
+			Log.e("app_version", ""+Data.appVersion);
+			Log.e("os_version", Data.osVersion);
+			Log.e("country", Data.country);
+			Log.e("unique_device_id", Data.uniqueDeviceId);
+			Log.e("client_id", Data.CLIENT_ID);
+			Log.e("referral_code", referralCode);
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/customer_fb_registeration_form", params,
+			client.post(Data.SERVER_URL + "/register_using_facebook", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -709,34 +707,24 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 							try {
 								jObj = new JSONObject(response);
 								
-
-								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
-								
-								if(!newUpdate){
-									if(!jObj.isNull("error")){
-										int flag = jObj.getInt("flag");	
-										String errorMessage = jObj.getString("error");
-										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-											HomeActivity.logoutUser(activity);
+								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
+									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+										int flag = jObj.getInt("flag");
+										if(ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag){
+											String error = jObj.getString("error");
+											new DialogPopup().alertPopup(activity, "", error);
 										}
-										else if(2 == flag){ // {"error": 'Please enter otp',"flag":2} 
-											RegisterScreen.this.referralCode = referralCode;
+										else if(ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag){
+											String error = jObj.getString("error");
+											new DialogPopup().alertPopup(activity, "", error);
+										}
+										else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 											RegisterScreen.this.phoneNo = jObj.getString("phone_no");
 											RegisterScreen.this.password = password;
-											otpFlag = 1;
+											RegisterScreen.this.referralCode = referralCode;
 											sendToOtpScreen = true;
+											otpFlag = 1;
 										}
-										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										DialogPopup.dismissLoadingDialog();
-									}
-									else{
-										new JSONParser().parseLoginData(activity, response);
-										loginDataFetched = true;
-										Database.getInstance(RegisterScreen.this).insertEmail(Data.fbUserEmail);
-										Database.getInstance(RegisterScreen.this).close();
-										
 										DialogPopup.dismissLoadingDialog();
 									}
 								}
@@ -748,8 +736,6 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								DialogPopup.dismissLoadingDialog();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
-	
-							
 						}
 					});
 		}
@@ -793,13 +779,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			loginDataFetched = false;
 			Database2.getInstance(RegisterScreen.this).updateDriverLastLocationTime();
 			Database2.getInstance(RegisterScreen.this).close();
-//			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
-			if(Data.termsAgreed == 1){
-				startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
-			}
-			else{
-				startActivity(new Intent(RegisterScreen.this, TermsConditionsActivity.class));
-			}
+			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
 		}
@@ -827,18 +807,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	
 	
 	public void performBackPressed(){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					if(Session.getActiveSession() != null){
-						Session.getActiveSession().closeAndClearTokenInformation();
-					}
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}).start();
+		new FacebookLoginHelper().logoutFacebook();
 		Intent intent = new Intent(RegisterScreen.this, SplashNewActivity.class);
 		intent.putExtra("no_anim", "yes");
 		startActivity(intent);
@@ -859,10 +828,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		// TODO Auto-generated method stub
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(RegisterScreen.this, location);
 	}
 	
 }

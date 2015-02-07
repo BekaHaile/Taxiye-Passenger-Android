@@ -9,7 +9,6 @@ public class UniqueIMEIID {
 		try {
 			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 			String imei = telephonyManager.getDeviceId();
-			Log.e("imei", "="+imei);
 			if(imei != null && !imei.isEmpty()){
 				return imei;
 			}

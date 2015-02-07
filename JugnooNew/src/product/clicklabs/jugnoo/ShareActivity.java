@@ -1,7 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
-import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
@@ -63,6 +63,12 @@ public class ShareActivity extends Activity{
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		HomeActivity.checkForAccessTokenChange(this);
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
@@ -114,7 +120,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLoginCreator().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
+				new FacebookLoginHelper().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
 				FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);
 			}
 		});
@@ -156,7 +162,7 @@ public class ShareActivity extends Activity{
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
 		public void facebookLoginDone() {
-			new FacebookLoginCreator().publishFeedDialog(ShareActivity.this, 
+			new FacebookLoginHelper().publishFeedDialog(ShareActivity.this, 
 					shareStr11 + Data.userData.referralCode + shareStr2, 
 					"Use " + Data.userData.referralCode + " as code & get a FREE ride");
 		}

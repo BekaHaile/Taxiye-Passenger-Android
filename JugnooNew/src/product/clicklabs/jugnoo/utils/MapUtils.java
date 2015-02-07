@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import android.location.Location;
 
@@ -111,11 +112,8 @@ public class MapUtils {
 	
 	
 	
-	
-	
-	//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
-	public static String getGAPIAddress(LatLng latLng) {
-		String fullAddress = "Unnamed";
+	public static GAPIAddress getGAPIAddressObject(LatLng latLng){
+		GAPIAddress fullAddress = new GAPIAddress(new ArrayList<String>(), "Unnamed", "not_found");
 		try {
 			JSONObject jsonObj = new JSONObject(
 					new HttpRequester().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?"
@@ -123,7 +121,7 @@ public class MapUtils {
 									+ latLng.latitude
 									+ ","
 									+ latLng.longitude + "&sensor=true"));
-
+			//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
 			
 			String status = jsonObj.getString("status");
 			if (status.equalsIgnoreCase("OK")) {
@@ -134,8 +132,8 @@ public class MapUtils {
 
 				if (zero.has("address_components")) {
 					try {
-
 						ArrayList<String> selectedAddressComponentsArr = new ArrayList<String>();
+						
 						JSONArray addressComponents = zero.getJSONArray("address_components");
 
 						for (int i = 0; i < addressComponents.length(); i++) {
@@ -203,26 +201,25 @@ public class MapUtils {
 								}
 							}
 						}
-
-						fullAddress = "";
-						if (selectedAddressComponentsArr.size() > 0) {
-							for (int i = 0; i < selectedAddressComponentsArr.size(); i++) {
-								if (i < selectedAddressComponentsArr.size() - 1) {
-									fullAddress = fullAddress + selectedAddressComponentsArr.get(i) + ", ";
+						fullAddress = new GAPIAddress(selectedAddressComponentsArr, zero.getString("formatted_address"), postalCode);
+						if (fullAddress.addressComponents.size() > 0) {
+							String lessRedundantformattedAddress = "";
+							for (int i = 0; i < fullAddress.addressComponents.size(); i++) {
+								if (i < fullAddress.addressComponents.size() - 1) {
+									lessRedundantformattedAddress = lessRedundantformattedAddress + fullAddress.addressComponents.get(i) + ", ";
 								} else {
-									fullAddress = fullAddress + selectedAddressComponentsArr.get(i);
+									lessRedundantformattedAddress = lessRedundantformattedAddress + fullAddress.addressComponents.get(i);
 								}
 							}
-						} else {
-							fullAddress = zero.getString("formatted_address");
+							fullAddress.formattedAddress = lessRedundantformattedAddress;
 						}
-
 					} catch (Exception e) {
 						e.printStackTrace();
-						fullAddress = zero.getString("formatted_address");
+						fullAddress.formattedAddress = zero.getString("formatted_address");
 					}
-				} else {
-					fullAddress = zero.getString("formatted_address");
+				}
+				else{
+					fullAddress.formattedAddress = zero.getString("formatted_address");
 				}
 			}
 		} catch (Exception e) {
@@ -230,6 +227,20 @@ public class MapUtils {
 		}
 		return fullAddress;
 	}
+	
+	
+	
+	public static String getGAPIAddress(LatLng latLng) {
+		String fullAddress = "Unnamed";
+		try {
+			GAPIAddress gapiAddress = getGAPIAddressObject(latLng);
+			fullAddress = gapiAddress.formattedAddress;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return fullAddress;
+	}
+	
 	
 	
 	
@@ -309,4 +320,23 @@ public class MapUtils {
 			return null;
 		}
 	}
+	
+	
+	public static String getOSMZIPCodeForLatLng(LatLng latLng) {
+		try{
+			String link = "http://nominatim.openstreetmap.org/reverse?format=json&lat="
+					+ latLng.latitude + "&lon=" + latLng.longitude + "&zoom=18&addressdetails=1";
+			////http://nominatim.openstreetmap.org/reverse?format=json&lat=30.75&lon=76.75&zoom=18&addressdetails=1
+			link = link.replaceAll(" ", "%20");
+			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(link));
+			JSONObject address = jsonObj.getJSONObject("address");
+			String zipCode = address.getString("postcode");
+			return zipCode;
+		} catch(Exception e){
+			e.printStackTrace();
+			return "not_found";
+		}
+	}
+	
+	
 }

@@ -30,12 +30,7 @@ public class DialogPopup {
 	Dialog dialog;
 	public void alertPopup(Activity activity, String title, String message) {
 		try {
-			try{
-				if(dialog != null && dialog.isShowing()){
-					dialog.dismiss();
-				}
-			}catch(Exception e){
-			}
+			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
 				title = activity.getResources().getString(R.string.alert);
 			}
@@ -81,14 +76,18 @@ public class DialogPopup {
 		}
 	}
 	
+	public void dismissAlertPopup(){
+		try{
+			if(dialog != null && dialog.isShowing()){
+				dialog.dismiss();
+			}
+		}catch(Exception e){
+		}
+	}
+	
 	public void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
 		try {
-			try{
-				if(dialog != null && dialog.isShowing()){
-					dialog.dismiss();
-				}
-			}catch(Exception e){
-			}
+			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
 				title = activity.getResources().getString(R.string.alert);
 			}
@@ -147,6 +146,7 @@ public class DialogPopup {
 	 */
 	public static void showLoadingDialog(Context context, String message) {
 		try {
+			
 			if(isDialogShowing()){
 				dismissLoadingDialog();
 			}

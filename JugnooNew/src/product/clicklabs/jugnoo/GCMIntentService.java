@@ -1,21 +1,9 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
-import product.clicklabs.jugnoo.datastructure.UserMode;
-import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import android.app.IntentService;
 import android.app.Notification;
@@ -27,16 +15,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
-import android.telephony.TelephonyManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -186,10 +168,8 @@ public class GCMIntentService extends IntentService {
 		 
 	    @Override
 	    public void onHandleIntent(Intent intent) {
-	    	String currentTimeUTC = DateOperations.getCurrentTimeInUTC();
-	    	String currentTime = DateOperations.getCurrentTime();
-	    	
 	        Bundle extras = intent.getExtras();
+	        Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
 	        
 	        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 	        // The getMessageType() intent parameter must be the intent you received
@@ -215,12 +195,6 @@ public class GCMIntentService extends IntentService {
 	                    MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 	                // This loop represents the service doing some work.
 
-	            	String SHARED_PREF_NAME1 = "myPref", SP_ACCESS_TOKEN_KEY = "access_token";
-	            	
-	            	SharedPreferences pref1 = getSharedPreferences(SHARED_PREF_NAME1, 0);
-	        		final String accessToken = pref1.getString(SP_ACCESS_TOKEN_KEY, "");
-	        		if(!"".equalsIgnoreCase(accessToken)){
-	            	
 	    	    	try{
 	    		    	 Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
 	    		    	 
@@ -233,108 +207,13 @@ public class GCMIntentService extends IntentService {
 	    	    				 
 	    	    				 int flag = jObj.getInt("flag");
 	    	    				 
-	    	    				 if(PushFlags.REQUEST.getOrdinal() == flag){
-	    	    						 
-//	    	    						 {   "engagement_id": engagement_id, 
-//	    	    							 "user_id": data.customer_id, 
-//	    	    							 "flag": g_enum_notificationFlags.REQUEST,
-//	    	    							 "latitude": data.pickup_latitude, 
-//	    	    							 "longitude": data.pickup_longitude, 
-//	    	    							 "address": pickup_address
-//	    	    							 "start_time": date}
-	    	    					 
-	    	    					 
-	    	    						 String engagementId = jObj.getString("engagement_id");
-		    	    					 String userId = jObj.getString("user_id");
-		    	    					 double latitude = jObj.getDouble("latitude");
-		    	    					 double longitude = jObj.getDouble("longitude");
-		    	    					 String startTime = jObj.getString("start_time");
-		    	    					 String address = jObj.getString("address");
-		    	    					 
-		    	    					 sendRequestAckToServer(this, engagementId, currentTimeUTC);
-		    	    					 
-		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), currentTime);
-		    	    					 
-		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
-
-		    	    					 startTime = new DateOperations().getSixtySecAfterCurrentTime();
-		    	    					 
-		    	    					 if(HomeActivity.appInterruptHandler != null){
-		    	    						 if(UserMode.DRIVER == HomeActivity.userMode){
-		    	    							 if(DriverScreenMode.D_INITIAL == HomeActivity.driverScreenMode ||
-		    	    								DriverScreenMode.D_REQUEST_ACCEPT == HomeActivity.driverScreenMode ||
-		    	    								DriverScreenMode.D_RIDE_END == HomeActivity.driverScreenMode){
-		    	    								 
-		    	    								 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, 
-					    	    							 startTime, address);
-					    	    					 startRing(this);
-					    	    					 RequestTimeoutTimerTask requestTimeoutTimerTask = new RequestTimeoutTimerTask(this, engagementId);
-					    	    					 requestTimeoutTimerTask.startTimer(0, 20000, startTimeMillis, 60000);
-					    	    					 
-		    	    								 notificationManagerResume(this, "You have got a new ride request.", true);
-				    	    						 HomeActivity.appInterruptHandler.onNewRideRequest();
-		    	    							 }
-		    	    						 }
-		    	    					 }
-		    	    					 else{
-		    	    						 notificationManager(this, "You have got a new ride request.", true);
-		    	    						 
-		    	    						 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, 
-			    	    							 startTime, address);
-			    	    					 startRing(this);
-			    	    					 RequestTimeoutTimerTask requestTimeoutTimerTask = new RequestTimeoutTimerTask(this, engagementId);
-			    	    					 requestTimeoutTimerTask.startTimer(0, 20000, startTimeMillis, 60000);
-		    	    					 }
-		    	    					 
-	    	    					 
-	    	    				 }
-	    	    				 else if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
+	    	    				 if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
 									if (HomeActivity.appInterruptHandler != null) {
 										HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
 										notificationManagerResume(this, "Your request has been accepted", false);
 									} else {
 										notificationManager(this, "Your request has been accepted", false);
 									}
-	    	    				 }
-	    	    				 else if(PushFlags.REQUEST_CANCELLED.getOrdinal() == flag){
-    	    						 
-	    	    					 String engagementId = jObj.getString("engagement_id");
-	    	    					 clearNotifications(this);
-	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
-	    	    					 
-	    	    					 stopRing();
-	    	    					 
-	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, false);
-	    	    					 }
-	    	    					 
-	    	    				 }
-	    	    				 else if(PushFlags.RIDE_ACCEPTED_BY_OTHER_DRIVER.getOrdinal() == flag){
-    	    						 
-	    	    					 String engagementId = jObj.getString("engagement_id");
-	    	    					 clearNotifications(this);
-	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
-	    	    					 
-	    	    					 stopRing();
-	    	    					 
-	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, true);
-	    	    					 }
-	    	    					 
-	    	    					 
-	    	    				 }
-	    	    				else if(PushFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
-    	    						 
-	    	    					 String engagementId = jObj.getString("engagement_id");
-	    	    					 clearNotifications(this);
-	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
-	    	    					 
-	    	    					 stopRing();
-	    	    					 
-	    	    					 if(HomeActivity.appInterruptHandler != null){
-	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
-	    	    					 }
-	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_STARTED.getOrdinal() == flag){
 
@@ -368,7 +247,7 @@ public class GCMIntentService extends IntentService {
 	    	    					 
 	    	    					 try{
 	    	    						 if(jObj.has("rate_app")){
-	    	    							 Data.customerRateApp = jObj.getInt("rate_app");
+	    	    							 Data.customerRateAppFlag = jObj.getInt("rate_app");
 	    	    						 }
 	    	    					 } catch(Exception e){
 	    	    						 e.printStackTrace();
@@ -438,19 +317,9 @@ public class GCMIntentService extends IntentService {
 		    	    					 notificationManagerResume(this, ""+message1, false);
 	    	    					 }
 	    	    				 }
-	    	    				else if(PushFlags.TOGGLE_LOCATION_UPDATES.getOrdinal() == flag){
-	    	    					 int toggleLocation = jObj.getInt("toggle_location");
-	    	    					 if (1 == toggleLocation) {
-	    	    						 new DriverServiceOperations().startDriverService(GCMIntentService.this);
-	    	    					 }
-	    	    					 else{
-	    	    						 new DriverServiceOperations().stopAndScheduleDriverService(GCMIntentService.this);
-	    	    					 }
-	    	    				 }
 	    	    				else if(PushFlags.MANUAL_ENGAGEMENT.getOrdinal() == flag){
 	    	    					Database2.getInstance(this).updateDriverManualPatchPushReceived(Database2.YES);
 	    	    					Database2.getInstance(this).close();
-	    	    					startRingWithStopHandler(this);
 	    	    					String message1 = jObj.getString("message");
 	    	    					if (HomeActivity.appInterruptHandler != null) {
 										HomeActivity.appInterruptHandler.onManualDispatchPushReceived();
@@ -459,14 +328,6 @@ public class GCMIntentService extends IntentService {
 										notificationManager(this, message1, true);
 									}
 	    	    				 }
-	    	    				else if(PushFlags.HEARTBEAT.getOrdinal() == flag){
-	    	    					try{
-	    	    						String uuid = jObj.getString("uuid");
-	    	    						sendHeartbeatAckToServer(this, uuid, currentTimeUTC);
-	    	    					} catch(Exception e){
-	    	    						e.printStackTrace();
-	    	    					}
-	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 e.printStackTrace();
@@ -479,344 +340,13 @@ public class GCMIntentService extends IntentService {
 	    	    		 Log.e("Recieved exception message arg1...", ","+intent);
 	    	    		 Log.e("exception", ","+e);
 	    	    	 }
-	        		}
-	    	         
 	    	    
 	            }
 	        }
 	        // Release the wake lock provided by the WakefulBroadcastReceiver.
 	        GcmBroadcastReceiver.completeWakefulIntent(intent);
 	    }
-
 	    
-	    
-	    
-	    
-	    
-	    
-	    public static MediaPlayer mediaPlayer;
-	    public static Vibrator vibrator;
-	    
-		public static void startRing(Context context){
-			try {
-				stopRing();
-				vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-				if(vibrator.hasVibrator()){
-					long[] pattern = {0, 1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900 };
-					vibrator.vibrate(pattern, -1);
-				}
-				AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-//				am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-				am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
-				mediaPlayer = MediaPlayer.create(context, R.raw.telephone_ring);
-				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-				    @Override
-				    public void onCompletion(MediaPlayer mp) {
-						mediaPlayer.stop();
-				    	mediaPlayer.reset();
-				    	mediaPlayer.release();
-				    	vibrator.cancel();
-				    }
-				});
-				mediaPlayer.start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		public static void startRingWithStopHandler(Context context){
-			try {
-				stopRing();
-				vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-				if(vibrator.hasVibrator()){
-					long[] pattern = {0, 1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900, 
-											1350, 3900 };
-					vibrator.vibrate(pattern, -1);
-				}
-				AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-//				am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-				am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
-				mediaPlayer = MediaPlayer.create(context, R.raw.telephone_ring);
-				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-				    @Override
-				    public void onCompletion(MediaPlayer mp) {
-						mediaPlayer.stop();
-				    	mediaPlayer.reset();
-				    	mediaPlayer.release();
-				    	vibrator.cancel();
-				    }
-				});
-				mediaPlayer.start();
-				
-				new Handler().postDelayed(new Runnable() {
-					
-					@Override
-					public void run() {
-						stopRing();
-					}
-				}, 20000);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		
-		public static void stopRing(){
-			try {
-				if(vibrator != null){
-					vibrator.cancel();
-				}
-				if(mediaPlayer != null && mediaPlayer.isPlaying()){
-					mediaPlayer.stop();
-					mediaPlayer.reset();
-					mediaPlayer.release();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally{
-				vibrator = null;
-				mediaPlayer = null;
-			}
-		}
-
-	    
-	    
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	    
-	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
-	    		String startTime, String address){
-	    	try {
-	    		Database2.getInstance(context).insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
-	    		Database2.getInstance(context).close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	    }
-	    
-	    public int deleteDriverRideRequest(Context context, String engagementId){
-	    	try {
-				int count = Database2.getInstance(context).deleteDriverRequest(engagementId);
-				Database2.getInstance(context).close();
-				return count;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	    	return 0;
-	    }
-	    
-	    class RequestTimeoutTimerTask{
-	    	
-	    	public Timer timer;
-	    	public TimerTask timerTask;
-	    	public Context context;
-	    	
-	    	public String engagementId;
-	    	
-	    	public long startTime, lifeTime, endTime, period, executionTime;
-	    	
-	    	public RequestTimeoutTimerTask(Context context, String engagementId){
-	    		this.context = context;
-	    		this.engagementId = engagementId;
-	    	}
-	    	
-	    	public void startTimer(long delay, long period, long startTime, long lifeTime){
-	    		stopTimer();
-	    		
-	    		this.startTime = startTime;
-	    		this.lifeTime = lifeTime;
-	    		this.endTime = startTime + lifeTime;
-	    		this.period = period;
-	    		this.executionTime = -1;
-	    		
-	    		timer = new Timer();
-	    		timerTask = new TimerTask() {
-	    			@Override
-	    			public void run() {
-	    				long start = System.currentTimeMillis();
-	    				
-	    				if(executionTime == -1){
-							executionTime = RequestTimeoutTimerTask.this.startTime;
-						}
-	    				
-		    			if(executionTime >= RequestTimeoutTimerTask.this.endTime){
-		    				int count = deleteDriverRideRequest(context, engagementId);
-		    				if(count > 0){
-		    					if(HomeActivity.appInterruptHandler != null){
-			    					HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
-			    				}
-		    					clearNotifications(context);
-		    					stopRing();
-		    				}
-		    				stopTimer();
-		    			}
-		    			long stop = System.currentTimeMillis();
-					    long elapsedTime = stop - start;
-					    if(executionTime != -1){
-					    	if(elapsedTime >= RequestTimeoutTimerTask.this.period){
-					    		executionTime = executionTime + elapsedTime;
-					    	}
-					    	else{
-					    		executionTime = executionTime + RequestTimeoutTimerTask.this.period;
-					    	}
-					    }
-					    Log.i("RequestTimeoutTimerTask execution", "="+(RequestTimeoutTimerTask.this.endTime - executionTime));
-	    			}
-	    		};
-	    		timer.scheduleAtFixedRate(timerTask, delay, period);
-	    	}
-	    	
-	    	public void stopTimer(){
-	    		try{
-	    			Log.e("RequestTimeoutTimerTask","stopTimer");
-	    			startTime = 0;
-	    			lifeTime = 0;
-	    			if(timerTask != null){
-	    				timerTask.cancel();
-	    				timerTask = null;
-	    			}
-	    			if(timer != null){
-	    				timer.cancel();
-	    				timer.purge();
-	    				timer = null;
-	    			}
-	    		} catch(Exception e){
-	    			e.printStackTrace();
-	    		}
-	    	}
-	    	
-	    	
-	    }
-	    
-	    
-	    
-	    public String getNetworkName(Context context){
-	    	try {
-				TelephonyManager telephonyManager =((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-				String simOperatorName = telephonyManager.getSimOperatorName();
-				String operatorName = telephonyManager.getNetworkOperatorName();
-				return simOperatorName + " " + operatorName;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	    	return "not found";
-	    }
-	    
-	    
-		public void sendRequestAckToServer(final Context context, final String engagementId, final String actTimeStamp){
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						String accessToken = Database2.getInstance(context).getDLDAccessToken();
-						Database2.getInstance(context).close();
-						if("".equalsIgnoreCase(accessToken)){
-							DriverLocationUpdateService.updateServerData(context);
-							accessToken = Database2.getInstance(context).getDLDAccessToken();
-						}
-						
-						String serverUrl = Database2.getInstance(context).getDLDServerUrl();
-						
-						String networkName = getNetworkName(context);
-						
-						
-						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-						nameValuePairs.add(new BasicNameValuePair("engagement_id", engagementId));
-						nameValuePairs.add(new BasicNameValuePair("ack_timestamp", actTimeStamp));
-						nameValuePairs.add(new BasicNameValuePair("network_name", networkName));
-						
-						Log.e("nameValuePairs in sending ack to server","="+nameValuePairs);
-						
-						HttpRequester simpleJSONParser = new HttpRequester();
-						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_request", nameValuePairs);
-						
-						Log.e("result ","="+result);
-						
-						simpleJSONParser = null;
-						nameValuePairs = null;
-						
-						JSONObject jObj = new JSONObject(result);
-						if(jObj.has("flag")){
-							int flag = jObj.getInt("flag");
-							if(ApiResponseFlags.ACK_RECEIVED.getOrdinal() == flag){
-								String log = jObj.getString("log");
-								Log.e("ack to server successfull", "="+log);
-							}
-						}
-						
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}).start();
-		}
-	    
-		
-		
-		public void sendHeartbeatAckToServer(final Context context, final String uuid, final String ackTimeStamp){
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						String serverUrl = Database2.getInstance(context).getDLDServerUrl();
-						
-						String networkName = getNetworkName(context);
-						
-						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("uuid", uuid));
-						nameValuePairs.add(new BasicNameValuePair("timestamp", ackTimeStamp));
-						nameValuePairs.add(new BasicNameValuePair("network_name", networkName));
-						
-//						Log.e("nameValuePairs in sending ack to server","="+nameValuePairs);
-						
-						HttpRequester simpleJSONParser = new HttpRequester();
-						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_heartbeat", nameValuePairs);
-						
-//						Log.e("result ","="+result);
-						
-						simpleJSONParser = null;
-						nameValuePairs = null;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}).start();
-		}
-		
-		
-		//context.sendBroadcast(new Intent("com.google.android.intent.action.GTALK_HEARTBEAT"));
-		//context.sendBroadcast(new Intent("com.google.android.intent.action.MCS_HEARTBEAT"));
-		
 }
 
 

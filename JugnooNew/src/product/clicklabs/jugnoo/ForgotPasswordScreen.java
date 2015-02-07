@@ -55,6 +55,12 @@ public class ForgotPasswordScreen extends Activity{
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		HomeActivity.checkForAccessTokenChange(this);
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.forgot_password_screen);

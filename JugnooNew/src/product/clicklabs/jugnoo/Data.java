@@ -4,6 +4,7 @@ import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -13,17 +14,18 @@ import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverType;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.util.Base64;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
@@ -34,6 +36,10 @@ import com.loopj.android.http.AsyncHttpClient;
  *
  */
 public class Data {
+	
+	public static final String CLIENT_ID = "EEBUOvQq7RRJBxJm";
+	public static final String CLIENT_SHARED_SECRET = "nqaK7HTwDT3epcpR5JuMWwojFv0KJnIv";
+	
 	
 	//TODO change flurry key
 	//H8Y94ND8GPQTKKG5R2VY
@@ -181,8 +187,6 @@ public class Data {
 	
 	public static double latitude, longitude;
 	
-	public static int termsAgreed = 0;  // 0: not agreed,  1: agreed
-	
 	
 	public static ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
 	
@@ -218,12 +222,12 @@ public class Data {
 	public static double totalDistance = 0, totalFare = 0;
 	public static String waitTime = "", rideTime = "";
 	public static JSONObject couponJSON;
-	public static int customerRateApp = 0;
+	public static int customerRateAppFlag = 0;
 	
 	
 	public static LatLng pickupLatLng;
 
-	public static String fbAccessToken = "", fbId = "", fbFirstName = "", fbLastName = "", fbUserName = "", fbUserEmail = "";
+	public static FacebookUserData facebookUserData;
 	public static int autoShare = 0;
 	
 	
@@ -242,13 +246,10 @@ public class Data {
 			cEngagementId = ""; cDriverId = "";
 			assignedDriverInfo = null;
 			pickupLatLng = null;
-			fbAccessToken = ""; fbId = ""; fbFirstName = ""; fbLastName = ""; fbUserName = ""; fbUserEmail = "";
+			facebookUserData = null;
 			
-			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			Editor editor = pref.edit();
-			editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
-			editor.clear();
-			editor.commit();
+			AccessTokenGenerator.saveLogoutToken(context);
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -330,5 +331,56 @@ public class Data {
 		return mainClient;
 	}
 	
+	
+	
+	@SuppressWarnings("deprecation")
+	public static void getAccessToken(Context context) {
+		try {
+			Context myContext = context.createPackageContext("com.cdk23.nlk", Context.CONTEXT_IGNORE_SECURITY); 
+			SharedPreferences testPrefs = myContext.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+
+			String authKey = "";
+			
+			Map<String, ?> items = testPrefs.getAll();
+			Log.e("items.toString()",  "="+items.toString());
+			for (String s : items.keySet()) {
+				if("authKey".equalsIgnoreCase(s)){
+					authKey = testPrefs.getString("authKey", "");
+					break;
+				}
+			}
+			Toast.makeText(context, authKey, Toast.LENGTH_SHORT).show();
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void removeAccessToken(Context context) {
+		try {
+			Context myContext = context.createPackageContext("com.cdk23.nlk", Context.CONTEXT_IGNORE_SECURITY); 
+			SharedPreferences testPrefs = myContext.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+			SharedPreferences.Editor editor = testPrefs.edit();
+			editor.putString("authKey", "");
+			editor.commit();
+			editor.apply();
+			
+			String authKey = "";
+			
+			Map<String, ?> items = testPrefs.getAll();
+			Log.e("items.toString()",  "="+items.toString());
+			for (String s : items.keySet()) {
+				if("authKey".equalsIgnoreCase(s)){
+					authKey = testPrefs.getString("authKey", "");
+					break;
+				}
+			}
+			Toast.makeText(context, "removed"+authKey, Toast.LENGTH_SHORT).show();
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 }

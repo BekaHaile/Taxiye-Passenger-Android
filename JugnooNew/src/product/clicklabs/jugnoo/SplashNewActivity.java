@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -17,21 +18,19 @@ import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -48,8 +47,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -68,9 +67,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	Button buttonLogin, buttonRegister;
 	
-	boolean loginDataFetched = false, loginFailed = false;
-	
-//	GoogleCloudMessaging gcm;
+	boolean loginDataFetched = false, loginFailed = false, resumed = false;
 	
 	// *****************************Used for flurry work***************//
 	@Override
@@ -109,6 +106,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 //		    config.locale = locale;
 //		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 //		}
+		
+		Data.userData = null;
 		
 		try {
 			Uri targetUri = getIntent().getData();
@@ -163,6 +162,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		loginDataFetched = false;
 		loginFailed = false;
+		resumed = false;
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashNewActivity.this, relative, 1134, 720, false);
@@ -216,6 +216,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		
 		
+		
 		try {																						// to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			Data.appVersion = pInfo.versionCode;
@@ -228,18 +229,17 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Log.i("deviceName", Data.deviceName + "..");
 			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
-			
 		} catch (Exception e) {
 			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
 		}
 		
 
+		
+	    
+	    
+	    
 		noNetFirstTime = false;
 		noNetSecondTime = false;
-	    
-	    
-	    
-	    
 	    
 		if(getIntent().hasExtra("no_anim")){
 			jugnooImg.clearAnimation();
@@ -302,6 +302,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	}
 	
 	
+	
 	@Override
 	protected void onResume() {
 		if(Data.locationFetcher == null){
@@ -319,8 +320,20 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		
 		super.onResume();
+		new DialogPopup().dismissAlertPopup();
+		checkForAccessTokenChange(this);
+		resumed = true;
 	}
 	
+	
+	public void checkForAccessTokenChange(Activity activity){
+		if(resumed){
+			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
+			if(!"".equalsIgnoreCase(pair.first)){
+				jugnooImg.performClick();
+			}
+		}
+	}
 	
 	
 	@Override
@@ -426,9 +439,10 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	 */
 	public void accessTokenLogin(final Activity activity) {
 		
-		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-		final String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
-		if(!"".equalsIgnoreCase(accessToken)){
+		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
+		
+		if(!"".equalsIgnoreCase(pair.first)){
+			String accessToken = pair.first;
 			buttonLogin.setVisibility(View.GONE);
 			buttonRegister.setVisibility(View.GONE);
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
@@ -444,36 +458,29 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.deviceToken);
 				
-				final String serviceRestartOnReboot = Database2.getInstance(activity).getDriverServiceRun();
-				if(Database2.NO.equalsIgnoreCase(serviceRestartOnReboot)){
-					params.put("latitude", "0");
-					params.put("longitude", "0");
-				}
-				else{
-					params.put("latitude", ""+Data.latitude);
-					params.put("longitude", ""+Data.longitude);
-				}
-				Database2.getInstance(activity).close();
+				
+				params.put("latitude", ""+Data.latitude);
+				params.put("longitude", ""+Data.longitude);
 				
 				
 				params.put("app_version", ""+Data.appVersion);
 				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("unique_device_id", Data.uniqueDeviceId);
+				params.put("client_id", Data.CLIENT_ID);
+				params.put("is_access_token_new", ""+pair.second);
 
-//				new SingleLocationSender(SplashNewActivity.this, accessToken, Data.deviceToken, Data.SERVER_URL);
-				
 				Log.i("accessToken", "=" + accessToken);
 				Log.i("device_token", Data.deviceToken);
 				Log.i("latitude", ""+Data.latitude);
 				Log.i("longitude", ""+Data.longitude);
 				Log.i("app_version", ""+Data.appVersion);
 				Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
+				
+				Log.e("params", "="+params);
 			
-				//start_app_using_access_token
-				//access_token
 				
 				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/start_app_using_access_token", params,
+				client.post(Data.SERVER_URL + "/login_using_access_token", params,
 						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
@@ -492,44 +499,41 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 								try {
 									jObj = new JSONObject(response);
 									
-									boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity);
+									int flag = jObj.getInt("flag");
 									
-									if(!newUpdate){
-										if(!jObj.isNull("error")){
-											
-											
-	//										{"error":"some parameter missing","flag":0}//error
-	//										{"error":"invalid access token","flag":1}//error
-	
-											int flag = jObj.getInt("flag");	
-											String errorMessage = jObj.getString("error");
-											if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-												HomeActivity.logoutUser(activity);
-											}
-											else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-												new DialogPopup().alertPopup(activity, "", errorMessage);
-											}
-											else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
-												new DialogPopup().alertPopup(activity, "", errorMessage);
-											}
-											else if(8 == flag){ // {"error":"email not  registered","flag":1}//error
-	//											new DialogPopup().alertPopup(activity, "", errorMessage);
-												noNetFirstTime = false;
-												noNetSecondTime = false;
-												
-												loginFailed = true;
-											}
-											else{
-												new DialogPopup().alertPopup(activity, "", errorMessage);
-											}
+									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+										if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+											String error = jObj.getString("error");
+											new DialogPopup().alertPopup(activity, "", error);
 											DialogPopup.dismissLoadingDialog();
 										}
+										else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+											String error = jObj.getString("error");
+											new DialogPopup().alertPopup(activity, "", error);
+											DialogPopup.dismissLoadingDialog();
+										}
+										else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+											if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+												new AccessTokenDataParseAsync(activity, response).execute();
+												
+												SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+												Editor editor = pref1.edit();
+												editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
+												editor.commit();
+											}
+											else{
+												DialogPopup.dismissLoadingDialog();
+											}
+										}
 										else{
-											
-											new AccessTokenDataParseAsync(activity, response, accessToken).execute();
-											
+											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+											DialogPopup.dismissLoadingDialog();
 										}
 									}
+									else{
+										DialogPopup.dismissLoadingDialog();
+									}
+									
 								}  catch (Exception exception) {
 									exception.printStackTrace();
 									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -554,18 +558,17 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String>{
 		
 		Activity activity;
-		String response, accessToken;
+		String response;
 		
-		public AccessTokenDataParseAsync(Activity activity, String response, String accessToken){
+		public AccessTokenDataParseAsync(Activity activity, String response){
 			this.activity = activity;
 			this.response = response;
-			this.accessToken = accessToken;
 		}
 		
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				String resp = new JSONParser().parseAccessTokenLoginData(activity, response, accessToken);
+				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
 				return resp;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -576,24 +579,17 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-
 			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 				loginDataFetched = false;
 				new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			}
 			else{
-
 				noNetFirstTime = false;
 				noNetSecondTime = false;
-				
 				loginDataFetched = true;
-				
 			}
-			
-
 			DialogPopup.dismissLoadingDialog();
 		}
-		
 	}
 	
 	
@@ -661,7 +657,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
-//			textHead.setText(title);
 			textMessage.setText(message);
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
@@ -697,6 +692,34 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 	}
 	
+	public static boolean checkIfTrivialAPIErrors(Activity activity, JSONObject jObj){
+		try {
+			int flag = jObj.getInt("flag");
+			if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
+				DialogPopup.dismissLoadingDialog();
+				HomeActivity.logoutUser(activity);
+				return true;
+			}
+			else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+				DialogPopup.dismissLoadingDialog();
+				String errorMessage = jObj.getString("error");
+				new DialogPopup().alertPopup(activity, "", errorMessage);
+				return true;
+			}
+			else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+				DialogPopup.dismissLoadingDialog();
+				String message = jObj.getString("message");
+				new DialogPopup().alertPopup(activity, "", message);
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	
 	@Override
@@ -796,7 +819,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
-	//TODO debug code confirm popup
 		public void confirmDebugPasswordPopup(final Activity activity){
 
 			try {
@@ -886,7 +908,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 	
 	
-		//TODO change server link popup
 		void changeServerLinkPopup(final Activity activity) {
 				try {
 					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -1018,184 +1039,11 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
-    class SingleLocationSender {
-
-    	public SingleLocationListener listener;
-    	public LocationManager locationManager;
-    	public Location location;
-    	public String accessToken, deviceToken, SERVER_URL;
-    	
-    	/**
-    	 * Initialize location fetcher object with selected listeners
-    	 * @param context
-    	 */
-		public SingleLocationSender(Context context, String accessToken, String deviceToken, String SERVER_URL) {
-			this.accessToken = accessToken;
-			this.deviceToken = deviceToken;
-			this.SERVER_URL = SERVER_URL;
-			locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-			if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-				listener = new SingleLocationListener();
-				locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, listener, null);
-			}
-		}
-    	
-    	public void destroy(){
-    		try{
-    			locationManager.removeUpdates(listener);
-    		}catch(Exception e){
-    		}
-    	}
-
-    	
-
-    	class SingleLocationListener implements LocationListener {
-
-    		public void onLocationChanged(Location loc) {
-    			SingleLocationSender.this.location = loc;
-    			new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, loc);
-    			new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						new DriverLocationDispatcher().sendLocationToServer(SplashNewActivity.this, "LocationReciever");
-					}
-				}).start();
-    			
-    		}
-
-    		public void onProviderDisabled(String provider) {
-    		}
-
-    		public void onProviderEnabled(String provider) {
-    		}
-
-    		public void onStatusChanged(String provider, int status, Bundle extras) {
-    		}
-    }
-    }
-
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, location);
-	}
-	
-	
-	public static boolean isLastLocationUpdateFine(Activity activity){
-		try {
-			String userMode = Database2.getInstance(activity).getUserMode();
-			String driverScreenMode = Database2.getInstance(activity).getDriverScreenMode();
-			long lastLocationUpdateTime = Database2.getInstance(activity).getDriverLastLocationTime();
-			Database2.getInstance(activity).close();
-			
-			long currentTime = System.currentTimeMillis();
-			
-			if(lastLocationUpdateTime == 0){
-				lastLocationUpdateTime = System.currentTimeMillis();
-			}
-			
-			long systemUpTime = SystemClock.uptimeMillis();
-			
-//			Log.e("isLastLocationUpdateFine lastLocationUpdateTime", "="+(currentTime - (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT)));
-//			Log.e("isLastLocationUpdateFine systemUpTime", "="+systemUpTime);
-//			Log.e("isLastLocationUpdateFine userMode", "="+userMode);
-//			Log.e("isLastLocationUpdateFine driverScreenMode", "="+driverScreenMode);
-			
-			
-			if(systemUpTime > HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT){
-//				Log.i("systemUpTime", "greater");
-				if(Database2.UM_DRIVER.equalsIgnoreCase(userMode) && 
-						(currentTime >= (lastLocationUpdateTime + HomeActivity.MAX_TIME_BEFORE_LOCATION_UPDATE_REBOOT))){
-					if(Database2.VULNERABLE.equalsIgnoreCase(driverScreenMode)){
-						showRestartPhonePopup(activity);
-						return false;
-					}
-					else{
-						dismissRestartPhonePopup();
-						return true;
-					}
-				}
-				else{
-					dismissRestartPhonePopup();
-					return true;
-				}
-			}
-			else{
-				dismissRestartPhonePopup();
-				return true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			dismissRestartPhonePopup();
-			return true;
-		}
-	}
-	
-	
-	public static Dialog restartPhoneDialog;
-	public static void showRestartPhonePopup(final Activity activity){
-		try {
-			if(restartPhoneDialog == null || !restartPhoneDialog.isShowing()){
-				restartPhoneDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				restartPhoneDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				restartPhoneDialog.setContentView(R.layout.no_driver_dialog);
-	
-				FrameLayout frameLayout = (FrameLayout) restartPhoneDialog.findViewById(R.id.rv);
-				new ASSL(activity, frameLayout, 1134, 720, true);
-	
-				WindowManager.LayoutParams layoutParams = restartPhoneDialog.getWindow().getAttributes();
-				layoutParams.dimAmount = 0.6f;
-				restartPhoneDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				restartPhoneDialog.setCancelable(false);
-				restartPhoneDialog.setCanceledOnTouchOutside(false);
-	
-				TextView textHead = (TextView) restartPhoneDialog.findViewById(R.id.textHead);
-				textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-				textHead.setVisibility(View.GONE);
-				TextView textMessage = (TextView) restartPhoneDialog.findViewById(R.id.textMessage);
-				textMessage.setTypeface(Data.regularFont(activity));
-	
-				textMessage.setMovementMethod(new ScrollingMovementMethod());
-				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
-				
-				textMessage.setText("Network Problem. Please Switch OFF and Switch ON your phone and wait for 5 minutes to continue using Jugnoo.");
-				
-	
-				Button btnOk = (Button) restartPhoneDialog.findViewById(R.id.btnOk);
-				btnOk.setTypeface(Data.regularFont(activity));
-				Button crossbtn = (Button) restartPhoneDialog
-						.findViewById(R.id.crossbtn);
-				crossbtn.setTypeface(Data.regularFont(activity));
-				crossbtn.setVisibility(View.GONE);
-	
-				btnOk.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						restartPhoneDialog.dismiss();
-						activity.finish();
-					}
-				});
-	
-				restartPhoneDialog.show();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	public static void dismissRestartPhonePopup(){
-		try{
-			if(restartPhoneDialog != null && restartPhoneDialog.isShowing()){
-				restartPhoneDialog.dismiss();
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 	
 }

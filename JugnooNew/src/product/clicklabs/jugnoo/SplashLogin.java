@@ -5,18 +5,23 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.SplashNewActivity.AccessTokenDataParseAsync;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
-import product.clicklabs.jugnoo.utils.FacebookLoginCreator;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.Rect;
@@ -36,6 +41,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
@@ -62,7 +68,8 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	LinearLayout relative;
 	
 	boolean loginDataFetched = false, facebookRegister = false, sendToOtpScreen = false;
-	int otpFlag = 0; String phoneNoOfLoginAccount = "";
+	int otpFlag = 0; 
+	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "";
 	
 
 	
@@ -83,6 +90,9 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		facebookRegister = false;
 		sendToOtpScreen = false;
 		otpFlag = 0;
+		phoneNoOfUnverifiedAccount = "";
+		otpErrorMsg = "";
+		notRegisteredMsg = "";
 	}
 	
 	// *****************************Used for flurry work***************//
@@ -242,7 +252,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			@Override
 			public void onClick(View v) {
 				loginDataFetched = false;
-				new FacebookLoginCreator().openFacebookSession(SplashLogin.this, facebookLoginCallback, true);
+				new FacebookLoginHelper().openFacebookSession(SplashLogin.this, facebookLoginCallback, true);
 			}
 		});
 		
@@ -331,8 +341,16 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
 		public void facebookLoginDone() {
-			sendFacebookLoginValues(SplashLogin.this);
-			FlurryEventLogger.facebookLoginClicked(Data.fbId);
+			if(FacebookLoginHelper.USER_DATA != null){
+				Data.facebookUserData = new FacebookUserData(FacebookLoginHelper.USER_DATA.accessToken, FacebookLoginHelper.USER_DATA.fbId, 
+						FacebookLoginHelper.USER_DATA.firstName, FacebookLoginHelper.USER_DATA.lastName, FacebookLoginHelper.USER_DATA.userName, 
+						FacebookLoginHelper.USER_DATA.userEmail);
+				sendFacebookLoginValues(SplashLogin.this);
+				FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
+			}
+			else{
+				Toast.makeText(getApplicationContext(), "Error occured during Facebook authentication", Toast.LENGTH_SHORT).show();
+			}
 		}
 	};
 	
@@ -355,6 +373,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			new DialogPopup().showLocationSettingsAlert(SplashLogin.this);
 		}
 		
+		HomeActivity.checkForAccessTokenChange(this);
 	}
 	
 	@Override
@@ -375,23 +394,11 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
-		super.onBackPressed();
 	}
 	
 	
 	public void performBackPressed(){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					if(Session.getActiveSession() != null){
-						Session.getActiveSession().closeAndClearTokenInformation();
-					}
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}).start();
+		new FacebookLoginHelper().logoutFacebook();
 		Intent intent = new Intent(SplashLogin.this, SplashNewActivity.class);
 		intent.putExtra("no_anim", "yes");
 		startActivity(intent);
@@ -409,7 +416,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	/**
 	 * ASync for login from server
 	 */
-	public void sendLoginValues(final Activity activity, final String emailId, final String password) {
+	public void sendLoginValues(final Activity activity, final String emailId, String password) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -423,31 +430,34 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			
 			params.put("email", emailId);
 			params.put("password", password);
-			params.put("device_type", Data.DEVICE_TYPE);
-			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("device_token", Data.deviceToken);
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", ""+Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
-			params.put("country", Data.country);
-			params.put("device_name", Data.deviceName);
-			params.put("app_version", Data.appVersion);
-			params.put("os_version", Data.osVersion);
+			params.put("client_id", Data.CLIENT_ID);
+			
 
-			Log.i("Server uRL", "=" + Data.SERVER_URL);
-			Log.i("email", "=" + emailId);
-			Log.i("password", "=" + password);
-			Log.e("device_token", "=" + Data.deviceToken);
-			Log.i("latitude", "=" + Data.latitude);
-			Log.i("longitude", "=" + Data.longitude);
-			Log.i("country", "=" + Data.country);
-			Log.i("device_name", "=" + Data.deviceName);
-			Log.i("app_version", "=" + Data.appVersion);
-			Log.i("os_version", "=" + Data.osVersion);
-			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
+			Log.i("email", emailId);
+			Log.i("password", password);
+			Log.i("device_token", Data.deviceToken);
+			Log.i("device_type", Data.DEVICE_TYPE);
+			Log.i("device_name", Data.deviceName);
+			Log.i("app_version", ""+Data.appVersion);
+			Log.i("os_version", Data.osVersion);
+			Log.i("country", Data.country);
+			Log.i("unique_device_id", Data.uniqueDeviceId);
+			Log.i("latitude", ""+Data.latitude);
+			Log.i("longitude", ""+Data.longitude);
+			Log.i("client_id", Data.CLIENT_ID);
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/email_login", params,
+			client.post(Data.SERVER_URL + "/login_using_email", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -466,58 +476,46 @@ public class SplashLogin extends Activity implements LocationUpdate{
 							try {
 								jObj = new JSONObject(response);
 								
-								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
+								int flag = jObj.getInt("flag");
 								
-								if(!newUpdate){
-									
-									if(!jObj.isNull("error")){
-										int flag = jObj.getInt("flag");	
-										String errorMessage = jObj.getString("error");
-										
-										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-											HomeActivity.logoutUser(activity);
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+										enteredEmail = emailId;
+										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+										otpErrorMsg = jObj.getString("error");
+										otpFlag = 0;
+										sendToOtpScreen = true;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
+											Database.getInstance(SplashLogin.this).insertEmail(emailId);
+											Database.getInstance(SplashLogin.this).close();
+											loginDataFetched = true;
 										}
-										else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										else if(1 == flag){ // {"error":"email not  registered","flag":1}//error
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										else if(2 == flag){ // {"error":"incorrect password","flag":2}//error
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										else if(3 == flag){ // {"error":"enter otp","flag":2}//error
-											phoneNoOfLoginAccount = (jObj.has("phone_no"))?(jObj.getString("phone_no")):"";
-											otpFlag = 0;
-											sendToOtpScreen = true;
-										}
-										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										DialogPopup.dismissLoadingDialog();
 									}
 									else{
-										
-										new JSONParser().parseLoginData(activity, response);
-										
-										Database.getInstance(SplashLogin.this).insertEmail(emailId);
-										Database.getInstance(SplashLogin.this).close();
-										
-										loginDataFetched = true;
-										
-										DialogPopup.dismissLoadingDialog();
-										
+										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
+									DialogPopup.dismissLoadingDialog();
 								}
 								else{
 									DialogPopup.dismissLoadingDialog();
 								}
+								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
-	
 						}
 					});
 		}
@@ -548,48 +546,45 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			}
 
 		
-			params.put("user_fb_id", Data.fbId);
-			params.put("user_fb_name", Data.fbFirstName + " " + Data.fbLastName);
-			params.put("fb_access_token", Data.fbAccessToken);
-			params.put("username", Data.fbUserName);
-			params.put("fb_mail", Data.fbUserEmail);
+			params.put("user_fb_id", Data.facebookUserData.fbId);
+			params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+			params.put("fb_access_token", Data.facebookUserData.accessToken);
+			params.put("fb_mail", Data.facebookUserData.userEmail);
+			params.put("username", Data.facebookUserData.userName);
+			
+			params.put("device_token", Data.deviceToken);
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", ""+Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
-			params.put("device_token", Data.deviceToken);
-			params.put("country", Data.country);
-			params.put("app_version", Data.appVersion);
-			params.put("os_version", Data.osVersion);
-			params.put("device_name", Data.deviceName);
-			params.put("device_type", Data.DEVICE_TYPE);
-			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("otp", "");
-			params.put("ph_no", "");
-			params.put("password", "");
-			params.put("referral_code", "");
-			
-			
+			params.put("client_id", Data.CLIENT_ID);
 			
 
-			Log.i("user_fb_id", "="+Data.fbId);
-			Log.i("user_fb_name", "="+Data.fbFirstName + " " + Data.fbLastName);
-			Log.i("fb_access_token", "="+Data.fbAccessToken);
-			Log.i("username", "="+Data.fbUserName);
-			Log.i("fb_mail", "="+Data.fbUserEmail);
-			Log.i("latitude", "="+Data.latitude);
-			Log.i("longitude", "="+Data.longitude);
-			Log.i("device_token in fb login", "="+Data.deviceToken);
-			Log.i("country", "="+Data.country);
-			Log.i("app_version", "="+Data.appVersion);
-			Log.i("os_version", "="+Data.osVersion);
-			Log.i("device_name", "="+Data.deviceName);
-			Log.i("device_type", "="+Data.DEVICE_TYPE);
-			Log.i("unique_device_id", "=" + Data.uniqueDeviceId);
-			Log.i("Server link", "="+Data.SERVER_URL + "/customer_fb_registeration_form");
+			Log.i("user_fb_id", Data.facebookUserData.fbId);
+			Log.i("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+			Log.i("fb_access_token", Data.facebookUserData.accessToken);
+			Log.i("fb_mail", Data.facebookUserData.userEmail);
+			Log.i("username", Data.facebookUserData.userName);
+			
+			Log.i("device_token", Data.deviceToken);
+			Log.i("device_type", Data.DEVICE_TYPE);
+			Log.i("device_name", Data.deviceName);
+			Log.i("app_version", ""+Data.appVersion);
+			Log.i("os_version", Data.osVersion);
+			Log.i("country", Data.country);
+			Log.i("unique_device_id", Data.uniqueDeviceId);
+			Log.i("latitude", ""+Data.latitude);
+			Log.i("longitude", ""+Data.longitude);
+			Log.i("client_id", Data.CLIENT_ID);
 			
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/customer_fb_registeration_form", params,
+			client.post(Data.SERVER_URL + "/login_using_facebook", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -607,44 +602,42 @@ public class SplashLogin extends Activity implements LocationUpdate{
 							try {
 								jObj = new JSONObject(response);
 
-								boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj, activity);
+								int flag = jObj.getInt("flag");
 								
-								if(!newUpdate){
-										
-									if(!jObj.isNull("error")){
-										int flag = jObj.getInt("flag");	
-										String errorMessage = jObj.getString("error");
-										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-											HomeActivity.logoutUser(activity);
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										facebookRegister = true;
+										notRegisteredMsg = error;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										new DialogPopup().alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+										otpErrorMsg = jObj.getString("error");
+										otpFlag = 1;
+										sendToOtpScreen = true;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
+											loginDataFetched = true;
+											
+											Database.getInstance(SplashLogin.this).insertEmail(Data.facebookUserData.userEmail);
+											Database.getInstance(SplashLogin.this).close();
 										}
-										else if(2 == flag){ // {"error": 'Please enter otp',"flag":2} 
-											phoneNoOfLoginAccount = (jObj.has("phone_no"))?(jObj.getString("phone_no")):"";
-											otpFlag = 1;
-											sendToOtpScreen = true;
-										}
-										else if(3 == flag){ // {"error": 'Please enter details',"flag":3}
-											facebookRegister = true;
-										}
-										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										DialogPopup.dismissLoadingDialog();
 									}
 									else{
-										
-										new JSONParser().parseLoginData(activity, response);
-										loginDataFetched = true;
-										
-										Database.getInstance(SplashLogin.this).insertEmail(Data.fbUserEmail);
-										Database.getInstance(SplashLogin.this).close();
-										
-										DialogPopup.dismissLoadingDialog();
-										
+										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
+									DialogPopup.dismissLoadingDialog();
 								}
 								else{
 									DialogPopup.dismissLoadingDialog();
 								}
+								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -669,24 +662,43 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	 *  flag 0 for email, 1 for Facebook
 	 */
 	public void sendIntentToOtpScreen(){
-		if(0 == otpFlag){
-			RegisterScreen.facebookLogin = false;
-			OTPConfirmScreen.intentFromRegister = false;
-			OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfLoginAccount, "", "");
-			startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
-			finish();
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		}
-		else if(1 == otpFlag){
-			RegisterScreen.facebookLogin = true;
-			OTPConfirmScreen.intentFromRegister = false;
-			OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(phoneNoOfLoginAccount, "", "");
-			startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
-			finish();
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		}
+		new DialogPopup().alertPopupWithListener(SplashLogin.this, "", otpErrorMsg, new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(0 == otpFlag){
+					RegisterScreen.facebookLogin = false;
+					OTPConfirmScreen.intentFromRegister = false;
+					OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "");
+					startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
+					finish();
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
+				else if(1 == otpFlag){
+					RegisterScreen.facebookLogin = true;
+					OTPConfirmScreen.intentFromRegister = false;
+					OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(phoneNoOfUnverifiedAccount, "", "");
+					startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
+					finish();
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
+			}
+		});
 	}
 	
+	
+	public void sendIntentToRegisterScreen(){
+		new DialogPopup().alertPopupWithListener(this, "", notRegisteredMsg, new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				RegisterScreen.facebookLogin = true;
+				startActivity(new Intent(SplashLogin.this, RegisterScreen.class));
+				finish();
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+	}
 	
 	
 	@Override
@@ -715,21 +727,13 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			FlurryAgent.logEvent("App Login", articleParams);
 			
 			loginDataFetched = false;
-			if(Data.termsAgreed == 1){
-				startActivity(new Intent(SplashLogin.this, HomeActivity.class));
-			}
-			else{
-				startActivity(new Intent(SplashLogin.this, TermsConditionsActivity.class));
-			}
+			startActivity(new Intent(SplashLogin.this, HomeActivity.class));
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 		else if(hasFocus && facebookRegister){
 			facebookRegister = false;
-			RegisterScreen.facebookLogin = true;
-			startActivity(new Intent(SplashLogin.this, RegisterScreen.class));
-			finish();
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			sendIntentToRegisterScreen();
 		}
 		else if(hasFocus && sendToOtpScreen){
 			sendIntentToOtpScreen();
@@ -758,7 +762,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	public void onLocationChanged(Location location, int priority) {
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(SplashLogin.this, location);
 	}
 	
 }
