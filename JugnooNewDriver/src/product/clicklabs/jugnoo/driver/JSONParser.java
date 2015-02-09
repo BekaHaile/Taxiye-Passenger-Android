@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import product.clicklabs.jugnoo.driver.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.driver.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.driver.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.driver.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.driver.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.driver.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.driver.datastructure.FareStructure;
@@ -51,11 +52,13 @@ public class JSONParser {
 			int currentUserStatus = userData.getInt("current_user_status");
 			
 			if(currentUserStatus == 1){
+				Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
 				new DriverServiceOperations().startDriverService(context);
 				HomeActivity.userMode = UserMode.DRIVER;
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
 			}
 			else if(currentUserStatus == 2){
+				Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
 				new DriverServiceOperations().stopService(context);
 				HomeActivity.userMode = UserMode.PASSENGER;
 				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -98,7 +101,8 @@ public class JSONParser {
 	
 	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
 		
-		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0, nukkadEnable = 0;
+		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0, 
+				nukkadEnable = 0, freeRideIconDisable = 1;
 		String phoneNo = "";
 		
 		if(userData.has("can_schedule")){
@@ -151,14 +155,91 @@ public class JSONParser {
 			e.printStackTrace();
 		}
 		
+		if(userData.has("free_ride_icon_disable")){
+			freeRideIconDisable = userData.getInt("free_ride_icon_disable");
+		}
+		
 		//"gcm_intent": 0, christmas_icon_enable
 		
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
-				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable);
+				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, 
+				freeRideIconDisable);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
+		
+//		{
+//	    "login": {
+//	        "user_data": {
+//	            "user_name": "Driver 5",
+//	            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//	            "phone_no": "+919780298413",
+//	            "current_user_status": 2,
+//	            "access_token": "b1e785f46e944e89b11a5741579e4aeccfa5aa0ca832267ba236358b069bacdc",
+//	            "referral_code": "DRIVER65",
+//	            "can_change_location": 1,
+//	            "can_schedule": 1,
+//	            "scheduling_limit": 60,
+//	            "is_available": 1,
+//	            "gcm_intent": 1,
+//	            "nukkad_enable": 1,
+//	            "fare_details": [
+//	                {
+//	                    "id": 1,
+//	                    "fare_fixed": 25,
+//	                    "fare_per_km": 6,
+//	                    "fare_threshold_distance": 2,
+//	                    "fare_per_min": 1,
+//	                    "fare_threshold_time": 6
+//	                }
+//	            ],
+//	            "exceptional_driver": 0
+//	        },
+//	        "popup": 0
+//	    },
+//	    "last_ride": {  or null
+//	        "engagement_id": 5982,
+//	        "fare": 25,
+//	        "to_pay": 25,
+//	        "discount": 0,
+//	        "distance_travelled": 0,
+//	        "ride_time": 1,
+//	        "wait_time": 0,
+//	        "coupon": null,
+//	        "rate_us": 0,
+//	        "driver_info": {
+//	            "id": 234,
+//	            "name": "Driver 1",
+//	            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png"
+//	        }
+//	    },
+//	    "status": {
+//	        "log": "No active session",
+//	        "flag": 131
+//	    },
+//	    "drivers": {
+//	        "data": [
+//	            {
+//	                "user_name": "Driver 1",
+//	                "phone_no": "+919999999999",
+//	                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//	                "driver_car_image": "http://images.thecarconnection.com/lrg/krasnov-igor-muska-supercar-concept-rendering-006_100201743_l.jpg",
+//	                "latitude": 30.718959,
+//	                "longitude": 76.810215,
+//	                "user_id": 234,
+//	                "driver_id": 234,
+//	                "home_latitude": 0,
+//	                "home_longitude": 0,
+//	                "start_time": "02:30:00",
+//	                "end_time": "18:29:59",
+//	                "timing_id": 14,
+//	                "distance": 7.03,
+//	                "rating": 4.786516853932584
+//	            }
+//	        ]
+//	    }
+//	}
 		
 		JSONObject jObj = new JSONObject(response);
 		
@@ -172,6 +253,12 @@ public class JSONParser {
 		
 		//current_user_status = 1 driver or 2 user
 		int currentUserStatus = userData.getInt("current_user_status");
+		if(currentUserStatus == 1){
+			Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
+		}
+		else if(currentUserStatus == 2){
+			Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
+		}
 		
 		//Fetching user current status
 		JSONObject jUserStatusObject = jObj.getJSONObject("status");
@@ -241,6 +328,7 @@ public class JSONParser {
 			
 			int engagementStatus = -1;
 			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "", schedulePickupTime = "";
+			int freeRide = 0;
 			
 			try{
 							
@@ -287,7 +375,7 @@ public class JSONParser {
 									
 									JSONArray jActiveRequests = jObject1.getJSONArray("active_requests");
 									
-									Database2.getInstance(context).deleteAllDriverRequests();
+									Data.driverRideRequests.clear();
 									for(int i=0; i<jActiveRequests.length(); i++){
 										JSONObject jActiveRequest = jActiveRequests.getJSONObject(i);
 										 String requestEngagementId = jActiveRequest.getString("engagement_id");
@@ -295,10 +383,10 @@ public class JSONParser {
 		    	    					 double requestLatitude = jActiveRequest.getDouble("pickup_latitude");
 		    	    					 double requestLongitude = jActiveRequest.getDouble("pickup_longitude");
 		    	    					 String requestAddress = jActiveRequest.getString("pickup_location_address");
-		    	    					 String requestStartTime = new DateOperations().getSixtySecAfterCurrentTime();
+		    	    					 String requestStartTime = DateOperations.getSixtySecAfterCurrentTime();
 		    	    					 
-		    	    					 Database2.getInstance(context).insertDriverRequest(requestEngagementId, requestUserId, 
-		    	    							 ""+requestLatitude, ""+requestLongitude, requestStartTime, requestAddress);
+		    	    					 Data.driverRideRequests.add(new DriverRideRequest(requestEngagementId, requestUserId, 
+		    	    								new LatLng(requestLatitude, requestLongitude), requestStartTime, requestAddress));
 		    	    					 
 		    	    					 Log.i("inserter in db", "insertDriverRequest = "+requestEngagementId);
 									}
@@ -308,8 +396,6 @@ public class JSONParser {
 									if(jActiveRequests.length() == 0){
 										GCMIntentService.stopRing();
 									}
-									
-
 									
 								}
 								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
@@ -336,6 +422,10 @@ public class JSONParser {
 												schedulePickupTime = jObject.getString("pickup_time");
 											}
 										}
+										
+										if(jObject.has("free_ride")){
+											freeRide = jObject.getInt("free_ride");
+										}
 									}
 								}
 							
@@ -360,7 +450,7 @@ public class JSONParser {
 			else{
 				screenMode = "";
 			}
-			
+
 			
 			if("".equalsIgnoreCase(screenMode)){
 				HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
@@ -384,7 +474,7 @@ public class JSONParser {
 					String phone = customerPhone;
 					String rating = customerRating;
 					
-					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
+					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating, freeRide);
 					Data.assignedCustomerInfo.schedulePickupTime = schedulePickupTime;
 					
 				}
@@ -408,7 +498,8 @@ public class JSONParser {
 					String rating = customerRating;
 					
 					
-					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating);
+					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating, freeRide);
+					Data.assignedCustomerInfo.schedulePickupTime = schedulePickupTime;
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
 					HomeActivity.previousWaitTime = Long.parseLong(pref.getString(Data.SP_WAIT_TIME, "0"));

@@ -15,6 +15,14 @@ public class DriverRideRequest {
 		this.address = address;
 	}
 	
+	public DriverRideRequest(String engagementId){
+		this.engagementId = engagementId;
+		this.customerId = "";
+		this.latLng = new LatLng(0, 0);
+		this.startTime = "";
+		this.address = "";
+	}
+	
 	@Override
 	public String toString() {
 		return engagementId + " " + customerId + " " + latLng + " " + startTime;
@@ -32,7 +40,7 @@ public class DriverRideRequest {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		return super.equals(o);
+		return false;
 	}
 	
 }

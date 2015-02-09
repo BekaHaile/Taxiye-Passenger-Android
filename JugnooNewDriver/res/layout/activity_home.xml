@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -414,7 +414,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
@@ -422,6 +422,27 @@
                     android:layout_height="match_parent"
                     android:splitMotionEvents="false"
                     android:visibility="visible" >
+
+                    <TextView
+                        android:id="@+id/textViewDriverInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="@color/white_translucent"
+                        android:gravity="center"
+                        android:padding="25px"
+                        android:text="Wait here..."
+                        android:textColor="@color/bg_grey_opaque"
+                        android:textSize="32px" 
+                        android:visibility="gone"
+                        />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="6px"
+                        android:layout_below="@+id/textViewDriverInfo"
+                        android:background="@drawable/shadow_down" />
 
                     <RelativeLayout
                         android:id="@+id/driverNewRideRequestRl"
@@ -549,7 +570,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <LinearLayout
                         android:id="@+id/driverPassengerInfoRl"
@@ -654,6 +675,18 @@
                         android:layout_height="6px"
                         android:layout_below="@+id/driverPassengerInfoRl"
                         android:background="@drawable/shadow_down" />
+
+                    <ImageView
+                        android:id="@+id/driverFreeRideIcon"
+                        android:layout_width="72px"
+                        android:layout_height="47px"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/driverPassengerInfoRl"
+                        android:layout_marginRight="20px"
+                        android:layout_marginTop="26px"
+                        android:src="@drawable/free_ride_icon"
+                        android:tag="mwar"
+                        android:visibility="gone" />
 
                     <RelativeLayout
                         android:id="@+id/driverStartRideMainRl"
@@ -1558,35 +1591,6 @@
                         android:tag="mwar"
                         android:visibility="gone" />
                 </RelativeLayout>
-
-                <ImageView
-                    android:id="@+id/christmasBell1"
-                    android:layout_width="27px"
-                    android:layout_height="91px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginRight="27px"
-                    android:layout_marginTop="70px"
-                    android:src="@drawable/bell_1" />
-
-                <ImageView
-                    android:id="@+id/christmasBell2"
-                    android:layout_width="27px"
-                    android:layout_height="128px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="43px"
-                    android:layout_marginTop="70px"
-                    android:src="@drawable/bell_2" />
-
-                <Button
-                    android:id="@+id/christmasButton"
-                    android:layout_width="73px"
-                    android:layout_height="70px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15px"
-                    android:layout_marginTop="10px"
-                    android:background="@drawable/christmas_gift_button_selector"
-                    android:tag="mwar" />
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>

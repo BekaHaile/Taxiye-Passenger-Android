@@ -70,6 +70,9 @@ public class DriverLocationDispatcher {
 				
 				wakeLock.release();
 			}
+			else{
+				new DriverServiceOperations().stopService(context);
+			}
 
 			Database2.getInstance(context).close();
 			

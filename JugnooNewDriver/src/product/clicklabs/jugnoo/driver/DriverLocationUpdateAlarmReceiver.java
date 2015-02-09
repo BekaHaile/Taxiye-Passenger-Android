@@ -15,39 +15,43 @@ public class DriverLocationUpdateAlarmReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(final Context context, Intent intent) {
-    	GCMHeartbeatRefresher.refreshGCMHeartbeat(context);
-		String action = intent.getAction();
-		if (SEND_LOCATION.equals(action)) {
-			try {
-				long lastTime = Database2.getInstance(context).getDriverLastLocationTime();
-				String accessToken = Database2.getInstance(context).getDLDAccessToken();
-				Database2.getInstance(context).close();
-				if("".equalsIgnoreCase(accessToken)){
-					DriverLocationUpdateService.updateServerData(context);
+		String userMode = Database2.getInstance(context).getUserMode();
+		if(Database2.UM_DRIVER.equalsIgnoreCase(userMode)){
+	    	GCMHeartbeatRefresher.refreshGCMHeartbeat(context);
+			String action = intent.getAction();
+			if (SEND_LOCATION.equals(action)) {
+				try {
+					long lastTime = Database2.getInstance(context).getDriverLastLocationTime();
+					String accessToken = Database2.getInstance(context).getDLDAccessToken();
+					Database2.getInstance(context).close();
+					if("".equalsIgnoreCase(accessToken)){
+						DriverLocationUpdateService.updateServerData(context);
+					}
+					long currentTime = System.currentTimeMillis();
+					
+					Log.e("currentTime - lastTime", "="+((currentTime - lastTime)/1000));
+			    	Log.writeLogToFile("AlarmReceiver", "Receiver "+DateOperations.getCurrentTime()+" = "+(currentTime - lastTime) 
+			    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));
+					
+					if(currentTime >= (lastTime + MAX_TIME_BEFORE_LOCATION_UPDATE)){
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								new DriverLocationDispatcher().sendLocationToServer(context, "AlarmReceiver");
+							}
+						}).start();
+					}
+				} 
+				catch (Exception e) {
+					e.printStackTrace();
 				}
-				long currentTime = System.currentTimeMillis();
-				
-				Log.e("currentTime - lastTime", "="+((currentTime - lastTime)/1000));
-		    	Log.writeLogToFile("AlarmReceiver", "Receiver "+DateOperations.getCurrentTime()+" = "+(currentTime - lastTime) 
-		    			+ " hasNet = "+AppStatus.getInstance(context).isOnline(context));
-				
-				if(currentTime >= (lastTime + MAX_TIME_BEFORE_LOCATION_UPDATE)){
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							new DriverLocationDispatcher().sendLocationToServer(context, "AlarmReceiver");
-						}
-					}).start();
+				finally{
+					Database2.getInstance(context).close();
 				}
-			} 
-			catch (Exception e) {
-				e.printStackTrace();
 			}
-			finally{
-				Database2.getInstance(context).close();
-			}
-			
-			
+		}
+		else{
+			new DriverServiceOperations().stopService(context);
 		}
 	}
 	

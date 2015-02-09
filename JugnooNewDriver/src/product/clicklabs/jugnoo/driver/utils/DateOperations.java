@@ -184,21 +184,6 @@ public class DateOperations {
 		String month = date.split("-")[1];
 		String day = date.split("-")[2];
 		
-		int dayInt = Integer.parseInt(day);
-		
-		if(dayInt == 1){
-			day = dayInt + "st";
-		}
-		else if(dayInt == 2){
-			day = dayInt + "nd";
-		}
-		else if(dayInt == 3){
-			day = dayInt + "rd";
-		}
-		else{
-			day = dayInt + "th";
-		}
-		
 		if("01".equalsIgnoreCase(month)){
 			month = "Jan";
 		}
@@ -276,7 +261,7 @@ public class DateOperations {
 	
 	
 	
-	public String getSixtySecAfterCurrentTime() {
+	public static String getSixtySecAfterCurrentTime() {
 	    long foo = System.currentTimeMillis() + 60000;
 	    Date date = new Date(foo);
 	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -284,7 +269,7 @@ public class DateOperations {
 	}
 	
 	
-	public long getTimeDifference(String time1, String time2){
+	public static long getTimeDifference(String time1, String time2){
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(time1);
@@ -297,7 +282,7 @@ public class DateOperations {
 		return 60000;
 	}
 	
-	public long getMilliseconds(String time1){
+	public static long getMilliseconds(String time1){
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(time1);

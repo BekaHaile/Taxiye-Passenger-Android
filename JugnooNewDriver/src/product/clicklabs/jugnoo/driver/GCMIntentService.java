@@ -9,6 +9,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.driver.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.driver.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.driver.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.driver.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.driver.datastructure.PushFlags;
@@ -31,7 +32,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.CountDownTimer;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
@@ -39,6 +40,7 @@ import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.maps.model.LatLng;
 
 public class GCMIntentService extends IntentService {
 	
@@ -59,12 +61,10 @@ public class GCMIntentService extends IntentService {
 	        return false;	    
 	    }
 
-	    
-		
 
 	  
 		@SuppressWarnings("deprecation")
-		private void notificationManager(Context context, String message, boolean ring) {
+		public static void notificationManager(Context context, String message, boolean ring) {
 	    	
 			try {
 				long when = System.currentTimeMillis();
@@ -94,7 +94,7 @@ public class GCMIntentService extends IntentService {
 				}
 				
 				builder.setWhen(when);
-				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+				builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.jugnoo_icon));
 				builder.setSmallIcon(R.drawable.notif_icon);
 				builder.setContentIntent(intent);
 				
@@ -116,7 +116,7 @@ public class GCMIntentService extends IntentService {
 		}
 
 		@SuppressWarnings("deprecation")
-		private void notificationManagerResume(Context context, String message, boolean ring) {
+		public static void notificationManagerResume(Context context, String message, boolean ring) {
 			
 			try {
 				long when = System.currentTimeMillis();
@@ -145,7 +145,7 @@ public class GCMIntentService extends IntentService {
 				}
 				
 				builder.setWhen(when);
-				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+				builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.jugnoo_icon));
 				builder.setSmallIcon(R.drawable.notif_icon);
 				builder.setContentIntent(intent);
 				
@@ -255,9 +255,9 @@ public class GCMIntentService extends IntentService {
 		    	    					 
 		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), currentTime);
 		    	    					 
-		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
+		    	    					 long startTimeMillis = DateOperations.getMilliseconds(startTime);
 
-		    	    					 startTime = new DateOperations().getSixtySecAfterCurrentTime();
+		    	    					 startTime = DateOperations.getSixtySecAfterCurrentTime();
 		    	    					 
 		    	    					 if(HomeActivity.appInterruptHandler != null){
 		    	    						 if(UserMode.DRIVER == HomeActivity.userMode){
@@ -265,8 +265,9 @@ public class GCMIntentService extends IntentService {
 		    	    								DriverScreenMode.D_REQUEST_ACCEPT == HomeActivity.driverScreenMode ||
 		    	    								DriverScreenMode.D_RIDE_END == HomeActivity.driverScreenMode){
 		    	    								 
-		    	    								 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, 
-					    	    							 startTime, address);
+		    	    								 Data.driverRideRequests.add(new DriverRideRequest(engagementId, userId, 
+		    	    											new LatLng(latitude, longitude), startTime, address));
+		    	    								 
 					    	    					 startRing(this);
 					    	    					 RequestTimeoutTimerTask requestTimeoutTimerTask = new RequestTimeoutTimerTask(this, engagementId);
 					    	    					 requestTimeoutTimerTask.startTimer(0, 20000, startTimeMillis, 60000);
@@ -279,13 +280,10 @@ public class GCMIntentService extends IntentService {
 		    	    					 else{
 		    	    						 notificationManager(this, "You have got a new ride request.", true);
 		    	    						 
-		    	    						 addDriverRideRequest(this, engagementId, userId, ""+latitude, ""+longitude, 
-			    	    							 startTime, address);
 			    	    					 startRing(this);
 			    	    					 RequestTimeoutTimerTask requestTimeoutTimerTask = new RequestTimeoutTimerTask(this, engagementId);
 			    	    					 requestTimeoutTimerTask.startTimer(0, 20000, startTimeMillis, 60000);
 		    	    					 }
-		    	    					 
 	    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
@@ -300,11 +298,11 @@ public class GCMIntentService extends IntentService {
     	    						 
 	    	    					 String engagementId = jObj.getString("engagement_id");
 	    	    					 clearNotifications(this);
-	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 stopRing();
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
+	    	    						 Data.driverRideRequests.remove(new DriverRideRequest(engagementId));
 	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, false);
 	    	    					 }
 	    	    					 
@@ -313,25 +311,24 @@ public class GCMIntentService extends IntentService {
     	    						 
 	    	    					 String engagementId = jObj.getString("engagement_id");
 	    	    					 clearNotifications(this);
-	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 stopRing();
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
+	    	    						 Data.driverRideRequests.remove(new DriverRideRequest(engagementId));
 	    	    						 HomeActivity.appInterruptHandler.onCancelRideRequest(engagementId, true);
 	    	    					 }
-	    	    					 
 	    	    					 
 	    	    				 }
 	    	    				else if(PushFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
     	    						 
 	    	    					 String engagementId = jObj.getString("engagement_id");
 	    	    					 clearNotifications(this);
-	    	    					 deleteDriverRideRequest(GCMIntentService.this, engagementId);
 	    	    					 
 	    	    					 stopRing();
 	    	    					 
 	    	    					 if(HomeActivity.appInterruptHandler != null){
+	    	    						 Data.driverRideRequests.remove(new DriverRideRequest(engagementId));
 	    	    						 HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
 	    	    					 }
 	    	    					 
@@ -462,6 +459,16 @@ public class GCMIntentService extends IntentService {
 	    	    						e.printStackTrace();
 	    	    					}
 	    	    				}
+	    	    				else if(PushFlags.STATION_CHANGED.getOrdinal() == flag){
+	    	    					String message1 = jObj.getString("message");
+	    	    					if (HomeActivity.appInterruptHandler != null) {
+										HomeActivity.appInterruptHandler.onStationChangedPushReceived();
+										notificationManagerResume(this, message1, false);
+									}
+	    	    					else{
+	    	    						notificationManager(this, message1, false);
+	    	    					}
+	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 
@@ -529,6 +536,7 @@ public class GCMIntentService extends IntentService {
 			}
 		}
 		
+		public static CountDownTimer ringStopTimer;
 		public static void startRingWithStopHandler(Context context){
 			try {
 				stopRing();
@@ -562,13 +570,21 @@ public class GCMIntentService extends IntentService {
 				});
 				mediaPlayer.start();
 				
-				new Handler().postDelayed(new Runnable() {
-					
-					@Override
-					public void run() {
-						stopRing();
-					}
-				}, 20000);
+				
+				ringStopTimer = new CountDownTimer(20000, 1000) {
+
+				    @Override
+				    public void onTick(long millisUntilFinished) {
+				    	Log.e("millisUntilFinished", "="+millisUntilFinished);
+				    }
+
+				    @Override
+				    public void onFinish() {
+				    	stopRing();
+				    }
+				};
+				ringStopTimer.start();
+				
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -586,11 +602,15 @@ public class GCMIntentService extends IntentService {
 					mediaPlayer.reset();
 					mediaPlayer.release();
 				}
+				if(ringStopTimer != null){
+					ringStopTimer.cancel();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally{
 				vibrator = null;
 				mediaPlayer = null;
+				ringStopTimer = null;
 			}
 		}
 
@@ -602,32 +622,6 @@ public class GCMIntentService extends IntentService {
 		
 		
 		
-		
-		
-		
-		
-		
-	    
-	    public void addDriverRideRequest(Context context, String engagementId, String userId, String latitude, String longitude, 
-	    		String startTime, String address){
-	    	try {
-	    		Database2.getInstance(context).insertDriverRequest(engagementId, userId, latitude, longitude, startTime, address);
-	    		Database2.getInstance(context).close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	    }
-	    
-	    public int deleteDriverRideRequest(Context context, String engagementId){
-	    	try {
-				int count = Database2.getInstance(context).deleteDriverRequest(engagementId);
-				Database2.getInstance(context).close();
-				return count;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	    	return 0;
-	    }
 	    
 	    class RequestTimeoutTimerTask{
 	    	
@@ -664,13 +658,15 @@ public class GCMIntentService extends IntentService {
 						}
 	    				
 		    			if(executionTime >= RequestTimeoutTimerTask.this.endTime){
-		    				int count = deleteDriverRideRequest(context, engagementId);
-		    				if(count > 0){
-		    					if(HomeActivity.appInterruptHandler != null){
-			    					HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
+		    				if(Data.driverRideRequests != null){
+			    				boolean removed = Data.driverRideRequests.remove(new DriverRideRequest(engagementId));
+			    				if(removed){
+			    					if(HomeActivity.appInterruptHandler != null){
+				    					HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
+				    				}
+			    					clearNotifications(context);
+			    					stopRing();
 			    				}
-		    					clearNotifications(context);
-		    					stopRing();
 		    				}
 		    				stopTimer();
 		    			}
@@ -795,7 +791,7 @@ public class GCMIntentService extends IntentService {
 //						Log.e("nameValuePairs in sending ack to server","="+nameValuePairs);
 						
 						HttpRequester simpleJSONParser = new HttpRequester();
-						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_heartbeat", nameValuePairs);
+						simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_heartbeat", nameValuePairs);
 						
 //						Log.e("result ","="+result);
 						

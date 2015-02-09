@@ -2,14 +2,17 @@ package product.clicklabs.jugnoo.driver;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.driver.datastructure.DriverRideRequest;
+import product.clicklabs.jugnoo.driver.datastructure.PendingAPICall;
+import product.clicklabs.jugnoo.driver.utils.Utils;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.loopj.android.http.RequestParams;
 
 /**
  * Handles database related work
@@ -51,15 +54,6 @@ public class Database2 {																	// class for handling database related 
 	public static final String NOT_VULNERABLE = "not_vulnerable";
 	
 	
-	private static final String TABLE_DRIVER_REQUESTS = "table_driver_requests";
-	private static final String TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID = "engagement_id";
-	private static final String TABLE_DRIVER_REQUESTS_USER_ID = "user_id";
-	private static final String TABLE_DRIVER_REQUESTS_LATITUDE = "latitude";
-	private static final String TABLE_DRIVER_REQUESTS_LONGITUDE = "longitude";
-	private static final String TABLE_DRIVER_REQUESTS_START_TIME = "start_time";
-	private static final String TABLE_DRIVER_REQUESTS_ADDRESS = "address";
-	
-	
 	private static final String TABLE_DRIVER_CURRENT_LOCATION = "table_driver_current_location";
 	private static final String DRIVER_CURRENT_LATITUDE = "driver_current_latitude";
 	private static final String DRIVER_CURRENT_LONGITUDE = "driver_current_longitude";
@@ -79,6 +73,14 @@ public class Database2 {																	// class for handling database related 
 	
 	private static final String TABLE_DRIVER_GCM_INTENT = "table_driver_gcm_intent";
 	private static final String DRIVER_GCM_INTENT = "driver_gcm_intent";
+	
+	
+	private static final String TABLE_PENDING_API_CALLS = "table_pending_api_calls";
+	private static final String API_ID = "api_id";
+	private static final String API_URL = "api_url";
+	private static final String API_REQUEST_PARAMS = "api_request_params";
+	
+	
 	
 	/**
 	 * Creates and opens database for the application use 
@@ -123,15 +125,6 @@ public class Database2 {																	// class for handling database related 
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_SCREEN_MODE + " ("
 				+ DRIVER_SCREEN_MODE + " TEXT" + ");");
 		
-		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_REQUESTS + " ("
-				+ TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID + " TEXT, " 
-				+ TABLE_DRIVER_REQUESTS_USER_ID + " TEXT, " 
-				+ TABLE_DRIVER_REQUESTS_LATITUDE + " TEXT, " 
-				+ TABLE_DRIVER_REQUESTS_LONGITUDE + " TEXT, " 
-				+ TABLE_DRIVER_REQUESTS_START_TIME + " TEXT, " 
-				+ TABLE_DRIVER_REQUESTS_ADDRESS + " TEXT" 
-				+ ");");
-		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_CURRENT_LOCATION + " ("
 				+ DRIVER_CURRENT_LATITUDE + " TEXT, " 
 				+ DRIVER_CURRENT_LONGITUDE + " TEXT" 
@@ -154,6 +147,12 @@ public class Database2 {																	// class for handling database related 
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_GCM_INTENT + " ("
 				+ DRIVER_GCM_INTENT + " INTEGER" + ");");
 		
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_PENDING_API_CALLS + " ("
+				+ API_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+				+ API_URL + " TEXT, " 
+				+ API_REQUEST_PARAMS + " TEXT" 
+				+ ");");
 	}
 	
 	public static Database2 getInstance(Context context) {
@@ -165,6 +164,10 @@ public class Database2 {																	// class for handling database related 
 			dbInstance = new Database2(context);
 		}
 		return dbInstance;
+	}
+	
+	public static void nullify() {
+		dbInstance = null;
 	}
 	
 	private Database2(Context context) {
@@ -395,69 +398,6 @@ public class Database2 {																	// class for handling database related 
 	
 	
 	
-	
-	public ArrayList<DriverRideRequest> getAllDriverRequests() {
-		ArrayList<DriverRideRequest> arrayList = new ArrayList<DriverRideRequest>();
-		try {
-			String[] columns = new String[] { Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID, Database2.TABLE_DRIVER_REQUESTS_USER_ID, 
-					Database2.TABLE_DRIVER_REQUESTS_LATITUDE, Database2.TABLE_DRIVER_REQUESTS_LONGITUDE, 
-					Database2.TABLE_DRIVER_REQUESTS_START_TIME, Database2.TABLE_DRIVER_REQUESTS_ADDRESS };
-			Cursor cursor = database.query(Database2.TABLE_DRIVER_REQUESTS, columns, null, null, null, null, null);
-			
-			int in0 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID);
-			int in1 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_USER_ID);
-			int in2 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_LATITUDE);
-			int in3 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_LONGITUDE);
-			int in4 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_START_TIME);
-			int in5 = cursor.getColumnIndex(Database2.TABLE_DRIVER_REQUESTS_ADDRESS);
-			
-			for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
-				arrayList.add(new DriverRideRequest(cursor.getString(in0), 
-						cursor.getString(in1), 
-						new LatLng(Double.parseDouble(cursor.getString(in2)), Double.parseDouble(cursor.getString(in3))), 
-						cursor.getString(in4), 
-						cursor.getString(in5)));
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return arrayList;
-	}
-	
-	
-	public void insertDriverRequest(String engagementId, String userId, String latitude, String longitude, String startTime, String address){
-		try{
-			ContentValues contentValues = new ContentValues();
-			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID, engagementId);
-			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_USER_ID, userId);
-			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_LATITUDE, latitude);
-			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_LONGITUDE, longitude);
-			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_START_TIME, startTime);
-			contentValues.put(Database2.TABLE_DRIVER_REQUESTS_ADDRESS, address);
-			database.insert(Database2.TABLE_DRIVER_REQUESTS, null, contentValues);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public int deleteDriverRequest(String engagementId){
-		try{
-			return database.delete(Database2.TABLE_DRIVER_REQUESTS, Database2.TABLE_DRIVER_REQUESTS_ENGAGEMENT_ID + "=?", new String[]{engagementId});
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
-	public void deleteAllDriverRequests(){
-		try{
-			database.delete(Database2.TABLE_DRIVER_REQUESTS, null, null);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 	
 	
 	
@@ -769,6 +709,89 @@ public class Database2 {																	// class for handling database related 
 			database.delete(Database2.TABLE_DRIVER_GCM_INTENT, null, null);
 		} catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public ArrayList<PendingAPICall> getAllPendingAPICalls() {
+		ArrayList<PendingAPICall> pendingAPICalls = new ArrayList<PendingAPICall>();
+		try {
+			String[] columns = new String[] { Database2.API_ID, Database2.API_URL, Database2.API_REQUEST_PARAMS };
+			Cursor cursor = database.query(Database2.TABLE_PENDING_API_CALLS, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				int in0 = cursor.getColumnIndex(Database2.API_ID);
+				int in1 = cursor.getColumnIndex(Database2.API_URL);
+				int in2 = cursor.getColumnIndex(Database2.API_REQUEST_PARAMS);
+				
+				for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+					try {
+						pendingAPICalls.add(new PendingAPICall(cursor.getInt(in0), cursor.getString(in1), Utils.convertQueryToNameValuePairArr(cursor.getString(in2))));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pendingAPICalls;
+	}
+	
+	public int getAllPendingAPICallsCount() {
+		try {
+			String[] columns = new String[] { Database2.API_ID };
+			Cursor cursor = database.query(Database2.TABLE_PENDING_API_CALLS, columns, null, null, null, null, null);
+			return cursor.getCount();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public void insertPendingAPICall(Context context, String url, RequestParams requestParams) {
+		try{
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.API_URL, url);
+			contentValues.put(Database2.API_REQUEST_PARAMS, requestParams.toString());
+			database.insert(Database2.TABLE_PENDING_API_CALLS, null, contentValues);
+			checkStartPendingApisService(context);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public int deletePendingAPICall(int apiId){
+		try{
+			return database.delete(Database2.TABLE_PENDING_API_CALLS, Database2.API_ID + "=" + apiId, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int deleteAllPendingAPICalls(){
+		try{
+			return database.delete(Database2.TABLE_PENDING_API_CALLS, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public void checkStartPendingApisService(Context context){
+		if(!HomeActivity.isServiceRunning(context, PushPendingCallsService.class.getName())){
+			context.startService(new Intent(context, PushPendingCallsService.class));
 		}
 	}
 	

@@ -12,6 +12,8 @@ public interface AppInterruptHandler {
 	
 	public void onManualDispatchPushReceived();
 	
+	public void onStationChangedPushReceived();
+	
 	
 	
 	

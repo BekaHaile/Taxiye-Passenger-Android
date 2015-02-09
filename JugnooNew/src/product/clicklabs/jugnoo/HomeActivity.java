@@ -3921,11 +3921,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					addCurrentLocationAddressMarker(userLatLng);
 					LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
 					LatLng farthestLatLng = null;
-					double maxDistance = 0;
 					for(int i=0; i<Data.driverInfos.size(); i++){
 						addDriverMarkerForCustomer(Data.driverInfos.get(i));
-						if(MapUtils.distance(userLatLng, Data.driverInfos.get(i).latLng) > maxDistance){
-							maxDistance = MapUtils.distance(userLatLng, Data.driverInfos.get(i).latLng);
+						if(i < 5){
 							farthestLatLng = Data.driverInfos.get(i).latLng;
 						}
 					}
@@ -5387,7 +5385,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("is_access_token_new", ""+1);
+			params.put("is_access_token_new", "1");
 			params.put("client_id", Data.CLIENT_ID);
 
 			Log.i("access_token", "="+Data.userData.accessToken);

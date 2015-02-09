@@ -24,6 +24,7 @@ public class AppStatus {
 	public static AppStatus getInstance(Context ctx) {
 		context = ctx;
 		return instance;
+		
 	}
 
 	public boolean isOnline(Context con) {
