@@ -188,7 +188,7 @@ public class RideHistoryFragment extends Fragment {
 			holder.fromValue.setText(booking.fromLocation);
 			holder.toValue.setText(booking.toLocation);
 			holder.distanceValue.setText(booking.distance + " km");
-			holder.timeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(booking.time)));
+			holder.timeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(booking.dateTime)));
 			holder.fareValue.setText("Rs. "+booking.fare);
 			holder.balanceValue.setVisibility(View.GONE);
 			

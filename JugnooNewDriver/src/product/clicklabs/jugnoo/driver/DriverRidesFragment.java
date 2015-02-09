@@ -168,7 +168,6 @@ public class DriverRidesFragment extends Fragment {
 				
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
 				
-				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);
@@ -190,7 +189,7 @@ public class DriverRidesFragment extends Fragment {
 			holder.fromValue.setText(booking.fromLocation);
 			holder.toValue.setText(booking.toLocation);
 			holder.distanceValue.setText(booking.distance + " km");
-			holder.timeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(booking.time)));
+			holder.timeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(booking.dateTime)));
 			holder.fareValue.setText("Rs. "+booking.fare);
 			
 			if(1 == booking.couponUsed){

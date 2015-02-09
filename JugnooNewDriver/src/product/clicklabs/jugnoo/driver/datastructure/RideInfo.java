@@ -7,7 +7,7 @@ public class RideInfo {
 	public String toLocation;
 	public String fare;
 	public String distance;
-	public String time;
+	public String dateTime;
 	public String balance;
 	public int couponUsed;
 	
@@ -18,14 +18,14 @@ public class RideInfo {
 		this.toLocation = toLocation;
 		this.fare = fare;
 		this.distance = distance;
-		this.time = time;
+		this.dateTime = time;
 		this.couponUsed = couponUsed;
 		this.balance = balance;
 	}
 	
 	@Override
 	public String toString() {
-		return fromLocation + " " + toLocation + " " + fare + " " + distance + " " + time;
+		return fromLocation + " " + toLocation + " " + fare + " " + distance + " " + dateTime;
 	}
 	
 }

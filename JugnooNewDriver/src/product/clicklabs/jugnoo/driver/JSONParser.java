@@ -101,7 +101,8 @@ public class JSONParser {
 	
 	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
 		
-		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0, nukkadEnable = 0;
+		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, christmasIconEnable = 0, 
+				nukkadEnable = 0, freeRideIconDisable = 1;
 		String phoneNo = "";
 		
 		if(userData.has("can_schedule")){
@@ -154,11 +155,16 @@ public class JSONParser {
 			e.printStackTrace();
 		}
 		
+		if(userData.has("free_ride_icon_disable")){
+			freeRideIconDisable = userData.getInt("free_ride_icon_disable");
+		}
+		
 		//"gcm_intent": 0, christmas_icon_enable
 		
 		return new UserData(userData.getString("access_token"), userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
-				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable);
+				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, 
+				freeRideIconDisable);
 	}
 	
 	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
@@ -493,6 +499,7 @@ public class JSONParser {
 					
 					
 					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating, freeRide);
+					Data.assignedCustomerInfo.schedulePickupTime = schedulePickupTime;
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
 					HomeActivity.previousWaitTime = Long.parseLong(pref.getString(Data.SP_WAIT_TIME, "0"));

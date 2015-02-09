@@ -1,11 +1,13 @@
 package product.clicklabs.jugnoo.driver;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.driver.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.driver.datastructure.DriverDebugOpenMode;
+import product.clicklabs.jugnoo.driver.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.driver.utils.AppStatus;
 import product.clicklabs.jugnoo.driver.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.driver.utils.CustomAsyncHttpResponseHandler;
@@ -19,6 +21,7 @@ import product.clicklabs.jugnoo.driver.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -289,8 +292,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					public void run() {
 						Data.deviceToken = regId;
 						Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
-						callFirstAttempt();
 						progressBar1.setVisibility(View.GONE);
+//						callFirstAttempt();
+						pushAPIs(SplashNewActivity.this);
 					}
 				});
 				
@@ -322,6 +326,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onPause() {
+		Database2.getInstance(this).checkStartPendingApisService(this);
 		try{
 			Data.locationFetcher.destroy();
 			Data.locationFetcher = null;
@@ -350,7 +355,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					
 					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 						noNetSecondTime = false;
-					    accessTokenLogin(SplashNewActivity.this);
+//					    accessTokenLogin(SplashNewActivity.this);
+					    pushAPIs(SplashNewActivity.this);
 					    FlurryEventLogger.appStarted(Data.deviceToken);
 					}
 					else{
@@ -365,6 +371,72 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	};
 	
 	
+	public void stopPendingAPIs(){
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				progressBar1.setVisibility(View.GONE);
+				callFirstAttempt();
+			}
+		});
+	}
+	
+	
+    public Thread pushApiThread;
+    public void pushAPIs(final Context context){
+    	progressBar1.setVisibility(View.VISIBLE);
+    	stopService(new Intent(context, PushPendingCallsService.class));
+    	stopPushApiThread();
+    	try{
+	    	pushApiThread = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					ArrayList<PendingAPICall> pendingAPICalls = Database2.getInstance(context).getAllPendingAPICalls();
+					for(PendingAPICall pendingAPICall : pendingAPICalls){
+						Log.e("pendingAPICall", "="+pendingAPICall);
+						startAPI(context, pendingAPICall);
+					}
+					
+					int pendingApisCount = Database2.getInstance(context).getAllPendingAPICallsCount();
+					if(pendingApisCount > 0){
+						pushAPIs(context);
+					}
+					else{
+						stopPendingAPIs();
+					}
+				}
+			});
+	    	pushApiThread.start();
+    	} catch(Exception e){
+    		e.printStackTrace();
+    	}
+    }
+    
+    public void stopPushApiThread(){
+    	try{
+    		if(pushApiThread != null){
+    			pushApiThread.interrupt();
+    		}
+    	} catch(Exception e){
+    		e.printStackTrace();
+    	}
+    }
+    
+	public void startAPI(Context context, PendingAPICall pendingAPICall) {
+		if (AppStatus.getInstance(context).isOnline(context)) {
+			HttpRequester simpleJSONParser = new HttpRequester();
+			String result = simpleJSONParser.getJSONFromUrlParams(pendingAPICall.url, pendingAPICall.nameValuePairs);
+			Log.e("result in pendingAPICall ", "=" + pendingAPICall + " and result = "+ result);
+			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+				
+			}
+			else{
+				Database2.getInstance(context).deletePendingAPICall(pendingAPICall.id);
+			}
+		}
+	}
 	
 	
 	class ShowAnimListener implements AnimationListener{
@@ -472,6 +544,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							@Override
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
+								
 								DialogPopup.dismissLoadingDialog();
 								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 								DialogPopup.dismissLoadingDialog();
@@ -771,6 +844,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
         ASSL.closeActivity(relative);
         System.gc();
 	}
+	
 	
 	
 	
@@ -1140,6 +1214,34 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public static boolean checkIfTrivialAPIErrors(Activity activity, JSONObject jObj, int flag){
+		try {
+			if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
+				DialogPopup.dismissLoadingDialog();
+				HomeActivity.logoutUser(activity);
+				return true;
+			}
+			else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+				DialogPopup.dismissLoadingDialog();
+				String errorMessage = jObj.getString("error");
+				new DialogPopup().alertPopup(activity, "", errorMessage);
+				return true;
+			}
+			else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+				DialogPopup.dismissLoadingDialog();
+				String message = jObj.getString("message");
+				new DialogPopup().alertPopup(activity, "", message);
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 }

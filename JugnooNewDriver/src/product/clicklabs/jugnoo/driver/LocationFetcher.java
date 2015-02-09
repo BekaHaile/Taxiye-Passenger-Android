@@ -46,7 +46,6 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 			this.context = (Context) locationUpdate;
 			this.requestInterval = requestInterval;
 			this.priority = priority;
-			connect();
 	}
 	
 	public synchronized void connect(){

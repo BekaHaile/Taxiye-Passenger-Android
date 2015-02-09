@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="product.clicklabs.jugnoo.driver"
-    android:versionCode="146"
-    android:versionName="1.4.6" >
+    android:versionCode="147"
+    android:versionName="1.4.7" >
 
     
     <uses-sdk
@@ -216,6 +216,14 @@
             android:exported="true"
             android:process=":DriverLocationUpdateService" >
         </service>
+        
+        <service
+            android:name="product.clicklabs.jugnoo.driver.PushPendingCallsService"
+            android:enabled="true"
+            android:exported="true"
+             >
+        </service>
+        
         
         <receiver android:name="product.clicklabs.jugnoo.driver.BootCompletedReceiver" >
     		<intent-filter>
