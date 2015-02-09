@@ -6,5 +6,9 @@
 
   Do NOT modify, delete, or commit to source control!
 -->
+<<<<<<< HEAD
 <string name="com.crashlytics.android.build_id" translatable="false">71b28b59-f2ed-4c89-b06b-b2f70847ff47</string>
+=======
+<string name="com.crashlytics.android.build_id" translatable="false">2643a3cb-94b4-4186-b600-c473b2a7022c</string>
+>>>>>>> location_change
 </resources>
