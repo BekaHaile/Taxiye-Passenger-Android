@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.driver;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -122,7 +123,8 @@ public class RideHistoryFragment extends Fragment {
 
 	
 	class ViewHolderRideHistory {
-		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue, balanceValue;
+		TextView textViewCustomerPaid, textViewBalance, textViewJugnooSubsidy;
+		TextView fromText, fromValue, toText, toValue, distanceValue, rideTimeValue, dateTimeValue;
 		ImageView couponImg;
 		LinearLayout relative;
 		int id;
@@ -158,14 +160,18 @@ public class RideHistoryFragment extends Fragment {
 				holder = new ViewHolderRideHistory();
 				convertView = mInflater.inflate(R.layout.list_item_ride_history, null);
 				
-				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.regularFont(context), Typeface.BOLD);
-				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.regularFont(context));
-				holder.toText = (TextView) convertView.findViewById(R.id.toText); holder.toText.setTypeface(Data.regularFont(context), Typeface.BOLD);
-				holder.toValue = (TextView) convertView.findViewById(R.id.toValue); holder.toValue.setTypeface(Data.regularFont(context));
-				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(context));
-				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.regularFont(context));
-				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.regularFont(context), Typeface.BOLD);
-				holder.balanceValue = (TextView) convertView.findViewById(R.id.balanceValue); holder.balanceValue.setTypeface(Data.regularFont(context), Typeface.BOLD);
+				holder.textViewCustomerPaid = (TextView) convertView.findViewById(R.id.textViewCustomerPaid); holder.textViewCustomerPaid.setTypeface(Data.regularFont(getActivity()));
+				holder.textViewBalance = (TextView) convertView.findViewById(R.id.textViewBalance); holder.textViewBalance.setTypeface(Data.regularFont(getActivity()));
+				holder.textViewJugnooSubsidy = (TextView) convertView.findViewById(R.id.textViewJugnooSubsidy); holder.textViewJugnooSubsidy.setTypeface(Data.regularFont(getActivity()));
+				
+				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
+				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.regularFont(getActivity()));
+				holder.toText = (TextView) convertView.findViewById(R.id.toText); holder.toText.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
+				holder.toValue = (TextView) convertView.findViewById(R.id.toValue); holder.toValue.setTypeface(Data.regularFont(getActivity()));
+				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(getActivity()));
+				holder.rideTimeValue = (TextView) convertView.findViewById(R.id.rideTimeValue); holder.rideTimeValue.setTypeface(Data.regularFont(getActivity()));
+				holder.dateTimeValue = (TextView) convertView.findViewById(R.id.dateTimeValue); holder.dateTimeValue.setTypeface(Data.regularFont(getActivity()));
+				
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
@@ -181,24 +187,27 @@ public class RideHistoryFragment extends Fragment {
 			}
 			
 			
-			RideInfo booking = rides.get(position);
+			RideInfo rideInfo = rides.get(position);
 			
 			holder.id = position;
 			
-			holder.fromValue.setText(booking.fromLocation);
-			holder.toValue.setText(booking.toLocation);
-			holder.distanceValue.setText(booking.distance + " km");
-			holder.timeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(booking.time)));
-			holder.fareValue.setText("Rs. "+booking.fare);
-			holder.balanceValue.setVisibility(View.GONE);
+			holder.textViewCustomerPaid.setText("Customer Paid: Rs. " + rideInfo.customerPaid);
+			holder.textViewBalance.setText("Balance: Rs. " + rideInfo.balance);
+			holder.textViewJugnooSubsidy.setText("+ Jugnoo Subsidy: Rs. " + rideInfo.subsidy);
 			
-			if(1 == booking.couponUsed){
+			holder.fromValue.setText(rideInfo.fromLocation);
+			holder.toValue.setText(rideInfo.toLocation);
+			
+			holder.distanceValue.setText(rideInfo.distance + " km");
+			holder.rideTimeValue.setText(rideInfo.rideTime + " min");
+			holder.dateTimeValue.setText(DateOperations.convertDate(DateOperations.utcToLocal(rideInfo.dateTime)));
+			
+			if(1 == rideInfo.couponUsed){
 				holder.couponImg.setVisibility(View.VISIBLE);
 			}
 			else{
 				holder.couponImg.setVisibility(View.GONE);
 			}
-			
 			
 			return convertView;
 		}
@@ -249,11 +258,14 @@ public class RideHistoryFragment extends Fragment {
 										JSONArray bookingData = jObj.getJSONArray("booking_data");
 										rides.clear();
 										if(bookingData.length() > 0){
+											DecimalFormat decimalFormat = new DecimalFormat("#.#");
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
-												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
-														booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
-														booData.getString("time"), "", booData.getInt("coupon_used")));
+												RideInfo rideInfo = new RideInfo(booData.getString("id"), booData.getString("from"), booData.getString("to"), 
+														booData.getString("fare"), "100", "0", "20", 
+														decimalFormat.format(booData.getDouble("distance")), "10", "10", booData.getString("time"), 
+														booData.getInt("coupon_used"));
+												rides.add(rideInfo);
 											}
 										}
 										updateListData("No rides currently", false);

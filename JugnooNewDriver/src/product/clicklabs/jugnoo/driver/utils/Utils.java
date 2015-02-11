@@ -1,5 +1,12 @@
 package product.clicklabs.jugnoo.driver.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
@@ -108,5 +115,17 @@ public class Utils {
 		}
 
 	}
+	
+	
+	public static ArrayList<NameValuePair> convertQueryToNameValuePairArr(String query) throws UnsupportedEncodingException {
+	    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	    String[] pairs = query.split("&");
+	    for (String pair : pairs) {
+	        int idx = pair.indexOf("=");
+	        nameValuePairs.add(new BasicNameValuePair(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8")));
+	    }
+	    return nameValuePairs;
+	}
+	
 	
 }

@@ -184,21 +184,6 @@ public class DateOperations {
 		String month = date.split("-")[1];
 		String day = date.split("-")[2];
 		
-		int dayInt = Integer.parseInt(day);
-		
-		if(dayInt == 1){
-			day = dayInt + "st";
-		}
-		else if(dayInt == 2){
-			day = dayInt + "nd";
-		}
-		else if(dayInt == 3){
-			day = dayInt + "rd";
-		}
-		else{
-			day = dayInt + "th";
-		}
-		
 		if("01".equalsIgnoreCase(month)){
 			month = "Jan";
 		}

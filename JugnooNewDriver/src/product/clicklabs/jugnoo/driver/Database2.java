@@ -1,12 +1,18 @@
 package product.clicklabs.jugnoo.driver;
 
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.driver.datastructure.PendingAPICall;
+import product.clicklabs.jugnoo.driver.utils.Utils;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.loopj.android.http.RequestParams;
 
 /**
  * Handles database related work
@@ -67,6 +73,14 @@ public class Database2 {																	// class for handling database related 
 	
 	private static final String TABLE_DRIVER_GCM_INTENT = "table_driver_gcm_intent";
 	private static final String DRIVER_GCM_INTENT = "driver_gcm_intent";
+	
+	
+	private static final String TABLE_PENDING_API_CALLS = "table_pending_api_calls";
+	private static final String API_ID = "api_id";
+	private static final String API_URL = "api_url";
+	private static final String API_REQUEST_PARAMS = "api_request_params";
+	
+	
 	
 	/**
 	 * Creates and opens database for the application use 
@@ -133,6 +147,12 @@ public class Database2 {																	// class for handling database related 
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_GCM_INTENT + " ("
 				+ DRIVER_GCM_INTENT + " INTEGER" + ");");
 		
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_PENDING_API_CALLS + " ("
+				+ API_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+				+ API_URL + " TEXT, " 
+				+ API_REQUEST_PARAMS + " TEXT" 
+				+ ");");
 	}
 	
 	public static Database2 getInstance(Context context) {
@@ -689,6 +709,89 @@ public class Database2 {																	// class for handling database related 
 			database.delete(Database2.TABLE_DRIVER_GCM_INTENT, null, null);
 		} catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public ArrayList<PendingAPICall> getAllPendingAPICalls() {
+		ArrayList<PendingAPICall> pendingAPICalls = new ArrayList<PendingAPICall>();
+		try {
+			String[] columns = new String[] { Database2.API_ID, Database2.API_URL, Database2.API_REQUEST_PARAMS };
+			Cursor cursor = database.query(Database2.TABLE_PENDING_API_CALLS, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				int in0 = cursor.getColumnIndex(Database2.API_ID);
+				int in1 = cursor.getColumnIndex(Database2.API_URL);
+				int in2 = cursor.getColumnIndex(Database2.API_REQUEST_PARAMS);
+				
+				for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+					try {
+						pendingAPICalls.add(new PendingAPICall(cursor.getInt(in0), cursor.getString(in1), Utils.convertQueryToNameValuePairArr(cursor.getString(in2))));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pendingAPICalls;
+	}
+	
+	public int getAllPendingAPICallsCount() {
+		try {
+			String[] columns = new String[] { Database2.API_ID };
+			Cursor cursor = database.query(Database2.TABLE_PENDING_API_CALLS, columns, null, null, null, null, null);
+			return cursor.getCount();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public void insertPendingAPICall(Context context, String url, RequestParams requestParams) {
+		try{
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.API_URL, url);
+			contentValues.put(Database2.API_REQUEST_PARAMS, requestParams.toString());
+			database.insert(Database2.TABLE_PENDING_API_CALLS, null, contentValues);
+			checkStartPendingApisService(context);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public int deletePendingAPICall(int apiId){
+		try{
+			return database.delete(Database2.TABLE_PENDING_API_CALLS, Database2.API_ID + "=" + apiId, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int deleteAllPendingAPICalls(){
+		try{
+			return database.delete(Database2.TABLE_PENDING_API_CALLS, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public void checkStartPendingApisService(Context context){
+		if(!HomeActivity.isServiceRunning(context, PushPendingCallsService.class.getName())){
+			context.startService(new Intent(context, PushPendingCallsService.class));
 		}
 	}
 	

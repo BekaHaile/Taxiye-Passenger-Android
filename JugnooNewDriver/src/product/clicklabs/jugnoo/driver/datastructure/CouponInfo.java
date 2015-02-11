@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.driver.datastructure;
 
+import product.clicklabs.jugnoo.driver.utils.DateOperations;
+
 public class CouponInfo {
 	
 	public int type;
@@ -10,7 +12,7 @@ public class CouponInfo {
 	public String image;
 	public String redeemedOn;
 	public String expiryDate;
-	double discountPrecent, maximumDiscountableValue;
+	public double discountPrecent, maximumDiscountableValue;
 	public int count;
 	public boolean enabled;
 	
@@ -30,6 +32,21 @@ public class CouponInfo {
 		this.enabled = true;
 	}
 	
+	public CouponInfo(int type, String title, String subtitle, String description, double discountPrecent, double maximumDiscountableValue){
+		this.type = type;
+		this.status = CouponStatus.ACTIVE.getOrdinal();
+		this.title = title;
+		this.subtitle = subtitle;
+		this.description = description;
+		this.image = "";
+		this.redeemedOn = DateOperations.getCurrentTime();
+		this.expiryDate = DateOperations.getCurrentTime();
+		this.discountPrecent = discountPrecent;
+		this.maximumDiscountableValue = maximumDiscountableValue;
+		this.count = 1;
+		this.enabled = true;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		try{
@@ -42,6 +59,11 @@ public class CouponInfo {
 		} catch(Exception e){
 			return false;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return status + " " + title + " " + count;
 	}
 	
 }

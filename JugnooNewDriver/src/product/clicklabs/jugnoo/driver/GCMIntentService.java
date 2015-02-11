@@ -18,7 +18,6 @@ import product.clicklabs.jugnoo.driver.utils.DateOperations;
 import product.clicklabs.jugnoo.driver.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.driver.utils.HttpRequester;
 import product.clicklabs.jugnoo.driver.utils.Log;
-import product.clicklabs.jugnoo.driver.utils.SoundMediaPlayer;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -34,7 +33,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
@@ -257,9 +255,9 @@ public class GCMIntentService extends IntentService {
 		    	    					 
 		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), currentTime);
 		    	    					 
-		    	    					 long startTimeMillis = new DateOperations().getMilliseconds(startTime);
+		    	    					 long startTimeMillis = DateOperations.getMilliseconds(startTime);
 
-		    	    					 startTime = new DateOperations().getSixtySecAfterCurrentTime();
+		    	    					 startTime = DateOperations.getSixtySecAfterCurrentTime();
 		    	    					 
 		    	    					 if(HomeActivity.appInterruptHandler != null){
 		    	    						 if(UserMode.DRIVER == HomeActivity.userMode){
@@ -793,7 +791,7 @@ public class GCMIntentService extends IntentService {
 //						Log.e("nameValuePairs in sending ack to server","="+nameValuePairs);
 						
 						HttpRequester simpleJSONParser = new HttpRequester();
-						String result = simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_heartbeat", nameValuePairs);
+						simpleJSONParser.getJSONFromUrlParams(serverUrl+"/acknowledge_heartbeat", nameValuePairs);
 						
 //						Log.e("result ","="+result);
 						
