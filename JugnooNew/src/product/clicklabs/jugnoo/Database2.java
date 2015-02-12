@@ -81,6 +81,11 @@ public class Database2 {																	// class for handling database related 
 	private static final String TABLE_DRIVER_GCM_INTENT = "table_driver_gcm_intent";
 	private static final String DRIVER_GCM_INTENT = "driver_gcm_intent";
 	
+	private static final String TABLE_PORT_NUMBER = "table_port_number";
+	private static final String PORT_NUMBER = "port_number";
+	
+	private static final String LIVE_PORT = "4012";
+	
 	/**
 	 * Creates and opens database for the application use 
 	 * @author shankar
@@ -154,6 +159,9 @@ public class Database2 {																	// class for handling database related 
 		
 		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_GCM_INTENT + " ("
 				+ DRIVER_GCM_INTENT + " INTEGER" + ");");
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_PORT_NUMBER + " ("
+				+ PORT_NUMBER + " TEXT" + ");");
 		
 	}
 	
@@ -770,6 +778,61 @@ public class Database2 {																	// class for handling database related 
 	public void deleteDriverGcmIntent(){
 		try{
 			database.delete(Database2.TABLE_DRIVER_GCM_INTENT, null, null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public String getPortNumber() {
+		try {
+			String[] columns = new String[] { Database2.PORT_NUMBER };
+			Cursor cursor = database.query(Database2.TABLE_PORT_NUMBER, columns, null, null, null, null, null);
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				String port = cursor.getString(cursor.getColumnIndex(Database2.PORT_NUMBER));
+				return port;
+			} else {
+				return LIVE_PORT;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return LIVE_PORT;
+		}
+	}
+	
+	public void updatePortNumber(String port) {
+		try{
+			deletePortNumber();
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.PORT_NUMBER, port);
+			database.insert(Database2.TABLE_PORT_NUMBER, null, contentValues);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void deletePortNumber(){
+		try{
+			database.delete(Database2.TABLE_PORT_NUMBER, null, null);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
