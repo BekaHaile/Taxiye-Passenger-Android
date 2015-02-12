@@ -15,4 +15,10 @@ public class CustomerInfo {
 		this.freeRide = freeRide;
 		this.couponInfo = couponInfo;
 	}
+	
+	@Override
+	public String toString() {
+		return "userId = "+userId+" couponInfo = "+couponInfo;
+	}
+	
 }

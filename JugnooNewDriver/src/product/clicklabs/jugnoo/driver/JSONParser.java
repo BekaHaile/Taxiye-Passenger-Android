@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.driver.utils.Log;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -37,16 +38,12 @@ public class JSONParser {
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		
-		Data.termsAgreed = 1;
+		
 		
 		Data.userData = parseUserData(context, userData);
 		
-		if(Data.termsAgreed == 1){
-			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			Editor editor = pref.edit();
-			editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-			editor.commit();
-		}
+		Data.termsAgreed = 1;
+		saveAccessToken(context, Data.userData.accessToken);
 		
 		try{
 			int currentUserStatus = userData.getInt("current_user_status");
@@ -69,6 +66,22 @@ public class JSONParser {
 			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 		}
 		
+	}
+	
+	
+	public static void saveAccessToken(Context context, String accessToken){
+		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		Editor editor = pref.edit();
+		editor.putString(Data.SP_ACCESS_TOKEN_KEY, accessToken);
+		editor.putString(Data.SP_IS_ACCESS_TOKEN_NEW, "1");
+		editor.commit();
+	}
+	
+	public static Pair<String, String> getAccessTokenPair(Context context){
+		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+		String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
+		String isAccessTokenNew = pref.getString(Data.SP_IS_ACCESS_TOKEN_NEW, "not_found");
+		return new Pair<String, String>(accessToken, isAccessTokenNew);
 	}
 	
 	
@@ -208,7 +221,7 @@ public class JSONParser {
 				freeRideIconDisable);
 	}
 	
-	public String parseAccessTokenLoginData(Context context, String response, String accessToken) throws Exception{
+	public String parseAccessTokenLoginData(Context context, String response) throws Exception{
 		
 		JSONObject jObj = new JSONObject(response);
 		
@@ -217,6 +230,7 @@ public class JSONParser {
 		JSONObject userData = jLoginObject.getJSONObject("user_data");
 		
 		Data.userData = parseUserData(context, userData);
+		saveAccessToken(context, Data.userData.accessToken);
 		
 		//current_user_status = 1 driver or 2 user
 		int currentUserStatus = userData.getInt("current_user_status");
@@ -411,6 +425,12 @@ public class JSONParser {
 											} catch(Exception e){
 												e.printStackTrace();
 											}
+										}
+										
+										try{
+											Log.writePathLogToFile(engagementId + "accept", "JSONPARSER  = "+jObject1);
+										} catch(Exception e){
+											e.printStackTrace();
 										}
 										
 									}

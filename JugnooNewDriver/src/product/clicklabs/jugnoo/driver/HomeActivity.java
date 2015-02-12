@@ -4215,6 +4215,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onSuccess(String response) {
 							Log.i("accept ride api Server response", "response = " + response);
 	
+							try{
+								Log.writePathLogToFile(Data.dEngagementId + "accept", response);
+							} catch(Exception e){
+								e.printStackTrace();
+							}
+							
 							try {
 								jObj = new JSONObject(response);
 								
@@ -4748,6 +4754,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							
 							DialogPopup.dismissLoadingDialog();
 							Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+							try{
+								Log.writePathLogToFile(Data.dEngagementId + "endRide", "url = "+url+" params = "+params);
+							} catch(Exception e){
+								e.printStackTrace();
+							}
 							endRideOffline();
 						}
 
@@ -4947,6 +4958,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			Log.e("totalFare == endride offline ", "="+totalFare);
 			Log.e("Data.assignedCustomerInfo.couponInfo == endride offline ", "="+Data.assignedCustomerInfo.couponInfo);
+			
+			try{
+				Log.writePathLogToFile(Data.dEngagementId + "endRide", "totalFare = "+totalFare+" Data.assignedCustomerInfo = "+Data.assignedCustomerInfo);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			
 			if(Data.assignedCustomerInfo.couponInfo != null){
 				endRideInfoRl.setVisibility(View.GONE);
 				relativeLayoutCoupon.setVisibility(View.VISIBLE);
@@ -5294,8 +5313,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
+			params.put("is_access_token_new", "1");
 
-			Log.i("access_token", "="+Data.userData.accessToken);
+			Log.i("params", "="+params);
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Data.SERVER_URL+"/logout_driver", params,

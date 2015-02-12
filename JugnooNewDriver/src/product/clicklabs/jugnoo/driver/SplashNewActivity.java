@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -494,9 +495,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	 */
 	public void accessTokenLogin(final Activity activity) {
 		
-		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-		final String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
-		if(!"".equalsIgnoreCase(accessToken)){
+		Pair<String, String> accPair = JSONParser.getAccessTokenPair(activity);
+		
+		if(!"".equalsIgnoreCase(accPair.first)){
 			buttonLogin.setVisibility(View.GONE);
 			buttonRegister.setVisibility(View.GONE);
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
@@ -509,7 +510,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				}
 				
 				RequestParams params = new RequestParams();
-				params.put("access_token", accessToken);
+				params.put("access_token", accPair.first);
+				
+				if("not_found".equalsIgnoreCase(accPair.second)){
+					params.put("is_access_token_new", "0");
+				} else{
+					params.put("is_access_token_new", accPair.second);
+				}
+				
 				params.put("device_token", Data.deviceToken);
 				
 				final String serviceRestartOnReboot = Database2.getInstance(activity).getDriverServiceRun();
@@ -528,7 +536,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("unique_device_id", Data.uniqueDeviceId);
 
-				Log.i("accessToken", "=" + accessToken);
+				Log.i("accessToken", "=" + accPair.first);
 				Log.i("device_token", Data.deviceToken);
 				Log.i("latitude", ""+Data.latitude);
 				Log.i("longitude", ""+Data.longitude);
@@ -560,7 +568,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 										boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity);
 										if(!newUpdate){
 											if(ApiResponseFlags.LOGIN_SUCCESSFUL.getOrdinal() == flag){
-												new AccessTokenDataParseAsync(activity, response, accessToken).execute();
+												new AccessTokenDataParseAsync(activity, response).execute();
 											}
 											else{
 												DialogPopup.dismissLoadingDialog();
@@ -598,16 +606,15 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		Activity activity;
 		String response, accessToken;
 		
-		public AccessTokenDataParseAsync(Activity activity, String response, String accessToken){
+		public AccessTokenDataParseAsync(Activity activity, String response){
 			this.activity = activity;
 			this.response = response;
-			this.accessToken = accessToken;
 		}
 		
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				String resp = new JSONParser().parseAccessTokenLoginData(activity, response, accessToken);
+				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
 				return resp;
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -44,7 +44,7 @@ public class Data {
 	public static final String DEBUG_PASSWORD = "3131", REGISTER_PASSWORD = "1485";
 	
 	public static final String SHARED_PREF_NAME = "myPref", SETTINGS_SHARED_PREF_NAME = "settingsPref";
-	public static final String SP_ACCESS_TOKEN_KEY = "access_token",
+	public static final String SP_ACCESS_TOKEN_KEY = "access_token", SP_IS_ACCESS_TOKEN_NEW = "is_access_token_new",
 			
 			SP_TOTAL_DISTANCE = "total_distance", 
 			SP_WAIT_TIME = "wait_time",
@@ -241,7 +241,6 @@ public class Data {
 			
 			SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 			Editor editor = pref.edit();
-			editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
 			editor.clear();
 			editor.commit();
 		} catch(Exception e){

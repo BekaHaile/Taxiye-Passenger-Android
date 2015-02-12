@@ -86,7 +86,6 @@ public class DriverLocationUpdateService extends Service {
         } catch(Exception e){
         	e.printStackTrace();
         }
-        
     }
     
     
@@ -130,6 +129,7 @@ public class DriverLocationUpdateService extends Service {
 				Context.MODE_PRIVATE).getString("registration_id", "");
     	
 		Log.e("SERVER_URL in updateService","="+SERVER_URL);
+		Log.e("accessToken in updateService","="+accessToken);
 		
 		Database2.getInstance(context).insertDriverLocData(accessToken, deviceToken, SERVER_URL);
 		Database2.getInstance(context).close();

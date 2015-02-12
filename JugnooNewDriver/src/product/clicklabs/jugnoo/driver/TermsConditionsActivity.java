@@ -8,8 +8,6 @@ import product.clicklabs.jugnoo.driver.utils.DialogPopup;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -54,10 +52,7 @@ public class TermsConditionsActivity extends Activity{
 			public void onClick(View v) {
 //				termsAgreedAsync(TermsConditionsActivity.this);
 				
-				SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-				Editor editor = pref.edit();
-				editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-				editor.commit();
+				JSONParser.saveAccessToken(TermsConditionsActivity.this, Data.userData.accessToken);
 				
 				startActivity(new Intent(TermsConditionsActivity.this, HomeActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -304,12 +299,7 @@ public class TermsConditionsActivity extends Activity{
 		super.onWindowFocusChanged(hasFocus);
 		
 		if(hasFocus && termsAgreedApiDone){
-			
-			SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			Editor editor = pref.edit();
-			editor.putString(Data.SP_ACCESS_TOKEN_KEY, Data.userData.accessToken);
-			editor.commit();
-			
+			JSONParser.saveAccessToken(this, Data.userData.accessToken);
 			startActivity(new Intent(TermsConditionsActivity.this, HomeActivity.class));
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
