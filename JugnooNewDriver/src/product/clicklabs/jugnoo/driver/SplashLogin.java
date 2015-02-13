@@ -742,7 +742,6 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	public void onLocationChanged(Location location, int priority) {
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(SplashLogin.this, location);
 	}
 	
 }

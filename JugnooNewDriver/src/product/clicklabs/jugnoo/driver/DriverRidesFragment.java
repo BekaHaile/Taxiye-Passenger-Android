@@ -123,7 +123,7 @@ public class DriverRidesFragment extends Fragment {
 
 	
 	class ViewHolderDriverRides {
-		TextView textViewCustomerPaid, textViewBalance, textViewJugnooSubsidy;
+		TextView textViewCustomerPaid, textViewFare, textViewBalance, textViewJugnooSubsidy;
 		TextView fromText, fromValue, toText, toValue, distanceValue, rideTimeValue, dateTimeValue;
 		ImageView couponImg;
 		LinearLayout relative;
@@ -159,6 +159,7 @@ public class DriverRidesFragment extends Fragment {
 				convertView = mInflater.inflate(R.layout.list_item_ride_history, null);
 				
 				holder.textViewCustomerPaid = (TextView) convertView.findViewById(R.id.textViewCustomerPaid); holder.textViewCustomerPaid.setTypeface(Data.regularFont(getActivity()));
+				holder.textViewFare = (TextView) convertView.findViewById(R.id.textViewFare); holder.textViewFare.setTypeface(Data.regularFont(getActivity()));
 				holder.textViewBalance = (TextView) convertView.findViewById(R.id.textViewBalance); holder.textViewBalance.setTypeface(Data.regularFont(getActivity()));
 				holder.textViewJugnooSubsidy = (TextView) convertView.findViewById(R.id.textViewJugnooSubsidy); holder.textViewJugnooSubsidy.setTypeface(Data.regularFont(getActivity()));
 				
@@ -190,6 +191,7 @@ public class DriverRidesFragment extends Fragment {
 			holder.id = position;
 			
 			holder.textViewCustomerPaid.setText("Customer Paid: Rs. " + rideInfo.customerPaid);
+			holder.textViewFare.setText("Fare: Rs. "+rideInfo.fare);
 			holder.textViewBalance.setText("Bal. from Jugnoo: Rs. " + rideInfo.balance);
 			
 			holder.fromValue.setText(rideInfo.fromLocation);

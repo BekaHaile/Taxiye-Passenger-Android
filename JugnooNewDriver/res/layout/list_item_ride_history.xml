@@ -36,6 +36,16 @@
                     android:text="Customer Paid: Rs. 0"
                     android:textColor="@color/bg_grey_opaque"
                     android:textSize="30px" />
+                
+                <TextView
+                    android:id="@+id/textViewFare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20px"
+                    android:singleLine="true"
+                    android:text="Fare: Rs. 0"
+                    android:textColor="@color/blue_btn"
+                    android:textSize="30px" />
             </LinearLayout>
 
             <LinearLayout

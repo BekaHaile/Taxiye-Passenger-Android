@@ -182,7 +182,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 				latLng = new LatLng(Data.latitude, Data.longitude);
 			}
 			else{
-				latLng = new LatLng(30.7500, 76.7800);
+				latLng = new LatLng(30.75, 76.78);
 			}
 			selectedScheduleLatLng = latLng;
 		}

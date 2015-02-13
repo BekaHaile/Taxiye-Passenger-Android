@@ -1511,7 +1511,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			map.getUiSettings().setMyLocationButtonEnabled(false);
 			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			
-			//30.7500, 76.7800
+			//30.75, 76.78
 			
 			if(0 == Data.latitude && 0 == Data.longitude){
 				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 14));
@@ -1952,6 +1952,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				jugnooONToggle.setImageResource(R.drawable.off);
 				jugnooOffLayout.setVisibility(View.VISIBLE);
 				GCMIntentService.clearNotifications(HomeActivity.this);
+				GCMIntentService.stopRing();
 				if(map != null){
 					map.clear();
 				}
@@ -8246,16 +8247,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 								else if(ApiResponseFlags.STATION_ASSIGNED.getOrdinal() == flag){
 									if(checkDriverFree()){
-//										{
-//										    "flag": 170,
-//										    "station_id": 1,
-//										    "address": "Sh.Chaudhari Devi Lal Memorial, Madhya Marg, Sector 28, Chandigarh, 160028",
-//										    "latitude": 30.719002,
-//										    "longitude": 76.810308,
-//										    "arrival_time": "2015-01-07 10:22:22",
-//										    "radius": 500,
-//										    "message": "Please reach Sh.Chaudhari Devi Lal Memorial, Madhya Marg, Sector 28, Chandigarh, 160028 by 10:22"
-//										}
 										assignedStationData = new StationData(jObj.getString("station_id"), jObj.getDouble("latitude"), jObj.getDouble("longitude"), 
 												DateOperations.utcToLocal(jObj.getString("arrival_time")), jObj.getString("address"), jObj.getString("message"), jObj.getDouble("radius"));
 										displayStationDataPopup(activity);

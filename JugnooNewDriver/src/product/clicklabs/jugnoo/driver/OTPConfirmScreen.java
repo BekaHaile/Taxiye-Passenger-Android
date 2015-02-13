@@ -685,7 +685,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		new DriverLocationDispatcher().saveLocationToDatabase(OTPConfirmScreen.this, location);
+		Data.latitude = location.getLatitude();
+		Data.longitude = location.getLongitude();
 	}
 	
 }

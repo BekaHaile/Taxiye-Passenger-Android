@@ -861,10 +861,8 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		// TODO Auto-generated method stub
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(RegisterScreen.this, location);
 	}
 	
 }
