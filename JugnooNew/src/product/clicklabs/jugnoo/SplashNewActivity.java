@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -83,13 +84,26 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		FlurryAgent.onEndSession(this);
 	}
 	
-	public void assignFlurryKey(){
-		if(Data.DEV_SERVER_URL.equalsIgnoreCase(Data.SERVER_URL)){
+	
+	public static void initializeServerURL(Context context){
+		SharedPreferences preferences = context.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
+		
+		Data.SERVER_URL = Data.DEFAULT_SERVER_URL;
+		
+		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+			Data.SERVER_URL = Data.TRIAL_SERVER_URL.substring(0, Data.TRIAL_SERVER_URL.length()-4) + Database2.getInstance(context).getSalesPortNumber();
+			Data.FLURRY_KEY = "abcd";
+		}
+		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+			Data.SERVER_URL = Data.DEV_SERVER_URL.substring(0, Data.DEV_SERVER_URL.length()-4) + Database2.getInstance(context).getDevPortNumber();
 			Data.FLURRY_KEY = "abcd";
 		}
 		else{
+			Data.SERVER_URL = Data.LIVE_SERVER_URL.substring(0, Data.LIVE_SERVER_URL.length()-4) + Database2.getInstance(context).getLivePortNumber();
 			Data.FLURRY_KEY = Data.STATIC_FLURRY_KEY;
 		}
+		Log.e("link", "="+link);
 	}
 	
 	@Override
@@ -107,44 +121,32 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 //		    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 //		}
 		
+		
+		
+//		try {
+//			Uri targetUri = getIntent().getData();
+//			Log.e("targetUri =======********", "="+targetUri);
+//			if(targetUri != null){
+//				String autoShare = targetUri.getQueryParameter("autoshare");
+//				if("1".equalsIgnoreCase(autoShare)){
+//					Data.autoShare = 1;
+//				}
+//				else{
+//					Data.autoShare = 0;
+//				}
+//			}
+//			else{
+//				Data.autoShare = 0;
+//			}
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//			Data.autoShare = 0;
+//		}
+		Data.autoShare = 0;
+		
 		Data.userData = null;
 		
-		try {
-			Uri targetUri = getIntent().getData();
-			Log.e("targetUri =======********", "="+targetUri);
-			if(targetUri != null){
-				String autoShare = targetUri.getQueryParameter("autoshare");
-				if("1".equalsIgnoreCase(autoShare)){
-					Data.autoShare = 1;
-				}
-				else{
-					Data.autoShare = 0;
-				}
-			}
-			else{
-				Data.autoShare = 0;
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			Data.autoShare = 0;
-		}
-		
-		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
-		
-		Data.SERVER_URL = Data.DEFAULT_SERVER_URL;
-		
-		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-			Data.SERVER_URL = Data.TRIAL_SERVER_URL;
-		}
-		else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-			Data.SERVER_URL = Data.LIVE_SERVER_URL;
-		}
-		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-			Data.SERVER_URL = Data.DEV_SERVER_URL;
-		}
-
-		assignFlurryKey();
+		initializeServerURL(this);
 		
 		
 		Locale locale = new Locale("en"); 
@@ -949,13 +951,13 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
 					
 					if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-						textMessage.setText("Current server is SALES.\nChange to:");
+						textMessage.setText("Current server is SALES \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-						textMessage.setText("Current server is LIVE.\nChange to:");
+						textMessage.setText("Current server is LIVE \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-						textMessage.setText("Current server is DEV.\nChange to:");
+						textMessage.setText("Current server is DEV \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					
 					
@@ -981,9 +983,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.LIVE_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.LIVE_SERVER_URL;
-
-							assignFlurryKey();
+							initializeServerURL(activity);
 							
 							dialog.dismiss();
 						}
@@ -997,9 +997,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.DEV_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.DEV_SERVER_URL;
+							initializeServerURL(activity);
 
-							assignFlurryKey();
 							dialog.dismiss();
 						}
 					});
@@ -1013,10 +1012,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.TRIAL_SERVER_URL;
+							initializeServerURL(activity);
 
-							assignFlurryKey();
-							
 							dialog.dismiss();
 						}
 					});

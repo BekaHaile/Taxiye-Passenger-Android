@@ -31,28 +31,6 @@ public class JSONParser {
 		
 	}
 	
-	public void parseLoginData1(Context context, String response) throws Exception{
-		JSONObject userData = new JSONObject(response);
-		
-		Data.userData = parseUserData(context, userData);
-		
-		try{
-			int currentUserStatus = userData.getInt("current_user_status");
-			if(currentUserStatus == 2){
-				Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
-				HomeActivity.userMode = UserMode.PASSENGER;
-				HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-			HomeActivity.userMode = UserMode.PASSENGER;
-			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-		}
-		
-		parseFareDetails(userData);
-		
-	}
-	
 	
 	public void parseFareDetails(JSONObject userData){
 		try{
@@ -183,83 +161,11 @@ public class JSONParser {
 	
 	public String parseAccessTokenLoginData(Context context, String response) throws Exception{
 		
-//		{
-//		    "login": {
-//		        "user_data": {
-//		            "user_name": "Driver 5",
-//		            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
-//		            "phone_no": "+919780298413",
-//		            "current_user_status": 2,
-//		            "access_token": "b1e785f46e944e89b11a5741579e4aeccfa5aa0ca832267ba236358b069bacdc",
-//		            "referral_code": "DRIVER65",
-//		            "can_change_location": 1,
-//		            "can_schedule": 1,
-//		            "scheduling_limit": 60,
-//		            "is_available": 1,
-//		            "gcm_intent": 1,
-//		            "nukkad_enable": 1,
-//		            "fare_details": [
-//		                {
-//		                    "id": 1,
-//		                    "fare_fixed": 25,
-//		                    "fare_per_km": 6,
-//		                    "fare_threshold_distance": 2,
-//		                    "fare_per_min": 1,
-//		                    "fare_threshold_time": 6
-//		                }
-//		            ],
-//		            "exceptional_driver": 0
-//		        },
-//		        "popup": 0
-//		    },
-//		    "last_ride": {  or null
-//		        "engagement_id": 5982,
-//		        "fare": 25,
-//		        "to_pay": 25,
-//		        "discount": 0,
-//		        "distance_travelled": 0,
-//		        "ride_time": 1,
-//		        "wait_time": 0,
-//		        "coupon": null,
-//		        "rate_us": 0,
-//		        "driver_info": {
-//		            "id": 234,
-//		            "name": "Driver 1",
-//		            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png"
-//		        }
-//		    },
-//		    "status": {
-//		        "log": "No active session",
-//		        "flag": 131
-//		    },
-//		    "drivers": {
-//		        "data": [
-//		            {
-//		                "user_name": "Driver 1",
-//		                "phone_no": "+919999999999",
-//		                "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
-//		                "driver_car_image": "http://images.thecarconnection.com/lrg/krasnov-igor-muska-supercar-concept-rendering-006_100201743_l.jpg",
-//		                "latitude": 30.718959,
-//		                "longitude": 76.810215,
-//		                "user_id": 234,
-//		                "driver_id": 234,
-//		                "home_latitude": 0,
-//		                "home_longitude": 0,
-//		                "start_time": "02:30:00",
-//		                "end_time": "18:29:59",
-//		                "timing_id": 14,
-//		                "distance": 7.03,
-//		                "rating": 4.786516853932584
-//		            }
-//		        ]
-//		    }
-//		}
-		
-		
 		JSONObject jObj = new JSONObject(response);
 		
 		//Fetching login data
 		JSONObject jLoginObject = jObj.getJSONObject("login");
+		Log.i("jLoginObject", "="+jLoginObject);
 		
 		Data.userData = parseUserData(context, jLoginObject);
 		
@@ -276,6 +182,7 @@ public class JSONParser {
 			Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
 		}
 		
+		parsePortNumber(context, jLoginObject);
 		
 		
 		//Fetching user current status
@@ -287,6 +194,33 @@ public class JSONParser {
 		return resp;
 	}
 	
+	
+	public void parsePortNumber(Context context, JSONObject jLoginObject){
+		try {
+			if(jLoginObject.has("port_number")){
+				String port = jLoginObject.getString("port_number");
+				updatePortNumber(context, port);
+				SplashNewActivity.initializeServerURL(context);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updatePortNumber(Context context, String port){
+		SharedPreferences preferences = context.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
+		
+		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+			Database2.getInstance(context).updateSalesPortNumber(port);
+		}
+		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+			Database2.getInstance(context).updateDevPortNumber(port);
+		}
+		else{
+			Database2.getInstance(context).updateLivePortNumber(port);
+		}
+	}
 	
 	//TODO
 	public void parseLastRideData(JSONObject jObj){

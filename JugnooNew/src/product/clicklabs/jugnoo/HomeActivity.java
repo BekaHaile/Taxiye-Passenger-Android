@@ -792,20 +792,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public boolean onLongClick(View v) {
-
-				String message = "";
 				
-				if(Data.SERVER_URL.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-					message = "Current server is TRIAL. "+Data.TRIAL_SERVER_URL;
-				}
-				else if(Data.SERVER_URL.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-					message = "Current server is LIVE. "+Data.LIVE_SERVER_URL;
-				}
-				else if(Data.SERVER_URL.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-					message = "Current server is DEV. "+Data.DEV_SERVER_URL;
-				}
-				
-				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "url = "+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
 				return false;
