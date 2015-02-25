@@ -71,7 +71,7 @@ public class FutureSchedulesFragment extends Fragment {
 		ASSL.DoMagic(main);
 
 		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
+		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.latoRegular(getActivity()));
 		listView = (ListView) rootView.findViewById(R.id.listView);
 		
 		futureSchedulesListAdapter = new FutureSchedulesListAdapter(getActivity());
@@ -171,11 +171,11 @@ public class FutureSchedulesFragment extends Fragment {
 				holder = new ViewHolderFutureSchedule();
 				convertView = mInflater.inflate(R.layout.list_item_future_schedule, null);
 				
-				holder.pickupLocationText = (TextView) convertView.findViewById(R.id.pickupLocationText); holder.pickupLocationText.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-				holder.pickupLocationValue = (TextView) convertView.findViewById(R.id.pickupLocationValue); holder.pickupLocationValue.setTypeface(Data.regularFont(activity));
-				holder.pickupDateTimeText = (TextView) convertView.findViewById(R.id.pickupDateTimeText); holder.pickupDateTimeText.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-				holder.pickupDateTimeValue = (TextView) convertView.findViewById(R.id.pickupDateTimeValue); holder.pickupDateTimeValue.setTypeface(Data.regularFont(activity));
-				holder.scheduleStatusValue = (TextView) convertView.findViewById(R.id.scheduleStatusValue); holder.scheduleStatusValue.setTypeface(Data.regularFont(activity));
+				holder.pickupLocationText = (TextView) convertView.findViewById(R.id.pickupLocationText); holder.pickupLocationText.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+				holder.pickupLocationValue = (TextView) convertView.findViewById(R.id.pickupLocationValue); holder.pickupLocationValue.setTypeface(Data.latoRegular(activity));
+				holder.pickupDateTimeText = (TextView) convertView.findViewById(R.id.pickupDateTimeText); holder.pickupDateTimeText.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+				holder.pickupDateTimeValue = (TextView) convertView.findViewById(R.id.pickupDateTimeValue); holder.pickupDateTimeValue.setTypeface(Data.latoRegular(activity));
+				holder.scheduleStatusValue = (TextView) convertView.findViewById(R.id.scheduleStatusValue); holder.scheduleStatusValue.setTypeface(Data.latoRegular(activity));
 				
 				holder.forwardImage = (ImageView) convertView.findViewById(R.id.forwardImage);
 				
@@ -257,17 +257,17 @@ public class FutureSchedulesFragment extends Fragment {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
-			TextView textExtra = (TextView) dialog.findViewById(R.id.textExtra); textExtra.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+			TextView textExtra = (TextView) dialog.findViewById(R.id.textExtra); textExtra.setTypeface(Data.latoRegular(activity));
 			
 			textHead.setText("Future Ride");
 			textMessage.setText("Do you want to change your scheduled ride?");
 			textExtra.setText("Terms and Conditions");
 			
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("Reschedule");
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity)); btnCancel.setText("Remove");
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("Reschedule");
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity)); btnCancel.setText("Remove");
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
@@ -360,8 +360,8 @@ public class FutureSchedulesFragment extends Fragment {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -370,8 +370,8 @@ public class FutureSchedulesFragment extends Fragment {
 			textHead.setText(title);
 			textMessage.setText(message);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("No");
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity)); btnCancel.setText("Yes");
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("No");
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity)); btnCancel.setText("Yes");
 			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
 			crossbtn.setVisibility(View.GONE);
 			

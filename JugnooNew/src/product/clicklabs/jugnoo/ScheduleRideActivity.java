@@ -133,28 +133,28 @@ public class ScheduleRideActivity extends FragmentActivity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		cancelBtn = (Button) findViewById(R.id.cancelBtn); cancelBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		cancelBtn = (Button) findViewById(R.id.cancelBtn); cancelBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		scheduleOptionsMainRl = (RelativeLayout) findViewById(R.id.scheduleOptionsMainRl);
-		scheduleRideText = (TextView) findViewById(R.id.scheduleRideText); scheduleRideText.setTypeface(Data.regularFont(getApplicationContext()));
+		scheduleRideText = (TextView) findViewById(R.id.scheduleRideText); scheduleRideText.setTypeface(Data.latoRegular(getApplicationContext()));
 		schedulePickupLocationLinear = (LinearLayout) findViewById(R.id.schedulePickupLocationLinear);
-		schedulePickupLocationText = (TextView) findViewById(R.id.schedulePickupLocationText); schedulePickupLocationText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		schedulePickupLocationValue = (TextView) findViewById(R.id.schedulePickupLocationValue); schedulePickupLocationValue.setTypeface(Data.regularFont(getApplicationContext()));
+		schedulePickupLocationText = (TextView) findViewById(R.id.schedulePickupLocationText); schedulePickupLocationText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		schedulePickupLocationValue = (TextView) findViewById(R.id.schedulePickupLocationValue); schedulePickupLocationValue.setTypeface(Data.latoRegular(getApplicationContext()));
 		scheduleDateTimeLinear = (LinearLayout) findViewById(R.id.scheduleDateTimeLinear);
-		scheduleDateTimeText = (TextView) findViewById(R.id.scheduleDateTimeText); scheduleDateTimeText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		scheduleDateTimeValue = (TextView) findViewById(R.id.scheduleDateTimeValue); scheduleDateTimeValue.setTypeface(Data.regularFont(getApplicationContext()));
-		scheduleBtn = (Button) findViewById(R.id.scheduleBtn); scheduleBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		textTerms = (TextView) findViewById(R.id.textTerms); textTerms.setTypeface(Data.regularFont(getApplicationContext()));
+		scheduleDateTimeText = (TextView) findViewById(R.id.scheduleDateTimeText); scheduleDateTimeText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		scheduleDateTimeValue = (TextView) findViewById(R.id.scheduleDateTimeValue); scheduleDateTimeValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		scheduleBtn = (Button) findViewById(R.id.scheduleBtn); scheduleBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		textTerms = (TextView) findViewById(R.id.textTerms); textTerms.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		scheduleSetPickupLocationRl = (RelativeLayout) findViewById(R.id.scheduleSetPickupLocationRl);
 		scheduleMyLocationBtn = (Button) findViewById(R.id.scheduleMyLocationBtn);
-		pickThisLocationBtn = (Button) findViewById(R.id.pickThisLocationBtn); pickThisLocationBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		pickThisLocationBtn = (Button) findViewById(R.id.pickThisLocationBtn); pickThisLocationBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		searchListRl = (LinearLayout) findViewById(R.id.searchListRl);
 		searchListView = (ListView) findViewById(R.id.searchListView);
-		searchBarEditText = (EditText) findViewById(R.id.searchBarEditText); searchBarEditText.setTypeface(Data.regularFont(getApplicationContext()));
-		searchBtn = (Button) findViewById(R.id.searchBtn); searchBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		searchBarEditText = (EditText) findViewById(R.id.searchBarEditText); searchBarEditText.setTypeface(Data.latoRegular(getApplicationContext()));
+		searchBtn = (Button) findViewById(R.id.searchBtn); searchBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch);
 		searchBtn.setVisibility(View.GONE);
 		progressBarSearch.setVisibility(View.GONE);
@@ -582,7 +582,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 				holder = new ViewHolderScheduleSearch();
 				convertView = mInflater.inflate(R.layout.list_item_search, null);
 				
-				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
+				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.latoRegular(getApplicationContext()));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);

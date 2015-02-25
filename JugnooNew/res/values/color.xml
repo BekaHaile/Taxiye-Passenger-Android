@@ -7,6 +7,7 @@
    
    
    <color name="black">#202020</color>
+   <color name="black_alpha">#88202020</color>
    <color name="black_light">#505050</color>
    
    <color name="black_text_shop">#1C1C1C</color>
@@ -35,6 +36,8 @@
     <color name="green_btn">#66BB66</color>
     <color name="green_btn_pressed">#669966</color>
     
+    
+    <color name="grey_light_more">#EBEBEB</color>
     <color name="grey_light">#AEAEAE</color>
     <color name="grey_btn">#8E8E8E</color>
     <color name="grey_btn_pressed">#7E7E7E</color>
@@ -44,6 +47,7 @@
     <color name="blue_dark_btn_pressed">#1B3979</color>
     
     
+    <color name="red_banner">#9B3A26</color>
     
     <color name="red_btn">#8E8E8E</color>
     <color name="red_btn_pressed">#7E7E7E</color>

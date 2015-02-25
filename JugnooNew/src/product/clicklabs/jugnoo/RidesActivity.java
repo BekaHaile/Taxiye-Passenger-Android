@@ -42,15 +42,15 @@ public class RidesActivity extends FragmentActivity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		linearLayoutRidesTabs = (LinearLayout) findViewById(R.id.linearLayoutRidesTabs);
 		
 		relativeLayoutRideHistory = (RelativeLayout) findViewById(R.id.relativeLayoutRideHistory);
 		relativeLayoutFutureRides = (RelativeLayout) findViewById(R.id.relativeLayoutFutureRides);
 		
-		textViewRideHistory = (TextView) findViewById(R.id.textViewRideHistory); textViewRideHistory.setTypeface(Data.regularFont(getApplicationContext()));
-		textViewFutureRides = (TextView) findViewById(R.id.textViewFutureRides); textViewFutureRides.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewRideHistory = (TextView) findViewById(R.id.textViewRideHistory); textViewRideHistory.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewFutureRides = (TextView) findViewById(R.id.textViewFutureRides); textViewFutureRides.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		imageViewRideHistory = (ImageView) findViewById(R.id.imageViewRideHistory);
 		imageViewFutureRides = (ImageView) findViewById(R.id.imageViewFutureRides);

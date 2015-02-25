@@ -20,6 +20,12 @@
 	<string name="fb_app_id">782131025144439</string>
     
 	
+	
+    <string name="rupee">\u20B9</string> 
+    
+    <string name="rupee_0">\u20B9 0.0</string> 
+    
+	
 	<string name="language_english_text">English</string>
 	<string name="language_hindi_text">हिंदी</string>
 	

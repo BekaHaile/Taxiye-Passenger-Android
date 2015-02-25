@@ -143,6 +143,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout couponsRl;
 	TextView couponsText;
 	
+	RelativeLayout walletRl;
+	TextView walletText;
+	
 	RelativeLayout bookingsRl;
 	TextView bookingsText;
 	
@@ -458,25 +461,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		profileImg = (ImageView) findViewById(R.id.profileImg);
-		userName = (TextView) findViewById(R.id.userName); userName.setTypeface(Data.regularFont(getApplicationContext()));
+		userName = (TextView) findViewById(R.id.userName); userName.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		inviteFriendRl = (RelativeLayout) findViewById(R.id.inviteFriendRl);
-		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText); inviteFriendText.setTypeface(Data.regularFont(getApplicationContext()));
+		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText); inviteFriendText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		couponsRl = (RelativeLayout) findViewById(R.id.couponsRl);
-		couponsText = (TextView) findViewById(R.id.couponsText); couponsText.setTypeface(Data.regularFont(getApplicationContext()));
+		couponsText = (TextView) findViewById(R.id.couponsText); couponsText.setTypeface(Data.latoRegular(getApplicationContext()));
+		
+		walletRl = (RelativeLayout) findViewById(R.id.walletRl);
+		walletText = (TextView) findViewById(R.id.walletText); walletText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
-		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.regularFont(getApplicationContext()));
+		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		fareDetailsRl = (RelativeLayout) findViewById(R.id.fareDetailsRl);
-		fareDetailsText = (TextView) findViewById(R.id.fareDetailsText); fareDetailsText.setTypeface(Data.regularFont(getApplicationContext()));
+		fareDetailsText = (TextView) findViewById(R.id.fareDetailsText); fareDetailsText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		helpRl = (RelativeLayout) findViewById(R.id.helpRl);
-		helpText = (TextView) findViewById(R.id.helpText); helpText.setTypeface(Data.regularFont(getApplicationContext()));
+		helpText = (TextView) findViewById(R.id.helpText); helpText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		logoutRl = (RelativeLayout) findViewById(R.id.logoutRl);
-		logoutText = (TextView) findViewById(R.id.logoutText); logoutText.setTypeface(Data.regularFont(getApplicationContext()));
+		logoutText = (TextView) findViewById(R.id.logoutText); logoutText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		
@@ -487,7 +493,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		topRl = (RelativeLayout) findViewById(R.id.topRl);
 		menuBtn = (Button) findViewById(R.id.menuBtn);
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		jugnooLogo = (ImageView) findViewById(R.id.jugnooLogo);
 		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
@@ -526,14 +532,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		//Initial layout 
 		initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
-		textViewAssigningInProgress = (TextView) findViewById(R.id.textViewAssigningInProgress); textViewAssigningInProgress.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewAssigningInProgress = (TextView) findViewById(R.id.textViewAssigningInProgress); textViewAssigningInProgress.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		myLocationBtn = (Button) findViewById(R.id.myLocationBtn);
-		requestRideBtn = (Button) findViewById(R.id.requestRideBtn); requestRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn); initialCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		requestRideBtn = (Button) findViewById(R.id.requestRideBtn); requestRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn); initialCancelRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		nearestDriverRl = (RelativeLayout) findViewById(R.id.nearestDriverRl);
-		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText); nearestDriverText.setTypeface(Data.regularFont(getApplicationContext()));
+		nearestDriverText = (TextView) findViewById(R.id.nearestDriverText); nearestDriverText.setTypeface(Data.latoRegular(getApplicationContext()));
 		nearestDriverProgress = (ProgressBar) findViewById(R.id.nearestDriverProgress);
 		
 		
@@ -550,18 +556,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverImage = (ImageView) findViewById(R.id.driverImage);
 		driverCarImage = (ImageView) findViewById(R.id.driverCarImage);
 		
-		driverName = (TextView) findViewById(R.id.driverName); driverName.setTypeface(Data.regularFont(getApplicationContext()));
-		driverTime = (TextView) findViewById(R.id.driverTime); driverTime.setTypeface(Data.regularFont(getApplicationContext()));
-		driverCarNumberText = (TextView) findViewById(R.id.driverCarNumberText); driverCarNumberText.setTypeface(Data.regularFont(getApplicationContext()));
-		callDriverBtn = (Button) findViewById(R.id.callDriverBtn); callDriverBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress); inRideRideInProgress.setTypeface(Data.regularFont(getApplicationContext()));
+		driverName = (TextView) findViewById(R.id.driverName); driverName.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverTime = (TextView) findViewById(R.id.driverTime); driverTime.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverCarNumberText = (TextView) findViewById(R.id.driverCarNumberText); driverCarNumberText.setTypeface(Data.latoRegular(getApplicationContext()));
+		callDriverBtn = (Button) findViewById(R.id.callDriverBtn); callDriverBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		inRideRideInProgress = (TextView) findViewById(R.id.inRideRideInProgress); inRideRideInProgress.setTypeface(Data.latoRegular(getApplicationContext()));
 		passengerFreeRideIcon = (ImageView) findViewById(R.id.passengerFreeRideIcon);
 		customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
 		
-		minFareText = (TextView) findViewById(R.id.minFareText); minFareText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		minFareValue = (TextView) findViewById(R.id.minFareValue); minFareValue.setTypeface(Data.regularFont(getApplicationContext()));
-		fareAfterText = (TextView) findViewById(R.id.fareAfterText); fareAfterText.setTypeface(Data.regularFont(getApplicationContext()));
-		fareAfterValue = (TextView) findViewById(R.id.fareAfterValue); fareAfterValue.setTypeface(Data.regularFont(getApplicationContext()));
+		minFareText = (TextView) findViewById(R.id.minFareText); minFareText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		minFareValue = (TextView) findViewById(R.id.minFareValue); minFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		fareAfterText = (TextView) findViewById(R.id.fareAfterText); fareAfterText.setTypeface(Data.latoRegular(getApplicationContext()));
+		fareAfterValue = (TextView) findViewById(R.id.fareAfterValue); fareAfterValue.setTypeface(Data.latoRegular(getApplicationContext()));
 		fareInfoBtn = (Button) findViewById(R.id.fareInfoBtn);
 		
 		
@@ -579,12 +585,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		//Feedback layout
 		feedbackLayout = (RelativeLayout) findViewById(R.id.feedbackLayout);
-		feedbackRatingText = (TextView) findViewById(R.id.feedbackRatingText); feedbackRatingText.setTypeface(Data.regularFont(getApplicationContext()));
-		feedbackHelpText = (TextView) findViewById(R.id.feedbackHelpText); feedbackHelpText.setTypeface(Data.regularFont(getApplicationContext()));
+		feedbackRatingText = (TextView) findViewById(R.id.feedbackRatingText); feedbackRatingText.setTypeface(Data.latoRegular(getApplicationContext()));
+		feedbackHelpText = (TextView) findViewById(R.id.feedbackHelpText); feedbackHelpText.setTypeface(Data.latoRegular(getApplicationContext()));
 		feedbackRatingBar = (RatingBar) findViewById(R.id.feedbackRatingBar);
-		feedbackEditText = (EditText) findViewById(R.id.feedbackEditText); feedbackEditText.setTypeface(Data.regularFont(getApplicationContext()));
-		feedbackSubmitBtn = (Button) findViewById(R.id.feedbackSubmitBtn); feedbackSubmitBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		feedbackSkipBtn = (Button) findViewById(R.id.feedbackSkipBtn); feedbackSkipBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		feedbackEditText = (EditText) findViewById(R.id.feedbackEditText); feedbackEditText.setTypeface(Data.latoRegular(getApplicationContext()));
+		feedbackSubmitBtn = (Button) findViewById(R.id.feedbackSubmitBtn); feedbackSubmitBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		feedbackSkipBtn = (Button) findViewById(R.id.feedbackSkipBtn); feedbackSkipBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		
@@ -613,11 +619,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverInitialLayout = (RelativeLayout) findViewById(R.id.driverInitialLayout);
 		driverNewRideRequestRl = (RelativeLayout) findViewById(R.id.driverNewRideRequestRl);
 		driverRideRequestsList = (ListView) findViewById(R.id.driverRideRequestsList);
-		driverNewRideRequestText = (TextView) findViewById(R.id.driverNewRideRequestText); driverNewRideRequestText.setTypeface(Data.regularFont(getApplicationContext()));
-		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText); driverNewRideRequestClickText.setTypeface(Data.regularFont(getApplicationContext()));
+		driverNewRideRequestText = (TextView) findViewById(R.id.driverNewRideRequestText); driverNewRideRequestText.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText); driverNewRideRequestClickText.setTypeface(Data.latoRegular(getApplicationContext()));
 		driverInitialMyLocationBtn = (Button) findViewById(R.id.driverInitialMyLocationBtn);
 		jugnooOffLayout = (RelativeLayout) findViewById(R.id.jugnooOffLayout);
-		jugnooOffText = (TextView) findViewById(R.id.jugnooOffText); jugnooOffText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		jugnooOffText = (TextView) findViewById(R.id.jugnooOffText); jugnooOffText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		
 		driverNewRideRequestRl.setVisibility(View.GONE);
 		driverRideRequestsList.setVisibility(View.GONE);
@@ -629,8 +635,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		// Driver Request Accept layout
 		driverRequestAcceptLayout = (RelativeLayout) findViewById(R.id.driverRequestAcceptLayout);
 		driverRequestAcceptBackBtn = (Button) findViewById(R.id.driverRequestAcceptBackBtn);
-		driverAcceptRideBtn = (Button) findViewById(R.id.driverAcceptRideBtn); driverAcceptRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		driverCancelRequestBtn = (Button) findViewById(R.id.driverCancelRequestBtn); driverCancelRequestBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		driverAcceptRideBtn = (Button) findViewById(R.id.driverAcceptRideBtn); driverAcceptRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverCancelRequestBtn = (Button) findViewById(R.id.driverCancelRequestBtn); driverCancelRequestBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		driverRequestAcceptMyLocationBtn = (Button) findViewById(R.id.driverRequestAcceptMyLocationBtn);
 		
 		
@@ -639,22 +645,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverEngagedLayout = (RelativeLayout) findViewById(R.id.driverEngagedLayout);
 		
 
-		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName); driverPassengerName.setTypeface(Data.regularFont(getApplicationContext()));
-		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue); driverPassengerRatingValue.setTypeface(Data.regularFont(getApplicationContext()));
+		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName); driverPassengerName.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue); driverPassengerRatingValue.setTypeface(Data.latoRegular(getApplicationContext()));
 		driverPassengerCallRl = (RelativeLayout) findViewById(R.id.driverPassengerCallRl);
-		driverPassengerCallText = (TextView) findViewById(R.id.driverPassengerCallText); driverPassengerCallText.setTypeface(Data.regularFont(getApplicationContext()));
-		driverScheduledRideText = (TextView) findViewById(R.id.driverScheduledRideText); driverScheduledRideText.setTypeface(Data.regularFont(getApplicationContext()));
+		driverPassengerCallText = (TextView) findViewById(R.id.driverPassengerCallText); driverPassengerCallText.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverScheduledRideText = (TextView) findViewById(R.id.driverScheduledRideText); driverScheduledRideText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		driverPassengerRatingValue.setVisibility(View.GONE);
 		
 		//Start ride layout
 		driverStartRideMainRl = (RelativeLayout) findViewById(R.id.driverStartRideMainRl);
 		driverStartRideMyLocationBtn = (Button) findViewById(R.id.driverStartRideMyLocationBtn);
-		driverStartRideBtn = (Button) findViewById(R.id.driverStartRideBtn); driverStartRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		driverStartRideBtn = (Button) findViewById(R.id.driverStartRideBtn); driverStartRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 
-//		driverStartRideSlider.setThumb(createStartRideThumbDrawable());
-//		driverStartRideSlider.setThumbOffset((int)(5.0f * ASSL.Xscale()));
 		
 		
 		//End ride layout
@@ -662,30 +666,30 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		driverEndRideMyLocationBtn = (Button) findViewById(R.id.driverEndRideMyLocationBtn);
 		
-		driverIRDistanceText = (TextView) findViewById(R.id.driverIRDistanceText); driverIRDistanceText.setTypeface(Data.regularFont(getApplicationContext()));
-		driverIRDistanceValue = (TextView) findViewById(R.id.driverIRDistanceValue); driverIRDistanceValue.setTypeface(Data.regularFont(getApplicationContext()));
-		driverIRDistanceKmText = (TextView) findViewById(R.id.driverIRDistanceKmText); driverIRDistanceKmText.setTypeface(Data.regularFont(getApplicationContext()));
+		driverIRDistanceText = (TextView) findViewById(R.id.driverIRDistanceText); driverIRDistanceText.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverIRDistanceValue = (TextView) findViewById(R.id.driverIRDistanceValue); driverIRDistanceValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverIRDistanceKmText = (TextView) findViewById(R.id.driverIRDistanceKmText); driverIRDistanceKmText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		driverIRFareText = (TextView) findViewById(R.id.driverIRFareText); driverIRFareText.setTypeface(Data.regularFont(getApplicationContext()));
-		driverIRFareRsText = (TextView) findViewById(R.id.driverIRFareRsText); driverIRFareRsText.setTypeface(Data.regularFont(getApplicationContext()));
-		driverIRFareValue = (TextView) findViewById(R.id.driverIRFareValue); driverIRFareValue.setTypeface(Data.regularFont(getApplicationContext()));
+		driverIRFareText = (TextView) findViewById(R.id.driverIRFareText); driverIRFareText.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverIRFareRsText = (TextView) findViewById(R.id.driverIRFareRsText); driverIRFareRsText.setTypeface(Data.latoRegular(getApplicationContext()));
+		driverIRFareValue = (TextView) findViewById(R.id.driverIRFareValue); driverIRFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		driverRideTimeText = (TextView) findViewById(R.id.driverRideTimeText); driverRideTimeText.setTypeface(Data.regularFont(getApplicationContext()));
-		rideTimeChronometer = (PausableChronometer) findViewById(R.id.rideTimeChronometer); rideTimeChronometer.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		driverRideTimeText = (TextView) findViewById(R.id.driverRideTimeText); driverRideTimeText.setTypeface(Data.latoRegular(getApplicationContext()));
+		rideTimeChronometer = (PausableChronometer) findViewById(R.id.rideTimeChronometer); rideTimeChronometer.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		
 		driverWaitRl = (RelativeLayout) findViewById(R.id.driverWaitRl);
-		driverWaitText = (TextView) findViewById(R.id.driverWaitText); driverWaitText.setTypeface(Data.regularFont(getApplicationContext()));
-		waitChronometer = (PausableChronometer) findViewById(R.id.waitChronometer); waitChronometer.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		driverWaitText = (TextView) findViewById(R.id.driverWaitText); driverWaitText.setTypeface(Data.latoRegular(getApplicationContext()));
+		waitChronometer = (PausableChronometer) findViewById(R.id.waitChronometer); waitChronometer.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 
-		inrideMinFareText = (TextView) findViewById(R.id.inrideMinFareText); inrideMinFareText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		inrideMinFareValue = (TextView) findViewById(R.id.inrideMinFareValue); inrideMinFareValue.setTypeface(Data.regularFont(getApplicationContext()));
-		inrideFareAfterText = (TextView) findViewById(R.id.inrideFareAfterText); inrideFareAfterText.setTypeface(Data.regularFont(getApplicationContext()));
-		inrideFareAfterValue = (TextView) findViewById(R.id.inrideFareAfterValue); inrideFareAfterValue.setTypeface(Data.regularFont(getApplicationContext()));
+		inrideMinFareText = (TextView) findViewById(R.id.inrideMinFareText); inrideMinFareText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		inrideMinFareValue = (TextView) findViewById(R.id.inrideMinFareValue); inrideMinFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		inrideFareAfterText = (TextView) findViewById(R.id.inrideFareAfterText); inrideFareAfterText.setTypeface(Data.latoRegular(getApplicationContext()));
+		inrideFareAfterValue = (TextView) findViewById(R.id.inrideFareAfterValue); inrideFareAfterValue.setTypeface(Data.latoRegular(getApplicationContext()));
 		inrideFareInfoBtn = (Button) findViewById(R.id.inrideFareInfoBtn);
 		
 		driverWaitRl.setVisibility(View.GONE);
 		
-		driverEndRideBtn = (Button) findViewById(R.id.driverEndRideBtn); driverEndRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		driverEndRideBtn = (Button) findViewById(R.id.driverEndRideBtn); driverEndRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		waitStart = 2;
 
 //		driverEndRideSlider.setThumb(createEndRideThumbDrawable());
@@ -701,26 +705,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		reviewUserImgBlured = (ImageView) findViewById(R.id.reviewUserImgBlured);
 		reviewUserImage = (ImageView) findViewById(R.id.reviewUserImage);
 		
-		reviewUserName = (TextView) findViewById(R.id.reviewUserName); reviewUserName.setTypeface(Data.regularFont(getApplicationContext()));
-		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText); reviewReachedDestinationText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		reviewDistanceText = (TextView) findViewById(R.id.reviewDistanceText); reviewDistanceText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		reviewDistanceValue = (TextView) findViewById(R.id.reviewDistanceValue); reviewDistanceValue.setTypeface(Data.regularFont(getApplicationContext()));
-		reviewWaitText = (TextView) findViewById(R.id.reviewWaitText); reviewWaitText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		reviewWaitValue = (TextView) findViewById(R.id.reviewWaitValue); reviewWaitValue.setTypeface(Data.regularFont(getApplicationContext()));
-		reviewRideTimeText = (TextView) findViewById(R.id.reviewRideTimeText); reviewRideTimeText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		reviewRideTimeValue = (TextView) findViewById(R.id.reviewRideTimeValue); reviewRideTimeValue.setTypeface(Data.regularFont(getApplicationContext()));
-		reviewFareText = (TextView) findViewById(R.id.reviewFareText); reviewFareText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		reviewFareValue = (TextView) findViewById(R.id.reviewFareValue); reviewFareValue.setTypeface(Data.regularFont(getApplicationContext()));
-		reviewRatingText = (TextView) findViewById(R.id.reviewRatingText); reviewRatingText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		reviewUserName = (TextView) findViewById(R.id.reviewUserName); reviewUserName.setTypeface(Data.latoRegular(getApplicationContext()));
+		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText); reviewReachedDestinationText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		reviewDistanceText = (TextView) findViewById(R.id.reviewDistanceText); reviewDistanceText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		reviewDistanceValue = (TextView) findViewById(R.id.reviewDistanceValue); reviewDistanceValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		reviewWaitText = (TextView) findViewById(R.id.reviewWaitText); reviewWaitText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		reviewWaitValue = (TextView) findViewById(R.id.reviewWaitValue); reviewWaitValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		reviewRideTimeText = (TextView) findViewById(R.id.reviewRideTimeText); reviewRideTimeText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		reviewRideTimeValue = (TextView) findViewById(R.id.reviewRideTimeValue); reviewRideTimeValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		reviewFareText = (TextView) findViewById(R.id.reviewFareText); reviewFareText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		reviewFareValue = (TextView) findViewById(R.id.reviewFareValue); reviewFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		reviewRatingText = (TextView) findViewById(R.id.reviewRatingText); reviewRatingText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		
 		reviewRatingBarRl = (LinearLayout) findViewById(R.id.reviewRatingBarRl);
 		endRideInfoRl = (LinearLayout) findViewById(R.id.endRideInfoRl);
 		jugnooRideOverText = (TextView) findViewById(R.id.jugnooRideOverText); 
-		jugnooRideOverText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		jugnooRideOverText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		takeFareText = (TextView) findViewById(R.id.takeFareText); 
-		takeFareText.setTypeface(Data.regularFont(getApplicationContext()));
+		takeFareText.setTypeface(Data.latoRegular(getApplicationContext()));
 		reviewRatingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
-		reviewSubmitBtn = (Button) findViewById(R.id.reviewSubmitBtn); reviewSubmitBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		reviewSubmitBtn = (Button) findViewById(R.id.reviewSubmitBtn); reviewSubmitBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		relativeLayoutCoupon = (RelativeLayout) findViewById(R.id.relativeLayoutCoupon);
 		textViewCouponTitle = (TextView) findViewById(R.id.textViewCouponTitle); textViewCouponTitle.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
@@ -728,10 +732,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		textViewCouponPayTakeText = (TextView) findViewById(R.id.textViewCouponPayTakeText); textViewCouponPayTakeText.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
 		textViewCouponDiscountedFare = (TextView) findViewById(R.id.textViewCouponDiscountedFare); textViewCouponDiscountedFare.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
 		
-		reviewMinFareText = (TextView) findViewById(R.id.reviewMinFareText); reviewMinFareText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		reviewMinFareValue = (TextView) findViewById(R.id.reviewMinFareValue); reviewMinFareValue.setTypeface(Data.regularFont(getApplicationContext()));
-		reviewFareAfterText = (TextView) findViewById(R.id.reviewFareAfterText); reviewFareAfterText.setTypeface(Data.regularFont(getApplicationContext()));
-		reviewFareAfterValue = (TextView) findViewById(R.id.reviewFareAfterValue); reviewFareAfterValue.setTypeface(Data.regularFont(getApplicationContext()));
+		reviewMinFareText = (TextView) findViewById(R.id.reviewMinFareText); reviewMinFareText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		reviewMinFareValue = (TextView) findViewById(R.id.reviewMinFareValue); reviewMinFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		reviewFareAfterText = (TextView) findViewById(R.id.reviewFareAfterText); reviewFareAfterText.setTypeface(Data.latoRegular(getApplicationContext()));
+		reviewFareAfterValue = (TextView) findViewById(R.id.reviewFareAfterValue); reviewFareAfterValue.setTypeface(Data.latoRegular(getApplicationContext()));
 		reviewFareInfoBtn = (Button) findViewById(R.id.reviewFareInfoBtn);
 		
 
@@ -794,20 +798,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public boolean onLongClick(View v) {
-
-				String message = "";
 				
-				if(Data.SERVER_URL.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-					message = "Current server is TRIAL. "+Data.TRIAL_SERVER_URL;
-				}
-				else if(Data.SERVER_URL.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-					message = "Current server is LIVE. "+Data.LIVE_SERVER_URL;
-				}
-				else if(Data.SERVER_URL.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-					message = "Current server is DEV. "+Data.DEV_SERVER_URL;
-				}
-				
-				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "url = "+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
 				return false;
@@ -895,6 +887,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
+			}
+		});
+		
+		
+		walletRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(HomeActivity.this, WalletActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
 			}
 		});
 		
@@ -3595,10 +3598,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				holder = new ViewHolderDriverRequest();
 				convertView = mInflater.inflate(R.layout.list_item_driver_request, null);
 				
-				holder.textViewRequestAddress = (TextView) convertView.findViewById(R.id.textViewRequestAddress); holder.textViewRequestAddress.setTypeface(Data.regularFont(getApplicationContext()));
-				holder.textViewRequestDistance = (TextView) convertView.findViewById(R.id.textViewRequestDistance); holder.textViewRequestDistance.setTypeface(Data.regularFont(getApplicationContext()));
-				holder.textViewRequestTime = (TextView) convertView.findViewById(R.id.textViewRequestTime); holder.textViewRequestTime.setTypeface(Data.regularFont(getApplicationContext()));
-				holder.textViewRequestNumber = (TextView) convertView.findViewById(R.id.textViewRequestNumber); holder.textViewRequestNumber.setTypeface(Data.regularFont(getApplicationContext()));
+				holder.textViewRequestAddress = (TextView) convertView.findViewById(R.id.textViewRequestAddress); holder.textViewRequestAddress.setTypeface(Data.latoRegular(getApplicationContext()));
+				holder.textViewRequestDistance = (TextView) convertView.findViewById(R.id.textViewRequestDistance); holder.textViewRequestDistance.setTypeface(Data.latoRegular(getApplicationContext()));
+				holder.textViewRequestTime = (TextView) convertView.findViewById(R.id.textViewRequestTime); holder.textViewRequestTime.setTypeface(Data.latoRegular(getApplicationContext()));
+				holder.textViewRequestNumber = (TextView) convertView.findViewById(R.id.textViewRequestNumber); holder.textViewRequestNumber.setTypeface(Data.latoRegular(getApplicationContext()));
 				
 				holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative); 
 				
@@ -5183,27 +5186,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							try {
 								jObj = new JSONObject(response);
 								int flag = jObj.getInt("flag");
-								if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
-									HomeActivity.logoutUser(activity);
-								}
-								else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-									String errorMessage = jObj.getString("error");
-									new DialogPopup().alertPopup(activity, "", errorMessage);
-								}
-								else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-									String message = jObj.getString("message");
-									new DialogPopup().alertPopup(activity, "", message);
-								}
-								else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-									userMode = UserMode.PASSENGER;
-									
-									switchUserScreen(userMode);
-									
-									passengerScreenMode = PassengerScreenMode.P_INITIAL;
-									switchPassengerScreen(passengerScreenMode);
-								}
-								else{
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+										userMode = UserMode.PASSENGER;
+										
+										switchUserScreen(userMode);
+										
+										passengerScreenMode = PassengerScreenMode.P_INITIAL;
+										switchPassengerScreen(passengerScreenMode);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
@@ -5236,8 +5230,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(getApplicationContext()));
-			final EditText favoriteNameEt = (EditText) dialog.findViewById(R.id.favoriteNameEt); favoriteNameEt.setTypeface(Data.regularFont(getApplicationContext()));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(getApplicationContext()));
+			final EditText favoriteNameEt = (EditText) dialog.findViewById(R.id.favoriteNameEt); favoriteNameEt.setTypeface(Data.latoRegular(getApplicationContext()));
 			
 			favoriteNameEt.setText(locationName);
 			
@@ -5249,8 +5243,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			});
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(getApplicationContext()));
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(getApplicationContext()));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(getApplicationContext()));
+			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.latoRegular(getApplicationContext()));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -5535,12 +5529,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 			
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -5585,10 +5579,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			noDriversDialog.setCanceledOnTouchOutside(false);
 
 			TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
-			textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
+			textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 			textHead.setVisibility(View.GONE);
 			TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
-			textMessage.setTypeface(Data.regularFont(activity));
+			textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -5608,10 +5602,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 
 			Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
-			btnOk.setTypeface(Data.regularFont(activity));
+			btnOk.setTypeface(Data.latoRegular(activity));
 			Button crossbtn = (Button) noDriversDialog
 					.findViewById(R.id.crossbtn);
-			crossbtn.setTypeface(Data.regularFont(activity));
+			crossbtn.setTypeface(Data.latoRegular(activity));
 			crossbtn.setVisibility(View.GONE);
 
 			btnOk.setOnClickListener(new View.OnClickListener() {
@@ -5709,8 +5703,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -5718,8 +5712,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			textHead.setText("Alert");
 			textMessage.setText(message);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -6303,8 +6297,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 			
 			textHead.setVisibility(View.VISIBLE);
 			textHead.setText("Chalo Jugnoo Se");
@@ -6324,8 +6318,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setText("Get Now");
 			btnCancel.setText("Later");
@@ -6416,14 +6410,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 			
 			textMessage.setText("Are you sure you want to start ride?");
 			
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -6487,14 +6481,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 				
 				textMessage.setText("Are you sure you want to end ride?");
 				
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 				
 				btnOk.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -6560,14 +6554,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 					
 					
-					TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-					TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+					TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+					TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 					
 					textMessage.setText("Are you sure you want to cancel ride?");
 					
 					
-					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
-					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 					
 					btnOk.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -6617,8 +6611,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				dialog.setCanceledOnTouchOutside(false);
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 				textMessage.setMovementMethod(new ScrollingMovementMethod());
 				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -6627,8 +6621,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textHead.setText("Rate Us");
 				textMessage.setText("Liked our services!!! Please rate us on Play Store");
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("RATE NOW");
-				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity)); btnCancel.setText("LATER");
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("RATE NOW");
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity)); btnCancel.setText("LATER");
 				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
 				crossbtn.setVisibility(View.GONE);
 				
@@ -6690,9 +6684,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				dialog.setCanceledOnTouchOutside(false);
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
-				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.latoRegular(activity));
 				
 				textHead.setText("Confirm Debug Password");
 				textMessage.setText("Please enter password to continue.");
@@ -6700,8 +6694,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textHead.setVisibility(View.GONE);
 				textMessage.setVisibility(View.GONE);
 				
-				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(activity));
-				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.latoRegular(activity));
+				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.latoRegular(activity));
 				
 				btnConfirm.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -6777,8 +6771,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 				
 				
 				if(appMode == AppMode.DEBUG){
@@ -6792,12 +6786,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 				btnOk.setText("NORMAL");
-				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 				btnCancel.setText("DEBUG");
 				
-				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.latoRegular(activity));
 				crossbtn.setVisibility(View.VISIBLE);
 				
 				
@@ -6854,8 +6848,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				dialog.setCanceledOnTouchOutside(false);
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 				textMessage.setMovementMethod(new ScrollingMovementMethod());
 				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -6863,8 +6857,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textHead.setText("Driver Info");
 				textMessage.setText(driverInfo.toString());
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity)); btnOk.setText("Call");
-				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("Call");
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 				
 				btnOk.setOnClickListener(new View.OnClickListener() {
 					@Override

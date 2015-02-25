@@ -49,8 +49,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -60,7 +60,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -106,8 +106,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -117,7 +117,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -162,7 +162,7 @@ public class DialogPopup {
 			FrameLayout frameLayout = (FrameLayout) progressDialog.findViewById(R.id.rv);
 			new ASSL((Activity)context, frameLayout, 1134, 720, false);
 			
-			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.regularFont(context));
+			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.latoRegular(context));
 			messageText.setText(message); 
 		} catch (Exception e) {
 			e.printStackTrace();

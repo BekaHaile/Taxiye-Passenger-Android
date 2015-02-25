@@ -60,7 +60,7 @@ public class RideHistoryFragment extends Fragment {
 		ASSL.DoMagic(main);
 
 		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
+		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.latoRegular(getActivity()));
 		listView = (ListView) rootView.findViewById(R.id.listView);
 		
 		rideHistoryListAdapter = new RideHistoryListAdapter(getActivity());
@@ -158,14 +158,14 @@ public class RideHistoryFragment extends Fragment {
 				holder = new ViewHolderRideHistory();
 				convertView = mInflater.inflate(R.layout.list_item_ride_history, null);
 				
-				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.regularFont(context), Typeface.BOLD);
-				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.regularFont(context));
-				holder.toText = (TextView) convertView.findViewById(R.id.toText); holder.toText.setTypeface(Data.regularFont(context), Typeface.BOLD);
-				holder.toValue = (TextView) convertView.findViewById(R.id.toValue); holder.toValue.setTypeface(Data.regularFont(context));
-				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(context));
-				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.regularFont(context));
-				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.regularFont(context), Typeface.BOLD);
-				holder.balanceValue = (TextView) convertView.findViewById(R.id.balanceValue); holder.balanceValue.setTypeface(Data.regularFont(context), Typeface.BOLD);
+				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.latoRegular(context), Typeface.BOLD);
+				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.latoRegular(context));
+				holder.toText = (TextView) convertView.findViewById(R.id.toText); holder.toText.setTypeface(Data.latoRegular(context), Typeface.BOLD);
+				holder.toValue = (TextView) convertView.findViewById(R.id.toValue); holder.toValue.setTypeface(Data.latoRegular(context));
+				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.latoRegular(context));
+				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.latoRegular(context));
+				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.latoRegular(context), Typeface.BOLD);
+				holder.balanceValue = (TextView) convertView.findViewById(R.id.balanceValue); holder.balanceValue.setTypeface(Data.latoRegular(context), Typeface.BOLD);
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
