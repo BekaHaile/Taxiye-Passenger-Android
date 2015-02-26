@@ -1801,7 +1801,9 @@
                             android:layout_marginLeft="20px"
                             android:layout_toRightOf="@+id/couponsText"
                             android:src="@drawable/free_rides_icon"
-                            android:tag="mwar" />
+                            android:tag="mwar" 
+                            android:visibility="gone"
+                            />
 
                         <ImageView
                             android:layout_width="match_parent"
