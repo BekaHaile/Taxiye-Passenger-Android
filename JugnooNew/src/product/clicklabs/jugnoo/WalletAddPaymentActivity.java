@@ -1,10 +1,15 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,16 +81,21 @@ public class WalletAddPaymentActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				String amount = editTextAmount.getText().toString().trim();
-				if("".equalsIgnoreCase(amount)){
-					editTextAmount.requestFocus();
-					editTextAmount.setError("Please enter some amount");
+				if(AppStatus.getInstance(WalletAddPaymentActivity.this).isOnline(WalletAddPaymentActivity.this)){
+					if("".equalsIgnoreCase(amount)){
+						editTextAmount.requestFocus();
+						editTextAmount.setError("Please enter some amount");
+					}
+					else{
+						Intent intent = new Intent(WalletAddPaymentActivity.this, WalletWebviewActivity.class);
+						intent.putExtra("amount", amount);
+						startActivity(intent);
+						finish();
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					}
 				}
 				else{
-					Intent intent = new Intent(WalletAddPaymentActivity.this, WalletWebviewActivity.class);
-					intent.putExtra("amount", amount);
-					startActivity(intent);
-					finish();
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					new DialogPopup().alertPopup(WalletAddPaymentActivity.this, "", Data.CHECK_INTERNET_MSG);
 				}
 			}
 		});
@@ -95,7 +105,13 @@ public class WalletAddPaymentActivity extends Activity{
 			if(getIntent().hasExtra("payment")){
 				String payment = getIntent().getStringExtra("payment");
 				if("failure".equalsIgnoreCase(payment)){
-					textViewCurrentTransactionInfo.setText("Transaction failed, Please try again");
+					SpannableString sstr = new SpannableString("Transaction failed");
+					final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+					sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewCurrentTransactionInfo.setText("");
+					textViewCurrentTransactionInfo.append(sstr);
+					textViewCurrentTransactionInfo.append(", Please try again");
+					
 					textViewCurrentTransactionInfo.setVisibility(View.VISIBLE);
 				}
 				else{

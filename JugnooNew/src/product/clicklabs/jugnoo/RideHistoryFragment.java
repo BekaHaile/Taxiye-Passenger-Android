@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.PaymentMode;
 import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -123,7 +124,7 @@ public class RideHistoryFragment extends Fragment {
 	
 	class ViewHolderRideHistory {
 		TextView fromText, fromValue, toText, toValue, distanceValue, timeValue, fareValue, balanceValue;
-		ImageView couponImg;
+		ImageView couponImg, jugnooCashImg;
 		LinearLayout relative;
 		int id;
 	}
@@ -166,7 +167,10 @@ public class RideHistoryFragment extends Fragment {
 				holder.timeValue = (TextView) convertView.findViewById(R.id.timeValue); holder.timeValue.setTypeface(Data.latoRegular(context));
 				holder.fareValue = (TextView) convertView.findViewById(R.id.fareValue); holder.fareValue.setTypeface(Data.latoRegular(context), Typeface.BOLD);
 				holder.balanceValue = (TextView) convertView.findViewById(R.id.balanceValue); holder.balanceValue.setTypeface(Data.latoRegular(context), Typeface.BOLD);
+				
+				
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
+				holder.jugnooCashImg = (ImageView) convertView.findViewById(R.id.jugnooCashImg);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
@@ -185,6 +189,7 @@ public class RideHistoryFragment extends Fragment {
 			
 			holder.id = position;
 			
+			
 			holder.fromValue.setText(booking.fromLocation);
 			holder.toValue.setText(booking.toLocation);
 			holder.distanceValue.setText(booking.distance + " km");
@@ -197,6 +202,13 @@ public class RideHistoryFragment extends Fragment {
 			}
 			else{
 				holder.couponImg.setVisibility(View.GONE);
+			}
+			
+			if(PaymentMode.WALLET.getOrdinal() == booking.paymentMode){
+				holder.jugnooCashImg.setVisibility(View.VISIBLE);
+			}
+			else{
+				holder.jugnooCashImg.setVisibility(View.GONE);
 			}
 			
 			
@@ -251,9 +263,15 @@ public class RideHistoryFragment extends Fragment {
 										if(bookingData.length() > 0){
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
+												
+												int paymentMode = PaymentMode.CASH.getOrdinal();
+												if(booData.has("payment_mode")){
+													paymentMode = booData.getInt("payment_mode");
+												}
+												
 												rides.add(new RideInfo(booData.getString("id"), booData.getString("from"),
 														booData.getString("to"), booData.getString("fare"), booData.getString("distance"),
-														booData.getString("time"), "", booData.getInt("coupon_used")));
+														booData.getString("time"), "", booData.getInt("coupon_used"), paymentMode));
 											}
 										}
 										updateListData("No rides currently", false);

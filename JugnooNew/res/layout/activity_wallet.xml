@@ -40,17 +40,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="70px" >
 
             <TextView
                 android:id="@+id/textViewPromotion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:background="@color/red_banner"
                 android:gravity="center"
                 android:padding="15px"
                 android:text="Successful"
+                android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="30px"
                 android:visibility="gone" />
@@ -59,11 +59,11 @@
                 android:id="@+id/textViewCurrentTransactionInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:background="@color/grey_light_more"
                 android:gravity="center"
                 android:padding="15px"
                 android:text="Successful"
+                android:singleLine="true"
                 android:textColor="@color/bg_grey_opaque"
                 android:textSize="30px"
                 android:visibility="gone" />

@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.LatLngPair;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PaymentMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
@@ -144,7 +145,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView couponsText;
 	
 	RelativeLayout walletRl;
-	TextView walletText;
+	TextView walletText, textViewJugnooBalance;
 	
 	RelativeLayout bookingsRl;
 	TextView bookingsText;
@@ -471,6 +472,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		walletRl = (RelativeLayout) findViewById(R.id.walletRl);
 		walletText = (TextView) findViewById(R.id.walletText); walletText.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewJugnooBalance = (TextView) findViewById(R.id.textViewJugnooBalance); textViewJugnooBalance.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
 		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.latoRegular(getApplicationContext()));
@@ -2068,6 +2070,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void setUserData(){
 		try{
 			userName.setText(Data.userData.userName);
+			
+			textViewJugnooBalance.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDecimal.format(Data.userData.jugnooBalance));
+			
 			Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
 			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(profileImg);}catch(Exception e){}
 		} catch(Exception e){
@@ -4920,61 +4925,90 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void displayCouponApplied(JSONObject jObj){
-		try {
+		
+		try{
+		
+			int paymentMode = PaymentMode.CASH.getOrdinal();
+			if(jObj.has("payment_mode")){
+				paymentMode = jObj.getInt("payment_mode");
+			}
 			
-//			{
-//		    "flag": 4,
-//		    "fare": 30,
-//		    "to_pay": 0,
-//		    "discount": 30,
-//		    "distance_travelled": "0",
-//		    "wait_time": "0",
-//		    "coupon": {
-//		        "account_id": 1,
-//		        "user_id": 207,
-//		        "coupon_id": 1,
-//		        "redeemed_on": null,
-//		        "status": 1,
-//		        "expiry_date": "2014-11-07T18:29:59.000Z",
-//		        "title": "Free ride",
-//		        "description": "upte 100/-",
-//		        "discount": 100,
-//		        "maximum": 100,
-//		        "image": null,
-//		        "type": 0,
-//		        "subtitle": "up to Rs. 100"
-//		    }
-//			}
+			String moneyToPay = decimalFormat.format(jObj.getDouble("to_pay"));
 			
-			if(jObj.has("coupon")){
-				endRideInfoRl.setVisibility(View.GONE);
-				relativeLayoutCoupon.setVisibility(View.VISIBLE);
+			try {
 				
-				String moneyToPay = decimalFormat.format(jObj.getDouble("to_pay"));
-				
-				JSONObject couponObject = jObj.getJSONObject("coupon");
-				
-				String couponTitle = couponObject.getString("title");
-				String couponSubTitle = couponObject.getString("subtitle");
-				
-				textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
-				textViewCouponTitle.setText(couponTitle);
-				textViewCouponSubTitle.setText(couponSubTitle);
-				if(UserMode.DRIVER == HomeActivity.userMode){
-					textViewCouponPayTakeText.setText("Take");
+				if(jObj.has("coupon")){
+					endRideInfoRl.setVisibility(View.GONE);
+					relativeLayoutCoupon.setVisibility(View.VISIBLE);
+					
+					JSONObject couponObject = jObj.getJSONObject("coupon");
+					
+					String couponTitle = couponObject.getString("title");
+					String couponSubTitle = couponObject.getString("subtitle");
+					
+					if(PaymentMode.WALLET.getOrdinal() == paymentMode){					// wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText(couponTitle + "\n& Jugnoo Cash");
+						textViewCouponSubTitle.setVisibility(View.GONE);
+					}
+					else{																			// no wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText(couponTitle);
+						textViewCouponSubTitle.setText(couponSubTitle);
+						textViewCouponSubTitle.setVisibility(View.VISIBLE);
+					}
+					
+					if(UserMode.DRIVER == HomeActivity.userMode){
+						textViewCouponPayTakeText.setText("Take");
+					}
+					else{
+						textViewCouponPayTakeText.setText("Pay");
+					}
 				}
 				else{
-					textViewCouponPayTakeText.setText("Pay");
+					if(PaymentMode.WALLET.getOrdinal() == paymentMode){								// wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText("Jugnoo Cash");
+						textViewCouponSubTitle.setVisibility(View.GONE);
+						if(UserMode.DRIVER == HomeActivity.userMode){
+							textViewCouponPayTakeText.setText("Take");
+						}
+						else{
+							textViewCouponPayTakeText.setText("Pay");
+						}
+							
+						endRideInfoRl.setVisibility(View.GONE);
+						relativeLayoutCoupon.setVisibility(View.VISIBLE);
+					}
+					else{																			// no wallet
+						endRideInfoRl.setVisibility(View.VISIBLE);
+						relativeLayoutCoupon.setVisibility(View.GONE);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				if(PaymentMode.WALLET.getOrdinal() == paymentMode){								// wallet
+					textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+					textViewCouponTitle.setText("Jugnoo Cash");
+					textViewCouponSubTitle.setVisibility(View.GONE);
+					if(UserMode.DRIVER == HomeActivity.userMode){
+						textViewCouponPayTakeText.setText("Take");
+					}
+					else{
+						textViewCouponPayTakeText.setText("Pay");
+					}
+						
+					endRideInfoRl.setVisibility(View.GONE);
+					relativeLayoutCoupon.setVisibility(View.VISIBLE);
+				}
+				else{																			// no wallet
+					endRideInfoRl.setVisibility(View.VISIBLE);
+					relativeLayoutCoupon.setVisibility(View.GONE);
 				}
 			}
-			else{
-				endRideInfoRl.setVisibility(View.VISIBLE);
-				relativeLayoutCoupon.setVisibility(View.GONE);
-			}
-		} catch (Exception e) {
+		
+		} catch(Exception e){
 			e.printStackTrace();
-			endRideInfoRl.setVisibility(View.VISIBLE);
-			relativeLayoutCoupon.setVisibility(View.GONE);
 		}
 	}
 	

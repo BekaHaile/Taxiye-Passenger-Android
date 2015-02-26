@@ -18,6 +18,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +98,8 @@ public class WalletActivity extends Activity{
 		textViewAccountBalance = (TextView) findViewById(R.id.textViewAccountBalance); textViewAccountBalance.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		textViewAccountBalanceValue = (TextView) findViewById(R.id.textViewAccountBalanceValue); textViewAccountBalanceValue.setTypeface(Data.latoRegular(this));
 		textViewRecentTransactions = (TextView) findViewById(R.id.textViewRecentTransactions); textViewRecentTransactions.setTypeface(Data.latoRegular(this));
+		textViewRecentTransactions.setVisibility(View.GONE);
+		
 		
 		buttonAddPayment = (Button) findViewById(R.id.buttonAddPayment); buttonAddPayment.setTypeface(Data.latoRegular(this));
 		
@@ -143,7 +148,15 @@ public class WalletActivity extends Activity{
 				String payment = getIntent().getStringExtra("payment");
 				if("success".equalsIgnoreCase(payment)){
 					String amount = getIntent().getStringExtra("amount");
-					textViewCurrentTransactionInfo.setText("Successful Transaction. Added Rs. "+amount);
+					
+					SpannableString sstr = new SpannableString("Successful Transaction");
+					final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+					sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					
+					textViewCurrentTransactionInfo.setText("");
+					textViewCurrentTransactionInfo.append(sstr);
+					textViewCurrentTransactionInfo.append(", Added Rs. "+amount);
+					
 					textViewCurrentTransactionInfo.setVisibility(View.VISIBLE);
 					
 					new Handler().postDelayed(new Runnable() {
@@ -180,7 +193,13 @@ public class WalletActivity extends Activity{
 		}
 		transactionInfoList.clear();
 		
-		textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+jugnooBalance);
+		try{
+			if(Data.userData != null){
+				textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.jugnooBalance);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 		
 		getTransactionInfoAsync(this);
 		
@@ -215,12 +234,12 @@ public class WalletActivity extends Activity{
 			transactionListAdapter.notifyDataSetChanged();
 		}
 		else{
+			textViewInfo.setVisibility(View.GONE);
 			if(transactionInfoList.size() == 0){
-				textViewInfo.setText(message);
-				textViewInfo.setVisibility(View.VISIBLE);
+				textViewRecentTransactions.setVisibility(View.GONE);
 			}
 			else{
-				textViewInfo.setVisibility(View.GONE);
+				textViewRecentTransactions.setVisibility(View.VISIBLE);
 			}
 			transactionListAdapter.notifyDataSetChanged();
 			textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+jugnooBalance);
@@ -266,7 +285,7 @@ public class WalletActivity extends Activity{
 				convertView = mInflater.inflate(R.layout.list_item_transaction, null);
 				
 				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Data.latoRegular(context));
-				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Data.latoRegular(context));
+				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Data.latoRegular(context), Typeface.BOLD);
 				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Data.latoLight(context));
 				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Data.latoLight(context));
 				holder.textViewShowMore = (TextView) convertView.findViewById(R.id.textViewShowMore); holder.textViewShowMore.setTypeface(Data.latoRegular(context));
@@ -287,7 +306,7 @@ public class WalletActivity extends Activity{
 			
 			holder.id = position;
 			
-			if(position == transactionInfoList.size()-1){
+			if(totalTransactions > transactionInfoList.size() && position == transactionInfoList.size()-1){
 				holder.relativeLayoutShowMore.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -382,14 +401,15 @@ public class WalletActivity extends Activity{
 											JSONArray jTransactions = jObj.getJSONArray("transactions");
 											for(int i=0; i<jTransactions.length(); i++){
 												JSONObject jTransactionI = jTransactions.getJSONObject(i);
-												TransactionInfo transactionInfo = new TransactionInfo(jTransactionI.getInt("txn_id"), 
+												transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"), 
 														jTransactionI.getString("txn_time"), 
 														jTransactionI.getString("txn_date"), 
 														jTransactionI.getString("txn_type"), 
-														jTransactionI.getDouble("amount"));
-												if(!transactionInfoList.contains(transactionInfo)){
-													transactionInfoList.add(transactionInfo);
-												}
+														jTransactionI.getDouble("amount")));
+											}
+											
+											if(Data.userData != null){
+												Data.userData.jugnooBalance = jugnooBalance;
 											}
 											
 											updateListData("No transactions currently", false);

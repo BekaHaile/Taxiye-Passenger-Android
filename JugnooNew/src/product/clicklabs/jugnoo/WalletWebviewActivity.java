@@ -5,7 +5,6 @@ import org.apache.http.util.EncodingUtils;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
-
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
@@ -15,14 +14,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class WalletWebviewActivity extends Activity{
 	
 	LinearLayout relative;
-	
-	TextView title;
 	
 	WebView paymentWebview;
 	
@@ -52,40 +48,59 @@ public class WalletWebviewActivity extends Activity{
 		new ASSL(WalletWebviewActivity.this, relative, 1134, 720, false);
 		
 		
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
-		
 		paymentWebview = (WebView) findViewById(R.id.paymentWebview);
 		WebSettings webSettings = paymentWebview.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		
 		
-		if(AppStatus.getInstance(this).isOnline(this)){
-			amount = "";
-			if(getIntent().hasExtra("amount")){
-				amount = getIntent().getStringExtra("amount");
-				
-				String urlStr = "https://www.dev.jugnoo.in/jugnoo-phpfiles/wallet/payments.php";
-				//access_token=%@&is_access_token_new=1&amount=%@&client_id=%@
-				String postData = "access_token=" + Data.userData.accessToken 
-						+ "&is_access_token_new=1"
-						+ "&amount=" + amount
-						+ "&client_id=" + Data.CLIENT_ID;
-				
-				Log.e("postData", "="+postData);
-				
-				
-				paymentWebview.setWebViewClient(new MyAppWebViewClient());
-				
-				paymentWebview.postUrl(urlStr, EncodingUtils.getBytes(postData, "BASE64"));
-				
+		try {
+			if(AppStatus.getInstance(this).isOnline(this)){
+				amount = "";
+				if(getIntent().hasExtra("amount")){
+					amount = getIntent().getStringExtra("amount");
+					
+					String urlStart = "https://www.dev.jugnoo.in";
+					
+					if(Data.SERVER_URL.contains(Data.LIVE_SERVER_URL.substring(0, Data.LIVE_SERVER_URL.length()-5))){
+						urlStart = "https://www.dev.jugnoo.in/jugnoo-phpfiles/wallet/payments.php";
+					}
+					else{
+						urlStart = "https://www.test.jugnoo.in/jugnoo-phpfiles/wallet/payments_dev.php";
+					}
+					
+					//https://www.dev.jugnoo.in/jugnoo-phpfiles/wallet/payments.php
+					
+//					Toast.makeText(this, urlStart, Toast.LENGTH_LONG).show();
+					
+					//access_token=%@&is_access_token_new=1&amount=%@&client_id=%@
+					String postData = "access_token=" + Data.userData.accessToken 
+							+ "&is_access_token_new=1"
+							+ "&amount=" + amount
+							+ "&client_id=" + Data.CLIENT_ID;
+					
+					Log.e("postData", "="+postData);
+					
+					
+					paymentWebview.setWebViewClient(new MyAppWebViewClient());
+					
+					paymentWebview.postUrl(urlStart, EncodingUtils.getBytes(postData, "BASE64"));
+					
+				}
+				else{
+					Toast.makeText(this, "Some error occured", Toast.LENGTH_SHORT).show();
+					finish();
+				}
 			}
 			else{
-				Toast.makeText(this, "Some error occured", Toast.LENGTH_SHORT).show();
-				finish();
+				new DialogPopup().alertPopup(this, "", Data.CHECK_INTERNET_MSG);
 			}
-		}
-		else{
-			new DialogPopup().alertPopup(this, "", Data.CHECK_INTERNET_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Intent intent = new Intent(WalletWebviewActivity.this, WalletAddPaymentActivity.class);
+			intent.putExtra("payment", "failure");
+			startActivity(intent);
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
 		
 	}
@@ -151,6 +166,7 @@ public class WalletWebviewActivity extends Activity{
 			super.onLoadResource(view, url);
 		}
 		
+		
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
         	Log.i("shouldOverrideUrlLoading url", "=="+url);
@@ -163,7 +179,7 @@ public class WalletWebviewActivity extends Activity{
         	
         	Log.e("onReceivedError url", "== errorCode="+errorCode+" description="+description+" failingUrl="+failingUrl);
         	
-        	String excepUrl = "https://secure.payu.in/response?mihpayid";
+        	String excepUrl = "https://secure.payu.in";
         	
         	if(!failingUrl.contains(excepUrl)){
         		Intent intent = new Intent(WalletWebviewActivity.this, WalletAddPaymentActivity.class);

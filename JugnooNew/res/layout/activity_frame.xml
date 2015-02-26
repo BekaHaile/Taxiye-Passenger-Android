@@ -133,6 +133,22 @@
                         android:text="Jugnoo Cash"
                         android:textColor="@color/white"
                         android:textSize="34px" />
+                    
+                    
+                    <TextView
+                        android:id="@+id/textViewJugnooBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20px"
+                        android:padding="10px"
+                        android:text="300"
+                        android:textColor="@color/black"
+                        android:background="@drawable/background_yellow_rounded"
+                        android:textSize="30px" />
+                    
+                    
 
                     <ImageView
                         android:layout_width="match_parent"

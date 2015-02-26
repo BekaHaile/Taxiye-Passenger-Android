@@ -1455,7 +1455,6 @@
                             android:layout_marginLeft="20px"
                             android:layout_marginRight="20px"
                             android:gravity="center"
-                            android:singleLine="true"
                             android:text="Free Ride"
                             android:textColor="@color/black"
                             android:textSize="46px" />
@@ -1469,7 +1468,6 @@
                             android:layout_marginRight="20px"
                             android:layout_marginTop="40px"
                             android:gravity="center"
-                            android:singleLine="true"
                             android:text="of up to Rs. 100/-"
                             android:textColor="@color/black"
                             android:textSize="32px" />
@@ -1852,6 +1850,19 @@
                             android:text="Jugnoo Cash"
                             android:textColor="@color/white"
                             android:textSize="34px" />
+
+                        <TextView
+                            android:id="@+id/textViewJugnooBalance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20px"
+                            android:background="@drawable/background_yellow_rounded"
+                            android:padding="10px"
+                            android:text="0"
+                            android:textColor="@color/black"
+                            android:textSize="30px" />
 
                         <ImageView
                             android:layout_width="match_parent"

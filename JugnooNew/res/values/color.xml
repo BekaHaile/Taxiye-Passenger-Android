@@ -60,7 +60,8 @@
     <color name="yellow_jugnoo">#FAA31C</color>
     
     
-        
+    <color name="yellow_pure">#FAF82A</color>    
+    
     <color name="yellow_status">#F89414</color>    
     <color name="green_status">#2EA058</color>    
     <color name="red_status">#F53C37</color>
@@ -72,5 +73,9 @@
     <color name="orange_btn_pressed">#E98603</color>
     
     <color name="orange_dark">#F96f01</color>
+    
+    <color name="yellow_text">#FABB15</color>   
+    <color name="grey_text">#232323</color>   
+    
    
 </resources>
