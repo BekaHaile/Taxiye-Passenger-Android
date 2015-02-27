@@ -10,7 +10,6 @@ import product.clicklabs.jugnoo.driver.utils.DateOperations;
 import product.clicklabs.jugnoo.driver.utils.HttpRequester;
 import product.clicklabs.jugnoo.driver.utils.Log;
 import android.content.Context;
-import android.location.Location;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
@@ -85,23 +84,7 @@ public class DriverLocationDispatcher {
 			Database2.getInstance(context).close();
     	}
 	}
-
 	
-	
-	
-	public void saveLocationToDatabase(final Context context, final Location location){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Database2.getInstance(context).updateDriverCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-					Database2.getInstance(context).close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
 	
 	
 }

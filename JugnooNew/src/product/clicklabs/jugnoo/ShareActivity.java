@@ -78,16 +78,16 @@ public class ShareActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		textViewReferralCodeDisplay = (TextView) findViewById(R.id.textViewReferralCodeDisplay); textViewReferralCodeDisplay.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewReferralCodeDisplay = (TextView) findViewById(R.id.textViewReferralCodeDisplay); textViewReferralCodeDisplay.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		shareFacebookImg = (ImageView) findViewById(R.id.shareFacebookImg);
 		shareWhatsappImg = (ImageView) findViewById(R.id.shareWhatsappImg);
 		shareSMSImg = (ImageView) findViewById(R.id.shareSMSImg);
 		shareEMailImg = (ImageView) findViewById(R.id.shareEMailImg);
 		
-		textViewShareReferral = (TextView) findViewById(R.id.textViewShareReferral); textViewShareReferral.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewShareReferral = (TextView) findViewById(R.id.textViewShareReferral); textViewShareReferral.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		SpannableString sstr = new SpannableString(Data.userData.referralCode);
 		final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
@@ -224,8 +224,6 @@ public class ShareActivity extends Activity{
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		super.onBackPressed();
 	}
-	
-	
 	
 	
 	@Override

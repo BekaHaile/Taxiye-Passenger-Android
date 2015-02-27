@@ -62,6 +62,7 @@ public class JSONParser {
 		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, 
 				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;;
 		String phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk";
+		double jugnooBalance = 0;
 		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
@@ -141,6 +142,10 @@ public class JSONParser {
 			freeRideIconDisable = userData.getInt("free_ride_icon_disable");
 		}
 		
+		if(userData.has("jugnoo_balance")){
+			jugnooBalance = userData.getDouble("jugnoo_balance");
+		}
+		
 		String authKey = userData.getString("auth_key");
 		AccessTokenGenerator.saveAuthKey(context, authKey);
 		
@@ -150,7 +155,7 @@ public class JSONParser {
 		return new UserData(accessToken, authKey, userData.getString("user_name"), 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
 				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
-				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable);
+				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance);
 	}
 	
 

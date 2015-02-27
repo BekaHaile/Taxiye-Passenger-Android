@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -91,14 +92,30 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		FlurryAgent.onEndSession(this);
 	}
 	
-	public void assignFlurryKey(){
-		if(Data.DEV_SERVER_URL.equalsIgnoreCase(Data.SERVER_URL)){
+	
+	public static void initializeServerURL(Context context){
+		SharedPreferences preferences = context.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
+		
+		Data.SERVER_URL = Data.DEFAULT_SERVER_URL;
+		
+		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+			Data.SERVER_URL = Data.TRIAL_SERVER_URL.substring(0, Data.TRIAL_SERVER_URL.length()-4) + Database2.getInstance(context).getSalesPortNumber();
+			Data.FLURRY_KEY = "abcd";
+		}
+		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+			Data.SERVER_URL = Data.DEV_SERVER_URL.substring(0, Data.DEV_SERVER_URL.length()-4) + Database2.getInstance(context).getDevPortNumber();
 			Data.FLURRY_KEY = "abcd";
 		}
 		else{
+			Data.SERVER_URL = Data.LIVE_SERVER_URL.substring(0, Data.LIVE_SERVER_URL.length()-4) + Database2.getInstance(context).getLivePortNumber();
 			Data.FLURRY_KEY = Data.STATIC_FLURRY_KEY;
 		}
+		Log.e("Data.SERVER_URL", "="+Data.SERVER_URL);
+		
+		DriverLocationUpdateService.updateServerData(context);
 	}
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,22 +133,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 //		}
 		
 		
-		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
-		
-		Data.SERVER_URL = Data.DEFAULT_SERVER_URL;
-		
-		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-			Data.SERVER_URL = Data.TRIAL_SERVER_URL;
-		}
-		else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-			Data.SERVER_URL = Data.LIVE_SERVER_URL;
-		}
-		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-			Data.SERVER_URL = Data.DEV_SERVER_URL;
-		}
-
-		assignFlurryKey();
+		initializeServerURL(this);
 		
 		
 		Locale locale = new Locale("en"); 
@@ -145,7 +147,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		if(Data.locationFetcher == null){
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
-		
 		
 		loginDataFetched = false;
 		loginFailed = false;
@@ -277,7 +278,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		});
 		
 		
-	    
 	}
 	
 	public void getDeviceToken(){
@@ -305,8 +305,13 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onResume() {
-		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+		try {
+			if(Data.locationFetcher == null){
+				Data.locationFetcher = new LocationFetcher(this, 1000, 1);
+			}
+			Data.locationFetcher.connect();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
@@ -329,7 +334,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		Database2.getInstance(this).checkStartPendingApisService(this);
 		try{
 			Data.locationFetcher.destroy();
-			Data.locationFetcher = null;
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -494,9 +498,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	 */
 	public void accessTokenLogin(final Activity activity) {
 		
-		SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-		final String accessToken = pref.getString(Data.SP_ACCESS_TOKEN_KEY, "");
-		if(!"".equalsIgnoreCase(accessToken)){
+		Pair<String, String> accPair = JSONParser.getAccessTokenPair(activity);
+		
+		if(!"".equalsIgnoreCase(accPair.first)){
 			buttonLogin.setVisibility(View.GONE);
 			buttonRegister.setVisibility(View.GONE);
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
@@ -509,7 +513,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				}
 				
 				RequestParams params = new RequestParams();
-				params.put("access_token", accessToken);
+				params.put("access_token", accPair.first);
+				
+				if("not_found".equalsIgnoreCase(accPair.second)){
+					params.put("is_access_token_new", "0");
+				} else{
+					params.put("is_access_token_new", accPair.second);
+				}
+				
 				params.put("device_token", Data.deviceToken);
 				
 				final String serviceRestartOnReboot = Database2.getInstance(activity).getDriverServiceRun();
@@ -528,7 +539,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("unique_device_id", Data.uniqueDeviceId);
 
-				Log.i("accessToken", "=" + accessToken);
+				Log.i("accessToken", "=" + accPair.first);
 				Log.i("device_token", Data.deviceToken);
 				Log.i("latitude", ""+Data.latitude);
 				Log.i("longitude", ""+Data.longitude);
@@ -553,35 +564,24 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							@Override
 							public void onSuccess(String response) {
 								Log.e("Server response of access_token", "response = " + response);
-		
 								try {
 									jObj = new JSONObject(response);
-									boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity);
-									if(!newUpdate){
-										int flag = jObj.getInt("flag");
-										if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
-											DialogPopup.dismissLoadingDialog();
-											HomeActivity.logoutUser(activity);
-										}
-										else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-											DialogPopup.dismissLoadingDialog();
-											String errorMessage = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", errorMessage);
-										}
-										else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-											DialogPopup.dismissLoadingDialog();
-											String message = jObj.getString("message");
-											new DialogPopup().alertPopup(activity, "", message);
-										}
-										else if(ApiResponseFlags.LOGIN_SUCCESSFUL.getOrdinal() == flag){
-											new AccessTokenDataParseAsync(activity, response, accessToken).execute();
+									int flag = jObj.getInt("flag");
+									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj, flag)){
+										boolean newUpdate = SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity);
+										if(!newUpdate){
+											if(ApiResponseFlags.LOGIN_SUCCESSFUL.getOrdinal() == flag){
+												new AccessTokenDataParseAsync(activity, response).execute();
+											}
+											else{
+												DialogPopup.dismissLoadingDialog();
+												new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+											}
 										}
 										else{
 											DialogPopup.dismissLoadingDialog();
-											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 										}
-									}
-									else{
+									} else{
 										DialogPopup.dismissLoadingDialog();
 									}
 								}  catch (Exception exception) {
@@ -609,16 +609,15 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		Activity activity;
 		String response, accessToken;
 		
-		public AccessTokenDataParseAsync(Activity activity, String response, String accessToken){
+		public AccessTokenDataParseAsync(Activity activity, String response){
 			this.activity = activity;
 			this.response = response;
-			this.accessToken = accessToken;
 		}
 		
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				String resp = new JSONParser().parseAccessTokenLoginData(activity, response, accessToken);
+				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
 				return resp;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1002,13 +1001,13 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
 					
 					if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-						textMessage.setText("Current server is SALES.\nChange to:");
+						textMessage.setText("Current server is SALES \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-						textMessage.setText("Current server is LIVE.\nChange to:");
+						textMessage.setText("Current server is LIVE \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-						textMessage.setText("Current server is DEV.\nChange to:");
+						textMessage.setText("Current server is DEV \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					
 					
@@ -1034,9 +1033,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.LIVE_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.LIVE_SERVER_URL;
-
-							assignFlurryKey();
+							initializeServerURL(activity);
 							
 							dialog.dismiss();
 						}
@@ -1050,9 +1047,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.DEV_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.DEV_SERVER_URL;
-
-							assignFlurryKey();
+							initializeServerURL(activity);
+							
 							dialog.dismiss();
 						}
 					});
@@ -1066,9 +1062,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.TRIAL_SERVER_URL;
-
-							assignFlurryKey();
+							initializeServerURL(activity);
 							
 							dialog.dismiss();
 						}
@@ -1098,7 +1092,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	public void onLocationChanged(Location location, int priority) {
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
-		new DriverLocationDispatcher().saveLocationToDatabase(SplashNewActivity.this, location);
 	}
 	
 	

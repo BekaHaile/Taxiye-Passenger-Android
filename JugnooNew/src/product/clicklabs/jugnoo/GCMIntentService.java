@@ -31,7 +31,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 public class GCMIntentService extends IntentService {
 	
 	public static final int NOTIFICATION_ID = 1;
-    NotificationCompat.Builder builder;
     
     public GCMIntentService() {
         super("GcmIntentService");
@@ -335,7 +334,7 @@ public class GCMIntentService extends IntentService {
 									}
 	    	    				 }
 	    	    				else if(PushFlags.CHANGE_PORT.getOrdinal() == flag){
-	    	    					
+	    	    					sendChangePortAckToServer(this, jObj);
 	    	    				 }
 	    	    				 
 	    		    		 } catch(Exception e){
@@ -357,7 +356,7 @@ public class GCMIntentService extends IntentService {
 	    }
 	    
 	    
-		public void sendChangePortAckToServer(final Context context){
+		public void sendChangePortAckToServer(final Context context, final JSONObject jObject1){
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -376,6 +375,12 @@ public class GCMIntentService extends IntentService {
 						
 						Log.e("result ","="+result);
 						
+						if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+						}
+						else{
+							new JSONParser().parsePortNumber(context, jObject1);
+						}
+						
 						simpleJSONParser = null;
 						nameValuePairs = null;
 					} catch (Exception e) {
@@ -386,8 +391,3 @@ public class GCMIntentService extends IntentService {
 		}
 	    
 }
-
-
-
-
-

@@ -92,22 +92,22 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(RegisterScreen.this, relative, 1134, 720, false);
 		
-		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		registerWithFacebookBtn = (Button) findViewById(R.id.registerWithFacebookBtn); registerWithFacebookBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.regularFont(getApplicationContext()));
+		registerWithFacebookBtn = (Button) findViewById(R.id.registerWithFacebookBtn); registerWithFacebookBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		scroll = (ScrollView) findViewById(R.id.scroll);
 		
-		nameEt = (EditText) findViewById(R.id.nameEt); nameEt.setTypeface(Data.regularFont(getApplicationContext()));
-		referralCodeEt = (EditText) findViewById(R.id.referralCodeEt); referralCodeEt.setTypeface(Data.regularFont(getApplicationContext()));
-		emailIdEt = (EditText) findViewById(R.id.emailIdEt); emailIdEt.setTypeface(Data.regularFont(getApplicationContext()));
-		phoneNoEt = (EditText) findViewById(R.id.phoneNoEt); phoneNoEt.setTypeface(Data.regularFont(getApplicationContext()));
-		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
-		confirmPasswordEt = (EditText) findViewById(R.id.confirmPasswordEt); confirmPasswordEt.setTypeface(Data.regularFont(getApplicationContext()));
+		nameEt = (EditText) findViewById(R.id.nameEt); nameEt.setTypeface(Data.latoRegular(getApplicationContext()));
+		referralCodeEt = (EditText) findViewById(R.id.referralCodeEt); referralCodeEt.setTypeface(Data.latoRegular(getApplicationContext()));
+		emailIdEt = (EditText) findViewById(R.id.emailIdEt); emailIdEt.setTypeface(Data.latoRegular(getApplicationContext()));
+		phoneNoEt = (EditText) findViewById(R.id.phoneNoEt); phoneNoEt.setTypeface(Data.latoRegular(getApplicationContext()));
+		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.latoRegular(getApplicationContext()));
+		confirmPasswordEt = (EditText) findViewById(R.id.confirmPasswordEt); confirmPasswordEt.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		signUpBtn = (Button) findViewById(R.id.signUpBtn); signUpBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		signUpBtn = (Button) findViewById(R.id.signUpBtn); signUpBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 

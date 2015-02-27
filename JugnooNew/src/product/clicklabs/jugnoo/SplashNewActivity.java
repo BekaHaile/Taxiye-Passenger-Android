@@ -177,8 +177,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
 		progressBar1.setVisibility(View.GONE);
 		
-		buttonLogin = (Button) findViewById(R.id.buttonLogin); buttonLogin.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		buttonRegister = (Button) findViewById(R.id.buttonRegister); buttonRegister.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		buttonLogin = (Button) findViewById(R.id.buttonLogin); buttonLogin.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		buttonRegister = (Button) findViewById(R.id.buttonRegister); buttonRegister.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		
 		buttonLogin.setVisibility(View.GONE);
 		buttonRegister.setVisibility(View.GONE);
@@ -653,17 +653,17 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
 			textMessage.setText(message);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 			
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 			btnCancel.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -778,8 +778,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -787,7 +787,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			textHead.setText(title);
 			textMessage.setText(message);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 			
 			frameLayout.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -838,9 +838,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				dialog.setCanceledOnTouchOutside(false);
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity));
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
-				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.regularFont(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.latoRegular(activity));
 				
 				textHead.setText("Confirm Debug Password");
 				textMessage.setText("Please enter password to continue.");
@@ -849,8 +849,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				textMessage.setVisibility(View.GONE);
 				
 				
-				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.regularFont(activity));
-				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.latoRegular(activity));
+				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.latoRegular(activity));
 				
 				btnConfirm.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -943,8 +943,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					});
 					
 					
-					TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-					TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+					TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+					TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 					
 					
 					SharedPreferences preferences = activity.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
@@ -962,16 +962,16 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					
 					
 					
-					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 					btnOk.setText("LIVE");
 					
-					Button btnNeutral = (Button) dialog.findViewById(R.id.btnNeutral); btnNeutral.setTypeface(Data.regularFont(activity));
+					Button btnNeutral = (Button) dialog.findViewById(R.id.btnNeutral); btnNeutral.setTypeface(Data.latoRegular(activity));
 					btnNeutral.setText("DEV");
 					
-					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.regularFont(activity));
+					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 					btnCancel.setText("SALES");
 					
-					Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.regularFont(activity));
+					Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.latoRegular(activity));
 					crossbtn.setVisibility(View.VISIBLE);
 					
 					

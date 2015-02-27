@@ -76,17 +76,17 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
-		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		otpHelpText = (TextView) findViewById(R.id.otpHelpText); otpHelpText.setTypeface(Data.regularFont(getApplicationContext()));
-		pleaseWaitText = (TextView) findViewById(R.id.pleaseWaitText); pleaseWaitText.setTypeface(Data.regularFont(getApplicationContext()));
-		weWillCallText = (TextView) findViewById(R.id.weWillCallText); weWillCallText.setTypeface(Data.regularFont(getApplicationContext()));
+		otpHelpText = (TextView) findViewById(R.id.otpHelpText); otpHelpText.setTypeface(Data.latoRegular(getApplicationContext()));
+		pleaseWaitText = (TextView) findViewById(R.id.pleaseWaitText); pleaseWaitText.setTypeface(Data.latoRegular(getApplicationContext()));
+		weWillCallText = (TextView) findViewById(R.id.weWillCallText); weWillCallText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		otpEt = (EditText) findViewById(R.id.otpEt); otpEt.setTypeface(Data.regularFont(getApplicationContext()));
+		otpEt = (EditText) findViewById(R.id.otpEt); otpEt.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		confirmBtn = (Button) findViewById(R.id.confirmBtn); confirmBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		callMeBtn = (Button) findViewById(R.id.callMeBtn); callMeBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		confirmBtn = (Button) findViewById(R.id.confirmBtn); confirmBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		callMeBtn = (Button) findViewById(R.id.callMeBtn); callMeBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {

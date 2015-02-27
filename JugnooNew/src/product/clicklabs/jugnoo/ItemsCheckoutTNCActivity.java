@@ -61,14 +61,14 @@ public class ItemsCheckoutTNCActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		title.setText("TERMS & CONDITIONS");
 		
 		webview = (WebView) findViewById(R.id.webview);
 		
 		relativeLayoutAD = (RelativeLayout) findViewById(R.id.relativeLayoutAD);
-		buttonAgree = (Button) findViewById(R.id.buttonAgree); buttonAgree.setTypeface(Data.regularFont(getApplicationContext()));
-		buttonDisagree = (Button) findViewById(R.id.buttonDisagree); buttonDisagree.setTypeface(Data.regularFont(getApplicationContext()));
+		buttonAgree = (Button) findViewById(R.id.buttonAgree); buttonAgree.setTypeface(Data.latoRegular(getApplicationContext()));
+		buttonDisagree = (Button) findViewById(R.id.buttonDisagree); buttonDisagree.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {

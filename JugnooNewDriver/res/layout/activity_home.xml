@@ -414,14 +414,14 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="90px"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/driverInitialLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <TextView
                         android:id="@+id/textViewDriverInfo"
@@ -570,7 +570,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <LinearLayout
                         android:id="@+id/driverPassengerInfoRl"
@@ -1027,7 +1027,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/upLayout"
@@ -1363,7 +1363,6 @@
                             android:layout_marginLeft="20px"
                             android:layout_marginRight="20px"
                             android:gravity="center"
-                            android:singleLine="true"
                             android:text="Free Ride"
                             android:textColor="@color/black"
                             android:textSize="46px" />
@@ -1377,10 +1376,11 @@
                             android:layout_marginRight="20px"
                             android:layout_marginTop="40px"
                             android:gravity="center"
-                            android:singleLine="true"
                             android:text="of upto Rs. 100/-"
                             android:textColor="@color/black"
-                            android:textSize="32px" />
+                            android:textSize="32px"
+                            android:visibility="visible"
+                             />
                     </LinearLayout>
 
                     <LinearLayout

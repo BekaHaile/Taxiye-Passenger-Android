@@ -86,7 +86,6 @@ public class DriverLocationUpdateService extends Service {
         } catch(Exception e){
         	e.printStackTrace();
         }
-        
     }
     
     
@@ -100,7 +99,7 @@ public class DriverLocationUpdateService extends Service {
 		String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 		String TRIAL_SERVER_URL = "https://test.jugnoo.in:8200";
 		
-		String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+		String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 		
 		
 		
@@ -114,14 +113,16 @@ public class DriverLocationUpdateService extends Service {
 		String link = preferences.getString(SP_SERVER_LINK, DEFAULT_SERVER_URL);
 		
 		if(link.equalsIgnoreCase(TRIAL_SERVER_URL)){
-			SERVER_URL = TRIAL_SERVER_URL;
-		}
-		else if(link.equalsIgnoreCase(LIVE_SERVER_URL)){
-			SERVER_URL = LIVE_SERVER_URL;
+			SERVER_URL = TRIAL_SERVER_URL.substring(0, TRIAL_SERVER_URL.length()-4) + Database2.getInstance(context).getSalesPortNumber();
 		}
 		else if(link.equalsIgnoreCase(DEV_SERVER_URL)){
-			SERVER_URL = DEV_SERVER_URL;
+			SERVER_URL = DEV_SERVER_URL.substring(0, DEV_SERVER_URL.length()-4) + Database2.getInstance(context).getDevPortNumber();
 		}
+		else{
+			SERVER_URL = LIVE_SERVER_URL.substring(0, LIVE_SERVER_URL.length()-4) + Database2.getInstance(context).getLivePortNumber();
+		}
+		Log.e("in service SERVER_URL", "="+SERVER_URL);
+		
 		
 		SharedPreferences pref = context.getSharedPreferences(SHARED_PREF_NAME, 0);
 		accessToken = pref.getString(SP_ACCESS_TOKEN_KEY, "");
@@ -130,9 +131,9 @@ public class DriverLocationUpdateService extends Service {
 				Context.MODE_PRIVATE).getString("registration_id", "");
     	
 		Log.e("SERVER_URL in updateService","="+SERVER_URL);
+		Log.e("accessToken in updateService","="+accessToken);
 		
 		Database2.getInstance(context).insertDriverLocData(accessToken, deviceToken, SERVER_URL);
-		Database2.getInstance(context).close();
     }
     
     

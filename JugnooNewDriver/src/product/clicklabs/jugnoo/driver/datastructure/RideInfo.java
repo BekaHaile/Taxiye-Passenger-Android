@@ -6,26 +6,45 @@ public class RideInfo {
 	public String fromLocation;
 	public String toLocation;
 	public String fare;
-	public String distance;
-	public String dateTime;
+	public String customerPaid;
 	public String balance;
+	public String subsidy;
+	public String distance;
+	public String rideTime;
+	public String waitTime;
+	public String dateTime;
 	public int couponUsed;
+	public int paymentMode;
 	
-	public RideInfo(String id, String fromLocation, String toLocation, String fare, String distance, String time, 
-			String balance, int couponUsed){
+	
+	public RideInfo(String id, String fromLocation, String toLocation, 
+			String fare, String customerPaid, String balance, String subsidy, 
+			String distance, String rideTime, String waitTime, String dateTime, 
+			int couponUsed, int paymentMode){
 		this.id = id;
 		this.fromLocation = fromLocation;
 		this.toLocation = toLocation;
+		
 		this.fare = fare;
+		this.customerPaid = customerPaid;
+		this.balance = balance;
+		this.subsidy = subsidy;
+		
+		
 		this.distance = distance;
-		this.dateTime = time;
+		this.rideTime = rideTime;
+		this.waitTime = waitTime;
+		this.dateTime = dateTime;
+		
 		this.couponUsed = couponUsed;
 		this.balance = balance;
+		
+		this.paymentMode = paymentMode;
 	}
 	
 	@Override
 	public String toString() {
-		return fromLocation + " " + toLocation + " " + fare + " " + distance + " " + dateTime;
+		return id + " " + dateTime;
 	}
 	
 }

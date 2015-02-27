@@ -8,7 +8,6 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
-public class HelpParticularActivity extends FragmentActivity{
+public class HelpParticularActivity extends Activity{
 	
 	
 	LinearLayout relative;
@@ -45,10 +44,10 @@ public class HelpParticularActivity extends FragmentActivity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(getApplicationContext()));
 		webview = (WebView) findViewById(R.id.webview);
 		
 		if(helpSection != null){

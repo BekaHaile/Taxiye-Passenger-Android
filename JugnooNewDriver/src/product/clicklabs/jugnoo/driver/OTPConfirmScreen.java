@@ -204,8 +204,13 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000, 1);
+		try {
+			if(Data.locationFetcher == null){
+				Data.locationFetcher = new LocationFetcher(this, 1000, 1);
+			}
+			Data.locationFetcher.connect();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -669,14 +674,6 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onDestroy() {
-		try{
-			if(Data.locationFetcher != null){
-				Data.locationFetcher.destroy();
-				Data.locationFetcher = null;
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();
@@ -685,7 +682,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		new DriverLocationDispatcher().saveLocationToDatabase(OTPConfirmScreen.this, location);
+		Data.latitude = location.getLatitude();
+		Data.longitude = location.getLongitude();
 	}
 	
 }

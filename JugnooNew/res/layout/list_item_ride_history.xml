@@ -179,11 +179,13 @@
             android:id="@+id/fareValue"
             android:layout_width="170px"
             android:layout_height="wrap_content"
-            android:text="Rs. 2500"
+            android:text="Rs. 0"
             android:textColor="@color/blue_btn"
-            android:gravity="center_vertical|right"
+            android:gravity="right"
             android:textSize="36px"
              />
+    
+
     
     <ImageView
         android:id="@+id/couponImg"
@@ -192,15 +194,31 @@
             android:src="@drawable/free_ride_icon"
             android:tag="mwar"
             android:layout_below="@+id/fareValue"
-            android:layout_marginTop="40px"
-            android:visibility="gone"
+            android:layout_marginTop="10px"
+            android:visibility="visible"
              />
+    
+    
+        
+    <ImageView
+        android:id="@+id/jugnooCashImg"
+            android:layout_width="72px"
+            android:layout_height="47px"
+            android:src="@drawable/jugnoo_cash_icon"
+            android:tag="mwar"
+            android:layout_below="@+id/fareValue"
+            android:layout_marginTop="10px"
+            android:visibility="visible"
+            android:layout_gravity="right"
+             />
+    
+    
     
     <TextView
             android:id="@+id/balanceValue"
             android:layout_width="170px"
             android:layout_height="wrap_content"
-            android:text="Rs. 2500"
+            android:text="Rs. 0"
             android:textColor="@color/black"
             android:gravity="center_vertical|right"
             android:textSize="30px"
