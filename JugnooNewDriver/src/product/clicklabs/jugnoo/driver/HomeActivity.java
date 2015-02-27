@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.driver;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,7 +37,6 @@ import product.clicklabs.jugnoo.driver.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.driver.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.driver.utils.DateOperations;
 import product.clicklabs.jugnoo.driver.utils.DialogPopup;
-import product.clicklabs.jugnoo.driver.utils.FileOperations;
 import product.clicklabs.jugnoo.driver.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.driver.utils.HttpRequester;
 import product.clicklabs.jugnoo.driver.utils.Log;
@@ -4696,7 +4694,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						        	driverScreenMode = DriverScreenMode.D_RIDE_END;
 									switchDriverScreen(driverScreenMode);
 									
-									driverUploadPathDataFileAsync(activity, Data.dEngagementId);
+//									driverUploadPathDataFileAsync(activity, Data.dEngagementId);
 									
 								}
 							}  catch (Exception exception) {
@@ -4720,67 +4718,67 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	/**
-	 * ASync for uploading path data file to server
-	 */
-	public void driverUploadPathDataFileAsync(final Activity activity, final String engagementId) {
-		
-		Thread fileUploadThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				
-				File pathLogFile = null;
-				try {
-					pathLogFile = Log.getPathLogFile(engagementId);
-					if (pathLogFile != null) {
-						String fileData = FileOperations.readFromFile(pathLogFile);
-						
-						int oneMBSize = (int) (1024 * 1024);
-						int onePointEightMBSize = (int) (1.8 * oneMBSize);
-						
-						Log.i("onePointEightMBSize", "="+onePointEightMBSize);
-						Log.i("fileData.length()", "="+fileData.length());
-						
-						if(fileData.length() < onePointEightMBSize){
-							sendPathFileDataToServer(activity, engagementId, fileData);
-						}
-						else{
-							for(String smallFileData : Utils.splitStringInParts(fileData, oneMBSize)){
-								sendPathFileDataToServer(activity, engagementId, smallFileData);
-							}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		fileUploadThread.start();
-		
-	}
-	
-	
-	public void sendPathFileDataToServer(Activity activity, String engagementId, String fileData){
-		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-		nameValuePairs.add(new BasicNameValuePair("engagement_id", engagementId));
-		nameValuePairs.add(new BasicNameValuePair("ride_path_data", fileData));
-		
-		String url = Data.SERVER_URL + "/upload_file_data";
-		// old  /upload_file
-		
-		HttpRequester simpleJSONParser = new HttpRequester();
-		String result = simpleJSONParser.getJSONFromUrlParams(url, nameValuePairs);
-		
-		Log.e("result of = user_status", "="+result);
-		if(result.contains(HttpRequester.SERVER_TIMEOUT)){
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("engagement_id", engagementId);
-			params.put("ride_path", fileData);
-			Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
-		}
-	}
+//	/**
+//	 * ASync for uploading path data file to server
+//	 */
+//	public void driverUploadPathDataFileAsync(final Activity activity, final String engagementId) {
+//		
+//		Thread fileUploadThread = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				
+//				File pathLogFile = null;
+//				try {
+//					pathLogFile = Log.getPathLogFile(engagementId);
+//					if (pathLogFile != null) {
+//						String fileData = FileOperations.readFromFile(pathLogFile);
+//						
+//						int oneMBSize = (int) (1024 * 1024);
+//						int onePointEightMBSize = (int) (1.8 * oneMBSize);
+//						
+//						Log.i("onePointEightMBSize", "="+onePointEightMBSize);
+//						Log.i("fileData.length()", "="+fileData.length());
+//						
+//						if(fileData.length() < onePointEightMBSize){
+//							sendPathFileDataToServer(activity, engagementId, fileData);
+//						}
+//						else{
+//							for(String smallFileData : Utils.splitStringInParts(fileData, oneMBSize)){
+//								sendPathFileDataToServer(activity, engagementId, smallFileData);
+//							}
+//						}
+//					}
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//		fileUploadThread.start();
+//		
+//	}
+//	
+//	
+//	public void sendPathFileDataToServer(Activity activity, String engagementId, String fileData){
+//		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//		nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+//		nameValuePairs.add(new BasicNameValuePair("engagement_id", engagementId));
+//		nameValuePairs.add(new BasicNameValuePair("ride_path_data", fileData));
+//		
+//		String url = Data.SERVER_URL + "/upload_file_data";
+//		// old  /upload_file
+//		
+//		HttpRequester simpleJSONParser = new HttpRequester();
+//		String result = simpleJSONParser.getJSONFromUrlParams(url, nameValuePairs);
+//		
+//		Log.e("result of = user_status", "="+result);
+//		if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+////			RequestParams params = new RequestParams();
+////			params.put("access_token", Data.userData.accessToken);
+////			params.put("engagement_id", engagementId);
+////			params.put("ride_path", fileData);
+////			Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+//		}
+//	}
 	
 	
 	
@@ -5017,7 +5015,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				e.printStackTrace();
 			}
 			
-			driverUploadPathDataFileAsync(activity, Data.dEngagementId);
+//			driverUploadPathDataFileAsync(activity, Data.dEngagementId);
 			
 		} catch(Exception e){
 			e.printStackTrace();
