@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.driver.utils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +25,7 @@ public class MapUtils {
 			location2.setLongitude(end.longitude);
 
 			double distance = location1.distanceTo(location2);
-			DecimalFormat decimalFormat = new DecimalFormat("#.#");
-			double distanceFormated = Double.parseDouble(decimalFormat.format(distance));
-			return distanceFormated;
+			return distance;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

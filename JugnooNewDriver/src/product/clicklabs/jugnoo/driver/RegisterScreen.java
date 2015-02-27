@@ -479,8 +479,13 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	protected void onResume() {
 		super.onResume();
 		
-		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(RegisterScreen.this, 1000, 1);
+		try {
+			if(Data.locationFetcher == null){
+				Data.locationFetcher = new LocationFetcher(this, 1000, 1);
+			}
+			Data.locationFetcher.connect();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 	}
@@ -490,7 +495,6 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		try{
 			if(Data.locationFetcher != null){
 				Data.locationFetcher.destroy();
-				Data.locationFetcher = null;
 			}
 		} catch(Exception e){
 			e.printStackTrace();

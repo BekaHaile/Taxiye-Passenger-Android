@@ -83,32 +83,32 @@ public class ItemsCheckoutActivity extends Activity implements LocationUpdate{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		textViewUserName = (TextView) findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		textViewContactNumber = (TextView) findViewById(R.id.textViewContactNumber); textViewContactNumber.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		textViewAddress = (TextView) findViewById(R.id.textViewAddress); textViewAddress.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		textViewEdit = (TextView) findViewById(R.id.textViewEdit); textViewEdit.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewUserName = (TextView) findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		textViewContactNumber = (TextView) findViewById(R.id.textViewContactNumber); textViewContactNumber.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		textViewAddress = (TextView) findViewById(R.id.textViewAddress); textViewAddress.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		textViewEdit = (TextView) findViewById(R.id.textViewEdit); textViewEdit.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Data.regularFont(getApplicationContext()));
-		editTextContactNumber = (EditText) findViewById(R.id.editTextContactNumber); editTextContactNumber.setTypeface(Data.regularFont(getApplicationContext()));
-		editTextAddressLine1 = (EditText) findViewById(R.id.editTextAddressLine1); editTextAddressLine1.setTypeface(Data.regularFont(getApplicationContext()));
-		editTextAddressLine2 = (EditText) findViewById(R.id.editTextAddressLine2); editTextAddressLine2.setTypeface(Data.regularFont(getApplicationContext()));
+		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Data.latoRegular(getApplicationContext()));
+		editTextContactNumber = (EditText) findViewById(R.id.editTextContactNumber); editTextContactNumber.setTypeface(Data.latoRegular(getApplicationContext()));
+		editTextAddressLine1 = (EditText) findViewById(R.id.editTextAddressLine1); editTextAddressLine1.setTypeface(Data.latoRegular(getApplicationContext()));
+		editTextAddressLine2 = (EditText) findViewById(R.id.editTextAddressLine2); editTextAddressLine2.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		textViewProductName = (TextView) findViewById(R.id.textViewProductName); textViewProductName.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		textViewQuantity = (TextView) findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		textViewPrice = (TextView) findViewById(R.id.textViewPrice); textViewPrice.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		textViewProductName = (TextView) findViewById(R.id.textViewProductName); textViewProductName.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		textViewQuantity = (TextView) findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		textViewPrice = (TextView) findViewById(R.id.textViewPrice); textViewPrice.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		
 		listViewSelectedItems = (ListView) findViewById(R.id.listViewSelectedItems);
 		
-		textViewTotal = (TextView) findViewById(R.id.textViewTotal); textViewTotal.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		textViewTotaValue = (TextView) findViewById(R.id.textViewTotaValue); textViewTotaValue.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
+		textViewTotal = (TextView) findViewById(R.id.textViewTotal); textViewTotal.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		textViewTotaValue = (TextView) findViewById(R.id.textViewTotaValue); textViewTotaValue.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		
 		selectedItemsListAdapter = new SelectedItemsListAdapter(ItemsCheckoutActivity.this);
 		listViewSelectedItems.setAdapter(selectedItemsListAdapter);
 		
 		relativeLayoutContinue = (RelativeLayout) findViewById(R.id.relativeLayoutContinue);
-		textViewContinue = (TextView) findViewById(R.id.textViewContinue); textViewContinue.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewContinue = (TextView) findViewById(R.id.textViewContinue); textViewContinue.setTypeface(Data.latoRegular(getApplicationContext()));
 		textViewContinue.setText("GET THEM");
 		
 		
@@ -300,9 +300,9 @@ public class ItemsCheckoutActivity extends Activity implements LocationUpdate{
 				holder = new ViewHolderSelectedItem();
 				convertView = mInflater.inflate(R.layout.list_item_selected_item, null);
 				
-				holder.textViewItemName = (TextView) convertView.findViewById(R.id.textViewItemName); holder.textViewItemName.setTypeface(Data.regularFont(context));
-				holder.textViewQuantity = (TextView) convertView.findViewById(R.id.textViewQuantity); holder.textViewQuantity.setTypeface(Data.regularFont(context));
-				holder.textViewPrice = (TextView) convertView.findViewById(R.id.textViewPrice); holder.textViewPrice.setTypeface(Data.regularFont(context));
+				holder.textViewItemName = (TextView) convertView.findViewById(R.id.textViewItemName); holder.textViewItemName.setTypeface(Data.latoRegular(context));
+				holder.textViewQuantity = (TextView) convertView.findViewById(R.id.textViewQuantity); holder.textViewQuantity.setTypeface(Data.latoRegular(context));
+				holder.textViewPrice = (TextView) convertView.findViewById(R.id.textViewPrice); holder.textViewPrice.setTypeface(Data.latoRegular(context));
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				

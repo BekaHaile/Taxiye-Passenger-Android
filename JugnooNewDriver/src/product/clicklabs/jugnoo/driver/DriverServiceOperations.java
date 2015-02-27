@@ -64,7 +64,6 @@ public class DriverServiceOperations {
 			e.printStackTrace();
 		}
 		finally{
-			Database2.getInstance(context).close();
 		}
 	}
 	
@@ -89,7 +88,6 @@ public class DriverServiceOperations {
 			e.printStackTrace();
 		}
 		finally{
-			Database2.getInstance(context).close();
 		}
 	}
 	
@@ -112,7 +110,6 @@ public class DriverServiceOperations {
 			e.printStackTrace();
 		}
 		finally{
-			Database2.getInstance(context).close();
 		}
 	}
 	
@@ -129,7 +126,6 @@ public class DriverServiceOperations {
 			e.printStackTrace();
 		}
 		finally{
-			Database2.getInstance(context).close();
 		}
 	}
 	
@@ -148,7 +144,6 @@ public class DriverServiceOperations {
 			e.printStackTrace();
 		}
 		finally{
-			Database2.getInstance(context).close();
 		}
 	}
 	

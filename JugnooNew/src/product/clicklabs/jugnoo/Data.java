@@ -4,7 +4,6 @@ import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -18,14 +17,12 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.util.Base64;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
@@ -282,14 +279,14 @@ public class Data {
 	
 	
 	
-	public static Typeface regular, museoSlab;																// fonts declaration
+	public static Typeface latoRegular, museoSlab, latoLight;																// fonts declaration
 	
 
-	public static Typeface regularFont(Context appContext) {											// accessing fonts functions
-		if (regular == null) {
-			regular = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_regular.ttf");
+	public static Typeface latoRegular(Context appContext) {											// accessing fonts functions
+		if (latoRegular == null) {
+			latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_regular.ttf");
 		}
-		return regular;
+		return latoRegular;
 	}
 	
 	
@@ -298,6 +295,13 @@ public class Data {
 			museoSlab = Typeface.createFromAsset(appContext.getAssets(), "fonts/museo_slab.otf");
 		}
 		return museoSlab;
+	}
+	
+	public static Typeface latoLight(Context appContext) {											// accessing fonts functions
+		if (latoLight == null) {
+			latoLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_light.ttf");
+		}
+		return latoLight;
 	}
 	
 	
@@ -332,55 +336,6 @@ public class Data {
 	}
 	
 	
-	
-	@SuppressWarnings("deprecation")
-	public static void getAccessToken(Context context) {
-		try {
-			Context myContext = context.createPackageContext("com.cdk23.nlk", Context.CONTEXT_IGNORE_SECURITY); 
-			SharedPreferences testPrefs = myContext.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
 
-			String authKey = "";
-			
-			Map<String, ?> items = testPrefs.getAll();
-			Log.e("items.toString()",  "="+items.toString());
-			for (String s : items.keySet()) {
-				if("authKey".equalsIgnoreCase(s)){
-					authKey = testPrefs.getString("authKey", "");
-					break;
-				}
-			}
-			Toast.makeText(context, authKey, Toast.LENGTH_SHORT).show();
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
-	@SuppressWarnings("deprecation")
-	public static void removeAccessToken(Context context) {
-		try {
-			Context myContext = context.createPackageContext("com.cdk23.nlk", Context.CONTEXT_IGNORE_SECURITY); 
-			SharedPreferences testPrefs = myContext.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
-			SharedPreferences.Editor editor = testPrefs.edit();
-			editor.putString("authKey", "");
-			editor.commit();
-			editor.apply();
-			
-			String authKey = "";
-			
-			Map<String, ?> items = testPrefs.getAll();
-			Log.e("items.toString()",  "="+items.toString());
-			for (String s : items.keySet()) {
-				if("authKey".equalsIgnoreCase(s)){
-					authKey = testPrefs.getString("authKey", "");
-					break;
-				}
-			}
-			Toast.makeText(context, "removed"+authKey, Toast.LENGTH_SHORT).show();
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-	}
 	
 }

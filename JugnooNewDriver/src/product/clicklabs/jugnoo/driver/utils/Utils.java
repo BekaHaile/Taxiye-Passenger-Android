@@ -128,4 +128,24 @@ public class Utils {
 	}
 	
 	
+	
+	public static String[] splitStringInParts(String s, int partLength) {
+	    int len = s.length();
+
+	    // Number of parts
+	    int nparts = (len + partLength - 1) / partLength;
+	    String parts[] = new String[nparts];
+
+	    // Break into parts
+	    int offset= 0;
+	    int i = 0;
+	    while (i < nparts) {
+	        parts[i] = s.substring(offset, Math.min(offset + partLength, len));
+	        offset += partLength;
+	        i++;
+	    }
+
+	    return parts;
+	}
+	
 }

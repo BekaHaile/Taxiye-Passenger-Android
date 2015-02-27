@@ -170,14 +170,15 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	public synchronized void destroy(){
 		try{
 			this.location = null;
-			Log.e("location","destroy");
 			if(locationclient != null){
 				if(locationclient.isConnected()){
 					locationclient.removeLocationUpdates(this);
 					locationclient.disconnect();
+					Log.e("location","destroy");
 				}
 				else if(locationclient.isConnecting()){
 					locationclient.disconnect();
+					Log.e("location","destroy");
 				}
 			}
 		}catch(Exception e){

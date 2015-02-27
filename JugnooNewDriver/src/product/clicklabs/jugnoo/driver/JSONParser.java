@@ -38,8 +38,6 @@ public class JSONParser {
 		JSONObject jObj = new JSONObject(response);
 		JSONObject userData = jObj.getJSONObject("user_data");
 		
-		
-		
 		Data.userData = parseUserData(context, userData);
 		
 		Data.termsAgreed = 1;
@@ -241,12 +239,49 @@ public class JSONParser {
 			Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
 		}
 		
+		parsePortNumber(context, jLoginObject);
+		
+		
 		//Fetching user current status
 		JSONObject jUserStatusObject = jObj.getJSONObject("status");
 		String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
 				
 		return resp;
 	}
+	
+	
+	
+	
+	
+	public void parsePortNumber(Context context, JSONObject jLoginObject){
+		try {
+			if(jLoginObject.has("port_number")){
+				String port = jLoginObject.getString("port_number");
+				updatePortNumber(context, port);
+				SplashNewActivity.initializeServerURL(context);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updatePortNumber(Context context, String port){
+		SharedPreferences preferences = context.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
+		
+		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+			Database2.getInstance(context).updateSalesPortNumber(port);
+		}
+		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+			Database2.getInstance(context).updateDevPortNumber(port);
+		}
+		else{
+			Database2.getInstance(context).updateLivePortNumber(port);
+		}
+	}
+	
+	
+	
 	
 	
 	
@@ -311,6 +346,7 @@ public class JSONParser {
 			String engagementId = "", userId = "", latitude = "", longitude = "", customerName = "", customerImage = "", customerPhone = "", customerRating = "4", schedulePickupTime = "";
 			int freeRide = 0;
 			CouponInfo couponInfo = null;
+			double jugnooBalance = 0;
 			
 			try{
 							
@@ -407,6 +443,10 @@ public class JSONParser {
 											}
 										}
 										
+										if(jObject.has("jugnoo_balance")){
+											jugnooBalance = jObject.getDouble("jugnoo_balance");
+										}
+										
 										if(jObject.has("free_ride")){
 											freeRide = jObject.getInt("free_ride");
 										}
@@ -481,7 +521,7 @@ public class JSONParser {
 					String phone = customerPhone;
 					String rating = customerRating;
 					
-					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating, freeRide, couponInfo);
+					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating, freeRide, couponInfo, jugnooBalance);
 					Data.assignedCustomerInfo.schedulePickupTime = schedulePickupTime;
 					
 				}
@@ -505,7 +545,7 @@ public class JSONParser {
 					String rating = customerRating;
 					
 					
-					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating, freeRide, couponInfo);
+					Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, name, image, phone, rating, freeRide, couponInfo, jugnooBalance);
 					Data.assignedCustomerInfo.schedulePickupTime = schedulePickupTime;
 					
 					HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
@@ -563,17 +603,6 @@ public class JSONParser {
 		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		Editor editor = pref.edit();
 
-		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
-
-		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
-		editor.putString(Data.SP_D_CUSTOMER_ID, "");
-		editor.putString(Data.SP_D_LATITUDE, "0");
-		editor.putString(Data.SP_D_LONGITUDE, "0");
-		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
-		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
-		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
-		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
-
 		editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
 		editor.putString(Data.SP_WAIT_TIME, "0");
 		editor.putString(Data.SP_RIDE_TIME, "0");
@@ -581,30 +610,9 @@ public class JSONParser {
 		editor.putString(Data.SP_LAST_LATITUDE, "0");
 		editor.putString(Data.SP_LAST_LONGITUDE, "0");
 
-		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
-
-		editor.putString(Data.SP_C_SESSION_ID, "");
-		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
-		editor.putString(Data.SP_C_DRIVER_ID, "");
-		editor.putString(Data.SP_C_LATITUDE, "0");
-		editor.putString(Data.SP_C_LONGITUDE, "0");
-		editor.putString(Data.SP_C_DRIVER_NAME, "");
-		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
-		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
-		editor.putString(Data.SP_C_DRIVER_PHONE, "");
-		editor.putString(Data.SP_C_DRIVER_RATING, "");
-		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-		editor.putString(Data.SP_C_DRIVER_DURATION, "");
-
-		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
-		editor.putString(Data.SP_C_TOTAL_FARE, "0");
-		editor.putString(Data.SP_C_WAIT_TIME, "0");
-		editor.putString(Data.SP_C_RIDE_TIME, "0");
-
 		editor.commit();
 
 		Database.getInstance(context).deleteSavedPath();
-		Database.getInstance(context).close();
 
 	}
 	

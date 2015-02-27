@@ -16,7 +16,8 @@ public enum PushFlags {
 	DISPLAY_MESSAGE(21),
 	TOGGLE_LOCATION_UPDATES(22),
 	MANUAL_ENGAGEMENT(23),
-	HEARTBEAT(40)
+	HEARTBEAT(40),
+	CHANGE_PORT(60)
 	;
 
 	private int ordinal;

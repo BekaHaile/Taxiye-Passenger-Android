@@ -38,6 +38,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.util.Pair;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.model.LatLng;
@@ -469,6 +470,9 @@ public class GCMIntentService extends IntentService {
 	    	    						notificationManager(this, message1, false);
 	    	    					}
 	    	    				}
+	    	    				else if(PushFlags.CHANGE_PORT.getOrdinal() == flag){
+	    	    					sendChangePortAckToServer(this, jObj);
+	    	    				 }
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 
@@ -807,6 +811,43 @@ public class GCMIntentService extends IntentService {
 		
 		//context.sendBroadcast(new Intent("com.google.android.intent.action.GTALK_HEARTBEAT"));
 		//context.sendBroadcast(new Intent("com.google.android.intent.action.MCS_HEARTBEAT"));
+		
+		
+		
+		
+		public void sendChangePortAckToServer(final Context context, final JSONObject jObject1){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						SplashNewActivity.initializeServerURL(context);
+						Pair<String, String> accessTokenPair = JSONParser.getAccessTokenPair(context);
+						
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("access_token", accessTokenPair.first));
+						
+						Log.i("nameValuePairs", "="+nameValuePairs);
+						Log.e("Data.SERVER_URL", "="+Data.SERVER_URL);
+						
+						HttpRequester simpleJSONParser = new HttpRequester();
+						String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/acknowledge_port_change", nameValuePairs);
+						
+						Log.e("result ","="+result);
+						
+						if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+						}
+						else{
+							new JSONParser().parsePortNumber(context, jObject1);
+						}
+						
+						simpleJSONParser = null;
+						nameValuePairs = null;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		}
 		
 }
 

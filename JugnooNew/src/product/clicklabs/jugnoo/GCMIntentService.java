@@ -1,9 +1,14 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import android.app.IntentService;
 import android.app.Notification;
@@ -19,13 +24,13 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
+import android.util.Pair;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GCMIntentService extends IntentService {
 	
 	public static final int NOTIFICATION_ID = 1;
-    NotificationCompat.Builder builder;
     
     public GCMIntentService() {
         super("GcmIntentService");
@@ -328,6 +333,9 @@ public class GCMIntentService extends IntentService {
 										notificationManager(this, message1, true);
 									}
 	    	    				 }
+	    	    				else if(PushFlags.CHANGE_PORT.getOrdinal() == flag){
+	    	    					sendChangePortAckToServer(this, jObj);
+	    	    				 }
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 e.printStackTrace();
@@ -347,9 +355,39 @@ public class GCMIntentService extends IntentService {
 	        GcmBroadcastReceiver.completeWakefulIntent(intent);
 	    }
 	    
+	    
+		public void sendChangePortAckToServer(final Context context, final JSONObject jObject1){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						SplashNewActivity.initializeServerURL(context);
+						Pair<String, Integer> accessTokenPair = AccessTokenGenerator.getAccessTokenPair(context);
+						
+						ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair("access_token", accessTokenPair.first));
+						
+						Log.i("nameValuePairs", "="+nameValuePairs);
+						Log.e("Data.SERVER_URL", "="+Data.SERVER_URL);
+						
+						HttpRequester simpleJSONParser = new HttpRequester();
+						String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/acknowledge_port_change", nameValuePairs);
+						
+						Log.e("result ","="+result);
+						
+						if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+						}
+						else{
+							new JSONParser().parsePortNumber(context, jObject1);
+						}
+						
+						simpleJSONParser = null;
+						nameValuePairs = null;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		}
+	    
 }
-
-
-
-
-

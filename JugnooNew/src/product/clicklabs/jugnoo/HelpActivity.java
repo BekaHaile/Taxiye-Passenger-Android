@@ -84,7 +84,7 @@ public class HelpActivity extends FragmentActivity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		listViewHelp = (ListView) findViewById(R.id.listViewHelp);
 		helpListAdapter = new HelpListAdapter();
@@ -95,7 +95,7 @@ public class HelpActivity extends FragmentActivity{
 		
 		
 		progressBarHelp = (ProgressBar) findViewById(R.id.progressBarHelp);
-		textViewInfoDisplay = (TextView) findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewInfoDisplay = (TextView) findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.latoRegular(getApplicationContext()));
 		helpWebview = (WebView) findViewById(R.id.helpWebview);
 		
 		
@@ -192,7 +192,7 @@ public class HelpActivity extends FragmentActivity{
 				holder = new ViewHolderHelp();
 				convertView = mInflater.inflate(R.layout.help_list_item, null);
 				
-				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
+				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.latoRegular(getApplicationContext()));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);

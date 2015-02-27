@@ -32,8 +32,14 @@ public class FareStructure {
 		}
 		double fareOfWaitTime = totalWaitTimeInMin * farePerWaitingMin;
 		
-		double fare = fareOfRideTime + fareOfWaitTime + fixedFare + ((totalDistanceInKm <= thresholdDistance) ? (0) : ((totalDistanceInKm - thresholdDistance)* farePerKm));
+		double fare = fareOfRideTime + fareOfWaitTime + fixedFare + ((totalDistanceInKm <= thresholdDistance) ? (0) : ((totalDistanceInKm - thresholdDistance) * farePerKm));
 		fare = Math.ceil(fare);
 		return fare;
+	}
+	
+	@Override
+	public String toString() {
+		return "fixedFare=" + fixedFare + ", thresholdDistance=" + thresholdDistance + ", farePerKm=" + farePerKm + ", farePerMin=" + farePerMin + ", freeMinutes=" + freeMinutes
+				+ ", farePerWaitingMin=" + farePerWaitingMin + ", freeWaitingMinutes=" + freeWaitingMinutes;
 	}
 }

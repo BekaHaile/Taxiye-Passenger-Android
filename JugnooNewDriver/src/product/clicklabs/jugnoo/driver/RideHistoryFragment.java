@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.driver.datastructure.PaymentMode;
 import product.clicklabs.jugnoo.driver.datastructure.RideInfo;
 import product.clicklabs.jugnoo.driver.utils.AppStatus;
 import product.clicklabs.jugnoo.driver.utils.CustomAsyncHttpResponseHandler;
@@ -261,10 +262,16 @@ public class RideHistoryFragment extends Fragment {
 											DecimalFormat decimalFormat = new DecimalFormat("#.#");
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
+												
+												int paymentMode = PaymentMode.CASH.getOrdinal();
+												if(booData.has("payment_mode")){
+													paymentMode = booData.getInt("payment_mode");
+												}
+												
 												RideInfo rideInfo = new RideInfo(booData.getString("id"), booData.getString("from"), booData.getString("to"), 
 														booData.getString("fare"), "100", "0", "20", 
 														decimalFormat.format(booData.getDouble("distance")), "10", "10", booData.getString("time"), 
-														booData.getInt("coupon_used"));
+														booData.getInt("coupon_used"), paymentMode);
 												rides.add(rideInfo);
 											}
 										}

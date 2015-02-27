@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.SplashNewActivity.AccessTokenDataParseAsync;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -20,8 +19,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.Rect;
@@ -121,23 +118,23 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashLogin.this, relative, 1134, 720, false);
 		
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
-		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		emailEt = (AutoCompleteTextView) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
-		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
+		emailEt = (AutoCompleteTextView) findViewById(R.id.emailEt); emailEt.setTypeface(Data.latoRegular(getApplicationContext()));
+		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		signInBtn = (Button) findViewById(R.id.signInBtn); signInBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		facebookSignInBtn = (Button) findViewById(R.id.facebookSignInBtn); facebookSignInBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		signInBtn = (Button) findViewById(R.id.signInBtn); signInBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		facebookSignInBtn = (Button) findViewById(R.id.facebookSignInBtn); facebookSignInBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 		
-		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.regularFont(getApplicationContext()));
+		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		needHelpLinearLayout = (LinearLayout) findViewById(R.id.needHelpLinearLayout);
-		needHelpText = (TextView) findViewById(R.id.needHelpText); needHelpText.setTypeface(Data.regularFont(SplashLogin.this));
-		callUsText = (TextView) findViewById(R.id.callUsText); callUsText.setTypeface(Data.regularFont(SplashLogin.this));
+		needHelpText = (TextView) findViewById(R.id.needHelpText); needHelpText.setTypeface(Data.latoRegular(SplashLogin.this));
+		callUsText = (TextView) findViewById(R.id.callUsText); callUsText.setTypeface(Data.latoRegular(SplashLogin.this));
 		
 		callUsText.setText("Call us now "+jugnooPhoneNumber);
 		

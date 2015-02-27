@@ -14,11 +14,13 @@ public class RideInfo {
 	public String waitTime;
 	public String dateTime;
 	public int couponUsed;
+	public int paymentMode;
+	
 	
 	public RideInfo(String id, String fromLocation, String toLocation, 
 			String fare, String customerPaid, String balance, String subsidy, 
 			String distance, String rideTime, String waitTime, String dateTime, 
-			int couponUsed){
+			int couponUsed, int paymentMode){
 		this.id = id;
 		this.fromLocation = fromLocation;
 		this.toLocation = toLocation;
@@ -36,6 +38,8 @@ public class RideInfo {
 		
 		this.couponUsed = couponUsed;
 		this.balance = balance;
+		
+		this.paymentMode = paymentMode;
 	}
 	
 	@Override

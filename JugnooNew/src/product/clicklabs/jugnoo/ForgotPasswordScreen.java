@@ -70,14 +70,14 @@ public class ForgotPasswordScreen extends Activity{
 		new ASSL(ForgotPasswordScreen.this, relative, 1134, 720, false);
 		
 		
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
-		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		forgotPasswordHelpText = (TextView) findViewById(R.id.forgotPasswordHelpText); forgotPasswordHelpText.setTypeface(Data.regularFont(getApplicationContext()));
+		forgotPasswordHelpText = (TextView) findViewById(R.id.forgotPasswordHelpText); forgotPasswordHelpText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
+		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn); sendEmailBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn); sendEmailBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 

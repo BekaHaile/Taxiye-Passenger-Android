@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.driver.datastructure.PaymentMode;
 import product.clicklabs.jugnoo.driver.datastructure.RideInfo;
 import product.clicklabs.jugnoo.driver.utils.AppStatus;
 import product.clicklabs.jugnoo.driver.utils.CustomAsyncHttpResponseHandler;
@@ -125,7 +126,7 @@ public class DriverRidesFragment extends Fragment {
 	class ViewHolderDriverRides {
 		TextView textViewCustomerPaid, textViewFare, textViewBalance, textViewJugnooSubsidy;
 		TextView fromText, fromValue, toText, toValue, distanceValue, rideTimeValue, dateTimeValue;
-		ImageView couponImg;
+		ImageView couponImg, jugnooCashImg;
 		LinearLayout relative;
 		int id;
 	}
@@ -172,6 +173,7 @@ public class DriverRidesFragment extends Fragment {
 				holder.dateTimeValue = (TextView) convertView.findViewById(R.id.dateTimeValue); holder.dateTimeValue.setTypeface(Data.regularFont(getActivity()));
 				
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
+				holder.jugnooCashImg = (ImageView) convertView.findViewById(R.id.jugnooCashImg);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
@@ -214,6 +216,13 @@ public class DriverRidesFragment extends Fragment {
 			}
 			else{
 				holder.couponImg.setVisibility(View.GONE);
+			}
+			
+			if(PaymentMode.WALLET.getOrdinal() == rideInfo.paymentMode){
+				holder.jugnooCashImg.setVisibility(View.VISIBLE);
+			}
+			else{
+				holder.jugnooCashImg.setVisibility(View.GONE);
 			}
 			
 			return convertView;
@@ -287,10 +296,16 @@ public class DriverRidesFragment extends Fragment {
 										if(bookingData.length() > 0){
 											for(int i=0; i<bookingData.length(); i++){
 												JSONObject booData = bookingData.getJSONObject(i);
+												
+												int paymentMode = PaymentMode.CASH.getOrdinal();
+												if(booData.has("payment_mode")){
+													paymentMode = booData.getInt("payment_mode");
+												}
+												
 												RideInfo rideInfo = new RideInfo(booData.getString("id"), booData.getString("from"), booData.getString("to"), 
 														booData.getString("fare"), booData.getString("customer_paid"),  booData.getString("balance"), booData.getString("subsidy"), 
 														decimalFormat.format(booData.getDouble("distance")), booData.getString("ride_time"), booData.getString("wait_time"), booData.getString("time"), 
-														booData.getInt("coupon_used"));
+														booData.getInt("coupon_used"), paymentMode);
 												rides.add(rideInfo);
 											}
 										}

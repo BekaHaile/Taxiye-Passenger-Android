@@ -8,8 +8,8 @@
     
     
     
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
-    <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
+    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
+    <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> <!-- Dev -->
     
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
     
@@ -18,6 +18,12 @@
     
 	<!-- <string name="fb_app_id">782131025144439</string> -->
 	<string name="fb_app_id">782131025144439</string>
+    
+	
+	
+    <string name="rupee">\u20B9</string> 
+    
+    <string name="rupee_0">\u20B9 0.0</string> 
     
 	
 	<string name="language_english_text">English</string>

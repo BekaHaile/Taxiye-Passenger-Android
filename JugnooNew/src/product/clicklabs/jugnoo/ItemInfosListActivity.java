@@ -89,9 +89,9 @@ public class ItemInfosListActivity extends Activity{
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
 		infoBtn = (Button) findViewById(R.id.infoBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(getApplicationContext()));
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		
 		itemInfosList.clear();
@@ -102,8 +102,8 @@ public class ItemInfosListActivity extends Activity{
 		
 		relativeLayoutCheckout = (RelativeLayout) findViewById(R.id.relativeLayoutCheckout);
 		
-		textViewSelectedItemsCount = (TextView) findViewById(R.id.textViewSelectedItemsCount); textViewSelectedItemsCount.setTypeface(Data.regularFont(getApplicationContext()));
-		textViewCheckout = (TextView) findViewById(R.id.textViewCheckout); textViewCheckout.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewSelectedItemsCount = (TextView) findViewById(R.id.textViewSelectedItemsCount); textViewSelectedItemsCount.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewCheckout = (TextView) findViewById(R.id.textViewCheckout); textViewCheckout.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		textViewInfo.setVisibility(View.GONE);
 		progressBar.setVisibility(View.GONE);
@@ -270,9 +270,9 @@ public class ItemInfosListActivity extends Activity{
 				holder = new ViewHolderItemInfo();
 				convertView = mInflater.inflate(R.layout.list_item_item_info, null);
 				
-				holder.textViewItemName = (TextView) convertView.findViewById(R.id.textViewItemName); holder.textViewItemName.setTypeface(Data.regularFont(context), Typeface.BOLD);
-				holder.textViewItemPrice = (TextView) convertView.findViewById(R.id.textViewItemPrice); holder.textViewItemPrice.setTypeface(Data.regularFont(context));
-				holder.textViewItemCount = (TextView) convertView.findViewById(R.id.textViewItemCount); holder.textViewItemCount.setTypeface(Data.regularFont(context));
+				holder.textViewItemName = (TextView) convertView.findViewById(R.id.textViewItemName); holder.textViewItemName.setTypeface(Data.latoRegular(context), Typeface.BOLD);
+				holder.textViewItemPrice = (TextView) convertView.findViewById(R.id.textViewItemPrice); holder.textViewItemPrice.setTypeface(Data.latoRegular(context));
+				holder.textViewItemCount = (TextView) convertView.findViewById(R.id.textViewItemCount); holder.textViewItemCount.setTypeface(Data.latoRegular(context));
 				
 				holder.imageViewItem = (ImageView) convertView.findViewById(R.id.imageViewItem);
 				holder.imageViewMinus = (ImageView) convertView.findViewById(R.id.imageViewMinus);

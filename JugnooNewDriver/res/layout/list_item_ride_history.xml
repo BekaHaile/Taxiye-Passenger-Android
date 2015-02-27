@@ -36,7 +36,7 @@
                     android:text="Customer Paid: Rs. 0"
                     android:textColor="@color/bg_grey_opaque"
                     android:textSize="30px" />
-                
+
                 <TextView
                     android:id="@+id/textViewFare"
                     android:layout_width="wrap_content"
@@ -174,7 +174,6 @@
                     android:text="10 min"
                     android:textColor="@color/bg_grey_opaque"
                     android:textSize="30px" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -185,7 +184,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:splitMotionEvents="false" >
-                
+
                 <ImageView
                     android:layout_width="30px"
                     android:layout_height="30px"
@@ -202,7 +201,6 @@
                     android:text="23 June, 2014 18:88 AM"
                     android:textColor="@color/bg_grey_opaque"
                     android:textSize="30px" />
-                
             </LinearLayout>
 
             <ImageView
@@ -221,6 +219,8 @@
             android:gravity="right"
             android:orientation="vertical" >
 
+            
+
             <ImageView
                 android:id="@+id/couponImg"
                 android:layout_width="72px"
@@ -228,9 +228,18 @@
                 android:layout_below="@+id/fareValue"
                 android:src="@drawable/free_ride_icon"
                 android:tag="mwar"
-                android:visibility="visible"
-                 />
-
+                android:visibility="visible" />
+            
+            <ImageView
+                android:id="@+id/jugnooCashImg"
+                android:layout_width="72px"
+                android:layout_height="47px"
+                android:layout_below="@+id/fareValue"
+                android:layout_marginTop="10px"
+                android:src="@drawable/jugnoo_cash_icon"
+                android:tag="mwar"
+                android:visibility="visible" />
+            
         </LinearLayout>
     </RelativeLayout>
 

@@ -92,14 +92,30 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		FlurryAgent.onEndSession(this);
 	}
 	
-	public void assignFlurryKey(){
-		if(Data.DEV_SERVER_URL.equalsIgnoreCase(Data.SERVER_URL)){
+	
+	public static void initializeServerURL(Context context){
+		SharedPreferences preferences = context.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
+		
+		Data.SERVER_URL = Data.DEFAULT_SERVER_URL;
+		
+		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+			Data.SERVER_URL = Data.TRIAL_SERVER_URL.substring(0, Data.TRIAL_SERVER_URL.length()-4) + Database2.getInstance(context).getSalesPortNumber();
+			Data.FLURRY_KEY = "abcd";
+		}
+		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+			Data.SERVER_URL = Data.DEV_SERVER_URL.substring(0, Data.DEV_SERVER_URL.length()-4) + Database2.getInstance(context).getDevPortNumber();
 			Data.FLURRY_KEY = "abcd";
 		}
 		else{
+			Data.SERVER_URL = Data.LIVE_SERVER_URL.substring(0, Data.LIVE_SERVER_URL.length()-4) + Database2.getInstance(context).getLivePortNumber();
 			Data.FLURRY_KEY = Data.STATIC_FLURRY_KEY;
 		}
+		Log.e("Data.SERVER_URL", "="+Data.SERVER_URL);
+		
+		DriverLocationUpdateService.updateServerData(context);
 	}
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,22 +133,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 //		}
 		
 		
-		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
-		
-		Data.SERVER_URL = Data.DEFAULT_SERVER_URL;
-		
-		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-			Data.SERVER_URL = Data.TRIAL_SERVER_URL;
-		}
-		else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-			Data.SERVER_URL = Data.LIVE_SERVER_URL;
-		}
-		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-			Data.SERVER_URL = Data.DEV_SERVER_URL;
-		}
-
-		assignFlurryKey();
+		initializeServerURL(this);
 		
 		
 		Locale locale = new Locale("en"); 
@@ -146,7 +147,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		if(Data.locationFetcher == null){
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
-		
 		
 		loginDataFetched = false;
 		loginFailed = false;
@@ -278,7 +278,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		});
 		
 		
-	    
 	}
 	
 	public void getDeviceToken(){
@@ -306,8 +305,13 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	@Override
 	protected void onResume() {
-		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+		try {
+			if(Data.locationFetcher == null){
+				Data.locationFetcher = new LocationFetcher(this, 1000, 1);
+			}
+			Data.locationFetcher.connect();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
@@ -330,7 +334,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		Database2.getInstance(this).checkStartPendingApisService(this);
 		try{
 			Data.locationFetcher.destroy();
-			Data.locationFetcher = null;
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -998,13 +1001,13 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
 					
 					if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-						textMessage.setText("Current server is SALES.\nChange to:");
+						textMessage.setText("Current server is SALES \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-						textMessage.setText("Current server is LIVE.\nChange to:");
+						textMessage.setText("Current server is LIVE \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-						textMessage.setText("Current server is DEV.\nChange to:");
+						textMessage.setText("Current server is DEV \n"+Data.SERVER_URL+".\nChange to:");
 					}
 					
 					
@@ -1030,9 +1033,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.LIVE_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.LIVE_SERVER_URL;
-
-							assignFlurryKey();
+							initializeServerURL(activity);
 							
 							dialog.dismiss();
 						}
@@ -1046,9 +1047,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.DEV_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.DEV_SERVER_URL;
-
-							assignFlurryKey();
+							initializeServerURL(activity);
+							
 							dialog.dismiss();
 						}
 					});
@@ -1062,9 +1062,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							editor.putString(Data.SP_SERVER_LINK, Data.TRIAL_SERVER_URL);
 							editor.commit();
 							
-							Data.SERVER_URL = Data.TRIAL_SERVER_URL;
-
-							assignFlurryKey();
+							initializeServerURL(activity);
 							
 							dialog.dismiss();
 						}
