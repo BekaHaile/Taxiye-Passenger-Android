@@ -8,7 +8,6 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
-public class HelpParticularActivity extends FragmentActivity{
+public class HelpParticularActivity extends Activity{
 	
 	
 	LinearLayout relative;

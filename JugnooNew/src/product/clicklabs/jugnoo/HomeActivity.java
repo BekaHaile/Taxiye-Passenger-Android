@@ -2832,6 +2832,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			           .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
 			               public void onClick(final DialogInterface dialog, final int id) {
 			                   startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			                   dialog.dismiss();
+			                   gpsDialogAlert = null;
 			               }
 			           })
 			           ;
@@ -5007,6 +5009,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			}
 		
+			
+			if(jObj.has("jugnoo_balance")){
+				Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
+				setUserData();
+			}
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		}

@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -113,6 +114,18 @@ public class WalletAddPaymentActivity extends Activity{
 					textViewCurrentTransactionInfo.append(", Please try again");
 					
 					textViewCurrentTransactionInfo.setVisibility(View.VISIBLE);
+					
+					new Handler().postDelayed(new Runnable() {
+						
+						@Override
+						public void run() {
+							try {
+								textViewCurrentTransactionInfo.setVisibility(View.GONE);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}, 5000);
 				}
 				else{
 					textViewCurrentTransactionInfo.setVisibility(View.GONE);

@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.TransactionInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -59,6 +60,7 @@ public class WalletActivity extends Activity{
 	
 	public double jugnooBalance = 0;
 	public int totalTransactions = 0, pageSize = 0;
+	public String promoBanner = "";
 	ArrayList<TransactionInfo> transactionInfoList = new ArrayList<TransactionInfo>();
 	
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -99,6 +101,8 @@ public class WalletActivity extends Activity{
 		textViewAccountBalanceValue = (TextView) findViewById(R.id.textViewAccountBalanceValue); textViewAccountBalanceValue.setTypeface(Data.latoRegular(this));
 		textViewRecentTransactions = (TextView) findViewById(R.id.textViewRecentTransactions); textViewRecentTransactions.setTypeface(Data.latoRegular(this));
 		textViewRecentTransactions.setVisibility(View.GONE);
+		textViewCurrentTransactionInfo.setVisibility(View.GONE);
+		textViewPromotion.setVisibility(View.GONE);
 		
 		
 		buttonAddPayment = (Button) findViewById(R.id.buttonAddPayment); buttonAddPayment.setTypeface(Data.latoRegular(this));
@@ -143,6 +147,18 @@ public class WalletActivity extends Activity{
 		});
 		
 		
+		textViewPromotion.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				HelpParticularActivity.helpSection = HelpSection.WALLET_PROMOTIONS;
+				startActivity(new Intent(WalletActivity.this, HelpParticularActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+		
+		
+		
 		try{
 			if(getIntent().hasExtra("payment")){
 				String payment = getIntent().getStringExtra("payment");
@@ -158,6 +174,7 @@ public class WalletActivity extends Activity{
 					textViewCurrentTransactionInfo.append(", Added Rs. "+amount);
 					
 					textViewCurrentTransactionInfo.setVisibility(View.VISIBLE);
+					showPromoBanner();
 					
 					new Handler().postDelayed(new Runnable() {
 						
@@ -165,6 +182,7 @@ public class WalletActivity extends Activity{
 						public void run() {
 							try {
 								textViewCurrentTransactionInfo.setVisibility(View.GONE);
+								showPromoBanner();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -391,12 +409,19 @@ public class WalletActivity extends Activity{
 //													txn_date	: <%d/%m/%y>,
 //													txn_time	: <%h:%i %p>
 //												}
+//													banner		:
 //											] 
 //											};
 											
 											jugnooBalance = jObj.getDouble("balance");
 											totalTransactions = jObj.getInt("num_txns");
 											pageSize = jObj.getInt("page_size");
+											
+											promoBanner = "";
+											if(jObj.has("banner")){
+												promoBanner = jObj.getString("banner");
+											}
+											
 											
 											JSONArray jTransactions = jObj.getJSONArray("transactions");
 											for(int i=0; i<jTransactions.length(); i++){
@@ -412,6 +437,7 @@ public class WalletActivity extends Activity{
 												Data.userData.jugnooBalance = jugnooBalance;
 											}
 											
+											showPromoBanner();
 											updateListData("No transactions currently", false);
 										}
 										else{
@@ -443,5 +469,23 @@ public class WalletActivity extends Activity{
 		}
 	}
 
+	
+	public void showPromoBanner(){
+		
+		if(!"".equalsIgnoreCase(promoBanner)){
+			if(textViewCurrentTransactionInfo.getVisibility() == View.GONE){
+				textViewPromotion.setVisibility(View.VISIBLE);
+				textViewPromotion.setText(promoBanner);
+			}
+			else{
+				textViewPromotion.setVisibility(View.GONE);
+			}
+		}
+		else{
+			textViewPromotion.setVisibility(View.GONE);
+		}
+		
+	}
+	
 	
 }

@@ -65,7 +65,7 @@ public class WalletWebviewActivity extends Activity{
 						urlStart = "https://www.dev.jugnoo.in/jugnoo-phpfiles/wallet/payments.php";
 					}
 					else{
-						urlStart = "https://www.test.jugnoo.in/jugnoo-phpfiles/wallet/payments_dev.php";
+						urlStart = "http://www.test.jugnoo.in/jugnoo/wallet/payments.php";
 					}
 					
 					//https://www.dev.jugnoo.in/jugnoo-phpfiles/wallet/payments.php

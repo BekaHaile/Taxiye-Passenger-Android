@@ -179,7 +179,7 @@
             android:id="@+id/fareValue"
             android:layout_width="170px"
             android:layout_height="wrap_content"
-            android:text="Rs. 2500"
+            android:text="Rs. 0"
             android:textColor="@color/blue_btn"
             android:gravity="right"
             android:textSize="36px"
