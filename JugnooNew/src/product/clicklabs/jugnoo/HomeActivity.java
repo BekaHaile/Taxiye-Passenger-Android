@@ -653,8 +653,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverStartRideBtn = (Button) findViewById(R.id.driverStartRideBtn); driverStartRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.regularFont(getApplicationContext()));
 
-//		driverStartRideSlider.setThumb(createStartRideThumbDrawable());
-//		driverStartRideSlider.setThumbOffset((int)(5.0f * ASSL.Xscale()));
 		
 		
 		//End ride layout
@@ -794,20 +792,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public boolean onLongClick(View v) {
-
-				String message = "";
 				
-				if(Data.SERVER_URL.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-					message = "Current server is TRIAL. "+Data.TRIAL_SERVER_URL;
-				}
-				else if(Data.SERVER_URL.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-					message = "Current server is LIVE. "+Data.LIVE_SERVER_URL;
-				}
-				else if(Data.SERVER_URL.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-					message = "Current server is DEV. "+Data.DEV_SERVER_URL;
-				}
-				
-				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "url = "+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
 				return false;
@@ -5183,27 +5169,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							try {
 								jObj = new JSONObject(response);
 								int flag = jObj.getInt("flag");
-								if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
-									HomeActivity.logoutUser(activity);
-								}
-								else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-									String errorMessage = jObj.getString("error");
-									new DialogPopup().alertPopup(activity, "", errorMessage);
-								}
-								else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-									String message = jObj.getString("message");
-									new DialogPopup().alertPopup(activity, "", message);
-								}
-								else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-									userMode = UserMode.PASSENGER;
-									
-									switchUserScreen(userMode);
-									
-									passengerScreenMode = PassengerScreenMode.P_INITIAL;
-									switchPassengerScreen(passengerScreenMode);
-								}
-								else{
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+										userMode = UserMode.PASSENGER;
+										
+										switchUserScreen(userMode);
+										
+										passengerScreenMode = PassengerScreenMode.P_INITIAL;
+										switchPassengerScreen(passengerScreenMode);
+									}
+									else{
+										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
