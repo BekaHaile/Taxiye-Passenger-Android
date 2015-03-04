@@ -11,6 +11,7 @@ import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -30,12 +32,14 @@ import com.loopj.android.http.RequestParams;
 
 public class ForgotPasswordScreen extends Activity{
 	
-	TextView title;
-	Button backBtn;
+	TextView textViewTitle;
+	ImageView imageViewBack;
 	
-	EditText emailEt;
-	Button sendEmailBtn;
-	TextView extraTextForScroll, forgotPasswordHelpText;
+	TextView textViewForgotPasswordHelp;
+	EditText editTextEmail;
+	Button buttonSendEmail;
+	
+	TextView extraTextForScroll;
 	
 	LinearLayout relative;
 	
@@ -63,26 +67,26 @@ public class ForgotPasswordScreen extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.forgot_password_screen);
+		setContentView(R.layout.activity_forgot_password);
 		
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(ForgotPasswordScreen.this, relative, 1134, 720, false);
 		
 		
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
-		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
-		forgotPasswordHelpText = (TextView) findViewById(R.id.forgotPasswordHelpText); forgotPasswordHelpText.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewForgotPasswordHelp = (TextView) findViewById(R.id.textViewForgotPasswordHelp); textViewForgotPasswordHelp.setTypeface(Data.latoRegular(this));
 		
-		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.latoRegular(getApplicationContext()));
+		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Data.latoRegular(this));
 		
-		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn); sendEmailBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		buttonSendEmail = (Button) findViewById(R.id.buttonSendEmail); buttonSendEmail.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 
 		
-		backBtn.setOnClickListener(new View.OnClickListener() {
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -93,26 +97,26 @@ public class ForgotPasswordScreen extends Activity{
 		});
 		
 
-		emailEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				emailEt.setError(null);
+				editTextEmail.setError(null);
 			}
 		});
 		
 		
 		
-		sendEmailBtn.setOnClickListener(new View.OnClickListener() {
+		buttonSendEmail.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				
-				String email = emailEt.getText().toString().trim();
+				String email = editTextEmail.getText().toString().trim();
 				
 				if("".equalsIgnoreCase(email)){
-					emailEt.requestFocus();
-					emailEt.setError("Please enter email");
+					editTextEmail.requestFocus();
+					editTextEmail.setError("Please enter email");
 				}
 				else{
 					if(isEmailValid(email)){
@@ -120,8 +124,8 @@ public class ForgotPasswordScreen extends Activity{
 						FlurryEventLogger.forgotPasswordClicked(email);
 					}
 					else{
-						emailEt.requestFocus();
-						emailEt.setError("Please enter valid email");
+						editTextEmail.requestFocus();
+						editTextEmail.setError("Please enter valid email");
 					}
 				}
 				
@@ -129,14 +133,14 @@ public class ForgotPasswordScreen extends Activity{
 		});
 		
 		
-		emailEt.setOnEditorActionListener(new OnEditorActionListener() {
+		editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
 				int result = actionId & EditorInfo.IME_MASK_ACTION;
 				switch (result) {
 					case EditorInfo.IME_ACTION_DONE:
-						sendEmailBtn.performClick();
+						buttonSendEmail.performClick();
 					break;
 
 					case EditorInfo.IME_ACTION_NEXT:
@@ -148,8 +152,8 @@ public class ForgotPasswordScreen extends Activity{
 			}
 		});
 		
-		emailEt.setText(emailAlready);
-		emailEt.setSelection(emailEt.getText().toString().length());
+		editTextEmail.setText(emailAlready);
+		editTextEmail.setSelection(editTextEmail.getText().toString().length());
 		
 		final View activityRootView = findViewById(R.id.mainLinear);
 		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(

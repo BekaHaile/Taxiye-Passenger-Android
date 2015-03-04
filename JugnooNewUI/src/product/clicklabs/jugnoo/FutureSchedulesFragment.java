@@ -245,7 +245,7 @@ public class FutureSchedulesFragment extends Fragment {
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.future_schedule_operations_dialog);
+			dialog.setContentView(R.layout.dialog_future_schedule_operations);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);

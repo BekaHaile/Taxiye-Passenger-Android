@@ -160,7 +160,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	    config.locale = locale;
 	    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 		
-		setContentView(R.layout.splash_new);
+		setContentView(R.layout.activity_splash_new);
 		
 		if(Data.locationFetcher == null){
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);

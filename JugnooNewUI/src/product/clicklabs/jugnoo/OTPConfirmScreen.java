@@ -71,7 +71,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.otp_confrim_screen);
+		setContentView(R.layout.activity_otp_confrim);
 		
 		loginDataFetched = false;
 		

@@ -94,7 +94,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.register_screen);
+		setContentView(R.layout.activity_register);
 		
 		loginDataFetched = false;
 		

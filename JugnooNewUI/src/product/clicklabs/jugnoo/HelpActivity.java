@@ -77,7 +77,7 @@ public class HelpActivity extends FragmentActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.help_activity);
+		setContentView(R.layout.activity_help);
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(HelpActivity.this, relative, 1134, 720, false);
@@ -190,7 +190,7 @@ public class HelpActivity extends FragmentActivity{
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				holder = new ViewHolderHelp();
-				convertView = mInflater.inflate(R.layout.help_list_item, null);
+				convertView = mInflater.inflate(R.layout.list_item_help, null);
 				
 				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.latoRegular(getApplicationContext()));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 

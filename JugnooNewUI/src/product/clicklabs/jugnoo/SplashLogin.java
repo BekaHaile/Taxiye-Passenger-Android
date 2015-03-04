@@ -115,7 +115,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.splash_login);
+		setContentView(R.layout.activity_splash);
 		
 		resetFlags();
 		

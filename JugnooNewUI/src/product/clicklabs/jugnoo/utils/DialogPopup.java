@@ -187,7 +187,7 @@ public class DialogPopup {
 			layoutParams.dimAmount = 0.6f;
 			progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 			progressDialog.setCancelable(false);
-			progressDialog.setContentView(R.layout.loading_box);
+			progressDialog.setContentView(R.layout.dialog_loading_box);
 			
 			FrameLayout frameLayout = (FrameLayout) progressDialog.findViewById(R.id.rv);
 			new ASSL((Activity)context, frameLayout, 1134, 720, false);

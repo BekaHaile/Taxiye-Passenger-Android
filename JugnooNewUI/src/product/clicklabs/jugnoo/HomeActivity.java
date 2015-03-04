@@ -5263,7 +5263,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.save_to_favorite_dialog);
+			dialog.setContentView(R.layout.dialog_save_to_favorite);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -5562,7 +5562,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.logout_dialog);
+			dialog.setContentView(R.layout.dialog_logout);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
