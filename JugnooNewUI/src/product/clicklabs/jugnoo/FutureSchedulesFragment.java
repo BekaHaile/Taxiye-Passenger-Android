@@ -339,7 +339,7 @@ public class FutureSchedulesFragment extends Fragment {
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.custom_two_btn_dialog_with_title);
+			dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, false);
@@ -347,8 +347,8 @@ public class FutureSchedulesFragment extends Fragment {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
 			
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
@@ -363,8 +363,6 @@ public class FutureSchedulesFragment extends Fragment {
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("No");
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity)); btnCancel.setText("Yes");
-			Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
-			crossbtn.setVisibility(View.GONE);
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -381,7 +379,7 @@ public class FutureSchedulesFragment extends Fragment {
 				}
 			});
 			
-			dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {

@@ -37,7 +37,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="100px"
             android:splitMotionEvents="false"
-            android:visibility="visible" >
+            android:visibility="gone" >
 
             <Button
                 android:id="@+id/buttonLogin"
@@ -60,6 +60,46 @@
                 android:textColor="@drawable/text_color_yellow_alpha_selector"
                 android:textSize="@dimen/button_text_size" />
         </RelativeLayout>
+        
+        
+        <LinearLayout
+            android:id="@+id/linearLayoutNoNet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="40px"
+            android:splitMotionEvents="false"
+            android:visibility="gone"
+            android:orientation="vertical"
+             >
+
+			<TextView
+                    android:id="@+id/textViewNoNet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="No internet connection available"
+                    android:textColor="@color/white"
+                    android:textSize="32px"
+                    android:layout_gravity="center_horizontal"
+                     />
+            
+            
+            <Button
+                android:id="@+id/buttonNoNetCall"
+                android:layout_width="648px"
+                android:layout_height="100px"
+                android:background="@drawable/button_white_selector"
+                android:text="Call on +919023121121 to book your ride"
+                android:textColor="@drawable/text_color_black_alpha_selector"
+                android:textSize="32px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
+                 />
+        </LinearLayout>
+        
+        
+        
     </RelativeLayout>
 
 </LinearLayout>

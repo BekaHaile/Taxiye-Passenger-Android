@@ -34,6 +34,9 @@ import com.loopj.android.http.AsyncHttpClient;
  */
 public class Data {
 	
+	public static final String SUPPORT_NUMBER = "+919023121121";
+	
+	
 	public static final String CLIENT_ID = "EEBUOvQq7RRJBxJm";
 	public static final String CLIENT_SHARED_SECRET = "nqaK7HTwDT3epcpR5JuMWwojFv0KJnIv";
 	

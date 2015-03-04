@@ -382,12 +382,11 @@ public class AccountActivity extends Activity{
 					dialog.dismiss();
 				}
 			}catch(Exception e){
-				
 			}
 			
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.coupon_description_dialog);
+			dialog.setContentView(R.layout.dialog_custom_one_button);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -395,8 +394,8 @@ public class AccountActivity extends Activity{
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
 			
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
@@ -405,10 +404,7 @@ public class AccountActivity extends Activity{
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
-			textHead.setText("");
 			textMessage.setText(message);
-			
-			textHead.setVisibility(View.GONE);
 			
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 			
@@ -417,7 +413,19 @@ public class AccountActivity extends Activity{
 				public void onClick(View view) {
 					dialog.dismiss();
 				}
-				
+			});
+			
+			frameLayout.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+			});
+			
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+				}
 			});
 
 			dialog.show();

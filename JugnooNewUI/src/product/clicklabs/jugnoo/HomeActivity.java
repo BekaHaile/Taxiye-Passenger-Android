@@ -1099,9 +1099,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				Intent callIntent = new Intent(Intent.ACTION_VIEW);
-		        callIntent.setData(Uri.parse("tel:"+Data.assignedDriverInfo.phoneNumber));
-		        startActivity(callIntent);
+		        Utils.openCallIntent(HomeActivity.this, Data.assignedDriverInfo.phoneNumber);
 		        FlurryEventLogger.callDriverPressed(Data.userData.accessToken, Data.assignedDriverInfo.userId, 
 		        		Data.assignedDriverInfo.phoneNumber);
 			}
@@ -5614,7 +5612,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			noDriversDialog.setContentView(R.layout.no_driver_dialog);
+			noDriversDialog.setContentView(R.layout.dialog_custom_one_button);
 
 			FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -5628,6 +5626,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
 			textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 			textHead.setVisibility(View.GONE);
+			
 			TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
 			textMessage.setTypeface(Data.latoRegular(activity));
 
@@ -5671,8 +5670,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				@Override
 				public void onClick(View v) {
-					noDriversDialog.dismiss();
-					noDriversDialog = null;
 				}
 			});
 
@@ -5740,7 +5737,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.custom_two_btn_dialog);
+			dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -5748,8 +5745,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
 			
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
@@ -5778,6 +5775,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					dialog.dismiss();
 				}
 				
+			});
+			
+			frameLayout.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+			});
+			
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+				}
 			});
 
 			dialog.show();
@@ -6446,7 +6456,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.custom_two_btn_dialog);
+			dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -6454,8 +6464,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
 			
 			
 			
@@ -6500,7 +6510,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				public void onClick(View view) {
 					dialog.dismiss();
 				}
-				
+			});
+			
+			frameLayout.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+			});
+			
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+				}
 			});
 
 			dialog.show();
@@ -6517,7 +6539,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.custom_two_btn_dialog);
+				dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, true);
@@ -6525,8 +6547,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 				layoutParams.dimAmount = 0.6f;
 				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(false);
-				dialog.setCanceledOnTouchOutside(false);
+				dialog.setCancelable(true);
+				dialog.setCanceledOnTouchOutside(true);
 				
 				
 				
@@ -6578,6 +6600,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					
 				});
+				
+				frameLayout.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+				});
+				
+				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+					}
+				});
 
 				dialog.show();
 			} catch (Exception e) {
@@ -6590,7 +6625,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				try {
 					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 					dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-					dialog.setContentView(R.layout.custom_two_btn_dialog);
+					dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 					FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 					new ASSL(activity, frameLayout, 1134, 720, true);
@@ -6598,8 +6633,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 					layoutParams.dimAmount = 0.6f;
 					dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-					dialog.setCancelable(false);
-					dialog.setCanceledOnTouchOutside(false);
+					dialog.setCancelable(true);
+					dialog.setCanceledOnTouchOutside(true);
 					
 					
 					
@@ -6631,6 +6666,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						}
 						
 					});
+					
+					frameLayout.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							dialog.dismiss();
+						}
+					});
+					
+					dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+						}
+					});
 
 					dialog.show();
 				} catch (Exception e) {
@@ -6648,7 +6696,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.custom_two_btn_dialog_with_title);
+				dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, false);
@@ -6656,8 +6704,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 				layoutParams.dimAmount = 0.6f;
 				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(false);
-				dialog.setCanceledOnTouchOutside(false);
+				dialog.setCancelable(true);
+				dialog.setCanceledOnTouchOutside(true);
 				
 				
 				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
@@ -6672,8 +6720,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("RATE NOW");
 				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity)); btnCancel.setText("LATER");
-				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn);
-				crossbtn.setVisibility(View.GONE);
 				
 				btnOk.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -6693,7 +6739,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 				});
 				
-				dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {
@@ -6721,7 +6767,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.edittext_confirm_dialog);
+				dialog.setContentView(R.layout.dialog_edittext_confirm);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, true);
@@ -6813,7 +6859,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.custom_two_btn_dialog);
+				dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, true);
@@ -6821,8 +6867,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 				layoutParams.dimAmount = 0.6f;
 				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(false);
-				dialog.setCanceledOnTouchOutside(false);
+				dialog.setCancelable(true);
+				dialog.setCanceledOnTouchOutside(true);
 				
 				
 				
@@ -6846,9 +6892,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 				btnCancel.setText("DEBUG");
 				
-				Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.latoRegular(activity));
-				crossbtn.setVisibility(View.VISIBLE);
-				
 				
 				btnOk.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -6869,12 +6912,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					
 				});
 				
-				crossbtn.setOnClickListener(new View.OnClickListener() {
+				frameLayout.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
 						dialog.dismiss();
 					}
-					
+				});
+				
+				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+					}
 				});
 				
 
@@ -6891,7 +6939,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.custom_two_btn_dialog);
+				dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, true);
@@ -6899,8 +6947,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 				layoutParams.dimAmount = 0.6f;
 				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(false);
-				dialog.setCanceledOnTouchOutside(false);
+				dialog.setCancelable(true);
+				dialog.setCanceledOnTouchOutside(true);
 				
 				
 				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
@@ -6931,6 +6979,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						dialog.dismiss();
 					}
 					
+				});
+				
+				frameLayout.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+				});
+				
+				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+					}
 				});
 
 				dialog.show();

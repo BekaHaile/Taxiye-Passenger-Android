@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.Dialog;
@@ -29,7 +30,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -66,9 +66,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	ProgressBar progressBar;
 	
+	RelativeLayout relativeLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
 	
-	boolean loginDataFetched = false, loginFailed = false, resumed = false;
+	LinearLayout linearLayoutNoNet;
+	TextView textViewNoNet;
+	Button buttonNoNetCall;
+	
+	boolean loginDataFetched = false, resumed = false;
 	
 	// *****************************Used for flurry work***************//
 	@Override
@@ -163,7 +168,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		
 		loginDataFetched = false;
-		loginFailed = false;
 		resumed = false;
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
@@ -175,11 +179,18 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		progressBar.setVisibility(View.GONE);
 		
+		relativeLayoutLoginSignupButtons = (RelativeLayout) findViewById(R.id.relativeLayoutLoginSignupButtons);
 		buttonLogin = (Button) findViewById(R.id.buttonLogin); buttonLogin.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		buttonRegister = (Button) findViewById(R.id.buttonRegister); buttonRegister.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
 		
-		buttonLogin.setVisibility(View.GONE);
-		buttonRegister.setVisibility(View.GONE);
+		linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
+		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet); textViewNoNet.setTypeface(Data.latoRegular(this));
+		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall); buttonNoNetCall.setTypeface(Data.latoRegular(this));
+		
+		
+		
+		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
+		linearLayoutNoNet.setVisibility(View.GONE);
 		
 		
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -200,6 +211,24 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				startActivity(new Intent(SplashNewActivity.this, RegisterScreen.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+		
+		buttonNoNetCall.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Utils.openCallIntent(SplashNewActivity.this, Data.SUPPORT_NUMBER);
+			}
+		});
+		
+		imageViewJugnooLogo.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(!loginDataFetched){
+					getDeviceToken();
+				}
 			}
 		});
 		
@@ -237,13 +266,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 	    
 	    
-	    
-		noNetFirstTime = false;
-		noNetSecondTime = false;
-	    
 		if(getIntent().hasExtra("no_anim")){
 			imageViewJugnooLogo.clearAnimation();
-			noNetFirstTime = true;
 			getDeviceToken();
 		}
 		else{
@@ -255,21 +279,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			imageViewJugnooLogo.startAnimation(animation);
 		}
 		
-		
-		
-		
-		
-		imageViewJugnooLogo.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(!loginDataFetched){
-					noNetFirstTime = false;
-					noNetSecondTime = false;
-					getDeviceToken();
-				}
-			}
-		});
 		
 		
 	    
@@ -287,7 +296,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					public void run() {
 						Data.deviceToken = regId;
 						Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
-						callFirstAttempt();
+						accessTokenLogin(SplashNewActivity.this);
 						progressBar.setVisibility(View.GONE);
 					}
 				});
@@ -331,6 +340,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	}
 	
 	
+	
 	@Override
 	protected void onPause() {
 		try{
@@ -342,39 +352,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		super.onPause();
 	}
 	
-	
-	
-	
-	
-	
-	boolean noNetFirstTime = false, noNetSecondTime = false;
-	
-	Handler checkNetHandler = new Handler();
-	Runnable checkNetRunnable = new Runnable() {
-		
-		@Override
-		public void run() {
-			
-			runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					
-					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-						noNetSecondTime = false;
-					    accessTokenLogin(SplashNewActivity.this);
-					    FlurryEventLogger.appStarted(Data.deviceToken);
-					}
-					else{
-						new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
-						noNetSecondTime = true;
-					}
-					
-				}
-			});
-			
-		}
-	};
 	
 	
 	
@@ -393,7 +370,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		public void onAnimationEnd(Animation animation) {
 			Log.i("onAnimationStart", "onAnimationStart");
 			imageViewJugnooLogo.clearAnimation();
-			noNetFirstTime = true;
 			getDeviceToken();
 		}
 
@@ -405,20 +381,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	
 	
-	public void callFirstAttempt(){
-		runOnUiThread(new Runnable() {
-		@Override
-		public void run() {
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				noNetFirstTime = false;
-			    accessTokenLogin(SplashNewActivity.this);
-			}
-			else{
-				new DialogPopup().alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
-			}
-		}
-		});
-	}
 	
 	
 	/**
@@ -428,10 +390,12 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
 		
+		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
+		linearLayoutNoNet.setVisibility(View.GONE);
+		
 		if(!"".equalsIgnoreCase(pair.first)){
 			String accessToken = pair.first;
-			buttonLogin.setVisibility(View.GONE);
-			buttonRegister.setVisibility(View.GONE);
+			
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
 				DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -531,12 +495,11 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 						});
 			}
 			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				linearLayoutNoNet.setVisibility(View.VISIBLE);
 			}
 		}
 		else{
-			buttonLogin.setVisibility(View.VISIBLE);
-			buttonRegister.setVisibility(View.VISIBLE);
+			relativeLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 		}
 
 	}
@@ -571,8 +534,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			}
 			else{
-				noNetFirstTime = false;
-				noNetSecondTime = false;
 				loginDataFetched = true;
 			}
 			DialogPopup.dismissLoadingDialog();
@@ -626,7 +587,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.app_update_dialog);
+			dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, false);
@@ -640,6 +601,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+			textHead.setVisibility(View.VISIBLE);
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -713,23 +675,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 		
-		if(hasFocus && noNetFirstTime){
-			noNetFirstTime = false;
-			checkNetHandler.postDelayed(checkNetRunnable, 4000);
-		}
-		else if(hasFocus && noNetSecondTime){
-			noNetSecondTime = false;
-			finish();
-		}
-		else if(hasFocus && loginDataFetched){
+		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
 			startActivity(new Intent(SplashNewActivity.this, HomeActivity.class));
-			finish();
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		}
-		else if(hasFocus && loginFailed){
-			loginFailed = false;
-			startActivity(new Intent(SplashNewActivity.this, SplashLogin.class));
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
@@ -751,7 +699,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.customer_app_dialog);
+			dialog.setContentView(R.layout.dialog_custom_one_button);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, false);
@@ -765,7 +713,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-
+			textHead.setVisibility(View.VISIBLE);
+			
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
 			
@@ -782,7 +731,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				}
 			});
 			
-			dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 				}
@@ -812,7 +761,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			try {
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.edittext_confirm_dialog);
+				dialog.setContentView(R.layout.dialog_edittext_confirm);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, true);
@@ -907,7 +856,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				try {
 					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 					dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-					dialog.setContentView(R.layout.custom_three_btn_dialog);
+					dialog.setContentView(R.layout.dialog_custom_three_buttons);
 
 					FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 					new ASSL(activity, frameLayout, 1134, 720, true);
@@ -915,8 +864,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 					layoutParams.dimAmount = 0.6f;
 					dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-					dialog.setCancelable(false);
-					dialog.setCanceledOnTouchOutside(false);
+					dialog.setCancelable(true);
+					dialog.setCanceledOnTouchOutside(true);
 					
 					
 					frameLayout.setOnClickListener(new View.OnClickListener() {
@@ -964,9 +913,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 					btnCancel.setText("SALES");
 					
-					Button crossbtn = (Button) dialog.findViewById(R.id.crossbtn); crossbtn.setTypeface(Data.latoRegular(activity));
-					crossbtn.setVisibility(View.VISIBLE);
-					
 					
 					btnOk.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -1011,13 +957,21 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 						}
 					});
 
-					
-					crossbtn.setOnClickListener(new View.OnClickListener() {
+					dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+						
 						@Override
-						public void onClick(View view) {
+						public void onClick(View v) {
+						}
+					});
+
+					frameLayout.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
 							dialog.dismiss();
 						}
 					});
+					
 					
 					
 					dialog.show();
