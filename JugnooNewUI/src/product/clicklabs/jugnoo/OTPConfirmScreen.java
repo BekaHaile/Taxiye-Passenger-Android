@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -36,10 +37,13 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	ImageView imageViewBack;
 	TextView textViewTitle;
 	
-	TextView otpHelpText, weWillCallText;
-	
+	TextView otpHelpText;
 	EditText editTextOTP;
-	Button buttonVerify, callMeBtn;
+	Button buttonVerify;
+	
+	RelativeLayout relativeLayoutOTPThroughCall;
+	TextView textViewOTPNotReceived, textViewCallMe;
+	
 	
 	LinearLayout relative;
 	
@@ -78,12 +82,14 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		
 		otpHelpText = (TextView) findViewById(R.id.otpHelpText); otpHelpText.setTypeface(Data.latoRegular(this));
-		weWillCallText = (TextView) findViewById(R.id.weWillCallText); weWillCallText.setTypeface(Data.latoRegular(this));
 		
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Data.latoRegular(this));
 		
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Data.latoRegular(this));
-		callMeBtn = (Button) findViewById(R.id.callMeBtn); callMeBtn.setTypeface(Data.latoRegular(this));
+		
+		relativeLayoutOTPThroughCall = (RelativeLayout) findViewById(R.id.relativeLayoutOTPThroughCall);
+		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Data.latoLight(this));
+		textViewCallMe = (TextView) findViewById(R.id.textViewCallMe); textViewCallMe.setTypeface(Data.latoLight(this), Typeface.BOLD);
 		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +152,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		});
 		
 		
-		callMeBtn.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutOTPThroughCall.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
