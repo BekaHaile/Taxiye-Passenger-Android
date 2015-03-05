@@ -134,30 +134,38 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	LinearLayout linearLayoutProfile;
+	ImageView imageViewProfile;
+	TextView textViewUserName, textViewViewAccount;
 	
-	ImageView profileImg;
-	TextView userName;
+	RelativeLayout relativeLayoutGetRide;
+	TextView textViewGetRide;
 	
-	RelativeLayout inviteFriendRl;
-	TextView inviteFriendText;
+	RelativeLayout relativeLayoutInvite;
+	TextView textViewInvite;
 	
-	RelativeLayout couponsRl;
-	TextView couponsText;
+	RelativeLayout relativeLayoutJugnooCash;
+	TextView textViewJugnooCash, textViewJugnooCashValue;
 	
-	RelativeLayout walletRl;
-	TextView walletText, textViewJugnooBalance;
+	RelativeLayout relativeLayoutPromotions;
+	TextView textViewPromotions;
 	
-	RelativeLayout bookingsRl;
-	TextView bookingsText;
+	RelativeLayout relativeLayoutFareDetails;
+	TextView textViewFareDetails;
 	
-	RelativeLayout fareDetailsRl;
-	TextView fareDetailsText;
+	RelativeLayout relativeLayoutSupport;
+	TextView textViewSupport;
 	
-	RelativeLayout helpRl;
-	TextView helpText;
+	RelativeLayout relativeLayoutAbout;
+	TextView textViewAbout;
 	
-	RelativeLayout logoutRl;
-	TextView logoutText;
+	
+	
+	
+	
+	
+	
+
 	
 	
 	
@@ -459,32 +467,39 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		linearLayoutProfile = (LinearLayout) findViewById(R.id.linearLayoutProfile);
+		imageViewProfile = (ImageView) findViewById(R.id.imageViewProfile);
+		textViewUserName = (TextView) findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Data.latoRegular(this));
+		textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Data.latoLight(this));
+		
+		relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
+		textViewGetRide = (TextView) findViewById(R.id.textViewGetRide); textViewGetRide.setTypeface(Data.latoRegular(this));
+		
+		relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
+		textViewInvite = (TextView) findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Data.latoRegular(this));
+		
+		relativeLayoutJugnooCash = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooCash);
+		textViewJugnooCash = (TextView) findViewById(R.id.textViewJugnooCash); textViewJugnooCash.setTypeface(Data.latoRegular(this));
+		textViewJugnooCashValue = (TextView) findViewById(R.id.textViewJugnooCashValue); textViewJugnooCashValue.setTypeface(Data.latoRegular(this));
+
+		relativeLayoutPromotions = (RelativeLayout) findViewById(R.id.relativeLayoutPromotions);
+		textViewPromotions = (TextView) findViewById(R.id.textViewPromotions); textViewPromotions.setTypeface(Data.latoRegular(this));
+
+		relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails);
+		textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails); textViewFareDetails.setTypeface(Data.latoRegular(this));
+
+		relativeLayoutSupport = (RelativeLayout) findViewById(R.id.relativeLayoutSupport);
+		textViewSupport = (TextView) findViewById(R.id.textViewSupport); textViewSupport.setTypeface(Data.latoRegular(this));
+
+		relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
+		textViewAbout = (TextView) findViewById(R.id.textViewAbout); textViewAbout.setTypeface(Data.latoRegular(this));
 		
 		
-		profileImg = (ImageView) findViewById(R.id.profileImg);
-		userName = (TextView) findViewById(R.id.userName); userName.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		inviteFriendRl = (RelativeLayout) findViewById(R.id.inviteFriendRl);
-		inviteFriendText = (TextView) findViewById(R.id.inviteFriendText); inviteFriendText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		couponsRl = (RelativeLayout) findViewById(R.id.couponsRl);
-		couponsText = (TextView) findViewById(R.id.couponsText); couponsText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		walletRl = (RelativeLayout) findViewById(R.id.walletRl);
-		walletText = (TextView) findViewById(R.id.walletText); walletText.setTypeface(Data.latoRegular(getApplicationContext()));
-		textViewJugnooBalance = (TextView) findViewById(R.id.textViewJugnooBalance); textViewJugnooBalance.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		bookingsRl = (RelativeLayout) findViewById(R.id.bookingsRl);
-		bookingsText = (TextView) findViewById(R.id.bookingsText); bookingsText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		fareDetailsRl = (RelativeLayout) findViewById(R.id.fareDetailsRl);
-		fareDetailsText = (TextView) findViewById(R.id.fareDetailsText); fareDetailsText.setTypeface(Data.latoRegular(getApplicationContext()));
-		
-		helpRl = (RelativeLayout) findViewById(R.id.helpRl);
-		helpText = (TextView) findViewById(R.id.helpText); helpText.setTypeface(Data.latoRegular(getApplicationContext()));
-		
-		logoutRl = (RelativeLayout) findViewById(R.id.logoutRl);
-		logoutText = (TextView) findViewById(R.id.logoutText); logoutText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		
@@ -872,7 +887,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		// menu events\
 		
-		inviteFriendRl.setOnClickListener(new View.OnClickListener() {
+		linearLayoutProfile.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+		relativeLayoutGetRide.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				drawerLayout.closeDrawer(menuLayout);
+			}
+		});
+
+		relativeLayoutInvite.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -881,19 +912,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
 			}
 		});
-		
-		couponsRl.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
-			}
-		});
-		
-		
-		walletRl.setOnClickListener(new View.OnClickListener() {
+
+		relativeLayoutJugnooCash.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -902,18 +922,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
 			}
 		});
-		
-		
-		fareDetailsRl.setOnClickListener(new View.OnClickListener() {
+
+		relativeLayoutPromotions.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
+			}
+		});
+
+		relativeLayoutFareDetails.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				sendToFareDetails();
 			}
 		});
-		
-		
-		helpRl.setOnClickListener(new View.OnClickListener() {
+
+		relativeLayoutSupport.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -922,40 +950,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
 			}
 		});
-		
-		
-		
-		
-		bookingsRl.setOnClickListener(new View.OnClickListener() {
+
+		relativeLayoutAbout.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if(userMode == UserMode.PASSENGER){
-					startActivity(new Intent(HomeActivity.this, RidesActivity.class));
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				}
-				FlurryEventLogger.rideScreenOpened(Data.userData.accessToken);
-			}
-		});
-		
-		
-		
-		
-		
-		
-		logoutRl.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_INITIAL)) 
-						|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_INITIAL))){
-					logoutPopup(HomeActivity.this);
-					FlurryEventLogger.logoutPressed(Data.userData.accessToken);
-				}
-				else{
-					new DialogPopup().alertPopup(activity, "", "Ride in progress. You can logout only after the ride ends.");
-					FlurryEventLogger.logoutPressedBetweenRide(Data.userData.accessToken);
-				}
+				
 			}
 		});
 		
@@ -1694,8 +1694,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			changeJugnooONUI(Data.userData.isAvailable);
 			
-			changeExceptionalDriverUI();
-			
 			Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
 			
 		} catch (Exception e) {
@@ -2006,14 +2004,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void changeExceptionalDriverUI(){
-		if(Data.userData.exceptionalDriver == 1){
-			logoutRl.setVisibility(View.GONE);
-		}
-		else{
-			logoutRl.setVisibility(View.VISIBLE);
-		}
-	}
 	
 	
 	
@@ -2072,12 +2062,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void setUserData(){
 		try{
-			userName.setText(Data.userData.userName);
+			textViewUserName.setText(Data.userData.userName);
 			
-			textViewJugnooBalance.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDecimal.format(Data.userData.jugnooBalance));
+			textViewJugnooCashValue.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDecimal.format(Data.userData.jugnooBalance));
 			
 			Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(profileImg);}catch(Exception e){}
+			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewProfile);}catch(Exception e){}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -2112,9 +2102,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				passengerMainLayout.setVisibility(View.GONE);
 				driverMainLayout.setVisibility(View.VISIBLE);
 				
-				couponsRl.setVisibility(View.GONE);
-				
-//				favBtn.setVisibility(View.GONE);
+				relativeLayoutPromotions.setVisibility(View.GONE);
 				
 				break;
 			
@@ -2128,9 +2116,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				passengerMainLayout.setVisibility(View.VISIBLE);
 				driverMainLayout.setVisibility(View.GONE);
 				
-				couponsRl.setVisibility(View.VISIBLE);
-				
-//				favBtn.setVisibility(View.VISIBLE);
+				relativeLayoutPromotions.setVisibility(View.VISIBLE);
 				
 				break;
 			
@@ -4170,8 +4156,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											Data.userData.exceptionalDriver = 0;
 											e.printStackTrace();
 										}
-										
-										changeExceptionalDriverUI();
 										
 										userMode = UserMode.DRIVER;
 										
