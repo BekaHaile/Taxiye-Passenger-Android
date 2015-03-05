@@ -56,7 +56,7 @@
             android:layout_marginTop="0px"
             android:divider="@color/white"
             android:dividerHeight="10px"
-            android:listSelector="@drawable/transparent"
+            android:listSelector="@drawable/background_transparent"
             android:splitMotionEvents="false" >
         </ListView>
 
@@ -113,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="34px"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:text="CHECKOUT"
                         android:singleLine="true"
                         android:layout_centerInParent="true"

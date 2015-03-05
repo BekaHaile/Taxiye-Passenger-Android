@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -95,7 +96,10 @@ public class SupportActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				
+				Intent intent = new Intent(SupportActivity.this, FeedbackActivity.class);
+				intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.SUPPORT.getOrdinal());
+				startActivity(intent);
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		

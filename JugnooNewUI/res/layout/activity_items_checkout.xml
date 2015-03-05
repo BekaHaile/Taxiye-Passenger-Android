@@ -65,7 +65,7 @@
                     android:layout_height="50px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10px"
-                    android:background="@drawable/transparent"
+                    android:background="@drawable/background_transparent"
                     android:capitalize="words"
                     android:gravity="center_vertical"
                     android:hint="Name"
@@ -97,7 +97,7 @@
                     android:layout_height="50px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10px"
-                    android:background="@drawable/transparent"
+                    android:background="@drawable/background_transparent"
                     android:gravity="center_vertical"
                     android:hint="Contact number"
                     android:inputType="phone"
@@ -146,7 +146,7 @@
                     android:layout_height="50px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10px"
-                    android:background="@drawable/transparent"
+                    android:background="@drawable/background_transparent"
                     android:gravity="center_vertical"
                     android:hint="Address Line 1"
                     android:singleLine="true"
@@ -159,7 +159,7 @@
                     android:layout_height="50px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10px"
-                    android:background="@drawable/transparent"
+                    android:background="@drawable/background_transparent"
                     android:gravity="center_vertical"
                     android:hint="Address Line 2"
                     android:singleLine="true"
@@ -218,7 +218,7 @@
                     android:layout_marginTop="10px"
                     android:divider="@color/transparent"
                     android:dividerHeight="10px"
-                    android:listSelector="@drawable/transparent"
+                    android:listSelector="@drawable/background_transparent"
                     android:splitMotionEvents="false" >
                 </ListView>
 
@@ -281,7 +281,7 @@
             android:layout_centerInParent="true"
             android:singleLine="true"
             android:text="CONTINUE"
-            android:textColor="@drawable/white_color_selector"
+            android:textColor="@drawable/text_color_white_dark_selector"
             android:textSize="34px" />
     </RelativeLayout>
 

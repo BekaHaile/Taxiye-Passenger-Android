@@ -8061,7 +8061,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 
 	
-	
+	@Override
+	public void onAfterRideFeedbackSubmitted(final int givenRating) {
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				userMode = UserMode.PASSENGER;
+				
+				switchUserScreen(userMode);
+				
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+				
+				if(givenRating >= 4 && Data.customerRateAppFlag == 1){
+					rateAppPopup(activity);
+				}
+			}
+		});
+		
+	}
 	
 	
 	

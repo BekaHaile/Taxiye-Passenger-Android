@@ -60,14 +60,14 @@
                 android:background="@drawable/orange_bg_selector"
                 android:singleLine="true"
                 android:text="AGREE"
-                android:textColor="@drawable/white_color_selector"
+                android:textColor="@drawable/text_color_white_dark_selector"
                 android:textSize="34px" />
 
             <Button
                 android:id="@+id/buttonDisagree"
                 android:layout_width="360px"
                 android:layout_height="match_parent"
-                android:background="@drawable/white_bg_selector"
+                android:background="@drawable/background_white_selector"
                 android:singleLine="true"
                 android:text="DISAGREE"
                 android:textColor="@drawable/black_color_selector"

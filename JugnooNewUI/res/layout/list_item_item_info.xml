@@ -47,7 +47,7 @@
                         android:layout_width="450px"
                         android:layout_height="wrap_content"
                         android:textSize="34px"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:text="Pineapple"
                         android:singleLine="true"
                         />
@@ -57,7 +57,7 @@
                         android:layout_width="450px"
                         android:layout_height="wrap_content"
                         android:textSize="30px"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:text="Rs. 0"
                         android:singleLine="true"
                         />

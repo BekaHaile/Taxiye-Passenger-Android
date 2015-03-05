@@ -103,7 +103,7 @@
                     android:tag="mwar"
                     android:layout_marginTop="60px"
                     android:textSize="34px"
-                    android:textColor="@drawable/white_color_selector"
+                    android:textColor="@drawable/text_color_white_dark_selector"
                     android:text="ADD TO CART"
                     
                     

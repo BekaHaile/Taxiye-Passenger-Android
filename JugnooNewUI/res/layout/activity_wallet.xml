@@ -97,7 +97,7 @@
             android:layout_marginTop="50px"
             android:background="@drawable/blue_btn_selector"
             android:text="Add Payment"
-            android:textColor="@drawable/white_color_selector"
+            android:textColor="@drawable/text_color_white_dark_selector"
             android:textSize="@dimen/button_text_size" />
 
         <TextView
@@ -125,9 +125,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0px"
-            android:divider="@drawable/transparent"
+            android:divider="@drawable/background_transparent"
             android:dividerHeight="0px"
-            android:listSelector="@drawable/transparent"
+            android:listSelector="@drawable/background_transparent"
             android:splitMotionEvents="false" >
         </ListView>
 

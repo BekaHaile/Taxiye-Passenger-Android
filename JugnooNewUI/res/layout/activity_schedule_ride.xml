@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="40px"
-                android:background="@drawable/white_bg_bordered"
+                android:background="@drawable/background_white_bordered"
                 android:orientation="vertical"
                 android:splitMotionEvents="false" >
 
@@ -153,7 +153,7 @@
                     android:layout_marginTop="40px"
                     android:background="@drawable/blue_btn_selector"
                     android:text="SCHEDULE"
-                    android:textColor="@drawable/white_color_selector"
+                    android:textColor="@drawable/text_color_white_dark_selector"
                     android:textSize="@dimen/button_text_size" />
                 
                 <TextView
@@ -200,7 +200,7 @@
                 android:layout_marginBottom="40px"
                 android:background="@drawable/blue_btn_selector"
                 android:text="PICK THIS LOCATION"
-                android:textColor="@drawable/white_color_selector"
+                android:textColor="@drawable/text_color_white_dark_selector"
                 android:textSize="@dimen/button_text_size" />
 
             <ImageView
@@ -236,9 +236,9 @@
                     android:id="@+id/searchListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-			        android:divider="@drawable/transparent"
+			        android:divider="@drawable/background_transparent"
 			        android:dividerHeight="0px"
-			        android:listSelector="@drawable/transparent"
+			        android:listSelector="@drawable/background_transparent"
 			        android:splitMotionEvents="false"
 			        android:layout_marginTop="150px"
                     ></ListView>
@@ -261,7 +261,7 @@
                         android:layout_marginLeft="20px"
                         android:layout_marginRight="0px"
                         android:layout_toLeftOf="@+id/searchBtn"
-                        android:background="@drawable/transparent"
+                        android:background="@drawable/background_transparent"
                         android:textColor="@color/black"
                         android:gravity="center_vertical"
                         android:hint="Search Place"
@@ -329,8 +329,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10px"
             android:text="Cancel"
-            android:background="@drawable/transparent"
-            android:textColor="@drawable/white_color_selector"
+            android:background="@drawable/background_transparent"
+            android:textColor="@drawable/text_color_white_dark_selector"
             android:textSize="@dimen/button_text_size"
              />
             

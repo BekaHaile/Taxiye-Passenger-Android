@@ -27,5 +27,6 @@ public interface AppInterruptHandler {
 	
 	public void customerEndRideInterrupt(JSONObject jObj);
 	
+	public void onAfterRideFeedbackSubmitted(int givenRating);
 	
 }

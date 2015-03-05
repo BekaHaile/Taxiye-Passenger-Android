@@ -84,7 +84,7 @@
                         android:layout_marginBottom="146px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="@string/request_ride"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:textSize="@dimen/button_text_size" />
 
                     <Button
@@ -96,7 +96,7 @@
                         android:layout_marginBottom="27px"
                         android:background="@drawable/red_btn_selector"
                         android:text="@string/cancel_request"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:textSize="@dimen/button_text_size"
                         android:visibility="gone" />
 
@@ -195,7 +195,7 @@
                                 android:layout_width="205px"
                                 android:layout_height="205px"
                                 android:layout_centerInParent="true"
-                                android:background="@drawable/transparent"
+                                android:background="@drawable/background_transparent"
                                 android:scaleType="centerCrop"
                                 android:tag="mwar" />
                         </RelativeLayout>
@@ -236,7 +236,7 @@
                                 android:layout_height="165px"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="10px"
-                                android:background="@drawable/transparent"
+                                android:background="@drawable/background_transparent"
                                 android:scaleType="centerCrop"
                                 android:tag="mwar" />
 
@@ -284,7 +284,7 @@
                         android:layout_marginBottom="27px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="@string/call_driver"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:textSize="@dimen/button_text_size" />
 
                     <ImageView
@@ -516,7 +516,7 @@
                         android:layout_marginBottom="10px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="Submit"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:textSize="@dimen/button_text_size" />
 
                     <Button
@@ -526,7 +526,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="10px"
-                        android:background="@drawable/transparent"
+                        android:background="@drawable/background_transparent"
                         android:text="Skip >>"
                         android:textColor="@drawable/blue_alpha_color_selector"
                         android:textSize="30px" />
@@ -554,7 +554,7 @@
                         android:layout_height="180px"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="90px"
-                        android:background="@drawable/white_bg_bordered"
+                        android:background="@drawable/background_white_bordered"
                         android:gravity="center"
                         android:splitMotionEvents="false"
                         android:visibility="gone" >
@@ -643,7 +643,7 @@
                         android:layout_marginBottom="27px"
                         android:background="@drawable/blue_btn_selector"
                         android:text="@string/accept_ride"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:textSize="@dimen/button_text_size" />
 
                     <Button
@@ -655,7 +655,7 @@
                         android:layout_marginBottom="27px"
                         android:background="@drawable/red_btn_selector"
                         android:text="@string/cancel_ride"
-                        android:textColor="@drawable/white_color_selector"
+                        android:textColor="@drawable/text_color_white_dark_selector"
                         android:textSize="@dimen/button_text_size" />
 
                     <Button
@@ -726,7 +726,7 @@
                                     android:layout_centerVertical="true"
                                     android:layout_marginLeft="115px"
                                     android:text="@string/call"
-                                    android:textColor="@drawable/white_color_selector"
+                                    android:textColor="@drawable/text_color_white_dark_selector"
                                     android:textSize="42px" />
                             </RelativeLayout>
                         </RelativeLayout>
@@ -807,7 +807,7 @@
                             android:layout_marginBottom="27px"
                             android:background="@drawable/blue_btn_selector"
                             android:text="@string/start_ride"
-                            android:textColor="@drawable/white_color_selector"
+                            android:textColor="@drawable/text_color_white_dark_selector"
                             android:textSize="@dimen/button_text_size" />
 
                         <Button
@@ -819,7 +819,7 @@
                             android:layout_marginBottom="27px"
                             android:background="@drawable/red_btn_selector"
                             android:text="@string/cancel_ride"
-                            android:textColor="@drawable/white_color_selector"
+                            android:textColor="@drawable/text_color_white_dark_selector"
                             android:textSize="@dimen/button_text_size" />
                     </RelativeLayout>
 
@@ -957,7 +957,7 @@
                                 android:layout_above="@+id/driverEndRideBtn"
                                 android:layout_marginBottom="20px"
                                 android:layout_marginLeft="40px"
-                                android:background="@drawable/white_bg_rounded_bordered" >
+                                android:background="@drawable/background_white_rounded_bordered" >
 
                                 <TextView
                                     android:id="@+id/driverRideTimeText"
@@ -998,7 +998,7 @@
                                     android:layout_centerHorizontal="true"
                                     android:layout_marginTop="10px"
                                     android:text="@string/start_wait"
-                                    android:textColor="@drawable/white_color_selector"
+                                    android:textColor="@drawable/text_color_white_dark_selector"
                                     android:textSize="30px" />
 
                                 <product.clicklabs.jugnoo.utils.PausableChronometer
@@ -1021,7 +1021,7 @@
                                 android:layout_marginBottom="27px"
                                 android:background="@drawable/red_btn_selector"
                                 android:text="@string/end_ride"
-                                android:textColor="@drawable/white_color_selector"
+                                android:textColor="@drawable/text_color_white_dark_selector"
                                 android:textSize="@dimen/button_text_size" />
 
                             <RelativeLayout
@@ -1513,7 +1513,7 @@
                     android:layout_marginBottom="20px"
                     android:background="@drawable/blue_btn_selector"
                     android:text="@string/submit"
-                    android:textColor="@drawable/white_color_selector"
+                    android:textColor="@drawable/text_color_white_dark_selector"
                     android:textSize="@dimen/button_text_size" />
 
                 <ImageView
@@ -1648,7 +1648,7 @@
                         android:layout_height="82px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="270px"
-                        android:background="@drawable/transparent"
+                        android:background="@drawable/background_transparent"
                         android:longClickable="true" />
 
                     <Button
@@ -1657,7 +1657,7 @@
                         android:layout_height="82px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="370px"
-                        android:background="@drawable/transparent"
+                        android:background="@drawable/background_transparent"
                         android:longClickable="true" />
 
                     <TextView
@@ -1705,7 +1705,7 @@
                         android:layout_height="80px"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="0px"
-                        android:background="@drawable/transparent"
+                        android:background="@drawable/background_transparent"
                         android:tag="mwar" />
                 </LinearLayout>
             </RelativeLayout>

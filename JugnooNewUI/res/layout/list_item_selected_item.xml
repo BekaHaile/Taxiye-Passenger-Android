@@ -3,7 +3,7 @@
     android:id="@+id/relative"
     android:layout_width="660px"
     android:layout_height="wrap_content"
-    android:background="@drawable/transparent"
+    android:background="@drawable/background_transparent"
     android:orientation="vertical"
     android:splitMotionEvents="false" >
 

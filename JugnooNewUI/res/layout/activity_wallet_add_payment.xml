@@ -93,7 +93,7 @@
             android:layout_marginTop="70px"
             android:background="@drawable/blue_btn_selector"
             android:text="Make Payment"
-            android:textColor="@drawable/white_color_selector"
+            android:textColor="@drawable/text_color_white_dark_selector"
             android:textSize="@dimen/button_text_size" />
     </LinearLayout>
 

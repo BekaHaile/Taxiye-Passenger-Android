@@ -16,9 +16,9 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/transparent"
+        android:divider="@drawable/background_transparent"
         android:dividerHeight="0px"
-        android:listSelector="@drawable/transparent"
+        android:listSelector="@drawable/background_transparent"
         android:splitMotionEvents="false" >
     </ListView>
     
