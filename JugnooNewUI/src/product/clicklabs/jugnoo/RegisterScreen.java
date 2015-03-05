@@ -601,7 +601,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -616,11 +616,11 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										int flag = jObj.getInt("flag");
 										if(ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag){
 											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
+											DialogPopup.alertPopup(activity, "", error);
 										}
 										else if(ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag){
 											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
+											DialogPopup.alertPopup(activity, "", error);
 										}
 										else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 											RegisterScreen.this.name = name;
@@ -632,7 +632,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 											otpFlag = 0;
 										}
 										else{
-											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 										}
 										DialogPopup.dismissLoadingDialog();
 									}
@@ -642,14 +642,14 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -724,7 +724,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -739,11 +739,11 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 										int flag = jObj.getInt("flag");
 										if(ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag){
 											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
+											DialogPopup.alertPopup(activity, "", error);
 										}
 										else if(ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag){
 											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
+											DialogPopup.alertPopup(activity, "", error);
 										}
 										else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 											RegisterScreen.this.phoneNo = jObj.getString("phone_no");
@@ -761,13 +761,13 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}

@@ -376,10 +376,10 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if(resp != ConnectionResult.SUCCESS){
 			Log.e("Google Play Service Error ","="+resp);
-			new DialogPopup().showGooglePlayErrorAlert(SplashLogin.this);
+			DialogPopup.showGooglePlayErrorAlert(SplashLogin.this);
 		}
 		else{
-			new DialogPopup().showLocationSettingsAlert(SplashLogin.this);
+			DialogPopup.showLocationSettingsAlert(SplashLogin.this);
 		}
 		
 		HomeActivity.checkForAccessTokenChange(this);
@@ -474,7 +474,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 
@@ -490,11 +490,11 @@ public class SplashLogin extends Activity implements LocationUpdate{
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", error);
+										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", error);
+										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 										enteredEmail = emailId;
@@ -512,7 +512,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 										}
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -522,14 +522,14 @@ public class SplashLogin extends Activity implements LocationUpdate{
 								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -601,7 +601,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -621,7 +621,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 									}
 									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", error);
+										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
@@ -639,7 +639,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 										}
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -649,7 +649,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 	
@@ -657,7 +657,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -671,7 +671,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	 *  flag 0 for email, 1 for Facebook
 	 */
 	public void sendIntentToOtpScreen(){
-		new DialogPopup().alertPopupWithListener(SplashLogin.this, "", otpErrorMsg, new View.OnClickListener() {
+		DialogPopup.alertPopupWithListener(SplashLogin.this, "", otpErrorMsg, new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -697,7 +697,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	
 	
 	public void sendIntentToRegisterScreen(){
-		new DialogPopup().alertPopupWithListener(this, "", notRegisteredMsg, new View.OnClickListener() {
+		DialogPopup.alertPopupWithListener(this, "", notRegisteredMsg, new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

@@ -18,17 +18,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class DialogPopup {
 
 	
 	
-	public DialogPopup(){
-	}
-	
-	Dialog dialog;
-	public void alertPopup(Activity activity, String title, String message) {
+	public static Dialog dialog;
+	public static void alertPopup(Activity activity, String title, String message) {
 		try {
 			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
@@ -91,7 +89,7 @@ public class DialogPopup {
 		}
 	}
 	
-	public void dismissAlertPopup(){
+	public static void dismissAlertPopup(){
 		try{
 			if(dialog != null && dialog.isShowing()){
 				dialog.dismiss();
@@ -100,7 +98,7 @@ public class DialogPopup {
 		}
 	}
 	
-	public void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
+	public static void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
 		try {
 			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
@@ -163,6 +161,43 @@ public class DialogPopup {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	
+	public static void dialogBanner(Activity activity, String message) {
+		try {
+			dismissAlertPopup();
+			
+			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.dialog_banner);
+
+			LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, linearLayout, 1134, 720, false);
+			
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
+			
+			TextView textViewBanner = (TextView) dialog.findViewById(R.id.textViewBanner); textViewBanner.setTypeface(Data.latoRegular(activity));
+			textViewBanner.setText(message);
+
+			linearLayout.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	
 	
@@ -233,12 +268,12 @@ public class DialogPopup {
 	
 	
 	
-	AlertDialog googlePlayAlertDialog;
+	public static AlertDialog googlePlayAlertDialog;
 	/**
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
-	public void showGooglePlayErrorAlert(final Activity mContext){
+	public static void showGooglePlayErrorAlert(final Activity mContext){
 		try{
 			if(googlePlayAlertDialog != null && googlePlayAlertDialog.isShowing()){
 				googlePlayAlertDialog.dismiss();
@@ -288,12 +323,12 @@ public class DialogPopup {
 	
 	
 	
-	AlertDialog locationAlertDialog;
+	public static AlertDialog locationAlertDialog;
 	/**
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
-	public void showLocationSettingsAlert(final Context mContext){
+	public static void showLocationSettingsAlert(final Context mContext){
 		try{
 			if(!((LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 					&&

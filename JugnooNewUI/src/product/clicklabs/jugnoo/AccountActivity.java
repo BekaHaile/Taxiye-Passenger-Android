@@ -584,7 +584,7 @@ public class AccountActivity extends Activity{
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							}
 							
 	
@@ -598,20 +598,20 @@ public class AccountActivity extends Activity{
 										if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
 											HomeActivity.logoutUser(activity);
 										} else {
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+											DialogPopup.alertPopup(activity, "", errorMessage);
 										}
 									} else {
 										int flag = jObj.getInt("flag");
 										if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
 											String message = jObj.getString("message");
-											new DialogPopup().alertPopup(activity, "", message);
+											DialogPopup.alertPopup(activity, "", message);
 											getAccountInfoAsync(activity);
 											FlurryEventLogger.promoCodeApplied(Data.userData.accessToken, promoCode, message);
 										}
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									
 								}
 								DialogPopup.dismissLoadingDialog();
@@ -625,7 +625,7 @@ public class AccountActivity extends Activity{
 						});
 			}
 			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
 	}
 	

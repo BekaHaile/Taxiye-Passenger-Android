@@ -1014,7 +1014,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}
 							else{
-								new DialogPopup().alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
+								DialogPopup.alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
 							}
 						}
 					}
@@ -1318,7 +1318,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					driverAcceptRideAsync(HomeActivity.this);
 				}
 				else{
-					new DialogPopup().alertPopup(HomeActivity.this, "", "Battery Level must be greater than 10% to accept the ride. Plugin to a power source to continue.");
+					DialogPopup.alertPopup(HomeActivity.this, "", "Battery Level must be greater than 10% to accept the ride. Plugin to a power source to continue.");
 				}
 			}
 		});
@@ -1379,7 +1379,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					startRidePopup(HomeActivity.this);
 				}
 				else{
-					new DialogPopup().alertPopup(HomeActivity.this, "", "Battery Level must be greater than 10% to start the ride. Plugin to a power source to continue.");
+					DialogPopup.alertPopup(HomeActivity.this, "", "Battery Level must be greater than 10% to start the ride. Plugin to a power source to continue.");
 				}
 	        }
 		});
@@ -1979,7 +1979,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void run() {
 				DialogPopup.dismissLoadingDialog();
-				new DialogPopup().alertPopup(HomeActivity.this, "", message);
+				DialogPopup.alertPopup(HomeActivity.this, "", message);
 			}
 		});
 	}
@@ -4039,7 +4039,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							callAndHandleStateRestoreAPI();
 						}
 
@@ -4057,7 +4057,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -4066,7 +4066,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -4074,7 +4074,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -4121,7 +4121,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -4140,13 +4140,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else if(1 == flag){
 										makeMeDriverPopup(activity, errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -4191,7 +4191,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -4199,7 +4199,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -4265,7 +4265,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						@Override
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
-//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							DialogPopup.dismissLoadingDialog();
 							callAndHandleStateRestoreAPI();
 						}
@@ -4287,7 +4287,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									
 //									response = {"error":"Request timed out","flag":10}
@@ -4303,7 +4303,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											int flag = jObj.getInt("flag");
 											Log.e("accept_a_request flag", "="+flag);
 											String logMessage = jObj.getString("log");
-											new DialogPopup().alertPopup(activity, "", ""+logMessage);
+											DialogPopup.alertPopup(activity, "", ""+logMessage);
 											
 										} catch(Exception e){
 											e.printStackTrace();
@@ -4386,7 +4386,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 							
@@ -4396,7 +4396,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -4458,7 +4458,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							}
 
 							@Override
@@ -4476,7 +4476,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											HomeActivity.logoutUser(activity);
 										}
 										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+											DialogPopup.alertPopup(activity, "", errorMessage);
 										}
 									}
 									else{
@@ -4486,7 +4486,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											int flag = jObj.getInt("flag");
 											if(ApiResponseFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
 												String log = jObj.getString("log");
-												new DialogPopup().alertPopup(activity, "", ""+log);
+												DialogPopup.alertPopup(activity, "", ""+log);
 											}
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -4502,7 +4502,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
 		
 								DialogPopup.dismissLoadingDialog();
@@ -4510,7 +4510,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						});
 			}
 			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
 
 		
@@ -4578,7 +4578,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-//							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							callAndHandleStateRestoreAPI();
 						}
 
@@ -4597,7 +4597,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -4626,7 +4626,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -4634,7 +4634,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -4674,7 +4674,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-//								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 								callAndHandleStateRestoreAPI();
 							}
 
@@ -4693,7 +4693,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											HomeActivity.logoutUser(activity);
 										}
 										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+											DialogPopup.alertPopup(activity, "", errorMessage);
 										}
 									}
 									else{
@@ -4704,7 +4704,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											int flag = jObj.getInt("flag");
 											if(ApiResponseFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
 												String log = jObj.getString("log");
-												new DialogPopup().alertPopup(activity, "", ""+log);
+												DialogPopup.alertPopup(activity, "", ""+log);
 											}
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -4719,7 +4719,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
 		
 								DialogPopup.dismissLoadingDialog();
@@ -4727,7 +4727,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						});
 			}
 			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
 
 		
@@ -4798,7 +4798,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							driverScreenMode = DriverScreenMode.D_IN_RIDE;
 							DialogPopup.dismissLoadingDialog();
 							rideTimeChronometer.start();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -4816,7 +4816,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									driverScreenMode = DriverScreenMode.D_IN_RIDE;
 									rideTimeChronometer.start();
@@ -4858,7 +4858,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								exception.printStackTrace();
 								driverScreenMode = DriverScreenMode.D_IN_RIDE;
 								rideTimeChronometer.start();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -4867,7 +4867,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		else {
 			driverScreenMode = DriverScreenMode.D_IN_RIDE;
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			rideTimeChronometer.start();
 		}
 
@@ -5045,7 +5045,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -5064,10 +5064,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -5096,7 +5096,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -5104,7 +5104,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -5138,7 +5138,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -5152,11 +5152,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 								else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
 									String errorMessage = jObj.getString("error");
-									new DialogPopup().alertPopup(activity, "", errorMessage);
+									DialogPopup.alertPopup(activity, "", errorMessage);
 								}
 								else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
 									String message = jObj.getString("message");
-									new DialogPopup().alertPopup(activity, "", message);
+									DialogPopup.alertPopup(activity, "", message);
 								}
 								else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 									userMode = UserMode.PASSENGER;
@@ -5171,18 +5171,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 								}
 								else{
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -5209,7 +5209,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -5228,19 +5228,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										switchPassengerScreen(passengerScreenMode);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -5344,7 +5344,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -5363,18 +5363,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
-									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
+									DialogPopup.alertPopup(activity, "", jObj.getString("log"));
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -5382,7 +5382,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -5425,7 +5425,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -5442,7 +5442,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -5464,7 +5464,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -5481,7 +5481,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -5808,7 +5808,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							}
 
 							@Override
@@ -5826,14 +5826,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											HomeActivity.logoutUser(activity);
 										}
 										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+											DialogPopup.alertPopup(activity, "", errorMessage);
 										}
 									}
 									else{
 										
 //									{"log": "Thank you for signing up. We will reach out to you soon."}
 										
-										new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
+										DialogPopup.alertPopup(activity, "", jObj.getString("log"));
 
 									
 										
@@ -5848,7 +5848,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						});
 			}
 			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -5882,11 +5882,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
 										String errorMessage = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
 										String message = jObj.getString("message");
-										new DialogPopup().alertPopup(activity, "", message);
+										DialogPopup.alertPopup(activity, "", message);
 									}
 									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 										
@@ -6481,7 +6481,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				        	driverStartRideAsync(activity, driverAtPickupLatLng);
 			        	}
 			        	else{
-			        		new DialogPopup().alertPopup(activity, "", "You must be present near the customer pickup location to start ride.");
+			        		DialogPopup.alertPopup(activity, "", "You must be present near the customer pickup location to start ride.");
 			        	}
 					}
 					else{
@@ -7071,7 +7071,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						Log.i("in in herestartRideForCustomer  run class","=");
 						passengerScreenMode = PassengerScreenMode.P_INITIAL;
 						switchPassengerScreen(passengerScreenMode);
-						new DialogPopup().alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
+						DialogPopup.alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
 					}
 				});
 			}
@@ -7341,10 +7341,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								driverScreenMode = DriverScreenMode.D_INITIAL;
 								switchDriverScreen(driverScreenMode);
 								if(acceptedByOtherDriver){
-									new DialogPopup().alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
+									DialogPopup.alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
 								}
 								else{
-									new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+									DialogPopup.alertPopup(HomeActivity.this, "", "User has canceled the request");
 								}
 							}
 						}
@@ -7357,7 +7357,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							if(engagementId.equalsIgnoreCase(Data.dEngagementId)){
 								driverScreenMode = DriverScreenMode.D_INITIAL;
 								switchDriverScreen(driverScreenMode);
-								new DialogPopup().alertPopup(HomeActivity.this, "", "User has canceled the request");
+								DialogPopup.alertPopup(HomeActivity.this, "", "User has canceled the request");
 							}
 						}
 					});
@@ -7765,7 +7765,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //				return true;
 //			}
 //			else{
-//				new DialogPopup().alertPopup(HomeActivity.this, "", "We are currently operational between 7 am - 9 pm. " +
+//				DialogPopup.alertPopup(HomeActivity.this, "", "We are currently operational between 7 am - 9 pm. " +
 //						"We are increasing our operations hour to 24 hours soon");
 //				return false;
 //			}
@@ -7867,7 +7867,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
-//											new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//											DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 										}
 									});
 								}
@@ -7888,7 +7888,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 														@Override
 														public void run() {
 															if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
-																new DialogPopup().alertPopup(HomeActivity.this, "", errorMessage);
+																DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
 																HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 																switchPassengerScreen(passengerScreenMode);
 															}
@@ -8116,7 +8116,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
-										new DialogPopup().alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+										DialogPopup.alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
 									}
 								});
 							}
@@ -8164,7 +8164,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
-											new DialogPopup().alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+											DialogPopup.alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
 										}
 									});
 								}
@@ -8197,7 +8197,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				if(Data.assignedCustomerInfo != null){
 					String manualPatchPushReceived = Database2.getInstance(HomeActivity.this).getDriverManualPatchPushReceived();
 					if(Database2.YES.equalsIgnoreCase(manualPatchPushReceived)){
-						new DialogPopup().alertPopupWithListener(HomeActivity.this, "", "A pickup has been assigned to you. Please pick the customer.", new View.OnClickListener() {
+						DialogPopup.alertPopupWithListener(HomeActivity.this, "", "A pickup has been assigned to you. Please pick the customer.", new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								Database2.getInstance(HomeActivity.this).updateDriverManualPatchPushReceived(Database2.NO);
@@ -8257,10 +8257,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										HomeActivity.logoutUser(activity);
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{

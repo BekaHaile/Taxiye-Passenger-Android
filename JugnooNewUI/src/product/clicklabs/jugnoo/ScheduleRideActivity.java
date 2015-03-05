@@ -749,7 +749,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 
@@ -769,16 +769,16 @@ public class ScheduleRideActivity extends FragmentActivity{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
+										DialogPopup.alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
 											
 											@Override
 											public void onClick(View v) {
@@ -791,7 +791,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -799,7 +799,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -837,7 +837,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 
@@ -857,16 +857,16 @@ public class ScheduleRideActivity extends FragmentActivity{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
+										DialogPopup.alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
 											
 											@Override
 											public void onClick(View v) {
@@ -879,7 +879,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -887,7 +887,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	

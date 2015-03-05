@@ -233,16 +233,16 @@ public class ForgotPasswordScreen extends Activity{
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									
 								}
 								else{
-									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
+									DialogPopup.alertPopup(activity, "", jObj.getString("log"));
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -253,13 +253,13 @@ public class ForgotPasswordScreen extends Activity{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}

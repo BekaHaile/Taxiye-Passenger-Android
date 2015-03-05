@@ -271,7 +271,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -286,11 +286,11 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", error);
+										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", error);
+										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 										if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
@@ -301,7 +301,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 										}
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -311,7 +311,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 								
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 	
@@ -320,7 +320,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -390,7 +390,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -405,11 +405,11 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", error);
+										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", error);
+										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 										if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
@@ -420,7 +420,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 										}
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -431,13 +431,13 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -465,7 +465,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -482,10 +482,10 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -493,20 +493,20 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 									String message = jObj.getString("message");
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", message);
+										DialogPopup.alertPopup(activity, "", message);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}

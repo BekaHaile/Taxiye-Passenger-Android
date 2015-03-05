@@ -316,15 +316,15 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if(resp != ConnectionResult.SUCCESS){
 			Log.e("Google Play Service Error ","="+resp);
-			new DialogPopup().showGooglePlayErrorAlert(SplashNewActivity.this);
+			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		}
 		else{
-			new DialogPopup().showLocationSettingsAlert(SplashNewActivity.this);
+			DialogPopup.showLocationSettingsAlert(SplashNewActivity.this);
 		}
 		
 		
 		super.onResume();
-		new DialogPopup().dismissAlertPopup();
+		DialogPopup.dismissAlertPopup();
 		checkForAccessTokenChange(this);
 		resumed = true;
 	}
@@ -439,7 +439,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 
@@ -455,12 +455,12 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 										if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
 											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
+											DialogPopup.alertPopup(activity, "", error);
 											DialogPopup.dismissLoadingDialog();
 										}
 										else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 											String error = jObj.getString("error");
-											new DialogPopup().alertPopup(activity, "", error);
+											DialogPopup.alertPopup(activity, "", error);
 											DialogPopup.dismissLoadingDialog();
 										}
 										else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
@@ -477,7 +477,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 											}
 										}
 										else{
-											new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 											DialogPopup.dismissLoadingDialog();
 										}
 									}
@@ -487,7 +487,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 									
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									DialogPopup.dismissLoadingDialog();
 								}
 		
@@ -531,7 +531,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			super.onPostExecute(result);
 			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 				loginDataFetched = false;
-				new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+				DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			}
 			else{
 				loginDataFetched = true;
@@ -652,13 +652,13 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
 				DialogPopup.dismissLoadingDialog();
 				String errorMessage = jObj.getString("error");
-				new DialogPopup().alertPopup(activity, "", errorMessage);
+				DialogPopup.alertPopup(activity, "", errorMessage);
 				return true;
 			}
 			else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
 				DialogPopup.dismissLoadingDialog();
 				String message = jObj.getString("message");
-				new DialogPopup().alertPopup(activity, "", message);
+				DialogPopup.alertPopup(activity, "", message);
 				return true;
 			}
 			else{

@@ -515,7 +515,7 @@ public class FutureSchedulesFragment extends Fragment {
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -532,10 +532,10 @@ public class FutureSchedulesFragment extends Fragment {
 										HomeActivity.logoutUser(activity);
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -543,21 +543,21 @@ public class FutureSchedulesFragment extends Fragment {
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
 										String message = jObj.getString("message");
-										new DialogPopup().alertPopup(activity, "", message);
+										DialogPopup.alertPopup(activity, "", message);
 										getFutureSchedulesAsync(activity);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}

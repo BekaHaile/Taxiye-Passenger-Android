@@ -209,7 +209,7 @@ public class FeedbackActivity extends Activity {
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -226,19 +226,19 @@ public class FeedbackActivity extends Activity {
 										overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -266,7 +266,7 @@ public class FeedbackActivity extends Activity {
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -282,19 +282,19 @@ public class FeedbackActivity extends Activity {
 										overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -322,7 +322,7 @@ public class FeedbackActivity extends Activity {
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -337,19 +337,19 @@ public class FeedbackActivity extends Activity {
 										performBackPressed();
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	

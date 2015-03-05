@@ -92,7 +92,7 @@ public class WalletWebviewActivity extends Activity{
 				}
 			}
 			else{
-				new DialogPopup().alertPopup(this, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(this, "", Data.CHECK_INTERNET_MSG);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

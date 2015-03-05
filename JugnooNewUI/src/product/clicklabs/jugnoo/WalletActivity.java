@@ -11,6 +11,7 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.TransactionInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -19,15 +20,13 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -43,10 +42,10 @@ public class WalletActivity extends Activity{
 	
 	LinearLayout relative;
 	
-	Button backBtn;
-	TextView title;
+	ImageView imageViewBack;
+	TextView textViewTitle;
 	
-	TextView textViewPromotion, textViewCurrentTransactionInfo, textViewAccountBalance, 
+	TextView textViewPromotion, textViewAccountBalance, 
 			textViewAccountBalanceValue, textViewRecentTransactions;
 	Button buttonAddPayment;
 	
@@ -88,20 +87,20 @@ public class WalletActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallet);
 		
+		promoBanner = "";
+		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(WalletActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		
 		textViewPromotion = (TextView) findViewById(R.id.textViewPromotion); textViewPromotion.setTypeface(Data.latoRegular(this));
-		textViewCurrentTransactionInfo = (TextView) findViewById(R.id.textViewCurrentTransactionInfo); textViewCurrentTransactionInfo.setTypeface(Data.latoRegular(this));
 		textViewAccountBalance = (TextView) findViewById(R.id.textViewAccountBalance); textViewAccountBalance.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		textViewAccountBalanceValue = (TextView) findViewById(R.id.textViewAccountBalanceValue); textViewAccountBalanceValue.setTypeface(Data.latoRegular(this));
 		textViewRecentTransactions = (TextView) findViewById(R.id.textViewRecentTransactions); textViewRecentTransactions.setTypeface(Data.latoRegular(this));
 		textViewRecentTransactions.setVisibility(View.GONE);
-		textViewCurrentTransactionInfo.setVisibility(View.GONE);
 		textViewPromotion.setVisibility(View.GONE);
 		
 		
@@ -119,7 +118,7 @@ public class WalletActivity extends Activity{
 		progressBar.setVisibility(View.GONE);
 		
 		
-		backBtn.setOnClickListener(new View.OnClickListener() {
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
@@ -164,39 +163,19 @@ public class WalletActivity extends Activity{
 				String payment = getIntent().getStringExtra("payment");
 				if("success".equalsIgnoreCase(payment)){
 					String amount = getIntent().getStringExtra("amount");
-					
-					SpannableString sstr = new SpannableString("Successful Transaction");
-					final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-					sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-					
-					textViewCurrentTransactionInfo.setText("");
-					textViewCurrentTransactionInfo.append(sstr);
-					textViewCurrentTransactionInfo.append(", Added Rs. "+amount);
-					
-					textViewCurrentTransactionInfo.setVisibility(View.VISIBLE);
-					showPromoBanner();
-					
+					DialogPopup.dialogBanner(WalletActivity.this, "Payment successful, Added Rs. "+amount);
 					new Handler().postDelayed(new Runnable() {
 						
 						@Override
 						public void run() {
-							try {
-								textViewCurrentTransactionInfo.setVisibility(View.GONE);
-								showPromoBanner();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+							DialogPopup.dismissAlertPopup();
 						}
 					}, 5000);
 					
 				}
-				else{
-					textViewCurrentTransactionInfo.setVisibility(View.GONE);
-				}
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			textViewCurrentTransactionInfo.setVisibility(View.GONE);
 		}
 		
 		
@@ -471,20 +450,13 @@ public class WalletActivity extends Activity{
 
 	
 	public void showPromoBanner(){
-		
 		if(!"".equalsIgnoreCase(promoBanner)){
-			if(textViewCurrentTransactionInfo.getVisibility() == View.GONE){
-				textViewPromotion.setVisibility(View.VISIBLE);
-				textViewPromotion.setText(promoBanner);
-			}
-			else{
-				textViewPromotion.setVisibility(View.GONE);
-			}
+			textViewPromotion.setVisibility(View.VISIBLE);
+			textViewPromotion.setText(promoBanner);
 		}
 		else{
 			textViewPromotion.setVisibility(View.GONE);
 		}
-		
 	}
 	
 	

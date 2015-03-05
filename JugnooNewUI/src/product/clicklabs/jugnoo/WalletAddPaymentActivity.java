@@ -8,12 +8,10 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,12 +21,13 @@ public class WalletAddPaymentActivity extends Activity{
 	
 	LinearLayout relative;
 	
-	Button backBtn;
-	TextView title;
+	ImageView imageViewBack;
+	TextView textViewTitle;
 	
-	TextView textViewCurrentTransactionInfo, textViewHelp;
+	TextView textViewHelp;
 	EditText editTextAmount;
-	Button buttonMakePayment;
+	Button button100, button200, button500, buttonMakePayment;
+	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
 	
 	@Override
 	protected void onStart() {
@@ -57,23 +56,51 @@ public class WalletAddPaymentActivity extends Activity{
 		new ASSL(WalletAddPaymentActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		
-		textViewCurrentTransactionInfo = (TextView) findViewById(R.id.textViewCurrentTransactionInfo); textViewCurrentTransactionInfo.setTypeface(Data.latoRegular(this));
-		textViewHelp = (TextView) findViewById(R.id.textViewHelp); textViewHelp.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		textViewHelp = (TextView) findViewById(R.id.textViewHelp); textViewHelp.setTypeface(Data.latoLight(this));
 		
 		editTextAmount = (EditText) findViewById(R.id.editTextAmount); editTextAmount.setTypeface(Data.latoRegular(this));
 		
+		button100 = (Button) findViewById(R.id.button100); button100.setTypeface(Data.latoRegular(this));
+		button200 = (Button) findViewById(R.id.button200); button200.setTypeface(Data.latoRegular(this));
+		button500 = (Button) findViewById(R.id.button500); button500.setTypeface(Data.latoRegular(this));
 		buttonMakePayment = (Button) findViewById(R.id.buttonMakePayment); buttonMakePayment.setTypeface(Data.latoRegular(this));
 		
-		backBtn.setOnClickListener(new View.OnClickListener() {
+		textViewCurrentBalance = (TextView) findViewById(R.id.textViewCurrentBalance); textViewCurrentBalance.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		textViewCurrentBalanceValue = (TextView) findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Data.latoRegular(this));
+		
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(WalletAddPaymentActivity.this, WalletActivity.class));
-				finish();
-				overridePendingTransition(R.anim.left_in, R.anim.left_out);
+				performBackPressed();
+			}
+		});
+		
+		
+		button100.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				editTextAmount.setText("100");
+			}
+		});
+		
+		button200.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				editTextAmount.setText("200");
+			}
+		});
+
+		button500.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				editTextAmount.setText("500");
 			}
 		});
 		
@@ -96,54 +123,46 @@ public class WalletAddPaymentActivity extends Activity{
 					}
 				}
 				else{
-					new DialogPopup().alertPopup(WalletAddPaymentActivity.this, "", Data.CHECK_INTERNET_MSG);
+					DialogPopup.alertPopup(WalletAddPaymentActivity.this, "", Data.CHECK_INTERNET_MSG);
 				}
 			}
 		});
 		
 		
 		try{
+			
+			textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.jugnooBalance);
+			
 			if(getIntent().hasExtra("payment")){
 				String payment = getIntent().getStringExtra("payment");
 				if("failure".equalsIgnoreCase(payment)){
-					SpannableString sstr = new SpannableString("Transaction failed");
-					final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-					sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-					textViewCurrentTransactionInfo.setText("");
-					textViewCurrentTransactionInfo.append(sstr);
-					textViewCurrentTransactionInfo.append(", Please try again");
-					
-					textViewCurrentTransactionInfo.setVisibility(View.VISIBLE);
-					
+					DialogPopup.dialogBanner(WalletAddPaymentActivity.this, "Transaction failed, Please try again");
 					new Handler().postDelayed(new Runnable() {
 						
 						@Override
 						public void run() {
-							try {
-								textViewCurrentTransactionInfo.setVisibility(View.GONE);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+							DialogPopup.dismissAlertPopup();
 						}
 					}, 5000);
-				}
-				else{
-					textViewCurrentTransactionInfo.setVisibility(View.GONE);
 				}
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			textViewCurrentTransactionInfo.setVisibility(View.GONE);
 		}
 		
 		
 	}
 	
-	@Override
-	public void onBackPressed() {
+	
+	public void performBackPressed(){
 		startActivity(new Intent(WalletAddPaymentActivity.this, WalletActivity.class));
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
 		super.onBackPressed();
 	}
 	
