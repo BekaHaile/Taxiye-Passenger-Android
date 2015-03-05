@@ -945,7 +945,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, HelpActivity.class));
+				startActivity(new Intent(HomeActivity.this, SupportActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
 			}

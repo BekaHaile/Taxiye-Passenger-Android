@@ -7,11 +7,12 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,8 +25,9 @@ public class HelpParticularActivity extends Activity{
 	
 	LinearLayout relative;
 	
-	Button backBtn;
-	TextView title;
+	ImageView imageViewBack;
+	TextView textViewTitle;
+	
 	ProgressBar progressBar;
 	TextView textViewInfo;
 	WebView webview;
@@ -43,19 +45,19 @@ public class HelpParticularActivity extends Activity{
 		new ASSL(HelpParticularActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(this));
 		webview = (WebView) findViewById(R.id.webview);
 		
 		if(helpSection != null){
-			title.setText(helpSection.getName());
+			textViewTitle.setText(helpSection.getName().toUpperCase());
 		}
 		
 		
-		backBtn.setOnClickListener(new View.OnClickListener() {
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
