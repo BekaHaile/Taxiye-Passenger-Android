@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,5 +121,18 @@ public class Utils {
         activity.startActivity(callIntent);
 	}
 	
+	
+	public static boolean appInstalledOrNot(Context context, String uri) {
+        PackageManager pm = context.getPackageManager();
+        boolean app_installed = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (Exception e) {
+            app_installed = false;
+        }
+        return app_installed;
+    }
 	
 }

@@ -323,8 +323,8 @@ public class JSONParser {
 				double latitude = dataI.getDouble("latitude");
 				double longitude = dataI.getDouble("longitude");
 				String userName = dataI.getString("user_name");
-				String userImage = dataI.getString("user_image");
-				String driverCarImage = dataI.getString("driver_car_image");
+				String userImage = "";
+				String driverCarImage = "";
 				String phoneNo = dataI.getString("phone_no");
 				String rating = dataI.getString("rating");
 				String carNumber = "";

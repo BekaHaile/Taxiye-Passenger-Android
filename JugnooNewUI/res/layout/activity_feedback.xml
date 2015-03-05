@@ -55,10 +55,8 @@
                 android:numStars="5"
                 android:rating="1"
                 android:stepSize="1.0" />
-            
-            
-            
-            <EditText 
+
+            <EditText
                 android:id="@+id/editTextFeedback"
                 android:layout_width="match_parent"
                 android:layout_height="310px"
@@ -66,15 +64,12 @@
                 android:layout_marginRight="40px"
                 android:layout_marginTop="70px"
                 android:background="@drawable/background_white_rounded"
-                android:scrollbars="vertical"
-                android:hint="How did you like your experience with Jugnoo? Please share your valuable feedback"
-                android:textSize="28px"
                 android:gravity="left"
+                android:hint="How did you like your experience with Jugnoo? Please share your valuable feedback"
                 android:padding="20px"
-                
-                />
-            
-            
+                android:scrollbars="vertical"
+                android:textSize="28px" />
+
             <Button
                 android:id="@+id/buttonSubmitFeedback"
                 android:layout_width="648px"
@@ -87,44 +82,36 @@
                 android:textSize="@dimen/button_text_size" />
             
             
-            
         </LinearLayout>
     </LinearLayout>
-    
-    
-    <RelativeLayout 
+
+    <RelativeLayout
         android:id="@+id/relativeLayoutSkip"
         android:layout_width="180px"
         android:layout_height="100px"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        
-        >
-        
-        
-        <TextView
-                        android:id="@+id/textViewSkip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/imageViewSkipArrow"
-                        android:layout_marginRight="20px"
-                        android:text="Skip"
-                        android:textColor="@drawable/text_color_grey_dark_white_selector"
-                        android:textSize="32px" />
+        android:layout_alignParentRight="true" >
 
-                    <ImageView
-                        android:id="@+id/imageViewSkipArrow"
-                        android:layout_width="13px"
-                        android:layout_height="26px"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="40px"
-                        android:src="@drawable/arrow_icon_selector"
-                        android:tag="mwar" />
-        
-        
+        <TextView
+            android:id="@+id/textViewSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20px"
+            android:layout_toLeftOf="@+id/imageViewSkipArrow"
+            android:text="Skip"
+            android:textColor="@drawable/text_color_grey_dark_white_selector"
+            android:textSize="32px" />
+
+        <ImageView
+            android:id="@+id/imageViewSkipArrow"
+            android:layout_width="13px"
+            android:layout_height="26px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40px"
+            android:src="@drawable/arrow_icon_selector"
+            android:tag="mwar" />
     </RelativeLayout>
-    
 
 </RelativeLayout>

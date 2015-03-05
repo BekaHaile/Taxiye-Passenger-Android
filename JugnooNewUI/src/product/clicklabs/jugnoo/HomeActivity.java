@@ -955,7 +955,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				
+				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
 			}
 		});
 		
@@ -3735,7 +3737,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			nameValuePairs.add(new BasicNameValuePair("latitude", ""+destination.latitude));
 		    			nameValuePairs.add(new BasicNameValuePair("longitude", ""+destination.longitude));
 		    			
-		    			Log.e("nameValuePairs in find_a_driver", "="+nameValuePairs);
+		    			Log.i("nameValuePairs in find_a_driver", "="+nameValuePairs);
 		    			
 		    			HttpRequester simpleJSONParser = new HttpRequester();
 		    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
@@ -3746,6 +3748,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			else{
 		    				try{
 		    					JSONObject jObj = new JSONObject(result);
+		    					Log.i("result", "t="+result);
 		    					new JSONParser().parseDriversToShow(jObj, "data");
 		    				}
 		    				catch(Exception e){
