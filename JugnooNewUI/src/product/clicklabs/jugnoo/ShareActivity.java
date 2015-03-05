@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -18,9 +19,8 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,15 +29,13 @@ import com.flurry.android.FlurryAgent;
 
 public class ShareActivity extends Activity{
 	
+	RelativeLayout relative;
 	
-	LinearLayout relative;
+	ImageView imageViewBack;
+	TextView textViewTitle;
 	
-	Button backBtn;
-	TextView title;
-	
-	TextView textViewReferralCodeDisplay;
-	ImageView shareFacebookImg, shareWhatsappImg, shareSMSImg, shareEMailImg;
-	TextView textViewShareReferral;
+	ImageView imageViewFacebook, imageViewWhatsapp, imageViewSMS, imageViewEmail;
+	TextView textViewReferralCode;
 	
 	
 	String str1 = "Share your referral code ",
@@ -73,21 +71,19 @@ public class ShareActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
 		
-		relative = (LinearLayout) findViewById(R.id.relative);
+		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(ShareActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		
-		textViewReferralCodeDisplay = (TextView) findViewById(R.id.textViewReferralCodeDisplay); textViewReferralCodeDisplay.setTypeface(Data.latoRegular(getApplicationContext()));
+		imageViewFacebook = (ImageView) findViewById(R.id.imageViewFacebook);
+		imageViewWhatsapp = (ImageView) findViewById(R.id.imageViewWhatsapp);
+		imageViewSMS = (ImageView) findViewById(R.id.imageViewSMS);
+		imageViewEmail = (ImageView) findViewById(R.id.imageViewEmail);
 		
-		shareFacebookImg = (ImageView) findViewById(R.id.shareFacebookImg);
-		shareWhatsappImg = (ImageView) findViewById(R.id.shareWhatsappImg);
-		shareSMSImg = (ImageView) findViewById(R.id.shareSMSImg);
-		shareEMailImg = (ImageView) findViewById(R.id.shareEMailImg);
-		
-		textViewShareReferral = (TextView) findViewById(R.id.textViewShareReferral); textViewShareReferral.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewReferralCode = (TextView) findViewById(R.id.textViewReferralCode); textViewReferralCode.setTypeface(Data.latoRegular(this));
 		
 		SpannableString sstr = new SpannableString(Data.userData.referralCode);
 		final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
@@ -95,28 +91,23 @@ public class ShareActivity extends Activity{
 		sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		sstr.setSpan(clrs, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		
-		textViewShareReferral.setText("");
-		textViewShareReferral.append(str1);
-		textViewShareReferral.append(sstr);
-		textViewShareReferral.append(str2);
-		
-		textViewReferralCodeDisplay.setText("");
-		textViewReferralCodeDisplay.append(str3);
-		textViewReferralCodeDisplay.append(sstr);
+		textViewReferralCode.setText("");
+		textViewReferralCode.append(str1);
+		textViewReferralCode.append(sstr);
+		textViewReferralCode.append(str2);
 		
 		
 		
-		backBtn.setOnClickListener(new View.OnClickListener() {
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
-				finish();
-				overridePendingTransition(R.anim.left_in, R.anim.left_out);
+				performbackPressed();
 			}
 		});
 		
 		
-		shareFacebookImg.setOnClickListener(new View.OnClickListener() {
+		imageViewFacebook.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -126,7 +117,7 @@ public class ShareActivity extends Activity{
 		});
 		
 		
-		shareWhatsappImg.setOnClickListener(new View.OnClickListener() {
+		imageViewWhatsapp.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -136,7 +127,7 @@ public class ShareActivity extends Activity{
 		});
 		
 		
-		shareSMSImg.setOnClickListener(new View.OnClickListener() {
+		imageViewSMS.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -145,7 +136,7 @@ public class ShareActivity extends Activity{
 			}
 		});
 
-		shareEMailImg.setOnClickListener(new View.OnClickListener() {
+		imageViewEmail.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -218,10 +209,14 @@ public class ShareActivity extends Activity{
 	}
 	
 	
-	@Override
-	public void onBackPressed() {
+	public void performbackPressed(){
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		performbackPressed();
 		super.onBackPressed();
 	}
 	
