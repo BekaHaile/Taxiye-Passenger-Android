@@ -11,8 +11,6 @@ public class CouponInfo {
 	public String redeemedOn;
 	public String expiryDate;
 	double discountPrecent, maximumDiscountableValue;
-	public int count;
-	public boolean enabled;
 	
 	public CouponInfo(int type, int status, String title, String subtitle, String description, String image, 
 			String redeemedOn, String expiryDate, double discountPrecent, double maximumDiscountableValue){
@@ -26,8 +24,6 @@ public class CouponInfo {
 		this.expiryDate = expiryDate;
 		this.discountPrecent = discountPrecent;
 		this.maximumDiscountableValue = maximumDiscountableValue;
-		this.count = 1;
-		this.enabled = true;
 	}
 	
 	@Override

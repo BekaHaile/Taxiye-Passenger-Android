@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.CouponStatus;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DateComparator;
@@ -18,14 +17,9 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,11 +30,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -48,26 +41,23 @@ import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
-public class AccountActivity extends Activity{
+public class PromotionsActivity extends Activity{
 	
 	
 	LinearLayout relative;
 	
-	Button backBtn;
-	TextView title;
-	
-	TextView textViewAccountInfo;
-	ProgressBar progressBarAccount;
+	ImageView imageViewBack;
+	TextView textViewTitle;
+
+	EditText editTextPromoCode;
+	Button buttonApplyPromo;
+	TextView textViewCouponsAvailable;
 	
 	ListView listViewCoupons;
 	CouponsListAdapter couponsListAdapter;
-	
-	TextView textViewWantMoreRides;
-	Button buttonReferUs;
-	
-	TextView textViewEnterCouponCode;
-	EditText editTextPromoCode;
-	Button buttonApplyPromoCode;
+
+	TextView textViewInfo;
+	ProgressBar progressBar;
 	
 	
 	
@@ -98,71 +88,58 @@ public class AccountActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_account);
+		setContentView(R.layout.activity_promotions);
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
-		new ASSL(AccountActivity.this, relative, 1134, 720, false);
+		new ASSL(PromotionsActivity.this, relative, 1134, 720, false);
 		
 		
-		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
-		
-		textViewAccountInfo = (TextView) findViewById(R.id.textViewAccountInfo); textViewAccountInfo.setTypeface(Data.latoRegular(getApplicationContext()));
-		progressBarAccount = (ProgressBar) findViewById(R.id.progressBarAccount);
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+
+		editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode); editTextPromoCode.setTypeface(Data.latoRegular(this));
+		buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo); buttonApplyPromo.setTypeface(Data.latoRegular(this));
+		textViewCouponsAvailable = (TextView) findViewById(R.id.textViewCouponsAvailable); textViewCouponsAvailable.setTypeface(Data.latoRegular(this));
+		textViewCouponsAvailable.setVisibility(View.GONE);
 		
 		couponInfosList.clear();
 		
 		listViewCoupons = (ListView) findViewById(R.id.listViewCoupons);
-		couponsListAdapter = new CouponsListAdapter(AccountActivity.this);
+		couponsListAdapter = new CouponsListAdapter(PromotionsActivity.this);
 		listViewCoupons.setAdapter(couponsListAdapter);
 		
-		textViewWantMoreRides = (TextView) findViewById(R.id.textViewWantMoreRides); textViewWantMoreRides.setTypeface(Data.latoRegular(getApplicationContext()));
-		buttonReferUs = (Button) findViewById(R.id.buttonReferUs); buttonReferUs.setTypeface(Data.latoRegular(getApplicationContext()));
-
-		textViewEnterCouponCode = (TextView) findViewById(R.id.textViewEnterCouponCode); textViewEnterCouponCode.setTypeface(Data.latoRegular(getApplicationContext()));
-		editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode); editTextPromoCode.setTypeface(Data.latoRegular(getApplicationContext()));
-		buttonApplyPromoCode = (Button) findViewById(R.id.buttonApplyPromoCode); buttonApplyPromoCode.setTypeface(Data.latoRegular(getApplicationContext()));
-		buttonApplyPromoCode.setVisibility(View.GONE);
-		
-		textViewAccountInfo.setVisibility(View.GONE);
-		progressBarAccount.setVisibility(View.GONE);
+		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(this));
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		
 		
-		backBtn.setOnClickListener(new View.OnClickListener() {
+		textViewInfo.setVisibility(View.GONE);
+		progressBar.setVisibility(View.GONE);
+		
+		
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
-				finish();
-				overridePendingTransition(R.anim.left_in, R.anim.left_out);
+				performBackPressed();
 			}
 		});
 		
 		
-		textViewAccountInfo.setOnClickListener(new View.OnClickListener() {
+		textViewInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getAccountInfoAsync(AccountActivity.this);
+				getAccountInfoAsync(PromotionsActivity.this);
 			}
 		});
 		
 		
-		buttonReferUs.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(AccountActivity.this, ShareActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.shareScreenOpenedThroughCoupons(Data.userData.accessToken);
-			}
-		});
-		
-		buttonApplyPromoCode.setOnClickListener(new View.OnClickListener() {
+		buttonApplyPromo.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				String promoCode = editTextPromoCode.getText().toString().trim();
 				if(promoCode.length() > 0){
-					applyPromoCodeAPI(AccountActivity.this, promoCode);
+					applyPromoCodeAPI(PromotionsActivity.this, promoCode);
 					FlurryEventLogger.promoCodeTried(Data.userData.accessToken, promoCode);
 				}
 				else{
@@ -187,7 +164,7 @@ public class AccountActivity extends Activity{
 				int result = actionId & EditorInfo.IME_MASK_ACTION;
 				switch (result) {
 					case EditorInfo.IME_ACTION_DONE:
-						buttonApplyPromoCode.performClick();
+						buttonApplyPromo.performClick();
 						return false;
 
 					case EditorInfo.IME_ACTION_NEXT:
@@ -199,42 +176,20 @@ public class AccountActivity extends Activity{
 			}
 		});
 		
-		editTextPromoCode.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				if(s.length() > 0){
-					if(buttonApplyPromoCode.getVisibility() == View.GONE){
-						buttonApplyPromoCode.setVisibility(View.VISIBLE);
-					}
-				}
-				else{
-					if(buttonApplyPromoCode.getVisibility() == View.VISIBLE){
-						buttonApplyPromoCode.setVisibility(View.GONE);
-					}
-				}
-			}
-		});
-		
-		getAccountInfoAsync(AccountActivity.this);
+		getAccountInfoAsync(PromotionsActivity.this);
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 	}
 	
-	@Override
-	public void onBackPressed() {
+	public void performBackPressed(){
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
 		super.onBackPressed();
 	}
 	
@@ -253,19 +208,21 @@ public class AccountActivity extends Activity{
 	
 	public void updateListData(String message, boolean errorOccurred){
 		if(errorOccurred){
-			textViewAccountInfo.setText(message);
-			textViewAccountInfo.setVisibility(View.VISIBLE);
+			textViewInfo.setText(message);
+			textViewInfo.setVisibility(View.VISIBLE);
 			
 			couponInfosList.clear();
 			couponsListAdapter.notifyDataSetChanged();
 		}
 		else{
 			if(couponInfosList.size() == 0){
-				textViewAccountInfo.setText(message);
-				textViewAccountInfo.setVisibility(View.VISIBLE);
+				textViewInfo.setText(message);
+				textViewInfo.setVisibility(View.VISIBLE);
+				textViewCouponsAvailable.setVisibility(View.GONE);
 			}
 			else{
-				textViewAccountInfo.setVisibility(View.GONE);
+				textViewInfo.setVisibility(View.GONE);
+				textViewCouponsAvailable.setVisibility(View.VISIBLE);
 			}
 			couponsListAdapter.notifyDataSetChanged();
 		}
@@ -273,8 +230,8 @@ public class AccountActivity extends Activity{
 	
 	
 	class ViewHolderCoupon {
-		TextView textViewYouHave, textViewCouponTitle, textViewCouponSubTitle, textViewExpiryDate;
-		RelativeLayout relative;
+		TextView textViewCouponTitle, textViewExpiryDate;
+		LinearLayout relative;
 		int id;
 	}
 
@@ -308,12 +265,10 @@ public class AccountActivity extends Activity{
 				holder = new ViewHolderCoupon();
 				convertView = mInflater.inflate(R.layout.list_item_coupon, null);
 				
-				holder.textViewYouHave = (TextView) convertView.findViewById(R.id.textViewYouHave); holder.textViewYouHave.setTypeface(Data.museoSlab(context), Typeface.BOLD);
-				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Data.museoSlab(context), Typeface.BOLD);
-				holder.textViewCouponSubTitle = (TextView) convertView.findViewById(R.id.textViewCouponSubTitle); holder.textViewCouponSubTitle.setTypeface(Data.museoSlab(context), Typeface.BOLD);
-				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Data.museoSlab(context));
+				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Data.latoRegular(context));
+				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Data.latoLight(context));
 				
-				holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative); 
+				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);
 				
@@ -328,32 +283,9 @@ public class AccountActivity extends Activity{
 			holder.id = position;
 			
 			CouponInfo couponInfo = couponInfosList.get(position);
-			
-			if(couponInfo.enabled){
-				holder.textViewYouHave.setVisibility(View.GONE);
-				if(couponInfo.count > 1){
-					holder.textViewCouponTitle.setText(couponInfo.count + " " + couponInfo.title + "s");
-				}
-				else{
-					holder.textViewCouponTitle.setText(couponInfo.count + " " + couponInfo.title);
-				}
-				holder.textViewCouponSubTitle.setVisibility(View.VISIBLE);
-				holder.textViewExpiryDate.setVisibility(View.VISIBLE);
-				holder.textViewCouponSubTitle.setText(couponInfo.subtitle);
-				holder.textViewExpiryDate.setText("Expiring on "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
-				holder.textViewCouponTitle.setAlpha(1.0f);
-			}
-			else{
-				holder.textViewYouHave.setVisibility(View.VISIBLE);
-				holder.textViewCouponTitle.setText("0 Free rides");
-				holder.textViewCouponSubTitle.setVisibility(View.GONE);
-				holder.textViewExpiryDate.setVisibility(View.GONE);
-				holder.textViewYouHave.setAlpha(0.5f);
-				holder.textViewCouponTitle.setAlpha(0.5f);
-				
-			}
-			
-			
+
+			holder.textViewCouponTitle.setText(couponInfo.title + " " + couponInfo.subtitle);
+			holder.textViewExpiryDate.setText("Expiring on "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
 				
@@ -361,77 +293,14 @@ public class AccountActivity extends Activity{
 				public void onClick(View v) {
 					holder = (ViewHolderCoupon) v.getTag();
 					CouponInfo couponInfo = couponInfosList.get(holder.id);
-					if(couponInfo.enabled){
-						alertPopup(AccountActivity.this, couponInfo.description);
-						FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.type);
-					}
+					DialogPopup.alertPopup(PromotionsActivity.this, "", couponInfo.description);
+					FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.type);
 				}
 			});
 			
 			return convertView;
 		}
 
-	}
-	
-	Dialog dialog;
-	
-	void alertPopup(Activity activity, String message) {
-		try {
-			try{
-				if(dialog != null && dialog.isShowing()){
-					dialog.dismiss();
-				}
-			}catch(Exception e){
-			}
-			
-			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_custom_one_button);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
-			
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
-			
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
-			
-			textMessage.setText(message);
-			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
-			
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-			});
-			
-			frameLayout.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-			});
-			
-			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-				}
-			});
-
-			dialog.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	
@@ -441,10 +310,10 @@ public class AccountActivity extends Activity{
 	public void getAccountInfoAsync(final Activity activity) {
 		if(fetchAccountInfoClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				progressBarAccount.setVisibility(View.VISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
 				couponInfosList.clear();
 				couponsListAdapter.notifyDataSetChanged();
-				textViewAccountInfo.setVisibility(View.GONE);
+				textViewInfo.setVisibility(View.GONE);
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				fetchAccountInfoClient = Data.getClient();
@@ -455,7 +324,7 @@ public class AccountActivity extends Activity{
 							@Override
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
-								progressBarAccount.setVisibility(View.GONE);
+								progressBar.setVisibility(View.GONE);
 								updateListData("Some error occurred. Tap to retry", true);
 							}
 	
@@ -510,42 +379,18 @@ public class AccountActivity extends Activity{
 															coData.getDouble("discount"), 
 															coData.getDouble("maximum"));
 													
-													if(CouponStatus.ACTIVE.getOrdinal() == couponInfo.status){
-														if(couponInfosList.contains(couponInfo)){
-															couponInfosList.get(couponInfosList.indexOf(couponInfo)).count++;
-														}
-														else{
-															couponInfosList.add(couponInfo);
-														}
-													}
+													couponInfosList.add(couponInfo);
 												}
-												
 												Collections.sort(couponInfosList, new DateComparator());
-												
 											}
 										}
-										else{
-											CouponInfo couponInfo = new CouponInfo(1, 
-													1, 
-													"", 
-													"", 
-													"", 
-													"", 
-													"", 
-													"", 
-													0, 
-													0);
-											couponInfo.enabled = false;
-											couponInfosList.add(couponInfo);
-										}
-										
-										updateListData("Account info fetched", false);
+										updateListData("No Coupons available", false);
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
 									updateListData("Some error occurred. Tap to retry", true);
 								}
-								progressBarAccount.setVisibility(View.GONE);
+								progressBar.setVisibility(View.GONE);
 							}
 							
 							@Override
@@ -593,21 +438,22 @@ public class AccountActivity extends Activity{
 								Log.i("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
-									if (!jObj.isNull("error")) {
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
 										String errorMessage = jObj.getString("error");
-										if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
-											HomeActivity.logoutUser(activity);
-										} else {
-											DialogPopup.alertPopup(activity, "", errorMessage);
-										}
-									} else {
-										int flag = jObj.getInt("flag");
-										if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-											String message = jObj.getString("message");
-											DialogPopup.alertPopup(activity, "", message);
-											getAccountInfoAsync(activity);
-											FlurryEventLogger.promoCodeApplied(Data.userData.accessToken, promoCode, message);
-										}
+										DialogPopup.alertPopup(activity, "", errorMessage);	
+									}
+									else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+										String message = jObj.getString("message");
+										DialogPopup.dialogBanner(activity, message);
+										getAccountInfoAsync(activity);
+										FlurryEventLogger.promoCodeApplied(Data.userData.accessToken, promoCode, message);
+									}
+									else{
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();

@@ -124,7 +124,7 @@
         </activity>
         
             <activity
-            android:name="product.clicklabs.jugnoo.AccountActivity"
+            android:name="product.clicklabs.jugnoo.PromotionsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
