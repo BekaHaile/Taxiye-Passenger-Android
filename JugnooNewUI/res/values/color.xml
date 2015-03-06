@@ -103,5 +103,9 @@
     <color name="blue_light">#4E75D8</color>
     <color name="blue_light_alpha">#994E75D8</color>
     
+    
+    
+    <color name="green_transaction_type">#46B82F</color>
+    
    
 </resources>

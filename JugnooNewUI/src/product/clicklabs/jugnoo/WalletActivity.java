@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.TransactionInfo;
+import product.clicklabs.jugnoo.datastructure.TransactionType;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -54,6 +55,9 @@ public class WalletActivity extends Activity{
 	
 	ListView listViewTransactions;
 	TransactionListAdapter transactionListAdapter;
+	
+	RelativeLayout relativeLayoutShowMore;
+	TextView textViewShowMore;
 	
 	AsyncHttpClient fetchTransactionInfoClient;
 	
@@ -108,6 +112,17 @@ public class WalletActivity extends Activity{
 		
 		listViewTransactions = (ListView) findViewById(R.id.listViewTransactions);
 		
+		
+		LinearLayout viewF = (LinearLayout) getLayoutInflater().inflate(R.layout.list_item_show_more, null);
+		listViewTransactions.addFooterView(viewF);
+		viewF.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
+		ASSL.DoMagic(viewF);
+		
+		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
+		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Data.latoLight(this));
+		relativeLayoutShowMore.setVisibility(View.GONE);
+		
+		
 		transactionListAdapter = new TransactionListAdapter(this);
 		listViewTransactions.setAdapter(transactionListAdapter);
 		
@@ -156,6 +171,14 @@ public class WalletActivity extends Activity{
 			}
 		});
 		
+		relativeLayoutShowMore.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				fetchTransactionInfoClient = null;
+				getTransactionInfoAsync(WalletActivity.this);
+			}
+		});
 		
 		
 		try{
@@ -245,9 +268,8 @@ public class WalletActivity extends Activity{
 	
 	
 	class ViewHolderTransaction {
-		TextView textViewTransactionDate, textViewTransactionAmount, textViewTransactionTime, textViewTransactionType, textViewShowMore;
+		TextView textViewTransactionDate, textViewTransactionAmount, textViewTransactionTime, textViewTransactionType;
 		LinearLayout relative;
-		RelativeLayout relativeLayoutShowMore;
 		int id;
 	}
 
@@ -285,13 +307,10 @@ public class WalletActivity extends Activity{
 				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Data.latoRegular(context), Typeface.BOLD);
 				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Data.latoLight(context));
 				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Data.latoLight(context));
-				holder.textViewShowMore = (TextView) convertView.findViewById(R.id.textViewShowMore); holder.textViewShowMore.setTypeface(Data.latoRegular(context));
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
-				holder.relativeLayoutShowMore = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutShowMore); 
 				
 				holder.relative.setTag(holder);
-				holder.relativeLayoutShowMore.setTag(holder);
 				
 				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
 				ASSL.DoMagic(holder.relative);
@@ -303,33 +322,32 @@ public class WalletActivity extends Activity{
 			
 			holder.id = position;
 			
-			if(totalTransactions > transactionInfoList.size() && position == transactionInfoList.size()-1){
-				holder.relativeLayoutShowMore.setVisibility(View.VISIBLE);
-			}
-			else{
-				holder.relativeLayoutShowMore.setVisibility(View.GONE);
-			}
-			
 			TransactionInfo transactionInfo = transactionInfoList.get(position);
 			
 			holder.textViewTransactionDate.setText(transactionInfo.date);
 			holder.textViewTransactionAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormat.format(transactionInfo.amount));
 			holder.textViewTransactionTime.setText(transactionInfo.time);
-			holder.textViewTransactionType.setText(transactionInfo.transactionType);
+			holder.textViewTransactionType.setText(transactionInfo.transactionText);
 			
-			holder.relativeLayoutShowMore.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					holder = (ViewHolderTransaction) v.getTag();
-					
-					fetchTransactionInfoClient = null;
-					getTransactionInfoAsync(WalletActivity.this);
-				}
-			});
-			
+			if(TransactionType.CREDIT.getOrdinal() == transactionInfo.transactionType){
+				holder.textViewTransactionType.setTextColor(getResources().getColor(R.color.green_transaction_type));
+			}
+			else{
+				holder.textViewTransactionType.setTextColor(getResources().getColor(R.color.grey_dark));
+			}
 			
 			return convertView;
+		}
+		
+		@Override
+		public void notifyDataSetChanged() {
+			super.notifyDataSetChanged();
+			if(totalTransactions > transactionInfoList.size()){
+				relativeLayoutShowMore.setVisibility(View.VISIBLE);
+			}
+			else{
+				relativeLayoutShowMore.setVisibility(View.GONE);
+			}
 		}
 
 	}
@@ -376,21 +394,22 @@ public class WalletActivity extends Activity{
 										else if(ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag){
 											
 //											{
-//												   flag         	: constants.responseFlags.TRANSACTION_HISTORY,
-//												   balance      	: balance,
-//												   num_txns	: <number>,
-//												   page_size	: <number>,
-//												   transactions : [
-//												{
-//													txn_id		: <a random string> <not to be shown>,
-//													txn_type	: <string><credited | autos | meals>,
-//													amount	: <amount>,
-//													txn_date	: <%d/%m/%y>,
-//													txn_time	: <%h:%i %p>
-//												}
-//													banner		:
-//											] 
-//											};
+//											    "flag": 423,
+//											    "banner": "Get Jugnoo Cash at 50% discount!!!",
+//											    "balance": 1,
+//											    "num_txns": 26,
+//											    "page_size": 10,
+//											    "transactions": [
+//											        {
+//											            "txn_id": 72,
+//											            "txn_type": 1,
+//											            "amount": 1,
+//											            "txn_date": "February 27th, 2015",
+//											            "txn_time": "12:58 PM",
+//											            "txn_text": "Cash Added"
+//											        }
+//											    ]
+//											}
 											
 											jugnooBalance = jObj.getDouble("balance");
 											totalTransactions = jObj.getInt("num_txns");
@@ -406,9 +425,10 @@ public class WalletActivity extends Activity{
 											for(int i=0; i<jTransactions.length(); i++){
 												JSONObject jTransactionI = jTransactions.getJSONObject(i);
 												transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"), 
+														jTransactionI.getInt("txn_type"), 
 														jTransactionI.getString("txn_time"), 
 														jTransactionI.getString("txn_date"), 
-														jTransactionI.getString("txn_type"), 
+														jTransactionI.getString("txn_text"), 
 														jTransactionI.getDouble("amount")));
 											}
 											

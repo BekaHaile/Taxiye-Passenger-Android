@@ -2,16 +2,17 @@ package product.clicklabs.jugnoo.datastructure;
 
 public class TransactionInfo {
 	
-	public int transactionId;
+	public int transactionId, transactionType;
 	public String time, date;
-	public String transactionType;
+	public String transactionText;
 	public double amount;
 	
-	public TransactionInfo(int transactionId, String time, String date, String transactionType, double amount){
+	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText, double amount){
 		this.transactionId = transactionId;
+		this.transactionType = transactionType;
 		this.time = time;
 		this.date = date;
-		this.transactionType = transactionType;
+		this.transactionText = transactionText;
 		this.amount = amount;
 	}
 	
