@@ -3,7 +3,7 @@
     android:id="@+id/relative"
     android:layout_width="720px"
     android:layout_height="1134px"
-    android:background="@color/white" >
+    android:background="@color/white_light_grey" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +36,6 @@
                 android:layout_marginLeft="10px"
                 android:padding="20px"
                 android:src="@drawable/back_white_selector" />
-            
         </RelativeLayout>
 
         <LinearLayout
@@ -46,25 +45,21 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="350px" >
+                android:layout_height="295px" >
 
                 <ImageView
                     android:id="@+id/imageViewUserImageBlur"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white_light_grey"
-                    android:scaleType="centerCrop"
-                     />
-                
+                    android:scaleType="centerCrop" />
+
                 <ImageView
                     android:id="@+id/imageViewUserImageBlurCover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#10000000"
-                    android:scaleType="centerCrop"
-                     />
-                
-                
+                    android:scaleType="centerCrop" />
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutProfileImage"
@@ -98,71 +93,175 @@
                 android:layout_marginTop="30px"
                 android:orientation="vertical" >
 
-                <EditText
-                    android:id="@+id/editTextUserName"
+                <RelativeLayout
                     android:layout_width="628px"
-                    android:layout_height="70px"
-                    android:background="#0000"
-                    android:capitalize="words"
-                    android:gravity="center_vertical"
-                    android:hint="Name"
-                    android:paddingLeft="20px"
-                    android:paddingRight="20px"
-                    android:singleLine="true"
-                    android:textColor="@color/black_text"
-                    android:textColorHint="@color/black_text_alpha"
-                    android:textCursorDrawable="@null"
-                    android:textSize="30px" />
+                    android:layout_height="wrap_content" >
+
+                    <EditText
+                        android:id="@+id/editTextUserName"
+                        android:layout_width="628px"
+                        android:layout_height="70px"
+                        android:background="#0000"
+                        android:capitalize="words"
+                        android:gravity="center_vertical"
+                        android:hint="Name"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/black_text"
+                        android:textColorHint="@color/black_text_alpha"
+                        android:textCursorDrawable="@null"
+                        android:textSize="30px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewEditName"
+                        android:layout_width="68px"
+                        android:layout_height="68px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="15px"
+                        android:src="@drawable/edit_icon_selector"
+                        android:tag="mwar" />
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="628px"
                     android:layout_height="2px"
                     android:src="@color/yellow_alpha" />
 
-                <EditText
-                    android:id="@+id/editTextEmail"
+                <RelativeLayout
                     android:layout_width="628px"
-                    android:layout_height="70px"
-                    android:layout_marginTop="5px"
-                    android:background="#0000"
-                    android:gravity="center_vertical"
-                    android:hint="Email"
-                    android:inputType="textEmailAddress"
-                    android:paddingLeft="20px"
-                    android:paddingRight="20px"
-                    android:singleLine="true"
-                    android:textColor="@color/black_text"
-                    android:textColorHint="@color/black_text_alpha"
-                    android:textCursorDrawable="@null"
-                    android:textSize="30px" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5px" >
+
+                    <EditText
+                        android:id="@+id/editTextEmail"
+                        android:layout_width="628px"
+                        android:layout_height="70px"
+                        android:background="#0000"
+                        android:gravity="center_vertical"
+                        android:hint="Email"
+                        android:inputType="textEmailAddress"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/black_text"
+                        android:textColorHint="@color/black_text_alpha"
+                        android:textCursorDrawable="@null"
+                        android:textSize="30px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewEditEmail"
+                        android:layout_width="68px"
+                        android:layout_height="68px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="15px"
+                        android:src="@drawable/edit_icon_selector"
+                        android:tag="mwar" />
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="628px"
                     android:layout_height="2px"
                     android:src="@color/yellow_alpha" />
 
-                <EditText
-                    android:id="@+id/editTextPhone"
+                <RelativeLayout
                     android:layout_width="628px"
-                    android:layout_height="70px"
-                    android:layout_marginTop="5px"
-                    android:background="#0000"
-                    android:gravity="center_vertical"
-                    android:hint="Phone Number"
-                    android:inputType="phone"
-                    android:paddingLeft="20px"
-                    android:paddingRight="20px"
-                    android:singleLine="true"
-                    android:textColor="@color/black_text"
-                    android:textColorHint="@color/black_text_alpha"
-                    android:textCursorDrawable="@null"
-                    android:textSize="30px" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5px" >
+
+                    <EditText
+                        android:id="@+id/editTextPhone"
+                        android:layout_width="628px"
+                        android:layout_height="70px"
+                        android:background="#0000"
+                        android:gravity="center_vertical"
+                        android:hint="Phone Number"
+                        android:inputType="phone"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/black_text"
+                        android:textColorHint="@color/black_text_alpha"
+                        android:textCursorDrawable="@null"
+                        android:textSize="30px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewEditPhoneNo"
+                        android:layout_width="68px"
+                        android:layout_height="68px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="15px"
+                        android:src="@drawable/edit_icon_selector"
+                        android:tag="mwar" />
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="628px"
                     android:layout_height="2px"
                     android:src="@color/yellow_alpha" />
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutNotTriedJugnoo"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="70px"
+                android:background="@color/white" >
+
+                <TextView
+                    android:id="@+id/textViewNotTriedJugnoo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:gravity="center"
+                    android:text="Haven&apos;t tried Jugnoo yet?"
+                    android:textColor="@color/black_text"
+                    android:textSize="30px" />
+
+                <TextView
+                    android:id="@+id/textViewGetARide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="80px"
+                    android:gravity="center"
+                    android:text="GET A RIDE"
+                    android:textColor="@drawable/text_color_black_alpha_selector"
+                    android:textSize="30px" />
+
+                <ImageView
+                    android:id="@+id/imageViewGetARideArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@color/yellow_alpha" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/buttonLogout"
+                android:layout_width="648px"
+                android:layout_height="100px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="70px"
+                android:background="@drawable/button_yellow_selector"
+                android:text="LOGOUT"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/button_text_size" />
         </LinearLayout>
     </LinearLayout>
 

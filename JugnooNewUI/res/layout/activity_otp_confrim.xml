@@ -134,7 +134,7 @@
                         android:textSize="30px" />
 
                     <ImageView
-                        android:id="@+id/imageViewPromotionsArrow"
+                        android:id="@+id/imageViewOTPArrow"
                         android:layout_width="13px"
                         android:layout_height="26px"
                         android:layout_alignParentRight="true"

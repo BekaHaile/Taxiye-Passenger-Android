@@ -85,6 +85,7 @@ public class WalletAddPaymentActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				editTextAmount.setText("100");
+				editTextAmount.setSelection(editTextAmount.getText().length());
 			}
 		});
 		
@@ -93,6 +94,7 @@ public class WalletAddPaymentActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				editTextAmount.setText("200");
+				editTextAmount.setSelection(editTextAmount.getText().length());
 			}
 		});
 
@@ -101,6 +103,7 @@ public class WalletAddPaymentActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				editTextAmount.setText("500");
+				editTextAmount.setSelection(editTextAmount.getText().length());
 			}
 		});
 		
