@@ -457,6 +457,7 @@ public class FutureSchedulesFragment extends Fragment {
 													JSONObject futureScheduleData = futureSchedulesArray.getJSONObject(i);
 													futureSchedules.add(new FutureSchedule(futureScheduleData.getString("pickup_id"), 
 															futureScheduleData.getString("address"), 
+															futureScheduleData.getString("date"), 
 															futureScheduleData.getString("time"), 
 															new LatLng(futureScheduleData.getDouble("latitude"), futureScheduleData.getDouble("longitude")), 
 															futureScheduleData.getInt("modifiable"),

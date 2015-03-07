@@ -59,8 +59,41 @@ public class JSONParser {
 	
 	public UserData parseUserData(Context context, JSONObject userData) throws Exception{
 		
+//		"login": {
+//        "flag": 407,
+//        "user_name": "Shankar Bhagwatia",
+//        "user_image": "http://graph.facebook.com/717496164959213/picture?width=160&height=160",
+//        "phone_no": "+919780298413",
+//        "user_email": "shankarsinghisking91@gmail.com",
+//        "email_verification_status": 0,
+//        "referral_code": "SHANKAR23",
+//        "auth_key": "06c898728e0c84d903a93d647ba67858594d2080390860711ed0fa9b37828db9",
+//        "jugnoo_balance": 2,
+//        "current_user_status": 2,
+//        "is_available": 1,
+//        "can_change_location": 1,
+//        "can_schedule": 1,
+//        "scheduling_limit": 60,
+//        "gcm_intent": 1,
+//        "christmas_icon_enable": 0,
+//        "fare_details": [
+//            {
+//                "fare_fixed": 25,
+//                "fare_per_km": 6,
+//                "fare_threshold_distance": 2,
+//                "fare_per_min": 1,
+//                "fare_threshold_time": 0
+//            }
+//        ],
+//        "exceptional_driver": 0,
+//        "update_popup": 0,
+//        "access_token": "f3e2632ae5d84b70e2ebae4f448bfb273a24a03595d5cafd029e4491061e27c6"
+//    }
+		
+		
 		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, 
-				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;;
+				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;
+		int emailVerificationStatus = 1;
 		String userEmail = "", phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk";
 		double jugnooBalance = 0;
 		
@@ -150,6 +183,10 @@ public class JSONParser {
 			userEmail = userData.getString("user_email");
 		}
 		
+		if(userData.has("email_verification_status")){
+			emailVerificationStatus = userData.getInt("email_verification_status");
+		}
+		
 		
 		String authKey = userData.getString("auth_key");
 		AccessTokenGenerator.saveAuthKey(context, authKey);
@@ -157,7 +194,7 @@ public class JSONParser {
 		String authSecret = authKey + Data.CLIENT_SHARED_SECRET;
 		String accessToken = SHA256Convertor.getSHA256String(authSecret);
 		
-		return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, 
+		return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus, 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
 				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
 				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance);

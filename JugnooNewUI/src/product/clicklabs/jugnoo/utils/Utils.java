@@ -97,11 +97,6 @@ public class Utils {
 	
 	
 	
-	/**
-	 * Hides keyboard
-	 * 
-	 * @param activity
-	 */
 	public static void hideSoftKeyboard(Activity activity, View searchET) {
 		try {
 			InputMethodManager mgr = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -109,8 +104,18 @@ public class Utils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
+	
+	
+	public static void showSoftKeyboard(Activity activity, View searchET){
+	    try {
+	    	InputMethodManager keyboard = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		    keyboard.showSoftInput(searchET, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 	
 	

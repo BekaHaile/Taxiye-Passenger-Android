@@ -4,14 +4,18 @@ public class UserData {
 	public String accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, nukkadIcon, jugnooMealsPackageName;
 	public int canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, enableJugnooMeals,
 		freeRideIconDisable;
+	public int emailVerificationStatus;
 	public double jugnooBalance;
-	public UserData(String accessToken, String authKey, String userName, String userEmail, String userImage, String referralCode, String phoneNo,
+	public UserData(String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus, 
+			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance){
 		this.accessToken = accessToken;
 		this.authKey = authKey;
 		this.userName = userName;
 		this.userEmail = userEmail;
+		this.emailVerificationStatus = emailVerificationStatus;
+		
 		this.userImage = userImage;
 		this.referralCode = referralCode;
 		this.phoneNo = phoneNo;

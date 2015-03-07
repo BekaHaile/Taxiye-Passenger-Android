@@ -231,6 +231,17 @@
             android:screenOrientation="portrait" >
         </activity>
         
+             <activity
+            android:name="product.clicklabs.jugnoo.PhoneNoOTPConfirmScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+             <activity
+            android:name="product.clicklabs.jugnoo.RideTransactionsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
         
         
         
