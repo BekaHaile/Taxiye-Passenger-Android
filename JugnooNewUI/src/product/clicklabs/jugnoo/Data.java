@@ -11,6 +11,7 @@ import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverType;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -219,6 +220,8 @@ public class Data {
 	
 	public static boolean driversRefreshedFirstTime = false;
 	
+	
+	public static EndRideData endRideData;
 	
 	public static double totalDistance = 0, totalFare = 0;
 	public static String waitTime = "", rideTime = "";

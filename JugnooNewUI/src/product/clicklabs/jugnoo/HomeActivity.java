@@ -21,10 +21,10 @@ import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.LatLngPair;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.datastructure.PaymentMode;
 import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
@@ -114,7 +114,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.squareup.picasso.BlurTransform;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -126,9 +125,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	DrawerLayout drawerLayout;																		// views declaration
-	
-	
-	
 	
 	
 	
@@ -183,11 +179,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	//Top RL
 	RelativeLayout topRl;
-	Button menuBtn, backBtn; //, favBtn;
+	ImageView imageViewMenu;
 	TextView title;
-	ImageView jugnooLogo;
 	Button checkServerBtn, toggleDebugModeBtn;
-	ImageView jugnooShopImageView, jugnooMealsImageView;
+	ImageView jugnooShopImageView, imageViewJugnooApp;
 	
 	
 	
@@ -316,23 +311,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	//Review layout
+	
+	
+	
+	//End Ride layout
 	RelativeLayout endRideReviewRl;
-		
-	ImageView reviewUserImgBlured, reviewUserImage;
-	TextView reviewUserName, reviewReachedDestinationText, 
-	reviewDistanceText, reviewDistanceValue, 
-	reviewWaitText, reviewWaitValue, reviewRideTimeText, reviewRideTimeValue,
-	reviewFareText, reviewFareValue, 
-	reviewRatingText;
-	LinearLayout reviewRatingBarRl, endRideInfoRl;
-	TextView jugnooRideOverText, takeFareText;
-	RelativeLayout relativeLayoutCoupon;
-	TextView textViewCouponTitle, textViewCouponSubTitle, textViewCouponPayTakeText, textViewCouponDiscountedFare;
-	RatingBar reviewRatingBar;
-	Button reviewSubmitBtn;
-	TextView reviewMinFareText, reviewMinFareValue, reviewFareAfterText, reviewFareAfterValue;
-	Button reviewFareInfoBtn;
+	
+	ImageView imageViewEndRideDriver, imageViewEndRideDriverCar;
+	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
+	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
+	TextView textViewEndRideFareValue, textViewEndRidePromotionDiscountValue, textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, 
+	textViewEndRideToBePaidValue, textViewEndRideBaseFareValue, textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideAddJugnooCashInfo;
+	Button buttonEndRideOk;
+	
+	
 	
 	
 	
@@ -459,6 +451,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		
 		
+		
 		assl = new ASSL(HomeActivity.this, drawerLayout, 1134, 720, false);
 		
 		
@@ -511,22 +504,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		//Top RL
 		topRl = (RelativeLayout) findViewById(R.id.topRl);
-		menuBtn = (Button) findViewById(R.id.menuBtn);
-		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
-		jugnooLogo = (ImageView) findViewById(R.id.jugnooLogo);
+		imageViewMenu = (ImageView) findViewById(R.id.imageViewMenu);
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 //		favBtn = (Button) findViewById(R.id.favBtn);
 		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
-		jugnooMealsImageView = (ImageView) findViewById(R.id.jugnooMealsImageView);
+		imageViewJugnooApp = (ImageView) findViewById(R.id.imageViewJugnooApp);
 		
 		
 		
-		menuBtn.setVisibility(View.VISIBLE);
-		jugnooLogo.setVisibility(View.VISIBLE);
-		backBtn.setVisibility(View.GONE);
-		title.setVisibility(View.GONE);
 		
 		
 		
@@ -643,7 +630,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText); driverNewRideRequestClickText.setTypeface(Data.latoRegular(getApplicationContext()));
 		driverInitialMyLocationBtn = (Button) findViewById(R.id.driverInitialMyLocationBtn);
 		jugnooOffLayout = (RelativeLayout) findViewById(R.id.jugnooOffLayout);
-		jugnooOffText = (TextView) findViewById(R.id.jugnooOffText); jugnooOffText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		jugnooOffText = (TextView) findViewById(R.id.jugnooOffText); jugnooOffText.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		
 		driverNewRideRequestRl.setVisibility(View.GONE);
 		driverRideRequestsList.setVisibility(View.GONE);
@@ -712,9 +699,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		driverEndRideBtn = (Button) findViewById(R.id.driverEndRideBtn); driverEndRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		waitStart = 2;
 
-//		driverEndRideSlider.setThumb(createEndRideThumbDrawable());
-//		driverEndRideSlider.setThumbOffset((int)(5.0f * ASSL.Xscale()));
-		
 		rideTimeChronometer.setText("00:00:00");
 		waitChronometer.setText("00:00:00");
 		
@@ -722,50 +706,49 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		//Review Layout
 		endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
 		
-		reviewUserImgBlured = (ImageView) findViewById(R.id.reviewUserImgBlured);
-		reviewUserImage = (ImageView) findViewById(R.id.reviewUserImage);
 		
-		reviewUserName = (TextView) findViewById(R.id.reviewUserName); reviewUserName.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewReachedDestinationText = (TextView) findViewById(R.id.reviewReachedDestinationText); reviewReachedDestinationText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		reviewDistanceText = (TextView) findViewById(R.id.reviewDistanceText); reviewDistanceText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		reviewDistanceValue = (TextView) findViewById(R.id.reviewDistanceValue); reviewDistanceValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewWaitText = (TextView) findViewById(R.id.reviewWaitText); reviewWaitText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		reviewWaitValue = (TextView) findViewById(R.id.reviewWaitValue); reviewWaitValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewRideTimeText = (TextView) findViewById(R.id.reviewRideTimeText); reviewRideTimeText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		reviewRideTimeValue = (TextView) findViewById(R.id.reviewRideTimeValue); reviewRideTimeValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewFareText = (TextView) findViewById(R.id.reviewFareText); reviewFareText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		reviewFareValue = (TextView) findViewById(R.id.reviewFareValue); reviewFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewRatingText = (TextView) findViewById(R.id.reviewRatingText); reviewRatingText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		imageViewEndRideDriver = (ImageView) findViewById(R.id.imageViewEndRideDriver);
+		imageViewEndRideDriverCar = (ImageView) findViewById(R.id.imageViewEndRideDriverCar);
 		
-		reviewRatingBarRl = (LinearLayout) findViewById(R.id.reviewRatingBarRl);
-		endRideInfoRl = (LinearLayout) findViewById(R.id.endRideInfoRl);
-		jugnooRideOverText = (TextView) findViewById(R.id.jugnooRideOverText); 
-		jugnooRideOverText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		takeFareText = (TextView) findViewById(R.id.takeFareText); 
-		takeFareText.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewRatingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
-		reviewSubmitBtn = (Button) findViewById(R.id.reviewSubmitBtn); reviewSubmitBtn.setTypeface(Data.latoRegular(getApplicationContext()));
-		
-		relativeLayoutCoupon = (RelativeLayout) findViewById(R.id.relativeLayoutCoupon);
-		textViewCouponTitle = (TextView) findViewById(R.id.textViewCouponTitle); textViewCouponTitle.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
-		textViewCouponSubTitle = (TextView) findViewById(R.id.textViewCouponSubTitle); textViewCouponSubTitle.setTypeface(Data.museoSlab(getApplicationContext()));
-		textViewCouponPayTakeText = (TextView) findViewById(R.id.textViewCouponPayTakeText); textViewCouponPayTakeText.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
-		textViewCouponDiscountedFare = (TextView) findViewById(R.id.textViewCouponDiscountedFare); textViewCouponDiscountedFare.setTypeface(Data.museoSlab(getApplicationContext()), Typeface.BOLD);
-		
-		reviewMinFareText = (TextView) findViewById(R.id.reviewMinFareText); reviewMinFareText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		reviewMinFareValue = (TextView) findViewById(R.id.reviewMinFareValue); reviewMinFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewFareAfterText = (TextView) findViewById(R.id.reviewFareAfterText); reviewFareAfterText.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewFareAfterValue = (TextView) findViewById(R.id.reviewFareAfterValue); reviewFareAfterValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		reviewFareInfoBtn = (Button) findViewById(R.id.reviewFareInfoBtn);
-		
+		textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Data.latoRegular(this));
+		textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Data.latoRegular(this));
 
-		reviewRatingBarRl.setVisibility(View.GONE);
-		endRideInfoRl.setVisibility(View.VISIBLE);
+		textViewEndRideStartLocationValue = (TextView) findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideEndLocationValue = (TextView) findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideStartTimeValue = (TextView) findViewById(R.id.textViewEndRideStartTimeValue); textViewEndRideStartTimeValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideEndTimeValue = (TextView) findViewById(R.id.textViewEndRideEndTimeValue); textViewEndRideEndTimeValue.setTypeface(Data.latoRegular(this));
+		
+		textViewEndRideFareValue = (TextView) findViewById(R.id.textViewEndRideFareValue); textViewEndRideFareValue.setTypeface(Data.latoRegular(this));
+		textViewEndRidePromotionDiscountValue = (TextView) findViewById(R.id.textViewEndRidePromotionDiscountValue); textViewEndRidePromotionDiscountValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideFinalFareValue = (TextView) findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideJugnooCashValue = (TextView) findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideToBePaidValue = (TextView) findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideAddJugnooCashInfo = (TextView) findViewById(R.id.textViewEndRideAddJugnooCashInfo); textViewEndRideAddJugnooCashInfo.setTypeface(Data.latoRegular(this));
+		
+		buttonEndRideOk = (Button) findViewById(R.id.buttonEndRideOk); buttonEndRideOk.setTypeface(Data.latoRegular(this));
 		
 		
-		reviewRatingBar.setRating(0);
-		
-		
+		((TextView)findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideStartTime)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideEndTime)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideSummary)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideFare)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideFareRupee)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRidePromotionDiscount)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRidePromotionDiscountRupee)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideFinalFareRupee)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideJugnooCashRupee)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideToBePaidRupee)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideDistance)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideTime)).setTypeface(Data.latoRegular(this));
 				 
 		
 		
@@ -785,7 +768,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		//Top bar events
-		menuBtn.setOnClickListener(new View.OnClickListener() {
+		imageViewMenu.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -803,14 +786,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //			}
 //		});
 		
-		backBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				passengerScreenMode = PassengerScreenMode.P_INITIAL;
-				switchPassengerScreen(passengerScreenMode);
-			}
-		});
 		
 		
 		
@@ -851,7 +826,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
-		jugnooMealsImageView.setOnClickListener(new View.OnClickListener() {
+		imageViewJugnooApp.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -1486,7 +1461,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		});
 				
 				
-		reviewSubmitBtn.setOnClickListener(new View.OnClickListener() {
+		buttonEndRideOk.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -1497,25 +1472,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					passengerScreenMode = PassengerScreenMode.P_FEEDBACK;
 					switchPassengerScreen(passengerScreenMode);
 				}
-				else{
-					int rating = (int) reviewRatingBar.getRating();
-					if(rating > 0){
-						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, ""+rating, "");
-						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.dEngagementId);
-					}
-					else{
-						submitReviewAsync(HomeActivity.this, Data.dEngagementId, "0", Data.dCustomerId, "5", "");
-						FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.dEngagementId);
-					}
-				}
-			}
-		});
-		
-		reviewFareInfoBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				fareInfoBtn.performClick();
 			}
 		});
 		
@@ -1744,18 +1700,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		if(UserMode.PASSENGER == userMode){
 			if(Data.userData != null){
 	    		if(Data.userData.enableJugnooMeals == 1){
-	    			jugnooMealsImageView.setVisibility(View.VISIBLE);
+	    			imageViewJugnooApp.setVisibility(View.VISIBLE);
 	    		}
 	    		else{
-	    			jugnooMealsImageView.setVisibility(View.GONE);
+	    			imageViewJugnooApp.setVisibility(View.GONE);
 	    		}
 			}
 			else{
-				jugnooMealsImageView.setVisibility(View.GONE);
+				imageViewJugnooApp.setVisibility(View.GONE);
 			}
 		}
 		else{
-			jugnooMealsImageView.setVisibility(View.GONE);
+			imageViewJugnooApp.setVisibility(View.GONE);
 		}
 	}
 	
@@ -1791,7 +1747,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				switchPassengerScreen(passengerScreenMode);
 			}
 			else if(passengerScreenMode == PassengerScreenMode.P_RIDE_END){
-				displayCouponApplied(Data.couponJSON);
 				clearSPData();
 				switchPassengerScreen(passengerScreenMode);
 			}
@@ -2156,56 +2111,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			saveDataOnPause(false);
 			
-		if(mode == DriverScreenMode.D_RIDE_END){
-			startAutomaticReviewHandler();
-			mapLayout.setVisibility(View.GONE);
-			endRideReviewRl.setVisibility(View.VISIBLE);
-			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
-			
-			
-			double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-			
-			
-			String kmsStr = "";
-			if(totalDistanceInKm > 1){
-				kmsStr = "kms";
-			}
-			else{
-				kmsStr = "km";
-			}
-			
-			
-			
-			reviewDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
-			reviewWaitValue.setText(waitTime+" min");
-			reviewRideTimeValue.setText(rideTime+" min");
-			reviewFareValue.setText("Rs. "+decimalFormat.format(totalFare));
-			
-			reviewRatingText.setText("Customer Rating");
-			reviewRatingBar.setRating(0);
-			
-			reviewUserName.setText(Data.assignedCustomerInfo.name);
-			
-			Data.assignedCustomerInfo.image = Data.assignedCustomerInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
-			try{Picasso.with(HomeActivity.this).load(Data.assignedCustomerInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
-			
-			reviewSubmitBtn.setText("OK");
-			
-			setTextToFareInfoTextViews(reviewMinFareValue, reviewFareAfterValue, reviewFareAfterText);
-			
-			
-			jugnooRideOverText.setText("The Jugnoo ride is over.");
-			takeFareText.setText("Please take the fare as shown above from the customer.");
-			
-			
-		}
-		else{
-			stopAutomaticReviewhandler();
 			mapLayout.setVisibility(View.VISIBLE);
 			endRideReviewRl.setVisibility(View.GONE);
-			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey));
-		}
 		
 		
 		switch(mode){
@@ -2434,49 +2341,60 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			saveDataOnPause(false);
 			
 		if(mode == PassengerScreenMode.P_RIDE_END){
-			startAutomaticReviewHandler();
-			mapLayout.setVisibility(View.GONE);
-			endRideReviewRl.setVisibility(View.VISIBLE);
-			topRl.setBackgroundColor(getResources().getColor(R.color.transparent));
-			
-			double totalDistanceInKm = Data.totalDistance;
-			String kmsStr = "";
-			if(totalDistanceInKm > 1){
-				kmsStr = "kms";
+			if(Data.endRideData != null){
+				mapLayout.setVisibility(View.GONE);
+				endRideReviewRl.setVisibility(View.VISIBLE);
+				
+				try{
+					Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
+					if(!"".equalsIgnoreCase(Data.assignedDriverInfo.image)){
+						Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(imageViewEndRideDriver);
+					}
+				}catch(Exception e){}
+				try{
+					if(!"".equalsIgnoreCase(Data.assignedDriverInfo.carImage)){
+						Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new CircleTransform())
+						.error(R.drawable.car_android).into(imageViewEndRideDriverCar);
+					}
+				}catch(Exception e){}
+				
+				textViewEndRideDriverName.setText(Data.assignedDriverInfo.name);
+				textViewEndRideDriverCarNumber.setText(Data.assignedDriverInfo.carNumber);
+				
+				textViewEndRideStartLocationValue.setText(Data.endRideData.pickupAddress);
+				textViewEndRideEndLocationValue.setText(Data.endRideData.dropAddress);
+				
+				textViewEndRideStartTimeValue.setText(Data.endRideData.pickupTime);
+				textViewEndRideEndTimeValue.setText(Data.endRideData.dropTime);
+				
+				textViewEndRideFareValue.setText(decimalFormatNoDecimal.format(Data.endRideData.fare));
+				textViewEndRidePromotionDiscountValue.setText(decimalFormatNoDecimal.format(Data.endRideData.discount));
+				textViewEndRideFinalFareValue.setText(decimalFormatNoDecimal.format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
+				textViewEndRideJugnooCashValue.setText(decimalFormatNoDecimal.format(Data.endRideData.paidUsingWallet));
+				textViewEndRideToBePaidValue.setText(decimalFormatNoDecimal.format(Data.endRideData.toPay));
+				
+				textViewEndRideBaseFareValue.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDecimal.format(Data.fareStructure.fixedFare));
+				
+				double totalDistanceInKm = Data.endRideData.distance;
+				String kmsStr = "";
+				if(totalDistanceInKm > 1){
+					kmsStr = "kms";
+				}
+				else{
+					kmsStr = "km";
+				}
+				textViewEndRideDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
+				
+				textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(Data.endRideData.rideTime)+" min");
 			}
 			else{
-				kmsStr = "km";
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
 			}
-			reviewDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
-			
-			reviewWaitValue.setText(Data.waitTime+" min");
-			
-			reviewRideTimeValue.setText(Data.rideTime+" min");
-			
-			reviewFareValue.setText("Rs. "+decimalFormat.format(Data.totalFare));
-			
-			reviewRatingText.setText("Driver Rating");
-			reviewRatingBar.setRating(0);
-			
-			reviewUserName.setText(Data.assignedDriverInfo.name);
-			
-			Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new BlurTransform()).into(reviewUserImgBlured);}catch(Exception e){}
-			try{Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).skipMemoryCache().transform(new CircleTransform()).into(reviewUserImage);}catch(Exception e){}
-			
-			reviewSubmitBtn.setText("OK");
-			
-			setTextToFareInfoTextViews(reviewMinFareValue, reviewFareAfterValue, reviewFareAfterText);
-			
-			jugnooRideOverText.setText("The Jugnoo ride is over.");
-			takeFareText.setText("Please pay the fare as shown above to the driver.");
-			
 		}
 		else{
-			stopAutomaticReviewhandler();
 			mapLayout.setVisibility(View.VISIBLE);
 			endRideReviewRl.setVisibility(View.GONE);
-			topRl.setBackgroundColor(getResources().getColor(R.color.bg_grey));
 		}
 		
 		
@@ -2519,10 +2437,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				initialCancelRideBtn.setVisibility(View.GONE);
 				textViewAssigningInProgress.setVisibility(View.GONE);
 				
-				menuBtn.setVisibility(View.VISIBLE);
-				jugnooLogo.setVisibility(View.VISIBLE);
-				backBtn.setVisibility(View.GONE);
-				title.setVisibility(View.GONE);
 				
 				Log.e("Data.latitude", "="+Data.latitude);
 				Log.e("myLocation", "="+myLocation);
@@ -2563,11 +2477,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				initialCancelRideBtn.setVisibility(View.VISIBLE);
 				textViewAssigningInProgress.setVisibility(View.VISIBLE);
 				
-				menuBtn.setVisibility(View.VISIBLE);
-				jugnooLogo.setVisibility(View.VISIBLE);
-				backBtn.setVisibility(View.GONE);
-				title.setVisibility(View.GONE);
-
 				cancelTimerUpdateDrivers();
 				
 				break;
@@ -2628,11 +2537,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				inRideRideInProgress.setText("Please wait while Jugnoo is coming...");
 				
 				
-				menuBtn.setVisibility(View.VISIBLE);
-				jugnooLogo.setVisibility(View.VISIBLE);
-				backBtn.setVisibility(View.GONE);
-				title.setVisibility(View.GONE);
-//				favBtn.setVisibility(View.GONE);
 				
 				
 				new Handler().postDelayed(new Runnable() {
@@ -2675,12 +2579,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				driverTime.setVisibility(View.GONE);
 				inRideRideInProgress.setText("Ride in progress...");
 				
-				menuBtn.setVisibility(View.VISIBLE);
-				jugnooLogo.setVisibility(View.VISIBLE);
-				backBtn.setVisibility(View.GONE);
-				title.setVisibility(View.GONE);
-//				favBtn.setVisibility(View.GONE);
-
 				
 				break;
 				
@@ -2693,11 +2591,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				centreLocationRl.setVisibility(View.GONE);
 				feedbackLayout.setVisibility(View.GONE);
 				
-				menuBtn.setVisibility(View.VISIBLE);
-				jugnooLogo.setVisibility(View.VISIBLE);
-				backBtn.setVisibility(View.GONE);
-				title.setVisibility(View.GONE);
-
 				
 				break;
 				
@@ -2707,12 +2600,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
 				feedbackLayout.setVisibility(View.VISIBLE);
-				
-				menuBtn.setVisibility(View.VISIBLE);
-				jugnooLogo.setVisibility(View.GONE);
-				backBtn.setVisibility(View.GONE);
-				title.setVisibility(View.VISIBLE);
-				title.setText("Feedback");
 				
 				break;
 				
@@ -2724,11 +2611,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
 				
-				
-				menuBtn.setVisibility(View.VISIBLE);
-				jugnooLogo.setVisibility(View.VISIBLE);
-				backBtn.setVisibility(View.GONE);
-				title.setVisibility(View.GONE);
 				
 		}
 		
@@ -4835,9 +4717,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										e.printStackTrace();
 										totalFare = 0;
 									}
-									
-									displayCouponApplied(jObj);
-									
 
 									lastLocation = null;
 									
@@ -4917,101 +4796,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					e.printStackTrace();
 				}
 			}
-	}
-	
-	
-	public void displayCouponApplied(JSONObject jObj){
-		
-		try{
-		
-			int paymentMode = PaymentMode.CASH.getOrdinal();
-			if(jObj.has("payment_mode")){
-				paymentMode = jObj.getInt("payment_mode");
-			}
-			
-			String moneyToPay = decimalFormat.format(jObj.getDouble("to_pay"));
-			
-			try {
-				
-				if(jObj.has("coupon")){
-					endRideInfoRl.setVisibility(View.GONE);
-					relativeLayoutCoupon.setVisibility(View.VISIBLE);
-					
-					JSONObject couponObject = jObj.getJSONObject("coupon");
-					
-					String couponTitle = couponObject.getString("title");
-					String couponSubTitle = couponObject.getString("subtitle");
-					
-					if(PaymentMode.WALLET.getOrdinal() == paymentMode){					// wallet
-						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
-						textViewCouponTitle.setText(couponTitle + "\n& Jugnoo Cash");
-						textViewCouponSubTitle.setVisibility(View.GONE);
-					}
-					else{																			// no wallet
-						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
-						textViewCouponTitle.setText(couponTitle);
-						textViewCouponSubTitle.setText(couponSubTitle);
-						textViewCouponSubTitle.setVisibility(View.VISIBLE);
-					}
-					
-					if(UserMode.DRIVER == HomeActivity.userMode){
-						textViewCouponPayTakeText.setText("Take");
-					}
-					else{
-						textViewCouponPayTakeText.setText("Pay");
-					}
-				}
-				else{
-					if(PaymentMode.WALLET.getOrdinal() == paymentMode){								// wallet
-						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
-						textViewCouponTitle.setText("Jugnoo Cash");
-						textViewCouponSubTitle.setVisibility(View.GONE);
-						if(UserMode.DRIVER == HomeActivity.userMode){
-							textViewCouponPayTakeText.setText("Take");
-						}
-						else{
-							textViewCouponPayTakeText.setText("Pay");
-						}
-							
-						endRideInfoRl.setVisibility(View.GONE);
-						relativeLayoutCoupon.setVisibility(View.VISIBLE);
-					}
-					else{																			// no wallet
-						endRideInfoRl.setVisibility(View.VISIBLE);
-						relativeLayoutCoupon.setVisibility(View.GONE);
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				if(PaymentMode.WALLET.getOrdinal() == paymentMode){								// wallet
-					textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
-					textViewCouponTitle.setText("Jugnoo Cash");
-					textViewCouponSubTitle.setVisibility(View.GONE);
-					if(UserMode.DRIVER == HomeActivity.userMode){
-						textViewCouponPayTakeText.setText("Take");
-					}
-					else{
-						textViewCouponPayTakeText.setText("Pay");
-					}
-						
-					endRideInfoRl.setVisibility(View.GONE);
-					relativeLayoutCoupon.setVisibility(View.VISIBLE);
-				}
-				else{																			// no wallet
-					endRideInfoRl.setVisibility(View.VISIBLE);
-					relativeLayoutCoupon.setVisibility(View.GONE);
-				}
-			}
-		
-			
-			if(jObj.has("jugnoo_balance")){
-				Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
-				setUserData();
-			}
-			
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 	
 	
@@ -5906,6 +5690,92 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public void getRideSummaryAPI(final Activity activity, final String engagementId) {
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				DialogPopup.showLoadingDialog(activity, "Getting ride info...");
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("engagement_id", engagementId);
+				AsyncHttpClient client = Data.getClient();
+				client.post(Data.SERVER_URL + "/get_ride_summary", params,
+						new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+							@Override
+							public void onFailure(Throwable arg3) {
+								DialogPopup.dismissLoadingDialog();
+								endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+
+							@Override
+							public void onSuccess(String response) {
+								Log.i("Server response get_ride_summary", "response = " + response);
+								DialogPopup.dismissLoadingDialog();
+								try {
+									jObj = new JSONObject(response);
+									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+										int flag = jObj.getInt("flag");
+										if(ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag){
+											
+//											{
+//											    "pickup_address": "1050-1091, Madhya Marg, 28B, Sector 26 East, Chandigarh 160102, India",
+//											    "drop_address": "1050-1091, Madhya Marg, 28B, Sector 26 East, Chandigarh 160102, India",
+//											    "pickup_time": "05:51 PM",
+//											    "drop_time": "05:51 PM",
+//											    "fare": 26,
+//											    "discount": 0,
+//											    "paid_using_wallet": 0,
+//											    "to_pay": 26,
+//											    "distance": 0,
+//											    "ride_time": 1,
+//											    "flag": 115
+//											}
+											
+											Data.endRideData = new EndRideData(engagementId, 
+													jObj.getString("pickup_address"), 
+													jObj.getString("drop_address"), 
+													jObj.getString("pickup_time"), 
+													jObj.getString("drop_time"), 
+													jObj.getDouble("fare"), 
+													jObj.getDouble("discount"), 
+													jObj.getDouble("paid_using_wallet"), 
+													jObj.getDouble("to_pay"), 
+													jObj.getDouble("distance"), 
+													jObj.getDouble("ride_time"));
+											
+											lastLocation = null;
+											clearSPData();
+											map.clear();
+											passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+											switchPassengerScreen(passengerScreenMode);
+											
+										}
+										else{
+											endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+										}
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+								}
+							}
+						});
+			}
+			else{
+				endRideRetryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
+			}
+	}
+	
+	public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage){
+		DialogPopup.alertPopupWithListener(activity, "", errorMessage + "\nTap OK to retry", new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				getRideSummaryAPI(activity, engagementId);
+			}
+		});
 	}
 	
 	
@@ -7479,19 +7349,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
 	@Override
-	public void customerEndRideInterrupt(final JSONObject jObj) {
+	public void customerEndRideInterrupt(final String engagementId) {
 		try{
 			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
+				
 				runOnUiThread(new Runnable() {
 					
 					@Override
 					public void run() {
-						displayCouponApplied(jObj);
-						lastLocation = null;
-						clearSPData();
-						map.clear();
-						passengerScreenMode = PassengerScreenMode.P_RIDE_END;
-						switchPassengerScreen(passengerScreenMode);
+						getRideSummaryAPI(HomeActivity.this, engagementId);
 					}
 				});
 			}
@@ -7561,52 +7427,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	public Handler automaticReviewHandler;
-	public Runnable automaticReviewRunnable;
-	
-	public void startAutomaticReviewHandler(){
-		try {
-			stopAutomaticReviewhandler();
-			automaticReviewHandler = new Handler();
-			automaticReviewRunnable = new Runnable() {
-				@Override
-				public void run() {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_RIDE_END){
-								GCMIntentService.clearNotifications(HomeActivity.this);
-								driverScreenMode = DriverScreenMode.D_INITIAL;
-								switchDriverScreen(driverScreenMode);
-							}
-							else if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_RIDE_END){
-								GCMIntentService.clearNotifications(HomeActivity.this);
-								passengerScreenMode = PassengerScreenMode.P_INITIAL;
-								switchPassengerScreen(passengerScreenMode);
-							}
-						}
-					});
-				}
-			};
-			
-			automaticReviewHandler.postDelayed(automaticReviewRunnable, AUTO_RATING_DELAY);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void stopAutomaticReviewhandler(){
-		try {
-			if(automaticReviewHandler != null && automaticReviewRunnable != null){
-				automaticReviewHandler.removeCallbacks(automaticReviewRunnable);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		automaticReviewHandler = null;
-		automaticReviewRunnable = null;
-	}
 	
 	
 	

@@ -25,7 +25,7 @@ public interface AppInterruptHandler {
 	
 	public void startRideForCustomer(final int flag);
 	
-	public void customerEndRideInterrupt(JSONObject jObj);
+	public void customerEndRideInterrupt(String engagementId);
 	
 	public void onAfterRideFeedbackSubmitted(int givenRating);
 	

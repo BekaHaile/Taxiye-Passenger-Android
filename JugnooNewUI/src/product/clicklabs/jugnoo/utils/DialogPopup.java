@@ -43,8 +43,8 @@ public class DialogPopup {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
 			
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
@@ -66,21 +66,6 @@ public class DialogPopup {
 					dialog.dismiss();
 				}
 				
-			});
-
-			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-				}
-			});
-
-			frameLayout.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
 			});
 			
 			dialog.show();
@@ -115,8 +100,8 @@ public class DialogPopup {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
 			
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
@@ -139,21 +124,6 @@ public class DialogPopup {
 					onClickListener.onClick(view);
 				}
 				
-			});
-
-			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-				}
-			});
-
-			frameLayout.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
 			});
 			
 			dialog.show();
