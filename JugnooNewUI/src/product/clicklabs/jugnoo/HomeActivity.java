@@ -129,6 +129,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	
+	
+	
 	//menu bar 
 	LinearLayout menuLayout;
 	
