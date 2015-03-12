@@ -142,6 +142,8 @@ public class FeedbackActivity extends Activity {
 			performBackPressed();
 		}
 		
+		ratingBarFeedback.setRating(5);
+		
 		
 		if(FeedbackMode.AFTER_RIDE == feedbackMode){
 			textViewTitle.setText("RATE YOUR EXPERIENCE");
@@ -154,7 +156,6 @@ public class FeedbackActivity extends Activity {
 		
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
 		
 	}
 

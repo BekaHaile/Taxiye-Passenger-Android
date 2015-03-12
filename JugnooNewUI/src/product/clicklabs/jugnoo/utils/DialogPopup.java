@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.WindowManager;
@@ -43,8 +44,8 @@ public class DialogPopup {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
 			
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
@@ -67,20 +68,53 @@ public class DialogPopup {
 				}
 				
 			});
+			
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void alertPopupHtml(Activity activity, String title, String message) {
+		try {
+			dismissAlertPopup();
+			if("".equalsIgnoreCase(title)){
+				title = activity.getResources().getString(R.string.alert);
+			}
+			
+			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.dialog_custom_one_button);
 
-			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-				}
-			});
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, false);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
-			frameLayout.setOnClickListener(new View.OnClickListener() {
-				
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			
+			textHead.setText(title);
+			textMessage.setText(Html.fromHtml(message));
+			
+			textHead.setVisibility(View.GONE);
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v) {
+				public void onClick(View view) {
 					dialog.dismiss();
 				}
+				
 			});
 			
 			dialog.show();
@@ -115,8 +149,8 @@ public class DialogPopup {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
 			
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
@@ -139,21 +173,6 @@ public class DialogPopup {
 					onClickListener.onClick(view);
 				}
 				
-			});
-
-			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-				}
-			});
-
-			frameLayout.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
 			});
 			
 			dialog.show();

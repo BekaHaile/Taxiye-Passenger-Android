@@ -368,7 +368,8 @@ public class PromotionsActivity extends Activity{
 												for(int i=0; i<couponsData.length(); i++){
 													JSONObject coData = couponsData.getJSONObject(i);
 													
-													CouponInfo couponInfo = new CouponInfo(coData.getInt("type"), 
+													CouponInfo couponInfo = new CouponInfo(1,
+															coData.getInt("type"), 
 															coData.getInt("status"), 
 															coData.getString("title"), 
 															coData.getString("subtitle"), 

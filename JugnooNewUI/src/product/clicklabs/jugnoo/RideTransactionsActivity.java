@@ -46,8 +46,8 @@ public class RideTransactionsActivity extends Activity {
 	
 	RideTransactionAdapter rideTransactionAdapter;
 	
-	RelativeLayout relativeLayoutSeeMore;
-	TextView textViewSeeMore;
+	RelativeLayout relativeLayoutShowMore;
+	TextView textViewShowMore;
 	
 	DecimalFormat decimalFormat = new DecimalFormat("#.#");
 	DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
@@ -76,14 +76,15 @@ public class RideTransactionsActivity extends Activity {
 		progressBarList.setVisibility(View.GONE);
 		
 		
-		LinearLayout viewF = (LinearLayout) getLayoutInflater().inflate(R.layout.list_item_see_more, null);
+		LinearLayout viewF = (LinearLayout) getLayoutInflater().inflate(R.layout.list_item_show_more, null);
 		listViewRideTransactions.addFooterView(viewF);
 		viewF.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
 		ASSL.DoMagic(viewF);
 		
-		relativeLayoutSeeMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutSeeMore);
-		textViewSeeMore = (TextView) viewF.findViewById(R.id.textViewSeeMore); textViewSeeMore.setTypeface(Data.latoLight(this));
-		relativeLayoutSeeMore.setVisibility(View.GONE);
+		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
+		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Data.latoLight(this));
+		textViewShowMore.setText("Show More");
+		relativeLayoutShowMore.setVisibility(View.GONE);
 		
 		rideTransactionAdapter = new RideTransactionAdapter(this);
 		listViewRideTransactions.setAdapter(rideTransactionAdapter);
@@ -107,7 +108,7 @@ public class RideTransactionsActivity extends Activity {
 		});
 		
 		
-		relativeLayoutSeeMore.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutShowMore.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -390,10 +391,10 @@ public class RideTransactionsActivity extends Activity {
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
 			if(AccountActivity.totalRides > AccountActivity.rideInfosList.size()){
-				relativeLayoutSeeMore.setVisibility(View.VISIBLE);
+				relativeLayoutShowMore.setVisibility(View.VISIBLE);
 			}
 			else{
-				relativeLayoutSeeMore.setVisibility(View.GONE);
+				relativeLayoutShowMore.setVisibility(View.GONE);
 			}
 		}
 		

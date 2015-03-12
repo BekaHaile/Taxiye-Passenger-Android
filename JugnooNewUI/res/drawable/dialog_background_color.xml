@@ -13,8 +13,8 @@
         />
     
     <stroke 
-        android:width="2px" 
-        android:color="#aa7e7d78"
+        android:width="1dp" 
+        android:color="@color/dialog_border_color"
         />
     
     

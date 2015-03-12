@@ -5,12 +5,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import org.json.JSONObject;
-
 import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverType;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -220,9 +219,8 @@ public class Data {
 	public static boolean driversRefreshedFirstTime = false;
 	
 	
-	public static double totalDistance = 0, totalFare = 0;
-	public static String waitTime = "", rideTime = "";
-	public static JSONObject couponJSON;
+	public static EndRideData endRideData;
+	
 	public static int customerRateAppFlag = 0;
 	
 	

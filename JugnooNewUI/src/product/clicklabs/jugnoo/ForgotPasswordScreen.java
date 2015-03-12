@@ -227,15 +227,8 @@ public class ForgotPasswordScreen extends Activity{
 								jObj = new JSONObject(response);
 								
 								if(!jObj.isNull("error")){
-									
 									String errorMessage = jObj.getString("error");
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-									
+									DialogPopup.alertPopup(activity, "", errorMessage);
 								}
 								else{
 									DialogPopup.alertPopup(activity, "", jObj.getString("log"));
@@ -244,7 +237,6 @@ public class ForgotPasswordScreen extends Activity{
 								exception.printStackTrace();
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
-	
 							DialogPopup.dismissLoadingDialog();
 						}
 						
