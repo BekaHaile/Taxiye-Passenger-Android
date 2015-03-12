@@ -4,13 +4,13 @@
     >
     
     <solid 
-        android:color="@color/yellow_alpha"
+        android:color="@color/white"
         />
     
     <corners 
         android:topLeftRadius="0px"
         android:topRightRadius="0px"
-        android:bottomLeftRadius="0px"
+        android:bottomLeftRadius="@dimen/button_corner_radius"
         android:bottomRightRadius="@dimen/button_corner_radius"
         />
     

@@ -76,7 +76,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="90px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0px"
                 android:orientation="horizontal" >
@@ -84,25 +84,34 @@
                 <Button
                     android:id="@+id/btnCancel"
                     android:layout_width="327px"
-                    android:layout_height="83px"
+                    android:layout_height="90px"
                     android:layout_marginLeft="0px"
-                    android:background="@drawable/button_yellow_blr_selector"
+                    android:background="@drawable/button_white_yellow_blr_selector"
                     android:singleLine="true"
                     android:text="Cancel"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textColor="@drawable/text_color_yellow_white_selector"
                     android:textSize="34px" />
+                
+               
 
                 <Button
                     android:id="@+id/btnOk"
                     android:layout_width="327px"
-                    android:layout_height="83px"
+                    android:layout_height="90px"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="0px"
-                    android:background="@drawable/button_yellow_brr_selector"
+                    android:background="@drawable/button_white_yellow_brr_selector"
                     android:singleLine="true"
                     android:text="OK"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textColor="@drawable/text_color_yellow_white_selector"
                     android:textSize="34px" />
+                
+                 <ImageView
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:background="@color/grey_light"
+                android:layout_centerHorizontal="true"
+                 />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

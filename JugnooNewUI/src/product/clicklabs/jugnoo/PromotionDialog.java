@@ -132,6 +132,16 @@ public class PromotionDialog {
 	
 	
 	
+	public void dismissAlert(){
+		try{
+			dialog.dismiss();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 	
 	class ViewHolderPromotion {
 		TextView textViewCouponTitle, textViewTNC;
@@ -318,6 +328,7 @@ public class PromotionDialog {
 //										}
 										
 										
+										
 										promoCouponList.clear();
 										
 										JSONArray jCouponsArr = jObj.getJSONArray("coupons");
@@ -371,15 +382,11 @@ public class PromotionDialog {
 												
 											}
 											else{
-												if(dynamicFactor > 1){
-													textViewMessage.setVisibility(View.VISIBLE);
-													textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
-															+"x higher than normal to maintain availability");
-												}
-												else{
-													textViewMessage.setVisibility(View.GONE);
-												}
-												textViewTitle.setText("You have coupons available. Choose one");
+												textViewMessage.setVisibility(View.VISIBLE);
+												textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
+														+"x higher than normal to maintain availability");
+												
+												textViewTitle.setText("You have coupons available.\nChoose one");
 											}
 											
 											promotionsListAdapter.notifyDataSetChanged();

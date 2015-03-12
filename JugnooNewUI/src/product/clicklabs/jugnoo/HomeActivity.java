@@ -997,7 +997,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 								if(myLocation != null){
 									
-									PromotionDialog promotionDialog = new PromotionDialog(myLocation, PromotionApplyMode.BEFORE_RIDE);
+									final PromotionDialog promotionDialog = new PromotionDialog(myLocation, PromotionApplyMode.BEFORE_RIDE);
 									promotionDialog.fetchPromotionsAPI(HomeActivity.this, new PromotionDialogEventHandler() {
 										
 										@Override
@@ -1022,6 +1022,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											
 										}
 									});
+									
+									new Handler().postDelayed(new Runnable() {
+										
+										@Override
+										public void run() {
+											promotionDialog.dismissAlert();
+										}
+									}, 2 * 60000);
 									
 								}
 								else{
