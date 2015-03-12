@@ -1,0 +1,180 @@
+package product.clicklabs.jugnoo;
+
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import rmn.androidscreenlibrary.ASSL;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.flurry.android.FlurryAgent;
+
+public class WalletAddPaymentActivity extends Activity{
+	
+	LinearLayout relative;
+	
+	ImageView imageViewBack;
+	TextView textViewTitle;
+	
+	TextView textViewHelp;
+	EditText editTextAmount;
+	Button button100, button200, button500, buttonMakePayment;
+	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		HomeActivity.checkForAccessTokenChange(this);
+	}
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_wallet_add_payment);
+		
+		relative = (LinearLayout) findViewById(R.id.relative);
+		new ASSL(WalletAddPaymentActivity.this, relative, 1134, 720, false);
+		
+		
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		
+		textViewHelp = (TextView) findViewById(R.id.textViewHelp); textViewHelp.setTypeface(Data.latoLight(this));
+		
+		editTextAmount = (EditText) findViewById(R.id.editTextAmount); editTextAmount.setTypeface(Data.latoRegular(this));
+		
+		button100 = (Button) findViewById(R.id.button100); button100.setTypeface(Data.latoRegular(this));
+		button200 = (Button) findViewById(R.id.button200); button200.setTypeface(Data.latoRegular(this));
+		button500 = (Button) findViewById(R.id.button500); button500.setTypeface(Data.latoRegular(this));
+		buttonMakePayment = (Button) findViewById(R.id.buttonMakePayment); buttonMakePayment.setTypeface(Data.latoRegular(this));
+		
+		textViewCurrentBalance = (TextView) findViewById(R.id.textViewCurrentBalance); textViewCurrentBalance.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		textViewCurrentBalanceValue = (TextView) findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Data.latoRegular(this));
+		
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
+		
+			@Override
+			public void onClick(View v) {
+				performBackPressed();
+			}
+		});
+		
+		
+		button100.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				editTextAmount.setText("100");
+				editTextAmount.setSelection(editTextAmount.getText().length());
+			}
+		});
+		
+		button200.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				editTextAmount.setText("200");
+				editTextAmount.setSelection(editTextAmount.getText().length());
+			}
+		});
+
+		button500.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				editTextAmount.setText("500");
+				editTextAmount.setSelection(editTextAmount.getText().length());
+			}
+		});
+		
+		buttonMakePayment.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String amount = editTextAmount.getText().toString().trim();
+				if(AppStatus.getInstance(WalletAddPaymentActivity.this).isOnline(WalletAddPaymentActivity.this)){
+					if("".equalsIgnoreCase(amount)){
+						editTextAmount.requestFocus();
+						editTextAmount.setError("Please enter some amount");
+					}
+					else{
+						Intent intent = new Intent(WalletAddPaymentActivity.this, WalletWebviewActivity.class);
+						intent.putExtra("amount", amount);
+						startActivity(intent);
+						finish();
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					}
+				}
+				else{
+					DialogPopup.alertPopup(WalletAddPaymentActivity.this, "", Data.CHECK_INTERNET_MSG);
+				}
+			}
+		});
+		
+		
+		try{
+			
+			textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.jugnooBalance);
+			
+			if(getIntent().hasExtra("payment")){
+				String payment = getIntent().getStringExtra("payment");
+				if("failure".equalsIgnoreCase(payment)){
+					DialogPopup.dialogBanner(WalletAddPaymentActivity.this, "Transaction failed, Please try again");
+					new Handler().postDelayed(new Runnable() {
+						
+						@Override
+						public void run() {
+							DialogPopup.dismissAlertPopup();
+						}
+					}, 5000);
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	public void performBackPressed(){
+		startActivity(new Intent(WalletAddPaymentActivity.this, WalletActivity.class));
+		finish();
+		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
+		super.onBackPressed();
+	}
+	
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+        ASSL.closeActivity(relative);
+        System.gc();
+	}
+	
+}
