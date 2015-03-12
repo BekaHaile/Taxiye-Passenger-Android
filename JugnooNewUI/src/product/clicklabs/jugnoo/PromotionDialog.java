@@ -318,6 +318,7 @@ public class PromotionDialog {
 //										}
 										
 										
+										
 										promoCouponList.clear();
 										
 										JSONArray jCouponsArr = jObj.getJSONArray("coupons");
