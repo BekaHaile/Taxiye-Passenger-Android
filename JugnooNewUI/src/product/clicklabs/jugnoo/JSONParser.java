@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -271,22 +272,29 @@ public class JSONParser {
 	
 	//TODO
 	public void parseLastRideData(JSONObject jObj){
-//	    "last_ride": {
-//        "engagement_id": 5982,
-//        "fare": 25,
-//        "to_pay": 25,
+		
+//		  "last_ride": {
+//        "engagement_id": 6973,
+//        "session_id": 3822,
+//        "pickup_address": "Unnamed",
+//        "drop_address": "Unnamed",
+//        "fare": 26,
 //        "discount": 0,
-//        "distance_travelled": 0,
+//        "paid_using_wallet": 0,
+//        "to_pay": 26,
+//        "distance": 0,
 //        "ride_time": 1,
-//        "wait_time": 0,
+//        "rate_app": 0,
+//        "drop_time": "05:14 AM",
+//        "pickup_time": "05:14 AM",
 //        "coupon": null,
-//        "rate_us": 0,
+//        "promotion": null,
 //        "driver_info": {
-//            "id": 234,
-//            "name": "Driver 1",
+//            "id": 231,
+//            "name": "Driver 3",
 //            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png"
 //        }
-//    },
+//    }
 		
 		try {
 			JSONObject jLastRideData = jObj.getJSONObject("last_ride");
@@ -300,10 +308,6 @@ public class JSONParser {
 			
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"));
 			
-			Data.totalDistance = jLastRideData.getDouble("distance_travelled");
-			Data.totalFare = jLastRideData.getDouble("fare");
-			Data.waitTime = jLastRideData.getString("wait_time");
-			Data.rideTime = jLastRideData.getString("ride_time");
 			
 			try{
 				if(jLastRideData.has("rate_app")){
@@ -315,13 +319,18 @@ public class JSONParser {
 			
 			HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 			
-			try{
-				Data.couponJSON = jLastRideData;
-				Log.i("Data.couponJSON", "="+Data.couponJSON);
-			} catch(Exception e){
-				e.printStackTrace();
-				Data.couponJSON = new JSONObject();
-			}
+			Data.endRideData = new EndRideData(jLastRideData.getString("engagement_id"), 
+					jLastRideData.getString("pickup_address"), 
+					jLastRideData.getString("drop_address"), 
+					jLastRideData.getString("pickup_time"), 
+					jLastRideData.getString("drop_time"), 
+					jLastRideData.getDouble("fare"), 
+					jLastRideData.getDouble("discount"), 
+					jLastRideData.getDouble("paid_using_wallet"), 
+					jLastRideData.getDouble("to_pay"), 
+					jLastRideData.getDouble("distance"), 
+					jLastRideData.getDouble("ride_time"));
+			
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -542,19 +551,6 @@ public class JSONParser {
 						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
 					}
 					
-				}
-				else if(Data.P_RIDE_END.equalsIgnoreCase(screenMode)){
-					String SP_C_TOTAL_DISTANCE = pref.getString(Data.SP_C_TOTAL_DISTANCE, "0");
-					String SP_C_TOTAL_FARE = pref.getString(Data.SP_C_TOTAL_FARE, "0");
-					String SP_C_WAIT_TIME = pref.getString(Data.SP_C_WAIT_TIME, "0");
-					String SP_C_RIDE_TIME = pref.getString(Data.SP_C_RIDE_TIME, "0");
-					
-					Data.totalDistance = Double.parseDouble(SP_C_TOTAL_DISTANCE);
-					Data.totalFare = Double.parseDouble(SP_C_TOTAL_FARE);
-					Data.waitTime = SP_C_WAIT_TIME;
-					Data.rideTime = SP_C_RIDE_TIME;
-					
-					HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 				}
 				
 			}

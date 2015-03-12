@@ -17,14 +17,20 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppMode;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.LatLngPair;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionApplyMode;
+import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
@@ -97,6 +103,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -316,6 +323,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	//End Ride layout
 	RelativeLayout endRideReviewRl;
+	ScrollView scrollViewEndRide;
 	
 	ImageView imageViewEndRideDriver, imageViewEndRideDriverCar;
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
@@ -392,6 +400,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	Dialog noDriversDialog;
 	
 	LocationFetcher lowPowerLF, highAccuracyLF;
+	
+	PromoCoupon promoCouponSelected;
 	
 	
 	
@@ -705,7 +715,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		//Review Layout
 		endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
-		
+		scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
 		
 		imageViewEndRideDriver = (ImageView) findViewById(R.id.imageViewEndRideDriver);
 		imageViewEndRideDriverCar = (ImageView) findViewById(R.id.imageViewEndRideDriverCar);
@@ -986,7 +996,33 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						if(checkWorkingTime()){
 							if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 								if(myLocation != null){
-									callAnAutoPopup(HomeActivity.this);
+									
+									PromotionDialog promotionDialog = new PromotionDialog(myLocation, PromotionApplyMode.BEFORE_RIDE);
+									promotionDialog.fetchPromotionsAPI(HomeActivity.this, new PromotionDialogEventHandler() {
+										
+										@Override
+										public void onOkPressed(PromoCoupon promoCoupon) {
+											if(promoCoupon.id > -1){
+												promoCouponSelected = promoCoupon;
+											}
+											else{
+												promoCouponSelected = null;
+											}
+											callAnAutoPopup(HomeActivity.this);
+										}
+										
+										@Override
+										public void onNoCouponsAvailable() {
+											promoCouponSelected = null;
+											callAnAutoPopup(HomeActivity.this);
+										}
+										
+										@Override
+										public void onCancelPressed() {
+											
+										}
+									});
+									
 								}
 								else{
 									Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
@@ -1467,13 +1503,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onClick(View v) {
 				GCMIntentService.clearNotifications(HomeActivity.this);
 				if(userMode == UserMode.PASSENGER){
-					feedbackEditText.setText("");
-					feedbackRatingBar.setRating(5);
-					passengerScreenMode = PassengerScreenMode.P_FEEDBACK;
-					switchPassengerScreen(passengerScreenMode);
+//					feedbackEditText.setText("");
+//					feedbackRatingBar.setRating(5);
+//					passengerScreenMode = PassengerScreenMode.P_FEEDBACK;
+//					switchPassengerScreen(passengerScreenMode);
+					
+					Intent intent = new Intent(HomeActivity.this, FeedbackActivity.class);
+					intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.AFTER_RIDE.getOrdinal());
+					startActivity(intent);
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					
 				}
 			}
 		});
+		
+		
 		
 		
 		
@@ -2342,6 +2386,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 		if(mode == PassengerScreenMode.P_RIDE_END){
 			if(Data.endRideData != null){
+				
+				scrollViewEndRide.scrollTo(0, 0);
+				
 				mapLayout.setVisibility(View.GONE);
 				endRideReviewRl.setVisibility(View.VISIBLE);
 				
@@ -2535,7 +2582,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				driverTime.setVisibility(View.VISIBLE);
 				inRideRideInProgress.setText("Please wait while Jugnoo is coming...");
-				
 				
 				
 				
@@ -5733,6 +5779,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 //											    "flag": 115
 //											}
 											
+											try{
+												if(jObj.has("rate_app")){
+													Data.customerRateAppFlag = jObj.getInt("rate_app");
+												}
+											} catch(Exception e){
+												e.printStackTrace();
+											}
+											
 											Data.endRideData = new EndRideData(engagementId, 
 													jObj.getString("pickup_address"), 
 													jObj.getString("drop_address"), 
@@ -7669,6 +7723,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								else{
 									nameValuePairs.add(new BasicNameValuePair("current_latitude", ""+Data.pickupLatLng.latitude));
 									nameValuePairs.add(new BasicNameValuePair("current_longitude", "" + Data.pickupLatLng.longitude));
+								}
+								
+								if(promoCouponSelected != null){
+									if(promoCouponSelected instanceof CouponInfo){
+										nameValuePairs.add(new BasicNameValuePair("account_id", ""+promoCouponSelected.id));
+									}
+									else if(promoCouponSelected instanceof PromotionInfo){
+										nameValuePairs.add(new BasicNameValuePair("promo_id", ""+promoCouponSelected.id));
+									}
 								}
 								
 								if("".equalsIgnoreCase(Data.cSessionId)){

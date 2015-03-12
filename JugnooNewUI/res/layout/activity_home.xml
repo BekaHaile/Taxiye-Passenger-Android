@@ -1698,6 +1698,10 @@
                             android:text="You can now add Jugnoo Cash by giving\nit to our Jugnoo Driver"
                             android:textColor="@color/black_text"
                             android:textSize="28px" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="30px" />
                     </LinearLayout>
                 </ScrollView>
             </RelativeLayout>

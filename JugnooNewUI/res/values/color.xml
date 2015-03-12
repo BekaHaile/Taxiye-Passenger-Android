@@ -87,6 +87,8 @@
     <color name="white">#FFFFFF</color>
     <color name="white_alpha">#99FFFFFF</color>
     <color name="white_light_grey">#FAFAFA</color>
+     <color name="white_light_more_grey">#F3F3F3</color>
+    
     
     <color name="black_text">#242424</color>
     <color name="black_text_alpha">#99242424</color>
@@ -107,6 +109,8 @@
     
     
     <color name="green_transaction_type">#46B82F</color>
+    
+    <color name="dialog_border_color">#AA7E7D78</color>
     
    
 </resources>
