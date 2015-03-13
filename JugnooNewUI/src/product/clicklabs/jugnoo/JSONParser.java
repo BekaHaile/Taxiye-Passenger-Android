@@ -368,20 +368,18 @@ public class JSONParser {
 		try{
 			JSONArray data = jObject.getJSONArray(jsonArrayKey);
 			Data.driverInfos.clear();
+			
 			for(int i=0; i<data.length(); i++){
 				JSONObject dataI = data.getJSONObject(i);
 				String userId = dataI.getString("user_id");
 				double latitude = dataI.getDouble("latitude");
 				double longitude = dataI.getDouble("longitude");
 				String userName = dataI.getString("user_name");
-				String userImage = "";
-				String driverCarImage = "";
 				String phoneNo = dataI.getString("phone_no");
 				String rating = dataI.getString("rating");
+				String userImage = "";
+				String driverCarImage = "";
 				String carNumber = "";
-				if(dataI.has("driver_car_no")){
-					carNumber = dataI.getString("driver_car_no");
-				}
 				Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0));
 			}
 		}

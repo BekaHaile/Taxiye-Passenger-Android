@@ -51,8 +51,39 @@
                 android:divider="@color/grey_light"
                 android:dividerHeight="2px"
                 android:splitMotionEvents="false"
+                android:visibility="visible"
                  >
             </ListView>
+            
+            
+            <TextView
+                android:id="@+id/textViewDoYouWantToRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30px"
+                android:layout_marginTop="30px"
+                android:gravity="center"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:text="Do you really want to request?"
+                android:textColor="@color/grey_dark"
+                android:textSize="34px" />
+            
+            
+            <TextView
+                android:id="@+id/textViewReferInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30px"
+                android:gravity="center"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:text="You can earn free rides referring\nJugnoo to your friends"
+                android:textColor="@color/grey_dark_less"
+                android:textSize="34px" />
+            
 
             <TextView
                 android:id="@+id/textViewMessage"
