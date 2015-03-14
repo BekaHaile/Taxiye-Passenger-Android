@@ -98,7 +98,7 @@ public class PromotionDialog {
 			listViewPromotions.setAdapter(promotionsListAdapter);
 			
 			btnOk = (Button) dialog.findViewById(R.id.btnOk);
-			btnOk.setTypeface(Data.latoRegular(activity));
+			btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 			
 			btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
 			btnCancel.setTypeface(Data.latoRegular(activity));
@@ -159,14 +159,22 @@ public class PromotionDialog {
 		}
 	}
 	public void stopDismissHandler(){
-		try{dismissHandler.removeCallbacks(dismissRunnable);} catch(Exception e){e.printStackTrace();}
+		try{
+			if(dismissHandler != null && dismissRunnable != null){
+				dismissHandler.removeCallbacks(dismissRunnable);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	
 	
 	public void dismissAlert(){
 		try{
-			dialog.dismiss();
+			if(dialog != null){
+				dialog.dismiss();
+			}
 			stopDismissHandler();
 		} catch(Exception e){
 			e.printStackTrace();
@@ -331,7 +339,8 @@ public class PromotionDialog {
 								jObj = new JSONObject(response);
 								
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
+//									int flag = jObj.getInt("flag");
+									int flag = ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal();
 									if(ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal() == flag){
 										
 //										{
@@ -392,6 +401,24 @@ public class PromotionDialog {
 										
 										showPromoAlert(activity, promotionDialogEventHandler);
 										
+										
+										if(PromotionApplyMode.BEFORE_SCHEDULE.getOrdinal() == promotionApplyMode.getOrdinal()){
+											textViewMessage.setText("Please note that price rates applicable at the scheduled time might be different");
+											
+											SpannableString sstr = new SpannableString("Choose one for this ride");
+											final StyleSpan bss = new StyleSpan(Typeface.BOLD);
+											sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+											
+											textViewTitle.setText("Ride Scheduled. You have coupons available.\n");
+											textViewTitle.append(sstr);
+										}
+										else{
+											textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
+													+"x higher than normal to maintain availability");
+											
+											textViewTitle.setText("You have coupons available.\nChoose one");
+										}
+										
 										if(promoCouponList.size() > 0){
 											promoCouponList.add(new CouponInfo(-1, "Don't apply coupon on this ride"));
 											selectedCoupon = promoCouponList.get(0);
@@ -406,25 +433,8 @@ public class PromotionDialog {
 											listViewPromotions.setVisibility(View.GONE);
 											textViewDoYouWantToRequest.setVisibility(View.VISIBLE);
 											textViewReferInfo.setVisibility(View.VISIBLE);
-										}
-										
-										if(PromotionApplyMode.BEFORE_SCHEDULE.getOrdinal() == promotionApplyMode.getOrdinal()){
-											textViewMessage.setVisibility(View.VISIBLE);
-											textViewMessage.setText("Please note that price rates applicable at the scheduled time might be different");
 											
-											SpannableString sstr = new SpannableString("Choose one for this ride");
-											final StyleSpan bss = new StyleSpan(Typeface.BOLD);
-											sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-											
-											textViewTitle.setText("Ride Scheduled. You have coupons available.\n");
-											textViewTitle.append(sstr);
-										}
-										else{
-											textViewMessage.setVisibility(View.VISIBLE);
-											textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
-													+"x higher than normal to maintain availability");
-											
-											textViewTitle.setText("You have coupons available.\nChoose one");
+											textViewTitle.setText("No coupons available");
 										}
 										
 										promotionsListAdapter.notifyDataSetChanged();

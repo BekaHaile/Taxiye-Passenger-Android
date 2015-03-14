@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionApplyMode;
 import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import product.clicklabs.jugnoo.datastructure.ScheduleOperationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -762,18 +761,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		});
 		
 		
-//		favBtn.setOnClickListener(new View.OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				startActivity(new Intent(HomeActivity.this, FavoriteActivity.class));
-//				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//			}
-//		});
-		
-		
-		
-		
 		checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
 			
 			@Override
@@ -1005,7 +992,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onClick(View v) {
 				if(Data.userData != null && Data.userData.canSchedule == 1){
-					switchToScheduleScreen(activity);
+					switchToScheduleScreen(HomeActivity.this);
 				}
 				else{
 					Toast.makeText(getApplicationContext(),
@@ -2373,7 +2360,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textViewNearestDriverETA.setText("Finding drivers near you...");
 				
 				textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
-				textViewCurrentRatesInfo.setText("Current rates are 1.0x higher than normal to maintain avaliability");
+				textViewCurrentRatesInfo.setText("Current rates are "
+						+decimalFormat.format(Data.userData.fareFactor)
+						+"x higher than normal to maintain avaliability");
 				
 				textViewFindingDriver.setVisibility(View.GONE);
 				
@@ -3587,6 +3576,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    					Log.i("result", "t="+result);
 		    					new JSONParser().parseDriversToShow(jObj, "drivers");
 		    					etaMinutes = jObj.getString("eta");
+		    					Data.userData.fareFactor = jObj.getDouble("fare_factor");
 		    				}
 		    				catch(Exception e){
 		    					e.printStackTrace();
@@ -3646,15 +3636,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							}
 						}, 10000);
 				        
-						textViewNearestDriverETA.setText("Done");
-						
 				        if(!"error".equalsIgnoreCase(result)){
 					        if(!driverAcceptPushRecieved){
 					        	if(Data.driverInfos.size() == 0){
 						        	textViewNearestDriverETA.setText("No drivers nearby.");
 					        	}
 					        	else{
-						        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minutes away");
+						        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minutes Away");
 					        	}
 					        }
 				        }
@@ -3663,6 +3651,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					        	textViewNearestDriverETA.setText("Couldn't find drivers nearby.");
 					        }
 				        }
+				        
+				        textViewCurrentRatesInfo.setText("Current rates are "
+								+decimalFormat.format(Data.userData.fareFactor)
+								+"x higher than normal to maintain avaliability");
 				        
 				        if (driverAcceptPushRecieved) {
 							SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -6021,7 +6013,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					dialog.setCanceledOnTouchOutside(false);
 					
 					
-					
 					TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 					TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 					
@@ -6052,18 +6043,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					});
 					
 					
-					dialog.findViewById(R.id.crossbtn).setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					
-					
 					dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-						}
+}
 					});
 					
 					
@@ -6098,11 +6081,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR_OF_DAY, 1);
 		calendar.add(Calendar.MINUTE, 5);
-		ScheduleRideActivity.selectedScheduleCalendar = calendar;
-		ScheduleRideActivity.selectedScheduleLatLng = null;
-		ScheduleRideActivity.scheduleOperationMode = ScheduleOperationMode.INSERT;
-		activity.startActivity(new Intent(activity, ScheduleRideActivity.class));
-		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		
+//		ScheduleRideActivity.selectedScheduleCalendar = calendar;
+//		ScheduleRideActivity.selectedScheduleLatLng = null;
+//		ScheduleRideActivity.scheduleOperationMode = ScheduleOperationMode.INSERT;
+//		activity.startActivity(new Intent(activity, ScheduleRideActivity.class));
+//		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		
+		
+		if(map != null){
+			LatLng latLng = map.getCameraPosition().target;
+			ScheduleRideDialog scheduleRideDialog = new ScheduleRideDialog(HomeActivity.this, calendar, latLng);
+			scheduleRideDialog.showDialog(HomeActivity.this);
+		}
+		
+		
 	}
 	
 	
@@ -6844,8 +6837,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
 			
+			String promoName = JSONParser.getPromoName(jObj);
+			
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName, 
-					driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide);
+					driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName);
 			
 			
 			
@@ -6912,8 +6907,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				freeRide = jObj.getInt("free_ride");
 			}
 			
+			String promoName = JSONParser.getPromoName(jObj);
+			
 			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName, 
-					driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide);
+					driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName);
 			
 			Data.startRidePreviousLatLng = Data.pickupLatLng;
 			initializeStartRideVariables();
@@ -7435,21 +7432,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								if(promoCouponSelected != null){
 									if(promoCouponSelected instanceof CouponInfo){
-										nameValuePairs.add(new BasicNameValuePair("account_id", ""+promoCouponSelected.id));
+										nameValuePairs.add(new BasicNameValuePair("coupon_to_apply", ""+promoCouponSelected.id));
 									}
 									else if(promoCouponSelected instanceof PromotionInfo){
-										nameValuePairs.add(new BasicNameValuePair("promo_id", ""+promoCouponSelected.id));
+										nameValuePairs.add(new BasicNameValuePair("promo_to_apply", ""+promoCouponSelected.id));
 									}
-									else{
-										nameValuePairs.add(new BasicNameValuePair("account_id", "0"));
-									}
-								}
-								else{
-									nameValuePairs.add(new BasicNameValuePair("account_id", "0"));
 								}
 								
 								if("".equalsIgnoreCase(Data.cSessionId)){
 									nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "0"));
+									nameValuePairs.add(new BasicNameValuePair("fare_factor", ""+Data.userData.fareFactor));
 									if(myLocation != null && myLocation.hasAccuracy()){
 										nameValuePairs.add(new BasicNameValuePair("location_accuracy", ""+myLocation.getAccuracy()));
 									}

@@ -519,6 +519,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		protected String doInBackground(String... params) {
 			try {
 				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
+				Log.e("AccessTokenDataParseAsync resp", "="+resp);
 				return resp;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -529,6 +530,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
+			Log.e("AccessTokenDataParseAsync result", "="+result);
 			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 				loginDataFetched = false;
 				DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

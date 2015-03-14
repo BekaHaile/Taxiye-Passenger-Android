@@ -8,13 +8,15 @@ public class DriverInfo {
 	public LatLng latLng;
 	public int freeRide;
 	
-	public String distanceToReach = "0", durationToReach = "";
+	public String distanceToReach = "0", durationToReach = "", promoName = "No Promo Code applied";
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
 	
-	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber, String rating, String carNumber, int freeRide){
+	public DriverInfo(String userId, double latitude, double longitude, 
+			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
+			int freeRide){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -24,6 +26,21 @@ public class DriverInfo {
 		this.rating = rating;
 		this.carNumber = carNumber;
 		this.freeRide = freeRide;
+	}
+	
+	public DriverInfo(String userId, double latitude, double longitude, 
+			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
+			int freeRide, String promoName){
+		this.userId = userId;
+		this.latLng = new LatLng(latitude, longitude);
+		this.name = name;
+		this.image = image;
+		this.carImage = carImage;
+		this.phoneNumber = phoneNumber;
+		this.rating = rating;
+		this.carNumber = carNumber;
+		this.freeRide = freeRide;
+		this.promoName = promoName;
 	}
 	
 	public DriverInfo(String userId, String name, String image){

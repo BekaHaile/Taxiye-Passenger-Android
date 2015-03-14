@@ -96,7 +96,7 @@ public class JSONParser {
 				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;
 		int emailVerificationStatus = 1;
 		String userEmail = "", phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk";
-		double jugnooBalance = 0;
+		double jugnooBalance = 0, fareFactor = 1.0;
 		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
@@ -188,6 +188,9 @@ public class JSONParser {
 			emailVerificationStatus = userData.getInt("email_verification_status");
 		}
 		
+		if(userData.has("fare_factor")){
+			fareFactor = userData.getDouble("fare_factor");
+		}
 		
 		String authKey = userData.getString("auth_key");
 		AccessTokenGenerator.saveAuthKey(context, authKey);
@@ -198,7 +201,7 @@ public class JSONParser {
 		return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus, 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
 				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
-				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance);
+				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor);
 	}
 	
 
@@ -391,7 +394,7 @@ public class JSONParser {
 	
 	
 	public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1){
-		
+		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
 		String returnResponse = "";
 		
 		if(currentUserStatus == 2){
@@ -403,6 +406,7 @@ public class JSONParser {
 					driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", driverCarNumber = "", 
 					pickupLatitude = "", pickupLongitude = "";
 			int freeRide = 0;
+			String promoName = "";
 			
 			try{
 							
@@ -471,6 +475,9 @@ public class JSONParser {
 										if(jObject.has("free_ride")){
 											freeRide = jObject.getInt("free_ride");
 										}
+										
+										promoName = getPromoName(jObject);
+										
 									}
 								}
 							
@@ -524,7 +531,7 @@ public class JSONParser {
 				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
 				Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName, 
-						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide);
+						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName);
 				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
 				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
 				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;
@@ -558,6 +565,41 @@ public class JSONParser {
 	}
 	
 	
+	
+	public static String getPromoName(JSONObject jObject){
+		String promoName = "No Promo Code applied";
+		try {
+			String coupon = "", promotion = "";
+			try {
+				if(jObject.has("coupon")){
+					coupon = jObject.getString("coupon");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				if(jObject.has("promotion")){
+					promotion = jObject.getString("promotion");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if(!"".equalsIgnoreCase(coupon)){
+				promoName = coupon;
+			}
+			else if(!"".equalsIgnoreCase(promotion)){
+				promoName = promotion;
+			}
+			else{
+				promoName = "No Promo Code applied";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return promoName;
+	}
 	
 	
 	
