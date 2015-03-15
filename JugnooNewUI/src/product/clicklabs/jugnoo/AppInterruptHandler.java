@@ -10,8 +10,6 @@ public interface AppInterruptHandler {
 	
 	public void onRideRequestTimeout(String engagementId);
 	
-	public void onManualDispatchPushReceived();
-	
 	
 	
 	

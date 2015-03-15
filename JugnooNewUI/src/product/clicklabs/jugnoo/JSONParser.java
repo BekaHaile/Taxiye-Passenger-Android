@@ -9,11 +9,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -240,7 +243,6 @@ public class JSONParser {
 		JSONObject jUserStatusObject = jObj.getJSONObject("status");
 		String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
 				
-		parseLastRideData(jObj);
 		
 		return resp;
 	}
@@ -309,8 +311,8 @@ public class JSONParser {
 			
 			Data.pickupLatLng = new LatLng(0, 0);
 			
-			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"));
-			
+			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"), 
+					jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
 			
 			try{
 				if(jLastRideData.has("rate_app")){
@@ -320,20 +322,32 @@ public class JSONParser {
 				e.printStackTrace();
 			}
 			
-			HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+			
+			double baseFare = Data.fareStructure.fixedFare;
+			if(jLastRideData.has("base_fare")){
+				baseFare = jLastRideData.getDouble("base_fare");
+			}
+			
+			String banner = "";
+			if(jLastRideData.has("banner")){
+				banner = jLastRideData.getString("banner");
+			}
 			
 			Data.endRideData = new EndRideData(jLastRideData.getString("engagement_id"), 
 					jLastRideData.getString("pickup_address"), 
 					jLastRideData.getString("drop_address"), 
 					jLastRideData.getString("pickup_time"), 
 					jLastRideData.getString("drop_time"), 
+					banner, 
 					jLastRideData.getDouble("fare"), 
 					jLastRideData.getDouble("discount"), 
 					jLastRideData.getDouble("paid_using_wallet"), 
 					jLastRideData.getDouble("to_pay"), 
 					jLastRideData.getDouble("distance"), 
-					jLastRideData.getDouble("ride_time"));
+					jLastRideData.getDouble("ride_time"),
+					baseFare);
 			
+			HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -406,7 +420,11 @@ public class JSONParser {
 					driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", driverCarNumber = "", 
 					pickupLatitude = "", pickupLongitude = "";
 			int freeRide = 0;
-			String promoName = "";
+			String promoName = "", eta = "";
+			double fareFactor = 1.0;
+			
+			
+			HomeActivity.userMode = UserMode.PASSENGER;
 			
 			try{
 							
@@ -478,7 +496,19 @@ public class JSONParser {
 										
 										promoName = getPromoName(jObject);
 										
+										if(jObject.has("eta")){
+											eta = jObject.getString("eta");
+										}
+										
+										if(jObject.has("fare_factor")){
+											fareFactor = jObject.getDouble("fare_factor");
+										}
+										
 									}
+								}
+								else if(ApiResponseFlags.LAST_RIDE.getOrdinal() == flag){
+									parseLastRideData(jObject1);
+									return returnResponse;
 								}
 							
 							}
@@ -488,8 +518,6 @@ public class JSONParser {
 				returnResponse = HttpRequester.SERVER_TIMEOUT;
 				return returnResponse;
 			}
-			
-			HomeActivity.userMode = UserMode.PASSENGER;
 			
 			if(EngagementStatus.REQUESTED.getOrdinal() == engagementStatus){
 				screenMode = Data.P_ASSIGNING;
@@ -527,16 +555,13 @@ public class JSONParser {
 				double dLatitude = Double.parseDouble(latitude);
 				double dLongitude = Double.parseDouble(longitude);
 				
-				String SP_C_DRIVER_DISTANCE = pref.getString(Data.SP_C_DRIVER_DISTANCE, "0");
-				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
 				Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName, 
-						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName);
-				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
-				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
-				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;
+						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta);
 				
-				Log.e("Data.assignedDriverInfo.durationToReach in get_current_user_status", "="+Data.assignedDriverInfo.durationToReach);
+				Data.userData.fareFactor = fareFactor;
+				
+				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
 				
 				
 				if(Data.P_REQUEST_FINAL.equalsIgnoreCase(screenMode)){
@@ -555,6 +580,8 @@ public class JSONParser {
 						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
 						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
 					}
+				}
+				else{
 					
 				}
 				
@@ -640,8 +667,6 @@ public class JSONParser {
 		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
 		editor.putString(Data.SP_C_DRIVER_PHONE, "");
 		editor.putString(Data.SP_C_DRIVER_RATING, "");
-		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-		editor.putString(Data.SP_C_DRIVER_DURATION, "");
 
 		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
 		editor.putString(Data.SP_C_TOTAL_FARE, "0");
@@ -655,6 +680,71 @@ public class JSONParser {
 
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static ArrayList<PromoCoupon> parsePromoCoupons(JSONObject jObj) throws Exception{
+		ArrayList<PromoCoupon> promoCouponList = new ArrayList<PromoCoupon>();
+		
+//		{
+//	    "flag": 174,
+//	    "coupons": [
+//	        {
+//	            "title": "Free ride",
+//	            "subtitle": "upto Rs. 100",
+//	            "description": "Your next ride",
+//	            "discount": 100,
+//	            "maximum": 100,
+//	            "image": "",
+//	            "type": 0,
+//	            "redeemed_on": "0000-00-00 00:00:00",
+//	            "status": 1,
+//	            "expiry_date": "December 31st 2015"
+//	        }
+//	    ],
+//	    "promotions": [
+//	        {
+//	            "promo_id": 1,
+//	            "title": "Flat 100% off",
+//	            "terms_n_conds": "t"
+//	        }
+//	    ],
+//	    "dynamic_factor": "1.0"
+//	}
+		
+		
+		JSONArray jCouponsArr = jObj.getJSONArray("coupons");
+		for(int i=0; i<jCouponsArr.length(); i++){
+			JSONObject coData = jCouponsArr.getJSONObject(i);
+			promoCouponList.add(new CouponInfo(coData.getInt("account_id"),
+					coData.getInt("type"), 
+					coData.getInt("status"), 
+					coData.getString("title"), 
+					coData.getString("subtitle"), 
+					coData.getString("description"), 
+					coData.getString("image"), 
+					coData.getString("redeemed_on"), 
+					coData.getString("expiry_date"), 
+					coData.getDouble("discount"), 
+					coData.getDouble("maximum")));
+		}
+		
+		JSONArray jPromoArr = jObj.getJSONArray("promotions");
+		for(int i=0; i<jPromoArr.length(); i++){
+			JSONObject coData = jPromoArr.getJSONObject(i);
+			promoCouponList.add(new PromotionInfo(coData.getInt("promo_id"), 
+					coData.getString("title"), 
+					coData.getString("terms_n_conds")));
+		}
+		
+		return promoCouponList;
+	}
 	
 	
 	

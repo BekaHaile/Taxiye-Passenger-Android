@@ -86,8 +86,6 @@ public class Data {
 			SP_C_DRIVER_CAR_IMAGE = "c_driver_car_image",
 			SP_C_DRIVER_PHONE = "c_driver_phone",
 			SP_C_DRIVER_RATING = "c_driver_rating",
-			SP_C_DRIVER_DISTANCE = "c_driver_distance",
-			SP_C_DRIVER_DURATION = "c_driver_duration",
 			
 			SP_C_TOTAL_DISTANCE = "c_total_distance",
 			SP_C_TOTAL_FARE = "c_total_fare",
@@ -281,7 +279,7 @@ public class Data {
 	
 	
 	
-	public static Typeface latoRegular, museoSlab, latoLight;																// fonts declaration
+	private static Typeface latoRegular, museoSlab, latoLight;																// fonts declaration
 	
 
 	public static Typeface latoRegular(Context appContext) {											// accessing fonts functions

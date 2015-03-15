@@ -12,6 +12,7 @@ import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
+import product.clicklabs.jugnoo.datastructure.RideCancellationMode;
 import product.clicklabs.jugnoo.datastructure.RideInfoNew;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -152,7 +153,7 @@ public class AccountActivity extends Activity {
 		ASSL.DoMagic(viewF);
 		
 		relativeLayoutSeeMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutSeeMore);
-		textViewSeeMore = (TextView) viewF.findViewById(R.id.textViewSeeMore); textViewSeeMore.setTypeface(Data.latoLight(this));
+		textViewSeeMore = (TextView) viewF.findViewById(R.id.textViewSeeMore); textViewSeeMore.setTypeface(Data.latoLight(this), Typeface.BOLD);
 		relativeLayoutSeeMore.setVisibility(View.GONE);
 		
 		rideTransactionAdapter = new RideTransactionAdapter(this);
@@ -1081,7 +1082,7 @@ public class AccountActivity extends Activity {
 				holder.textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); holder.textViewToValue.setTypeface(Data.latoRegular(context));
 				holder.textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); holder.textViewDetails.setTypeface(Data.latoRegular(context));
 				holder.textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); holder.textViewDetailsValue.setTypeface(Data.latoRegular(context));
-				holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Data.latoRegular(context));
+				holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Data.latoRegular(context), Typeface.BOLD);
 				holder.textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); holder.textViewCancel.setTypeface(Data.latoRegular(context));
 				
 				holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
@@ -1162,6 +1163,16 @@ public class AccountActivity extends Activity {
 				}
 				holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfoNew.amount));
 			}
+			
+			holder.relativeLayoutCancel.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					RideCancellationActivity.rideCancellationMode = RideCancellationMode.SCHEDULE_RIDE;
+					startActivity(new Intent(AccountActivity.this, RideCancellationActivity.class));
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
+			});
 			
 			
 			return convertView;

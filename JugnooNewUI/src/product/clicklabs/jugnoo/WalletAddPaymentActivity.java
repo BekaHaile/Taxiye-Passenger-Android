@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import rmn.androidscreenlibrary.ASSL;
@@ -28,6 +29,8 @@ public class WalletAddPaymentActivity extends Activity{
 	EditText editTextAmount;
 	Button button100, button200, button500, buttonMakePayment;
 	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
+	
+	public static AddPaymentPath addPaymentPath = AddPaymentPath.FROM_WALLET;
 	
 	@Override
 	protected void onStart() {
@@ -59,7 +62,7 @@ public class WalletAddPaymentActivity extends Activity{
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		
-		textViewHelp = (TextView) findViewById(R.id.textViewHelp); textViewHelp.setTypeface(Data.latoLight(this));
+		textViewHelp = (TextView) findViewById(R.id.textViewHelp); textViewHelp.setTypeface(Data.latoLight(this), Typeface.BOLD);
 		
 		editTextAmount = (EditText) findViewById(R.id.editTextAmount); editTextAmount.setTypeface(Data.latoRegular(this));
 		
@@ -111,22 +114,36 @@ public class WalletAddPaymentActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				String amount = editTextAmount.getText().toString().trim();
-				if(AppStatus.getInstance(WalletAddPaymentActivity.this).isOnline(WalletAddPaymentActivity.this)){
-					if("".equalsIgnoreCase(amount)){
+				try {
+					String amountStr = editTextAmount.getText().toString().trim();
+					if("".equalsIgnoreCase(amountStr)){
 						editTextAmount.requestFocus();
 						editTextAmount.setError("Please enter some amount");
 					}
 					else{
-						Intent intent = new Intent(WalletAddPaymentActivity.this, WalletWebviewActivity.class);
-						intent.putExtra("amount", amount);
-						startActivity(intent);
-						finish();
-						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						double amount = Double.parseDouble(editTextAmount.getText().toString().trim());
+						if(AppStatus.getInstance(WalletAddPaymentActivity.this).isOnline(WalletAddPaymentActivity.this)){
+							if(amount < 1){
+								editTextAmount.requestFocus();
+								editTextAmount.setError("Please enter some amount");
+							}
+							else{
+								Intent intent = new Intent(WalletAddPaymentActivity.this, WalletWebviewActivity.class);
+								intent.putExtra("amount", amountStr);
+								startActivity(intent);
+								finish();
+								overridePendingTransition(R.anim.right_in, R.anim.right_out);
+							}
+						}
+						else{
+							DialogPopup.alertPopup(WalletAddPaymentActivity.this, "", Data.CHECK_INTERNET_MSG);
+						}
 					}
-				}
-				else{
-					DialogPopup.alertPopup(WalletAddPaymentActivity.this, "", Data.CHECK_INTERNET_MSG);
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					editTextAmount.requestFocus();
+					editTextAmount.setError("Please enter valid amount");
 				}
 			}
 		});
@@ -158,7 +175,9 @@ public class WalletAddPaymentActivity extends Activity{
 	
 	
 	public void performBackPressed(){
-		startActivity(new Intent(WalletAddPaymentActivity.this, WalletActivity.class));
+		if(AddPaymentPath.FROM_WALLET == addPaymentPath){
+			startActivity(new Intent(WalletAddPaymentActivity.this, WalletActivity.class));
+		}
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}

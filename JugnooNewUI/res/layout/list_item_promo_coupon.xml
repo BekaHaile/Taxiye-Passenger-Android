@@ -24,7 +24,7 @@
             android:gravity="center_vertical"
             android:text="1 Free Ride"
             android:textColor="@color/grey_dark"
-            android:textSize="34px" />
+            android:textSize="30px" />
 
         <TextView
             android:id="@+id/textViewTNC"

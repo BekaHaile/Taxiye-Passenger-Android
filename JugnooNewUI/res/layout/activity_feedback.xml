@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="720px"
+    android:layout_height="1134px"
     android:background="@color/white" >
 
     <LinearLayout
@@ -38,51 +38,63 @@
                 android:src="@drawable/back_white_selector" />
         </RelativeLayout>
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white_light_grey"
-            android:orientation="vertical"
             android:splitMotionEvents="false" >
 
-            <RatingBar
-                android:id="@+id/ratingBarFeedback"
-                style="@style/YellowRatingBarNew"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="120px"
-                android:numStars="5"
-                android:rating="1"
-                android:stepSize="1.0" />
-
-            <EditText
-                android:id="@+id/editTextFeedback"
+            <LinearLayout
+                android:id="@+id/linearLayoutMain"
                 android:layout_width="match_parent"
-                android:layout_height="310px"
-                android:layout_marginLeft="40px"
-                android:layout_marginRight="40px"
-                android:layout_marginTop="70px"
-                android:background="@drawable/background_white_rounded"
-                android:gravity="left"
-                android:hint="How did you like your experience with Jugnoo? Please share your valuable feedback"
-                android:padding="20px"
-                android:scrollbars="vertical"
-                android:textSize="28px" />
+                android:layout_height="match_parent"
+                android:background="@color/white_light_grey"
+                android:orientation="vertical"
+                android:splitMotionEvents="false" >
 
-            <Button
-                android:id="@+id/buttonSubmitFeedback"
-                android:layout_width="648px"
-                android:layout_height="100px"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40px"
-                android:background="@drawable/button_yellow_selector"
-                android:text="SUBMIT"
-                android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/button_text_size" />
-            
-            
-        </LinearLayout>
+                <RatingBar
+                    android:id="@+id/ratingBarFeedback"
+                    style="@style/YellowRatingBarNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="120px"
+                    android:numStars="5"
+                    android:rating="1"
+                    android:stepSize="1.0" />
+
+                <EditText
+                    android:id="@+id/editTextFeedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="310px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:layout_marginTop="70px"
+                    android:background="@drawable/background_white_rounded"
+                    android:gravity="left"
+                    android:hint="How did you like your experience with Jugnoo? Please share your valuable feedback"
+                    android:padding="20px"
+                    android:scrollbars="vertical"
+                    android:textSize="28px" />
+
+                <Button
+                    android:id="@+id/buttonSubmitFeedback"
+                    android:layout_width="648px"
+                    android:layout_height="100px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40px"
+                    android:background="@drawable/button_yellow_selector"
+                    android:text="SUBMIT"
+                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textSize="@dimen/button_text_size" />
+
+                <TextView
+                    android:id="@+id/textViewScroll"
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:text=" " />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
     <RelativeLayout

@@ -289,17 +289,6 @@ public class GCMIntentService extends IntentService {
 		    	    					 notificationManagerResume(this, ""+message1, false);
 	    	    					 }
 	    	    				 }
-	    	    				else if(PushFlags.MANUAL_ENGAGEMENT.getOrdinal() == flag){
-	    	    					Database2.getInstance(this).updateDriverManualPatchPushReceived(Database2.YES);
-	    	    					Database2.getInstance(this).close();
-	    	    					String message1 = jObj.getString("message");
-	    	    					if (HomeActivity.appInterruptHandler != null) {
-										HomeActivity.appInterruptHandler.onManualDispatchPushReceived();
-										notificationManagerResume(this, message1, true);
-									} else {
-										notificationManager(this, message1, true);
-									}
-	    	    				 }
 	    	    				else if(PushFlags.CHANGE_PORT.getOrdinal() == flag){
 	    	    					sendChangePortAckToServer(this, jObj);
 	    	    				 }

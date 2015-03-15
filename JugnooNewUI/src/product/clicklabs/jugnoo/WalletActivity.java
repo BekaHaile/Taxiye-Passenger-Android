@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.TransactionInfo;
@@ -119,7 +120,7 @@ public class WalletActivity extends Activity{
 		ASSL.DoMagic(viewF);
 		
 		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
-		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Data.latoLight(this));
+		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Data.latoLight(this), Typeface.BOLD);
 		relativeLayoutShowMore.setVisibility(View.GONE);
 		
 		
@@ -154,6 +155,7 @@ public class WalletActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
+				WalletAddPaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
 				startActivity(new Intent(WalletActivity.this, WalletAddPaymentActivity.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -305,8 +307,8 @@ public class WalletActivity extends Activity{
 				
 				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Data.latoRegular(context));
 				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Data.latoRegular(context), Typeface.BOLD);
-				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Data.latoLight(context));
-				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Data.latoLight(context));
+				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Data.latoLight(context), Typeface.BOLD);
+				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Data.latoLight(context), Typeface.BOLD);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				

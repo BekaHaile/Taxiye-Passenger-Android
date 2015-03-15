@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -22,7 +21,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -40,6 +38,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
@@ -50,7 +49,7 @@ public class PromotionDialog {
 	
 	private FrameLayout frameLayout;
 	private TextView textViewTitle, textViewMessage, textViewDoYouWantToRequest, textViewReferInfo;
-	private Button btnOk, btnCancel;
+	private Button btnOk, btnCancel, btnOkOnly;
 	private ListView listViewPromotions;
 	
 	private ArrayList<PromoCoupon> promoCouponList;
@@ -59,19 +58,30 @@ public class PromotionDialog {
 	
 	private PromoCoupon selectedCoupon;
 	
-	private Location promoLocation;
+	private LatLng promoLatLng;
 	
 	private PromotionApplyMode promotionApplyMode = PromotionApplyMode.BEFORE_RIDE;
 	
+	private double dynamicFactor = 1.0;
+	private String pickupId = "";
+	
+	
 	private DecimalFormat decimalFormat = new DecimalFormat("#.#");
 	
-	public PromotionDialog(Location location, PromotionApplyMode promotionApplyMode){
+	public PromotionDialog(LatLng latLng, PromotionApplyMode promotionApplyMode){
 		this.promoCouponList = new ArrayList<PromoCoupon>();
 		this.selectedCoupon = null;
-		this.promoLocation = location;
+		this.promoLatLng = latLng;
 		this.promotionApplyMode = promotionApplyMode;
 	}
 	
+	
+	public void updateList(ArrayList<PromoCoupon> promoCouponList, String pickupId){
+		this.promoCouponList.clear();
+		this.promoCouponList.addAll(promoCouponList);
+		
+		this.pickupId = pickupId;
+	}
 	
 	public void showPromoAlert(final Activity activity, final PromotionDialogEventHandler promotionDialogEventHandler) {
 		try {
@@ -91,7 +101,7 @@ public class PromotionDialog {
 			textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(activity));
 			textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Data.latoRegular(activity));
 			textViewDoYouWantToRequest = (TextView) dialog.findViewById(R.id.textViewDoYouWantToRequest); textViewDoYouWantToRequest.setTypeface(Data.latoRegular(activity));
-			textViewReferInfo = (TextView) dialog.findViewById(R.id.textViewReferInfo); textViewReferInfo.setTypeface(Data.latoLight(activity));
+			textViewReferInfo = (TextView) dialog.findViewById(R.id.textViewReferInfo); textViewReferInfo.setTypeface(Data.latoLight(activity), Typeface.BOLD);
 
 			listViewPromotions = (ListView) dialog.findViewById(R.id.listViewPromotions);
 			promotionsListAdapter = new PromotionsListAdapter(activity);
@@ -102,7 +112,9 @@ public class PromotionDialog {
 			
 			btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
 			btnCancel.setTypeface(Data.latoRegular(activity));
-
+			
+			btnOkOnly = (Button) dialog.findViewById(R.id.btnOkOnly); btnOkOnly.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+					
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -128,10 +140,73 @@ public class PromotionDialog {
 				}
 			});
 			
+			btnOkOnly.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(promoCouponList.size() == 0){
+						selectedCoupon = new CouponInfo(0, "");
+					}
+					if(selectedCoupon != null){
+						promotionDialogEventHandler.onOkOnlyPressed(PromotionDialog.this, selectedCoupon, pickupId);
+					}
+					else{
+						Toast.makeText(activity, "Please select some coupon first", Toast.LENGTH_LONG).show();
+					}
+				}
+			});
+			
 
 			dialog.show();
 			
 			startDismissHandler();
+			
+
+			if(PromotionApplyMode.AFTER_SCHEDULE.getOrdinal() == promotionApplyMode.getOrdinal()){
+				textViewMessage.setText("Please note that price rates applicable at the scheduled time might be different");
+				
+				SpannableString sstr = new SpannableString("Choose one for this ride");
+				final StyleSpan bss = new StyleSpan(Typeface.BOLD);
+				sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				
+				textViewTitle.setText("Ride Scheduled. You have coupons available.\n");
+				textViewTitle.append(sstr);
+				
+				btnOk.setVisibility(View.GONE);
+				btnCancel.setVisibility(View.GONE);
+				btnOkOnly.setVisibility(View.VISIBLE);
+				
+			}
+			else{
+				textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
+						+"x higher than normal to maintain availability");
+				
+				textViewTitle.setText("You have coupons available.\nChoose one");
+				
+				btnOk.setVisibility(View.VISIBLE);
+				btnCancel.setVisibility(View.VISIBLE);
+				btnOkOnly.setVisibility(View.GONE);
+			}
+			
+			if(promoCouponList.size() > 0){
+				promoCouponList.add(new CouponInfo(-1, "Don't apply coupon on this ride"));
+				selectedCoupon = promoCouponList.get(0);
+				
+				listViewPromotions.setVisibility(View.VISIBLE);
+				textViewDoYouWantToRequest.setVisibility(View.GONE);
+				textViewReferInfo.setVisibility(View.GONE);
+			}
+			else{
+				selectedCoupon = new CouponInfo(0, "");
+				
+				listViewPromotions.setVisibility(View.GONE);
+				textViewDoYouWantToRequest.setVisibility(View.VISIBLE);
+				textViewReferInfo.setVisibility(View.VISIBLE);
+				
+				textViewTitle.setText("No coupons available");
+			}
+			
+			promotionsListAdapter.notifyDataSetChanged();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -224,7 +299,7 @@ public class PromotionDialog {
 				convertView = mInflater.inflate(R.layout.list_item_promo_coupon, null);
 				
 				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Data.latoRegular(context));
-				holder.textViewTNC = (TextView) convertView.findViewById(R.id.textViewTNC); holder.textViewTNC.setTypeface(Data.latoLight(context));
+				holder.textViewTNC = (TextView) convertView.findViewById(R.id.textViewTNC); holder.textViewTNC.setTypeface(Data.latoLight(context), Typeface.BOLD);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
@@ -313,8 +388,8 @@ public class PromotionDialog {
 			RequestParams params = new RequestParams();
 			
 			params.put("access_token", Data.userData.accessToken);
-			params.put("latitude", ""+promoLocation.getLatitude());
-			params.put("longitude", ""+promoLocation.getLongitude());
+			params.put("latitude", ""+promoLatLng.latitude);
+			params.put("longitude", ""+promoLatLng.latitude);
 
 			Log.i("params", "=" + params);
 			
@@ -329,7 +404,6 @@ public class PromotionDialog {
 							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							DialogPopup.dismissLoadingDialog();
 						}
-
 						
 						@Override
 						public void onSuccess(String response) {
@@ -339,105 +413,15 @@ public class PromotionDialog {
 								jObj = new JSONObject(response);
 								
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-//									int flag = jObj.getInt("flag");
-									int flag = ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal();
+									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal() == flag){
 										
-//										{
-//										    "flag": 174,
-//										    "coupons": [
-//										        {
-//										            "title": "Free ride",
-//										            "subtitle": "upto Rs. 100",
-//										            "description": "Your next ride",
-//										            "discount": 100,
-//										            "maximum": 100,
-//										            "image": "",
-//										            "type": 0,
-//										            "redeemed_on": "0000-00-00 00:00:00",
-//										            "status": 1,
-//										            "expiry_date": "December 31st 2015"
-//										        }
-//										    ],
-//										    "promotions": [
-//										        {
-//										            "promo_id": 1,
-//										            "title": "Flat 100% off",
-//										            "terms_n_conds": "t"
-//										        }
-//										    ],
-//										    "dynamic_factor": "1.0"
-//										}
-										
-										
-										
 										promoCouponList.clear();
+										promoCouponList.addAll(JSONParser.parsePromoCoupons(jObj));
 										
-										JSONArray jCouponsArr = jObj.getJSONArray("coupons");
-										for(int i=0; i<jCouponsArr.length(); i++){
-											JSONObject coData = jCouponsArr.getJSONObject(i);
-											promoCouponList.add(new CouponInfo(coData.getInt("account_id"),
-													coData.getInt("type"), 
-													coData.getInt("status"), 
-													coData.getString("title"), 
-													coData.getString("subtitle"), 
-													coData.getString("description"), 
-													coData.getString("image"), 
-													coData.getString("redeemed_on"), 
-													coData.getString("expiry_date"), 
-													coData.getDouble("discount"), 
-													coData.getDouble("maximum")));
-										}
-										
-										JSONArray jPromoArr = jObj.getJSONArray("promotions");
-										for(int i=0; i<jPromoArr.length(); i++){
-											JSONObject coData = jPromoArr.getJSONObject(i);
-											promoCouponList.add(new PromotionInfo(coData.getInt("promo_id"), 
-													coData.getString("title"), 
-													coData.getString("terms_n_conds")));
-										}
-										
-										double dynamicFactor = jObj.getDouble("dynamic_factor");
+										dynamicFactor = jObj.getDouble("dynamic_factor");
 										
 										showPromoAlert(activity, promotionDialogEventHandler);
-										
-										
-										if(PromotionApplyMode.BEFORE_SCHEDULE.getOrdinal() == promotionApplyMode.getOrdinal()){
-											textViewMessage.setText("Please note that price rates applicable at the scheduled time might be different");
-											
-											SpannableString sstr = new SpannableString("Choose one for this ride");
-											final StyleSpan bss = new StyleSpan(Typeface.BOLD);
-											sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-											
-											textViewTitle.setText("Ride Scheduled. You have coupons available.\n");
-											textViewTitle.append(sstr);
-										}
-										else{
-											textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
-													+"x higher than normal to maintain availability");
-											
-											textViewTitle.setText("You have coupons available.\nChoose one");
-										}
-										
-										if(promoCouponList.size() > 0){
-											promoCouponList.add(new CouponInfo(-1, "Don't apply coupon on this ride"));
-											selectedCoupon = promoCouponList.get(0);
-											
-											listViewPromotions.setVisibility(View.VISIBLE);
-											textViewDoYouWantToRequest.setVisibility(View.GONE);
-											textViewReferInfo.setVisibility(View.GONE);
-										}
-										else{
-											selectedCoupon = new CouponInfo(0, "");
-											
-											listViewPromotions.setVisibility(View.GONE);
-											textViewDoYouWantToRequest.setVisibility(View.VISIBLE);
-											textViewReferInfo.setVisibility(View.VISIBLE);
-											
-											textViewTitle.setText("No coupons available");
-										}
-										
-										promotionsListAdapter.notifyDataSetChanged();
 										
 									}
 									else{

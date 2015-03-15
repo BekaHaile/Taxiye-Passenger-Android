@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -7,6 +8,9 @@ import java.util.Locale;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionApplyMode;
+import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomDateTimePicker;
@@ -44,11 +48,14 @@ public class ScheduleRideDialog {
 	private CustomDateTimePicker customDateTimePicker;
 	private Calendar selectedScheduleCalendar = Calendar.getInstance();
 	private LatLng selectedScheduleLatLng;
+	private PromotionDialogEventHandler promotionDialogEventHandler;
 	
-	public ScheduleRideDialog(Activity activity, Calendar calendar, LatLng latLng){
+	public ScheduleRideDialog(Activity activity, Calendar calendar, LatLng latLng, PromotionDialogEventHandler promotionDialogEventHandler){
 		this.activity = activity;
 		this.selectedScheduleCalendar = calendar;
 		this.selectedScheduleLatLng = latLng;
+		this.promotionDialogEventHandler = promotionDialogEventHandler;
+		
 		this.customDateTimePicker = new CustomDateTimePicker(activity,
 				new CustomDateTimePicker.ICustomDateTimeListener() {
 
@@ -193,7 +200,6 @@ public class ScheduleRideDialog {
 	
 	Thread schedulePickupLocationAddressFetcherThread;
 	public void getSchedulePickupLocationAddress(final LatLng schedulePickupLatLng){
-		selectedScheduleLatLng = null;
 		stopSchedulePickupLocationAddressFetcherThread();
 		setSchedulePickupLocationAddress("Loading address...");
 		try{
@@ -226,7 +232,7 @@ public class ScheduleRideDialog {
 	/**
 	 * ASync for inserting schedule ride event to server
 	 */
-	public void insertScheduleRideAsync(final Activity activity, Calendar selectedCalendar, LatLng selectedLatLng) {
+	public void insertScheduleRideAsync(final Activity activity, Calendar selectedCalendar, final LatLng selectedLatLng) {
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -262,34 +268,25 @@ public class ScheduleRideDialog {
 							try {
 								jObj = new JSONObject(response);
 								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										DialogPopup.alertPopup(activity, "", errorMessage);
+								dismissAlert();
+								
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.SCHEDULE_ADDED.getOrdinal() == flag){
+										
+										ArrayList<PromoCoupon> promoCouponList = new ArrayList<PromoCoupon>();
+										promoCouponList.addAll(JSONParser.parsePromoCoupons(jObj));
+										
+										String pickupId = jObj.getString("pickup_id");
+										
+										final PromotionDialog promotionDialog = new PromotionDialog(selectedLatLng, PromotionApplyMode.AFTER_SCHEDULE);
+										promotionDialog.updateList(promoCouponList, pickupId);
+										promotionDialog.showPromoAlert(activity, promotionDialogEventHandler);
+										
 									}
 									else{
-										DialogPopup.alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
-								}
-								else{
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										dismissAlert();
-										DialogPopup.alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
-											
-											@Override
-											public void onClick(View v) {
-												
-											}
-										});
-									}
-									
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
