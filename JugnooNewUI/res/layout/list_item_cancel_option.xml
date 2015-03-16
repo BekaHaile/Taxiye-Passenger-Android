@@ -23,12 +23,12 @@
 
         <ImageView
             android:id="@+id/imageViewCancelOptionCheck"
-            android:layout_width="44px"
-            android:layout_height="41px"
+            android:layout_width="36px"
+            android:layout_height="36px"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="40px"
-            android:src="@drawable/check_box_checked"
+            android:src="@drawable/check_box_checked_new"
             android:tag="mwar"
              />
     </RelativeLayout>

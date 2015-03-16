@@ -357,6 +357,7 @@ public class WalletActivity extends Activity{
 	
 	
 	public void getTransactionInfoAsync(final Activity activity) {
+		relativeLayoutShowMore.setVisibility(View.GONE);
 		if(fetchTransactionInfoClient == null){
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				
