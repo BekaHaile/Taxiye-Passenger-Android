@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
@@ -231,6 +232,8 @@ public class Data {
 	public static ArrayList<DriverType> driverTypes = new ArrayList<DriverType>();
 	
 	public static FareStructure fareStructure;
+	
+	public static CancelOptionsList cancelOptionsList;
 	
 	
 	

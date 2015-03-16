@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.CancelOption;
+import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
@@ -242,7 +244,9 @@ public class JSONParser {
 		//Fetching user current status
 		JSONObject jUserStatusObject = jObj.getJSONObject("status");
 		String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
-				
+			
+		parseCancellationReasons(jObj);
+		
 		
 		return resp;
 	}
@@ -744,6 +748,51 @@ public class JSONParser {
 		}
 		
 		return promoCouponList;
+	}
+	
+	
+	
+	
+
+	
+	public static void parseCancellationReasons(JSONObject jObj){
+		
+//		"cancellation": {
+//      "message": "Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of Rs. 20",
+//      "reasons": [
+//          "Driver is late",
+//          "Driver denied duty",
+//          "Changed my mind",
+//          "Booked another cab"
+//      ]
+//  }
+		try {
+			ArrayList<CancelOption> options = new ArrayList<CancelOption>();
+			options.add(new CancelOption("Driver is late"));
+			options.add(new CancelOption("Driver denied duty"));
+			options.add(new CancelOption("Changed my mind"));
+			options.add(new CancelOption("Booked another cab"));
+			
+			Data.cancelOptionsList = new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
+					"will lead to cancellation charges of Rs. 20");
+			
+			JSONObject jCancellation = jObj.getJSONObject("cancellation");
+			
+			String message = jCancellation.getString("message");
+			
+			JSONArray jReasons = jCancellation.getJSONArray("reasons");
+			
+			options.clear();
+			
+			for(int i=0; i<jReasons.length(); i++){
+				options.add(new CancelOption(jReasons.getString(i)));
+			}
+			
+			Data.cancelOptionsList = new CancelOptionsList(options, message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	

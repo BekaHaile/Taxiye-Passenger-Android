@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ActivityCloser;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppMode;
@@ -31,7 +32,6 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionApplyMode;
 import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import product.clicklabs.jugnoo.datastructure.RideCancellationMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -430,6 +430,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public boolean activityResumed = false;
 	
 	public ASSL assl;
+	
+	public ActivityCloser activityCloser;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -1008,14 +1010,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				if(Data.userData != null && Data.userData.canSchedule == 1){
-					switchToScheduleScreen(HomeActivity.this);
-				}
-				else{
-					Toast.makeText(getApplicationContext(),
-							"Sorry you cannot schedule ride right now.",
-							Toast.LENGTH_SHORT).show();
-				}
+				switchToScheduleScreen(HomeActivity.this);
 			}
 		});
 		
@@ -1097,7 +1092,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				RideCancellationActivity.rideCancellationMode = RideCancellationMode.CURRENT_RIDE;
 				startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
@@ -6559,34 +6553,34 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void startRideForCustomer(final int flag) {
 		try {
 			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
-			Log.e("in ","herestartRideForCustomer");
-			
-			if(flag == 0){
-			
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						Log.i("in in herestartRideForCustomer  run class","=");
-						initializeStartRideVariables();
-						passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-						switchPassengerScreen(passengerScreenMode);
-					}
-				});
+				Log.e("in ","herestartRideForCustomer");
 				
-			}
-			else{
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						Log.i("in in herestartRideForCustomer  run class","=");
-						passengerScreenMode = PassengerScreenMode.P_INITIAL;
-						switchPassengerScreen(passengerScreenMode);
-						DialogPopup.alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
-					}
-				});
-			}
+				closeCancelActivity();
+				
+				if(flag == 0){
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Log.i("in in herestartRideForCustomer  run class","=");
+							initializeStartRideVariables();
+							passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+							switchPassengerScreen(passengerScreenMode);
+						}
+					});
+				}
+				else{
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Log.i("in in herestartRideForCustomer  run class","=");
+							passengerScreenMode = PassengerScreenMode.P_INITIAL;
+							switchPassengerScreen(passengerScreenMode);
+							DialogPopup.alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
+						}
+					});
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -7006,7 +7000,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void customerEndRideInterrupt(final String engagementId) {
 		try{
 			if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_IN_RIDE){
-				
+				closeCancelActivity();
 				runOnUiThread(new Runnable() {
 					
 					@Override
@@ -7023,12 +7017,34 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onChangeStatePushReceived() {
 		try{
+			closeCancelActivity();
 			callAndHandleStateRestoreAPI(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	
+	public void closeCancelActivity(){
+		try{
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						if(RideCancellationActivity.activityCloser != null){
+							RideCancellationActivity.activityCloser.close();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
 	public static void logoutUser(final Activity cont){
 		try{

@@ -183,7 +183,7 @@ public class DialogPopup {
 	
 	
 	
-	public void alertPopupTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext, 
+	public static void alertPopupTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext, 
 			final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative, final boolean cancelable, final boolean showTitle) {
 		try {
 			dismissAlertPopup();

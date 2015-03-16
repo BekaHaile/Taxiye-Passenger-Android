@@ -12,8 +12,8 @@ import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
-import product.clicklabs.jugnoo.datastructure.RideCancellationMode;
 import product.clicklabs.jugnoo.datastructure.RideInfoNew;
+import product.clicklabs.jugnoo.datastructure.ScheduleCancelListener;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -93,8 +93,6 @@ public class AccountActivity extends Activity {
 	
 	Button buttonLogout;
 	
-	boolean resumed = false;
-	
 	public static FutureSchedule futureSchedule = null;
 	public static ArrayList<RideInfoNew> rideInfosList = new ArrayList<RideInfoNew>();
 	public static int totalRides = 0;
@@ -107,7 +105,7 @@ public class AccountActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_user);
 		
-		resumed = false;
+		
 		futureSchedule = null;
 		rideInfosList = new ArrayList<RideInfoNew>();
 		totalRides = 0;
@@ -403,7 +401,7 @@ public class AccountActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				new DialogPopup().alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "", 
+				DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "", 
 						new View.OnClickListener() {
 							
 							@Override
@@ -567,11 +565,7 @@ public class AccountActivity extends Activity {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
 		
-		
-		if(resumed){
-			reloadProfileAPI(this);
-		}
-		resumed = true;
+		reloadProfileAPI(this);
 		
 		scrollView.scrollTo(0, 0);
 	}
@@ -715,15 +709,19 @@ public class AccountActivity extends Activity {
 										
 										Data.userData.userName = userName;
 										Data.userData.phoneNo = phoneNo;
+										Data.userData.userEmail = email;
+										
+										boolean refresh = false;
+										
+										if(EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() != Data.userData.emailVerificationStatus
+												&& EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() == emailVerificationStatus){
+											refresh = true;
+										}
+										
 										Data.userData.emailVerificationStatus = emailVerificationStatus;
 										
-										if(Data.userData.userEmail.equalsIgnoreCase(email)){
-											setUserData(false);
-										}
-										else{
-											Data.userData.userEmail = email;
-											setUserData(true);
-										}
+										
+										setUserData(refresh);
 									}
 								}
 							}  catch (Exception exception) {
@@ -1168,9 +1166,31 @@ public class AccountActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					RideCancellationActivity.rideCancellationMode = RideCancellationMode.SCHEDULE_RIDE;
-					startActivity(new Intent(AccountActivity.this, RideCancellationActivity.class));
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					if(futureSchedule != null){
+						DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "Cancel Schedule", "Are you sure you want to cancel the schedule?", "OK", "Cancel",
+								new View.OnClickListener() {
+									
+									@Override
+									public void onClick(View v) {
+										if(futureSchedule != null){
+											removeScheduledRideAPI(AccountActivity.this, futureSchedule.pickupId, new ScheduleCancelListener() {
+												
+												@Override
+												public void onCancelSuccess() {
+													getRecentRidesAPI(AccountActivity.this);
+												}
+											});
+										}
+									}
+								}, 
+								new View.OnClickListener() {
+									
+									@Override
+									public void onClick(View v) {
+									}
+								}, true, true);
+					}
+					
 				}
 			});
 			
@@ -1190,6 +1210,79 @@ public class AccountActivity extends Activity {
 			}
 		}
 		
+	}
+	
+	
+	
+	/**
+	 * ASync for removing scheduled ride from server
+	 */
+	public static void removeScheduledRideAPI(final Activity activity, String pickupId, final ScheduleCancelListener scheduleCancelListener) {
+		if (AppStatus.getInstance(activity).isOnline(activity)) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			params.put("access_token", Data.userData.accessToken);
+			params.put("pickup_id", pickupId);
+			
+			Log.i("remove_pickup_schedule api params", ">"+params);
+		
+			AsyncHttpClient client = Data.getClient();
+			client.post(Data.SERVER_URL + "/remove_pickup_schedule", params,
+					new CustomAsyncHttpResponseHandler() {
+					private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+
+								if(!jObj.isNull("error")){
+									String errorMessage = jObj.getString("error");
+									int flag = jObj.getInt("flag");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+										DialogPopup.alertPopup(activity, "", errorMessage);
+									}
+									else{
+										DialogPopup.alertPopup(activity, "", errorMessage);
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+								else{
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+										String message = jObj.getString("message");
+										DialogPopup.alertPopup(activity, "", message);
+										scheduleCancelListener.onCancelSuccess();
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
+							}
+						}
+					});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
 	}
 	
 

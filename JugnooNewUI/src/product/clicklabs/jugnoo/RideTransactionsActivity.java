@@ -7,14 +7,14 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
-import product.clicklabs.jugnoo.datastructure.RideCancellationMode;
 import product.clicklabs.jugnoo.datastructure.RideInfoNew;
+import product.clicklabs.jugnoo.datastructure.ScheduleCancelListener;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -388,9 +388,43 @@ public class RideTransactionsActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					RideCancellationActivity.rideCancellationMode = RideCancellationMode.SCHEDULE_RIDE;
-					startActivity(new Intent(RideTransactionsActivity.this, RideCancellationActivity.class));
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					DialogPopup.alertPopupTwoButtonsWithListeners(RideTransactionsActivity.this, "Cancel Schedule", "Are you sure you want to cancel the schedule?", "OK", "Cancel",
+							new View.OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									if(AccountActivity.futureSchedule != null){
+										DialogPopup.alertPopupTwoButtonsWithListeners(RideTransactionsActivity.this, "Cancel Schedule", "Are you sure you want to cancel the schedule?", "OK", "Cancel",
+												new View.OnClickListener() {
+													
+													@Override
+													public void onClick(View v) {
+														if(AccountActivity.futureSchedule != null){
+															AccountActivity.removeScheduledRideAPI(RideTransactionsActivity.this, AccountActivity.futureSchedule.pickupId, new ScheduleCancelListener() {
+																
+																@Override
+																public void onCancelSuccess() {
+																	getRecentRidesAPI(RideTransactionsActivity.this);
+																}
+															});
+														}
+													}
+												}, 
+												new View.OnClickListener() {
+													
+													@Override
+													public void onClick(View v) {
+													}
+												}, true, true);
+									}
+								}
+							}, 
+							new View.OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+								}
+							}, true, true);
 				}
 			});
 			

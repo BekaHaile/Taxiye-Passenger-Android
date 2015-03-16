@@ -1,17 +1,13 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.datastructure.ActivityCloser;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
-import product.clicklabs.jugnoo.datastructure.RideCancellationMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -28,7 +24,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,7 +31,7 @@ import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
-public class RideCancellationActivity extends Activity{
+public class RideCancellationActivity extends Activity implements ActivityCloser{
 	
 	
 	RelativeLayout relative;
@@ -50,16 +45,11 @@ public class RideCancellationActivity extends Activity{
 	CancelOptionsListAdapter cancelOptionsListAdapter;
 	
 	Button buttonCancelRide;
-
-	TextView textViewInfo;
-	ProgressBar progressBar;
 	
 	TextView textViewCancelInfo;
 	
+	public static ActivityCloser activityCloser = null;
 	
-	ArrayList<CancelOption> cancelOptions = new ArrayList<CancelOption>();
-	
-	public static RideCancellationMode rideCancellationMode = RideCancellationMode.CURRENT_RIDE;
 	
 	@Override
 	protected void onStart() {
@@ -84,6 +74,11 @@ public class RideCancellationActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cancel_ride);
 		
+		for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
+			Data.cancelOptionsList.cancelOptions.get(i).checked = false;
+		}
+		
+		
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(RideCancellationActivity.this, relative, 1134, 720, false);
 		
@@ -99,14 +94,7 @@ public class RideCancellationActivity extends Activity{
 		
 		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Data.latoRegular(this));
 		
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(this));
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		
 		textViewCancelInfo = (TextView) findViewById(R.id.textViewCancelInfo); textViewCancelInfo.setTypeface(Data.latoLight(this), Typeface.BOLD);
-		
-		textViewInfo.setVisibility(View.GONE);
-		progressBar.setVisibility(View.GONE);
-		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 		
@@ -117,25 +105,37 @@ public class RideCancellationActivity extends Activity{
 		});
 		
 		
-		textViewInfo.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getCancelOptionsAPI(RideCancellationActivity.this);
-			}
-		});
-		
-		
 		buttonCancelRide.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				
+				String cancelReasonsStr = "";
+				
+				for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
+					if(Data.cancelOptionsList.cancelOptions.get(i).checked){
+						cancelReasonsStr = cancelReasonsStr + Data.cancelOptionsList.cancelOptions.get(i).name + ", ";
+					}
+				}
+				
+				if(!"".equalsIgnoreCase(cancelReasonsStr)){
+					cancelReasonsStr = cancelReasonsStr.substring(0, cancelReasonsStr.length()-2);
+				}
+				
+				cancelRideAPI(RideCancellationActivity.this, cancelReasonsStr);
+				
+				
 			}
 		});
 		
-		getCancelOptionsAPI(RideCancellationActivity.this);
+		textViewCancelInfo.setText(Data.cancelOptionsList.message);
+		
+		
+		RideCancellationActivity.activityCloser = this;
 		
 	}
+	
+	
 	
 	public void performBackPressed(){
 		finish();
@@ -152,31 +152,12 @@ public class RideCancellationActivity extends Activity{
 	
 	@Override
 	public void onDestroy() {
+		RideCancellationActivity.activityCloser = null;
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();
 	}
 	
-	
-	public void updateListData(String message, boolean errorOccurred){
-		if(errorOccurred){
-			textViewInfo.setText(message);
-			textViewInfo.setVisibility(View.VISIBLE);
-			
-			cancelOptions.clear();
-			cancelOptionsListAdapter.notifyDataSetChanged();
-		}
-		else{
-			if(cancelOptions.size() == 0){
-				textViewInfo.setText(message);
-				textViewInfo.setVisibility(View.VISIBLE);
-			}
-			else{
-				textViewInfo.setVisibility(View.GONE);
-			}
-			cancelOptionsListAdapter.notifyDataSetChanged();
-		}
-	}
 	
 	
 	class ViewHolderCancelOption {
@@ -198,7 +179,7 @@ public class RideCancellationActivity extends Activity{
 
 		@Override
 		public int getCount() {
-			return cancelOptions.size();
+			return Data.cancelOptionsList.cancelOptions.size();
 		}
 
 		@Override
@@ -215,7 +196,7 @@ public class RideCancellationActivity extends Activity{
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				holder = new ViewHolderCancelOption();
-				convertView = mInflater.inflate(R.layout.list_item_coupon, null);
+				convertView = mInflater.inflate(R.layout.list_item_cancel_option, null);
 				
 				holder.textViewCancelOption = (TextView) convertView.findViewById(R.id.textViewCancelOption); holder.textViewCancelOption.setTypeface(Data.latoRegular(context));
 				holder.imageViewCancelOptionCheck = (ImageView) convertView.findViewById(R.id.imageViewCancelOptionCheck);
@@ -234,11 +215,11 @@ public class RideCancellationActivity extends Activity{
 			
 			holder.id = position;
 			
-			CancelOption cancelOption = cancelOptions.get(position);
+			CancelOption cancelOption = Data.cancelOptionsList.cancelOptions.get(position);
 
 			holder.textViewCancelOption.setText(cancelOption.name);
 			
-			if(cancelOptions.get(position).checked){
+			if(cancelOption.checked){
 				holder.relative.setBackgroundColor(Color.WHITE);
 				holder.imageViewCancelOptionCheck.setVisibility(View.VISIBLE);
 			}
@@ -252,11 +233,11 @@ public class RideCancellationActivity extends Activity{
 				@Override
 				public void onClick(View v) {
 					holder = (ViewHolderCancelOption) v.getTag();
-					if(cancelOptions.get(holder.id).checked){
-						cancelOptions.get(holder.id).checked = false;
+					if(Data.cancelOptionsList.cancelOptions.get(holder.id).checked){
+						Data.cancelOptionsList.cancelOptions.get(holder.id).checked = false;
 					}
 					else{
-						cancelOptions.get(holder.id).checked = true;
+						Data.cancelOptionsList.cancelOptions.get(holder.id).checked = true;
 					}
 					notifyDataSetChanged();
 				}
@@ -267,95 +248,18 @@ public class RideCancellationActivity extends Activity{
 
 	}
 	
-	
-	/**
-	 * ASync for get Account info from server
-	 */
-	public void getCancelOptionsAPI(final Activity activity) {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				progressBar.setVisibility(View.VISIBLE);
-				cancelOptions.clear();
-				cancelOptionsListAdapter.notifyDataSetChanged();
-				textViewInfo.setVisibility(View.GONE);
-				RequestParams params = new RequestParams();
-				params.put("access_token", Data.userData.accessToken);
-				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/get_cancel_options", params,
-						new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
-	
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								progressBar.setVisibility(View.GONE);
-								updateListData("Some error occurred. Tap to retry", true);
-								
-								cancelOptions.add(new CancelOption(1, "Driver is late"));
-								cancelOptions.add(new CancelOption(2, "Driver denied duty"));
-								cancelOptions.add(new CancelOption(3, "Changed my mind"));
-								cancelOptions.add(new CancelOption(4, "Booked another cab"));
-								updateListData("No options available", false);
-								
-							}
-	
-							@Override
-							public void onSuccess(String response) {
-								Log.e("Server response", "response = " + response);
-								try {
-									jObj = new JSONObject(response);
-									if(!jObj.isNull("error")){
-										String errorMessage = jObj.getString("error");
-										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-											HomeActivity.logoutUser(activity);
-										}
-										else{
-											updateListData("Some error occurred. Tap to retry", true);
-										}
-									}
-									else{
-										
-										cancelOptions.clear();
-										
-										if(jObj.has("cancel_options")){
-											JSONArray cancelOptionsData = jObj.getJSONArray("cancel_options");
-											if(cancelOptionsData.length() > 0){
-												for(int i=0; i<cancelOptionsData.length(); i++){
-													JSONObject coData = cancelOptionsData.getJSONObject(i);
-													cancelOptions.add(new CancelOption(coData.getInt("id"), coData.getString("name")));
-												}
-											}
-										}
-										updateListData("No options available", false);
-									}
-								}  catch (Exception exception) {
-									exception.printStackTrace();
-									updateListData("Some error occurred. Tap to retry", true);
-								}
-								progressBar.setVisibility(View.GONE);
-							}
-							
-						});
-			}
-			else {
-				updateListData("No Internet connection. Tap to retry", true);
-			}
 
-	}
-
-	/**
-	 * API call for applying promo code to server
-	 */
-	public void applyPromoCodeAPI(final Activity activity, final String promoCode) {
+	public void cancelRideAPI(final Activity activity, final String reasons) {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
 				RequestParams params = new RequestParams();
 				
 				params.put("access_token", Data.userData.accessToken);
-				params.put("code", promoCode);
+				params.put("reasons", reasons);
 			
 				AsyncHttpClient asyncHttpClient = Data.getClient();
-				asyncHttpClient.post(Data.SERVER_URL + "/enter_code", params,
+				asyncHttpClient.post(Data.SERVER_URL + "/cancel_ride_by_customer", params,
 						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 	
@@ -372,27 +276,38 @@ public class RideCancellationActivity extends Activity{
 								Log.i("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										String errorMessage = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", errorMessage);	
-									}
-									else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										DialogPopup.dialogBanner(activity, message);
-										getCancelOptionsAPI(activity);
-										FlurryEventLogger.promoCodeApplied(Data.userData.accessToken, promoCode, message);
+									
+									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+										int flag = jObj.getInt("flag");
+										if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+											String error = jObj.getString("error");
+											DialogPopup.alertPopup(activity, "", error);
+										}
+										else if(ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag){
+											String message = jObj.getString("message");
+											
+											if(jObj.has("jugnoo_balance")){
+												Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
+											}
+											
+											DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+												
+												@Override
+												public void onClick(View v) {
+													performBackPressed();
+												}
+											});
+										}
+										else{
+											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										}
 									}
 									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
+									
 								}  catch (Exception exception) {
 									exception.printStackTrace();
 									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									
 								}
 								DialogPopup.dismissLoadingDialog();
 							}
@@ -407,6 +322,11 @@ public class RideCancellationActivity extends Activity{
 			else {
 				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
+	}
+
+	@Override
+	public void close() {
+		performBackPressed();
 	}
 	
 }

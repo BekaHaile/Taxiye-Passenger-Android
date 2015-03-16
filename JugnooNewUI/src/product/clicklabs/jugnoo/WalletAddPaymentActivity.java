@@ -9,12 +9,15 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
 
@@ -129,7 +132,7 @@ public class WalletAddPaymentActivity extends Activity{
 							}
 							else{
 								Intent intent = new Intent(WalletAddPaymentActivity.this, WalletWebviewActivity.class);
-								intent.putExtra("amount", amountStr);
+								intent.putExtra("amount", ""+amount);
 								startActivity(intent);
 								finish();
 								overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -145,6 +148,25 @@ public class WalletAddPaymentActivity extends Activity{
 					editTextAmount.requestFocus();
 					editTextAmount.setError("Please enter valid amount");
 				}
+			}
+		});
+		
+		editTextAmount.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				int result = actionId & EditorInfo.IME_MASK_ACTION;
+				switch (result) {
+					case EditorInfo.IME_ACTION_DONE:
+						buttonMakePayment.performClick();
+					break;
+
+					case EditorInfo.IME_ACTION_NEXT:
+					break;
+
+					default:
+				}
+				return true;
 			}
 		});
 		

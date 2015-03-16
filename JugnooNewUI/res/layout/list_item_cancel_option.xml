@@ -28,7 +28,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="40px"
-            android:src="@drawable/check_box_checked" />
+            android:src="@drawable/check_box_checked"
+            android:tag="mwar"
+             />
     </RelativeLayout>
 
 </LinearLayout>

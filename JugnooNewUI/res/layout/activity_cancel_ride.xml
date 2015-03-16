@@ -54,35 +54,15 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="30px" />
 
-            <RelativeLayout
+            <ListView
+                android:id="@+id/listViewCancelOptions"
                 android:layout_width="match_parent"
                 android:layout_height="560px"
-                android:layout_marginTop="40px" >
-
-                <ListView
-                    android:id="@+id/listViewCancelOptions"
-                    android:layout_width="match_parent"
-                    android:layout_height="560px"
-                    android:divider="@color/transparent"
-                    android:dividerHeight="0px"
-                    android:splitMotionEvents="false" >
-                </ListView>
-
-                <TextView
-                    android:id="@+id/textViewInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="TextView"
-                    android:textColor="@color/black"
-                    android:textSize="34px" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="100px"
-                    android:layout_height="100px"
-                    android:layout_centerInParent="true" />
-            </RelativeLayout>
+                android:layout_marginTop="40px"
+                android:divider="@color/transparent"
+                android:dividerHeight="10px"
+                android:splitMotionEvents="false" >
+            </ListView>
 
             <Button
                 android:id="@+id/buttonCancelRide"
@@ -100,6 +80,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="50px"
+                android:layout_marginRight="50px"
                 android:layout_marginTop="50px"
                 android:gravity="center"
                 android:text="Cancellation of a ride more than 5 minutes\nafter the driver is allocated will lead to\ncancellation charges of Rs. 20"
