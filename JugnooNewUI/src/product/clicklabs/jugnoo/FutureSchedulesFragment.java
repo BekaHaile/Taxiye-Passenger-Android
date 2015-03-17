@@ -361,7 +361,7 @@ public class FutureSchedulesFragment extends Fragment {
 			textHead.setText(title);
 			textMessage.setText(message);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("No");
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD); btnOk.setText("No");
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity)); btnCancel.setText("Yes");
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {

@@ -37,7 +37,7 @@
             android:layout_marginRight="60px"
             android:text="See More Transactions"
             android:textColor="@color/grey_black_light"
-            android:textSize="34px" />
+            android:textSize="26px" />
         
     <ImageView
         android:layout_width="match_parent"

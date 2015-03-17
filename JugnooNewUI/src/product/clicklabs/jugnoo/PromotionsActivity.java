@@ -284,7 +284,7 @@ public class PromotionsActivity extends Activity{
 			
 			CouponInfo couponInfo = couponInfosList.get(position);
 
-			holder.textViewCouponTitle.setText(couponInfo.title + " " + couponInfo.subtitle);
+			holder.textViewCouponTitle.setText(couponInfo.title);
 			holder.textViewExpiryDate.setText("Expiring on "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -293,7 +293,7 @@ public class PromotionsActivity extends Activity{
 				public void onClick(View v) {
 					holder = (ViewHolderCoupon) v.getTag();
 					CouponInfo couponInfo = couponInfosList.get(holder.id);
-					DialogPopup.alertPopup(PromotionsActivity.this, "", couponInfo.description);
+					DialogPopup.alertPopupLeftOriented(PromotionsActivity.this, "", couponInfo.description);
 					FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.type);
 				}
 			});

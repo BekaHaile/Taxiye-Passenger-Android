@@ -31,6 +31,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 public class GCMIntentService extends IntentService {
 	
 	public static final int NOTIFICATION_ID = 1;
+	public static final int PROMOTION_NOTIFICATION_ID = 1212;
     
     public GCMIntentService() {
         super("GcmIntentService");
@@ -151,6 +152,49 @@ public class GCMIntentService extends IntentService {
 			
 		}
 	    
+		
+		@SuppressWarnings("deprecation")
+		private void notificationManagerCustomID(Context context, String message, int notificationId) {
+			
+			try {
+				long when = System.currentTimeMillis();
+				
+				NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+				
+				Log.v("message",","+message);
+				
+				Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+				
+				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+				
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+				builder.setAutoCancel(true);
+				builder.setContentTitle("Jugnoo");
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+				builder.setContentText(message);
+				builder.setTicker(message);
+				builder.setDefaults(Notification.DEFAULT_ALL);
+				builder.setWhen(when);
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+				builder.setSmallIcon(R.drawable.notif_icon);
+				builder.setContentIntent(intent);
+				
+				
+				
+				Notification notification = builder.build();
+				notificationManager.notify(NOTIFICATION_ID, notification);
+				
+				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+				wl.acquire(15000);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
 	    
 	    public static void clearNotifications(Context context){
 			NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -282,12 +326,7 @@ public class GCMIntentService extends IntentService {
 								}
 	    	    				else if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag){
 	    	    					 String message1 = jObj.getString("message");
-	    	    					 if (HomeActivity.activity == null) {
-		    	    					 notificationManager(this, ""+message1, false);
-	    	    					 }
-	    	    					 else{
-		    	    					 notificationManagerResume(this, ""+message1, false);
-	    	    					 }
+	    	    					 notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID);
 	    	    				 }
 	    	    				else if(PushFlags.CHANGE_PORT.getOrdinal() == flag){
 	    	    					sendChangePortAckToServer(this, jObj);

@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -254,18 +255,22 @@ public class WalletActivity extends Activity{
 			
 			transactionInfoList.clear();
 			transactionListAdapter.notifyDataSetChanged();
+			relativeLayoutShowMore.setVisibility(View.GONE);
 		}
 		else{
 			textViewInfo.setVisibility(View.GONE);
 			if(transactionInfoList.size() == 0){
 				textViewRecentTransactions.setVisibility(View.GONE);
+				relativeLayoutShowMore.setVisibility(View.GONE);
 			}
 			else{
 				textViewRecentTransactions.setVisibility(View.VISIBLE);
+				relativeLayoutShowMore.setVisibility(View.VISIBLE);
 			}
 			transactionListAdapter.notifyDataSetChanged();
 			textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+jugnooBalance);
 		}
+		Utils.expandListForVariableHeight(listViewTransactions);
 	}
 	
 	

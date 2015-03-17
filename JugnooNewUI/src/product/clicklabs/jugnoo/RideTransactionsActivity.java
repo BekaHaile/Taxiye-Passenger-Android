@@ -351,7 +351,7 @@ public class RideTransactionsActivity extends Activity {
 					holder.textViewFromValue.setText(rideInfoNew.pickupAddress);
 					holder.textViewToValue.setText(rideInfoNew.dropAddress);
 					holder.textViewDetails.setText("Details: ");
-					if(rideInfoNew.rideTime > 1){
+					if(rideInfoNew.rideTime == 1){
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
 								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
 					}
@@ -373,7 +373,7 @@ public class RideTransactionsActivity extends Activity {
 				holder.textViewFromValue.setText(rideInfoNew.pickupAddress);
 				holder.textViewToValue.setText(rideInfoNew.dropAddress);
 				holder.textViewDetails.setText("Details: ");
-				if(rideInfoNew.rideTime > 1){
+				if(rideInfoNew.rideTime == 1){
 					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
 							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
 				}

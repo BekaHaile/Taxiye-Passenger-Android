@@ -610,7 +610,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			textMessage.setText(message);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 			
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 			btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -723,7 +723,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			textHead.setText(title);
 			textMessage.setText(message);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 			btnOk.setText("Go to PlayStore");
 			
 			frameLayout.setOnClickListener(new View.OnClickListener() {
@@ -775,7 +775,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				dialog.setCanceledOnTouchOutside(true);
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.latoRegular(activity));
 				
@@ -906,7 +906,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					
 					
 					
-					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 					btnOk.setText("LIVE");
 					
 					Button btnNeutral = (Button) dialog.findViewById(R.id.btnNeutral); btnNeutral.setTypeface(Data.latoRegular(activity));

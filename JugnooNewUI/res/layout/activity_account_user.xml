@@ -43,56 +43,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="295px" >
-
-                <ImageView
-                    android:id="@+id/imageViewUserImageBlur"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white_light_grey"
-                    android:scaleType="centerCrop" />
-
-                <ImageView
-                    android:id="@+id/imageViewUserImageBlurCover"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#10000000"
-                    android:scaleType="centerCrop" />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutProfileImage"
-                    android:layout_width="211px"
-                    android:layout_height="211px"
-                    android:layout_centerInParent="true"
-                    android:splitMotionEvents="false"
-                    android:tag="mwar" >
-
-                    <ImageView
-                        android:id="@+id/imageViewProfileImageBack"
-                        android:layout_width="211px"
-                        android:layout_height="211px"
-                        android:background="@drawable/circle_white"
-                        android:tag="mwar" />
-
-                    <ImageView
-                        android:id="@+id/imageViewProfileImage"
-                        android:layout_width="190px"
-                        android:layout_height="190px"
-                        android:layout_centerInParent="true"
-                        android:tag="mwar" />
-                </RelativeLayout>
-
-                <ProgressBar
-                    android:id="@+id/progressBarProfileUpdate"
-                    android:layout_width="100px"
-                    android:layout_height="100px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
             <ScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
@@ -104,6 +54,56 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:splitMotionEvents="false" >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="295px" >
+
+                        <ImageView
+                            android:id="@+id/imageViewUserImageBlur"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/white_light_grey"
+                            android:scaleType="centerCrop" />
+
+                        <ImageView
+                            android:id="@+id/imageViewUserImageBlurCover"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#10000000"
+                            android:scaleType="centerCrop" />
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutProfileImage"
+                            android:layout_width="211px"
+                            android:layout_height="211px"
+                            android:layout_centerInParent="true"
+                            android:splitMotionEvents="false"
+                            android:tag="mwar" >
+
+                            <ImageView
+                                android:id="@+id/imageViewProfileImageBack"
+                                android:layout_width="211px"
+                                android:layout_height="211px"
+                                android:background="@drawable/circle_white"
+                                android:tag="mwar" />
+
+                            <ImageView
+                                android:id="@+id/imageViewProfileImage"
+                                android:layout_width="190px"
+                                android:layout_height="190px"
+                                android:layout_centerInParent="true"
+                                android:tag="mwar" />
+                        </RelativeLayout>
+
+                        <ProgressBar
+                            android:id="@+id/progressBarProfileUpdate"
+                            android:layout_width="100px"
+                            android:layout_height="100px"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:visibility="gone" />
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/linearLayoutEditTexts"
@@ -389,8 +389,8 @@
                         android:layout_width="648px"
                         android:layout_height="100px"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="70px"
                         android:layout_marginBottom="70px"
+                        android:layout_marginTop="70px"
                         android:background="@drawable/button_yellow_selector"
                         android:text="LOGOUT"
                         android:textColor="@drawable/text_color_white_alpha_selector"

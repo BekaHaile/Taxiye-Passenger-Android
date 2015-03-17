@@ -362,7 +362,7 @@ public class PromotionDialog {
 					holder = (ViewHolderPromotion) v.getTag();
 					PromoCoupon promoCoupon = promoCouponList.get(holder.id);
 					if(promoCoupon instanceof CouponInfo){
-						DialogPopup.alertPopup(context, "", ((CouponInfo)promoCoupon).description);
+						DialogPopup.alertPopupLeftOriented(context, "", ((CouponInfo)promoCoupon).description);
 					}
 					else if(promoCoupon instanceof PromotionInfo){
 						if(((PromotionInfo)promoCoupon).id > 0){

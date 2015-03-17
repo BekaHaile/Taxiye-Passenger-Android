@@ -193,7 +193,7 @@
                         android:layout_height="80px"
                         android:layout_above="@+id/linearLayoutInRideDriverInfo"
                         android:layout_marginBottom="20px"
-                        android:layout_marginLeft="40px"
+                        android:layout_marginLeft="50px"
                         android:background="@drawable/mylocation_btn_selector"
                         android:tag="mwar" />
 
@@ -202,9 +202,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/relativeLayoutInRideLowJugnooCash"
-                        android:layout_marginBottom="40px"
-                        android:layout_marginLeft="40px"
-                        android:layout_marginRight="40px"
+                        android:layout_marginBottom="50px"
+                        android:layout_marginLeft="50px"
+                        android:layout_marginRight="50px"
                         android:background="@drawable/background_white_rounded"
                         android:orientation="vertical" >
 
@@ -212,10 +212,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10px"
-                            android:layout_marginTop="20px" >
+                            android:layout_marginTop="30px" >
 
                             <LinearLayout
-                                android:layout_width="320px"
+                                android:layout_width="310px"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical" >
 
@@ -254,7 +254,7 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="320px"
+                                android:layout_width="310px"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:orientation="vertical" >
@@ -322,7 +322,7 @@
 
                             <Button
                                 android:id="@+id/buttonCancelRide"
-                                android:layout_width="320px"
+                                android:layout_width="310px"
                                 android:layout_height="90px"
                                 android:background="@drawable/button_white_yellow_blr_selector"
                                 android:singleLine="true"
@@ -333,7 +333,7 @@
 
                             <Button
                                 android:id="@+id/buttonAddJugnooCash"
-                                android:layout_width="320px"
+                                android:layout_width="310px"
                                 android:layout_height="90px"
                                 android:background="@drawable/button_white_yellow_blr_selector"
                                 android:singleLine="true"
@@ -344,7 +344,7 @@
 
                             <Button
                                 android:id="@+id/buttonCallDriver"
-                                android:layout_width="320px"
+                                android:layout_width="310px"
                                 android:layout_height="90px"
                                 android:layout_alignParentRight="true"
                                 android:background="@drawable/button_white_yellow_brr_selector"
@@ -391,8 +391,8 @@
 
                     <ImageView
                         android:id="@+id/centreLocationPin"
-                        android:layout_width="40px"
-                        android:layout_height="63px"
+                        android:layout_width="47px"
+                        android:layout_height="79px"
                         android:layout_above="@+id/centreLocationPivot"
                         android:layout_centerHorizontal="true"
                         android:background="@drawable/pin_ball"

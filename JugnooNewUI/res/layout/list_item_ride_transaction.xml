@@ -35,11 +35,10 @@
                 android:id="@+id/textViewFrom"
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="36px"
                 android:text="From: "
                 android:textColor="@color/black_text"
-                android:textSize="28px" />
+                android:textSize="24px" />
 
             <TextView
                 android:id="@+id/textViewFromValue"
@@ -49,7 +48,7 @@
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="30px"
                 android:layout_toRightOf="@+id/textViewFrom"
-                android:text="Plot No 5, Sector 28 B, Chandigarh"
+                android:text="Plot No 5, Sector 28 B, \nChandigarh"
                 android:textColor="@color/black_text_alpha"
                 android:textSize="24px" />
         </RelativeLayout>
@@ -64,11 +63,10 @@
                 android:id="@+id/textViewTo"
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="36px"
                 android:text="To: "
                 android:textColor="@color/black_text"
-                android:textSize="28px" />
+                android:textSize="24px" />
 
             <TextView
                 android:id="@+id/textViewToValue"
@@ -92,11 +90,10 @@
                 android:id="@+id/textViewDetails"
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="36px"
                 android:text="Details: "
                 android:textColor="@color/black_text"
-                android:textSize="28px" />
+                android:textSize="24px" />
 
             <TextView
                 android:id="@+id/textViewDetailsValue"

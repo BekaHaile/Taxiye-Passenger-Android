@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="30px"
+        android:layout_margin="50px"
         android:background="@drawable/dialog_background_color"
         android:splitMotionEvents="false" >
 
@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="300px"
                 android:divider="@color/grey_light"
-                android:dividerHeight="2px"
+                android:dividerHeight="1px"
                 android:splitMotionEvents="false"
                 android:visibility="visible" >
             </ListView>
@@ -109,7 +109,7 @@
 
                 <Button
                     android:id="@+id/btnCancel"
-                    android:layout_width="327px"
+                    android:layout_width="307px"
                     android:layout_height="90px"
                     android:layout_marginLeft="0px"
                     android:background="@drawable/button_white_yellow_blr_selector"
@@ -120,7 +120,7 @@
 
                 <Button
                     android:id="@+id/btnOk"
-                    android:layout_width="327px"
+                    android:layout_width="307px"
                     android:layout_height="90px"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="0px"
@@ -144,7 +144,9 @@
                     android:singleLine="true"
                     android:text="OK"
                     android:textColor="@drawable/text_color_yellow_white_selector"
-                    android:textSize="30px" />
+                    android:textSize="30px" 
+                    android:visibility="gone"
+                    />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

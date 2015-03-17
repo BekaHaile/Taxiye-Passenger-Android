@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="30px"
+        android:layout_margin="50px"
         android:background="@drawable/dialog_background_color"
         android:splitMotionEvents="false" >
 
@@ -35,7 +35,7 @@
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
                 android:text="Title"
-                android:textColor="@color/black"
+                android:textColor="@color/grey_dark_more"
                 android:textSize="50px"
                 android:visibility="gone" />
 
@@ -52,7 +52,7 @@
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
                 android:text="Message"
-                android:textColor="@color/black"
+                android:textColor="@color/grey_dark"
                 android:textSize="34px" />
 
             <ImageView
@@ -70,7 +70,7 @@
 
                 <Button
                     android:id="@+id/btnCancel"
-                    android:layout_width="218px"
+                    android:layout_width="207px"
                     android:layout_height="90px"
                     android:background="@drawable/button_white_yellow_blr_selector"
                     android:singleLine="true"
@@ -82,7 +82,7 @@
 
                 <Button
                     android:id="@+id/btnNeutral"
-                    android:layout_width="216px"
+                    android:layout_width="204px"
                     android:layout_height="90px"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
@@ -96,7 +96,7 @@
 
                 <Button
                     android:id="@+id/btnOk"
-                    android:layout_width="218px"
+                    android:layout_width="206px"
                     android:layout_height="90px"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/button_white_yellow_brr_selector"

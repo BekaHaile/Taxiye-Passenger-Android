@@ -114,16 +114,17 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 				
 				for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
 					if(Data.cancelOptionsList.cancelOptions.get(i).checked){
-						cancelReasonsStr = cancelReasonsStr + Data.cancelOptionsList.cancelOptions.get(i).name + ", ";
+						cancelReasonsStr = Data.cancelOptionsList.cancelOptions.get(i).name;
+						break;
 					}
 				}
 				
-				if(!"".equalsIgnoreCase(cancelReasonsStr)){
-					cancelReasonsStr = cancelReasonsStr.substring(0, cancelReasonsStr.length()-2);
+				if("".equalsIgnoreCase(cancelReasonsStr)){
+					DialogPopup.alertPopup(RideCancellationActivity.this, "", "Please select one reason");
 				}
-				
-				cancelRideAPI(RideCancellationActivity.this, cancelReasonsStr);
-				
+				else{
+					cancelRideAPI(RideCancellationActivity.this, cancelReasonsStr);
+				}
 				
 			}
 		});
@@ -221,11 +222,11 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 			
 			if(cancelOption.checked){
 				holder.relative.setBackgroundColor(Color.WHITE);
-				holder.imageViewCancelOptionCheck.setVisibility(View.VISIBLE);
+				holder.imageViewCancelOptionCheck.setImageResource(R.drawable.check_box_checked_new);
 			}
 			else{
 				holder.relative.setBackgroundColor(Color.TRANSPARENT);
-				holder.imageViewCancelOptionCheck.setVisibility(View.GONE);
+				holder.imageViewCancelOptionCheck.setImageResource(R.drawable.check_box_unchecked_new);
 			}
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -233,11 +234,13 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 				@Override
 				public void onClick(View v) {
 					holder = (ViewHolderCancelOption) v.getTag();
-					if(Data.cancelOptionsList.cancelOptions.get(holder.id).checked){
-						Data.cancelOptionsList.cancelOptions.get(holder.id).checked = false;
-					}
-					else{
-						Data.cancelOptionsList.cancelOptions.get(holder.id).checked = true;
+					for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
+						if(holder.id == i){
+							Data.cancelOptionsList.cancelOptions.get(i).checked = true;
+						}
+						else{
+							Data.cancelOptionsList.cancelOptions.get(i).checked = false;
+						}
 					}
 					notifyDataSetChanged();
 				}

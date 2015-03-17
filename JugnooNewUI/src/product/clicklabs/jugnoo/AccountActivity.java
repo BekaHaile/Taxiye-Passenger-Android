@@ -1004,17 +1004,20 @@ public class AccountActivity extends Activity {
 			
 			rideInfosList.clear();
 			rideTransactionAdapter.notifyDataSetChanged();
+			relativeLayoutSeeMore.setVisibility(View.GONE);
 		}
 		else{
 			textViewInfo.setVisibility(View.GONE);
 			if(rideInfosList.size() == 0 && futureSchedule == null){
 				relativeLayoutNotTriedJugnoo.setVisibility(View.VISIBLE);
 				relativeLayoutRideTransactions.setVisibility(View.GONE);
+				relativeLayoutSeeMore.setVisibility(View.GONE);
 			}
 			else{
 				relativeLayoutNotTriedJugnoo.setVisibility(View.GONE);
 				relativeLayoutRideTransactions.setVisibility(View.VISIBLE);
 				textViewRecentTransactions.setVisibility(View.VISIBLE);
+				relativeLayoutSeeMore.setVisibility(View.VISIBLE);
 			}
 			rideTransactionAdapter.notifyDataSetChanged();
 		}
@@ -1129,7 +1132,7 @@ public class AccountActivity extends Activity {
 					holder.textViewFromValue.setText(rideInfoNew.pickupAddress);
 					holder.textViewToValue.setText(rideInfoNew.dropAddress);
 					holder.textViewDetails.setText("Details: ");
-					if(rideInfoNew.rideTime > 1){
+					if(rideInfoNew.rideTime == 1){
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
 								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
 					}
@@ -1151,7 +1154,7 @@ public class AccountActivity extends Activity {
 				holder.textViewFromValue.setText(rideInfoNew.pickupAddress);
 				holder.textViewToValue.setText(rideInfoNew.dropAddress);
 				holder.textViewDetails.setText("Details: ");
-				if(rideInfoNew.rideTime > 1){
+				if(rideInfoNew.rideTime == 1){
 					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
 							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
 				}

@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="30px"
+        android:layout_margin="50px"
         android:background="@drawable/dialog_background_color"
         android:splitMotionEvents="false" >
 
@@ -47,11 +47,11 @@
 
                 <ImageView
                     android:id="@+id/imageViewPickupLocation"
-                    android:layout_width="60px"
-                    android:layout_height="60px"
+                    android:layout_width="54px"
+                    android:layout_height="54px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="40px"
-                    android:src="@drawable/jugnoo_icon_small_yellow"
+                    android:src="@drawable/location_icon_schedule"
                     android:tag="mwar" />
 
                 <TextView
@@ -88,11 +88,11 @@
 
                 <ImageView
                     android:id="@+id/imageViewPickupTime"
-                    android:layout_width="60px"
-                    android:layout_height="60px"
+                    android:layout_width="54px"
+                    android:layout_height="54px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="40px"
-                    android:src="@drawable/jugnoo_icon_small_yellow"
+                    android:src="@drawable/calendar_icon"
                     android:tag="mwar" />
 
                 <TextView
@@ -135,7 +135,7 @@
 
                 <Button
                     android:id="@+id/btnCancel"
-                    android:layout_width="327px"
+                    android:layout_width="307px"
                     android:layout_height="90px"
                     android:layout_marginLeft="0px"
                     android:background="@drawable/button_white_yellow_blr_selector"
@@ -146,7 +146,7 @@
 
                 <Button
                     android:id="@+id/btnOk"
-                    android:layout_width="327px"
+                    android:layout_width="307px"
                     android:layout_height="90px"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="0px"

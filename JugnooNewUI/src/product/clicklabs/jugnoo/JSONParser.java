@@ -470,6 +470,14 @@ public class JSONParser {
 								
 								if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
 									sessionId = jObject1.getString("session_id");
+									double assigningLatitude = 0, assigningLongitude = 0;
+									if(jObject1.has("latitude") && jObject1.has("longitude")){
+										assigningLatitude = jObject1.getDouble("latitude");
+										assigningLongitude = jObject1.getDouble("longitude");
+										Log.e("assigningLatitude,assigningLongitude ====@@@", ""+assigningLatitude+","+assigningLongitude);
+									}
+									Data.pickupLatLng = new LatLng(assigningLatitude, assigningLongitude);
+									
 									engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
 								}
 								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){

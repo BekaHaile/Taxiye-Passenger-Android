@@ -410,6 +410,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public static final long LOCATION_UPDATE_TIME_PERIOD = 10000; //in milliseconds
 	public static final double MAX_DISPLACEMENT_THRESHOLD = 200; //in meters
 	
+	
+	public static final double MIN_BALANCE_ALERT_VALUE = 150; //in Rupees
+	
+	
 	public static final long SERVICE_RESTART_TIMER = 12 * 60 * 60 * 1000; //in milliseconds
 	
 	
@@ -1774,15 +1778,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		}
 		else{
-			if(myLocation == null){
-				Data.pickupLatLng = new LatLng(0, 0);
-			}
-			else{
-				Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-			}
 			
 			Data.cEngagementId = "";
-			
 			
 			switchRequestRideUI();
 			startTimerRequestRide();
@@ -2496,6 +2493,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				buttonCancelRide.setVisibility(View.VISIBLE);
 				buttonAddJugnooCash.setVisibility(View.GONE);
 				
+				textViewInRideLowJugnooCash.setVisibility(View.GONE);
+				
 				
 				startDriverLocationUpdateTimer();
 				
@@ -2527,6 +2526,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				buttonCancelRide.setVisibility(View.GONE);
 				buttonAddJugnooCash.setVisibility(View.VISIBLE);
+				
+				if(Data.userData != null){
+					if(Data.userData.jugnooBalance < MIN_BALANCE_ALERT_VALUE){
+						textViewInRideLowJugnooCash.setVisibility(View.VISIBLE);
+					}
+					else{
+						textViewInRideLowJugnooCash.setVisibility(View.GONE);
+					}
+				}
+				else{
+					textViewInRideLowJugnooCash.setVisibility(View.GONE);
+				}
 				
 				
 				break;
@@ -2948,6 +2959,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	protected void onPause() {
 		
+		destroyFusedLocationFetchers();
+		
 		GCMIntentService.clearNotifications(getApplicationContext());
 		saveDataOnPause(false);
 		
@@ -2958,8 +2971,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		destroyFusedLocationFetchers();
 		
 		super.onPause();
 		
@@ -3658,7 +3669,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						        	textViewNearestDriverETA.setText("No drivers nearby.");
 					        	}
 					        	else{
-						        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minutes Away");
+					        		if("1".equalsIgnoreCase(etaMinutes)){
+							        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minute Away");
+					        		}
+					        		else{
+							        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minutes Away");
+					        		}
 					        	}
 					        }
 				        }
@@ -3718,24 +3734,30 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void addCurrentLocationAddressMarker(LatLng latLng){
 		try {
 			if (Data.userData.canChangeLocation == 0) {
-				if(currentLocationMarker != null){
-					currentLocationMarker.remove();
-				}
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.title("customer_current_location");
-				markerOptions.snippet("");
-				markerOptions.position(latLng);
-				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
-				currentLocationMarker = map.addMarker(markerOptions);
+				addUserCurrentLocationAddressMarker(latLng);
 			}
 		} catch (Exception e) {
 		}
 	}
 	
+	public void addUserCurrentLocationAddressMarker(LatLng latLng){
+		try {
+			if(currentLocationMarker != null){
+				currentLocationMarker.remove();
+			}
+			MarkerOptions markerOptions = new MarkerOptions();
+			markerOptions.title("customer_current_location");
+			markerOptions.snippet("");
+			markerOptions.position(latLng);
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+			currentLocationMarker = map.addMarker(markerOptions);
+		} catch (Exception e) {
+		}
+	}
 	
 	
 	public void showDriverMarkersAndPanMap(final LatLng userLatLng){
-		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+		if(userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_INITIAL || passengerScreenMode == PassengerScreenMode.P_ASSIGNING)){
 				if(map != null){
 					map.clear();
 					addCurrentLocationAddressMarker(userLatLng);
@@ -3764,6 +3786,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									public void run() {
 										try {
 											map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
+											
+											new Handler().postDelayed(new Runnable() {
+												
+												@Override
+												public void run() {
+													float zoom = map.getCameraPosition().zoom;
+													if(zoom > 17){
+														map.animateCamera(CameraUpdateFactory.zoomTo(17), 1000, null);
+													}
+												}
+											}, 1000);
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -3791,6 +3824,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					
 				}
+		}
+		if(userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)){
+			addUserCurrentLocationAddressMarker(userLatLng);
 		}
 	}
 	
@@ -4946,7 +4982,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 
 			Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
-			btnOk.setTypeface(Data.latoRegular(activity));
+			btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -5057,7 +5093,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			textHead.setText("Alert");
 			textMessage.setText(message);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
@@ -5848,7 +5884,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					textHead.setText("Chalo Jugnoo Se");
 					
 					
-					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 					
 					btnOk.setText("OK");
@@ -5968,7 +6004,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			textMessage.setText("Are you sure you want to start ride?");
 			
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
@@ -6051,7 +6087,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textMessage.setText("Are you sure you want to end ride?");
 				
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 				
 				btnOk.setOnClickListener(new View.OnClickListener() {
@@ -6137,7 +6173,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					textMessage.setText("Are you sure you want to cancel ride?");
 					
 					
-					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 					
 					btnOk.setOnClickListener(new View.OnClickListener() {
@@ -6211,7 +6247,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textHead.setText("Rate Us");
 				textMessage.setText("Liked our services!!! Please rate us on Play Store");
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("RATE NOW");
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD); btnOk.setText("RATE NOW");
 				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity)); btnCancel.setText("LATER");
 				
 				btnOk.setOnClickListener(new View.OnClickListener() {
@@ -6272,7 +6308,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				dialog.setCanceledOnTouchOutside(true);
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.latoRegular(activity));
 				
@@ -6380,7 +6416,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 				btnOk.setText("NORMAL");
 				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 				btnCancel.setText("DEBUG");
@@ -6453,7 +6489,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textHead.setText("Driver Info");
 				textMessage.setText(driverInfo.toString());
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity)); btnOk.setText("Call");
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD); btnOk.setText("Call");
 				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
 				
 				btnOk.setOnClickListener(new View.OnClickListener() {
@@ -7222,6 +7258,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    		editor.commit();
 		    		
 		    		if(getDistanceTimeAddress != null){
+						getDistanceTimeAddress.cancel(true);
+						getDistanceTimeAddress = null;
+					}
+					if(myLocation != null){
+						getDistanceTimeAddress = new GetDistanceTimeAddress(Data.pickupLatLng, false);
+						getDistanceTimeAddress.execute();
+					}
+				}
+				else{
+					if(getDistanceTimeAddress != null){
 						getDistanceTimeAddress.cancel(true);
 						getDistanceTimeAddress = null;
 					}
