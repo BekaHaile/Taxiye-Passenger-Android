@@ -1001,7 +1001,7 @@
                 android:layout_marginTop="96px"
                 android:background="@color/white_light_grey"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <ScrollView
                     android:id="@+id/scrollViewEndRide"
@@ -1018,87 +1018,63 @@
                         <RelativeLayout
                             android:id="@+id/relativeLayoutEndRideDriverInfo"
                             android:layout_width="match_parent"
-                            android:layout_height="210px" >
+                            android:layout_height="120px" >
 
-                            <LinearLayout
+                            <RelativeLayout
                                 android:layout_width="360px"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="30px"
-                                android:orientation="vertical" >
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="30px" >
 
-                                <RelativeLayout
-                                    android:layout_width="116px"
-                                    android:layout_height="116px"
-                                    android:layout_gravity="center_horizontal"
-                                    android:tag="mwar" >
-
-                                    <ImageView
-                                        android:layout_width="116px"
-                                        android:layout_height="116px"
-                                        android:background="@drawable/circle_grey"
-                                        android:tag="mwar" />
-
-                                    <ImageView
-                                        android:id="@+id/imageViewEndRideDriver"
-                                        android:layout_width="110px"
-                                        android:layout_height="110px"
-                                        android:layout_centerInParent="true"
-                                        android:tag="mwar" />
-                                </RelativeLayout>
+                                <ImageView
+                                    android:id="@+id/imageViewEndRideDriverIcon"
+                                    android:layout_width="81px"
+                                    android:layout_height="62px"
+                                    android:layout_marginLeft="50px"
+                                    android:src="@drawable/driver_icon_end_ride"
+                                    android:tag="mwar" />
 
                                 <TextView
                                     android:id="@+id/textViewEndRideDriverName"
-                                    android:layout_width="320px"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_marginTop="20px"
-                                    android:gravity="center"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="10px"
+                                    android:layout_toRightOf="@+id/imageViewEndRideDriverIcon"
+                                    android:gravity="center_vertical"
                                     android:maxLines="2"
-                                    android:text="Driver Name"
+                                    android:text="Driver Name\nverma"
                                     android:textColor="@color/grey_dark"
                                     android:textSize="30px" />
-                            </LinearLayout>
+                            </RelativeLayout>
 
-                            <LinearLayout
+                            <RelativeLayout
                                 android:layout_width="360px"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:layout_marginTop="30px"
-                                android:orientation="vertical" >
+                                android:layout_marginTop="30px" >
 
-                                <RelativeLayout
-                                    android:layout_width="116px"
-                                    android:layout_height="116px"
-                                    android:layout_gravity="center_horizontal"
-                                    android:tag="mwar" >
-
-                                    <ImageView
-                                        android:layout_width="116px"
-                                        android:layout_height="116px"
-                                        android:background="@drawable/circle_grey"
-                                        android:tag="mwar" />
-
-                                    <ImageView
-                                        android:id="@+id/imageViewEndRideDriverCar"
-                                        android:layout_width="110px"
-                                        android:layout_height="110px"
-                                        android:layout_centerInParent="true"
-                                        android:src="@drawable/auto_icon_normal"
-                                        android:tag="mwar" />
-                                </RelativeLayout>
+                                <ImageView
+                                    android:id="@+id/imageViewEndRideAutoIcon"
+                                    android:layout_width="81px"
+                                    android:layout_height="62px"
+                                    android:layout_marginLeft="10px"
+                                    android:src="@drawable/auto_icon_end_ride"
+                                    android:tag="mwar" />
 
                                 <TextView
                                     android:id="@+id/textViewEndRideDriverCarNumber"
-                                    android:layout_width="320px"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_marginTop="20px"
-                                    android:gravity="center"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="5px"
+                                    android:layout_marginRight="10px"
+                                    android:layout_toRightOf="@+id/imageViewEndRideAutoIcon"
+                                    android:gravity="center_vertical"
                                     android:maxLines="2"
-                                    android:text="Car Number"
+                                    android:text="Car Number\n1234"
                                     android:textColor="@color/grey_dark"
                                     android:textSize="30px" />
-                            </LinearLayout>
+                            </RelativeLayout>
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -1573,7 +1549,7 @@
                             android:layout_width="540px"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="40px"
+                            android:layout_marginTop="30px"
                             android:gravity="center"
                             android:text="You can now add Jugnoo Cash by giving\nit to our Jugnoo Driver"
                             android:textColor="@color/black_text"

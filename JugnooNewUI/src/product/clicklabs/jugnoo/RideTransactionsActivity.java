@@ -395,7 +395,7 @@ public class RideTransactionsActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					if(AccountActivity.futureSchedule != null){
-						DialogPopup.alertPopupTwoButtonsWithListeners(RideTransactionsActivity.this, "Cancel Schedule", "Are you sure you want to cancel the schedule?", "OK", "Cancel",
+						DialogPopup.alertPopupTwoButtonsWithListeners(RideTransactionsActivity.this, "Cancel Scheduled Ride", "Are you sure you want to cancel the scheduled ride?", "OK", "Cancel",
 								new View.OnClickListener() {
 									
 									@Override

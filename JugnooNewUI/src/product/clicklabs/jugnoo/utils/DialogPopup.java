@@ -372,7 +372,6 @@ public class DialogPopup {
 	
 	
 	
-	
 	public static ProgressDialog progressDialog;
 	
 	/**
@@ -399,7 +398,6 @@ public class DialogPopup {
 			new ASSL((Activity)context, frameLayout, 1134, 720, false);
 			
 			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.latoRegular(context));
-			messageText.setMinimumWidth((int)(240.0f*ASSL.Xscale()));
 			messageText.setText(message); 
 		} catch (Exception e) {
 			e.printStackTrace();

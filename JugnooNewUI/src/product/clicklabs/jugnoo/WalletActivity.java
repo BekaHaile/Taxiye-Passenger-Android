@@ -105,7 +105,7 @@ public class WalletActivity extends Activity{
 		textViewAccountBalance = (TextView) findViewById(R.id.textViewAccountBalance); textViewAccountBalance.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		textViewAccountBalanceValue = (TextView) findViewById(R.id.textViewAccountBalanceValue); textViewAccountBalanceValue.setTypeface(Data.latoRegular(this));
 		textViewRecentTransactions = (TextView) findViewById(R.id.textViewRecentTransactions); textViewRecentTransactions.setTypeface(Data.latoRegular(this));
-		textViewRecentTransactions.setVisibility(View.GONE);
+		textViewRecentTransactions.setText("");
 		textViewPromotion.setVisibility(View.GONE);
 		
 		
@@ -250,13 +250,13 @@ public class WalletActivity extends Activity{
 		}
 		else{
 			if(transactionInfoList.size() == 0){
-				textViewRecentTransactions.setVisibility(View.GONE);
+				textViewRecentTransactions.setText("");
 				relativeLayoutShowMore.setVisibility(View.GONE);
 				textViewInfo.setVisibility(View.VISIBLE);
 				textViewInfo.setText(message);
 			}
 			else{
-				textViewRecentTransactions.setVisibility(View.VISIBLE);
+				textViewRecentTransactions.setText("Recent Transactions");
 				relativeLayoutShowMore.setVisibility(View.VISIBLE);
 				textViewInfo.setVisibility(View.GONE);
 			}

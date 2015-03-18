@@ -384,7 +384,11 @@ public class FeedbackActivity extends Activity {
 								jObj = new JSONObject(response);
 								int flag = jObj.getInt("flag");
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										DialogPopup.alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 										Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
 										performBackPressed();
 									}

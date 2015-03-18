@@ -316,7 +316,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout endRideReviewRl;
 	ScrollView scrollViewEndRide;
 	
-	ImageView imageViewEndRideDriver, imageViewEndRideDriverCar;
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
 	TextView textViewEndRideFareValue, textViewEndRidePromotionDiscountValue, textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, 
@@ -705,9 +704,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		//Review Layout
 		endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
 		scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
-		
-		imageViewEndRideDriver = (ImageView) findViewById(R.id.imageViewEndRideDriver);
-		imageViewEndRideDriverCar = (ImageView) findViewById(R.id.imageViewEndRideDriverCar);
 		
 		textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Data.latoRegular(this));
 		textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Data.latoRegular(this));
@@ -1931,8 +1927,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		@Override
 		public void onClick(View v) {
 			if(myLocation != null){
-				if(map.getCameraPosition().zoom < 10){
-					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 10));
+				if(map.getCameraPosition().zoom < 12){
+					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 12));
 				}
 				else if(map.getCameraPosition().zoom < 15){
 					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 15));
@@ -2294,19 +2290,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				mapLayout.setVisibility(View.GONE);
 				endRideReviewRl.setVisibility(View.VISIBLE);
 				
-				try{
-					Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
-					if(!"".equalsIgnoreCase(Data.assignedDriverInfo.image)){
-						Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(imageViewEndRideDriver);
-					}
-				}catch(Exception e){}
-				try{
-					if(!"".equalsIgnoreCase(Data.assignedDriverInfo.carImage)){
-						Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new CircleTransform())
-						.error(R.drawable.car_android).into(imageViewEndRideDriverCar);
-					}
-				}catch(Exception e){}
-				
 				textViewEndRideDriverName.setText(Data.assignedDriverInfo.name);
 				textViewEndRideDriverCarNumber.setText(Data.assignedDriverInfo.carNumber);
 				
@@ -2569,20 +2552,22 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void setFareFactorToInitialState(){
 		try {
-			if(Data.userData.fareFactor > 1){
-				textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
-				textViewCurrentRatesInfo.setText("Current rates are "
-						+decimalFormat.format(Data.userData.fareFactor)
-						+"x higher than normal to maintain avaliability");
-			}
-			else if(Data.userData.fareFactor < 1){
-				textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
-				textViewCurrentRatesInfo.setText("Current rates are "
-						+decimalFormat.format(Data.userData.fareFactor)
-						+"x lower than normal to maintain avaliability");
-			}
-			else{
-				textViewCurrentRatesInfo.setVisibility(View.GONE);
+			if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+				if(Data.userData.fareFactor > 1){
+					textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
+					textViewCurrentRatesInfo.setText("Current rates are "
+							+decimalFormat.format(Data.userData.fareFactor)
+							+"x higher than normal to maintain avaliability");
+				}
+				else if(Data.userData.fareFactor < 1){
+					textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
+					textViewCurrentRatesInfo.setText("Current rates are "
+							+decimalFormat.format(Data.userData.fareFactor)
+							+"x lower than normal to maintain avaliability");
+				}
+				else{
+					textViewCurrentRatesInfo.setVisibility(View.GONE);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3803,10 +3788,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					if(!mapTouchedOnce){
 						if(farthestLatLng != null){
-							boundsBuilder.include(new LatLng(userLatLng.latitude, farthestLatLng.longitude));
-							boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
-							boundsBuilder.include(new LatLng(userLatLng.latitude, ((2*userLatLng.longitude) - farthestLatLng.longitude)));
-							boundsBuilder.include(new LatLng(((2*userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
+							
+							double distance = MapUtils.distance(userLatLng, farthestLatLng);
+							if(distance > 1000){
+								boundsBuilder.include(new LatLng(userLatLng.latitude, farthestLatLng.longitude));
+								boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
+								boundsBuilder.include(new LatLng(userLatLng.latitude, ((2*userLatLng.longitude) - farthestLatLng.longitude)));
+								boundsBuilder.include(new LatLng(((2*userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
+							}
+							else{
+								boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
+								boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
+							}
 							
 							boundsBuilder.include(userLatLng);
 							
@@ -3818,21 +3811,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									public void run() {
 										try {
 											map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
-											
-											new Handler().postDelayed(new Runnable() {
-												
-												@Override
-												public void run() {
-													float zoom = map.getCameraPosition().zoom;
-													if(zoom > 16){
-														map.animateCamera(CameraUpdateFactory.zoomTo(16), 1000, null);
-													}
-												}
-											}, 1000);
+											mapTouchedOnce = true;
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
-										mapTouchedOnce = true;
 									}
 								}, 1000);
 								
@@ -3841,17 +3823,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							}
 						}
 						else{
-							new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									try {
-										map.animateCamera(CameraUpdateFactory.newLatLng(userLatLng), 1000, null);
-									} catch (Exception e) {
-										e.printStackTrace();
+							boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
+							boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
+							boundsBuilder.include(userLatLng);
+							
+							try {
+								final LatLngBounds bounds = boundsBuilder.build();
+								final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+								new Handler().postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										try {
+											map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
+											mapTouchedOnce = true;
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
 									}
-									mapTouchedOnce = true;
-								}
-							}, 1000);
+								}, 1000);
+								
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					}
 					
@@ -5287,7 +5280,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void getRideSummaryAPI(final Activity activity, final String engagementId) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				DialogPopup.showLoadingDialog(activity, "Getting ride info...");
+				DialogPopup.showLoadingDialog(activity, "Loading...");
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("engagement_id", engagementId);
@@ -5555,7 +5548,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 													try{
 														if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
 															driverLocationMarker.setPosition(driverCurrentLatLng);
+															
 															updateDriverETAText();
+															
+															if(myLocation != null && map != null){
+																LatLng myLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+																double distance = MapUtils.distance(myLatLng, driverCurrentLatLng);
+																if(distance > 1000){
+																	final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+																	LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+																	boundsBuilder.include(myLatLng);
+																	boundsBuilder.include(driverCurrentLatLng);
+																	LatLngBounds bounds = boundsBuilder.build();
+																	map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int)(160*minScaleRatio)), 1000, null);
+																}
+															}
 														}
 													} catch(Exception e){
 														e.printStackTrace();

@@ -40,7 +40,7 @@ public class ScheduleRideDialog {
 	private Dialog dialog;
 	
 	private FrameLayout frameLayout;
-	private RelativeLayout relativeLayoutPickupTime;
+	private RelativeLayout relativeLayoutPickupLoaction, relativeLayoutPickupTime;
 	private TextView textViewTitle, textViewPickupLocation, textViewPickupTime;
 	private Button btnOk, btnCancel;
 	
@@ -90,7 +90,6 @@ public class ScheduleRideDialog {
 
 			@Override
 			public void onCancel() {
-
 			}
 		});
 		
@@ -112,6 +111,7 @@ public class ScheduleRideDialog {
 			dialog.setCancelable(false);
 			dialog.setCanceledOnTouchOutside(false);
 
+			relativeLayoutPickupLoaction = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPickupLoaction);
 			relativeLayoutPickupTime = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPickupTime);
 			
 			textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(activity));
@@ -133,6 +133,15 @@ public class ScheduleRideDialog {
 				@Override
 				public void onClick(View v) {
 					dismissAlert();
+				}
+			});
+			
+			relativeLayoutPickupLoaction.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dismissAlert();
+					DialogPopup.dialogBanner(activity, "Please place the pin at the desired pickup location");
 				}
 			});
 			
