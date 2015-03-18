@@ -69,6 +69,7 @@ public class AccountActivity extends Activity {
 	ProgressBar progressBarProfileUpdate;
 	
 	ScrollView scrollView;
+	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
 	
 	EditText editTextUserName, editTextEmail, editTextPhone;
@@ -122,6 +123,7 @@ public class AccountActivity extends Activity {
 		progressBarProfileUpdate = (ProgressBar) findViewById(R.id.progressBarProfileUpdate);
 		
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
+		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 		
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Data.latoRegular(this));
@@ -372,6 +374,32 @@ public class AccountActivity extends Activity {
 			}
 		});
 		
+		imageViewEmailVerifyStatus.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal()){
+					if(relativeLayoutEmailVerify.getVisibility() == View.GONE){
+						relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
+					}
+					else{
+						relativeLayoutEmailVerify.setVisibility(View.GONE);
+					}
+				}
+			}
+		});
+		
+		linearLayoutMain.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(relativeLayoutEmailVerify.getVisibility() == View.VISIBLE){
+					relativeLayoutEmailVerify.setVisibility(View.GONE);
+				}
+			}
+		});
+		
+		
 		relativeLayoutNotTriedJugnoo.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -425,7 +453,7 @@ public class AccountActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				getRecentRidesAPI(AccountActivity.this);
+				getRecentRidesAPI(AccountActivity.this, true);
 			}
 		});
 		
@@ -482,9 +510,6 @@ public class AccountActivity extends Activity {
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
-		
-		getRecentRidesAPI(this);
-		
 	}
 	
 	
@@ -504,7 +529,7 @@ public class AccountActivity extends Activity {
 				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
 				imageViewEmailVerifyStatus.setImageResource(R.drawable.warning_icon);
 				
-				relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
+				relativeLayoutEmailVerify.setVisibility(View.GONE);
 				textViewEmailVerifyMessage.setText("Please verify the Address.");
 				textViewEmailVerify.setText("VERIFY ME");
 			}
@@ -512,7 +537,7 @@ public class AccountActivity extends Activity {
 				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
 				imageViewEmailVerifyStatus.setImageResource(R.drawable.alert_icon);
 				
-				relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
+				relativeLayoutEmailVerify.setVisibility(View.GONE);
 				textViewEmailVerifyMessage.setText("Please enter a valid Address.");
 				textViewEmailVerify.setText("CHANGE");
 			}
@@ -566,6 +591,8 @@ public class AccountActivity extends Activity {
 		HomeActivity.checkForAccessTokenChange(this);
 		
 		reloadProfileAPI(this);
+		
+		getRecentRidesAPI(this, true);
 		
 		scrollView.scrollTo(0, 0);
 	}
@@ -875,9 +902,14 @@ public class AccountActivity extends Activity {
 	}
 	
 	
-	public void getRecentRidesAPI(final Activity activity) {
+	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
 		progressBarList.setVisibility(View.GONE);
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
+			
+			if(refresh){
+				rideInfosList.clear();
+				futureSchedule = null;
+			}
 			
 			progressBarList.setVisibility(View.VISIBLE);
 			textViewInfo.setVisibility(View.GONE);
@@ -1027,7 +1059,8 @@ public class AccountActivity extends Activity {
 	class ViewHolderRideTransaction {
 		TextView textViewPickupAt, textViewFrom, textViewFromValue, textViewTo, 
 		textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel;
-		RelativeLayout relative, relativeLayoutCancel, relativeLayoutTo;
+		RelativeLayout relativeLayoutCancel, relativeLayoutTo;
+		RelativeLayout relative;
 		int id;
 	}
 
@@ -1083,7 +1116,7 @@ public class AccountActivity extends Activity {
 				holder.textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); holder.textViewToValue.setTypeface(Data.latoRegular(context));
 				holder.textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); holder.textViewDetails.setTypeface(Data.latoRegular(context));
 				holder.textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); holder.textViewDetailsValue.setTypeface(Data.latoRegular(context));
-				holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Data.latoRegular(context), Typeface.BOLD);
+				holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Data.latoRegular(context));
 				holder.textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); holder.textViewCancel.setTypeface(Data.latoRegular(context));
 				
 				holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
@@ -1112,7 +1145,7 @@ public class AccountActivity extends Activity {
 						
 					holder.textViewFromValue.setText(futureSchedule.pickupAddress);
 					holder.textViewDetails.setText("Date: ");
-					holder.textViewDetailsValue.setText(futureSchedule.pickupDate + " " + futureSchedule.pickupTime);
+					holder.textViewDetailsValue.setText(futureSchedule.pickupDate + ", " + futureSchedule.pickupTime);
 						
 					if(futureSchedule.modifiable == 1){
 						holder.relativeLayoutCancel.setVisibility(View.VISIBLE);
@@ -1134,11 +1167,11 @@ public class AccountActivity extends Activity {
 					holder.textViewDetails.setText("Details: ");
 					if(rideInfoNew.rideTime == 1){
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
+								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
 					}
 					else{
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
+								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
 					}
 					holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfoNew.amount));
 				}
@@ -1156,11 +1189,11 @@ public class AccountActivity extends Activity {
 				holder.textViewDetails.setText("Details: ");
 				if(rideInfoNew.rideTime == 1){
 					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
+							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
 				}
 				else{
 					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
+							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
 				}
 				holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfoNew.amount));
 			}
@@ -1180,7 +1213,7 @@ public class AccountActivity extends Activity {
 												
 												@Override
 												public void onCancelSuccess() {
-													getRecentRidesAPI(AccountActivity.this);
+													getRecentRidesAPI(AccountActivity.this, true);
 												}
 											});
 										}

@@ -31,7 +31,7 @@
             android:padding="35px"
             android:text="Message"
             android:textColor="@color/black_light"
-            android:textSize="34px" />
+            android:textSize="28px" />
     </LinearLayout>
 
 </LinearLayout>

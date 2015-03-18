@@ -113,7 +113,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="0px"
                 android:orientation="vertical"
                 android:splitMotionEvents="false" >
@@ -121,7 +121,7 @@
                 <ListView
                     android:id="@+id/listViewTransactions"
                     android:layout_width="match_parent"
-                    android:layout_height="500px"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="0px"
                     android:divider="@drawable/background_transparent"
                     android:dividerHeight="0px"
@@ -142,8 +142,8 @@
                     android:id="@+id/progressBar"
                     android:layout_width="140px"
                     android:layout_height="140px"
-                    android:layout_alignBottom="@+id/listViewTransactions"
                     android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginBottom="180px"
                      />
             </RelativeLayout>

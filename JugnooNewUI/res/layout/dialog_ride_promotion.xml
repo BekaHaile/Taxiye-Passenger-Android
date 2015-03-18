@@ -31,12 +31,12 @@
                 android:layout_marginBottom="30px"
                 android:layout_marginTop="30px"
                 android:gravity="center"
-                android:lineSpacingExtra="10px"
+                android:lineSpacingExtra="5px"
                 android:maxHeight="800px"
-                android:paddingLeft="25px"
-                android:paddingRight="25px"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
                 android:text="Ride Scheduled. You have coupons available.\nChoose one for this ride"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/grey_dark_more"
                 android:textSize="30px" />
 
             <ImageView
@@ -54,25 +54,13 @@
                 android:visibility="visible" >
             </ListView>
 
-            <TextView
-                android:id="@+id/textViewDoYouWantToRequest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30px"
-                android:layout_marginTop="30px"
-                android:gravity="center"
-                android:paddingLeft="40px"
-                android:paddingRight="40px"
-                android:text="Do you really want to request?"
-                android:textColor="@color/grey_dark"
-                android:textSize="30px" />
 
             <TextView
                 android:id="@+id/textViewReferInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30px"
                 android:layout_marginBottom="30px"
                 android:gravity="center"
                 android:paddingLeft="40px"

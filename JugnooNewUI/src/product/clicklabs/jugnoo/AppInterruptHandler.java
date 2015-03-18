@@ -17,6 +17,8 @@ public interface AppInterruptHandler {
 	
 	public void onChangeStatePushReceived();
 	
+	public void onCancelCompleted();
+	
 	public void rideRequestAcceptedInterrupt(JSONObject jObj);
 	
 	public void onNoDriversAvailablePushRecieved(String logMessage);

@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
@@ -355,6 +356,13 @@ public class DialogPopup {
 			});
 			
 			dialog.show();
+			new Handler().postDelayed(new Runnable() {
+				
+				@Override
+				public void run() {
+					DialogPopup.dismissAlertPopup();
+				}
+			}, 5000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -391,6 +399,7 @@ public class DialogPopup {
 			new ASSL((Activity)context, frameLayout, 1134, 720, false);
 			
 			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.latoRegular(context));
+			messageText.setMinimumWidth((int)(240.0f*ASSL.Xscale()));
 			messageText.setText(message); 
 		} catch (Exception e) {
 			e.printStackTrace();

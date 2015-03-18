@@ -15,7 +15,7 @@
 
         <RelativeLayout
             android:id="@+id/rlt"
-            android:layout_width="240px"
+            android:layout_width="wrap_content"
             android:layout_height="240px"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
@@ -38,7 +38,8 @@
                 android:gravity="center"
                 android:paddingLeft="20px"
                 android:paddingRight="20px"
-                android:text="Creating Game ... "
+                android:minWidth="240px"
+                android:text="Loading..."
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#ffffff"
                 android:singleLine="true"

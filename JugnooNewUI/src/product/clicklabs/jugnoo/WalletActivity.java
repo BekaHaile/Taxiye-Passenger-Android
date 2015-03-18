@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -190,14 +189,6 @@ public class WalletActivity extends Activity{
 				if("success".equalsIgnoreCase(payment)){
 					String amount = getIntent().getStringExtra("amount");
 					DialogPopup.dialogBanner(WalletActivity.this, "Payment successful, Added Rs. "+amount);
-					new Handler().postDelayed(new Runnable() {
-						
-						@Override
-						public void run() {
-							DialogPopup.dismissAlertPopup();
-						}
-					}, 5000);
-					
 				}
 			}
 		} catch(Exception e){
@@ -258,14 +249,16 @@ public class WalletActivity extends Activity{
 			relativeLayoutShowMore.setVisibility(View.GONE);
 		}
 		else{
-			textViewInfo.setVisibility(View.GONE);
 			if(transactionInfoList.size() == 0){
 				textViewRecentTransactions.setVisibility(View.GONE);
 				relativeLayoutShowMore.setVisibility(View.GONE);
+				textViewInfo.setVisibility(View.VISIBLE);
+				textViewInfo.setText(message);
 			}
 			else{
 				textViewRecentTransactions.setVisibility(View.VISIBLE);
 				relativeLayoutShowMore.setVisibility(View.VISIBLE);
+				textViewInfo.setVisibility(View.GONE);
 			}
 			transactionListAdapter.notifyDataSetChanged();
 			textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+jugnooBalance);

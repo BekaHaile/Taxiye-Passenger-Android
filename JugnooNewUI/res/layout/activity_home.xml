@@ -51,32 +51,39 @@
                         android:layout_height="100px"
                         android:background="@color/white" >
 
-                        <TextView
-                            android:id="@+id/textViewNearestDriverETA"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20px"
-                            android:layout_marginRight="20px"
-                            android:layout_marginTop="10px"
-                            android:gravity="center"
-                            android:singleLine="true"
-                            android:text="Nearest Driver is 4 minutes away"
-                            android:textColor="@color/black_text"
-                            android:textSize="30px" />
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical" >
 
-                        <TextView
-                            android:id="@+id/textViewCurrentRatesInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/textViewNearestDriverETA"
-                            android:layout_marginLeft="20px"
-                            android:layout_marginRight="20px"
-                            android:layout_marginTop="10px"
-                            android:gravity="center"
-                            android:singleLine="true"
-                            android:text="Current rates are 1.2x higher than normal to maintain availablity"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="22px" />
+                            <TextView
+                                android:id="@+id/textViewNearestDriverETA"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20px"
+                                android:layout_marginRight="20px"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="Nearest Driver is 4 minutes away"
+                                android:textColor="@color/black_text"
+                                android:textSize="30px" />
+
+                            <TextView
+                                android:id="@+id/textViewCurrentRatesInfo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textViewNearestDriverETA"
+                                android:layout_marginLeft="20px"
+                                android:layout_marginRight="20px"
+                                android:layout_marginTop="10px"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="Current rates are 1.2x higher than normal to maintain availablity"
+                                android:textColor="@color/grey_dark"
+                                android:textSize="22px"
+                                android:visibility="visible" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/textViewFindingDriver"
@@ -375,7 +382,7 @@
                             android:gravity="center"
                             android:maxLines="2"
                             android:padding="25px"
-                            android:text="Jugnoo Cash running low. Recharge now"
+                            android:text="Jugnoo Cash is running low. Recharge now"
                             android:textColor="@color/grey_dark_more"
                             android:textSize="26px"
                             android:visibility="visible" />
@@ -1714,7 +1721,7 @@
                 android:singleLine="true"
                 android:text="UserName"
                 android:textColor="@color/grey_dark"
-                android:textSize="30px" />
+                android:textSize="32px" />
 
             <TextView
                 android:id="@+id/textViewViewAccount"
@@ -1726,7 +1733,7 @@
                 android:singleLine="true"
                 android:text="View Account"
                 android:textColor="@color/grey_dark"
-                android:textSize="24px" />
+                android:textSize="26px" />
         </LinearLayout>
 
         <ScrollView

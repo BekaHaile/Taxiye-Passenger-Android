@@ -48,7 +48,7 @@ public class PromotionDialog {
 	private Dialog dialog;
 	
 	private FrameLayout frameLayout;
-	private TextView textViewTitle, textViewMessage, textViewDoYouWantToRequest, textViewReferInfo;
+	private TextView textViewTitle, textViewMessage, textViewReferInfo;
 	private Button btnOk, btnCancel, btnOkOnly;
 	private ListView listViewPromotions;
 	
@@ -100,7 +100,6 @@ public class PromotionDialog {
 
 			textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(activity));
 			textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Data.latoRegular(activity));
-			textViewDoYouWantToRequest = (TextView) dialog.findViewById(R.id.textViewDoYouWantToRequest); textViewDoYouWantToRequest.setTypeface(Data.latoRegular(activity));
 			textViewReferInfo = (TextView) dialog.findViewById(R.id.textViewReferInfo); textViewReferInfo.setTypeface(Data.latoLight(activity), Typeface.BOLD);
 
 			listViewPromotions = (ListView) dialog.findViewById(R.id.listViewPromotions);
@@ -178,8 +177,21 @@ public class PromotionDialog {
 				
 			}
 			else{
-				textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
-						+"x higher than normal to maintain availability");
+				
+				if(dynamicFactor > 1){
+					textViewMessage.setVisibility(View.VISIBLE);
+					textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
+							+"x higher than normal to maintain availability");
+				}
+				else if(dynamicFactor < 1){
+					textViewMessage.setVisibility(View.VISIBLE);
+					textViewMessage.setText("Current rates are "+decimalFormat.format(dynamicFactor)
+							+"x lower than normal to maintain availability");
+				}
+				else{
+					textViewMessage.setVisibility(View.GONE);
+				}
+				
 				
 				textViewTitle.setText("You have coupons available.\nChoose one");
 				
@@ -193,14 +205,12 @@ public class PromotionDialog {
 				selectedCoupon = promoCouponList.get(0);
 				
 				listViewPromotions.setVisibility(View.VISIBLE);
-				textViewDoYouWantToRequest.setVisibility(View.GONE);
 				textViewReferInfo.setVisibility(View.GONE);
 			}
 			else{
 				selectedCoupon = new CouponInfo(0, "");
 				
 				listViewPromotions.setVisibility(View.GONE);
-				textViewDoYouWantToRequest.setVisibility(View.VISIBLE);
 				textViewReferInfo.setVisibility(View.VISIBLE);
 				
 				textViewTitle.setText("No coupons available");
@@ -332,8 +342,8 @@ public class PromotionDialog {
 			}
 			else{
 				holder.relative.setBackground(drawableWhite);
-				holder.textViewCouponTitle.setTextColor(context.getResources().getColor(R.color.grey_dark));
-				holder.textViewTNC.setTextColor(context.getResources().getColor(R.color.grey_dark));
+				holder.textViewCouponTitle.setTextColor(context.getResources().getColor(R.color.grey_dark_less));
+				holder.textViewTNC.setTextColor(context.getResources().getColor(R.color.grey_dark_less));
 			}
 			
 			if(promoCoupon.id > -1){

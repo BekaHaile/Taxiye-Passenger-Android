@@ -34,7 +34,7 @@
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
                 android:text="Schedule Ride"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/grey_dark_more"
                 android:textSize="36px" />
 
             <RelativeLayout

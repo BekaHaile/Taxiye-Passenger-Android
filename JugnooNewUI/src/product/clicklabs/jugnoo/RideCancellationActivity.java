@@ -293,6 +293,10 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 												Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
 											}
 											
+											if(HomeActivity.appInterruptHandler != null){
+												HomeActivity.appInterruptHandler.onCancelCompleted();
+											}
+											
 											DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
 												
 												@Override

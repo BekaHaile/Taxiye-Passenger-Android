@@ -114,7 +114,7 @@ public class ScheduleRideDialog {
 
 			relativeLayoutPickupTime = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPickupTime);
 			
-			textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(activity));
 			textViewPickupLocation = (TextView) dialog.findViewById(R.id.textViewPickupLocation); textViewPickupLocation.setTypeface(Data.latoRegular(activity));
 			textViewPickupTime = (TextView) dialog.findViewById(R.id.textViewPickupTime); textViewPickupTime.setTypeface(Data.latoRegular(activity));
 			

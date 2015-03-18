@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -179,13 +178,6 @@ public class WalletAddPaymentActivity extends Activity{
 				String payment = getIntent().getStringExtra("payment");
 				if("failure".equalsIgnoreCase(payment)){
 					DialogPopup.dialogBanner(WalletAddPaymentActivity.this, "Transaction failed, Please try again");
-					new Handler().postDelayed(new Runnable() {
-						
-						@Override
-						public void run() {
-							DialogPopup.dismissAlertPopup();
-						}
-					}, 5000);
 				}
 			}
 		} catch(Exception e){

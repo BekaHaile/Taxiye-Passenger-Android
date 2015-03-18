@@ -474,8 +474,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		linearLayoutProfile = (LinearLayout) findViewById(R.id.linearLayoutProfile);
 		imageViewProfile = (ImageView) findViewById(R.id.imageViewProfile);
-		textViewUserName = (TextView) findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Data.latoRegular(this));
-		textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Data.latoLight(this), Typeface.BOLD);
+		textViewUserName = (TextView) findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Data.latoLight(this));
 		
 		relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
 		textViewGetRide = (TextView) findViewById(R.id.textViewGetRide); textViewGetRide.setTypeface(Data.latoRegular(this));
@@ -1931,11 +1931,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		@Override
 		public void onClick(View v) {
 			if(myLocation != null){
-				if(map.getCameraPosition().zoom < 12){
-					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 12));
+				if(map.getCameraPosition().zoom < 10){
+					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 10));
 				}
-				else if(map.getCameraPosition().zoom < 17){
-					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 17));
+				else if(map.getCameraPosition().zoom < 15){
+					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 15));
 				}
 				else{
 					map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
@@ -2384,10 +2384,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textViewNearestDriverETA.setVisibility(View.VISIBLE);
 				textViewNearestDriverETA.setText("Finding drivers near you...");
 				
-				textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
-				textViewCurrentRatesInfo.setText("Current rates are "
-						+decimalFormat.format(Data.userData.fareFactor)
-						+"x higher than normal to maintain avaliability");
+				setFareFactorToInitialState();
 				
 				textViewFindingDriver.setVisibility(View.GONE);
 				
@@ -2570,6 +2567,29 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	
 	
+	public void setFareFactorToInitialState(){
+		try {
+			if(Data.userData.fareFactor > 1){
+				textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
+				textViewCurrentRatesInfo.setText("Current rates are "
+						+decimalFormat.format(Data.userData.fareFactor)
+						+"x higher than normal to maintain avaliability");
+			}
+			else if(Data.userData.fareFactor < 1){
+				textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
+				textViewCurrentRatesInfo.setText("Current rates are "
+						+decimalFormat.format(Data.userData.fareFactor)
+						+"x lower than normal to maintain avaliability");
+			}
+			else{
+				textViewCurrentRatesInfo.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void setTextToFareInfoTextViews(TextView minFareValue, TextView fareAfterValue, TextView fareAfterText){
 		
 		minFareValue.setText("Rs " + decimalFormat.format(Data.fareStructure.fixedFare) + " for " 
@@ -2598,7 +2618,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		
 		textViewInRidePromoName.setText(Data.assignedDriverInfo.promoName);
-		textViewInRideFareFactor.setText("Price: "+decimalFormat.format(Data.userData.fareFactor)+"x");
+		
+		if(Data.userData.fareFactor > 1){
+			textViewInRideFareFactor.setVisibility(View.VISIBLE);
+			textViewInRideFareFactor.setText("Price: "+decimalFormat.format(Data.userData.fareFactor)+"x");
+		}
+		else if(Data.userData.fareFactor < 1){
+			textViewInRideFareFactor.setVisibility(View.VISIBLE);
+			textViewInRideFareFactor.setText("Price: "+decimalFormat.format(Data.userData.fareFactor)+"x");
+		}
+		else{
+			textViewInRideFareFactor.setVisibility(View.GONE);
+		}
+		
 		
 		
 		if(PassengerScreenMode.P_REQUEST_FINAL == mode){
@@ -2648,12 +2680,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	void buildAlertMessageNoGps() {
-		if(!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
+		if(!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+				&&
+				!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
 			if(gpsDialogAlert != null && gpsDialogAlert.isShowing()){
 		    }
 			else{
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			    builder.setMessage("The app needs active GPS connection. Enable it from Settings.")
+			    builder.setMessage("The app needs Location Services to be enabled. Enable it from Settings.")
 			           .setCancelable(false)
 			           .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
 			               public void onClick(final DialogInterface dialog, final int id) {
@@ -3670,10 +3704,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					        	}
 					        	else{
 					        		if("1".equalsIgnoreCase(etaMinutes)){
-							        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minute Away");
+							        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minute away");
 					        		}
 					        		else{
-							        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minutes Away");
+							        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minutes away");
 					        		}
 					        	}
 					        }
@@ -3684,9 +3718,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					        }
 				        }
 				        
-				        textViewCurrentRatesInfo.setText("Current rates are "
-								+decimalFormat.format(Data.userData.fareFactor)
-								+"x higher than normal to maintain avaliability");
+				        setFareFactorToInitialState();
 				        
 				        if (driverAcceptPushRecieved) {
 							SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -3792,8 +3824,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												@Override
 												public void run() {
 													float zoom = map.getCameraPosition().zoom;
-													if(zoom > 17){
-														map.animateCamera(CameraUpdateFactory.zoomTo(17), 1000, null);
+													if(zoom > 16){
+														map.animateCamera(CameraUpdateFactory.zoomTo(16), 1000, null);
 													}
 												}
 											}, 1000);
@@ -6657,6 +6689,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	
+	@Override
+	public void onCancelCompleted() {
+		customerUIBackToInitialAfterCancel();
+		FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
 	}
 	
 	
