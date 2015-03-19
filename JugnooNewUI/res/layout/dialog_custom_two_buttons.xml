@@ -29,13 +29,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="30px"
                 android:gravity="center"
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
                 android:text="Alert"
                 android:textColor="@color/grey_dark_more"
-                android:textSize="50px"
+                android:textSize="34px"
                 android:visibility="gone" />
 
             <TextView
@@ -52,7 +52,7 @@
                 android:paddingRight="40px"
                 android:text="Message"
                 android:textColor="@color/grey_dark"
-                android:textSize="34px" />
+                android:textSize="30px" />
 
             <ImageView
                 android:layout_width="match_parent"

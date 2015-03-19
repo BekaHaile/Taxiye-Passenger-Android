@@ -256,7 +256,7 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(cancelable);
 
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-			textHead.setTypeface(Data.latoRegular(activity));
+			textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
 			TextView textMessage = (TextView) dialog
 					.findViewById(R.id.textMessage);
 			textMessage.setTypeface(Data.latoRegular(activity));

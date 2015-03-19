@@ -406,7 +406,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public static final long DRIVER_START_RIDE_CHECK_METERS = 600; //in meters
 	
-	public static final long LOCATION_UPDATE_TIME_PERIOD = 10000; //in milliseconds
+	public static final long LOCATION_UPDATE_TIME_PERIOD = 6 * 10000; //in milliseconds
 	public static final double MAX_DISPLACEMENT_THRESHOLD = 200; //in meters
 	
 	
@@ -474,7 +474,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		linearLayoutProfile = (LinearLayout) findViewById(R.id.linearLayoutProfile);
 		imageViewProfile = (ImageView) findViewById(R.id.imageViewProfile);
 		textViewUserName = (TextView) findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Data.latoRegular(this), Typeface.BOLD);
-		textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Data.latoLight(this));
+		textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Data.latoLight(this), Typeface.BOLD);
 		
 		relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
 		textViewGetRide = (TextView) findViewById(R.id.textViewGetRide); textViewGetRide.setTypeface(Data.latoRegular(this));
@@ -2494,6 +2494,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				if(map != null){
 					map.clear();
+					
+					if(Data.pickupLatLng != null){
+						MarkerOptions markerOptions = new MarkerOptions();
+						markerOptions.snippet("");
+						markerOptions.title("start ride location");
+						markerOptions.position(Data.pickupLatLng);
+						markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+						map.addMarker(markerOptions);
+					}
 				}
 				
 				
@@ -2694,40 +2703,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
-	public Dialog timeDialogAlert;
-	
-    @SuppressWarnings("deprecation")
-	public void buildTimeSettingsAlertDialog(final Activity activity) {
-    	try {
-    		int autoTime = android.provider.Settings.System.getInt(activity.getContentResolver(), android.provider.Settings.System.AUTO_TIME);
-    		if(autoTime == 0){
-				if(timeDialogAlert != null && timeDialogAlert.isShowing()){
-			    }
-				else{
-					AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-				    builder.setMessage("The app needs Network Provided Time to be enabled. Enable it from Settings.")
-				           .setCancelable(false)
-				           .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
-				               public void onClick(final DialogInterface dialog, final int id) {
-				            	   activity.startActivity(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS));
-				               }
-				           })
-				           ;
-				    timeDialogAlert = null;
-				    timeDialogAlert = builder.create();
-				    timeDialogAlert.show();
-				}
-			}
-			else{
-				if(timeDialogAlert != null && timeDialogAlert.isShowing()){
-					timeDialogAlert.dismiss();
-			    }
-			}
-    	} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
 	
 	
@@ -2760,14 +2735,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 			    
 			    initializeFusedLocationFetchers();
-			    
-			    if(UserMode.DRIVER == userMode){
-					buildTimeSettingsAlertDialog(this);
-				}
-			    
-			    sendToShareScreen();
-			    
-			    Data.autoShare = 0;
 			    
 			    if(activityResumed){
 			    	callAndHandleStateRestoreAPI(false);
@@ -2818,13 +2785,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
-	public void sendToShareScreen(){
-		if(Data.autoShare == 1){
-	    	Data.autoShare = 0;
-	    	startActivity(new Intent(HomeActivity.this, ShareActivity.class));
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-	    }
-	}
 	
 	
 	
@@ -3119,6 +3079,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 	}
+	
 	
 	
 	public synchronized void addLatLngPathToDistance(final LatLng lastLatLng, final LatLng currentLatLng){
@@ -3972,114 +3933,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	/**
-	 * ASync for change driver mode from server
-	 */
-	public void changeDriverModeAsync(final Activity activity, final int flag) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-		
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("flag", ""+flag);
-
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("flag", "=" + flag);
-			
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/switch_to_driver_mode", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-									else if(1 == flag){
-										makeMeDriverPopup(activity, errorMessage);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-								}
-								else{
-									
-									if(flag == 1){
-										try {
-											int excepInt = jObj.getInt("exceptional_driver");
-											Data.userData.exceptionalDriver = excepInt;
-										} catch (Exception e) {
-											Data.userData.exceptionalDriver = 0;
-											e.printStackTrace();
-										}
-										
-										userMode = UserMode.DRIVER;
-										
-										switchUserScreen(userMode);
-										
-										driverScreenMode = DriverScreenMode.D_INITIAL;
-										switchDriverScreen(driverScreenMode);
-										
-										getAndShowAllDriverRequests(activity);
-										
-										if(UserMode.DRIVER == userMode){
-											buildTimeSettingsAlertDialog(activity);
-										}
-										
-									}
-									else{
-										
-										userMode = UserMode.PASSENGER;
-										
-										
-										switchUserScreen(userMode);
-										
-										passengerScreenMode = PassengerScreenMode.P_INITIAL;
-										switchPassengerScreen(passengerScreenMode);
-									}
-									
-									enableJugnooShopUI();
-									enableJugnooMealsUI();
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-					});
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-	}
 	
 	
 	public void deleteAllDriverRequests(final Activity activity){
@@ -5899,79 +5752,75 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	void callAnAutoPopup(final Activity activity) {
 		try {
-			if(Data.userData.canChangeLocation == 1){
-				Data.pickupLatLng = map.getCameraPosition().target;
-				double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-				if(distance > MAP_PAN_DISTANCE_CHECK){
-					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-					dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-					dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-					new ASSL(activity, (FrameLayout)dialog.findViewById(R.id.rv), 1134, 720, true);
-					
-					WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-					layoutParams.dimAmount = 0.6f;
-					dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-					dialog.setCancelable(false);
-					dialog.setCanceledOnTouchOutside(false);
-					
-					
-					TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-					TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-					
-					textHead.setVisibility(View.VISIBLE);
-					textHead.setText("Chalo Jugnoo Se");
-					
-					
-					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
-					
-					btnOk.setText("OK");
-					btnCancel.setText("Cancel");
-					
-					btnOk.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							dialog.dismiss();
-							initiateRequestRide(true);
-						}
-						
-					});
-					
-					btnCancel.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							dialog.dismiss();
-						}
-					});
-					
-					
-					dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-}
-					});
-					
-					
-					dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					
-					textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
-					
-					dialog.show();
-				}
-				else{
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.dialog_custom_two_buttons);
+
+			new ASSL(activity, (FrameLayout)dialog.findViewById(R.id.rv), 1134, 720, true);
+			
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			
+			
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+			
+			textHead.setVisibility(View.VISIBLE);
+			textHead.setText("Chalo Jugnoo Se");
+			
+			
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
+			
+			btnOk.setText("OK");
+			btnCancel.setText("Cancel");
+			
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
 					initiateRequestRide(true);
 				}
+				
+			});
+			
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+			});
+			
+			
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				}
+			});
+			
+			
+			dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			
+			Data.pickupLatLng = map.getCameraPosition().target;
+			double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+			if(distance > MAP_PAN_DISTANCE_CHECK){
+				textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
 			}
 			else{
-				initiateRequestRide(true);
+				textMessage.setText("Do you want an auto to pick you up?");
 			}
+				
+			dialog.show();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -5984,13 +5833,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR_OF_DAY, 1);
 		calendar.add(Calendar.MINUTE, 5);
-		
-//		ScheduleRideActivity.selectedScheduleCalendar = calendar;
-//		ScheduleRideActivity.selectedScheduleLatLng = null;
-//		ScheduleRideActivity.scheduleOperationMode = ScheduleOperationMode.INSERT;
-//		activity.startActivity(new Intent(activity, ScheduleRideActivity.class));
-//		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		
 		
 		if(map != null){
 			LatLng latLng = map.getCameraPosition().target;
@@ -7616,6 +7458,46 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 	}
 	
+	
+	@Override
+	public void onJugnooCashAddedByDriver(final double jugnooBalance, final double moneyAdded) {
+		
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					if(Data.userData != null){
+						Data.userData.jugnooBalance = jugnooBalance;
+						setUserData();
+					}
+					DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, 
+							"Jugnoo Cash added", 
+							"Your driver just added to your wallet "
+							+HomeActivity.this.getResources().getString(R.string.rupee) +" "+decimalFormat.format(moneyAdded), 
+							"Check Balance", "Call Support", 
+							new View.OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
+									overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
+								}
+							}, 
+							new View.OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									Utils.openCallIntent(HomeActivity.this, Data.SUPPORT_NUMBER);
+								}
+							}, true, true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	
 	
 	

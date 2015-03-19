@@ -429,7 +429,7 @@ public class AccountActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "", 
+				DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "Cancel", 
 						new View.OnClickListener() {
 							
 							@Override

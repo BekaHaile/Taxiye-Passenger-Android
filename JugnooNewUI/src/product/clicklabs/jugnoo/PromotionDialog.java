@@ -48,7 +48,7 @@ public class PromotionDialog {
 	private Dialog dialog;
 	
 	private FrameLayout frameLayout;
-	private TextView textViewTitle, textViewMessage, textViewReferInfo;
+	private TextView textViewTitle, textViewMessage, textViewRequestConfirm;
 	private Button btnOk, btnCancel, btnOkOnly;
 	private ListView listViewPromotions;
 	
@@ -100,7 +100,7 @@ public class PromotionDialog {
 
 			textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(activity));
 			textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Data.latoRegular(activity));
-			textViewReferInfo = (TextView) dialog.findViewById(R.id.textViewReferInfo); textViewReferInfo.setTypeface(Data.latoLight(activity), Typeface.BOLD);
+			textViewRequestConfirm = (TextView) dialog.findViewById(R.id.textViewRequestConfirm); textViewRequestConfirm.setTypeface(Data.latoRegular(activity));
 
 			listViewPromotions = (ListView) dialog.findViewById(R.id.listViewPromotions);
 			promotionsListAdapter = new PromotionsListAdapter(activity);
@@ -117,16 +117,7 @@ public class PromotionDialog {
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					if(promoCouponList.size() == 0){
-						selectedCoupon = new CouponInfo(0, "");
-					}
-					if(selectedCoupon != null){
-						dismissAlert();
-						promotionDialogEventHandler.onOkPressed(selectedCoupon);
-					}
-					else{
-						Toast.makeText(activity, "Please select some coupon first", Toast.LENGTH_LONG).show();
-					}
+					performBtnOk(activity, promotionDialogEventHandler);
 				}
 			});
 			
@@ -143,22 +134,10 @@ public class PromotionDialog {
 				
 				@Override
 				public void onClick(View v) {
-					if(promoCouponList.size() == 0){
-						selectedCoupon = new CouponInfo(0, "");
-					}
-					if(selectedCoupon != null){
-						promotionDialogEventHandler.onOkOnlyPressed(PromotionDialog.this, selectedCoupon, pickupId);
-					}
-					else{
-						Toast.makeText(activity, "Please select some coupon first", Toast.LENGTH_LONG).show();
-					}
+					performBtnOkOnly(activity, promotionDialogEventHandler);
 				}
 			});
 			
-
-			dialog.show();
-			
-			startDismissHandler();
 			
 
 			if(PromotionApplyMode.AFTER_SCHEDULE.getOrdinal() == promotionApplyMode.getOrdinal()){
@@ -205,24 +184,60 @@ public class PromotionDialog {
 				selectedCoupon = promoCouponList.get(0);
 				
 				listViewPromotions.setVisibility(View.VISIBLE);
-				textViewReferInfo.setVisibility(View.GONE);
+				textViewRequestConfirm.setVisibility(View.GONE);
+				
+				dialog.show();
+				
+				startDismissHandler();
+				
+				promotionsListAdapter.notifyDataSetChanged();
 			}
 			else{
 				selectedCoupon = new CouponInfo(0, "");
 				
 				listViewPromotions.setVisibility(View.GONE);
-				textViewReferInfo.setVisibility(View.VISIBLE);
+				textViewRequestConfirm.setVisibility(View.VISIBLE);
 				
-				textViewTitle.setText("No coupons available");
+				textViewTitle.setText("Chalo Jugnoo Se");
+				
+				if(PromotionApplyMode.AFTER_SCHEDULE.getOrdinal() == promotionApplyMode.getOrdinal()){
+					performBtnOkOnly(activity, promotionDialogEventHandler);
+				}
+				else{
+					performBtnOk(activity, promotionDialogEventHandler);
+				}
 			}
-			
-			promotionsListAdapter.notifyDataSetChanged();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	
+	public void performBtnOk(Activity activity, PromotionDialogEventHandler promotionDialogEventHandler){
+		if(promoCouponList.size() == 0){
+			selectedCoupon = new CouponInfo(0, "");
+		}
+		if(selectedCoupon != null){
+			dismissAlert();
+			promotionDialogEventHandler.onOkPressed(selectedCoupon);
+		}
+		else{
+			Toast.makeText(activity, "Please select some coupon first", Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	public void performBtnOkOnly(Activity activity, PromotionDialogEventHandler promotionDialogEventHandler){
+		if(promoCouponList.size() == 0){
+			selectedCoupon = new CouponInfo(0, "");
+		}
+		if(selectedCoupon != null){
+			promotionDialogEventHandler.onOkOnlyPressed(PromotionDialog.this, selectedCoupon, pickupId);
+		}
+		else{
+			Toast.makeText(activity, "Please select some coupon first", Toast.LENGTH_LONG).show();
+		}
+	}
 	
 	
 	Handler dismissHandler;

@@ -327,10 +327,17 @@ public class GCMIntentService extends IntentService {
 	    	    				else if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag){
 	    	    					 String message1 = jObj.getString("message");
 	    	    					 notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID);
-	    	    				 }
+	    	    				}
 	    	    				else if(PushFlags.CHANGE_PORT.getOrdinal() == flag){
 	    	    					sendChangePortAckToServer(this, jObj);
-	    	    				 }
+	    	    				}
+	    	    				else if(PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag){
+//	    	    				    balance : body.balance,
+//	    	    				    money_added : moneyAdded,
+	    	    					
+	    	    					
+	    	    					
+	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 e.printStackTrace();

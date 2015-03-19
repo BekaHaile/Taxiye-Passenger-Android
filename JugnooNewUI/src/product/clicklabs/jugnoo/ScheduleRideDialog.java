@@ -273,7 +273,7 @@ public class ScheduleRideDialog {
 						@Override
 						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
-	
+							DialogPopup.dismissLoadingDialog();
 							try {
 								jObj = new JSONObject(response);
 								
@@ -302,7 +302,6 @@ public class ScheduleRideDialog {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
-							DialogPopup.dismissLoadingDialog();
 						}
 					});
 		}

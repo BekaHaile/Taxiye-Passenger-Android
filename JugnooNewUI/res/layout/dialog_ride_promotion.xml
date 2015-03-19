@@ -56,7 +56,7 @@
 
 
             <TextView
-                android:id="@+id/textViewReferInfo"
+                android:id="@+id/textViewRequestConfirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -65,8 +65,8 @@
                 android:gravity="center"
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
-                android:text="You can earn free rides referring\nJugnoo to your friends"
-                android:textColor="@color/grey_dark_less"
+                android:text="Do you want an auto to pick you up?"
+                android:textColor="@color/grey_dark"
                 android:textSize="30px" />
 
             <TextView

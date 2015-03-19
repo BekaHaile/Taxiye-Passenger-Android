@@ -147,7 +147,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 //			e1.printStackTrace();
 //			Data.autoShare = 0;
 //		}
-		Data.autoShare = 0;
 		
 		Data.userData = null;
 		
