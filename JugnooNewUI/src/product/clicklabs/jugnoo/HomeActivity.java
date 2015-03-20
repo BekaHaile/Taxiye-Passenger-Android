@@ -1,16 +1,13 @@
 package product.clicklabs.jugnoo;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,10 +16,7 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppMode;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
-import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
@@ -47,7 +41,6 @@ import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
-import product.clicklabs.jugnoo.utils.PausableChronometer;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -60,17 +53,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -82,22 +72,16 @@ import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -114,7 +98,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.CircleTransform;
@@ -250,63 +233,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	// Driver main layout 
-	RelativeLayout driverMainLayout;
-	
-	
-	//Driver initial layout
-	RelativeLayout driverInitialLayout;
-	RelativeLayout driverNewRideRequestRl;
-	ListView driverRideRequestsList;
-	TextView driverNewRideRequestText;
-	TextView driverNewRideRequestClickText;
-	Button driverInitialMyLocationBtn;
-	RelativeLayout jugnooOffLayout;
-	TextView jugnooOffText;
-	
-	DriverRequestListAdapter driverRequestListAdapter;
-	
-	
-	
-	// Driver Request Accept layout
-	RelativeLayout driverRequestAcceptLayout;
-	Button driverRequestAcceptBackBtn, driverAcceptRideBtn, driverCancelRequestBtn, driverRequestAcceptMyLocationBtn;
-	
-	
-	// Driver Engaged layout
-	RelativeLayout driverEngagedLayout;
-	
-	TextView driverPassengerName;
-	TextView driverPassengerRatingValue;
-	RelativeLayout driverPassengerCallRl;
-	TextView driverPassengerCallText;
-	TextView driverScheduledRideText;
-	
-	//Start ride layout
-	RelativeLayout driverStartRideMainRl;
-	Button driverStartRideMyLocationBtn, driverStartRideBtn;
-	Button driverCancelRideBtn;
-	
-	
-	//End ride layout
-	RelativeLayout driverInRideMainRl;
-	Button driverEndRideMyLocationBtn;
-	TextView driverIRDistanceText, driverIRDistanceValue, driverIRDistanceKmText;
-	TextView driverIRFareText, driverIRFareRsText, driverIRFareValue;
-	TextView driverRideTimeText;
-	PausableChronometer rideTimeChronometer;
-	RelativeLayout driverWaitRl;
-	TextView driverWaitText;
-	PausableChronometer waitChronometer;
-	TextView inrideMinFareText, inrideMinFareValue, inrideFareAfterText, inrideFareAfterValue;
-	Button inrideFareInfoBtn;
-	Button driverEndRideBtn;
-	
-	public static int waitStart = 2;
-	double distanceAfterWaitStarted = 0;
-	
-	
-	
 	
 	
 	
@@ -361,7 +287,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	static UserMode userMode;
 	static PassengerScreenMode passengerScreenMode;
-	static DriverScreenMode driverScreenMode;
 	
 	
 	
@@ -613,92 +538,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
-		
-		// Driver main layout 
-		driverMainLayout = (RelativeLayout) findViewById(R.id.driverMainLayout);
-		
-		
-		
-		//Driver initial layout
-		driverInitialLayout = (RelativeLayout) findViewById(R.id.driverInitialLayout);
-		driverNewRideRequestRl = (RelativeLayout) findViewById(R.id.driverNewRideRequestRl);
-		driverRideRequestsList = (ListView) findViewById(R.id.driverRideRequestsList);
-		driverNewRideRequestText = (TextView) findViewById(R.id.driverNewRideRequestText); driverNewRideRequestText.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverNewRideRequestClickText = (TextView) findViewById(R.id.driverNewRideRequestClickText); driverNewRideRequestClickText.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverInitialMyLocationBtn = (Button) findViewById(R.id.driverInitialMyLocationBtn);
-		jugnooOffLayout = (RelativeLayout) findViewById(R.id.jugnooOffLayout);
-		jugnooOffText = (TextView) findViewById(R.id.jugnooOffText); jugnooOffText.setTypeface(Data.latoRegular(this), Typeface.BOLD);
-		
-		driverNewRideRequestRl.setVisibility(View.GONE);
-		driverRideRequestsList.setVisibility(View.GONE);
-		
-		driverRequestListAdapter = new DriverRequestListAdapter();
-		driverRideRequestsList.setAdapter(driverRequestListAdapter);
-		
-		
-		// Driver Request Accept layout
-		driverRequestAcceptLayout = (RelativeLayout) findViewById(R.id.driverRequestAcceptLayout);
-		driverRequestAcceptBackBtn = (Button) findViewById(R.id.driverRequestAcceptBackBtn);
-		driverAcceptRideBtn = (Button) findViewById(R.id.driverAcceptRideBtn); driverAcceptRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverCancelRequestBtn = (Button) findViewById(R.id.driverCancelRequestBtn); driverCancelRequestBtn.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverRequestAcceptMyLocationBtn = (Button) findViewById(R.id.driverRequestAcceptMyLocationBtn);
-		
-		
-		
-		// Driver engaged layout
-		driverEngagedLayout = (RelativeLayout) findViewById(R.id.driverEngagedLayout);
-		
-
-		driverPassengerName = (TextView) findViewById(R.id.driverPassengerName); driverPassengerName.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverPassengerRatingValue = (TextView) findViewById(R.id.driverPassengerRatingValue); driverPassengerRatingValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverPassengerCallRl = (RelativeLayout) findViewById(R.id.driverPassengerCallRl);
-		driverPassengerCallText = (TextView) findViewById(R.id.driverPassengerCallText); driverPassengerCallText.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverScheduledRideText = (TextView) findViewById(R.id.driverScheduledRideText); driverScheduledRideText.setTypeface(Data.latoRegular(getApplicationContext()));
-		
-		driverPassengerRatingValue.setVisibility(View.GONE);
-		
-		//Start ride layout
-		driverStartRideMainRl = (RelativeLayout) findViewById(R.id.driverStartRideMainRl);
-		driverStartRideMyLocationBtn = (Button) findViewById(R.id.driverStartRideMyLocationBtn);
-		driverStartRideBtn = (Button) findViewById(R.id.driverStartRideBtn); driverStartRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverCancelRideBtn = (Button) findViewById(R.id.driverCancelRideBtn); driverCancelRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
-
-		
-		
-		//End ride layout
-		driverInRideMainRl = (RelativeLayout) findViewById(R.id.driverInRideMainRl);
-		
-		driverEndRideMyLocationBtn = (Button) findViewById(R.id.driverEndRideMyLocationBtn);
-		
-		driverIRDistanceText = (TextView) findViewById(R.id.driverIRDistanceText); driverIRDistanceText.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverIRDistanceValue = (TextView) findViewById(R.id.driverIRDistanceValue); driverIRDistanceValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverIRDistanceKmText = (TextView) findViewById(R.id.driverIRDistanceKmText); driverIRDistanceKmText.setTypeface(Data.latoRegular(getApplicationContext()));
-		
-		driverIRFareText = (TextView) findViewById(R.id.driverIRFareText); driverIRFareText.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverIRFareRsText = (TextView) findViewById(R.id.driverIRFareRsText); driverIRFareRsText.setTypeface(Data.latoRegular(getApplicationContext()));
-		driverIRFareValue = (TextView) findViewById(R.id.driverIRFareValue); driverIRFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		
-		driverRideTimeText = (TextView) findViewById(R.id.driverRideTimeText); driverRideTimeText.setTypeface(Data.latoRegular(getApplicationContext()));
-		rideTimeChronometer = (PausableChronometer) findViewById(R.id.rideTimeChronometer); rideTimeChronometer.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		
-		driverWaitRl = (RelativeLayout) findViewById(R.id.driverWaitRl);
-		driverWaitText = (TextView) findViewById(R.id.driverWaitText); driverWaitText.setTypeface(Data.latoRegular(getApplicationContext()));
-		waitChronometer = (PausableChronometer) findViewById(R.id.waitChronometer); waitChronometer.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-
-		inrideMinFareText = (TextView) findViewById(R.id.inrideMinFareText); inrideMinFareText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
-		inrideMinFareValue = (TextView) findViewById(R.id.inrideMinFareValue); inrideMinFareValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		inrideFareAfterText = (TextView) findViewById(R.id.inrideFareAfterText); inrideFareAfterText.setTypeface(Data.latoRegular(getApplicationContext()));
-		inrideFareAfterValue = (TextView) findViewById(R.id.inrideFareAfterValue); inrideFareAfterValue.setTypeface(Data.latoRegular(getApplicationContext()));
-		inrideFareInfoBtn = (Button) findViewById(R.id.inrideFareInfoBtn);
-		
-		driverWaitRl.setVisibility(View.GONE);
-		
-		driverEndRideBtn = (Button) findViewById(R.id.driverEndRideBtn); driverEndRideBtn.setTypeface(Data.latoRegular(getApplicationContext()));
-		waitStart = 2;
-
-		rideTimeChronometer.setText("00:00:00");
-		waitChronometer.setText("00:00:00");
 		
 		
 		//Review Layout
@@ -975,9 +814,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								promotionDialog.fetchPromotionsAPI(HomeActivity.this, new PromotionDialogEventHandler() {
 	
 											@Override
-											public void onOkPressed(PromoCoupon promoCoupon) {
+											public void onOkPressed(PromoCoupon promoCoupon, int totalPromoCoupons) {
 												promoCouponSelectedForRide = promoCoupon;
-												callAnAutoPopup(HomeActivity.this);
+												callAnAutoPopup(HomeActivity.this, totalPromoCoupons);
 											}
 											
 											@Override
@@ -1192,23 +1031,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		// driver initial layout events
-		driverNewRideRequestRl.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				driverNewRideRequestRl.setVisibility(View.GONE);
-				driverRideRequestsList.setVisibility(View.VISIBLE);
-			}
-		});
 		
-		jugnooOffLayout.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				drawerLayout.openDrawer(menuLayout);
-			}
-		});
 		
 		
 		
@@ -1227,40 +1050,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		// driver accept layout events
 		
-		driverRequestAcceptBackBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				driverScreenMode = DriverScreenMode.D_INITIAL;
-				switchDriverScreen(driverScreenMode);
-			}
-		});
 		
-		driverAcceptRideBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(getBatteryPercentage() >= 10){
-					 GCMIntentService.clearNotifications(HomeActivity.this);
-					driverAcceptRideAsync(HomeActivity.this);
-				}
-				else{
-					DialogPopup.alertPopup(HomeActivity.this, "", "Battery Level must be greater than 10% to accept the ride. Plugin to a power source to continue.");
-				}
-			}
-		});
 		
 		
-		driverCancelRequestBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				GCMIntentService.clearNotifications(HomeActivity.this);
-				driverRejectRequestAsync(HomeActivity.this);
-			}
-		});
 		
 		
 		
@@ -1287,95 +1080,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		// driver start ride layout events
-		driverPassengerCallRl.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent callIntent = new Intent(Intent.ACTION_VIEW);
-		        callIntent.setData(Uri.parse("tel:"+Data.assignedCustomerInfo.phoneNumber));
-		        startActivity(callIntent);
-			}
-		});
 		
 		
-		driverStartRideBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				if(getBatteryPercentage() >= 10){
-					startRidePopup(HomeActivity.this);
-				}
-				else{
-					DialogPopup.alertPopup(HomeActivity.this, "", "Battery Level must be greater than 10% to start the ride. Plugin to a power source to continue.");
-				}
-	        }
-		});
 		
 		
 		
-		driverCancelRideBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				cancelRidePopup(HomeActivity.this);
-			}
-		});
 		
 		
 		
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// driver in ride layout events 
-		driverWaitRl.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(waitStart == 2){ 
-					startWait();
-				}
-				else if(waitStart == 1){
-					stopWait();
-				}
-				else if(waitStart == 0){
-					startWait();
-				}
-			}
-		});
-		
-		inrideFareInfoBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				sendToFareDetails();
-			}
-		});
-		
-		driverEndRideBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				endRidePopup(HomeActivity.this);
-			}
-		});
 		
 		
 		
@@ -1452,26 +1167,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), 14));
 			}
 			
-			
-			// Find ZoomControl view
-			View zoomControls = mapFragment.getView().findViewById(0x1);
-
-			if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
-			    // ZoomControl is inside of RelativeLayout
-			    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
-
-			    // Align it to - parent top|left
-			    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-
-			    // Update margins, set to 10dp
-			    final int marginTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 250*ASSL.Yscale(),
-			            getResources().getDisplayMetrics());
-			    final int marginRight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 20*ASSL.Yscale(),
-			            getResources().getDisplayMetrics());
-			    
-			    params.setMargins(0, marginTop, marginRight, 0);
-			}
 			
 			
 			map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -1567,10 +1262,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			
 			myLocationBtn.setOnClickListener(mapMyLocationClick);
-			driverInitialMyLocationBtn.setOnClickListener(mapMyLocationClick);
-			driverRequestAcceptMyLocationBtn.setOnClickListener(mapMyLocationClick);
-			driverStartRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
-			driverEndRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 			
 		}
@@ -1592,9 +1283,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			}
 			
-			if(driverScreenMode == null){
-				driverScreenMode = DriverScreenMode.D_INITIAL;
-			}
 			
 			enableJugnooShopUI();
 			enableJugnooMealsUI();
@@ -1603,8 +1291,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			startUIAfterGettingUserStatus();
 			
-			
-			changeJugnooONUI(Data.userData.isAvailable);
 			
 			Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
 			
@@ -1704,9 +1390,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 		}
-		else if(userMode == UserMode.DRIVER){
-			switchDriverScreen(driverScreenMode);
-		}
 	}
 	
 	
@@ -1717,37 +1400,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		FlurryEventLogger.fareDetailsOpened(Data.userData.accessToken);
 	}
 	
-	
-	public void startWait(){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				waitChronometer.start();
-				rideTimeChronometer.stop();
-				driverWaitRl.setBackgroundResource(R.drawable.red_btn_selector);
-				driverWaitText.setText(getResources().getString(R.string.stop_wait));
-				waitStart = 1;
-				distanceAfterWaitStarted = 0;
-				startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 1);
-			}
-		});
-	}
-	
-	
-	
-	public void stopWait(){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				waitChronometer.stop();
-				rideTimeChronometer.start();
-				driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
-				driverWaitText.setText(getResources().getString(R.string.start_wait));
-				waitStart = 0;
-				startEndWaitAsync(HomeActivity.this, Data.dCustomerId, 0);
-			}
-		});
-	}
 	
 	
 	public void initiateRequestRide(boolean newRequest){
@@ -1802,123 +1454,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void changeJugnooON(int mode){
-		if(mode == 1){
-			if(myLocation != null){
-				switchJugnooOnThroughServer(1, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-			}
-			else{
-				Toast.makeText(HomeActivity.this, "Waiting for location...", Toast.LENGTH_SHORT).show();
-			}
-		}
-		else{
-			switchJugnooOnThroughServer(0, new LatLng(0, 0));
-		}
-	}
-	
-	
-	
-	
-	public void switchJugnooOnThroughServer(final int jugnooOnFlag, final LatLng latLng){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-			}
-		});
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-					nameValuePairs.add(new BasicNameValuePair("latitude", ""+latLng.latitude));
-					nameValuePairs.add(new BasicNameValuePair("longitude", ""+latLng.longitude));
-					nameValuePairs.add(new BasicNameValuePair("flag", ""+jugnooOnFlag));
-					
-					Log.e("nameValuePairs in sending loc on jugnoo toggle","="+nameValuePairs);
-					
-					HttpRequester simpleJSONParser = new HttpRequester();
-					String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/change_availability", nameValuePairs);
-					
-					Log.e("result ","="+result);
-					
-					simpleJSONParser = null;
-					nameValuePairs = null;
-					
-					//{"log":"Updated"}
-					JSONObject jObj = new JSONObject(result);
-					
-					if(jObj.has("flag")){
-						int flag = jObj.getInt("flag");
-						if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-							if(jugnooOnFlag == 1){
-								Data.userData.isAvailable = 1;
-								changeJugnooONUI(1);
-							}
-							else{
-								Data.userData.isAvailable = 0;
-								changeJugnooONUI(0);
-							}
-						}
-					}
-					if(jObj.has("message")){
-						String message = jObj.getString("message");
-						showDialogFromBackground(message);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
-	
-	
-	
-	public void showDialogFromBackground(final String message){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				DialogPopup.dismissLoadingDialog();
-				DialogPopup.alertPopup(HomeActivity.this, "", message);
-			}
-		});
-	}
-	
-	public void switchJugnooOn(){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				DialogPopup.dismissLoadingDialog();
-				jugnooOffLayout.setVisibility(View.GONE);
-			}
-		});
-	}
-	
-	public void switchJugnooOff(){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				DialogPopup.dismissLoadingDialog();
-				jugnooOffLayout.setVisibility(View.VISIBLE);
-			}
-		});
-	}
 	
 	
 	
 	
 	
 	
-	public void changeJugnooONUI(int mode){
-		Log.e("homeac changeJugnooONUI ====", "="+mode);
-		if(mode == 1){
-			switchJugnooOn();
-		}
-		else{
-			switchJugnooOff();
-		}
-	}
 	
 	
 	
@@ -1995,40 +1536,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 		
 		
-		switch(mode){
+		Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_PASSENGER);
 		
-			case DRIVER:
-				cancelTimerUpdateDrivers();
-				
-				Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_DRIVER);
-				
-				passengerMainLayout.setVisibility(View.GONE);
-				driverMainLayout.setVisibility(View.VISIBLE);
-				
-				relativeLayoutPromotions.setVisibility(View.GONE);
-				
-				break;
-			
-				
-				
-				
-			case PASSENGER:
-				
-				Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_PASSENGER);
-				
-				passengerMainLayout.setVisibility(View.VISIBLE);
-				driverMainLayout.setVisibility(View.GONE);
-				
-				relativeLayoutPromotions.setVisibility(View.VISIBLE);
-				
-				break;
-			
-				
-				
-				
-			default:
+		passengerMainLayout.setVisibility(View.VISIBLE);
 		
-		}
+		relativeLayoutPromotions.setVisibility(View.VISIBLE);
 		
 		Database2.getInstance(HomeActivity.this).close();
 		
@@ -2036,239 +1548,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void updateDriverServiceFast(String choice){
-		Database2.getInstance(HomeActivity.this).updateDriverServiceFast(choice);
-		Database2.getInstance(HomeActivity.this).close();
-	}
 	
-	
-	public void switchDriverScreen(final DriverScreenMode mode){
-		if(userMode == UserMode.DRIVER){
-			
-			initializeFusedLocationFetchers();
-			
-			if(currentLocationMarker != null){
-				currentLocationMarker.remove();
-			}
-			
-			saveDataOnPause(false);
-			
-			mapLayout.setVisibility(View.VISIBLE);
-			endRideReviewRl.setVisibility(View.GONE);
-		
-		
-		switch(mode){
-		
-			case D_INITIAL:
-				
-				updateDriverServiceFast("no");
-				
-				driverInitialLayout.setVisibility(View.VISIBLE);
-				driverRequestAcceptLayout.setVisibility(View.GONE);
-				driverEngagedLayout.setVisibility(View.GONE);
-				
-				cancelCustomerPathUpdateTimer();
-				
-				if(map != null){
-					map.clear();
-				}
-				
-				getAndShowAllDriverRequests(HomeActivity.this);
-				cancelMapAnimateAndUpdateRideDataTimer();
-				
-				break;
-				
-				
-			case D_REQUEST_ACCEPT:
-				
-				updateDriverServiceFast("no");
-				
-				driverInitialLayout.setVisibility(View.GONE);
-				driverRequestAcceptLayout.setVisibility(View.VISIBLE);
-				driverEngagedLayout.setVisibility(View.GONE);
-				
-				cancelCustomerPathUpdateTimer();
-				cancelMapAnimateAndUpdateRideDataTimer();
-				
-			
-				break;
-				
-				
-				
-			case D_START_RIDE:
-				
-				updateDriverServiceFast("yes");
-				
-				if(map != null){
-					map.clear();
-					
-					markerOptionsCustomerPickupLocation = null;
-					
-					markerOptionsCustomerPickupLocation = new MarkerOptions();
-					markerOptionsCustomerPickupLocation.title(Data.dEngagementId);
-					markerOptionsCustomerPickupLocation.snippet("");
-					markerOptionsCustomerPickupLocation.position(Data.dCustLatLng);
-					markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPassengerMarkerBitmap(HomeActivity.this, assl)));
-					
-					map.addMarker(markerOptionsCustomerPickupLocation);
-				}
-				
-				
-				double rateingD = 4;
-				try{
-					rateingD = Double.parseDouble(Data.assignedCustomerInfo.rating);
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-				
-				driverPassengerName.setText(Data.assignedCustomerInfo.name);
-				driverPassengerRatingValue.setText(decimalFormat.format(rateingD) + " "+getResources().getString(R.string.rating));
-				
-				
-				
-				driverInitialLayout.setVisibility(View.GONE);
-				driverRequestAcceptLayout.setVisibility(View.GONE);
-				driverEngagedLayout.setVisibility(View.VISIBLE);
-				
-				if("".equalsIgnoreCase(Data.assignedCustomerInfo.schedulePickupTime)){
-					driverScheduledRideText.setVisibility(View.GONE);
-				}
-				else{
-					String time = DateOperations.getTimeAMPM(DateOperations.utcToLocal(Data.assignedCustomerInfo.schedulePickupTime));
-					if("".equalsIgnoreCase(time)){
-						driverScheduledRideText.setVisibility(View.GONE);
-					}
-					else{
-						driverScheduledRideText.setVisibility(View.VISIBLE);
-						driverScheduledRideText.setText("Scheduled Ride Pickup: "+time);
-					}
-				}
-				
-				
-				driverStartRideMainRl.setVisibility(View.VISIBLE);
-				driverInRideMainRl.setVisibility(View.GONE);
-				
-				
-				startCustomerPathUpdateTimer();
-				cancelMapAnimateAndUpdateRideDataTimer();
-				
-				
-				break;
-				
-				
-				
-				
-			case D_IN_RIDE:
-				
-				updateDriverServiceFast("no");
-				
-				cancelCustomerPathUpdateTimer();
-				
-				startMapAnimateAndUpdateRideDataTimer();
-				
-				long timeR = (long)HomeActivity.previousRideTime;
-				int hR = (int) (timeR / 3600000);
-				int mR = (int) (timeR - hR * 3600000) / 60000;
-				int sR = (int) (timeR - hR * 3600000 - mR * 60000) / 1000;
-				String hhR = hR < 10 ? "0" + hR : hR + "";
-				String mmR = mR < 10 ? "0" + mR : mR + "";
-				String ssR = sR < 10 ? "0" + sR : sR + "";
-				rideTimeChronometer.setText(hhR + ":" + mmR + ":" + ssR);
-				
-				rideTimeChronometer.eclipsedTime = (long)HomeActivity.previousRideTime;
-				rideTimeChronometer.start();
-				
-				
-				long time = (long)HomeActivity.previousWaitTime;
-				int h = (int) (time / 3600000);
-				int m = (int) (time - h * 3600000) / 60000;
-				int s = (int) (time - h * 3600000 - m * 60000) / 1000;
-				String hh = h < 10 ? "0" + h : h + "";
-				String mm = m < 10 ? "0" + m : m + "";
-				String ss = s < 10 ? "0" + s : s + "";
-				waitChronometer.setText(hh + ":" + mm + ":" + ss);
-				
-				waitChronometer.eclipsedTime =  (long)HomeActivity.previousWaitTime;
-				
-				
-				
-				if(map != null){
-					map.clear();
-				}
-				
-				updateDistanceFareTexts();
-				
-				driverPassengerName.setText(Data.assignedCustomerInfo.name);
-				
-			
-				setTextToFareInfoTextViews(inrideMinFareValue, inrideFareAfterValue, inrideFareAfterText);
-				
-				
-				
-				driverInitialLayout.setVisibility(View.GONE);
-				driverRequestAcceptLayout.setVisibility(View.GONE);
-				driverEngagedLayout.setVisibility(View.VISIBLE);
-				
-				driverScheduledRideText.setVisibility(View.GONE);
-				
-				driverStartRideMainRl.setVisibility(View.GONE);
-				driverInRideMainRl.setVisibility(View.VISIBLE);
-				
-			
-				break;
-				
-				
-			case D_RIDE_END:
-				
-				updateDriverServiceFast("no");
-				
-				cancelMapAnimateAndUpdateRideDataTimer();
-
-				driverInitialLayout.setVisibility(View.GONE);
-				driverRequestAcceptLayout.setVisibility(View.GONE);
-				driverEngagedLayout.setVisibility(View.GONE);
-				
-				
-			
-				break;
-				
-				
-			
-			default:
-				driverInitialLayout.setVisibility(View.VISIBLE);
-				driverRequestAcceptLayout.setVisibility(View.GONE);
-				driverEngagedLayout.setVisibility(View.GONE);
-		
-		}
-		
-		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					if(DriverScreenMode.D_INITIAL == mode){
-						Database2.getInstance(HomeActivity.this).updateDriverScreenMode(Database2.VULNERABLE);
-					}
-					else{
-						Database2.getInstance(HomeActivity.this).updateDriverScreenMode(Database2.NOT_VULNERABLE);
-					}
-				} catch (Exception e) {
-					Database2.getInstance(HomeActivity.this).updateDriverScreenMode(Database2.NOT_VULNERABLE);
-					e.printStackTrace();
-				}
-				finally{
-					Database2.getInstance(HomeActivity.this).close();
-				}
-			}
-		}).start();
-		
-		
-		}
-		
-		
-		
-		
-	}
 	
 	
 	
@@ -2793,86 +2073,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void run() {
 		        try {
-					if(userMode == UserMode.DRIVER){
-						
-						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-						Editor editor = pref.edit();
-						
-						if(driverScreenMode == DriverScreenMode.D_START_RIDE){
-							
-							editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_START_RIDE);
-							
-							editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
-							editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
-							
-							editor.putString(Data.SP_D_LATITUDE, ""+Data.dCustLatLng.latitude);
-							editor.putString(Data.SP_D_LONGITUDE, ""+Data.dCustLatLng.longitude);
-							
-							editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
-							editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
-							editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
-							editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
-							
-						}
-						else if(driverScreenMode == DriverScreenMode.D_IN_RIDE){
-							
-							if(stopWait){
-								if(waitChronometer.isRunning){
-									stopWait();
-								}
-								if(rideTimeChronometer.isRunning){
-									runOnUiThread(new Runnable() {
-										@Override
-										public void run() {
-											try{
-												rideTimeChronometer.stop();
-											} catch(Exception e){
-							        			e.printStackTrace();
-							        		}
-										}
-									});
-								}
-							}
-							
-							editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_IN_RIDE);
-							
-							editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
-							editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
-							
-							editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
-							editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
-							editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
-							editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
-							
-							long elapsedMillis = waitChronometer.eclipsedTime;
-					    	
-							editor.putString(Data.SP_TOTAL_DISTANCE, ""+totalDistance);
-							editor.putString(Data.SP_WAIT_TIME, ""+elapsedMillis);
-							
-							long elapsedRideTime = rideTimeChronometer.eclipsedTime;
-							editor.putString(Data.SP_RIDE_TIME, ""+elapsedRideTime);
-							
-							if(HomeActivity.this.lastLocation != null){
-								editor.putString(Data.SP_LAST_LATITUDE, ""+HomeActivity.this.lastLocation.getLatitude());
-					    		editor.putString(Data.SP_LAST_LONGITUDE, ""+HomeActivity.this.lastLocation.getLongitude());
-							}
-							
-							Log.e("Data on app paused", "-----");
-							Log.i("HomeActivity.totalDistance", "="+HomeActivity.totalDistance);
-							Log.i("lastLocation", "="+lastLocation);
-							Log.e("----------", "-----");
-							
-						}
-						else{
-							editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
-						}
-						
-						
-						editor.commit();
-						
-					}
-					else if(userMode == UserMode.PASSENGER){
-					    
+					if(userMode == UserMode.PASSENGER){
 						
 						SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 						Editor editor = pref.edit();
@@ -2962,26 +2163,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onBackPressed() {
 		try{
-			if(userMode == UserMode.DRIVER){
-				if(driverScreenMode == DriverScreenMode.D_IN_RIDE || driverScreenMode == DriverScreenMode.D_START_RIDE){
-					Intent intent = new Intent(Intent.ACTION_MAIN);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					intent.addCategory(Intent.CATEGORY_HOME);
-					startActivity(intent);
-				}
-				else{
-					ActivityCompat.finishAffinity(this);
-//					super.onBackPressed();
-				}
-			}
-			else{
-				ActivityCompat.finishAffinity(this);
-//				super.onBackPressed();
-			}
+			ActivityCompat.finishAffinity(this);
 		} catch(Exception e){
 			e.printStackTrace();
 			ActivityCompat.finishAffinity(this);
-//			super.onBackPressed();
 		}
 	}
 	
@@ -2990,9 +2175,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
     public void onDestroy() {
         try{
-        	if(createPathAsyncTasks != null){
-        		createPathAsyncTasks.clear();
-        	}
         	saveDataOnPause(true);
         	
     		GCMIntentService.clearNotifications(HomeActivity.this);
@@ -3013,486 +2195,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         
         super.onDestroy();
     }
-	
-	
-	
-	
-	
-	
-	
-	public synchronized void drawLocationChanged(Location location){
-		try {
-			if(map != null){
-				HomeActivity.myLocation = location;
-				zoomToCurrentLocationAtFirstLocationFix(location);
-			
-				updatePickupLocation(location);
-			
-				if(((userMode == UserMode.DRIVER) && (driverScreenMode == DriverScreenMode.D_IN_RIDE)) 
-						|| ((userMode == UserMode.PASSENGER) && (passengerScreenMode == PassengerScreenMode.P_IN_RIDE))){
-					
-					final LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-					
-					if(Utils.compareDouble(totalDistance, -1.0) == 0){
-						lastLocation = null;
-						Log.i("lastLocation made null", "="+lastLocation);
-					}
-					
-					Log.i("lastLocation", "="+lastLocation);
-					Log.i("totalDistance", "="+totalDistance);
-					
-					writePathLogToFile("lastLocation = "+lastLocation);
-					writePathLogToFile("totalDistance = "+totalDistance);
-					
-					if(lastLocation != null){
-						final LatLng lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-						addLatLngPathToDistance(lastLatLng, currentLatLng);
-					}
-					else{
-						if(Utils.compareDouble(totalDistance, -1.0) == 0){
-							totalDistance = 0;
-						}
-						displayOldPath();
-						writePathLogToFile("Data.startRidePreviousLatLng = "+Data.startRidePreviousLatLng);
-						addLatLngPathToDistance(Data.startRidePreviousLatLng, currentLatLng);
-					}
-					
-					lastLocation = location;
-					
-					saveDataOnPause(false);
-				}
-				
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-	}
-	
-	
-	public void writePathLogToFile(String text){
-		try{
-			if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
-				Log.writePathLogToFile(Data.dEngagementId, text);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	public synchronized void addLatLngPathToDistance(final LatLng lastLatLng, final LatLng currentLatLng){
-		try {
-			double displacement = MapUtils.distance(lastLatLng, currentLatLng);
-			Log.i("displacement", "="+displacement);
-			
-			writePathLogToFile("lastLatLng = "+lastLatLng+", currentLatLng = "+currentLatLng);
-			writePathLogToFile("displacement = "+displacement);
-			
-			if(Utils.compareDouble(displacement, MAX_DISPLACEMENT_THRESHOLD) == -1){
-				
-				boolean validDistance = updateTotalDistance(lastLatLng, currentLatLng, displacement);
-				if(validDistance){
-					checkAndUpdateWaitTimeDistance(displacement);
-					map.addPolyline(new PolylineOptions()
-				    .add(lastLatLng, currentLatLng)
-				    .width(5)
-				    .color(MAP_PATH_COLOR).geodesic(true));
-					logPathDataToFlurry(currentLatLng, totalDistance);
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							Database.getInstance(HomeActivity.this).insertPolyLine(lastLatLng, currentLatLng);
-							Database.getInstance(HomeActivity.this).close();
-						}
-					}).start();
-				}
-				
-				updateDistanceFareTexts();
-			}
-			else{
-				callGooglePathAPI(lastLatLng, currentLatLng, displacement);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	ArrayList<CreatePathAsyncTask> createPathAsyncTasks = new ArrayList<HomeActivity.CreatePathAsyncTask>();
-	
-	public synchronized void callGooglePathAPI(LatLng lastLatLng, LatLng currentLatLng, double displacement){
-		if(createPathAsyncTasks == null){
-			createPathAsyncTasks = new ArrayList<HomeActivity.CreatePathAsyncTask>();
-		}
-		CreatePathAsyncTask createPathAsyncTask = new CreatePathAsyncTask(lastLatLng, currentLatLng, displacement);
-		if(!createPathAsyncTasks.contains(createPathAsyncTask)){
-			createPathAsyncTasks.add(createPathAsyncTask);
-			createPathAsyncTask.execute();
-		}
-	}
-	
-	class CreatePathAsyncTask extends AsyncTask<Void, Void, String>{
-	    String url;
-	    double displacementToCompare;
-	    LatLng source, destination;
-	    CreatePathAsyncTask(LatLng source, LatLng destination, double displacementToCompare){
-	    	this.source = source;
-	    	this.destination = destination;
-	        this.url = MapUtils.makeDirectionsURL(source, destination);
-	        this.displacementToCompare = displacementToCompare;
-	    }
-	    
-	    @Override
-	    protected void onPreExecute() {
-	        super.onPreExecute();
-	    }
-	    @Override
-	    protected String doInBackground(Void... params) {
-	    	return new HttpRequester().getJSONFromUrl(url);
-	    }
-	    @Override
-	    protected void onPostExecute(String result) {
-	        super.onPostExecute(result);   
-	        if(result!=null){
-	            drawPath(result, displacementToCompare, source, destination);
-				updateDistanceFareTexts();
-	        }
-	        createPathAsyncTasks.remove(this);
-	    }
-	    
-	    
-	    @Override
-	    public boolean equals(Object o) {
-	    	try{
-	    		if((((CreatePathAsyncTask)o).source == this.source) && (((CreatePathAsyncTask)o).destination == this.destination)){
-	    			return true;
-	    		}
-	    	} catch(Exception e){
-	    		e.printStackTrace();
-	    	}
-	    	return false;
-	    }
-	}
-	
-	
-	
-	public void logPathDataToFlurry(LatLng latLng, double totalDistance){
-		try{
-			if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
-				FlurryEventLogger.logRideData(Data.userData.accessToken, Data.dEngagementId, latLng, totalDistance);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	public void logPathDataToFlurryGAPI(LatLng latLng1, LatLng latLng2, double totalDistance){
-		try{
-			if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
-				FlurryEventLogger.logRideDataGAPI(Data.userData.accessToken, Data.dEngagementId, latLng1, latLng2, totalDistance);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	public synchronized void checkAndUpdateWaitTimeDistance(final double distance){
-		try {
-			if(waitStart == 1){
-				distanceAfterWaitStarted = distanceAfterWaitStarted + distance;
-				if(distanceAfterWaitStarted >= MAX_WAIT_TIME_ALLOWED_DISTANCE){
-					stopWait();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	public synchronized void updateDistanceFareTexts(){
-		double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-		
-		int h = (int) (rideTimeChronometer.eclipsedTime / 3600000);
-		int m = (int) (rideTimeChronometer.eclipsedTime - h * 3600000) / 60000;
-		double totalTimeInMin = (double) m;
-		Log.i("totalTimeInMin", "="+totalTimeInMin);
-		
-		driverIRDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm));
-		driverIRFareValue.setText(""+decimalFormat.format(Data.fareStructure.calculateFare(totalDistanceInKm, totalTimeInMin)));
-	}
-	
-	
-	
-	public synchronized void displayOldPath(){
-		
-		try {
-			ArrayList<Pair<LatLng, LatLng>> path = Database.getInstance(HomeActivity.this).getSavedPath();
-			Database.getInstance(HomeActivity.this).close();
-			
-			LatLng firstLatLng = null;
-			
-			PolylineOptions polylineOptions = new PolylineOptions();
-			polylineOptions.width(5);
-			polylineOptions.color(MAP_PATH_COLOR);
-			polylineOptions.geodesic(true);
-			
-			for(Pair<LatLng, LatLng> pair : path){
-				LatLng src = pair.first;
-			    LatLng dest = pair.second;
-			    
-				if(firstLatLng == null){
-					firstLatLng = src;
-				}
-				
-				polylineOptions.add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude));
-			}
-			
-			map.addPolyline(polylineOptions);
-			
-			if(firstLatLng == null){
-				firstLatLng = Data.startRidePreviousLatLng;
-			}
-			
-			if(firstLatLng != null){
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.snippet("");
-				markerOptions.title("start ride location");
-				markerOptions.position(firstLatLng);
-				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
-				map.addMarker(markerOptions);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
-	
-	
-	
-	
-	
-
-	
-	public synchronized boolean updateTotalDistance(LatLng lastLatLng, LatLng currentLatLng, double deltaDistance){
-		boolean validDistance = false;
-		if(deltaDistance > 0.0){
-			LatLngPair latLngPair = new LatLngPair(lastLatLng, currentLatLng, deltaDistance);
-			
-			Log.e("latLngPair to add", "="+latLngPair);
-			
-			if(HomeActivity.deltaLatLngPairs == null){
-				HomeActivity.deltaLatLngPairs = new ArrayList<LatLngPair>();
-			}
-			
-			if(!HomeActivity.deltaLatLngPairs.contains(latLngPair)){
-				totalDistance = totalDistance + deltaDistance;
-				HomeActivity.deltaLatLngPairs.add(latLngPair);
-				validDistance = true;
-			}
-		}
-		Log.e("HomeActivity.deltaLatLngPairs", "="+HomeActivity.deltaLatLngPairs);
-		return validDistance;
-	}
-	
-	
-	
-	public synchronized void drawPath(String result, double displacementToCompare, LatLng source, LatLng destination) {
-	    try {
-	        writePathLogToFile("GAPI source = "+source+", destination = "+destination);
-	    	 final JSONObject json = new JSONObject(result);
-	    	
-	    	JSONObject leg0 = json.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0);
-	    	double distanceOfPath = leg0.getJSONObject("distance").getDouble("value");
-	    	
-	    	 writePathLogToFile("GAPI distanceOfPath = "+distanceOfPath);
-	    	
-	    	if(Utils.compareDouble(distanceOfPath, (displacementToCompare*1.8)) <= 0){														// distance would be approximately correct
-
-		           JSONArray routeArray = json.getJSONArray("routes");
-		           JSONObject routes = routeArray.getJSONObject(0);
-		           JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
-		           String encodedString = overviewPolylines.getString("points");
-		           List<LatLng> list = MapUtils.decodeDirectionsPolyline(encodedString);
-			    	
-//			    	totalDistance = totalDistance + distanceOfPath;
-		           boolean validDistance = updateTotalDistance(source, destination, distanceOfPath);
-		           if(validDistance){
-				    	checkAndUpdateWaitTimeDistance(distanceOfPath);
-				    	 
-			           for(int z = 0; z<list.size()-1;z++){
-			                LatLng src= list.get(z);
-			                LatLng dest= list.get(z+1);
-			                map.addPolyline(new PolylineOptions()
-			                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-			                .width(5)
-					        .color(MAP_PATH_COLOR).geodesic(true));
-			                Database.getInstance(this).insertPolyLine(src, dest);
-			            }
-			           Database.getInstance(this).close();
-		           }
-	    	}
-	    	else{																									// displacement would be correct
-//	    		totalDistance = totalDistance + displacementToCompare;
-	    		boolean validDistance = updateTotalDistance(source, destination, displacementToCompare);
-	    		if(validDistance){
-		    		checkAndUpdateWaitTimeDistance(displacementToCompare);
-		    		
-		    		 map.addPolyline(new PolylineOptions()
-		                .add(new LatLng(source.latitude, source.longitude), new LatLng(destination.latitude, destination.longitude))
-		                .width(5)
-				        .color(MAP_PATH_COLOR).geodesic(true));
-		    		 Database.getInstance(this).insertPolyLine(source, destination);
-		    		 Database.getInstance(this).close();
-	    		}
-	    		
-	    	}
-	    	writePathLogToFile("totalDistance after GAPI = "+totalDistance);
-	    	logPathDataToFlurryGAPI(source, destination, totalDistance);
-	           
-	    } 
-	    catch (Exception e) {
-	    	e.printStackTrace();
-	    }
-	} 
-	
-	
-	
-	
-	
-	
-	
-	
-	class ViewHolderDriverRequest {
-		TextView textViewRequestAddress, textViewRequestDistance, textViewRequestTime, textViewRequestNumber;
-		RelativeLayout relative;
-		int id;
-	}
-
-	class DriverRequestListAdapter extends BaseAdapter {
-		LayoutInflater mInflater;
-		ViewHolderDriverRequest holder;
-		
-		DateOperations dateOperations;
-		
-		public DriverRequestListAdapter() {
-			mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			dateOperations = new DateOperations();
-		}
-		
-		public DateOperations getDateOperations(){
-			if(dateOperations == null){
-				dateOperations = new DateOperations();
-			}
-			return dateOperations;
-		}
-
-		@Override
-		public int getCount() {
-			return Data.driverRideRequests.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return position;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			
-			if (convertView == null) {
-				
-				holder = new ViewHolderDriverRequest();
-				convertView = mInflater.inflate(R.layout.list_item_driver_request, null);
-				
-				holder.textViewRequestAddress = (TextView) convertView.findViewById(R.id.textViewRequestAddress); holder.textViewRequestAddress.setTypeface(Data.latoRegular(getApplicationContext()));
-				holder.textViewRequestDistance = (TextView) convertView.findViewById(R.id.textViewRequestDistance); holder.textViewRequestDistance.setTypeface(Data.latoRegular(getApplicationContext()));
-				holder.textViewRequestTime = (TextView) convertView.findViewById(R.id.textViewRequestTime); holder.textViewRequestTime.setTypeface(Data.latoRegular(getApplicationContext()));
-				holder.textViewRequestNumber = (TextView) convertView.findViewById(R.id.textViewRequestNumber); holder.textViewRequestNumber.setTypeface(Data.latoRegular(getApplicationContext()));
-				
-				holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative); 
-				
-				holder.relative.setTag(holder);
-				
-				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
-				ASSL.DoMagic(holder.relative);
-				
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolderDriverRequest) convertView.getTag();
-			}
-			
-			
-			DriverRideRequest driverRideRequest = Data.driverRideRequests.get(position);
-			
-			holder.id = position;
-			
-			holder.textViewRequestNumber.setText(""+(position+1));
-			holder.textViewRequestAddress.setText(driverRideRequest.address);
-			
-			
-			long timeDiff = getDateOperations().getTimeDifference(DateOperations.getCurrentTime(), driverRideRequest.startTime);
-			long timeDiffInSec = timeDiff / 1000;
-			holder.textViewRequestTime.setText(""+timeDiffInSec + " sec left");
-			
-			if(myLocation != null){
-				holder.textViewRequestDistance.setVisibility(View.VISIBLE);
-				double distance = MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), driverRideRequest.latLng);
-				if(distance >= 1000){
-					holder.textViewRequestDistance.setText(""+decimalFormat.format(distance/1000)+" km away");
-				}
-				else{
-					holder.textViewRequestDistance.setText(""+distance+" m away");
-				}
-			}
-			else{
-				holder.textViewRequestDistance.setVisibility(View.GONE);
-			}
-			
-			
-			
-			
-			
-			holder.relative.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					try {
-						holder = (ViewHolderDriverRequest) v.getTag();
-						
-						DriverRideRequest driverRideRequest = Data.driverRideRequests.get(holder.id);
-						
-						Data.dEngagementId = driverRideRequest.engagementId;
-						Data.dCustomerId = driverRideRequest.customerId;
-						Data.dCustLatLng = driverRideRequest.latLng;
-						
-						
-						driverScreenMode = DriverScreenMode.D_REQUEST_ACCEPT;
-						switchDriverScreen(driverScreenMode);
-						
-						
-						map.animateCamera(CameraUpdateFactory.newLatLng(driverRideRequest.latLng), 1000, null);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-				}
-			});
-			
-			
-			return convertView;
-		}
-
-	}
 	
 	
 	
@@ -3820,31 +2522,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public float getBatteryPercentage(){
-		try {
-			IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-			Intent batteryStatus = registerReceiver(null, ifilter);
-			int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-			int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-			float batteryPct = (level / (float)scale)*100;
-			
-			// Are we charging / charged?
-			int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-			boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-			                     status == BatteryManager.BATTERY_STATUS_FULL;
-			if(isCharging){
-				return 70;
-			}
-			else{
-				return batteryPct;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 70;
-		}
-	}
-	
-	
 
 	
 	
@@ -3935,324 +2612,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void deleteAllDriverRequests(final Activity activity){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Database2.getInstance(activity).deleteAllDriverRequests();
-				Database2.getInstance(activity).close();
-			}
-		}).start();
-	}
 	
 	
-	public void deleteParticularDriverRequest(final Activity activity, final String engagementId){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Database2.getInstance(activity).deleteDriverRequest(engagementId);
-				Database2.getInstance(activity).close();
-			}
-		}).start();
-	}
-	
-	
-	
-	/**
-	 * ASync for change driver mode from server
-	 */
-	public void driverAcceptRideAsync(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-			 
-			if(myLocation != null){
-				Data.latitude = myLocation.getLatitude();
-				Data.longitude = myLocation.getLongitude();
-			}
-			
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("customer_id", Data.dCustomerId);
-			params.put("engagement_id", Data.dEngagementId);
-			params.put("latitude", ""+Data.latitude);
-			params.put("longitude", ""+Data.longitude);
-
-			Log.e("accept ride api", "=");
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("user_id", "=" + Data.dCustomerId);
-			Log.i("engage_id", "=" + Data.dEngagementId);
-			Log.i("latitude", "="+Data.latitude);
-			Log.i("longitude", "="+Data.longitude);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/accept_a_request", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							DialogPopup.dismissLoadingDialog();
-							callAndHandleStateRestoreAPI(true);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.v("accept ride api Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									Log.e("accept_a_request flag", "="+flag);
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-									
-//									response = {"error":"Request timed out","flag":10}
-									DialogPopup.dismissLoadingDialog();
-									
-									reduceRideRequest(activity, Data.dEngagementId);
-									
-								}
-								else{
-									
-									if(jObj.has("flag")){
-										try{
-											int flag = jObj.getInt("flag");
-											Log.e("accept_a_request flag", "="+flag);
-											String logMessage = jObj.getString("log");
-											DialogPopup.alertPopup(activity, "", ""+logMessage);
-											
-										} catch(Exception e){
-											e.printStackTrace();
-										}
-										reduceRideRequest(activity, Data.dEngagementId);
-									}
-									else{
-//										{
-//											Òuser_dataÓ: {
-//										            "user_name": result_customer[0].user_name,
-//										            "phone_no": result_customer[0].phone_no,
-//										            "user_image": result_customer[0].user_image,
-//										            "user_rating": rating};
-										
-										JSONObject userData = jObj.getJSONObject("user_data");
-										
-										String userName = userData.getString("user_name");
-										String userImage = userData.getString("user_image");
-										String phoneNo = userData.getString("phone_no");
-										String rating = "4";
-										try{
-											rating = userData.getString("user_rating");
-										} catch(Exception e){
-											e.printStackTrace();
-										}
-										if(userName == null){
-											userName = "";
-										}
-										if(userImage == null){
-											userImage = "http://jugnoo-images.s3.amazonaws.com/user_profile/user.png";
-										}
-										if(phoneNo == null){
-											phoneNo = "";
-										}
-										
-										
-										int isScheduled = 0;
-										String pickupTime = "";
-										if(jObj.has("is_scheduled")){
-											isScheduled = jObj.getInt("is_scheduled");
-											if(isScheduled == 1 && jObj.has("pickup_time")){
-												pickupTime = jObj.getString("pickup_time");
-											}
-										}
-										
-										Data.assignedCustomerInfo = new CustomerInfo(Data.dCustomerId, userName,
-												userImage, phoneNo, rating);
-										Data.assignedCustomerInfo.schedulePickupTime = pickupTime;
-										
-										Data.driverRideRequests.clear();
-										
-										SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-										Editor editor = pref.edit();
-										editor.putString(Data.SP_DRIVER_SCREEN_MODE, Data.D_START_RIDE);
-										
-										editor.putString(Data.SP_D_ENGAGEMENT_ID, Data.dEngagementId);
-										editor.putString(Data.SP_D_CUSTOMER_ID, Data.dCustomerId);
-										
-										editor.putString(Data.SP_D_LATITUDE, ""+Data.dCustLatLng.latitude);
-										editor.putString(Data.SP_D_LONGITUDE, ""+Data.dCustLatLng.longitude);
-										
-										editor.putString(Data.SP_D_CUSTOMER_NAME, Data.assignedCustomerInfo.name);
-										editor.putString(Data.SP_D_CUSTOMER_IMAGE, Data.assignedCustomerInfo.image);
-										editor.putString(Data.SP_D_CUSTOMER_PHONE, Data.assignedCustomerInfo.phoneNumber);
-										editor.putString(Data.SP_D_CUSTOMER_RATING, Data.assignedCustomerInfo.rating);
-										
-										editor.commit();
-	
-								        GCMIntentService.clearNotifications(getApplicationContext());
-								        
-										driverScreenMode = DriverScreenMode.D_START_RIDE;
-										switchDriverScreen(driverScreenMode);
-										
-										deleteAllDriverRequests(HomeActivity.this);
-										
-									}
-									
-									
-									DialogPopup.dismissLoadingDialog();
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								DialogPopup.dismissLoadingDialog();
-							}
-							
-							DialogPopup.dismissLoadingDialog();
-							
-						}
-					});
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-	}
-	
-	
-	
-	
-	public void reduceRideRequest(Activity activity, String engagementId){
-		deleteParticularDriverRequest(activity, engagementId);
-		driverScreenMode = DriverScreenMode.D_INITIAL;
-		switchDriverScreen(driverScreenMode);
-	}
-	
-	
-	public void getAndShowAllDriverRequests(final Activity activity){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Data.driverRideRequests.clear();
-				Data.driverRideRequests.addAll(Database2.getInstance(activity).getAllDriverRequests());
-				Database2.getInstance(activity).close();
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						showAllRideRequestsOnMap();
-					}
-				});
-			}
-		}).start();
-	}
-	
-	
-	/**
-	 * ASync for change driver mode from server
-	 */
-	public void driverRejectRequestAsync(final Activity activity) {
-
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
-				
-				RequestParams params = new RequestParams();
-			
-				
-				params.put("access_token", Data.userData.accessToken);
-				params.put("customer_id", Data.dCustomerId);
-				params.put("engagement_id", Data.dEngagementId);
-
-				Log.i("access_token", "=" + Data.userData.accessToken);
-				Log.i("customer_id", "=" + Data.dCustomerId);
-				Log.i("engagement_id", "=" + Data.dEngagementId);
-				
-			
-				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/reject_a_request", params,
-						new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
-
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								DialogPopup.dismissLoadingDialog();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							}
-
-							@Override
-							public void onSuccess(String response) {
-								Log.v("Server response", "response = " + response);
-		
-								try {
-									jObj = new JSONObject(response);
-									
-									if(!jObj.isNull("error")){
-										
-										String errorMessage = jObj.getString("error");
-										
-										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-											HomeActivity.logoutUser(activity);
-										}
-										else{
-											DialogPopup.alertPopup(activity, "", errorMessage);
-										}
-									}
-									else{
-//										{"log":"rejected successfully"}
-//										{"log":"Rejected successfully","flag":110}
-										try {
-											int flag = jObj.getInt("flag");
-											if(ApiResponseFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
-												String log = jObj.getString("log");
-												DialogPopup.alertPopup(activity, "", ""+log);
-											}
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-										
-										
-										if(map != null){
-											map.clear();
-										}
-										
-										reduceRideRequest(activity, Data.dEngagementId);
-										
-									}
-								}  catch (Exception exception) {
-									exception.printStackTrace();
-									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								}
-		
-								DialogPopup.dismissLoadingDialog();
-							}
-						});
-			}
-			else {
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			}
-
-		
-	}
 	
 	
 	
 	public void initializeStartRideVariables(){
-		if(createPathAsyncTasks != null){
-    		createPathAsyncTasks.clear();
-    	}
 		
 		lastLocation = null;
 		
@@ -4266,108 +2631,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		HomeActivity.deltaLatLngPairs.clear();
 		
 		clearRideSPData();
-		
-		waitStart = 2;
-	}
-	
-	
-	
-	
-	/**
-	 * ASync for start ride in  driver mode from server
-	 */
-	public void driverStartRideAsync(final Activity activity, final LatLng driverAtPickupLatLng) {
-		initializeStartRideVariables();
-		
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-		
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("engagement_id", Data.dEngagementId);
-			params.put("customer_id", Data.dCustomerId);
-			params.put("pickup_latitude", ""+driverAtPickupLatLng.latitude);
-			params.put("pickup_longitude", ""+driverAtPickupLatLng.longitude);
-
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("engagement_id", "=" + Data.dEngagementId);
-			Log.i("customer_id", "=" + Data.dCustomerId);
-			Log.i("pickup_latitude", "=" + driverAtPickupLatLng.latitude);
-			Log.i("pickup_longitude", "=" + driverAtPickupLatLng.longitude);
-			
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/start_ride", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							callAndHandleStateRestoreAPI(true);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-								}
-								else{
-									
-									
-//									{"log":"ride_started"}
-
-									if(map != null){
-										map.clear();
-									}
-									
-									initializeStartRideVariables();
-									
-									Data.startRidePreviousLatLng = driverAtPickupLatLng;
-									SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-									Editor editor = pref.edit();
-									editor.putString(Data.SP_LAST_LATITUDE, "" + driverAtPickupLatLng.latitude);
-									editor.putString(Data.SP_LAST_LONGITUDE, "" + driverAtPickupLatLng.longitude);
-									editor.commit();
-									Log.e("driverAtPickupLatLng in start_ride", "=" + driverAtPickupLatLng);
-									writePathLogToFile("on Start driverAtPickupLatLng"+driverAtPickupLatLng);
-									
-						        	driverScreenMode = DriverScreenMode.D_IN_RIDE;
-									switchDriverScreen(driverScreenMode);
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-					});
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-
 	}
 	
 	
@@ -4375,445 +2638,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	/**
-	 * ASync for change driver mode from server
-	 */
-	public void driverCancelRideAsync(final Activity activity) {
-
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
-				
-				RequestParams params = new RequestParams();
-			
-				
-				params.put("access_token", Data.userData.accessToken);
-				params.put("customer_id", Data.dCustomerId);
-				params.put("engagement_id", Data.dEngagementId);
-
-				Log.e("access_token", "=" + Data.userData.accessToken);
-				Log.e("customer_id", "=" + Data.dCustomerId);
-				Log.e("engagement_id", "=" + Data.dEngagementId);
-				
-			
-				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/cancel_the_ride", params,
-						new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
-
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								DialogPopup.dismissLoadingDialog();
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-								callAndHandleStateRestoreAPI(true);
-							}
-
-							@Override
-							public void onSuccess(String response) {
-								Log.v("Server response", "response = " + response);
-		
-								try {
-									jObj = new JSONObject(response);
-									
-									if(!jObj.isNull("error")){
-										
-										String errorMessage = jObj.getString("error");
-										
-										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-											HomeActivity.logoutUser(activity);
-										}
-										else{
-											DialogPopup.alertPopup(activity, "", errorMessage);
-										}
-									}
-									else{
-//										{"log":"rejected successfully"}
-//										response = {"log":"Ride cancelled successfully","flag":109}
-										
-										try {
-											int flag = jObj.getInt("flag");
-											if(ApiResponseFlags.REQUEST_TIMEOUT.getOrdinal() == flag){
-												String log = jObj.getString("log");
-												DialogPopup.alertPopup(activity, "", ""+log);
-											}
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-										
-										if(map != null){
-											map.clear();
-										}
-										
-										reduceRideRequest(activity, Data.dEngagementId);
-										
-									}
-								}  catch (Exception exception) {
-									exception.printStackTrace();
-									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								}
-		
-								DialogPopup.dismissLoadingDialog();
-							}
-						});
-			}
-			else {
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			}
-
-		
-	}
-	
-	
-	
-	
-	
-	/**
-	 * ASync for start ride in  driver mode from server
-	 */
-	public void driverEndRideAsync(final Activity activity, double dropLatitude, double dropLongitude, double waitMinutes, double rideMinutes) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			if(createPathAsyncTasks != null){
-        		createPathAsyncTasks.clear();
-        	}
-
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-		
-			SharedPreferences pref = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-			long rideStartTime = Long.parseLong(pref.getString(Data.SP_RIDE_START_TIME, ""+System.currentTimeMillis()));
-			long timeDiffToAdd = System.currentTimeMillis() - rideStartTime;
-			long rideTimeSeconds = timeDiffToAdd / 1000;
-			double rideTimeMinutes = Math.ceil(((double)rideTimeSeconds) / 60.0);
-			Log.e("System.currentTimeMillis() - rideStartTime", "="+System.currentTimeMillis() + " - " +  rideStartTime);
-			Log.e("timeDiffToAdd", "="+rideTimeMinutes);
-			if(rideTimeMinutes > 0){
-				rideMinutes = rideTimeMinutes;
-			}
-			
-			rideTime = decimalFormatNoDecimal.format(rideMinutes);
-			waitTime = decimalFormatNoDecimal.format(waitMinutes);
-			
-			double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("engagement_id", Data.dEngagementId);
-			params.put("customer_id", Data.dCustomerId);
-			params.put("latitude", ""+dropLatitude);
-			params.put("longitude", ""+dropLongitude);
-			params.put("distance_travelled", decimalFormat.format(totalDistanceInKm));
-			params.put("wait_time", waitTime);
-			params.put("ride_time", rideTime);
-
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("engagement_id", "=" + Data.dEngagementId);
-			Log.i("customer_id", "=" + Data.dCustomerId);
-			Log.i("latitude", "="+dropLatitude);
-			Log.i("longitude", "="+dropLongitude);
-			Log.i("distance_travelled", "="+decimalFormat.format(totalDistanceInKm));
-			Log.i("wait_time", "="+waitTime);
-			Log.i("ride_time", "="+rideTime);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/end_ride", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							driverScreenMode = DriverScreenMode.D_IN_RIDE;
-							DialogPopup.dismissLoadingDialog();
-							rideTimeChronometer.start();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.e("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-									driverScreenMode = DriverScreenMode.D_IN_RIDE;
-									rideTimeChronometer.start();
-								}
-								else{
-									
-//									{"log":"ride_ended"}//result
-									
-									try{
-										totalFare = jObj.getDouble("fare");
-									} catch(Exception e){
-										e.printStackTrace();
-										totalFare = 0;
-									}
-
-									lastLocation = null;
-									
-									if(map != null){
-										map.clear();
-									}
-									
-									waitStart = 2;
-									waitChronometer.stop();
-									rideTimeChronometer.stop();
-									
-									
-									clearSPData();
-									
-						        	driverScreenMode = DriverScreenMode.D_RIDE_END;
-									switchDriverScreen(driverScreenMode);
-									
-									driverUploadPathDataFileAsync(activity, Data.dEngagementId);
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								driverScreenMode = DriverScreenMode.D_IN_RIDE;
-								rideTimeChronometer.start();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-					});
-		}
-		else {
-			driverScreenMode = DriverScreenMode.D_IN_RIDE;
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			rideTimeChronometer.start();
-		}
-
-	}
-	
-	
-	
-	/**
-	 * ASync for uploading path data file to server
-	 */
-	public void driverUploadPathDataFileAsync(final Activity activity, final String engagementId) {
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				File pathLogFile = null;
-				try{
-					pathLogFile = Log.getPathLogFile(engagementId);
-					if(pathLogFile != null){
-						RequestParams params = new RequestParams();
-						params.put("access_token", Data.userData.accessToken);
-						params.put("engagement_id", engagementId);
-						params.put("ride_path", pathLogFile);
-						params.put("file_type", "0");
-						
-						Log.e("access_token", "=" + Data.userData.accessToken);
-						Log.e("engagement_id", "=" + engagementId);
-						Log.e("pathLogFile", "=" + pathLogFile);
-					
-						AsyncHttpClient client = Data.getClient();
-						client.post(Data.SERVER_URL + "/upload_file", params,
-								new CustomAsyncHttpResponseHandler() {
-
-									@Override
-									public void onFailure(Throwable arg3) {
-										Log.e("request fail", arg3.toString());
-									}
-
-									@Override
-									public void onSuccess(String response) {
-										Log.e("Server response on upload path file", "response = " + response);
-									}
-								});
-					}
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-	}
-	
-	
-	/**
-	 * ASync for start ride in  driver mode from server
-	 */
-	public void submitReviewAsync(final Activity activity, String engagementId, final String flag, String ratingReceiverId, String givenRating, String feedbackText) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
-			RequestParams params = new RequestParams();
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("engagement_id", engagementId);
-			params.put("flag", flag);
-			params.put("rating_receiver_id", ratingReceiverId);
-			params.put("given_rating", givenRating);
-			params.put("feedback", feedbackText);
-
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("engagement_id", engagementId);
-			Log.i("flag", flag);
-			Log.i("rating_receiver_id", ratingReceiverId);
-			Log.i("given_rating", givenRating);
-			Log.i("feedback", feedbackText);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/rating", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									
-									int flag = jObj.getInt("flag");	
-									String errorMessage = jObj.getString("error");
-									
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-								}
-								else{
-									
-//									{"log":"Rated successfully"}
-									
-
-									if(flag.equalsIgnoreCase("0")){
-										userMode = UserMode.DRIVER;
-										
-										switchUserScreen(userMode);
-										
-										driverScreenMode = DriverScreenMode.D_INITIAL;
-										switchDriverScreen(driverScreenMode);
-									}
-									else{
-										userMode = UserMode.PASSENGER;
-										
-										switchUserScreen(userMode);
-										
-										passengerScreenMode = PassengerScreenMode.P_INITIAL;
-										switchPassengerScreen(passengerScreenMode);
-									}
-									
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-	
-							DialogPopup.dismissLoadingDialog();
-						}
-					});
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-	}
-	
-	
-	
 	
 	
 	
 
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * ASync for start or end wait from server
-	 */
-	public void startEndWaitAsync(final Activity activity, String customerId, int flag) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			RequestParams params = new RequestParams();
-			
-			params.put("access_token", Data.userData.accessToken);
-			params.put("customer_id", customerId);
-			params.put("flag", ""+flag);
-
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("customer_id", "="+customerId);
-			Log.i("flag", "="+flag);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/start_end_wait", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
-							try {
-								jObj = new JSONObject(response);
-								
-								if(!jObj.isNull("error")){
-									String errorMessage = jObj.getString("error");
-									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-										HomeActivity.logoutUser(activity);
-									}
-								}
-								else{
-									
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-							}
-	
-						}
-					});
-		}
-		else {
-		}
-
-	}
 	
 	
 	
@@ -4895,45 +2725,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	/**
-	 * ASync for no drivers from server
-	 */
-	public void noDriverAsync(final Activity activity) {
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
-			
-			RequestParams params = new RequestParams();
-			
-			params.put("access_token", Data.userData.accessToken);
-
-			if(myLocation != null){
-				Data.latitude = myLocation.getLatitude();
-				Data.longitude = myLocation.getLongitude();
-			}
-			
-			params.put("latitude", ""+Data.latitude);
-			params.put("longitude", ""+Data.longitude);
-			
-			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("latitude", "=" + Data.latitude);
-			Log.i("longitude", "=" + Data.longitude);
-			
-		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/request_now", params,
-					new CustomAsyncHttpResponseHandler() {
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-						}
-					});
-		}
-	}
 	
 	
 	
@@ -4942,145 +2733,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	
-	
-	
-	void makeMeDriverPopup(final Activity activity, String message){
-		try {
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_custom_two_buttons);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
-			
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
-			
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
-			
-			textHead.setText("Alert");
-			textMessage.setText(message);
-			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
-			
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-					makeMeDriverAsync(activity);
-				}
-			});
-			
-			btnCancel.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-				
-			});
-			
-			frameLayout.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-			});
-			
-			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-				}
-			});
-
-			dialog.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	/**
-	 * ASync for make me driver server
-	 */
-	public void makeMeDriverAsync(final Activity activity) {
-		try {
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
-				
-				RequestParams params = new RequestParams();
-				
-				params.put("access_token", Data.userData.accessToken);
-				
-			
-				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/make_me_driver_request", params,
-						new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
-
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								DialogPopup.dismissLoadingDialog();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							}
-
-							@Override
-							public void onSuccess(String response) {
-								Log.v("Server response", "response = " + response);
-
-								try {
-									jObj = new JSONObject(response);
-									
-									if(!jObj.isNull("error")){
-										
-
-										String errorMessage = jObj.getString("error");
-										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-											HomeActivity.logoutUser(activity);
-										}
-										else{
-											DialogPopup.alertPopup(activity, "", errorMessage);
-										}
-									}
-									else{
-										
-//									{"log": "Thank you for signing up. We will reach out to you soon."}
-										
-										DialogPopup.alertPopup(activity, "", jObj.getString("log"));
-
-									
-										
-									}
-								}  catch (Exception exception) {
-									exception.printStackTrace();
-								}
-
-								DialogPopup.dismissLoadingDialog();
-								
-							}
-						});
-			}
-			else {
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
 	
 	
 	public void acceptAppRatingRequestAPI(final Activity activity) {
@@ -5470,120 +3122,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	//Driver's timer
-	Timer timerCustomerPathUpdater;
-	TimerTask timerTaskCustomerPathUpdater;
-	
-	
-	public void startCustomerPathUpdateTimer(){
-		
-		try{
-			if(timerTaskCustomerPathUpdater != null){
-				timerTaskCustomerPathUpdater.cancel();
-				timerTaskCustomerPathUpdater = null;
-			}
-			
-			if(timerCustomerPathUpdater != null){
-				timerCustomerPathUpdater.cancel();
-				timerCustomerPathUpdater.purge();
-				timerCustomerPathUpdater = null;
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		try {
-			timerCustomerPathUpdater = new Timer();
-			
-			timerTaskCustomerPathUpdater = new TimerTask() {
-				
-				@Override
-				public void run() {
-					try {
-						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-							//customer path updater
-							if(myLocation != null){
-								if(Data.dCustLatLng != null){
-									
-									if(driverScreenMode == DriverScreenMode.D_START_RIDE){
-										LatLng source = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-										String url = MapUtils.makeDirectionsURL(source, Data.dCustLatLng);
-										String result = new HttpRequester().getJSONFromUrl(url);
-										
-										if(result != null){
-											final List<LatLng> list = getLatLngListFromPath(result);
-											
-											runOnUiThread(new Runnable() {
-												
-												@Override
-												public void run() {
-													try {
-														if(driverScreenMode == DriverScreenMode.D_START_RIDE){
-															map.clear();
-															
-															if(markerOptionsCustomerPickupLocation == null){
-																markerOptionsCustomerPickupLocation = new MarkerOptions();
-																markerOptionsCustomerPickupLocation.title(Data.dEngagementId);
-																markerOptionsCustomerPickupLocation.snippet("");
-																markerOptionsCustomerPickupLocation.position(Data.dCustLatLng);
-																markerOptionsCustomerPickupLocation.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPassengerMarkerBitmap(HomeActivity.this, assl)));
-															}
-															
-															map.addMarker(markerOptionsCustomerPickupLocation);
-															
-															for(int z = 0; z<list.size()-1;z++){
-															    LatLng src= list.get(z);
-															    LatLng dest= list.get(z+1);
-															    map.addPolyline(new PolylineOptions()
-															    .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
-															    .width(5)
-															    .color(D_TO_C_MAP_PATH_COLOR).geodesic(true));
-															}
-														}
-													} catch (Exception e) {
-														e.printStackTrace();
-													}
-												}
-											});
-								        }
-									}
-								}
-							}
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			};
-			
-			
-			
-			timerCustomerPathUpdater.scheduleAtFixedRate(timerTaskCustomerPathUpdater, 10, 15000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public void cancelCustomerPathUpdateTimer(){
-		try{
-			if(timerTaskCustomerPathUpdater != null){
-				timerTaskCustomerPathUpdater.cancel();
-				timerTaskCustomerPathUpdater = null;
-			}
-			
-			if(timerCustomerPathUpdater != null){
-				timerCustomerPathUpdater.cancel();
-				timerCustomerPathUpdater.purge();
-				timerCustomerPathUpdater = null;
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
 	
 	
 	
@@ -5637,33 +3175,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	public void updateInRideData(){
-		if(UserMode.DRIVER == userMode && DriverScreenMode.D_IN_RIDE == driverScreenMode){
-			if(myLocation != null){
-				double totalDistanceInKm = Math.abs(totalDistance/1000.0);
-				
-				long rideTimeSeconds = rideTimeChronometer.eclipsedTime / 1000;
-				double rideTimeMinutes = Math.ceil(((double)rideTimeSeconds) / 60.0);
-				
-				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-				nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.dEngagementId));
-				nameValuePairs.add(new BasicNameValuePair("current_latitude", ""+myLocation.getLatitude()));
-				nameValuePairs.add(new BasicNameValuePair("current_longitude", ""+myLocation.getLongitude()));
-				nameValuePairs.add(new BasicNameValuePair("distance_travelled", decimalFormat.format(totalDistanceInKm)));
-				nameValuePairs.add(new BasicNameValuePair("ride_time", decimalFormatNoDecimal.format(rideTimeMinutes)));
-				nameValuePairs.add(new BasicNameValuePair("wait_time", "0"));
-				
-				Log.i("update_in_ride_data nameValuePairs", "="+nameValuePairs);
-				
-				HttpRequester simpleJSONParser = new HttpRequester();
-				String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/update_in_ride_data", nameValuePairs);
-				Log.i("update_in_ride_data result", "="+result);
-			}
-		}
-	}
-	
-	
 	
 	//Both driver and customer
 	Timer timerMapAnimateAndUpdateRideData;
@@ -5680,7 +3191,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				@Override
 				public void run() {
 					try {
-						updateInRideData();
 						if (myLocation != null && map != null) {
 							runOnUiThread(new Runnable() {
 								
@@ -5724,35 +3234,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
-	public List<LatLng> getLatLngListFromPath(String result){
-		try {
-	    	 final JSONObject json = new JSONObject(result);
-		     JSONArray routeArray = json.getJSONArray("routes");
-		     JSONObject routes = routeArray.getJSONObject(0);
-		     JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
-		     String encodedString = overviewPolylines.getString("points");
-		     List<LatLng> list = MapUtils.decodeDirectionsPolyline(encodedString);
-		     return list;
-	    } 
-	    catch (Exception e) {
-	    	e.printStackTrace();
-	    	return new ArrayList<LatLng>();
-	    }
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	void callAnAutoPopup(final Activity activity) {
-		try {
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	void callAnAutoPopup(final Activity activity, int totalPromoCoupons) {
+		try {
+			
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_custom_two_buttons);
@@ -5815,12 +3310,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 			if(distance > MAP_PAN_DISTANCE_CHECK){
 				textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
+				dialog.show();
 			}
 			else{
-				textMessage.setText("Do you want an auto to pick you up?");
+				if(totalPromoCoupons == 0){
+					textMessage.setText("Do you want an auto to pick you up?");
+					dialog.show();
+				}
+				else{
+					initiateRequestRide(true);
+				}
 			}
-				
-			dialog.show();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -5840,7 +3340,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				ScheduleRideDialog scheduleRideDialog = new ScheduleRideDialog(HomeActivity.this, calendar, latLng, new PromotionDialogEventHandler() {
 					
 					@Override
-					public void onOkPressed(PromoCoupon promoCoupon) {
+					public void onOkPressed(PromoCoupon promoCoupon, int totalPromoCoupons) {
 					}
 					
 					@Override
@@ -5862,241 +3362,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	void startRidePopup(final Activity activity) {
-		try {
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_custom_two_buttons);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
-			
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
-			
-			
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-			
-			textMessage.setText("Are you sure you want to start ride?");
-			
-			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
-			
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if(myLocation != null){
-						dialog.dismiss();
-						LatLng driverAtPickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-			        	double displacement = MapUtils.distance(driverAtPickupLatLng, Data.dCustLatLng);
-			        	
-			        	if(displacement <= DRIVER_START_RIDE_CHECK_METERS){
-			        		buildAlertMessageNoGps();
-				        	
-				        	GCMIntentService.clearNotifications(activity);
-				        	
-				        	driverStartRideAsync(activity, driverAtPickupLatLng);
-			        	}
-			        	else{
-			        		DialogPopup.alertPopup(activity, "", "You must be present near the customer pickup location to start ride.");
-			        	}
-					}
-					else{
-						Toast.makeText(activity, "Waiting for location...", Toast.LENGTH_SHORT).show();
-					}
-		        	
-				}
-				
-			});
-			
-			btnCancel.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-			});
-			
-			frameLayout.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-			});
-			
-			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-				}
-			});
-
-			dialog.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	
 	
-	
-	
-	void endRidePopup(final Activity activity) {
-			try {
-				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.dialog_custom_two_buttons);
-
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-				new ASSL(activity, frameLayout, 1134, 720, true);
-				
-				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-				layoutParams.dimAmount = 0.6f;
-				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
-				
-				
-				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-				
-				textMessage.setText("Are you sure you want to end ride?");
-				
-				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
-				
-				btnOk.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						if(myLocation != null){
-							dialog.dismiss();
-	
-							GCMIntentService.clearNotifications(HomeActivity.this);
-							waitChronometer.stop();
-							rideTimeChronometer.stop();
-							
-							driverWaitRl.setBackgroundResource(R.drawable.blue_btn_selector);
-							driverWaitText.setText(getResources().getString(R.string.start_wait));
-							waitStart = 0;
-							
-//							long waitSeconds = waitChronometer.eclipsedTime / 1000;
-//							double waitMinutes = Math.ceil(((double)waitSeconds) / 60.0);
-							
-							long rideTimeSeconds = rideTimeChronometer.eclipsedTime / 1000;
-							double rideTimeMinutes = Math.ceil(((double)rideTimeSeconds) / 60.0);
-							
-							driverScreenMode = DriverScreenMode.D_RIDE_END;
-							
-				        	driverEndRideAsync(activity, myLocation.getLatitude(), myLocation.getLongitude(), 0, rideTimeMinutes);
-						}
-						else{
-							Toast.makeText(activity, "Waiting for location...", Toast.LENGTH_SHORT).show();
-						}
-			        	
-					}
-					
-				});
-				
-				btnCancel.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-					}
-					
-				});
-				
-				frameLayout.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-					}
-				});
-				
-				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-					}
-				});
-
-				dialog.show();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	
-	
-		void cancelRidePopup(final Activity activity) {
-				try {
-					final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-					dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-					dialog.setContentView(R.layout.dialog_custom_two_buttons);
-
-					FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-					new ASSL(activity, frameLayout, 1134, 720, true);
-					
-					WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-					layoutParams.dimAmount = 0.6f;
-					dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-					dialog.setCancelable(true);
-					dialog.setCanceledOnTouchOutside(true);
-					
-					
-					
-					TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-					TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-					
-					textMessage.setText("Are you sure you want to cancel ride?");
-					
-					
-					Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-					Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
-					
-					btnOk.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							dialog.dismiss();
-							
-							GCMIntentService.clearNotifications(HomeActivity.this);
-							driverCancelRideAsync(HomeActivity.this);
-						}
-						
-						
-					});
-					
-					btnCancel.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							dialog.dismiss();
-						}
-						
-					});
-					
-					frameLayout.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							dialog.dismiss();
-						}
-					});
-					
-					dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-						}
-					});
-
-					dialog.show();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-	
-		
 		
 		
 		/**
@@ -6722,131 +3990,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 
 
-	public void showAllRideRequestsOnMap(){
-		
-		try {
-			if(userMode == UserMode.DRIVER){
-				
-				map.clear();
-				
-			
-				if(Data.driverRideRequests.size() > 0){
-					
-					driverRequestListAdapter.notifyDataSetChanged();
-					
-					if(driverNewRideRequestRl.getVisibility() == View.GONE && driverRideRequestsList.getVisibility() == View.GONE){
-						driverNewRideRequestRl.setVisibility(View.VISIBLE);
-						driverRideRequestsList.setVisibility(View.GONE);
-					}
-					
-					LatLng last = map.getCameraPosition().target;
-					
-					for(int i=0; i<Data.driverRideRequests.size(); i++){
-						MarkerOptions markerOptions = new MarkerOptions();
-						markerOptions.title(Data.driverRideRequests.get(i).engagementId);
-						markerOptions.snippet("");
-						markerOptions.position(Data.driverRideRequests.get(i).latLng);
-						markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPassengerMarkerBitmap(HomeActivity.this, assl)));
-						
-						map.addMarker(markerOptions);
-						
-					}
-					
-					driverNewRideRequestText.setText(getResources().getString(R.string.you_have)+" "+Data.driverRideRequests.size()+" "+getResources().getString(R.string.ride_request));
-					
-					map.animateCamera(CameraUpdateFactory.newLatLng(last), 1000, null);
-					
-				}
-				else{
-					driverNewRideRequestRl.setVisibility(View.GONE);
-					driverRideRequestsList.setVisibility(View.GONE);
-				}
-			
-			}
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-		}
-		
-	}
 	
-	@Override
-	public void onNewRideRequest() {
-		if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					getAndShowAllDriverRequests(HomeActivity.this);
-				}
-			});
-		}
-	}
-
-	@Override
-	public void onCancelRideRequest(final String engagementId, final boolean acceptedByOtherDriver) {
-		try {
-				if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_INITIAL){
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							getAndShowAllDriverRequests(HomeActivity.this);
-						}
-					});
-				}
-				else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							if(engagementId.equalsIgnoreCase(Data.dEngagementId)){
-								DialogPopup.dismissLoadingDialog();
-								driverScreenMode = DriverScreenMode.D_INITIAL;
-								switchDriverScreen(driverScreenMode);
-								if(acceptedByOtherDriver){
-									DialogPopup.alertPopup(HomeActivity.this, "", "This request has been accepted by other driver");
-								}
-								else{
-									DialogPopup.alertPopup(HomeActivity.this, "", "User has canceled the request");
-								}
-							}
-						}
-					});
-				}
-				else if(userMode == UserMode.DRIVER && driverScreenMode == DriverScreenMode.D_START_RIDE){
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							if(engagementId.equalsIgnoreCase(Data.dEngagementId)){
-								driverScreenMode = DriverScreenMode.D_INITIAL;
-								switchDriverScreen(driverScreenMode);
-								DialogPopup.alertPopup(HomeActivity.this, "", "User has canceled the request");
-							}
-						}
-					});
-				}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	@Override
-	public void onRideRequestTimeout(final String engagementId) {
-		if(userMode == UserMode.DRIVER ){
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					if(driverScreenMode == DriverScreenMode.D_REQUEST_ACCEPT){
-						if(engagementId.equalsIgnoreCase(Data.dEngagementId)){
-							driverScreenMode = DriverScreenMode.D_INITIAL;
-							switchDriverScreen(driverScreenMode);
-						}
-					}
-					else if(driverScreenMode == DriverScreenMode.D_INITIAL){
-						getAndShowAllDriverRequests(HomeActivity.this);
-					}
-				}
-			});
-		}
-	}
 	
 	
 	
@@ -7106,7 +4250,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				HomeActivity.myLocation = location;
 				zoomToCurrentLocationAtFirstLocationFix(location);
 				updatePickupLocation(location);
-				drawLocationChanged(location);
 			}
 		}
 	}
@@ -7521,14 +4664,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 							}
 						});
-						int currentUserStatus = 0;
-						if(UserMode.DRIVER == userMode){
-							currentUserStatus = 1;
-						}
-						else if(UserMode.PASSENGER == userMode){
-							currentUserStatus = 2;
-						}
-						if(currentUserStatus != 0){
+						int currentUserStatus = 2;
 							String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
 							if(resp.contains(HttpRequester.SERVER_TIMEOUT)){
 								String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
@@ -7547,7 +4683,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 									});
 								}
 							}
-						}
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
@@ -7556,7 +4691,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										DialogPopup.dismissLoadingDialog();
 									}
 									startUIAfterGettingUserStatus();
-//									Toast.makeText(HomeActivity.this, "", Toast.LENGTH_SHORT).show();
 								} catch (Exception e) {
 									e.printStackTrace();
 								}

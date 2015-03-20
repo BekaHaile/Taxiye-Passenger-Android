@@ -148,8 +148,6 @@ public class FeedbackActivity extends Activity {
 			performBackPressed();
 		}
 		
-		ratingBarFeedback.setRating(5);
-		
 		
 		if(FeedbackMode.AFTER_RIDE == feedbackMode){
 			textViewTitle.setText("RATE YOUR EXPERIENCE");

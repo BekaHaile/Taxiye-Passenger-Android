@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -870,7 +869,6 @@ public class AccountActivity extends Activity {
 										
 										HomeActivity.userMode = UserMode.PASSENGER;
 										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-										HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
 										
 										ActivityCompat.finishAffinity(activity);
 										Intent intent = new Intent(activity, SplashNewActivity.class);

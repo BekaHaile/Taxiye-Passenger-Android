@@ -339,4 +339,21 @@ public class MapUtils {
 	}
 	
 	
+	
+	public static List<LatLng> getLatLngListFromPath(String result){
+		try {
+	    	 final JSONObject json = new JSONObject(result);
+		     JSONArray routeArray = json.getJSONArray("routes");
+		     JSONObject routes = routeArray.getJSONObject(0);
+		     JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
+		     String encodedString = overviewPolylines.getString("points");
+		     List<LatLng> list = MapUtils.decodeDirectionsPolyline(encodedString);
+		     return list;
+	    } 
+	    catch (Exception e) {
+	    	e.printStackTrace();
+	    	return new ArrayList<LatLng>();
+	    }
+	}
+	
 }

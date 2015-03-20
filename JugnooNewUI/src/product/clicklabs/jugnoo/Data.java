@@ -6,10 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
-import product.clicklabs.jugnoo.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
-import product.clicklabs.jugnoo.datastructure.DriverType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.UserData;
@@ -153,7 +150,7 @@ public class Data {
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 	public static final String TRIAL_SERVER_URL = "https://test.jugnoo.in:8200";
 	
-	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
 	
 	
 	
@@ -211,9 +208,6 @@ public class Data {
 	public static String dEngagementId = "", dCustomerId = "";
 	public static LatLng dCustLatLng;
 	
-	public static ArrayList<DriverRideRequest> driverRideRequests = new ArrayList<DriverRideRequest>();
-	
-	public static CustomerInfo assignedCustomerInfo;
 	
 	public static boolean driversRefreshedFirstTime = false;
 	
@@ -228,7 +222,6 @@ public class Data {
 	public static FacebookUserData facebookUserData;
 	
 	
-	public static ArrayList<DriverType> driverTypes = new ArrayList<DriverType>();
 	
 	public static FareStructure fareStructure;
 	

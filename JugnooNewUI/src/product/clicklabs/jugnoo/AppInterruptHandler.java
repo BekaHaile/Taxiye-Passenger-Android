@@ -4,15 +4,6 @@ import org.json.JSONObject;
 
 public interface AppInterruptHandler {
 	
-	public void onNewRideRequest();
-	
-	public void onCancelRideRequest(String engagementId, boolean acceptedByOtherDriver);
-	
-	public void onRideRequestTimeout(String engagementId);
-	
-	
-	
-	
 	public void refreshDriverLocations();
 	
 	public void onChangeStatePushReceived();

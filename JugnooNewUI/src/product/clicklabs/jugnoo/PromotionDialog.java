@@ -220,7 +220,7 @@ public class PromotionDialog {
 		}
 		if(selectedCoupon != null){
 			dismissAlert();
-			promotionDialogEventHandler.onOkPressed(selectedCoupon);
+			promotionDialogEventHandler.onOkPressed(selectedCoupon, promoCouponList.size());
 		}
 		else{
 			Toast.makeText(activity, "Please select some coupon first", Toast.LENGTH_LONG).show();
