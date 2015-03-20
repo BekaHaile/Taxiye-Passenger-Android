@@ -1,7 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -207,7 +205,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	//Search Layout
 	LinearLayout linearLayoutSearch;
 	EditText editTextSearch;
-	ImageView imageViewSearchArrow;
 	ProgressBar progressBarSearch;
 	ListView listViewSearch;
 	SearchListAdapter searchListAdapter;
@@ -220,6 +217,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	//Request Final Layout
 	RelativeLayout requestFinalLayout;
+	RelativeLayout relativeLayoutInRideInfo;
 	TextView textViewInRidePromoName, textViewInRideFareFactor;
 	Button customerInRideMyLocationBtn;
 	ImageView imageViewInRideDriver, imageViewInRideDriverCar;
@@ -519,7 +517,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		//Search Layout 
 		linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
 		editTextSearch = (EditText) findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Data.latoRegular(this));
-		imageViewSearchArrow = (ImageView) findViewById(R.id.imageViewSearchArrow);
 		progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		listViewSearch = (ListView) findViewById(R.id.listViewSearch);
 		searchListAdapter = new SearchListAdapter();
@@ -533,6 +530,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		//Request Final Layout
 		requestFinalLayout = (RelativeLayout) findViewById(R.id.requestFinalLayout);
 		
+		relativeLayoutInRideInfo = (RelativeLayout) findViewById(R.id.relativeLayoutInRideInfo);
 		textViewInRidePromoName = (TextView) findViewById(R.id.textViewInRidePromoName); textViewInRidePromoName.setTypeface(Data.latoLight(this), Typeface.BOLD);
 		textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor); textViewInRideFareFactor.setTypeface(Data.latoRegular(this));
 		
@@ -935,7 +933,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				editTextSearch.setText("");
+				editTextSearch.requestFocus();
+				editTextSearch.setText(textViewInitialSearch.getText().toString());
+				editTextSearch.setSelection(editTextSearch.getText().length());
+				Utils.showSoftKeyboard(HomeActivity.this, editTextSearch);
 				autoCompleteSearchResults.clear();
 				searchListAdapter.notifyDataSetChanged();
 				passengerScreenMode = PassengerScreenMode.P_SEARCH;
@@ -1000,63 +1001,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				autoCompleteSearchResults.clear();
 				searchListAdapter.notifyDataSetChanged();
 				if(s.length() > 0){
-					if(imageViewSearchArrow.getVisibility() != View.VISIBLE){
-						imageViewSearchArrow.setVisibility(View.VISIBLE);
-					}
 					if(map != null){
 						getSearchResults(s.toString().trim(), map.getCameraPosition().target);
 					}
 				}
-				else{
-					if(imageViewSearchArrow.getVisibility() != View.GONE){
-						imageViewSearchArrow.setVisibility(View.GONE);
-					}
-				}
 			}
 		});
 		
-		imageViewSearchArrow.setOnClickListener(new View.OnClickListener() {
+		editTextSearch.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if(map != null){
-					String searchText = editTextSearch.getText().toString().trim();
-					if(searchText.length() > 0){
-						autoCompleteSearchResults.clear();
-						searchListAdapter.notifyDataSetChanged();
-						try {
-							searchText = URLEncoder.encode(searchText, "utf-8");
-							getSearchResults(searchText, map.getCameraPosition().target);
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
-							editTextSearch.requestFocus();
-							editTextSearch.setError("Invalid search text");
-						}
-					}
-					else{
-						editTextSearch.requestFocus();
-						editTextSearch.setError("Search cannot be empty");
-					}
-				}
-			}
-		});
-		
-		editTextSearch.setOnEditorActionListener(new OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						imageViewSearchArrow.performClick();
-						return false;
-
-					case EditorInfo.IME_ACTION_NEXT:
-						return false;
-
-					default:
-						return false;
-				}
+				editTextSearch.requestFocus();
+				Utils.showSoftKeyboard(HomeActivity.this, editTextSearch);
 			}
 		});
 		
@@ -1504,7 +1461,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void callMapTouchedRefreshDrivers(){
-		if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+		if(userMode == UserMode.PASSENGER && 
+				(PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
 			  if(Data.userData.canChangeLocation == 1){
 				  Data.pickupLatLng = map.getCameraPosition().target;
 				  if(!dontCallRefreshDriver){
@@ -1619,6 +1577,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		@Override
 		public void onClick(View v) {
+			textViewInitialSearch.setText("");
 			if(myLocation != null){
 				if(map.getCameraPosition().zoom < 12){
 					map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 12));
@@ -1794,8 +1753,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				requestFinalLayout.setVisibility(View.GONE);
 				if (Data.userData.canChangeLocation == 1) {
 					centreLocationRl.setVisibility(View.VISIBLE);
+					relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
 				} else {
 					centreLocationRl.setVisibility(View.GONE);
+					relativeLayoutInitialSearchBar.setVisibility(View.GONE);
 				}
 				
 				textViewNearestDriverETA.setVisibility(View.VISIBLE);
@@ -1865,6 +1826,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textViewNearestDriverETA.setVisibility(View.GONE);
 				textViewCurrentRatesInfo.setVisibility(View.GONE);
 				textViewFindingDriver.setVisibility(View.VISIBLE);
+				
+				relativeLayoutInitialSearchBar.setVisibility(View.GONE);
 				
 				requestRideBtn.setVisibility(View.GONE);
 				requestRideLaterBtn.setVisibility(View.GONE);
@@ -2031,7 +1994,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public void setFareFactorToInitialState(){
 		try {
-			if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+			if((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
 				if(Data.userData.fareFactor > 1){
 					textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
 					textViewCurrentRatesInfo.setText("Current rates are "
@@ -2081,19 +2044,32 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			textViewInRideDriverCarNumber.setText("");
 		}
 		
-		textViewInRidePromoName.setText(Data.assignedDriverInfo.promoName);
+		if(!"No Promo Code applied".equalsIgnoreCase(Data.assignedDriverInfo.promoName)){
+			textViewInRidePromoName.setText(Data.assignedDriverInfo.promoName);
+		}
+		else{
+			textViewInRidePromoName.setText("");
+		}
+
 		
+		textViewInRideFareFactor.setVisibility(View.VISIBLE);
 		if(Data.userData.fareFactor > 1){
-			textViewInRideFareFactor.setVisibility(View.VISIBLE);
 			textViewInRideFareFactor.setText("Price: "+decimalFormat.format(Data.userData.fareFactor)+"x");
 		}
 		else if(Data.userData.fareFactor < 1){
-			textViewInRideFareFactor.setVisibility(View.VISIBLE);
 			textViewInRideFareFactor.setText("Price: "+decimalFormat.format(Data.userData.fareFactor)+"x");
 		}
 		else{
-			textViewInRideFareFactor.setVisibility(View.GONE);
+			textViewInRideFareFactor.setText("");
 		}
+		
+		if(textViewInRidePromoName.getText().length() == 0 && textViewInRideFareFactor.getText().length() == 0){
+			relativeLayoutInRideInfo.setVisibility(View.GONE);
+		}
+		else{
+			relativeLayoutInRideInfo.setVisibility(View.VISIBLE);
+		}
+		
 		
 		
 		
@@ -2200,7 +2176,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				setUserData();
 		//		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
 				
-				if(userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL){
+				if(userMode == UserMode.PASSENGER && 
+						(PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
 					  startTimerUpdateDrivers();
 				}
 			    
@@ -2401,9 +2378,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	public Thread autoCompleteThread;
 	
-	public void getSearchResults(final String searchText, final LatLng latLng){
+	public synchronized void getSearchResults(final String searchText, final LatLng latLng){
 		try {
-			imageViewSearchArrow.setVisibility(View.GONE);
 			progressBarSearch.setVisibility(View.VISIBLE);
 			
 			if(autoCompleteThread != null){
@@ -2425,11 +2401,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}
 	}
 	
-	public void setSearchResultsToList(){
+	public synchronized void setSearchResultsToList(){
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				imageViewSearchArrow.setVisibility(View.VISIBLE);
 				progressBarSearch.setVisibility(View.GONE);
 				
 				if(autoCompleteSearchResults.size() == 0){
@@ -2442,7 +2417,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public void getSearchResultFromPlaceId(final String placeId){
+	public synchronized void getSearchResultFromPlaceId(final String placeId){
 		progressBarInitialSearch.setVisibility(View.VISIBLE);
 		new Thread(new Runnable() {
 			@Override
@@ -2453,13 +2428,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		}).start();
 	}
 	
-	public void setSearchResultToMapAndText(final SearchResult searchResult){
+	public synchronized void setSearchResultToMapAndText(final SearchResult searchResult){
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				progressBarInitialSearch.setVisibility(View.GONE);
 				if(map != null && searchResult != null){
-					textViewInitialSearch.setText(searchResult.name + " " +searchResult.address);
+					textViewInitialSearch.setText(searchResult.name);
 					map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 14), 1000, null);
 				}
 			}
@@ -2543,6 +2518,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			return convertView;
 		}
 		
+		@Override
+		public void notifyDataSetChanged() {
+			if(autoCompleteSearchResults.size() > 1){
+				if(autoCompleteSearchResults.contains(new AutoCompleteSearchResult("No results found", "", ""))){
+					autoCompleteSearchResults.remove(autoCompleteSearchResults.indexOf(new AutoCompleteSearchResult("No results found", "", "")));
+				}
+			}
+			super.notifyDataSetChanged();
+		}
+		
 	}
 	
 	
@@ -2566,7 +2551,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    LatLng destination;
 	    
 	    boolean driverAcceptPushRecieved;
-	    String etaMinutes = "1", message = "";
+	    String etaMinutes = "1", farAwayCity = "";
 	    
 	    public GetDistanceTimeAddress(LatLng destination, boolean driverAcceptPushRecieved){
 	    	this.distance = "";
@@ -2646,8 +2631,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    					etaMinutes = jObj.getString("eta");
 		    					Data.userData.fareFactor = jObj.getDouble("fare_factor");
 		    					
-		    					if(jObj.has("message")){
-		    						message = jObj.getString("message");
+		    					if(jObj.has("far_away_city")){
+		    						farAwayCity = jObj.getString("far_away_city");
 		    					}
 		    				}
 		    				catch(Exception e){
@@ -2707,14 +2692,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				        if(!"error".equalsIgnoreCase(result)){
 					        if(!driverAcceptPushRecieved){
 					        	if(Data.driverInfos.size() == 0){
-						        	textViewNearestDriverETA.setText("No drivers nearby.");
+						        	textViewNearestDriverETA.setText("No drivers nearby");
 					        	}
 					        	else{
 					        		if("1".equalsIgnoreCase(etaMinutes)){
-							        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minute away");
+							        	textViewNearestDriverETA.setText("Nearest driver is "+etaMinutes+" minute away");
 					        		}
 					        		else{
-							        	textViewNearestDriverETA.setText("Nearest Driver is "+etaMinutes+" minutes away");
+							        	textViewNearestDriverETA.setText("Nearest driver is "+etaMinutes+" minutes away");
 					        		}
 					        	}
 					        }
@@ -2725,8 +2710,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					        }
 				        }
 				        
-				        if(!"".equalsIgnoreCase(message)){
-				        	textViewNearestDriverETA.setText(message);
+				        if(!"".equalsIgnoreCase(farAwayCity)){
+				        	textViewNearestDriverETA.setText(farAwayCity);
 				        }
 				        
 				        setFareFactorToInitialState();
@@ -2800,7 +2785,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public void showDriverMarkersAndPanMap(final LatLng userLatLng){
-		if(userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_INITIAL || passengerScreenMode == PassengerScreenMode.P_ASSIGNING)){
+		if(userMode == UserMode.PASSENGER && 
+				((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) 
+						|| PassengerScreenMode.P_ASSIGNING == passengerScreenMode)){
 				if(map != null){
 					map.clear();
 					addCurrentLocationAddressMarker(userLatLng);

@@ -46,16 +46,6 @@
                 android:textCursorDrawable="@null"
                 android:textSize="30px" />
 
-            <ImageView
-                android:id="@+id/imageViewSearchArrow"
-                android:layout_width="74px"
-                android:layout_height="74px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20px"
-                android:padding="10px"
-                android:src="@drawable/arrow_selector"
-                android:tag="mwar" />
 
             <ProgressBar
                 android:id="@+id/progressBarSearch"

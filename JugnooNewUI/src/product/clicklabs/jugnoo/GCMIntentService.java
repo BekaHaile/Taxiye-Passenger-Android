@@ -83,7 +83,7 @@ public class GCMIntentService extends IntentService {
 				
 				builder.setWhen(when);
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-				builder.setSmallIcon(R.drawable.notif_icon);
+				builder.setSmallIcon(R.drawable.notification_icon);
 				builder.setContentIntent(intent);
 				
 				
@@ -134,7 +134,7 @@ public class GCMIntentService extends IntentService {
 				
 				builder.setWhen(when);
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-				builder.setSmallIcon(R.drawable.notif_icon);
+				builder.setSmallIcon(R.drawable.notification_icon);
 				builder.setContentIntent(intent);
 				
 				
@@ -177,13 +177,13 @@ public class GCMIntentService extends IntentService {
 				builder.setDefaults(Notification.DEFAULT_ALL);
 				builder.setWhen(when);
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-				builder.setSmallIcon(R.drawable.notif_icon);
+				builder.setSmallIcon(R.drawable.notification_icon);
 				builder.setContentIntent(intent);
 				
 				
 				
 				Notification notification = builder.build();
-				notificationManager.notify(NOTIFICATION_ID, notification);
+				notificationManager.notify(notificationId, notification);
 				
 				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");

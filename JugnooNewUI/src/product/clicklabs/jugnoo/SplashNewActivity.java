@@ -30,6 +30,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -679,7 +680,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
 			startActivity(new Intent(SplashNewActivity.this, HomeActivity.class));
-			finish();
+			ActivityCompat.finishAffinity(this);
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 	}

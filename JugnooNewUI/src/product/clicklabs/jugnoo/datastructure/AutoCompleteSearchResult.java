@@ -16,5 +16,19 @@ public class AutoCompleteSearchResult{
 		return name + " "+ address +" " + placeId;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		try{
+			if(((AutoCompleteSearchResult)o).name.equalsIgnoreCase(this.name)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch(Exception e){
+			return false;
+		}
+	}
+	
 	
 }
