@@ -278,14 +278,14 @@ public class MapUtils {
 		return searchResults;
 	}
 	
-	public static ArrayList<AutoCompleteSearchResult> getAutoCompleteSearchResultsFromGooglePlaces(String searchText) {
+	public static ArrayList<AutoCompleteSearchResult> getAutoCompleteSearchResultsFromGooglePlaces(String searchText, LatLng latLng) {
 		ArrayList<AutoCompleteSearchResult> searchResults = new ArrayList<AutoCompleteSearchResult>();
 		try{
 			searchText = URLEncoder.encode(searchText, "utf8");
 			String ignr2 = "https://maps.googleapis.com/maps/api/place/autocomplete/json?"+
 					"input="+ URLEncoder.encode(searchText, "utf8")
 					+"&type=address&location=" 
-					+ "" + "," + ""+ "&radius=500"
+					+ latLng.latitude + "," + latLng.longitude + "&radius=50"
 					+"&key="+Data.MAPS_BROWSER_KEY;
 			//https://maps.googleapis.com/maps/api/place/autocomplete/json?input=pizza&type=address&location=30.75,76.78&radius=500&key=
 			//AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
@@ -294,11 +294,26 @@ public class MapUtils {
 			JSONArray info = null;
 			info = jsonObj.getJSONArray("predictions");
 			for (int i = 0; i < info.length(); i++) {
-				searchResults.add(new AutoCompleteSearchResult(info.getJSONObject(i).getString("description"), info.getJSONObject(i).getString("place_id")));
+				JSONObject jInfoI = info.getJSONObject(i);
+				String name = jInfoI.getString("description"), address = "";
+				JSONArray jTerms = jInfoI.getJSONArray("terms");
+				for(int j=0; j<jTerms.length(); j++){
+					if(j == 0){
+						name = jTerms.getJSONObject(j).getString("value");
+					}
+					else if(j < jTerms.length()-1){
+						address = address + jTerms.getJSONObject(j).getString("value") + ", ";
+					}
+					else{
+						address = address + jTerms.getJSONObject(j).getString("value");
+					}
+				}
+				searchResults.add(new AutoCompleteSearchResult(name, address, jInfoI.getString("place_id")));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		Log.e("getAutoCompleteSearchResultsFromGooglePlaces searchResults = ", "="+searchResults);
 		return searchResults;
 	}
 	

@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,6 +17,7 @@ import product.clicklabs.jugnoo.datastructure.ActivityCloser;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppMode;
+import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
@@ -67,21 +70,29 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -164,7 +175,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	//Top RL
 	RelativeLayout topRl;
-	ImageView imageViewMenu;
+	ImageView imageViewMenu, imageViewSearchCancel;
 	TextView title;
 	Button checkServerBtn, toggleDebugModeBtn;
 	ImageView jugnooShopImageView, imageViewJugnooApp;
@@ -186,6 +197,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout initialLayout;
 	TextView textViewNearestDriverETA, textViewCurrentRatesInfo, textViewFindingDriver;
 	Button myLocationBtn, requestRideBtn, requestRideLaterBtn, initialCancelRideBtn;
+	RelativeLayout relativeLayoutInitialSearchBar;
+	TextView textViewInitialSearch;
+	ProgressBar progressBarInitialSearch;
+	
+	
+	
+	
+	//Search Layout
+	LinearLayout linearLayoutSearch;
+	EditText editTextSearch;
+	ImageView imageViewSearchArrow;
+	ProgressBar progressBarSearch;
+	ListView listViewSearch;
+	SearchListAdapter searchListAdapter;
+	
 	
 	
 	
@@ -265,7 +291,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	Location lastLocation;
 	
-	ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>(); 
+	ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults = new ArrayList<AutoCompleteSearchResult>(); 
 	
 	
 	DecimalFormat decimalFormat = new DecimalFormat("#.#");
@@ -438,10 +464,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		//Top RL
 		topRl = (RelativeLayout) findViewById(R.id.topRl);
 		imageViewMenu = (ImageView) findViewById(R.id.imageViewMenu);
+		imageViewSearchCancel = (ImageView) findViewById(R.id.imageViewSearchCancel);
 		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
-//		favBtn = (Button) findViewById(R.id.favBtn);
 		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
 		imageViewJugnooApp = (ImageView) findViewById(R.id.imageViewJugnooApp);
 		
@@ -479,9 +505,25 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		requestRideBtn = (Button) findViewById(R.id.requestRideBtn); requestRideBtn.setTypeface(Data.latoRegular(this));
 		requestRideLaterBtn = (Button) findViewById(R.id.requestRideLaterBtn); requestRideLaterBtn.setTypeface(Data.latoRegular(this));
 		initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn); initialCancelRideBtn.setTypeface(Data.latoRegular(this));
+		relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
+		textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Data.latoRegular(this));
+		progressBarInitialSearch = (ProgressBar) findViewById(R.id.progressBarInitialSearch); progressBarInitialSearch.setVisibility(View.GONE);
 		
 		
 		
+		
+		
+		
+		
+		
+		//Search Layout 
+		linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
+		editTextSearch = (EditText) findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Data.latoRegular(this));
+		imageViewSearchArrow = (ImageView) findViewById(R.id.imageViewSearchArrow);
+		progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
+		listViewSearch = (ListView) findViewById(R.id.listViewSearch);
+		searchListAdapter = new SearchListAdapter();
+		listViewSearch.setAdapter(searchListAdapter);
 		
 		
 		
@@ -664,6 +706,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
+		imageViewSearchCancel.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+			}
+		});
 		
 		
 		
@@ -880,6 +931,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		});
 		
 		
+		relativeLayoutInitialSearchBar.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				editTextSearch.setText("");
+				autoCompleteSearchResults.clear();
+				searchListAdapter.notifyDataSetChanged();
+				passengerScreenMode = PassengerScreenMode.P_SEARCH;
+				switchPassengerScreen(passengerScreenMode);
+			}
+		});
 		
 		
 		
@@ -904,6 +966,99 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//Search Layout Events
+		linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			}
+		});
+		
+		editTextSearch.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				autoCompleteSearchResults.clear();
+				searchListAdapter.notifyDataSetChanged();
+				if(s.length() > 0){
+					if(imageViewSearchArrow.getVisibility() != View.VISIBLE){
+						imageViewSearchArrow.setVisibility(View.VISIBLE);
+					}
+					if(map != null){
+						getSearchResults(s.toString().trim(), map.getCameraPosition().target);
+					}
+				}
+				else{
+					if(imageViewSearchArrow.getVisibility() != View.GONE){
+						imageViewSearchArrow.setVisibility(View.GONE);
+					}
+				}
+			}
+		});
+		
+		imageViewSearchArrow.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(map != null){
+					String searchText = editTextSearch.getText().toString().trim();
+					if(searchText.length() > 0){
+						autoCompleteSearchResults.clear();
+						searchListAdapter.notifyDataSetChanged();
+						try {
+							searchText = URLEncoder.encode(searchText, "utf-8");
+							getSearchResults(searchText, map.getCameraPosition().target);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+							editTextSearch.requestFocus();
+							editTextSearch.setError("Invalid search text");
+						}
+					}
+					else{
+						editTextSearch.requestFocus();
+						editTextSearch.setError("Search cannot be empty");
+					}
+				}
+			}
+		});
+		
+		editTextSearch.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				int result = actionId & EditorInfo.IME_MASK_ACTION;
+				switch (result) {
+					case EditorInfo.IME_ACTION_DONE:
+						imageViewSearchArrow.performClick();
+						return false;
+
+					case EditorInfo.IME_ACTION_NEXT:
+						return false;
+
+					default:
+						return false;
+				}
+			}
+		});
 		
 		
 		
@@ -1284,9 +1439,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			
-			enableJugnooShopUI();
-			enableJugnooMealsUI();
-			
 			switchUserScreen(userMode);
 			
 			startUIAfterGettingUserStatus();
@@ -1615,7 +1767,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
+		enableJugnooShopUI();
+		enableJugnooMealsUI();
 		
 		switch(mode){
 		
@@ -1637,6 +1790,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				initialLayout.setVisibility(View.VISIBLE);
+				linearLayoutSearch.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				if (Data.userData.canChangeLocation == 1) {
 					centreLocationRl.setVisibility(View.VISIBLE);
@@ -1667,12 +1821,33 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				startTimerUpdateDrivers();
 				
+				
+				imageViewSearchCancel.setVisibility(View.GONE);
+				
+				break;
+				
+				
+			case P_SEARCH:
+				
+				initialLayout.setVisibility(View.GONE);
+				linearLayoutSearch.setVisibility(View.VISIBLE);
+				requestFinalLayout.setVisibility(View.GONE);
+				centreLocationRl.setVisibility(View.GONE);
+				
+				jugnooShopImageView.setVisibility(View.GONE);
+				imageViewJugnooApp.setVisibility(View.GONE);
+				
+				
+				imageViewSearchCancel.setVisibility(View.VISIBLE);
+				
+				
 				break;
 				
 				
 			case P_ASSIGNING:
 				
 				initialLayout.setVisibility(View.VISIBLE);
+				linearLayoutSearch.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
 				
@@ -1698,6 +1873,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				cancelTimerUpdateDrivers();
+				
+				imageViewSearchCancel.setVisibility(View.GONE);
 				
 				break;
 				
@@ -1745,6 +1922,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				initialLayout.setVisibility(View.GONE);
+				linearLayoutSearch.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.GONE);
 				
@@ -1759,6 +1937,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				startDriverLocationUpdateTimer();
 				
 				cancelTimerUpdateDrivers();
+				
+
+				imageViewSearchCancel.setVisibility(View.GONE);
 				
 				break;
 				
@@ -1787,6 +1968,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				
 				initialLayout.setVisibility(View.GONE);
+				linearLayoutSearch.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.GONE);
 				
@@ -1808,6 +1990,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					textViewInRideLowJugnooCash.setVisibility(View.GONE);
 				}
 				
+
+				imageViewSearchCancel.setVisibility(View.GONE);
 				
 				break;
 				
@@ -1816,8 +2000,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				cancelMapAnimateAndUpdateRideDataTimer();
 				
 				initialLayout.setVisibility(View.GONE);
+				linearLayoutSearch.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
+
+				imageViewSearchCancel.setVisibility(View.GONE);
 				
 				break;
 				
@@ -1825,9 +2012,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			default:
 
 				initialLayout.setVisibility(View.VISIBLE);
+				linearLayoutSearch.setVisibility(View.GONE);
 				requestFinalLayout.setVisibility(View.GONE);
 				endRideReviewRl.setVisibility(View.GONE);
 				centreLocationRl.setVisibility(View.GONE);
+
+				imageViewSearchCancel.setVisibility(View.GONE);
 				
 				
 		}
@@ -2163,7 +2353,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	public void onBackPressed() {
 		try{
-			ActivityCompat.finishAffinity(this);
+			if(PassengerScreenMode.P_SEARCH == passengerScreenMode){
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+			}
+			else{
+				ActivityCompat.finishAffinity(this);
+			}
 		} catch(Exception e){
 			e.printStackTrace();
 			ActivityCompat.finishAffinity(this);
@@ -2203,6 +2399,165 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+	public Thread autoCompleteThread;
+	
+	public void getSearchResults(final String searchText, final LatLng latLng){
+		try {
+			imageViewSearchArrow.setVisibility(View.GONE);
+			progressBarSearch.setVisibility(View.VISIBLE);
+			
+			if(autoCompleteThread != null){
+				autoCompleteThread.interrupt();
+			}
+			
+			autoCompleteThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					autoCompleteSearchResults.clear();
+					autoCompleteSearchResults.addAll(MapUtils.getAutoCompleteSearchResultsFromGooglePlaces(searchText, latLng));
+					setSearchResultsToList();
+					autoCompleteThread = null;
+				}
+			});
+			autoCompleteThread.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setSearchResultsToList(){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				imageViewSearchArrow.setVisibility(View.VISIBLE);
+				progressBarSearch.setVisibility(View.GONE);
+				
+				if(autoCompleteSearchResults.size() == 0){
+					autoCompleteSearchResults.add(new AutoCompleteSearchResult("No results found", "", ""));
+				}
+				
+				searchListAdapter.notifyDataSetChanged();
+			}
+		});
+	}
+	
+	
+	public void getSearchResultFromPlaceId(final String placeId){
+		progressBarInitialSearch.setVisibility(View.VISIBLE);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				SearchResult searchResult = MapUtils.getSearchResultsFromPlaceIdGooglePlaces(placeId);
+				setSearchResultToMapAndText(searchResult);
+			}
+		}).start();
+	}
+	
+	public void setSearchResultToMapAndText(final SearchResult searchResult){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				progressBarInitialSearch.setVisibility(View.GONE);
+				if(map != null && searchResult != null){
+					textViewInitialSearch.setText(searchResult.name + " " +searchResult.address);
+					map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 14), 1000, null);
+				}
+			}
+		});
+	}
+	
+	
+	
+	class ViewHolderSearchItem {
+		TextView textViewSearchName, textViewSearchAddress;
+		LinearLayout relative;
+		int id;
+	}
+
+	class SearchListAdapter extends BaseAdapter {
+		LayoutInflater mInflater;
+		ViewHolderSearchItem holder;
+
+		public SearchListAdapter() {
+			mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		}
+
+		@Override
+		public int getCount() {
+			return autoCompleteSearchResults.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				holder = new ViewHolderSearchItem();
+				convertView = mInflater.inflate(R.layout.list_item_search_item, null);
+				
+				holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName); 
+				holder.textViewSearchName.setTypeface(Data.latoRegular(HomeActivity.this));
+				holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress); 
+				holder.textViewSearchAddress.setTypeface(Data.latoRegular(HomeActivity.this));
+				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
+				
+				holder.relative.setTag(holder);
+				
+				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
+				ASSL.DoMagic(holder.relative);
+				
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolderSearchItem) convertView.getTag();
+			}
+			
+			
+			holder.id = position;
+			
+			holder.textViewSearchName.setText(autoCompleteSearchResults.get(position).name);
+			holder.textViewSearchAddress.setText(autoCompleteSearchResults.get(position).address);
+			
+			holder.relative.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					holder = (ViewHolderSearchItem) v.getTag();
+					Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
+					AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
+					if(!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)){
+						textViewInitialSearch.setText(autoCompleteSearchResult.name);
+						passengerScreenMode = PassengerScreenMode.P_INITIAL;
+						switchPassengerScreen(passengerScreenMode);
+						getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
+					}
+				}
+			});
+			return convertView;
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	class GetDistanceTimeAddress extends AsyncTask<Void, Void, String>{
 	    String url;
 	    
@@ -2211,7 +2566,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	    LatLng destination;
 	    
 	    boolean driverAcceptPushRecieved;
-	    String etaMinutes = "1";
+	    String etaMinutes = "1", message = "";
 	    
 	    public GetDistanceTimeAddress(LatLng destination, boolean driverAcceptPushRecieved){
 	    	this.distance = "";
@@ -2290,6 +2645,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    					new JSONParser().parseDriversToShow(jObj, "drivers");
 		    					etaMinutes = jObj.getString("eta");
 		    					Data.userData.fareFactor = jObj.getDouble("fare_factor");
+		    					
+		    					if(jObj.has("message")){
+		    						message = jObj.getString("message");
+		    					}
 		    				}
 		    				catch(Exception e){
 		    					e.printStackTrace();
@@ -2364,6 +2723,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				        	if(!driverAcceptPushRecieved){
 					        	textViewNearestDriverETA.setText("Couldn't find drivers nearby.");
 					        }
+				        }
+				        
+				        if(!"".equalsIgnoreCase(message)){
+				        	textViewNearestDriverETA.setText(message);
 				        }
 				        
 				        setFareFactorToInitialState();

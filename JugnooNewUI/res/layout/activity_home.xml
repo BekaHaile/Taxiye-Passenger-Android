@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -100,6 +100,51 @@
                             android:visibility="gone" />
                     </RelativeLayout>
 
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutInitialSearchBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="90px"
+                        android:layout_below="@+id/relativeLayoutRequestInfo"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="20px"
+                        android:background="@drawable/background_white_rounded_bordered"
+                        android:splitMotionEvents="false" >
+
+                        <ImageView
+                            android:id="@+id/imageViewInitialSearchGPSIcon"
+                            android:layout_width="30px"
+                            android:layout_height="44px"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="18px"
+                            android:tag="mwar" 
+                            android:src="@drawable/search_location_icon"
+                            />
+
+                        <TextView
+                            android:id="@+id/textViewInitialSearch"
+                            android:layout_width="580px"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20px"
+                            android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
+                            android:background="@color/transparent"
+                            android:hint="Search pickup location"
+                            android:singleLine="true"
+                            android:textColor="@color/black_text"
+                            android:textSize="30px" />
+                        
+                         <ProgressBar 
+                            android:id="@+id/progressBarInitialSearch"
+                            android:layout_width="70px"
+                            android:layout_height="70px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20px"
+                            
+                            />
+                        
+                    </RelativeLayout>
+
                     <Button
                         android:id="@+id/myLocationBtn"
                         android:layout_width="80px"
@@ -154,13 +199,91 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
+                <LinearLayout
+                    android:id="@+id/linearLayoutSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="96px"
+                    android:background="@color/white_translucent"
+                    android:orientation="vertical"
+                    android:splitMotionEvents="false" 
+                    android:visibility="gone"
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutSearchBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="90px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="20px"
+                        android:background="@drawable/background_white_rounded_bordered"
+                        android:splitMotionEvents="false" >
+
+                        <ImageView
+                            android:id="@+id/imageViewSearchGPSIcon"
+                            android:layout_width="30px"
+                            android:layout_height="44px"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="18px"
+                            android:tag="mwar" 
+                            android:src="@drawable/search_location_icon"
+                            />
+
+                        <EditText
+                            android:id="@+id/editTextSearch"
+                            android:layout_width="510px"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20px"
+                            android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
+                            android:background="@color/transparent"
+                            android:hint="Search pickup location"
+                            android:singleLine="true"
+                            android:textColor="@color/black_text"
+                            android:textSize="30px"
+                            android:textCursorDrawable="@null"
+                             />
+
+                        <ImageView
+                            android:id="@+id/imageViewSearchArrow"
+                            android:layout_width="74px"
+                            android:layout_height="74px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20px"
+                            android:padding="10px"
+                            android:src="@drawable/arrow_selector"
+                            android:tag="mwar" />
+                        
+                        <ProgressBar 
+                            android:id="@+id/progressBarSearch"
+                            android:layout_width="70px"
+                            android:layout_height="70px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20px"
+                            
+                            />
+                        
+                    </RelativeLayout>
+
+                    <ListView
+                        android:id="@+id/listViewSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@color/transparent"
+                        android:dividerHeight="0px"
+                        android:splitMotionEvents="false" >
+                    </ListView>
+                </LinearLayout>
+
                 <RelativeLayout
                     android:id="@+id/requestFinalLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutInRideInfo"
@@ -394,7 +517,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="gone" >
 
                     <ImageView
                         android:id="@+id/centreLocationPin"
@@ -420,7 +543,7 @@
                 android:layout_marginTop="96px"
                 android:background="@color/white_light_grey"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <ScrollView
                     android:id="@+id/scrollViewEndRide"
@@ -843,7 +966,7 @@
                                     android:paddingBottom="7px"
                                     android:paddingTop="7px"
                                     android:text="@string/rupee"
-                                    android:textColor="@color/grey_dark"
+                                    android:textColor="@color/black_text"
                                     android:textSize="30px" />
 
                                 <TextView
@@ -856,7 +979,7 @@
                                     android:paddingRight="20px"
                                     android:paddingTop="7px"
                                     android:text="0"
-                                    android:textColor="@color/grey_dark"
+                                    android:textColor="@color/black_text"
                                     android:textSize="30px" />
                             </RelativeLayout>
                         </LinearLayout>
@@ -1031,6 +1154,17 @@
                         android:text="AUTOS"
                         android:textColor="@color/white"
                         android:textSize="40px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewSearchCancel"
+                        android:layout_width="80px"
+                        android:layout_height="80px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10px"
+                        android:padding="10px"
+                        android:src="@drawable/cross_button_selector"
+                        android:tag="mwar" />
                 </RelativeLayout>
 
                 <LinearLayout
