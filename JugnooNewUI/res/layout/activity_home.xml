@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -532,7 +532,7 @@
                 android:layout_marginTop="96px"
                 android:background="@color/white_light_grey"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <ScrollView
                     android:id="@+id/scrollViewEndRide"
@@ -1069,7 +1069,7 @@
                             android:layout_width="648px"
                             android:layout_height="100px"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="30px"
+                            android:layout_marginTop="110px"
                             android:background="@drawable/button_yellow_selector"
                             android:text="OK"
                             android:textColor="@drawable/text_color_white_alpha_selector"
