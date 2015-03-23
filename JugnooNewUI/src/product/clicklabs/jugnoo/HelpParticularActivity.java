@@ -132,18 +132,12 @@ public class HelpParticularActivity extends Activity{
 									Log.i("Server response faq ", "response = " + response);
 									try {
 										jObj = new JSONObject(response);
-										if(!jObj.isNull("error")){
-											String errorMessage = jObj.getString("error");
-											if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-												HomeActivity.logoutUser(activity);
-											}
-											else{
-												openHelpData("Some error occured. Tap to retry.", true);
-											}
-										}
-										else{
+										if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 											String data = jObj.getString("data");
 											openHelpData(data, false);
+										}
+										else{
+											openHelpData("Some error occured. Tap to retry.", true);
 										}
 									}  catch (Exception exception) {
 										exception.printStackTrace();

@@ -332,11 +332,14 @@ public class GCMIntentService extends IntentService {
 	    	    					sendChangePortAckToServer(this, jObj);
 	    	    				}
 	    	    				else if(PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag){
-//	    	    				    balance : body.balance,
-//	    	    				    money_added : moneyAdded,
-	    	    					
-	    	    					
-	    	    					
+	    	    					String message1 = jObj.getString("message");
+	    	    					double balance = jObj.getDouble("balance");
+	    	    					if (HomeActivity.appInterruptHandler != null) {
+										HomeActivity.appInterruptHandler.onJugnooCashAddedByDriver(balance, message1);
+										notificationManagerResume(this, message1, false);
+									} else {
+										notificationManager(this, message1, false);
+									}
 	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){

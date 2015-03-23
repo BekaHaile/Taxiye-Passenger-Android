@@ -1760,7 +1760,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				}
 				
 				textViewNearestDriverETA.setVisibility(View.VISIBLE);
-				textViewNearestDriverETA.setText("Finding drivers near you...");
+				textViewNearestDriverETA.setText("Finding nearby drivers...");
 				
 				setFareFactorToInitialState();
 				
@@ -2577,7 +2577,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							addCurrentLocationAddressMarker(destination);
 						}
 				        
-				        textViewNearestDriverETA.setText("Finding nearby drivers for you...");
+				        textViewNearestDriverETA.setText("Finding nearby drivers...");
 				        dontCallRefreshDriver = false;
 				        
 					}
@@ -3181,6 +3181,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												e.printStackTrace();
 											}
 											
+											try{
+												if(jObj.has("jugnoo_balance")){
+													Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
+												}
+											} catch(Exception e){
+												e.printStackTrace();
+											}
+											
 											double baseFare = Data.fareStructure.fixedFare;
 											if(jObj.has("base_fare")){
 												baseFare = jObj.getDouble("base_fare");
@@ -3210,6 +3218,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 											map.clear();
 											passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 											switchPassengerScreen(passengerScreenMode);
+											
+											setUserData();
 											
 										}
 										else{
@@ -4953,7 +4963,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	@Override
-	public void onJugnooCashAddedByDriver(final double jugnooBalance, final double moneyAdded) {
+	public void onJugnooCashAddedByDriver(final double jugnooBalance, final String message) {
 		
 		runOnUiThread(new Runnable() {
 			
@@ -4966,8 +4976,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					}
 					DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, 
 							"Jugnoo Cash added", 
-							"Your driver just added to your wallet "
-							+HomeActivity.this.getResources().getString(R.string.rupee) +" "+decimalFormat.format(moneyAdded), 
+							message, 
 							"Check Balance", "Call Support", 
 							new View.OnClickListener() {
 								
@@ -4975,7 +4984,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								public void onClick(View v) {
 									HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
 									overridePendingTransition(R.anim.right_in, R.anim.right_out);
-									FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
 								}
 							}, 
 							new View.OnClickListener() {

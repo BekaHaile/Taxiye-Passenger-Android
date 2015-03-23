@@ -20,6 +20,6 @@ public interface AppInterruptHandler {
 	
 	public void onAfterRideFeedbackSubmitted(int givenRating);
 	
-	public void onJugnooCashAddedByDriver(double jugnooBalance, double moneyAdded);
+	public void onJugnooCashAddedByDriver(double jugnooBalance, String message);
 	
 }
