@@ -31,6 +31,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 public class GCMIntentService extends IntentService {
 	
 	public static final int NOTIFICATION_ID = 1;
+	public static final int PROMOTION_NOTIFICATION_ID = 1212;
     
     public GCMIntentService() {
         super("GcmIntentService");
@@ -82,7 +83,7 @@ public class GCMIntentService extends IntentService {
 				
 				builder.setWhen(when);
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-				builder.setSmallIcon(R.drawable.notif_icon);
+				builder.setSmallIcon(R.drawable.notification_icon);
 				builder.setContentIntent(intent);
 				
 				
@@ -133,7 +134,7 @@ public class GCMIntentService extends IntentService {
 				
 				builder.setWhen(when);
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-				builder.setSmallIcon(R.drawable.notif_icon);
+				builder.setSmallIcon(R.drawable.notification_icon);
 				builder.setContentIntent(intent);
 				
 				
@@ -151,6 +152,49 @@ public class GCMIntentService extends IntentService {
 			
 		}
 	    
+		
+		@SuppressWarnings("deprecation")
+		private void notificationManagerCustomID(Context context, String message, int notificationId) {
+			
+			try {
+				long when = System.currentTimeMillis();
+				
+				NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+				
+				Log.v("message",","+message);
+				
+				Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+				
+				notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+				
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+				builder.setAutoCancel(true);
+				builder.setContentTitle("Jugnoo");
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+				builder.setContentText(message);
+				builder.setTicker(message);
+				builder.setDefaults(Notification.DEFAULT_ALL);
+				builder.setWhen(when);
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+				builder.setSmallIcon(R.drawable.notification_icon);
+				builder.setContentIntent(intent);
+				
+				
+				
+				Notification notification = builder.build();
+				notificationManager.notify(notificationId, notification);
+				
+				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+				wl.acquire(15000);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
 	    
 	    public static void clearNotifications(Context context){
 			NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -239,50 +283,17 @@ public class GCMIntentService extends IntentService {
 	    	    					 }
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ENDED.getOrdinal() == flag){
-
-	    	    					 Data.totalDistance = jObj.getDouble("distance_travelled");
-	    	    					 Data.totalFare = jObj.getDouble("fare");
-	    	    					 Data.waitTime = jObj.getString("wait_time");
-	    	    					 try{
-	    	    						 Data.rideTime = jObj.getString("ride_time");
-	    	    					 } catch(Exception e){
-	    	    						 e.printStackTrace();
-	    	    						 Data.rideTime = "10";
-	    	    					 }
-	    	    					 
-	    	    					 try{
-	    	    						 if(jObj.has("rate_app")){
-	    	    							 Data.customerRateAppFlag = jObj.getInt("rate_app");
-	    	    						 }
-	    	    					 } catch(Exception e){
-	    	    						 e.printStackTrace();
-	    	    					 }
-	    	    					 
+	    	    					 String engagementId = jObj.getString("engagement_id");
 	    	    					 
 	    	    					 if (HomeActivity.appInterruptHandler != null) {
 	    	    						 if(PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode){
 	    	    							 notificationManagerResume(this, "Your ride has ended.", false);
-		    	    						 HomeActivity.appInterruptHandler.customerEndRideInterrupt(jObj);
+		    	    						 HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
 	    	    						 }
 	    	    					 }
 	    	    					 else{
 	    	    						 notificationManager(this, "Your ride has ended.", false);
 	    	    					 }
-	    	    					 String SHARED_PREF_NAME = "myPref",
-		    	    						 SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
-		    	    								 P_RIDE_END = "P_RIDE_END",
-		    	    										 SP_C_TOTAL_DISTANCE = "c_total_distance",
-		    	    											SP_C_TOTAL_FARE = "c_total_fare", 
-		    	    											SP_C_WAIT_TIME = "c_wait_time",
-		    	    											SP_C_RIDE_TIME = "c_ride_time";
-		    	    						 SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-		    	    						 Editor editor = pref.edit();
-		    	    						 editor.putString(SP_CUSTOMER_SCREEN_MODE, P_RIDE_END);
-		    	    						 editor.putString(SP_C_TOTAL_DISTANCE, ""+Data.totalDistance);
-		    	    						 editor.putString(SP_C_TOTAL_FARE, ""+Data.totalFare);
-		    	    						 editor.putString(SP_C_WAIT_TIME, Data.waitTime);
-		    	    						 editor.putString(SP_C_RIDE_TIME, Data.rideTime);
-		    	    						 editor.commit();
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag){
 	    	    					 if (HomeActivity.appInterruptHandler != null) {
@@ -315,27 +326,21 @@ public class GCMIntentService extends IntentService {
 								}
 	    	    				else if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag){
 	    	    					 String message1 = jObj.getString("message");
-	    	    					 if (HomeActivity.activity == null) {
-		    	    					 notificationManager(this, ""+message1, false);
-	    	    					 }
-	    	    					 else{
-		    	    					 notificationManagerResume(this, ""+message1, false);
-	    	    					 }
-	    	    				 }
-	    	    				else if(PushFlags.MANUAL_ENGAGEMENT.getOrdinal() == flag){
-	    	    					Database2.getInstance(this).updateDriverManualPatchPushReceived(Database2.YES);
-	    	    					Database2.getInstance(this).close();
-	    	    					String message1 = jObj.getString("message");
-	    	    					if (HomeActivity.appInterruptHandler != null) {
-										HomeActivity.appInterruptHandler.onManualDispatchPushReceived();
-										notificationManagerResume(this, message1, true);
-									} else {
-										notificationManager(this, message1, true);
-									}
-	    	    				 }
+	    	    					 notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID);
+	    	    				}
 	    	    				else if(PushFlags.CHANGE_PORT.getOrdinal() == flag){
 	    	    					sendChangePortAckToServer(this, jObj);
-	    	    				 }
+	    	    				}
+	    	    				else if(PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag){
+	    	    					String message1 = jObj.getString("message");
+	    	    					double balance = jObj.getDouble("balance");
+	    	    					if (HomeActivity.appInterruptHandler != null) {
+										HomeActivity.appInterruptHandler.onJugnooCashAddedByDriver(balance, message1);
+										notificationManagerResume(this, message1, false);
+									} else {
+										notificationManager(this, message1, false);
+									}
+	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 e.printStackTrace();

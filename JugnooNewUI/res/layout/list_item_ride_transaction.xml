@@ -4,6 +4,11 @@
     android:layout_width="720px"
     android:layout_height="wrap_content"
     android:splitMotionEvents="false" >
+    
+     <ImageView
+         
+            android:layout_width="match_parent"
+            android:layout_height="15px" />
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
@@ -11,7 +16,11 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:splitMotionEvents="false" >
+        android:splitMotionEvents="false"
+        android:layout_marginTop="15px"
+         >
+
+       
 
         <TextView
             android:id="@+id/textViewPickupAt"
@@ -20,9 +29,9 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="0px"
-            android:layout_marginLeft="36px"
+            android:layout_marginLeft="40px"
             android:layout_marginTop="20px"
-            android:text="Pickup At"
+            android:text="Pickup at"
             android:textColor="@color/black_text"
             android:textSize="30px" />
 
@@ -35,21 +44,20 @@
                 android:id="@+id/textViewFrom"
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="36px"
+                android:layout_marginLeft="40px"
                 android:text="From: "
                 android:textColor="@color/black_text"
-                android:textSize="28px" />
+                android:textSize="24px" />
 
             <TextView
                 android:id="@+id/textViewFromValue"
-                android:layout_width="400px"
+                android:layout_width="380px"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="30px"
                 android:layout_toRightOf="@+id/textViewFrom"
-                android:text="Plot No 5, Sector 28 B, Chandigarh"
+                android:text="Plot No 5, Sector 28 B, \nChandigarh"
                 android:textColor="@color/black_text_alpha"
                 android:textSize="24px" />
         </RelativeLayout>
@@ -64,15 +72,14 @@
                 android:id="@+id/textViewTo"
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="36px"
+                android:layout_marginLeft="40px"
                 android:text="To: "
                 android:textColor="@color/black_text"
-                android:textSize="28px" />
+                android:textSize="24px" />
 
             <TextView
                 android:id="@+id/textViewToValue"
-                android:layout_width="400px"
+                android:layout_width="380px"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
@@ -92,15 +99,14 @@
                 android:id="@+id/textViewDetails"
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="36px"
+                android:layout_marginLeft="40px"
                 android:text="Details: "
                 android:textColor="@color/black_text"
-                android:textSize="28px" />
+                android:textSize="24px" />
 
             <TextView
                 android:id="@+id/textViewDetailsValue"
-                android:layout_width="400px"
+                android:layout_width="380px"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
@@ -124,41 +130,36 @@
         android:layout_height="70px"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="20px" >
+        android:layout_marginRight="40px" >
 
         <TextView
-                android:id="@+id/textViewAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:text="@string/rupee_0"
-                android:singleLine="true"
-                android:textColor="@color/black_text"
-                android:textSize="26px" 
-                android:layout_marginRight="10px"
-                />
-        
-        
+            android:id="@+id/textViewAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="0px"
+            android:singleLine="true"
+            android:text="@string/rupee_0"
+            android:textColor="@color/black_text"
+            android:textSize="28px" />
+
         <RelativeLayout
             android:id="@+id/relativeLayoutCancel"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" 
-            android:visibility="gone"
-            >
-            
+            android:layout_height="match_parent"
+            android:visibility="gone" >
+
             <TextView
                 android:id="@+id/textViewCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="10px"
                 android:layout_toLeftOf="@+id/imageViewArrow"
                 android:text="CANCEL"
                 android:textColor="@drawable/text_color_black_alpha_selector"
-                android:textSize="26px" 
-                android:layout_marginRight="10px"
-                />
-            
+                android:textSize="26px" />
 
             <ImageView
                 android:id="@+id/imageViewArrow"

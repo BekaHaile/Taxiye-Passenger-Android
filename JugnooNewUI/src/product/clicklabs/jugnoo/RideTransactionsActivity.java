@@ -8,8 +8,10 @@ import org.json.JSONObject;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.RideInfoNew;
+import product.clicklabs.jugnoo.datastructure.ScheduleCancelListener;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Context;
@@ -46,8 +48,8 @@ public class RideTransactionsActivity extends Activity {
 	
 	RideTransactionAdapter rideTransactionAdapter;
 	
-	RelativeLayout relativeLayoutSeeMore;
-	TextView textViewSeeMore;
+	RelativeLayout relativeLayoutShowMore;
+	TextView textViewShowMore;
 	
 	DecimalFormat decimalFormat = new DecimalFormat("#.#");
 	DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
@@ -76,14 +78,15 @@ public class RideTransactionsActivity extends Activity {
 		progressBarList.setVisibility(View.GONE);
 		
 		
-		LinearLayout viewF = (LinearLayout) getLayoutInflater().inflate(R.layout.list_item_see_more, null);
+		LinearLayout viewF = (LinearLayout) getLayoutInflater().inflate(R.layout.list_item_show_more, null);
 		listViewRideTransactions.addFooterView(viewF);
 		viewF.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
 		ASSL.DoMagic(viewF);
 		
-		relativeLayoutSeeMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutSeeMore);
-		textViewSeeMore = (TextView) viewF.findViewById(R.id.textViewSeeMore); textViewSeeMore.setTypeface(Data.latoLight(this));
-		relativeLayoutSeeMore.setVisibility(View.GONE);
+		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
+		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Data.latoLight(this), Typeface.BOLD);
+		textViewShowMore.setText("Show More");
+		relativeLayoutShowMore.setVisibility(View.GONE);
 		
 		rideTransactionAdapter = new RideTransactionAdapter(this);
 		listViewRideTransactions.setAdapter(rideTransactionAdapter);
@@ -102,16 +105,16 @@ public class RideTransactionsActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				getRecentRidesAPI(RideTransactionsActivity.this);
+				getRecentRidesAPI(RideTransactionsActivity.this, true);
 			}
 		});
 		
 		
-		relativeLayoutSeeMore.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutShowMore.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				getRecentRidesAPI(RideTransactionsActivity.this);
+				getRecentRidesAPI(RideTransactionsActivity.this, false);
 			}
 		});
 		
@@ -138,9 +141,14 @@ public class RideTransactionsActivity extends Activity {
 	}
 	
 	
-	public void getRecentRidesAPI(final Activity activity) {
+	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
 		progressBarList.setVisibility(View.GONE);
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
+			
+			if(refresh){
+				AccountActivity.rideInfosList.clear();
+				AccountActivity.futureSchedule = null;
+			}
 			
 			progressBarList.setVisibility(View.VISIBLE);
 			textViewInfo.setVisibility(View.GONE);
@@ -253,7 +261,8 @@ public class RideTransactionsActivity extends Activity {
 	class ViewHolderRideTransaction {
 		TextView textViewPickupAt, textViewFrom, textViewFromValue, textViewTo, 
 		textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel;
-		RelativeLayout relative, relativeLayoutCancel, relativeLayoutTo;
+		RelativeLayout relativeLayoutCancel, relativeLayoutTo;
+		RelativeLayout relative;
 		int id;
 	}
 
@@ -299,7 +308,7 @@ public class RideTransactionsActivity extends Activity {
 				holder.textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); holder.textViewToValue.setTypeface(Data.latoRegular(context));
 				holder.textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); holder.textViewDetails.setTypeface(Data.latoRegular(context));
 				holder.textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); holder.textViewDetailsValue.setTypeface(Data.latoRegular(context));
-				holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Data.latoRegular(context));
+				holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Data.latoRegular(context), Typeface.BOLD);
 				holder.textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); holder.textViewCancel.setTypeface(Data.latoRegular(context));
 				
 				holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
@@ -328,7 +337,7 @@ public class RideTransactionsActivity extends Activity {
 						
 					holder.textViewFromValue.setText(AccountActivity.futureSchedule.pickupAddress);
 					holder.textViewDetails.setText("Date: ");
-					holder.textViewDetailsValue.setText(AccountActivity.futureSchedule.pickupDate + " " + AccountActivity.futureSchedule.pickupTime);
+					holder.textViewDetailsValue.setText(AccountActivity.futureSchedule.pickupDate + ", " + AccountActivity.futureSchedule.pickupTime);
 						
 					if(AccountActivity.futureSchedule.modifiable == 1){
 						holder.relativeLayoutCancel.setVisibility(View.VISIBLE);
@@ -348,13 +357,13 @@ public class RideTransactionsActivity extends Activity {
 					holder.textViewFromValue.setText(rideInfoNew.pickupAddress);
 					holder.textViewToValue.setText(rideInfoNew.dropAddress);
 					holder.textViewDetails.setText("Details: ");
-					if(rideInfoNew.rideTime > 1){
+					if(rideInfoNew.rideTime == 1){
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
+								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
 					}
 					else{
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
+								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
 					}
 					holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfoNew.amount));
 				}
@@ -370,16 +379,48 @@ public class RideTransactionsActivity extends Activity {
 				holder.textViewFromValue.setText(rideInfoNew.pickupAddress);
 				holder.textViewToValue.setText(rideInfoNew.dropAddress);
 				holder.textViewDetails.setText("Details: ");
-				if(rideInfoNew.rideTime > 1){
-					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
-				}
-				else{
+				if(rideInfoNew.rideTime == 1){
 					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
 							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
 				}
+				else{
+					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
+							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
+				}
 				holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfoNew.amount));
 			}
+			
+			holder.relativeLayoutCancel.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(AccountActivity.futureSchedule != null){
+						DialogPopup.alertPopupTwoButtonsWithListeners(RideTransactionsActivity.this, "Cancel Scheduled Ride", "Are you sure you want to cancel the scheduled ride?", "OK", "Cancel",
+								new View.OnClickListener() {
+									
+									@Override
+									public void onClick(View v) {
+										if(AccountActivity.futureSchedule != null){
+											AccountActivity.removeScheduledRideAPI(RideTransactionsActivity.this, AccountActivity.futureSchedule.pickupId, new ScheduleCancelListener() {
+												
+												@Override
+												public void onCancelSuccess() {
+													getRecentRidesAPI(RideTransactionsActivity.this, true);
+												}
+											});
+										}
+									}
+								}, 
+								new View.OnClickListener() {
+									
+									@Override
+									public void onClick(View v) {
+									}
+								}, true, true);
+					}
+					
+				}
+			});
 			
 			
 			return convertView;
@@ -390,10 +431,10 @@ public class RideTransactionsActivity extends Activity {
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
 			if(AccountActivity.totalRides > AccountActivity.rideInfosList.size()){
-				relativeLayoutSeeMore.setVisibility(View.VISIBLE);
+				relativeLayoutShowMore.setVisibility(View.VISIBLE);
 			}
 			else{
-				relativeLayoutSeeMore.setVisibility(View.GONE);
+				relativeLayoutShowMore.setVisibility(View.GONE);
 			}
 		}
 		

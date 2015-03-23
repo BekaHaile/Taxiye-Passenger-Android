@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:splitMotionEvents="false" >
 
-	<RelativeLayout
+    <RelativeLayout
         android:id="@+id/topBar"
         android:layout_width="720px"
         android:layout_height="96px"
@@ -35,105 +35,119 @@
             android:src="@drawable/back_white_selector" />
     </RelativeLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="match_parent" >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="110px" >
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/textViewPromotion"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center"
-                android:padding="15px"
-                android:text="Promotional banner"
-                android:maxLines="3"
-                android:textColor="@color/grey_black_light"
-                android:textSize="26px"
-                android:visibility="visible" />
-        </RelativeLayout>
+                android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/textViewAccountBalance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50px"
-            android:text="Current Balance"
-            android:textColor="@color/bg_grey_opaque"
-            android:textSize="34px" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="110px" >
 
-        <TextView
-            android:id="@+id/textViewAccountBalanceValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5px"
-            android:text="Rs. 200"
-            android:textColor="@color/bg_grey_opaque"
-            android:textSize="30px" />
+                    <TextView
+                        android:id="@+id/textViewPromotion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:maxLines="3"
+                        android:padding="15px"
+                        android:text="Promotional banner"
+                        android:textColor="@color/grey_black_light"
+                        android:textSize="26px"
+                        android:visibility="visible" />
+                </RelativeLayout>
 
-        <Button
-            android:id="@+id/buttonAddPayment"
-            android:layout_width="648px"
-            android:layout_height="100px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50px"
-            android:background="@drawable/button_yellow_selector"
-            android:text="ADD JUGNOO CASH"
-            android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/button_text_size" />
+                <TextView
+                    android:id="@+id/textViewAccountBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="50px"
+                    android:text="Current Balance"
+                    android:textColor="@color/bg_grey_opaque"
+                    android:textSize="34px" />
 
-        <TextView
-            android:id="@+id/textViewRecentTransactions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="36px"
-            android:layout_marginLeft="36px"
-            android:layout_marginRight="36px"
-            android:layout_marginTop="70px"
-            android:text="Recent Transactions"
-            android:textColor="@color/grey_black_light"
-            android:textSize="34px" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/textViewAccountBalanceValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5px"
+                    android:text="Rs. 200"
+                    android:textColor="@color/bg_grey_opaque"
+                    android:textSize="30px" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="0px"
-        android:orientation="vertical"
-        android:splitMotionEvents="false" >
+                <Button
+                    android:id="@+id/buttonAddPayment"
+                    android:layout_width="648px"
+                    android:layout_height="100px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="50px"
+                    android:background="@drawable/button_yellow_selector"
+                    android:text="ADD JUGNOO CASH"
+                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textSize="@dimen/button_text_size" />
 
-        <ListView
-            android:id="@+id/listViewTransactions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0px"
-            android:divider="@drawable/background_transparent"
-            android:dividerHeight="0px"
-            android:listSelector="@drawable/background_transparent"
-            android:splitMotionEvents="false" >
-        </ListView>
+                <TextView
+                    android:id="@+id/textViewRecentTransactions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="36px"
+                    android:layout_marginLeft="36px"
+                    android:layout_marginRight="36px"
+                    android:layout_marginTop="70px"
+                    android:text="Recent Transactions"
+                    android:textColor="@color/grey_black_light"
+                    android:textSize="34px" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/textViewInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="TextView"
-            android:textColor="@color/black"
-            android:textSize="30px" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0px"
+                android:orientation="vertical"
+                android:splitMotionEvents="false" >
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="140px"
-            android:layout_height="140px"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
+                <ListView
+                    android:id="@+id/listViewTransactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0px"
+                    android:divider="@drawable/background_transparent"
+                    android:dividerHeight="0px"
+                    android:listSelector="@drawable/background_transparent"
+                    android:splitMotionEvents="false" >
+                </ListView>
+
+                <TextView
+                    android:id="@+id/textViewInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="TextView"
+                    android:textColor="@color/black"
+                    android:textSize="30px" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="140px"
+                    android:layout_height="140px"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="180px"
+                     />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

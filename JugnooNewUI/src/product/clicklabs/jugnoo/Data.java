@@ -5,12 +5,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.datastructure.CustomerInfo;
+import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.DriverRideRequest;
-import product.clicklabs.jugnoo.datastructure.DriverType;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -87,8 +84,6 @@ public class Data {
 			SP_C_DRIVER_CAR_IMAGE = "c_driver_car_image",
 			SP_C_DRIVER_PHONE = "c_driver_phone",
 			SP_C_DRIVER_RATING = "c_driver_rating",
-			SP_C_DRIVER_DISTANCE = "c_driver_distance",
-			SP_C_DRIVER_DURATION = "c_driver_duration",
 			
 			SP_C_TOTAL_DISTANCE = "c_total_distance",
 			SP_C_TOTAL_FARE = "c_total_fare",
@@ -155,7 +150,7 @@ public class Data {
 	public static final String LIVE_SERVER_URL = "https://dev.jugnoo.in:4012";
 	public static final String TRIAL_SERVER_URL = "https://test.jugnoo.in:8200";
 	
-	public static final String DEFAULT_SERVER_URL = DEV_SERVER_URL;
+	public static final String DEFAULT_SERVER_URL = LIVE_SERVER_URL;
 	
 	
 	
@@ -213,28 +208,24 @@ public class Data {
 	public static String dEngagementId = "", dCustomerId = "";
 	public static LatLng dCustLatLng;
 	
-	public static ArrayList<DriverRideRequest> driverRideRequests = new ArrayList<DriverRideRequest>();
-	
-	public static CustomerInfo assignedCustomerInfo;
 	
 	public static boolean driversRefreshedFirstTime = false;
 	
 	
-	public static double totalDistance = 0, totalFare = 0;
-	public static String waitTime = "", rideTime = "";
-	public static JSONObject couponJSON;
+	public static EndRideData endRideData;
+	
 	public static int customerRateAppFlag = 0;
 	
 	
 	public static LatLng pickupLatLng;
 
 	public static FacebookUserData facebookUserData;
-	public static int autoShare = 0;
 	
 	
-	public static ArrayList<DriverType> driverTypes = new ArrayList<DriverType>();
 	
 	public static FareStructure fareStructure;
+	
+	public static CancelOptionsList cancelOptionsList;
 	
 	
 	
@@ -283,7 +274,7 @@ public class Data {
 	
 	
 	
-	public static Typeface latoRegular, museoSlab, latoLight;																// fonts declaration
+	private static Typeface latoRegular, museoSlab, latoLight;																// fonts declaration
 	
 
 	public static Typeface latoRegular(Context appContext) {											// accessing fonts functions

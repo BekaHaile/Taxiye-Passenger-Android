@@ -22,6 +22,7 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -808,7 +809,7 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 			Database2.getInstance(RegisterScreen.this).close();
 			startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-			finish();
+			ActivityCompat.finishAffinity(this);
 		}
 		else if(hasFocus && sendToOtpScreen){
 			sendIntentToOtpScreen();

@@ -43,56 +43,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="295px" >
-
-                <ImageView
-                    android:id="@+id/imageViewUserImageBlur"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white_light_grey"
-                    android:scaleType="centerCrop" />
-
-                <ImageView
-                    android:id="@+id/imageViewUserImageBlurCover"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#10000000"
-                    android:scaleType="centerCrop" />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutProfileImage"
-                    android:layout_width="211px"
-                    android:layout_height="211px"
-                    android:layout_centerInParent="true"
-                    android:splitMotionEvents="false"
-                    android:tag="mwar" >
-
-                    <ImageView
-                        android:id="@+id/imageViewProfileImageBack"
-                        android:layout_width="211px"
-                        android:layout_height="211px"
-                        android:background="@drawable/circle_white"
-                        android:tag="mwar" />
-
-                    <ImageView
-                        android:id="@+id/imageViewProfileImage"
-                        android:layout_width="190px"
-                        android:layout_height="190px"
-                        android:layout_centerInParent="true"
-                        android:tag="mwar" />
-                </RelativeLayout>
-
-                <ProgressBar
-                    android:id="@+id/progressBarProfileUpdate"
-                    android:layout_width="100px"
-                    android:layout_height="100px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
             <ScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
@@ -105,6 +55,56 @@
                     android:orientation="vertical"
                     android:splitMotionEvents="false" >
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="295px" >
+
+                        <ImageView
+                            android:id="@+id/imageViewUserImageBlur"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/white_light_grey"
+                            android:scaleType="centerCrop" />
+
+                        <ImageView
+                            android:id="@+id/imageViewUserImageBlurCover"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#10000000"
+                            android:scaleType="centerCrop" />
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutProfileImage"
+                            android:layout_width="211px"
+                            android:layout_height="211px"
+                            android:layout_centerInParent="true"
+                            android:splitMotionEvents="false"
+                            android:tag="mwar" >
+
+                            <ImageView
+                                android:id="@+id/imageViewProfileImageBack"
+                                android:layout_width="211px"
+                                android:layout_height="211px"
+                                android:background="@drawable/circle_white"
+                                android:tag="mwar" />
+
+                            <ImageView
+                                android:id="@+id/imageViewProfileImage"
+                                android:layout_width="190px"
+                                android:layout_height="190px"
+                                android:layout_centerInParent="true"
+                                android:tag="mwar" />
+                        </RelativeLayout>
+
+                        <ProgressBar
+                            android:id="@+id/progressBarProfileUpdate"
+                            android:layout_width="100px"
+                            android:layout_height="100px"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
                     <LinearLayout
                         android:id="@+id/linearLayoutEditTexts"
                         android:layout_width="wrap_content"
@@ -115,12 +115,12 @@
                         android:splitMotionEvents="false" >
 
                         <RelativeLayout
-                            android:layout_width="628px"
+                            android:layout_width="660px"
                             android:layout_height="wrap_content" >
 
                             <EditText
                                 android:id="@+id/editTextUserName"
-                                android:layout_width="560px"
+                                android:layout_width="590px"
                                 android:layout_height="70px"
                                 android:background="#0000"
                                 android:capitalize="words"
@@ -146,12 +146,12 @@
                         </RelativeLayout>
 
                         <ImageView
-                            android:layout_width="628px"
+                            android:layout_width="660px"
                             android:layout_height="2px"
                             android:src="@color/yellow_alpha" />
 
                         <RelativeLayout
-                            android:layout_width="628px"
+                            android:layout_width="660px"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5px" >
 
@@ -193,13 +193,13 @@
                         </RelativeLayout>
 
                         <ImageView
-                            android:layout_width="628px"
+                            android:layout_width="660px"
                             android:layout_height="2px"
                             android:src="@color/yellow_alpha" />
 
                         <RelativeLayout
                             android:id="@+id/relativeLayoutEmailVerify"
-                            android:layout_width="596px"
+                            android:layout_width="626px"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10px"
@@ -214,7 +214,7 @@
                                 android:src="@drawable/triangle_orange" />
 
                             <RelativeLayout
-                                android:layout_width="596px"
+                                android:layout_width="616px"
                                 android:layout_height="58px"
                                 android:layout_marginTop="10px"
                                 android:background="@drawable/button_yellow_orange_normal" >
@@ -256,13 +256,13 @@
                         </RelativeLayout>
 
                         <RelativeLayout
-                            android:layout_width="628px"
+                            android:layout_width="660px"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5px" >
 
                             <EditText
                                 android:id="@+id/editTextPhone"
-                                android:layout_width="560px"
+                                android:layout_width="590px"
                                 android:layout_height="70px"
                                 android:background="#0000"
                                 android:gravity="center_vertical"
@@ -288,7 +288,7 @@
                         </RelativeLayout>
 
                         <ImageView
-                            android:layout_width="628px"
+                            android:layout_width="660px"
                             android:layout_height="2px"
                             android:src="@color/yellow_alpha" />
                     </LinearLayout>
@@ -302,7 +302,7 @@
                             android:id="@+id/textViewRecentTransactions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30px"
+                            android:layout_marginLeft="40px"
                             android:layout_marginTop="30px"
                             android:text="Recent Transactions"
                             android:textColor="@color/black_text"
@@ -348,7 +348,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"
+                            android:layout_marginLeft="40px"
                             android:gravity="center"
                             android:text="Haven&apos;t tried Jugnoo yet?"
                             android:textColor="@color/black_text"
@@ -360,7 +360,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="80px"
+                            android:layout_marginRight="70px"
                             android:gravity="center"
                             android:text="GET A RIDE"
                             android:textColor="@drawable/text_color_black_alpha_selector"
@@ -389,8 +389,8 @@
                         android:layout_width="648px"
                         android:layout_height="100px"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="70px"
                         android:layout_marginBottom="70px"
+                        android:layout_marginTop="70px"
                         android:background="@drawable/button_yellow_selector"
                         android:text="LOGOUT"
                         android:textColor="@drawable/text_color_white_alpha_selector"

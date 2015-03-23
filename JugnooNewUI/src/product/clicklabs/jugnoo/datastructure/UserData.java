@@ -6,10 +6,11 @@ public class UserData {
 		freeRideIconDisable;
 	public int emailVerificationStatus;
 	public double jugnooBalance;
+	public double fareFactor;
 	public UserData(String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus, 
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
-			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance){
+			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor){
 		this.accessToken = accessToken;
 		this.authKey = authKey;
 		this.userName = userName;
@@ -32,5 +33,6 @@ public class UserData {
 		this.jugnooMealsPackageName = jugnooMealsPackageName;
 		this.freeRideIconDisable = freeRideIconDisable;
 		this.jugnooBalance = jugnooBalance;
+		this.fareFactor = fareFactor;
 	}
 }
