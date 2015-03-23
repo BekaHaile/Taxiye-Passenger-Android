@@ -414,7 +414,7 @@ public class PromotionDialog {
 			
 			params.put("access_token", Data.userData.accessToken);
 			params.put("latitude", ""+promoLatLng.latitude);
-			params.put("longitude", ""+promoLatLng.latitude);
+			params.put("longitude", ""+promoLatLng.longitude);
 
 			Log.i("params", "=" + params);
 			

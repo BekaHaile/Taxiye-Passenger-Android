@@ -1702,6 +1702,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					textViewEndRideAddJugnooCashInfo.setText(Data.endRideData.banner);
 				}
 				
+				textViewEndRideAddJugnooCashInfo.setVisibility(View.GONE);
+				
 				double totalDistanceInKm = Data.endRideData.distance;
 				String kmsStr = "";
 				if(totalDistanceInKm > 1){
@@ -2120,9 +2122,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	void buildAlertMessageNoGps() {
-		if(!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-				&&
-				!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
+//		!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+//		&&
+		if(!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
 			if(gpsDialogAlert != null && gpsDialogAlert.isShowing()){
 		    }
 			else{
