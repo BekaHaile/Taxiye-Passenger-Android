@@ -179,7 +179,7 @@ public class WalletWebviewActivity extends Activity{
         	
         	Log.e("onReceivedError url", "== errorCode="+errorCode+" description="+description+" failingUrl="+failingUrl);
         	
-        	String excepUrl = "https://secure.payu.in";
+        	String excepUrl = "payu.in";
         	
         	if(!failingUrl.contains(excepUrl)){
         		Intent intent = new Intent(WalletWebviewActivity.this, WalletAddPaymentActivity.class);

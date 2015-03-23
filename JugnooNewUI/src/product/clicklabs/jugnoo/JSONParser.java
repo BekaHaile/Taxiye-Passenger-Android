@@ -9,11 +9,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.CancelOption;
+import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -96,7 +101,7 @@ public class JSONParser {
 				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;
 		int emailVerificationStatus = 1;
 		String userEmail = "", phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk";
-		double jugnooBalance = 0;
+		double jugnooBalance = 0, fareFactor = 1.0;
 		
 		if(userData.has("can_schedule")){
 			canSchedule = userData.getInt("can_schedule");
@@ -188,6 +193,9 @@ public class JSONParser {
 			emailVerificationStatus = userData.getInt("email_verification_status");
 		}
 		
+		if(userData.has("fare_factor")){
+			fareFactor = userData.getDouble("fare_factor");
+		}
 		
 		String authKey = userData.getString("auth_key");
 		AccessTokenGenerator.saveAuthKey(context, authKey);
@@ -198,7 +206,7 @@ public class JSONParser {
 		return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus, 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
 				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
-				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance);
+				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor);
 	}
 	
 
@@ -236,8 +244,9 @@ public class JSONParser {
 		//Fetching user current status
 		JSONObject jUserStatusObject = jObj.getJSONObject("status");
 		String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
-				
-		parseLastRideData(jObj);
+			
+		parseCancellationReasons(jObj);
+		
 		
 		return resp;
 	}
@@ -306,8 +315,8 @@ public class JSONParser {
 			
 			Data.pickupLatLng = new LatLng(0, 0);
 			
-			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"));
-			
+			Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"), 
+					jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
 			
 			try{
 				if(jLastRideData.has("rate_app")){
@@ -317,24 +326,37 @@ public class JSONParser {
 				e.printStackTrace();
 			}
 			
-			HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+			
+			double baseFare = Data.fareStructure.fixedFare;
+			if(jLastRideData.has("base_fare")){
+				baseFare = jLastRideData.getDouble("base_fare");
+			}
+			
+			String banner = "";
+			if(jLastRideData.has("banner")){
+				banner = jLastRideData.getString("banner");
+			}
 			
 			Data.endRideData = new EndRideData(jLastRideData.getString("engagement_id"), 
 					jLastRideData.getString("pickup_address"), 
 					jLastRideData.getString("drop_address"), 
 					jLastRideData.getString("pickup_time"), 
 					jLastRideData.getString("drop_time"), 
+					banner, 
 					jLastRideData.getDouble("fare"), 
 					jLastRideData.getDouble("discount"), 
 					jLastRideData.getDouble("paid_using_wallet"), 
 					jLastRideData.getDouble("to_pay"), 
 					jLastRideData.getDouble("distance"), 
-					jLastRideData.getDouble("ride_time"));
+					jLastRideData.getDouble("ride_time"),
+					baseFare);
 			
+			HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
 		
 	}
 	
@@ -368,20 +390,18 @@ public class JSONParser {
 		try{
 			JSONArray data = jObject.getJSONArray(jsonArrayKey);
 			Data.driverInfos.clear();
+			
 			for(int i=0; i<data.length(); i++){
 				JSONObject dataI = data.getJSONObject(i);
 				String userId = dataI.getString("user_id");
 				double latitude = dataI.getDouble("latitude");
 				double longitude = dataI.getDouble("longitude");
 				String userName = dataI.getString("user_name");
-				String userImage = "";
-				String driverCarImage = "";
 				String phoneNo = dataI.getString("phone_no");
 				String rating = dataI.getString("rating");
+				String userImage = "";
+				String driverCarImage = "";
 				String carNumber = "";
-				if(dataI.has("driver_car_no")){
-					carNumber = dataI.getString("driver_car_no");
-				}
 				Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0));
 			}
 		}
@@ -393,7 +413,7 @@ public class JSONParser {
 	
 	
 	public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1){
-		
+		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
 		String returnResponse = "";
 		
 		if(currentUserStatus == 2){
@@ -405,6 +425,11 @@ public class JSONParser {
 					driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", driverCarNumber = "", 
 					pickupLatitude = "", pickupLongitude = "";
 			int freeRide = 0;
+			String promoName = "", eta = "";
+			double fareFactor = 1.0;
+			
+			
+			HomeActivity.userMode = UserMode.PASSENGER;
 			
 			try{
 							
@@ -446,6 +471,14 @@ public class JSONParser {
 								
 								if(ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag){
 									sessionId = jObject1.getString("session_id");
+									double assigningLatitude = 0, assigningLongitude = 0;
+									if(jObject1.has("latitude") && jObject1.has("longitude")){
+										assigningLatitude = jObject1.getDouble("latitude");
+										assigningLongitude = jObject1.getDouble("longitude");
+										Log.e("assigningLatitude,assigningLongitude ====@@@", ""+assigningLatitude+","+assigningLongitude);
+									}
+									Data.pickupLatLng = new LatLng(assigningLatitude, assigningLongitude);
+									
 									engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
 								}
 								else if(ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag){
@@ -473,7 +506,22 @@ public class JSONParser {
 										if(jObject.has("free_ride")){
 											freeRide = jObject.getInt("free_ride");
 										}
+										
+										promoName = getPromoName(jObject);
+										
+										if(jObject.has("eta")){
+											eta = jObject.getString("eta");
+										}
+										
+										if(jObject.has("fare_factor")){
+											fareFactor = jObject.getDouble("fare_factor");
+										}
+										
 									}
+								}
+								else if(ApiResponseFlags.LAST_RIDE.getOrdinal() == flag){
+									parseLastRideData(jObject1);
+									return returnResponse;
 								}
 							
 							}
@@ -483,8 +531,6 @@ public class JSONParser {
 				returnResponse = HttpRequester.SERVER_TIMEOUT;
 				return returnResponse;
 			}
-			
-			HomeActivity.userMode = UserMode.PASSENGER;
 			
 			if(EngagementStatus.REQUESTED.getOrdinal() == engagementStatus){
 				screenMode = Data.P_ASSIGNING;
@@ -522,16 +568,13 @@ public class JSONParser {
 				double dLatitude = Double.parseDouble(latitude);
 				double dLongitude = Double.parseDouble(longitude);
 				
-				String SP_C_DRIVER_DISTANCE = pref.getString(Data.SP_C_DRIVER_DISTANCE, "0");
-				String SP_C_DRIVER_DURATION = pref.getString(Data.SP_C_DRIVER_DURATION, "");
 				
 				Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName, 
-						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide);
-				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
-				Data.assignedDriverInfo.distanceToReach = SP_C_DRIVER_DISTANCE;
-				Data.assignedDriverInfo.durationToReach = SP_C_DRIVER_DURATION;
+						driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta);
 				
-				Log.e("Data.assignedDriverInfo.durationToReach in get_current_user_status", "="+Data.assignedDriverInfo.durationToReach);
+				Data.userData.fareFactor = fareFactor;
+				
+				Log.e("Data.assignedDriverInfo on login","="+Data.assignedDriverInfo.latLng);
 				
 				
 				if(Data.P_REQUEST_FINAL.equalsIgnoreCase(screenMode)){
@@ -550,6 +593,8 @@ public class JSONParser {
 						String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
 						Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
 					}
+				}
+				else{
 					
 				}
 				
@@ -560,6 +605,41 @@ public class JSONParser {
 	}
 	
 	
+	
+	public static String getPromoName(JSONObject jObject){
+		String promoName = "No Promo Code applied";
+		try {
+			String coupon = "", promotion = "";
+			try {
+				if(jObject.has("coupon")){
+					coupon = jObject.getString("coupon");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				if(jObject.has("promotion")){
+					promotion = jObject.getString("promotion");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if(!"".equalsIgnoreCase(coupon)){
+				promoName = coupon;
+			}
+			else if(!"".equalsIgnoreCase(promotion)){
+				promoName = promotion;
+			}
+			else{
+				promoName = "No Promo Code applied";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return promoName;
+	}
 	
 	
 	
@@ -600,8 +680,6 @@ public class JSONParser {
 		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
 		editor.putString(Data.SP_C_DRIVER_PHONE, "");
 		editor.putString(Data.SP_C_DRIVER_RATING, "");
-		editor.putString(Data.SP_C_DRIVER_DISTANCE, "0");
-		editor.putString(Data.SP_C_DRIVER_DURATION, "");
 
 		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
 		editor.putString(Data.SP_C_TOTAL_FARE, "0");
@@ -615,6 +693,116 @@ public class JSONParser {
 
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static ArrayList<PromoCoupon> parsePromoCoupons(JSONObject jObj) throws Exception{
+		ArrayList<PromoCoupon> promoCouponList = new ArrayList<PromoCoupon>();
+		
+//		{
+//	    "flag": 174,
+//	    "coupons": [
+//	        {
+//	            "title": "Free ride",
+//	            "subtitle": "upto Rs. 100",
+//	            "description": "Your next ride",
+//	            "discount": 100,
+//	            "maximum": 100,
+//	            "image": "",
+//	            "type": 0,
+//	            "redeemed_on": "0000-00-00 00:00:00",
+//	            "status": 1,
+//	            "expiry_date": "December 31st 2015"
+//	        }
+//	    ],
+//	    "promotions": [
+//	        {
+//	            "promo_id": 1,
+//	            "title": "Flat 100% off",
+//	            "terms_n_conds": "t"
+//	        }
+//	    ],
+//	    "dynamic_factor": "1.0"
+//	}
+		
+		
+		JSONArray jCouponsArr = jObj.getJSONArray("coupons");
+		for(int i=0; i<jCouponsArr.length(); i++){
+			JSONObject coData = jCouponsArr.getJSONObject(i);
+			promoCouponList.add(new CouponInfo(coData.getInt("account_id"),
+					coData.getInt("type"), 
+					coData.getInt("status"), 
+					coData.getString("title"), 
+					coData.getString("subtitle"), 
+					coData.getString("description"), 
+					coData.getString("image"), 
+					coData.getString("redeemed_on"), 
+					coData.getString("expiry_date"), 
+					coData.getDouble("discount"), 
+					coData.getDouble("maximum")));
+		}
+		
+		JSONArray jPromoArr = jObj.getJSONArray("promotions");
+		for(int i=0; i<jPromoArr.length(); i++){
+			JSONObject coData = jPromoArr.getJSONObject(i);
+			promoCouponList.add(new PromotionInfo(coData.getInt("promo_id"), 
+					coData.getString("title"), 
+					coData.getString("terms_n_conds")));
+		}
+		
+		return promoCouponList;
+	}
+	
+	
+	
+	
+
+	
+	public static void parseCancellationReasons(JSONObject jObj){
+		
+//		"cancellation": {
+//      "message": "Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of Rs. 20",
+//      "reasons": [
+//          "Driver is late",
+//          "Driver denied duty",
+//          "Changed my mind",
+//          "Booked another cab"
+//      ]
+//  }
+		try {
+			ArrayList<CancelOption> options = new ArrayList<CancelOption>();
+			options.add(new CancelOption("Driver is late"));
+			options.add(new CancelOption("Driver denied duty"));
+			options.add(new CancelOption("Changed my mind"));
+			options.add(new CancelOption("Booked another cab"));
+			
+			Data.cancelOptionsList = new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
+					"will lead to cancellation charges of Rs. 20");
+			
+			JSONObject jCancellation = jObj.getJSONObject("cancellation");
+			
+			String message = jCancellation.getString("message");
+			
+			JSONArray jReasons = jCancellation.getJSONArray("reasons");
+			
+			options.clear();
+			
+			for(int i=0; i<jReasons.length(); i++){
+				options.add(new CancelOption(jReasons.getString(i)));
+			}
+			
+			Data.cancelOptionsList = new CancelOptionsList(options, message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 	

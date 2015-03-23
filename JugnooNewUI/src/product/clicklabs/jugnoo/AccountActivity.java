@@ -7,12 +7,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.DriverScreenMode;
 import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
 import product.clicklabs.jugnoo.datastructure.RideInfoNew;
+import product.clicklabs.jugnoo.datastructure.ScheduleCancelListener;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -68,6 +68,7 @@ public class AccountActivity extends Activity {
 	ProgressBar progressBarProfileUpdate;
 	
 	ScrollView scrollView;
+	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
 	
 	EditText editTextUserName, editTextEmail, editTextPhone;
@@ -92,8 +93,6 @@ public class AccountActivity extends Activity {
 	
 	Button buttonLogout;
 	
-	boolean resumed = false;
-	
 	public static FutureSchedule futureSchedule = null;
 	public static ArrayList<RideInfoNew> rideInfosList = new ArrayList<RideInfoNew>();
 	public static int totalRides = 0;
@@ -106,7 +105,7 @@ public class AccountActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_user);
 		
-		resumed = false;
+		
 		futureSchedule = null;
 		rideInfosList = new ArrayList<RideInfoNew>();
 		totalRides = 0;
@@ -123,6 +122,7 @@ public class AccountActivity extends Activity {
 		progressBarProfileUpdate = (ProgressBar) findViewById(R.id.progressBarProfileUpdate);
 		
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
+		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 		
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Data.latoRegular(this));
@@ -152,7 +152,7 @@ public class AccountActivity extends Activity {
 		ASSL.DoMagic(viewF);
 		
 		relativeLayoutSeeMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutSeeMore);
-		textViewSeeMore = (TextView) viewF.findViewById(R.id.textViewSeeMore); textViewSeeMore.setTypeface(Data.latoLight(this));
+		textViewSeeMore = (TextView) viewF.findViewById(R.id.textViewSeeMore); textViewSeeMore.setTypeface(Data.latoLight(this), Typeface.BOLD);
 		relativeLayoutSeeMore.setVisibility(View.GONE);
 		
 		rideTransactionAdapter = new RideTransactionAdapter(this);
@@ -373,6 +373,32 @@ public class AccountActivity extends Activity {
 			}
 		});
 		
+		imageViewEmailVerifyStatus.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal()){
+					if(relativeLayoutEmailVerify.getVisibility() == View.GONE){
+						relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
+					}
+					else{
+						relativeLayoutEmailVerify.setVisibility(View.GONE);
+					}
+				}
+			}
+		});
+		
+		linearLayoutMain.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(relativeLayoutEmailVerify.getVisibility() == View.VISIBLE){
+					relativeLayoutEmailVerify.setVisibility(View.GONE);
+				}
+			}
+		});
+		
+		
 		relativeLayoutNotTriedJugnoo.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -402,7 +428,7 @@ public class AccountActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				new DialogPopup().alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "", 
+				DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "Cancel", 
 						new View.OnClickListener() {
 							
 							@Override
@@ -426,7 +452,7 @@ public class AccountActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				getRecentRidesAPI(AccountActivity.this);
+				getRecentRidesAPI(AccountActivity.this, true);
 			}
 		});
 		
@@ -483,9 +509,6 @@ public class AccountActivity extends Activity {
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
-		
-		getRecentRidesAPI(this);
-		
 	}
 	
 	
@@ -505,7 +528,7 @@ public class AccountActivity extends Activity {
 				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
 				imageViewEmailVerifyStatus.setImageResource(R.drawable.warning_icon);
 				
-				relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
+				relativeLayoutEmailVerify.setVisibility(View.GONE);
 				textViewEmailVerifyMessage.setText("Please verify the Address.");
 				textViewEmailVerify.setText("VERIFY ME");
 			}
@@ -513,7 +536,7 @@ public class AccountActivity extends Activity {
 				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
 				imageViewEmailVerifyStatus.setImageResource(R.drawable.alert_icon);
 				
-				relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
+				relativeLayoutEmailVerify.setVisibility(View.GONE);
 				textViewEmailVerifyMessage.setText("Please enter a valid Address.");
 				textViewEmailVerify.setText("CHANGE");
 			}
@@ -566,11 +589,9 @@ public class AccountActivity extends Activity {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
 		
+		reloadProfileAPI(this);
 		
-		if(resumed){
-			reloadProfileAPI(this);
-		}
-		resumed = true;
+		getRecentRidesAPI(this, true);
 		
 		scrollView.scrollTo(0, 0);
 	}
@@ -714,15 +735,19 @@ public class AccountActivity extends Activity {
 										
 										Data.userData.userName = userName;
 										Data.userData.phoneNo = phoneNo;
+										Data.userData.userEmail = email;
+										
+										boolean refresh = false;
+										
+										if(EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() != Data.userData.emailVerificationStatus
+												&& EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() == emailVerificationStatus){
+											refresh = true;
+										}
+										
 										Data.userData.emailVerificationStatus = emailVerificationStatus;
 										
-										if(Data.userData.userEmail.equalsIgnoreCase(email)){
-											setUserData(false);
-										}
-										else{
-											Data.userData.userEmail = email;
-											setUserData(true);
-										}
+										
+										setUserData(refresh);
 									}
 								}
 							}  catch (Exception exception) {
@@ -844,7 +869,6 @@ public class AccountActivity extends Activity {
 										
 										HomeActivity.userMode = UserMode.PASSENGER;
 										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-										HomeActivity.driverScreenMode = DriverScreenMode.D_INITIAL;
 										
 										ActivityCompat.finishAffinity(activity);
 										Intent intent = new Intent(activity, SplashNewActivity.class);
@@ -876,9 +900,14 @@ public class AccountActivity extends Activity {
 	}
 	
 	
-	public void getRecentRidesAPI(final Activity activity) {
+	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
 		progressBarList.setVisibility(View.GONE);
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
+			
+			if(refresh){
+				rideInfosList.clear();
+				futureSchedule = null;
+			}
 			
 			progressBarList.setVisibility(View.VISIBLE);
 			textViewInfo.setVisibility(View.GONE);
@@ -1005,17 +1034,20 @@ public class AccountActivity extends Activity {
 			
 			rideInfosList.clear();
 			rideTransactionAdapter.notifyDataSetChanged();
+			relativeLayoutSeeMore.setVisibility(View.GONE);
 		}
 		else{
 			textViewInfo.setVisibility(View.GONE);
 			if(rideInfosList.size() == 0 && futureSchedule == null){
 				relativeLayoutNotTriedJugnoo.setVisibility(View.VISIBLE);
 				relativeLayoutRideTransactions.setVisibility(View.GONE);
+				relativeLayoutSeeMore.setVisibility(View.GONE);
 			}
 			else{
 				relativeLayoutNotTriedJugnoo.setVisibility(View.GONE);
 				relativeLayoutRideTransactions.setVisibility(View.VISIBLE);
 				textViewRecentTransactions.setVisibility(View.VISIBLE);
+				relativeLayoutSeeMore.setVisibility(View.VISIBLE);
 			}
 			rideTransactionAdapter.notifyDataSetChanged();
 		}
@@ -1025,7 +1057,8 @@ public class AccountActivity extends Activity {
 	class ViewHolderRideTransaction {
 		TextView textViewPickupAt, textViewFrom, textViewFromValue, textViewTo, 
 		textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel;
-		RelativeLayout relative, relativeLayoutCancel, relativeLayoutTo;
+		RelativeLayout relativeLayoutCancel, relativeLayoutTo;
+		RelativeLayout relative;
 		int id;
 	}
 
@@ -1110,7 +1143,7 @@ public class AccountActivity extends Activity {
 						
 					holder.textViewFromValue.setText(futureSchedule.pickupAddress);
 					holder.textViewDetails.setText("Date: ");
-					holder.textViewDetailsValue.setText(futureSchedule.pickupDate + " " + futureSchedule.pickupTime);
+					holder.textViewDetailsValue.setText(futureSchedule.pickupDate + ", " + futureSchedule.pickupTime);
 						
 					if(futureSchedule.modifiable == 1){
 						holder.relativeLayoutCancel.setVisibility(View.VISIBLE);
@@ -1130,13 +1163,13 @@ public class AccountActivity extends Activity {
 					holder.textViewFromValue.setText(rideInfoNew.pickupAddress);
 					holder.textViewToValue.setText(rideInfoNew.dropAddress);
 					holder.textViewDetails.setText("Details: ");
-					if(rideInfoNew.rideTime > 1){
+					if(rideInfoNew.rideTime == 1){
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
+								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
 					}
 					else{
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
+								+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
 					}
 					holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfoNew.amount));
 				}
@@ -1152,16 +1185,48 @@ public class AccountActivity extends Activity {
 				holder.textViewFromValue.setText(rideInfoNew.pickupAddress);
 				holder.textViewToValue.setText(rideInfoNew.dropAddress);
 				holder.textViewDetails.setText("Details: ");
-				if(rideInfoNew.rideTime > 1){
-					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
-							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
-				}
-				else{
+				if(rideInfoNew.rideTime == 1){
 					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
 							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minute, "+rideInfoNew.date);
 				}
+				else{
+					holder.textViewDetailsValue.setText(decimalFormat.format(rideInfoNew.distance) + " km, " 
+							+ decimalFormatNoDec.format(rideInfoNew.rideTime) + " minutes, "+rideInfoNew.date);
+				}
 				holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfoNew.amount));
 			}
+			
+			holder.relativeLayoutCancel.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(futureSchedule != null){
+						DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "Cancel Scheduled Ride", "Are you sure you want to cancel the scheduled ride?", "OK", "Cancel",
+								new View.OnClickListener() {
+									
+									@Override
+									public void onClick(View v) {
+										if(futureSchedule != null){
+											removeScheduledRideAPI(AccountActivity.this, futureSchedule.pickupId, new ScheduleCancelListener() {
+												
+												@Override
+												public void onCancelSuccess() {
+													getRecentRidesAPI(AccountActivity.this, true);
+												}
+											});
+										}
+									}
+								}, 
+								new View.OnClickListener() {
+									
+									@Override
+									public void onClick(View v) {
+									}
+								}, true, true);
+					}
+					
+				}
+			});
 			
 			
 			return convertView;
@@ -1179,6 +1244,79 @@ public class AccountActivity extends Activity {
 			}
 		}
 		
+	}
+	
+	
+	
+	/**
+	 * ASync for removing scheduled ride from server
+	 */
+	public static void removeScheduledRideAPI(final Activity activity, String pickupId, final ScheduleCancelListener scheduleCancelListener) {
+		if (AppStatus.getInstance(activity).isOnline(activity)) {
+			
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+			
+			RequestParams params = new RequestParams();
+		
+			params.put("access_token", Data.userData.accessToken);
+			params.put("pickup_id", pickupId);
+			
+			Log.i("remove_pickup_schedule api params", ">"+params);
+		
+			AsyncHttpClient client = Data.getClient();
+			client.post(Data.SERVER_URL + "/remove_pickup_schedule", params,
+					new CustomAsyncHttpResponseHandler() {
+					private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+	
+							try {
+								jObj = new JSONObject(response);
+
+								if(!jObj.isNull("error")){
+									String errorMessage = jObj.getString("error");
+									int flag = jObj.getInt("flag");
+									if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+										HomeActivity.logoutUser(activity);
+									}
+									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+										DialogPopup.alertPopup(activity, "", errorMessage);
+									}
+									else{
+										DialogPopup.alertPopup(activity, "", errorMessage);
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+								else{
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+										String message = jObj.getString("message");
+										DialogPopup.alertPopup(activity, "", message);
+										scheduleCancelListener.onCancelSuccess();
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
+							}
+						}
+					});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
 	}
 	
 

@@ -8,13 +8,15 @@ public class DriverInfo {
 	public LatLng latLng;
 	public int freeRide;
 	
-	public String distanceToReach = "0", durationToReach = "";
+	public String promoName = "No Promo Code applied", eta = "10";
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
 	
-	public DriverInfo(String userId, double latitude, double longitude, String name, String image, String carImage, String phoneNumber, String rating, String carNumber, int freeRide){
+	public DriverInfo(String userId, double latitude, double longitude, 
+			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
+			int freeRide){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -26,15 +28,35 @@ public class DriverInfo {
 		this.freeRide = freeRide;
 	}
 	
-	public DriverInfo(String userId, String name, String image){
+	public DriverInfo(String userId, double latitude, double longitude, 
+			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
+			int freeRide, String promoName, String eta){
+		this.userId = userId;
+		this.latLng = new LatLng(latitude, longitude);
+		this.name = name;
+		this.image = image;
+		this.carImage = carImage;
+		this.phoneNumber = phoneNumber;
+		this.rating = rating;
+		this.carNumber = carNumber;
+		this.freeRide = freeRide;
+		if(!"".equalsIgnoreCase(promoName)){
+			this.promoName = promoName;
+		}
+		if(!"".equalsIgnoreCase(eta)){
+			this.eta = eta;
+		}
+	}
+	
+	public DriverInfo(String userId, String name, String image, String carImage, String carNumber){
 		this.userId = userId;
 		this.latLng = new LatLng(0, 0);
 		this.name = name;
 		this.image = image;
-		this.carImage = "";
+		this.carImage = carImage;
 		this.phoneNumber = "";
 		this.rating = "4";
-		this.carNumber = "";
+		this.carNumber = carNumber;
 		this.freeRide = 0;
 	}
 	

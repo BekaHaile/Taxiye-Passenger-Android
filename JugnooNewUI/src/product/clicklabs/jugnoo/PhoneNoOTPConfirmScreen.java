@@ -253,7 +253,7 @@ public class PhoneNoOTPConfirmScreen extends Activity{
 			Log.i("params", ">"+params);
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/send_otp_via_call", params,
+			client.post(Data.SERVER_URL + "/send_new_number_otp_via_call", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 

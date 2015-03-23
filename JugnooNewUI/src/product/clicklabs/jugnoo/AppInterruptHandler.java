@@ -4,20 +4,11 @@ import org.json.JSONObject;
 
 public interface AppInterruptHandler {
 	
-	public void onNewRideRequest();
-	
-	public void onCancelRideRequest(String engagementId, boolean acceptedByOtherDriver);
-	
-	public void onRideRequestTimeout(String engagementId);
-	
-	public void onManualDispatchPushReceived();
-	
-	
-	
-	
 	public void refreshDriverLocations();
 	
 	public void onChangeStatePushReceived();
+	
+	public void onCancelCompleted();
 	
 	public void rideRequestAcceptedInterrupt(JSONObject jObj);
 	
@@ -28,5 +19,7 @@ public interface AppInterruptHandler {
 	public void customerEndRideInterrupt(String engagementId);
 	
 	public void onAfterRideFeedbackSubmitted(int givenRating);
+	
+	public void onJugnooCashAddedByDriver(double jugnooBalance, String message);
 	
 }

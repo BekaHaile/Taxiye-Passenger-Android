@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="656px"
+    android:layout_width="616px"
     android:layout_height="wrap_content"
     android:background="@drawable/background_white_yellow_selector"
     android:orientation="vertical"
@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/textViewCouponTitle"
-            android:layout_width="500px"
+            android:layout_width="460px"
             android:layout_height="wrap_content"
             android:layout_marginLeft="45px"
             android:layout_marginRight="10px"
@@ -23,8 +23,8 @@
             android:layout_marginBottom="35px"
             android:gravity="center_vertical"
             android:text="1 Free Ride"
-            android:textColor="@color/grey_dark"
-            android:textSize="34px" />
+            android:textColor="@color/grey_dark_less"
+            android:textSize="30px" />
 
         <TextView
             android:id="@+id/textViewTNC"
@@ -34,7 +34,7 @@
             android:layout_gravity="center_vertical"
             android:text="T&amp;C"
             android:gravity="center"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/grey_dark_less"
             android:textSize="30px" />
     </LinearLayout>
 

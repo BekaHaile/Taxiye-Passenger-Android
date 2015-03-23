@@ -27,6 +27,20 @@ public class CouponInfo extends PromoCoupon{
 		this.maximumDiscountableValue = maximumDiscountableValue;
 	}
 	
+	public CouponInfo(int id, String title){
+		this.id = id;
+		this.title = title;
+		this.type = 0;
+		this.status = 0;
+		this.subtitle = "";
+		this.description = "";
+		this.image = "";
+		this.redeemedOn = "";
+		this.expiryDate = "";
+		this.discountPrecent = 0;
+		this.maximumDiscountableValue = 0;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		try{

@@ -25,6 +25,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -737,7 +738,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			
 			loginDataFetched = false;
 			startActivity(new Intent(SplashLogin.this, HomeActivity.class));
-			finish();
+			ActivityCompat.finishAffinity(this);
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 		else if(hasFocus && facebookRegister){

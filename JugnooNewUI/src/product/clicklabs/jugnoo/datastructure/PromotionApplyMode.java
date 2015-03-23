@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.datastructure;
 
 public enum PromotionApplyMode {
 	BEFORE_RIDE(0), 
-	BEFORE_SCHEDULE(1)
+	AFTER_SCHEDULE(1)
 	;
 
 	private int ordinal;

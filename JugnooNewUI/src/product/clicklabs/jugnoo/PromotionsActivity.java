@@ -260,13 +260,13 @@ public class PromotionsActivity extends Activity{
 		}
 
 		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				holder = new ViewHolderCoupon();
 				convertView = mInflater.inflate(R.layout.list_item_coupon, null);
 				
 				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Data.latoRegular(context));
-				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Data.latoLight(context));
+				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Data.latoLight(context), Typeface.BOLD);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
@@ -284,7 +284,7 @@ public class PromotionsActivity extends Activity{
 			
 			CouponInfo couponInfo = couponInfosList.get(position);
 
-			holder.textViewCouponTitle.setText(couponInfo.title + " " + couponInfo.subtitle);
+			holder.textViewCouponTitle.setText(couponInfo.title);
 			holder.textViewExpiryDate.setText("Expiring on "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -293,7 +293,7 @@ public class PromotionsActivity extends Activity{
 				public void onClick(View v) {
 					holder = (ViewHolderCoupon) v.getTag();
 					CouponInfo couponInfo = couponInfosList.get(holder.id);
-					DialogPopup.alertPopup(PromotionsActivity.this, "", couponInfo.description);
+					DialogPopup.alertPopupLeftOriented(PromotionsActivity.this, "", couponInfo.description);
 					FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.type);
 				}
 			});
@@ -333,60 +333,62 @@ public class PromotionsActivity extends Activity{
 								Log.e("Server response", "response = " + response);
 								try {
 									jObj = new JSONObject(response);
-									if(!jObj.isNull("error")){
-										String errorMessage = jObj.getString("error");
-										if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-											HomeActivity.logoutUser(activity);
+									
+									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+										int flag = jObj.getInt("flag");
+										if(ApiResponseFlags.COUPONS.getOrdinal() == flag){
+											
+//											{
+//											    "coupons": [
+//											        {
+//											            "title": "Free ride",
+//											            "description": "upte 100/-",
+//											            "discount": 100,
+//											            "maximum": 100,
+//											            "image": null,
+//											            "type": 0,
+//											            "redeemed_on": null,
+//											            "status": 1,
+//											            "expiry_date": "2014-11-07T18:29:59.000Z"
+//											        }
+//											    ]
+//											}
+											
+											couponInfosList.clear();
+											
+											if(jObj.has("coupons")){
+												JSONArray couponsData = jObj.getJSONArray("coupons");
+												if(couponsData.length() > 0){
+													for(int i=0; i<couponsData.length(); i++){
+														JSONObject coData = couponsData.getJSONObject(i);
+														
+														CouponInfo couponInfo = new CouponInfo(1,
+																coData.getInt("type"), 
+																coData.getInt("status"), 
+																coData.getString("title"), 
+																coData.getString("subtitle"), 
+																coData.getString("description"), 
+																coData.getString("image"), 
+																coData.getString("redeemed_on"), 
+																coData.getString("expiry_date"), 
+																coData.getDouble("discount"), 
+																coData.getDouble("maximum"));
+														
+														couponInfosList.add(couponInfo);
+													}
+													Collections.sort(couponInfosList, new DateComparator());
+												}
+											}
+											updateListData("No Coupons available", false);
 										}
 										else{
 											updateListData("Some error occurred. Tap to retry", true);
 										}
 									}
 									else{
-										
-//										{
-//										    "coupons": [
-//										        {
-//										            "title": "Free ride",
-//										            "description": "upte 100/-",
-//										            "discount": 100,
-//										            "maximum": 100,
-//										            "image": null,
-//										            "type": 0,
-//										            "redeemed_on": null,
-//										            "status": 1,
-//										            "expiry_date": "2014-11-07T18:29:59.000Z"
-//										        }
-//										    ]
-//										}
-										
-										couponInfosList.clear();
-										
-										if(jObj.has("coupons")){
-											JSONArray couponsData = jObj.getJSONArray("coupons");
-											if(couponsData.length() > 0){
-												for(int i=0; i<couponsData.length(); i++){
-													JSONObject coData = couponsData.getJSONObject(i);
-													
-													CouponInfo couponInfo = new CouponInfo(1,
-															coData.getInt("type"), 
-															coData.getInt("status"), 
-															coData.getString("title"), 
-															coData.getString("subtitle"), 
-															coData.getString("description"), 
-															coData.getString("image"), 
-															coData.getString("redeemed_on"), 
-															coData.getString("expiry_date"), 
-															coData.getDouble("discount"), 
-															coData.getDouble("maximum"));
-													
-													couponInfosList.add(couponInfo);
-												}
-												Collections.sort(couponInfosList, new DateComparator());
-											}
-										}
-										updateListData("No Coupons available", false);
+										updateListData("Some error occurred. Tap to retry", true);
 									}
+									
 								}  catch (Exception exception) {
 									exception.printStackTrace();
 									updateListData("Some error occurred. Tap to retry", true);

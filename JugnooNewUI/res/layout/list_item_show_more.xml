@@ -62,7 +62,7 @@
                 android:layout_marginRight="106px"
                 android:text="Show More"
                 android:textColor="@color/grey_black_light"
-                android:textSize="34px" />
+                android:textSize="26px" />
         
         
     </RelativeLayout>

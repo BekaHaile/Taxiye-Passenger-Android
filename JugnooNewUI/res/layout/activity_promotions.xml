@@ -51,7 +51,7 @@
                     android:layout_marginTop="60px"
                     android:background="#0000"
                     android:gravity="center_vertical"
-                    android:hint="Enter Promocode"
+                    android:hint="Enter Promo Code"
                     android:capitalize="words"
                     android:paddingLeft="20px"
                     android:paddingRight="20px"
