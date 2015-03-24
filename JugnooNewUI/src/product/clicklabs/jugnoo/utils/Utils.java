@@ -127,17 +127,20 @@ public class Utils {
 	}
 	
 	
+	
 	public static boolean appInstalledOrNot(Context context, String uri) {
         PackageManager pm = context.getPackageManager();
-        boolean app_installed = false;
+        boolean appInstalled = false;
         try {
             pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            app_installed = true;
+            appInstalled = true;
         }
         catch (Exception e) {
-            app_installed = false;
+            appInstalled = false;
         }
-        return app_installed;
+        return appInstalled;
     }
+	
+	
 	
 }

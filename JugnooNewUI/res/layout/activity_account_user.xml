@@ -324,7 +324,8 @@
                             android:id="@+id/textViewInfo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="120px"
                             android:text="TextView"
                             android:textColor="@color/black_text"
                             android:textSize="30px" />
@@ -333,7 +334,10 @@
                             android:id="@+id/progressBarList"
                             android:layout_width="100px"
                             android:layout_height="100px"
-                            android:layout_centerInParent="true" />
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="85px"
+                            
+                             />
                     </RelativeLayout>
 
                     <RelativeLayout

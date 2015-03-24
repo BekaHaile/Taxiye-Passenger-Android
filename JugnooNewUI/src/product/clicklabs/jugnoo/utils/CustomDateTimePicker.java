@@ -180,7 +180,7 @@ public class CustomDateTimePicker implements OnClickListener {
 		btn_cancel.setTypeface(Data.latoRegular(activity));
 		btn_cancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
 		btn_cancel.setTextColor(activity.getResources().getColor(R.drawable.text_color_white_alpha_selector));
-		btn_cancel.setBackgroundResource(R.drawable.button_yellow_selector);
+		btn_cancel.setBackgroundResource(R.drawable.grey_btn_selector);
 
 		linear_bottom.addView(btn_cancel);
 		linear_bottom.addView(btn_set);

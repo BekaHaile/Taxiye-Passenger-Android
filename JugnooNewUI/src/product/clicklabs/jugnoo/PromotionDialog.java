@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -294,12 +293,9 @@ public class PromotionDialog {
 		LayoutInflater mInflater;
 		ViewHolderPromotion holder;
 		Activity context;
-		Drawable drawableWhite, drawableYellow;
 		public PromotionsListAdapter(Activity context) {
 			this.context = context;
 			this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			this.drawableWhite = context.getResources().getDrawable(R.drawable.background_white);
-			this.drawableYellow = context.getResources().getDrawable(R.drawable.background_yellow);
 		}
 
 		@Override
@@ -351,12 +347,12 @@ public class PromotionDialog {
 			}
 			
 			if(selectedCoupon.id == promoCoupon.id){
-				holder.relative.setBackground(drawableYellow);
+				holder.relative.setBackgroundColor(context.getResources().getColor(R.color.yellow));
 				holder.textViewCouponTitle.setTextColor(context.getResources().getColor(R.color.white));
 				holder.textViewTNC.setTextColor(context.getResources().getColor(R.color.white));
 			}
 			else{
-				holder.relative.setBackground(drawableWhite);
+				holder.relative.setBackgroundColor(context.getResources().getColor(R.color.white));
 				holder.textViewCouponTitle.setTextColor(context.getResources().getColor(R.color.grey_dark_less));
 				holder.textViewTNC.setTextColor(context.getResources().getColor(R.color.grey_dark_less));
 			}

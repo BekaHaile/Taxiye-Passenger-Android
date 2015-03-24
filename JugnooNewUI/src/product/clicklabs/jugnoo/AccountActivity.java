@@ -1000,7 +1000,7 @@ public class AccountActivity extends Activity {
 										
 										
 										updateListData("No rides currently", false);
-										
+
 									}
 									else{
 										updateListData("Some error occurred, tap to retry", true);
