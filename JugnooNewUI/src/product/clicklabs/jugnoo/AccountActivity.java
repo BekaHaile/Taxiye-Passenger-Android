@@ -76,6 +76,9 @@ public class AccountActivity extends Activity {
 	ImageView imageViewEmailVerifyStatus;
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
+	RelativeLayout relativeLayoutChangePassword;
+	TextView textViewChangePassword;
+	
 	
 	RelativeLayout relativeLayoutRideTransactions;
 	TextView textViewRecentTransactions;
@@ -139,6 +142,9 @@ public class AccountActivity extends Activity {
 		textViewEmailVerifyMessage = (TextView) findViewById(R.id.textViewEmailVerifyMessage); textViewEmailVerifyMessage.setTypeface(Data.latoRegular(this));
 		textViewEmailVerify = (TextView) findViewById(R.id.textViewEmailVerify); textViewEmailVerify.setTypeface(Data.latoRegular(this));
 		
+		relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
+		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Data.latoRegular(this));
+		relativeLayoutChangePassword.setVisibility(View.GONE);
 		
 		relativeLayoutRideTransactions = (RelativeLayout) findViewById(R.id.relativeLayoutRideTransactions);
 		textViewRecentTransactions = (TextView) findViewById(R.id.textViewRecentTransactions); textViewRecentTransactions.setTypeface(Data.latoRegular(this));
@@ -419,6 +425,15 @@ public class AccountActivity extends Activity {
 				else if(EmailVerificationStatus.WRONG_EMAIL.getOrdinal() == Data.userData.emailVerificationStatus){
 					imageViewEditEmail.performClick();
 				}
+			}
+		});
+		
+		relativeLayoutChangePassword.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(AccountActivity.this, ChangePasswordActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 		

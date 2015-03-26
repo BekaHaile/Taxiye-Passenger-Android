@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -247,8 +248,33 @@ public class JSONParser {
 			
 		parseCancellationReasons(jObj);
 		
+		Data.referralMessages = parseReferralMessages(jObj);
 		
 		return resp;
+	}
+	
+	
+	public ReferralMessages parseReferralMessages(JSONObject jObj){
+		String referralMessage = "Share your referral code "+Data.userData.referralCode+
+				" with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, you will earn a FREE ride (up to Rs. 100) as well.";
+		String referralSharingMessage = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
+				" Use this referral code: "+Data.userData.referralCode+" to get FREE ride up to Rs. 100." +
+						"\nDownload it from here: http://smarturl.it/jugnoo";
+		
+		try {
+			if(jObj.has("referral_message")){
+				referralMessage = jObj.getString("referral_message");
+			}
+			if(jObj.has("referral_sharing_message")){
+				referralSharingMessage = jObj.getString("referral_sharing_message");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage);
+		
+		return referralMessages;
 	}
 	
 	

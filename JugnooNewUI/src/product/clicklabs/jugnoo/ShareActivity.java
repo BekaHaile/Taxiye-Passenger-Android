@@ -37,16 +37,16 @@ public class ShareActivity extends Activity{
 	ImageView imageViewFacebook, imageViewWhatsapp, imageViewSMS, imageViewEmail;
 	TextView textViewReferralCode;
 	
-	
-	String str1 = "Share your referral code ",
-			str2 = " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, " +
-					"you will earn a FREE ride (up to Rs. 100) as well.",
-					str3 = "Your Referral Code is ";
-	
-	
-	String shareStr1 = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
-	String shareStr11 = "Use Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
-	String shareStr2 = " to get FREE ride up to Rs. 100.\nDownload it from here: http://smarturl.it/jugnoo";
+//	
+//	String str1 = "Share your referral code ",
+//			str2 = " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, " +
+//					"you will earn a FREE ride (up to Rs. 100) as well.",
+//			str3 = "Your Referral Code is ";
+//	
+//	
+//	String shareStr1 = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
+//	String shareStr11 = "Use Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
+//	String shareStr2 = " to get FREE ride up to Rs. 100.\nDownload it from here: http://smarturl.it/jugnoo";
 	
 	@Override
 	protected void onStart() {
@@ -85,16 +85,27 @@ public class ShareActivity extends Activity{
 		
 		textViewReferralCode = (TextView) findViewById(R.id.textViewReferralCode); textViewReferralCode.setTypeface(Data.latoRegular(this));
 		
-		SpannableString sstr = new SpannableString(Data.userData.referralCode);
-		final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-		final ForegroundColorSpan clrs = new ForegroundColorSpan(Color.parseColor("#FAA31C"));
-		sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		sstr.setSpan(clrs, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		try {
+			if(Data.referralMessages.referralMessage.contains(Data.userData.referralCode)){
+				String strPre = Data.referralMessages.referralMessage.split(Data.userData.referralCode)[0];
+				String strPost = Data.referralMessages.referralMessage.split(Data.userData.referralCode)[1];
+				
+				SpannableString sstr = new SpannableString(Data.userData.referralCode);
+				final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+				final ForegroundColorSpan clrs = new ForegroundColorSpan(Color.parseColor("#FAA31C"));
+				sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				sstr.setSpan(clrs, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				
+				textViewReferralCode.setText("");
+				textViewReferralCode.append(strPre);
+				textViewReferralCode.append(sstr);
+				textViewReferralCode.append(strPost);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		textViewReferralCode.setText("");
-		textViewReferralCode.append(str1);
-		textViewReferralCode.append(sstr);
-		textViewReferralCode.append(str2);
+		
 		
 		
 		
@@ -121,7 +132,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				shareToWhatsapp(Data.userData.referralCode);
+				shareToWhatsapp();
 				FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);
 			}
 		});
@@ -131,7 +142,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				sendSMSIntent(Data.userData.referralCode);
+				sendSMSIntent();
 				FlurryEventLogger.sharedViaSMS(Data.userData.accessToken);
 			}
 		});
@@ -140,7 +151,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				openMailIntent(Data.userData.referralCode);
+				openMailIntent();
 				FlurryEventLogger.sharedViaEmail(Data.userData.accessToken);
 			}
 		});
@@ -154,18 +165,18 @@ public class ShareActivity extends Activity{
 		@Override
 		public void facebookLoginDone() {
 			new FacebookLoginHelper().publishFeedDialog(ShareActivity.this, 
-					shareStr11 + Data.userData.referralCode + shareStr2, 
+					Data.referralMessages.referralSharingMessage, 
 					"Use " + Data.userData.referralCode + " as code & get a FREE ride");
 		}
 	};
 	
 	
-	public void shareToWhatsapp(String referralCode) {
+	public void shareToWhatsapp() {
 		PackageManager pm = getPackageManager();
 		try {
 			Intent waIntent = new Intent(Intent.ACTION_SEND);
 			waIntent.setType("text/plain");
-			String text = shareStr1 + referralCode + shareStr2;
+			String text = Data.referralMessages.referralSharingMessage;
 
 			PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
 			Log.d("info", "="+info);
@@ -180,19 +191,19 @@ public class ShareActivity extends Activity{
 	}
 	
 	
-	public void sendSMSIntent(String referralCode){
+	public void sendSMSIntent(){
 		Uri sms_uri = Uri.parse("smsto:"); 
         Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri); 
-        sms_intent.putExtra("sms_body", shareStr1 + referralCode + shareStr2); 
+        sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage); 
         startActivity(sms_intent); 
 	}
 	
 	
-	public void openMailIntent(String referralCode){
+	public void openMailIntent(){
 		Intent email = new Intent(Intent.ACTION_SEND);
 		email.putExtra(Intent.EXTRA_EMAIL, new String[] { "" });
 		email.putExtra(Intent.EXTRA_SUBJECT, "Jugnoo Invite");
-		email.putExtra(Intent.EXTRA_TEXT, shareStr1 + referralCode + shareStr2);
+		email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage);
 		email.setType("message/rfc822");
 		startActivity(Intent.createChooser(email, "Choose an Email client:"));
 	}

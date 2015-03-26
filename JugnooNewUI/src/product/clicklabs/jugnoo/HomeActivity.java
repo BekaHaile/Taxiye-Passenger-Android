@@ -82,6 +82,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -176,7 +180,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	ImageView imageViewMenu, imageViewSearchCancel;
 	TextView title;
 	Button checkServerBtn, toggleDebugModeBtn;
-	ImageView jugnooShopImageView, imageViewJugnooApp;
+	ImageView jugnooShopImageView, imageViewJugnooApp, imageViewMeals, imageViewFatafat;
+	boolean mealsAnimating = false, fatafatAnimating = false;
 	
 	
 	
@@ -401,6 +406,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		dontCallRefreshDriver = false;
 		mapTouchedOnce = false;
 		
+		mealsAnimating = false;
+		fatafatAnimating = false;
+		
 		appMode = AppMode.NORMAL;
 		
 		
@@ -468,6 +476,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
 		imageViewJugnooApp = (ImageView) findViewById(R.id.imageViewJugnooApp);
+		imageViewMeals = (ImageView) findViewById(R.id.imageViewMeals); imageViewMeals.setEnabled(false);
+		imageViewFatafat = (ImageView) findViewById(R.id.imageViewFatafat); imageViewFatafat.setEnabled(false);
 		
 		
 		
@@ -692,12 +702,43 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				try {
-					if(Data.userData != null){
-						if(Data.userData.enableJugnooMeals == 1){
-							CustomAppLauncher.launchApp(HomeActivity.this, Data.userData.jugnooMealsPackageName);
-						}
+				if(!mealsAnimating){
+					if(imageViewMeals.getTag() != "shown"){
+						startShowAnimMeals();
 					}
+					else{
+						startHideAnimMeals();
+					}
+				}
+				if(!fatafatAnimating){
+					if(imageViewFatafat.getTag() != "shown"){
+						startShowAnimFatafat();
+					}
+					else{
+						startHideAnimFatafat();
+					}
+				}
+			}
+		});
+		
+		imageViewMeals.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				try {
+					CustomAppLauncher.launchApp(HomeActivity.this, AccessTokenGenerator.MEALS_PACKAGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		imageViewFatafat.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				try {
+					CustomAppLauncher.launchApp(HomeActivity.this, AccessTokenGenerator.FATAFAT_PACKAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -1068,6 +1109,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 		
+		textViewInRideLowJugnooCash.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				buttonAddJugnooCash.performClick();
+			}
+		});
+		
 		
 		
 		
@@ -1400,6 +1449,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			startUIAfterGettingUserStatus();
 			
+			imageViewJugnooApp.setVisibility(View.VISIBLE);
+			
 			
 			Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
 			
@@ -1410,6 +1461,164 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 	}
 	
+	
+	public long animDuration = 300;
+	
+	public void startShowAnimMeals(){
+		Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * 110);
+		translateAnimation.setDuration(animDuration);
+		translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+		translateAnimation.setFillAfter(false);
+		translateAnimation.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				mealsAnimating = true;
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals.getLayoutParams());
+				layoutParams.setMargins(0, 0, 0, 0);
+				imageViewMeals.setLayoutParams(layoutParams);
+				imageViewMeals.setEnabled(false);
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals.getLayoutParams());
+				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 110)), 0, 0);
+				imageViewMeals.clearAnimation();
+				imageViewMeals.setLayoutParams(layoutParams);
+				imageViewMeals.setEnabled(true);
+				imageViewMeals.setTag("shown");
+				mealsAnimating = false;
+			}
+		});
+		imageViewMeals.clearAnimation();
+		imageViewMeals.startAnimation(translateAnimation);
+	}
+	
+	public void startHideAnimMeals(){
+		Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * -110);
+		translateAnimation.setDuration(animDuration);
+		translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+		translateAnimation.setFillAfter(false);
+		translateAnimation.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				mealsAnimating = true;
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals.getLayoutParams());
+				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 110)), 0, 0);
+				imageViewMeals.setLayoutParams(layoutParams);
+				imageViewMeals.setEnabled(false);
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals.getLayoutParams());
+				layoutParams.setMargins(0, 0, 0, 0);
+				imageViewMeals.clearAnimation();
+				imageViewMeals.setLayoutParams(layoutParams);
+				imageViewMeals.setTag("");
+				mealsAnimating = false;
+			}
+		});
+		imageViewMeals.clearAnimation();
+		imageViewMeals.startAnimation(translateAnimation);
+	}
+	
+
+	
+	public void startShowAnimFatafat(){
+		Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * 220);
+		translateAnimation.setDuration(animDuration);
+		translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+		translateAnimation.setFillAfter(false);
+		translateAnimation.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				fatafatAnimating = true;
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat.getLayoutParams());
+				layoutParams.setMargins(0, 0, 0, 0);
+				imageViewFatafat.setLayoutParams(layoutParams);
+				imageViewFatafat.setEnabled(false);
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat.getLayoutParams());
+				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 220)), 0, 0);
+				imageViewFatafat.clearAnimation();
+				imageViewFatafat.setLayoutParams(layoutParams);
+				imageViewFatafat.setEnabled(true);
+				imageViewFatafat.setTag("shown");
+				fatafatAnimating = false;
+			}
+		});
+		imageViewFatafat.clearAnimation();
+		imageViewFatafat.startAnimation(translateAnimation);
+	}
+	
+	public void startHideAnimFatafat(){
+		Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, 0, 
+				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * -220);
+		translateAnimation.setDuration(animDuration);
+		translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+		translateAnimation.setFillAfter(false);
+		translateAnimation.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				fatafatAnimating = true;
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat.getLayoutParams());
+				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 220)), 0, 0);
+				imageViewFatafat.setLayoutParams(layoutParams);
+				imageViewFatafat.setEnabled(false);
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat.getLayoutParams());
+				layoutParams.setMargins(0, 0, 0, 0);
+				imageViewFatafat.clearAnimation();
+				imageViewFatafat.setLayoutParams(layoutParams);
+				imageViewFatafat.setTag("");
+				fatafatAnimating = false;
+			}
+		});
+		imageViewFatafat.clearAnimation();
+		imageViewFatafat.startAnimation(translateAnimation);
+	}
 	
 	
 	public void enableJugnooShopUI(){
@@ -1440,24 +1649,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public void enableJugnooMealsUI(){
-		if(UserMode.PASSENGER == userMode){
-			if(Data.userData != null){
-	    		if(Data.userData.enableJugnooMeals == 1){
-	    			imageViewJugnooApp.setVisibility(View.VISIBLE);
-	    		}
-	    		else{
-	    			imageViewJugnooApp.setVisibility(View.GONE);
-	    		}
-			}
-			else{
-				imageViewJugnooApp.setVisibility(View.GONE);
-			}
-		}
-		else{
-			imageViewJugnooApp.setVisibility(View.GONE);
-		}
-	}
 	
 	
 	public void callMapTouchedRefreshDrivers(){
@@ -1623,6 +1814,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
 			try{Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewProfile);}catch(Exception e){}
+			
+			updateLowJugnooCashBanner(passengerScreenMode);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -1729,7 +1922,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		enableJugnooShopUI();
-		enableJugnooMealsUI();
+		imageViewJugnooApp.setVisibility(View.VISIBLE);
 		
 		switch(mode){
 		
@@ -1943,17 +2136,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				buttonCancelRide.setVisibility(View.GONE);
 				buttonAddJugnooCash.setVisibility(View.VISIBLE);
 				
-				if(Data.userData != null){
-					if(Data.userData.jugnooBalance < MIN_BALANCE_ALERT_VALUE){
-						textViewInRideLowJugnooCash.setVisibility(View.VISIBLE);
-					}
-					else{
-						textViewInRideLowJugnooCash.setVisibility(View.GONE);
-					}
-				}
-				else{
-					textViewInRideLowJugnooCash.setVisibility(View.GONE);
-				}
+				updateLowJugnooCashBanner(mode);
 				
 
 				imageViewSearchCancel.setVisibility(View.GONE);
@@ -1992,6 +2175,25 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 	}
 
+	
+	public void updateLowJugnooCashBanner(PassengerScreenMode mode){
+		if(PassengerScreenMode.P_IN_RIDE == mode){
+			if(Data.userData != null){
+				if(Data.userData.jugnooBalance < MIN_BALANCE_ALERT_VALUE){
+					textViewInRideLowJugnooCash.setVisibility(View.VISIBLE);
+				}
+				else{
+					textViewInRideLowJugnooCash.setVisibility(View.GONE);
+				}
+			}
+			else{
+				textViewInRideLowJugnooCash.setVisibility(View.GONE);
+			}
+		}
+		else{
+			textViewInRideLowJugnooCash.setVisibility(View.GONE);
+		}
+	}
 	
 	
 	public void setFareFactorToInitialState(){

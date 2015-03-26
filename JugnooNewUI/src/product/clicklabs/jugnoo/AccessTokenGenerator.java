@@ -14,7 +14,11 @@ public class AccessTokenGenerator {
 	
 	public static final String LOGOUT = "logout";
 	
-	private static final String[] OTHER_JUGNOO_APP_PACKAGES = new String[]{ "com.cdk23.nlk", "com.cdk23.nlkf" };
+	public static final String MEALS_PACKAGE = "com.cdk23.nlk";
+	public static final String FATAFAT_PACKAGE = "com.cdk23.nlkf";
+	
+	
+	private static final String[] OTHER_JUGNOO_APP_PACKAGES = new String[]{ MEALS_PACKAGE, FATAFAT_PACKAGE };
 	
 	@SuppressWarnings("deprecation")
 	public static void saveAuthKey(Context context, String authKey) {
