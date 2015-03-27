@@ -1009,6 +1009,10 @@ public class AccountActivity extends Activity {
 											}
 										}
 										
+										Log.e("totalRides", "="+totalRides);
+										Log.e("rideInfosList", "="+rideInfosList.size());
+										Log.e("futureSchedule", "="+futureSchedule);
+										
 										
 										
 										updateListData("No rides currently", false);
@@ -1248,7 +1252,7 @@ public class AccountActivity extends Activity {
 		@Override
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
-			if(totalRides > rideInfosList.size()){
+			if(totalRides > getCount()){
 				relativeLayoutSeeMore.setVisibility(View.VISIBLE);
 			}
 			else{

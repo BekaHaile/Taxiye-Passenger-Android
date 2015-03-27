@@ -274,6 +274,7 @@ public class HelpActivity extends FragmentActivity{
 				Log.e("helpSection", "="+helpSection);
 				
 				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
 				params.put("section", ""+helpSection.getOrdinal());
 				
 				fetchHelpDataClient = Data.getClient();

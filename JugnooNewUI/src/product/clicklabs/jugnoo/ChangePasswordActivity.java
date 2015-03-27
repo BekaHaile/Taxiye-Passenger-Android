@@ -115,7 +115,13 @@ public class ChangePasswordActivity extends Activity {
 									editTextNewPassword.setError("New Password is same as the old one");
 								}
 								else{
-									updateUserProfileChangePasswordAPI(ChangePasswordActivity.this, oldPassword, newPassword);
+									if(newPassword.length() >= 6){
+										updateUserProfileChangePasswordAPI(ChangePasswordActivity.this, oldPassword, newPassword);
+									}
+									else{
+										editTextNewPassword.requestFocus();
+										editTextNewPassword.setError("New Password must be of atleast 6 characters");
+									}
 								}
 							}
 						}

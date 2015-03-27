@@ -167,8 +167,8 @@ public class ShareActivity extends Activity{
 			if(Data.userData != null){
 				new FacebookLoginHelper().publishFeedDialog(ShareActivity.this, 
 						"Jugnoo - autos on demand",
-						Data.referralMessages.referralSharingMessage, 
-						"Use " + Data.userData.referralCode + " as code & get a FREE ride",
+						Data.referralMessages.fbShareCaption, 
+						Data.referralMessages.fbShareDescription,
 						"https://jugnoo.in",
 						Data.userData.jugnooFbBanner);
 			}
@@ -179,6 +179,8 @@ public class ShareActivity extends Activity{
 			//"https://jugnoo.in"
 		}
 	};
+	
+	
 	
 	
 	public void shareToWhatsapp() {

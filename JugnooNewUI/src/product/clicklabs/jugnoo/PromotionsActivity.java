@@ -380,6 +380,10 @@ public class PromotionsActivity extends Activity{
 												}
 											}
 											updateListData("No Coupons available", false);
+											
+											if(Data.userData != null){
+												Data.userData.numCouponsAvaliable = couponInfosList.size();
+											}
 										}
 										else{
 											updateListData("Some error occurred. Tap to retry", true);

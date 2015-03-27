@@ -430,7 +430,7 @@ public class RideTransactionsActivity extends Activity {
 		@Override
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
-			if(AccountActivity.totalRides > AccountActivity.rideInfosList.size()){
+			if(AccountActivity.totalRides > getCount()){
 				relativeLayoutShowMore.setVisibility(View.VISIBLE);
 			}
 			else{

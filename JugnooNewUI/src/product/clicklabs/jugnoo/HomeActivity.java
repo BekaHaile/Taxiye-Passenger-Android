@@ -1672,7 +1672,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try{
 			textViewUserName.setText(Data.userData.userName);
 			
-			textViewPromotionsValue.setText(Data.userData.numCouponsAvaliable);
+			textViewPromotionsValue.setText(""+Data.userData.numCouponsAvaliable);
 			
 			textViewJugnooCashValue.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDecimal.format(Data.userData.jugnooBalance));
 			

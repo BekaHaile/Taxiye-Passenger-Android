@@ -112,6 +112,9 @@ public class CustomDateTimePicker implements OnClickListener {
 		datePicker.setMaxDate(calendar.getTimeInMillis());
 		datePicker.setCalendarViewShown(false);
 		
+		
+		
+		
 		timePicker = new TimePicker(activity);
 		timePicker.setOnTimeChangedListener(new OnTimeChangedListener() {
 			@Override
