@@ -101,7 +101,8 @@ public class JSONParser {
 		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, 
 				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;
 		int emailVerificationStatus = 1;
-		String userEmail = "", phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk";
+		int numCouponsAvailable = 0;
+		String userEmail = "", phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk", jugnooFbBanner = "http://bit.ly/1OCgcke";
 		double jugnooBalance = 0, fareFactor = 1.0;
 		
 		if(userData.has("can_schedule")){
@@ -198,6 +199,14 @@ public class JSONParser {
 			fareFactor = userData.getDouble("fare_factor");
 		}
 		
+		if(userData.has("jugnoo_fb_banner")){
+			jugnooFbBanner = userData.getString("jugnoo_fb_banner");
+		}
+		
+		if(userData.has("num_coupons_available")){
+			numCouponsAvailable = userData.getInt("num_coupons_available");
+		}
+		
 		String authKey = userData.getString("auth_key");
 		AccessTokenGenerator.saveAuthKey(context, authKey);
 		
@@ -207,7 +216,8 @@ public class JSONParser {
 		return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus, 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
 				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
-				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor);
+				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
+				jugnooFbBanner, numCouponsAvailable);
 	}
 	
 

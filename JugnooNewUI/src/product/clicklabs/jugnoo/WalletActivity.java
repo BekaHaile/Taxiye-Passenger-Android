@@ -189,6 +189,9 @@ public class WalletActivity extends Activity{
 				if("success".equalsIgnoreCase(payment)){
 					String amount = getIntent().getStringExtra("amount");
 					DialogPopup.dialogBanner(WalletActivity.this, "Payment successful, Added Rs. "+amount);
+					if(AddPaymentPath.FROM_IN_RIDE == WalletAddPaymentActivity.addPaymentPath){
+						HomeActivity.rechargedOnce = true;
+					}
 				}
 			}
 		} catch(Exception e){

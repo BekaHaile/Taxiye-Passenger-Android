@@ -1,16 +1,18 @@
 package product.clicklabs.jugnoo.datastructure;
 
 public class UserData {
-	public String accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, nukkadIcon, jugnooMealsPackageName;
+	public String accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, nukkadIcon, jugnooMealsPackageName, jugnooFbBanner;
 	public int canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, enableJugnooMeals,
 		freeRideIconDisable;
 	public int emailVerificationStatus;
 	public double jugnooBalance;
+	public int numCouponsAvaliable;
 	public double fareFactor;
 	public UserData(String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus, 
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
-			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor){
+			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
+			String jugnooFbBanner, int numCouponsAvaliable){
 		this.accessToken = accessToken;
 		this.authKey = authKey;
 		this.userName = userName;
@@ -34,5 +36,8 @@ public class UserData {
 		this.freeRideIconDisable = freeRideIconDisable;
 		this.jugnooBalance = jugnooBalance;
 		this.fareFactor = fareFactor;
+		
+		this.jugnooFbBanner = jugnooFbBanner;
+		this.numCouponsAvaliable = numCouponsAvaliable;
 	}
 }

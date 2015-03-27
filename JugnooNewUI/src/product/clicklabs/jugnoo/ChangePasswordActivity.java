@@ -115,7 +115,7 @@ public class ChangePasswordActivity extends Activity {
 									editTextNewPassword.setError("New Password is same as the old one");
 								}
 								else{
-									changePasswordAsync(ChangePasswordActivity.this, oldPassword, newPassword);
+									updateUserProfileChangePasswordAPI(ChangePasswordActivity.this, oldPassword, newPassword);
 								}
 							}
 						}
@@ -268,29 +268,36 @@ public class ChangePasswordActivity extends Activity {
 	
 	
 	
-	public void changePasswordAsync(final Activity activity, final String oldPassword, final String newPassword) {
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
+	public void updateUserProfileChangePasswordAPI(final Activity activity, final String oldPassword, final String newPassword) {
+		if(AppStatus.getInstance(activity).isOnline(activity)) {
 			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, "Updating...");
 			
 			RequestParams params = new RequestParams();
 		
+			params.put("client_id", Data.CLIENT_ID);
 			params.put("access_token", Data.userData.accessToken);
+			params.put("is_access_token_new", "1");
 			params.put("old_password", oldPassword);
 			params.put("new_password", newPassword);
-			params.put("client_id", Data.CLIENT_ID);
-
-			Log.i("params", "=" + params);
-		
+			
+			
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/change_password", params,
+			client.post(Data.SERVER_URL + "/update_user_profile", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
-					@Override
-					public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
-	
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+							DialogPopup.dismissLoadingDialog();
 							try {
 								jObj = new JSONObject(response);
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
@@ -316,18 +323,9 @@ public class ChangePasswordActivity extends Activity {
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
 							}
-							DialogPopup.dismissLoadingDialog();
 						}
-						
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-						
 					});
 		}
 		else {

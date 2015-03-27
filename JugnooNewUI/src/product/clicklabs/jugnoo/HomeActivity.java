@@ -145,7 +145,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	TextView textViewJugnooCash, textViewJugnooCashValue;
 	
 	RelativeLayout relativeLayoutPromotions;
-	TextView textViewPromotions;
+	TextView textViewPromotions, textViewPromotionsValue;
 	
 	RelativeLayout relativeLayoutFareDetails;
 	TextView textViewFareDetails;
@@ -385,6 +385,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	public boolean activityResumed = false;
+	public static boolean rechargedOnce = false;
 	
 	public ASSL assl;
 	
@@ -400,6 +401,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		activity = this;
 		
 		activityResumed = false;
+		rechargedOnce = false;
 		
 		loggedOut = false;
 		zoomedToMyLocation = false;
@@ -445,6 +447,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 		relativeLayoutPromotions = (RelativeLayout) findViewById(R.id.relativeLayoutPromotions);
 		textViewPromotions = (TextView) findViewById(R.id.textViewPromotions); textViewPromotions.setTypeface(Data.latoRegular(this));
+		textViewPromotionsValue = (TextView) findViewById(R.id.textViewPromotionsValue); textViewPromotionsValue.setTypeface(Data.latoRegular(this));
 
 		relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails);
 		textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails); textViewFareDetails.setTypeface(Data.latoRegular(this));
@@ -1136,147 +1139,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		// End ride review layout events
 		endRideReviewRl.setOnClickListener(new View.OnClickListener() {
 					
@@ -1810,6 +1672,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		try{
 			textViewUserName.setText(Data.userData.userName);
 			
+			textViewPromotionsValue.setText(Data.userData.numCouponsAvaliable);
+			
 			textViewJugnooCashValue.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDecimal.format(Data.userData.jugnooBalance));
 			
 			Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
@@ -2179,7 +2043,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void updateLowJugnooCashBanner(PassengerScreenMode mode){
 		if(PassengerScreenMode.P_IN_RIDE == mode){
 			if(Data.userData != null){
-				if(Data.userData.jugnooBalance < MIN_BALANCE_ALERT_VALUE){
+				if(HomeActivity.rechargedOnce){
+					textViewInRideLowJugnooCash.setVisibility(View.GONE);
+				}
+				else if(Data.userData.jugnooBalance < MIN_BALANCE_ALERT_VALUE){
 					textViewInRideLowJugnooCash.setVisibility(View.VISIBLE);
 				}
 				else{
@@ -3896,7 +3763,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	void switchToScheduleScreen(final Activity activity){
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR_OF_DAY, 1);
-		calendar.add(Calendar.MINUTE, 5);
+		calendar.add(Calendar.MINUTE, (5 - (calendar.get(Calendar.MINUTE) % 5)));
 		
 		if(map != null){
 			LatLng latLng = map.getCameraPosition().target;

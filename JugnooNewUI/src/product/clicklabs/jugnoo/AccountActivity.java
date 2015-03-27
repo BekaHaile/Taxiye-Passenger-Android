@@ -144,7 +144,6 @@ public class AccountActivity extends Activity {
 		
 		relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
 		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Data.latoRegular(this));
-		relativeLayoutChangePassword.setVisibility(View.GONE);
 		
 		relativeLayoutRideTransactions = (RelativeLayout) findViewById(R.id.relativeLayoutRideTransactions);
 		textViewRecentTransactions = (TextView) findViewById(R.id.textViewRecentTransactions); textViewRecentTransactions.setTypeface(Data.latoRegular(this));
@@ -467,7 +466,7 @@ public class AccountActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				getRecentRidesAPI(AccountActivity.this, true);
+				getRecentRidesAPI(AccountActivity.this);
 			}
 		});
 		
@@ -606,7 +605,7 @@ public class AccountActivity extends Activity {
 		
 		reloadProfileAPI(this);
 		
-		getRecentRidesAPI(this, true);
+		getRecentRidesAPI(this);
 		
 		scrollView.scrollTo(0, 0);
 	}
@@ -915,14 +914,12 @@ public class AccountActivity extends Activity {
 	}
 	
 	
-	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
+	public void getRecentRidesAPI(final Activity activity) {
 		progressBarList.setVisibility(View.GONE);
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
 			
-			if(refresh){
-				rideInfosList.clear();
-				futureSchedule = null;
-			}
+			rideInfosList.clear();
+			futureSchedule = null;
 			
 			progressBarList.setVisibility(View.VISIBLE);
 			textViewInfo.setVisibility(View.GONE);
@@ -1226,7 +1223,7 @@ public class AccountActivity extends Activity {
 												
 												@Override
 												public void onCancelSuccess() {
-													getRecentRidesAPI(AccountActivity.this, true);
+													getRecentRidesAPI(AccountActivity.this);
 												}
 											});
 										}

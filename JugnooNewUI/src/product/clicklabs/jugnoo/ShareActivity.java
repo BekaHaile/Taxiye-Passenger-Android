@@ -164,9 +164,19 @@ public class ShareActivity extends Activity{
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
 		public void facebookLoginDone() {
-			new FacebookLoginHelper().publishFeedDialog(ShareActivity.this, 
-					Data.referralMessages.referralSharingMessage, 
-					"Use " + Data.userData.referralCode + " as code & get a FREE ride");
+			if(Data.userData != null){
+				new FacebookLoginHelper().publishFeedDialog(ShareActivity.this, 
+						"Jugnoo - autos on demand",
+						Data.referralMessages.referralSharingMessage, 
+						"Use " + Data.userData.referralCode + " as code & get a FREE ride",
+						"https://jugnoo.in",
+						Data.userData.jugnooFbBanner);
+			}
+			
+//			http://i62.tinypic.com/2uejgj5.png
+			//http://bit.ly/1OCgcke
+			
+			//"https://jugnoo.in"
 		}
 	};
 	

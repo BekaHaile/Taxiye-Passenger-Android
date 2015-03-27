@@ -227,14 +227,14 @@ public class FacebookLoginHelper {
 	        
 	}
 	
-	public void publishFeedDialog(final Activity activity, String shareString, String shareString2) {
+	public void publishFeedDialog(final Activity activity, String name, String caption, String description, String link, String pictureLink) {
 		
 	    Bundle params = new Bundle();
-	    params.putString("name", "Jugnoo - autos on demand");
-	    params.putString("caption", shareString);
-	    params.putString("description", shareString2);
-	    params.putString("link", "https://jugnoo.in");
-	    params.putString("picture", "http://i62.tinypic.com/2uejgj5.png");
+	    params.putString("name", name);
+	    params.putString("caption", caption);
+	    params.putString("description", description);
+	    params.putString("link", link);
+	    params.putString("picture", pictureLink);
 
 	    WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(activity, Session.getActiveSession(), params))
 	        .setOnCompleteListener(new OnCompleteListener() {
