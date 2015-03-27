@@ -76,6 +76,9 @@ public class AccountActivity extends Activity {
 	ImageView imageViewEmailVerifyStatus;
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
+	RelativeLayout relativeLayoutChangePassword;
+	TextView textViewChangePassword;
+	
 	
 	RelativeLayout relativeLayoutRideTransactions;
 	TextView textViewRecentTransactions;
@@ -139,6 +142,8 @@ public class AccountActivity extends Activity {
 		textViewEmailVerifyMessage = (TextView) findViewById(R.id.textViewEmailVerifyMessage); textViewEmailVerifyMessage.setTypeface(Data.latoRegular(this));
 		textViewEmailVerify = (TextView) findViewById(R.id.textViewEmailVerify); textViewEmailVerify.setTypeface(Data.latoRegular(this));
 		
+		relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
+		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Data.latoRegular(this));
 		
 		relativeLayoutRideTransactions = (RelativeLayout) findViewById(R.id.relativeLayoutRideTransactions);
 		textViewRecentTransactions = (TextView) findViewById(R.id.textViewRecentTransactions); textViewRecentTransactions.setTypeface(Data.latoRegular(this));
@@ -422,6 +427,15 @@ public class AccountActivity extends Activity {
 			}
 		});
 		
+		relativeLayoutChangePassword.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(AccountActivity.this, ChangePasswordActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+		
 		
 		buttonLogout.setOnClickListener(new View.OnClickListener() {
 			
@@ -452,7 +466,7 @@ public class AccountActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				getRecentRidesAPI(AccountActivity.this, true);
+				getRecentRidesAPI(AccountActivity.this);
 			}
 		});
 		
@@ -591,7 +605,7 @@ public class AccountActivity extends Activity {
 		
 		reloadProfileAPI(this);
 		
-		getRecentRidesAPI(this, true);
+		getRecentRidesAPI(this);
 		
 		scrollView.scrollTo(0, 0);
 	}
@@ -900,14 +914,12 @@ public class AccountActivity extends Activity {
 	}
 	
 	
-	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
+	public void getRecentRidesAPI(final Activity activity) {
 		progressBarList.setVisibility(View.GONE);
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
 			
-			if(refresh){
-				rideInfosList.clear();
-				futureSchedule = null;
-			}
+			rideInfosList.clear();
+			futureSchedule = null;
 			
 			progressBarList.setVisibility(View.VISIBLE);
 			textViewInfo.setVisibility(View.GONE);
@@ -997,10 +1009,14 @@ public class AccountActivity extends Activity {
 											}
 										}
 										
+										Log.e("totalRides", "="+totalRides);
+										Log.e("rideInfosList", "="+rideInfosList.size());
+										Log.e("futureSchedule", "="+futureSchedule);
+										
 										
 										
 										updateListData("No rides currently", false);
-										
+
 									}
 									else{
 										updateListData("Some error occurred, tap to retry", true);
@@ -1211,7 +1227,7 @@ public class AccountActivity extends Activity {
 												
 												@Override
 												public void onCancelSuccess() {
-													getRecentRidesAPI(AccountActivity.this, true);
+													getRecentRidesAPI(AccountActivity.this);
 												}
 											});
 										}
@@ -1236,7 +1252,7 @@ public class AccountActivity extends Activity {
 		@Override
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
-			if(totalRides > rideInfosList.size()){
+			if(totalRides > getCount()){
 				relativeLayoutSeeMore.setVisibility(View.VISIBLE);
 			}
 			else{

@@ -63,7 +63,7 @@
                 android:id="@+id/imageViewFacebook"
                 android:layout_width="75px"
                 android:layout_height="75px"
-                android:layout_marginLeft="80px"
+                android:layout_marginLeft="85px"
                 android:src="@drawable/fb_share_icon_selector"
                 android:tag="mwar" />
 
@@ -71,7 +71,7 @@
                 android:id="@+id/imageViewWhatsapp"
                 android:layout_width="75px"
                 android:layout_height="75px"
-                android:layout_marginLeft="80px"
+                android:layout_marginLeft="85px"
                 android:layout_toRightOf="@+id/imageViewFacebook"
                 android:src="@drawable/whatsapp_share_icon_selector"
                 android:tag="mwar" />
@@ -80,7 +80,7 @@
                 android:id="@+id/imageViewSMS"
                 android:layout_width="75px"
                 android:layout_height="75px"
-                android:layout_marginRight="80px"
+                android:layout_marginRight="85px"
                 android:layout_toLeftOf="@+id/imageViewEmail"
                 android:src="@drawable/sms_share_icon_selector"
                 android:tag="mwar" />
@@ -90,7 +90,7 @@
                 android:layout_width="75px"
                 android:layout_height="75px"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="80px"
+                android:layout_marginRight="85px"
                 android:src="@drawable/email_share_icon_selector"
                 android:tag="mwar" />
         </RelativeLayout>

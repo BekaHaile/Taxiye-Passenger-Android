@@ -291,6 +291,7 @@ public class MapUtils {
 			//AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
 			ignr2 = ignr2.replaceAll(" ", "%20");
 			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
+			Log.e("getAutoCompleteSearchResultsFromGooglePlaces", "=jsonObj"+jsonObj);
 			JSONArray info = null;
 			info = jsonObj.getJSONArray("predictions");
 			for (int i = 0; i < info.length(); i++) {

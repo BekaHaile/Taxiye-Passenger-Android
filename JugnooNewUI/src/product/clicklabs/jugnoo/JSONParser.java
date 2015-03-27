@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -100,7 +101,8 @@ public class JSONParser {
 		int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1, 
 				christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;
 		int emailVerificationStatus = 1;
-		String userEmail = "", phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk";
+		int numCouponsAvailable = 0;
+		String userEmail = "", phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk", jugnooFbBanner = "http://bit.ly/1OCgcke";
 		double jugnooBalance = 0, fareFactor = 1.0;
 		
 		if(userData.has("can_schedule")){
@@ -197,6 +199,14 @@ public class JSONParser {
 			fareFactor = userData.getDouble("fare_factor");
 		}
 		
+		if(userData.has("jugnoo_fb_banner")){
+			jugnooFbBanner = userData.getString("jugnoo_fb_banner");
+		}
+		
+		if(userData.has("num_coupons_available")){
+			numCouponsAvailable = userData.getInt("num_coupons_available");
+		}
+		
 		String authKey = userData.getString("auth_key");
 		AccessTokenGenerator.saveAuthKey(context, authKey);
 		
@@ -206,7 +216,8 @@ public class JSONParser {
 		return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus, 
 				userData.getString("user_image"), userData.getString("referral_code"), phoneNo, 
 				canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, 
-				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor);
+				christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
+				jugnooFbBanner, numCouponsAvailable);
 	}
 	
 
@@ -247,8 +258,41 @@ public class JSONParser {
 			
 		parseCancellationReasons(jObj);
 		
+		Data.referralMessages = parseReferralMessages(jObj);
 		
 		return resp;
+	}
+	
+	
+	public ReferralMessages parseReferralMessages(JSONObject jObj){
+		String referralMessage = "Share your referral code "+Data.userData.referralCode+
+				" with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, you will earn a FREE ride (up to Rs. 100) as well.";
+		String referralSharingMessage = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
+				" Use this referral code: "+Data.userData.referralCode+" to get FREE ride up to Rs. 100." +
+						"\nDownload it from here: http://smarturl.it/jugnoo";
+		String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
+		String fbShareDescription = "Try Jugnoo app to call an auto at your doorsteps with just a tap.";
+		
+		try {
+			if(jObj.has("referral_message")){
+				referralMessage = jObj.getString("referral_message");
+			}
+			if(jObj.has("referral_sharing_message")){
+				referralSharingMessage = jObj.getString("referral_sharing_message");
+			}
+			if(jObj.has("fb_share_caption")){
+				fbShareCaption = jObj.getString("fb_share_caption");
+			}
+			if(jObj.has("fb_share_description")){
+				fbShareDescription = jObj.getString("fb_share_description");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage, fbShareCaption, fbShareDescription);
+		
+		return referralMessages;
 	}
 	
 	

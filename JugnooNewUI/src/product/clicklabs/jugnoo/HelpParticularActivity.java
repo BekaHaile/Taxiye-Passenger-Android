@@ -7,11 +7,17 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -51,6 +57,21 @@ public class HelpParticularActivity extends Activity{
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(this));
 		webview = (WebView) findViewById(R.id.webview);
+		webview.getSettings().setJavaScriptEnabled(true);
+		webview.setWebChromeClient(new WebChromeClient());
+		webview.getSettings().setDomStorageEnabled(true);
+		webview.getSettings().setDatabaseEnabled(true);
+		
+		
+		//enable Javascript
+		webview.getSettings().setJavaScriptEnabled(true);
+        
+        //override the web client to open all links in the same webview
+		webview.setWebViewClient(new MyWebViewClient());
+        webview.setWebChromeClient(new MyWebChromeClient());
+        
+		
+		
 		
 		if(helpSection != null){
 			textViewTitle.setText(helpSection.getName().toUpperCase());
@@ -77,6 +98,58 @@ public class HelpParticularActivity extends Activity{
 		getFareDetailsAsync(HelpParticularActivity.this);
 		
 	}
+	
+	 private class MyWebViewClient extends WebViewClient {
+	     @Override
+	     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+	    	 Log.i("shouldOverrideUrlLoading", "url="+url);
+	         return false;
+	     }
+	     
+	     @Override
+	    public void onLoadResource(WebView view, String url) {
+	    	 Log.i("onLoadResource", "url="+url);
+	    	super.onLoadResource(view, url);
+	    }
+	     
+	     @Override
+	    public void onPageFinished(WebView view, String url) {
+	    	 Log.i("onPageFinished", "url="+url);
+	    	super.onPageFinished(view, url);
+	    }
+	     @Override
+	    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+	    	 Log.i("onPageStarted", "url="+url);
+	    	super.onPageStarted(view, url, favicon);
+	    }
+	     
+	     @Override
+	    public void onReceivedError(WebView view, int errorCode,
+	    		String description, String failingUrl) {
+	    	 Log.e("onReceivedError", "url="+failingUrl);
+	    	super.onReceivedError(view, errorCode, description, failingUrl);
+	    }
+	     
+	     
+	     @Override
+	    public void onReceivedSslError(WebView view, SslErrorHandler handler,
+	    		SslError error) {
+	    	 Log.e("onReceivedSslError", "error="+error);
+	    	 handler.proceed(); 
+	    }
+	 }
+	 
+	 private class MyWebChromeClient extends WebChromeClient {
+	     
+	  //display alert message in Web View
+	  @Override
+	     public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+	         Log.d("message", message);
+	         return false;
+	     }
+	  
+	 }
+	 
 	
 	
 	public void openHelpData(String data, boolean errorOccured) {
@@ -113,6 +186,7 @@ public class HelpParticularActivity extends Activity{
 					Log.e("helpSection", "="+helpSection.getOrdinal() + " " + helpSection.getName());
 					
 					RequestParams params = new RequestParams();
+					params.put("access_token", Data.userData.accessToken);
 					params.put("section", ""+helpSection.getOrdinal());
 					
 					fetchHelpDataClient = Data.getClient();

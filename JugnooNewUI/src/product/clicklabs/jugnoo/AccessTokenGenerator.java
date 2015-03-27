@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import product.clicklabs.jugnoo.utils.AuthKeySaver;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
+import product.clicklabs.jugnoo.utils.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -12,6 +13,12 @@ public class AccessTokenGenerator {
 
 	
 	public static final String LOGOUT = "logout";
+	
+	public static final String MEALS_PACKAGE = "com.cdk23.nlk";
+	public static final String FATAFAT_PACKAGE = "com.cdk23.nlkf";
+	
+	
+	private static final String[] OTHER_JUGNOO_APP_PACKAGES = new String[]{ MEALS_PACKAGE, FATAFAT_PACKAGE };
 	
 	@SuppressWarnings("deprecation")
 	public static void saveAuthKey(Context context, String authKey) {
@@ -31,9 +38,27 @@ public class AccessTokenGenerator {
 		editor.commit();
 	}
 	
+	@SuppressWarnings("deprecation")
+	public static void updateFreshInstall(Context context) {
+		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+		Editor editor = pref.edit();
+		editor.putString("freshInstall", "no");
+		editor.commit();
+	}
+	
+	
+	public static Pair<String, Integer> getAccessTokenPair(Context context) {
+		
+		Pair<String, Integer> pair = getAccessTokenPairPre(context);
+		
+		updateFreshInstall(context);
+		
+		return pair;
+	}
+	
 	
 	@SuppressWarnings("deprecation")
-	public static Pair<String, Integer> getAccessTokenPair(Context context) {
+	public static Pair<String, Integer> getAccessTokenPairPre(Context context) {
 		
 		Pair<String, Integer> pair = new Pair<String, Integer>("", 1);
 		
@@ -77,6 +102,27 @@ public class AccessTokenGenerator {
 				pair = new Pair<String, Integer>(accessToken, 0);
 				return pair;
 			}
+		}
+		else{
+			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+			String freshInstall = pref.getString("freshInstall", "");
+			
+			if("".equalsIgnoreCase(freshInstall)){
+				boolean otherAppsInstalled = false;
+				for(String appPackage : OTHER_JUGNOO_APP_PACKAGES){
+					Log.e("appPackage="+appPackage, "=Utils.appInstalledOrNot(context, "+appPackage+")="+Utils.appInstalledOrNot(context, appPackage));
+					if(Utils.appInstalledOrNot(context, appPackage)){
+						otherAppsInstalled = true;
+						break;
+					}
+				}
+				
+				if(!otherAppsInstalled){
+					authKey = "";
+					saveAuthKey(context, authKey);
+				}
+			}
+			
 		}
 		
 		if("".equalsIgnoreCase(authKey)){																			// no auth key

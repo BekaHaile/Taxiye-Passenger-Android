@@ -222,7 +222,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			}
 		});
 		
-		imageViewJugnooLogo.setOnClickListener(new View.OnClickListener() {
+		relative.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -285,24 +285,31 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	}
 	
 	public void getDeviceToken(){
-	    progressBar.setVisibility(View.VISIBLE);
-		new DeviceTokenGenerator(SplashNewActivity.this).generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
-			
-			@Override
-			public void deviceTokenReceived(final String regId) {
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						Data.deviceToken = regId;
-						Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
-						accessTokenLogin(SplashNewActivity.this);
-						progressBar.setVisibility(View.GONE);
-					}
-				});
+	    relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
+	    linearLayoutNoNet.setVisibility(View.GONE);
+	    if (AppStatus.getInstance(this).isOnline(this)) {
+	    	progressBar.setVisibility(View.VISIBLE);
+			new DeviceTokenGenerator(SplashNewActivity.this).generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 				
-			}
-		});
+				@Override
+				public void deviceTokenReceived(final String regId) {
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Data.deviceToken = regId;
+							Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+							accessTokenLogin(SplashNewActivity.this);
+							progressBar.setVisibility(View.GONE);
+						}
+					});
+					
+				}
+			});
+	    }
+	    else{
+	    	linearLayoutNoNet.setVisibility(View.VISIBLE);
+	    }
 	}
 	
 	
@@ -325,17 +332,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		super.onResume();
 		DialogPopup.dismissAlertPopup();
-		checkForAccessTokenChange(this);
+		retryAccessTokenLogin();
 		resumed = true;
 	}
 	
 	
-	public void checkForAccessTokenChange(Activity activity){
+	public void retryAccessTokenLogin(){
 		if(resumed){
-			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
-			if(!"".equalsIgnoreCase(pair.first)){
-				imageViewJugnooLogo.performClick();
-			}
+			relative.performClick();
 		}
 	}
 	
@@ -441,6 +445,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 								DialogPopup.dismissLoadingDialog();
 								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 								DialogPopup.dismissLoadingDialog();
+								linearLayoutNoNet.setVisibility(View.VISIBLE);
 							}
 
 							@Override
@@ -667,7 +672,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e("e", "="+e);
 		}
 		return false;
 	}

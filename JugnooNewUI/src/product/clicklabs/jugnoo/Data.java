@@ -9,6 +9,7 @@ import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
@@ -177,6 +178,8 @@ public class Data {
 
 	public static final String MAPS_BROWSER_KEY = "AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY";
 	
+	//AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY autos
+	
 	public static final String FACEBOOK_APP_ID = "782131025144439";
 	
 	
@@ -226,6 +229,8 @@ public class Data {
 	public static FareStructure fareStructure;
 	
 	public static CancelOptionsList cancelOptionsList;
+	
+	public static ReferralMessages referralMessages;
 	
 	
 	
