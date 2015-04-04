@@ -61,14 +61,14 @@ public class ItemsCheckoutTNCActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		title.setText("TERMS & CONDITIONS");
 		
 		webview = (WebView) findViewById(R.id.webview);
 		
 		relativeLayoutAD = (RelativeLayout) findViewById(R.id.relativeLayoutAD);
-		buttonAgree = (Button) findViewById(R.id.buttonAgree); buttonAgree.setTypeface(Data.regularFont(getApplicationContext()));
-		buttonDisagree = (Button) findViewById(R.id.buttonDisagree); buttonDisagree.setTypeface(Data.regularFont(getApplicationContext()));
+		buttonAgree = (Button) findViewById(R.id.buttonAgree); buttonAgree.setTypeface(Data.latoRegular(getApplicationContext()));
+		buttonDisagree = (Button) findViewById(R.id.buttonDisagree); buttonDisagree.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +169,7 @@ public class ItemsCheckoutTNCActivity extends Activity{
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							}
 
 							@Override
@@ -188,7 +188,7 @@ public class ItemsCheckoutTNCActivity extends Activity{
 											if(jObj.has("flag")){
 												int flag = jObj.getInt("flag");
 												if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-													new DialogPopup().alertPopup(activity, "", errorMessage);
+													DialogPopup.alertPopup(activity, "", errorMessage);
 												}
 											}
 										}
@@ -197,7 +197,7 @@ public class ItemsCheckoutTNCActivity extends Activity{
 										if(jObj.has("flag")){
 											int flag = jObj.getInt("flag");
 											if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-												new DialogPopup().alertPopup(activity, "", jObj.getString("message"));
+												DialogPopup.alertPopup(activity, "", jObj.getString("message"));
 											}
 											else if(ApiResponseFlags.ORDER_PLACED.getOrdinal() == flag){
 												orderConfirmedDialog(activity, jObj.getString("message"));
@@ -206,7 +206,7 @@ public class ItemsCheckoutTNCActivity extends Activity{
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
 
 								DialogPopup.dismissLoadingDialog();
@@ -217,13 +217,13 @@ public class ItemsCheckoutTNCActivity extends Activity{
 			}
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
 	
 	public void orderConfirmedDialog(Activity activity, String message){
-		new DialogPopup().alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+		DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				sendBackToInfoList();

@@ -55,6 +55,15 @@ public class DateOperations {
 			return null;
 		}
 	}
+	
+	
+	public static String getTimeStampfromCalendar(Calendar calendar) {
+	    long foo = calendar.getTimeInMillis();
+	    Date date = new Date(foo);
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    return formatter.format(date);
+	}
+	
 
 	/**
 	 * Converts date string from 2014-01-12 00:00 to 12 Jan, 2014 12:00 AM
@@ -248,12 +257,7 @@ public class DateOperations {
 	}
 	
 	
-	public static String getTimeStampfromCalendar(Calendar calendar) {
-	    long foo = calendar.getTimeInMillis();
-	    Date date = new Date(foo);
-	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	    return formatter.format(date);
-	}
+	
 	
 	
 	
@@ -263,6 +267,13 @@ public class DateOperations {
 	
 	public static String getSixtySecAfterCurrentTime() {
 	    long foo = System.currentTimeMillis() + 60000;
+	    Date date = new Date(foo);
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    return formatter.format(date);
+	}
+	
+	public static String getDelayMillisAfterCurrentTime(long delayMillis) {
+	    long foo = System.currentTimeMillis() + delayMillis;
 	    Date date = new Date(foo);
 	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    return formatter.format(date);
@@ -282,6 +293,7 @@ public class DateOperations {
 		return 60000;
 	}
 	
+	
 	public static long getMilliseconds(String time1){
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -293,6 +305,19 @@ public class DateOperations {
 		}
 		return 60000;
 	}
+	
+	
+	
+	
+	
+	public static String getTimeStampFromMillis(long timeMillis){
+		Date date = new Date(timeMillis);
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    return formatter.format(date);
+	}
+	
+	
+	
 	
 	
 }

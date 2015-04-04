@@ -14,6 +14,10 @@ public interface AppInterruptHandler {
 	
 	public void onStationChangedPushReceived();
 	
+	public void onCustomerCashDone();
+	
+	public void onCashAddedToWalletByCustomer(String userId, double balance);
+	
 	
 	
 	

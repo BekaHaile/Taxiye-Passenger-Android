@@ -100,9 +100,9 @@ public class AccountActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		textViewAccountInfo = (TextView) findViewById(R.id.textViewAccountInfo); textViewAccountInfo.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewAccountInfo = (TextView) findViewById(R.id.textViewAccountInfo); textViewAccountInfo.setTypeface(Data.latoRegular(getApplicationContext()));
 		progressBarAccount = (ProgressBar) findViewById(R.id.progressBarAccount);
 		
 		couponInfosList.clear();
@@ -111,12 +111,12 @@ public class AccountActivity extends Activity{
 		couponsListAdapter = new CouponsListAdapter(AccountActivity.this);
 		listViewCoupons.setAdapter(couponsListAdapter);
 		
-		textViewWantMoreRides = (TextView) findViewById(R.id.textViewWantMoreRides); textViewWantMoreRides.setTypeface(Data.regularFont(getApplicationContext()));
-		buttonReferUs = (Button) findViewById(R.id.buttonReferUs); buttonReferUs.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewWantMoreRides = (TextView) findViewById(R.id.textViewWantMoreRides); textViewWantMoreRides.setTypeface(Data.latoRegular(getApplicationContext()));
+		buttonReferUs = (Button) findViewById(R.id.buttonReferUs); buttonReferUs.setTypeface(Data.latoRegular(getApplicationContext()));
 
-		textViewEnterCouponCode = (TextView) findViewById(R.id.textViewEnterCouponCode); textViewEnterCouponCode.setTypeface(Data.regularFont(getApplicationContext()));
-		editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode); editTextPromoCode.setTypeface(Data.regularFont(getApplicationContext()));
-		buttonApplyPromoCode = (Button) findViewById(R.id.buttonApplyPromoCode); buttonApplyPromoCode.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewEnterCouponCode = (TextView) findViewById(R.id.textViewEnterCouponCode); textViewEnterCouponCode.setTypeface(Data.latoRegular(getApplicationContext()));
+		editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode); editTextPromoCode.setTypeface(Data.latoRegular(getApplicationContext()));
+		buttonApplyPromoCode = (Button) findViewById(R.id.buttonApplyPromoCode); buttonApplyPromoCode.setTypeface(Data.latoRegular(getApplicationContext()));
 		buttonApplyPromoCode.setVisibility(View.GONE);
 		
 		textViewAccountInfo.setVisibility(View.GONE);
@@ -394,8 +394,8 @@ public class AccountActivity extends Activity{
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -405,7 +405,7 @@ public class AccountActivity extends Activity{
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -571,7 +571,7 @@ public class AccountActivity extends Activity{
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 							}
 							
 	
@@ -585,20 +585,20 @@ public class AccountActivity extends Activity{
 										if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
 											HomeActivity.logoutUser(activity);
 										} else {
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+											DialogPopup.alertPopup(activity, "", errorMessage);
 										}
 									} else {
 										int flag = jObj.getInt("flag");
 										if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
 											String message = jObj.getString("message");
-											new DialogPopup().alertPopup(activity, "", message);
+											DialogPopup.alertPopup(activity, "", message);
 											getAccountInfoAsync(activity);
 											FlurryEventLogger.promoCodeApplied(Data.userData.accessToken, promoCode, message);
 										}
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									
 								}
 								DialogPopup.dismissLoadingDialog();
@@ -612,7 +612,7 @@ public class AccountActivity extends Activity{
 						});
 			}
 			else {
-				new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
 	}
 	

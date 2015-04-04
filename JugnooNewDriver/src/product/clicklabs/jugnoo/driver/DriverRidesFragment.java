@@ -62,7 +62,7 @@ public class DriverRidesFragment extends Fragment {
 		ASSL.DoMagic(main);
 
 		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
+		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.latoRegular(getActivity()));
 		listView = (ListView) rootView.findViewById(R.id.listView);
 		
 		driverRidesListAdapter = new DriverRidesListAdapter();
@@ -124,7 +124,7 @@ public class DriverRidesFragment extends Fragment {
 
 	
 	class ViewHolderDriverRides {
-		TextView textViewCustomerPaid, textViewFare, textViewBalance, textViewJugnooSubsidy;
+		TextView textViewRideId, textViewCustomerPaid, textViewFare, textViewBalance, textViewJugnooSubsidy;
 		TextView fromText, fromValue, toText, toValue, distanceValue, rideTimeValue, dateTimeValue;
 		ImageView couponImg, jugnooCashImg;
 		LinearLayout relative;
@@ -159,18 +159,19 @@ public class DriverRidesFragment extends Fragment {
 				holder = new ViewHolderDriverRides();
 				convertView = mInflater.inflate(R.layout.list_item_ride_history, null);
 				
-				holder.textViewCustomerPaid = (TextView) convertView.findViewById(R.id.textViewCustomerPaid); holder.textViewCustomerPaid.setTypeface(Data.regularFont(getActivity()));
-				holder.textViewFare = (TextView) convertView.findViewById(R.id.textViewFare); holder.textViewFare.setTypeface(Data.regularFont(getActivity()));
-				holder.textViewBalance = (TextView) convertView.findViewById(R.id.textViewBalance); holder.textViewBalance.setTypeface(Data.regularFont(getActivity()));
-				holder.textViewJugnooSubsidy = (TextView) convertView.findViewById(R.id.textViewJugnooSubsidy); holder.textViewJugnooSubsidy.setTypeface(Data.regularFont(getActivity()));
+				holder.textViewRideId = (TextView) convertView.findViewById(R.id.textViewRideId); holder.textViewRideId.setTypeface(Data.latoRegular(getActivity()));
+				holder.textViewCustomerPaid = (TextView) convertView.findViewById(R.id.textViewCustomerPaid); holder.textViewCustomerPaid.setTypeface(Data.latoRegular(getActivity()));
+				holder.textViewFare = (TextView) convertView.findViewById(R.id.textViewFare); holder.textViewFare.setTypeface(Data.latoRegular(getActivity()));
+				holder.textViewBalance = (TextView) convertView.findViewById(R.id.textViewBalance); holder.textViewBalance.setTypeface(Data.latoRegular(getActivity()));
+				holder.textViewJugnooSubsidy = (TextView) convertView.findViewById(R.id.textViewJugnooSubsidy); holder.textViewJugnooSubsidy.setTypeface(Data.latoRegular(getActivity()));
 				
-				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
-				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.regularFont(getActivity()));
-				holder.toText = (TextView) convertView.findViewById(R.id.toText); holder.toText.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
-				holder.toValue = (TextView) convertView.findViewById(R.id.toValue); holder.toValue.setTypeface(Data.regularFont(getActivity()));
-				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.regularFont(getActivity()));
-				holder.rideTimeValue = (TextView) convertView.findViewById(R.id.rideTimeValue); holder.rideTimeValue.setTypeface(Data.regularFont(getActivity()));
-				holder.dateTimeValue = (TextView) convertView.findViewById(R.id.dateTimeValue); holder.dateTimeValue.setTypeface(Data.regularFont(getActivity()));
+				holder.fromText = (TextView) convertView.findViewById(R.id.fromText); holder.fromText.setTypeface(Data.latoRegular(getActivity()), Typeface.BOLD);
+				holder.fromValue = (TextView) convertView.findViewById(R.id.fromValue); holder.fromValue.setTypeface(Data.latoRegular(getActivity()));
+				holder.toText = (TextView) convertView.findViewById(R.id.toText); holder.toText.setTypeface(Data.latoRegular(getActivity()), Typeface.BOLD);
+				holder.toValue = (TextView) convertView.findViewById(R.id.toValue); holder.toValue.setTypeface(Data.latoRegular(getActivity()));
+				holder.distanceValue = (TextView) convertView.findViewById(R.id.distanceValue); holder.distanceValue.setTypeface(Data.latoRegular(getActivity()));
+				holder.rideTimeValue = (TextView) convertView.findViewById(R.id.rideTimeValue); holder.rideTimeValue.setTypeface(Data.latoRegular(getActivity()));
+				holder.dateTimeValue = (TextView) convertView.findViewById(R.id.dateTimeValue); holder.dateTimeValue.setTypeface(Data.latoRegular(getActivity()));
 				
 				holder.couponImg = (ImageView) convertView.findViewById(R.id.couponImg);
 				holder.jugnooCashImg = (ImageView) convertView.findViewById(R.id.jugnooCashImg);
@@ -192,6 +193,7 @@ public class DriverRidesFragment extends Fragment {
 			
 			holder.id = position;
 			
+			holder.textViewRideId.setText("Ride ID: "+rideInfo.id);
 			holder.textViewCustomerPaid.setText("Customer Paid: Rs. " + rideInfo.customerPaid);
 			holder.textViewFare.setText("Fare: Rs. "+rideInfo.fare);
 			holder.textViewBalance.setText("Bal. from Jugnoo: Rs. " + rideInfo.balance);

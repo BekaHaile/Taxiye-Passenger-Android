@@ -112,23 +112,23 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashLogin.this, relative, 1134, 720, false);
 		
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
-		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		emailEt = (AutoCompleteTextView) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
-		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.regularFont(getApplicationContext()));
+		emailEt = (AutoCompleteTextView) findViewById(R.id.emailEt); emailEt.setTypeface(Data.latoRegular(getApplicationContext()));
+		passwordEt = (EditText) findViewById(R.id.passwordEt); passwordEt.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		signInBtn = (Button) findViewById(R.id.signInBtn); signInBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		facebookSignInBtn = (Button) findViewById(R.id.facebookSignInBtn); facebookSignInBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		signInBtn = (Button) findViewById(R.id.signInBtn); signInBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn); forgotPasswordBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		facebookSignInBtn = (Button) findViewById(R.id.facebookSignInBtn); facebookSignInBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 		
-		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.regularFont(getApplicationContext()));
+		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		needHelpLinearLayout = (LinearLayout) findViewById(R.id.needHelpLinearLayout);
-		needHelpText = (TextView) findViewById(R.id.needHelpText); needHelpText.setTypeface(Data.regularFont(SplashLogin.this));
-		callUsText = (TextView) findViewById(R.id.callUsText); callUsText.setTypeface(Data.regularFont(SplashLogin.this));
+		needHelpText = (TextView) findViewById(R.id.needHelpText); needHelpText.setTypeface(Data.latoRegular(SplashLogin.this));
+		callUsText = (TextView) findViewById(R.id.callUsText); callUsText.setTypeface(Data.latoRegular(SplashLogin.this));
 		
 		callUsText.setText("Call us now "+jugnooPhoneNumber);
 		
@@ -355,10 +355,10 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if(resp != ConnectionResult.SUCCESS){
 			Log.e("Google Play Service Error ","="+resp);
-			new DialogPopup().showGooglePlayErrorAlert(SplashLogin.this);
+			DialogPopup.showGooglePlayErrorAlert(SplashLogin.this);
 		}
 		else{
-			new DialogPopup().showLocationSettingsAlert(SplashLogin.this);
+			DialogPopup.showLocationSettingsAlert(SplashLogin.this);
 		}
 		
 	}
@@ -460,7 +460,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 
@@ -477,15 +477,15 @@ public class SplashLogin extends Activity implements LocationUpdate{
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
 										String errorMessage = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
 										String message = jObj.getString("message");
-										new DialogPopup().alertPopup(activity, "", message);
+										DialogPopup.alertPopup(activity, "", message);
 									}
 									else if(ApiResponseFlags.INCORRECT_PASSWORD.getOrdinal() == flag){
 										String errorMessage = jObj.getString("error");
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else if(ApiResponseFlags.CUSTOMER_LOGGING_IN.getOrdinal() == flag){
 										String errorMessage = jObj.getString("error");
@@ -498,19 +498,19 @@ public class SplashLogin extends Activity implements LocationUpdate{
 										loginDataFetched = true;
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -585,7 +585,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -614,7 +614,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 											facebookRegister = true;
 										}
 										else{
-											new DialogPopup().alertPopup(activity, "", errorMessage);
+											DialogPopup.alertPopup(activity, "", errorMessage);
 										}
 										DialogPopup.dismissLoadingDialog();
 									}
@@ -635,7 +635,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 	
@@ -643,7 +643,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}

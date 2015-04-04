@@ -43,10 +43,10 @@ public class DriverTypeActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		uncheckAll = (Button) findViewById(R.id.uncheckAll); uncheckAll.setTypeface(Data.regularFont(getApplicationContext()));
-		checkAll = (Button) findViewById(R.id.checkAll); checkAll.setTypeface(Data.regularFont(getApplicationContext()));
+		uncheckAll = (Button) findViewById(R.id.uncheckAll); uncheckAll.setTypeface(Data.latoRegular(getApplicationContext()));
+		checkAll = (Button) findViewById(R.id.checkAll); checkAll.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		driverTypeList = (ListView) findViewById(R.id.driverTypeList);
 		driverTypeListAdapter = new DriverTypeListAdapter(this);
@@ -163,7 +163,7 @@ public class DriverTypeActivity extends Activity{
 				holder = new ViewHolderDriverType();
 				convertView = mInflater.inflate(R.layout.driver_type_list_item, null);
 				
-				holder.driverTypeName = (TextView) convertView.findViewById(R.id.driverTypeName); holder.driverTypeName.setTypeface(Data.regularFont(context));
+				holder.driverTypeName = (TextView) convertView.findViewById(R.id.driverTypeName); holder.driverTypeName.setTypeface(Data.latoRegular(context));
 				holder.tick = (ImageView) convertView.findViewById(R.id.tick);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 

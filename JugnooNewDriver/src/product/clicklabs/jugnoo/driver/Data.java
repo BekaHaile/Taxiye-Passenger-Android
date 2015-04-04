@@ -9,6 +9,7 @@ import product.clicklabs.jugnoo.driver.datastructure.CustomerInfo;
 import product.clicklabs.jugnoo.driver.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.driver.datastructure.DriverRideRequest;
 import product.clicklabs.jugnoo.driver.datastructure.DriverType;
+import product.clicklabs.jugnoo.driver.datastructure.EndRideData;
 import product.clicklabs.jugnoo.driver.datastructure.FareStructure;
 import product.clicklabs.jugnoo.driver.datastructure.UserData;
 import product.clicklabs.jugnoo.driver.utils.Log;
@@ -51,9 +52,11 @@ public class Data {
 			SP_RIDE_TIME = "ride_time", 
 			SP_RIDE_START_TIME = "ride_start_time", 
 			SP_LAST_LATITUDE = "last_latitude",
-			SP_LAST_LONGITUDE = "last_longitude"
+			SP_LAST_LONGITUDE = "last_longitude",
+			SP_LAST_LOCATION_TIME = "last_location_time"
 			
 			;
+	
 	
 	
 	public static final String SP_SERVER_LINK = "sp_server_link";
@@ -72,6 +75,7 @@ public class Data {
 	
 	
 	public static LatLng startRidePreviousLatLng;
+	public static long startRidePreviousLocationTime = System.currentTimeMillis();
 	
 	
 	
@@ -191,6 +195,8 @@ public class Data {
 	public static ArrayList<DriverType> driverTypes = new ArrayList<DriverType>();
 	
 	public static FareStructure fareStructure;
+
+	public static EndRideData endRideData;
 	
 	
 	
@@ -240,14 +246,14 @@ public class Data {
 	
 	
 	
-	public static Typeface regular, museoSlab;																// fonts declaration
+	private static Typeface latoRegular, museoSlab;																// fonts declaration
 	
 
-	public static Typeface regularFont(Context appContext) {											// accessing fonts functions
-		if (regular == null) {
-			regular = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_regular.ttf");
+	public static Typeface latoRegular(Context appContext) {											// accessing fonts functions
+		if (latoRegular == null) {
+			latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_regular.ttf");
 		}
-		return regular;
+		return latoRegular;
 	}
 	
 	

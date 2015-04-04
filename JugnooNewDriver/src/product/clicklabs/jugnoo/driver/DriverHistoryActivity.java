@@ -41,13 +41,13 @@ public class DriverHistoryActivity extends FragmentActivity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		relativeLayoutRides = (RelativeLayout) findViewById(R.id.relativeLayoutRides);
 		relativeLayoutMissed = (RelativeLayout) findViewById(R.id.relativeLayoutMissed);
 		
-		textViewRides = (TextView) findViewById(R.id.textViewRides); textViewRides.setTypeface(Data.regularFont(getApplicationContext()));
-		textViewMissed = (TextView) findViewById(R.id.textViewMissed); textViewMissed.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewRides = (TextView) findViewById(R.id.textViewRides); textViewRides.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewMissed = (TextView) findViewById(R.id.textViewMissed); textViewMissed.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		imageViewRides = (ImageView) findViewById(R.id.imageViewRides);
 		imageViewMissed = (ImageView) findViewById(R.id.imageViewMissed);

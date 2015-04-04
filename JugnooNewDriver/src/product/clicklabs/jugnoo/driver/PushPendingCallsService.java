@@ -88,12 +88,8 @@ public class PushPendingCallsService extends Service {
 					
 					int pendingApisCount = Database2.getInstance(context).getAllPendingAPICallsCount();
 					if(pendingApisCount > 0){
-<<<<<<< HEAD
 						restartServiceThroughAlarm(context);
 						PushPendingCallsService.this.stopSelf();
-=======
-						pushAPIs(context);
->>>>>>> 2547f4c528e412aa85371923c4ca06f9e0fe422a
 					}
 					else{
 						PushPendingCallsService.this.stopSelf();
@@ -106,18 +102,15 @@ public class PushPendingCallsService extends Service {
     	}
     }
     
-<<<<<<< HEAD
     public void restartServiceThroughAlarm(Context context){
     	Intent restartService = new Intent(context, this.getClass());
 		restartService.setPackage(getPackageName());
 		PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
 		AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-		alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (30 * 60000), restartServicePI);
+		alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (1 * 30000), restartServicePI);
     }
     
     
-=======
->>>>>>> 2547f4c528e412aa85371923c4ca06f9e0fe422a
     public void stopPushApiThread(){
     	try{
     		if(pushApiThread != null){

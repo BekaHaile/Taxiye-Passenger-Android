@@ -133,28 +133,28 @@ public class ScheduleRideActivity extends FragmentActivity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		cancelBtn = (Button) findViewById(R.id.cancelBtn); cancelBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		cancelBtn = (Button) findViewById(R.id.cancelBtn); cancelBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		scheduleOptionsMainRl = (RelativeLayout) findViewById(R.id.scheduleOptionsMainRl);
-		scheduleRideText = (TextView) findViewById(R.id.scheduleRideText); scheduleRideText.setTypeface(Data.regularFont(getApplicationContext()));
+		scheduleRideText = (TextView) findViewById(R.id.scheduleRideText); scheduleRideText.setTypeface(Data.latoRegular(getApplicationContext()));
 		schedulePickupLocationLinear = (LinearLayout) findViewById(R.id.schedulePickupLocationLinear);
-		schedulePickupLocationText = (TextView) findViewById(R.id.schedulePickupLocationText); schedulePickupLocationText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		schedulePickupLocationValue = (TextView) findViewById(R.id.schedulePickupLocationValue); schedulePickupLocationValue.setTypeface(Data.regularFont(getApplicationContext()));
+		schedulePickupLocationText = (TextView) findViewById(R.id.schedulePickupLocationText); schedulePickupLocationText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		schedulePickupLocationValue = (TextView) findViewById(R.id.schedulePickupLocationValue); schedulePickupLocationValue.setTypeface(Data.latoRegular(getApplicationContext()));
 		scheduleDateTimeLinear = (LinearLayout) findViewById(R.id.scheduleDateTimeLinear);
-		scheduleDateTimeText = (TextView) findViewById(R.id.scheduleDateTimeText); scheduleDateTimeText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		scheduleDateTimeValue = (TextView) findViewById(R.id.scheduleDateTimeValue); scheduleDateTimeValue.setTypeface(Data.regularFont(getApplicationContext()));
-		scheduleBtn = (Button) findViewById(R.id.scheduleBtn); scheduleBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		textTerms = (TextView) findViewById(R.id.textTerms); textTerms.setTypeface(Data.regularFont(getApplicationContext()));
+		scheduleDateTimeText = (TextView) findViewById(R.id.scheduleDateTimeText); scheduleDateTimeText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		scheduleDateTimeValue = (TextView) findViewById(R.id.scheduleDateTimeValue); scheduleDateTimeValue.setTypeface(Data.latoRegular(getApplicationContext()));
+		scheduleBtn = (Button) findViewById(R.id.scheduleBtn); scheduleBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		textTerms = (TextView) findViewById(R.id.textTerms); textTerms.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		scheduleSetPickupLocationRl = (RelativeLayout) findViewById(R.id.scheduleSetPickupLocationRl);
 		scheduleMyLocationBtn = (Button) findViewById(R.id.scheduleMyLocationBtn);
-		pickThisLocationBtn = (Button) findViewById(R.id.pickThisLocationBtn); pickThisLocationBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		pickThisLocationBtn = (Button) findViewById(R.id.pickThisLocationBtn); pickThisLocationBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		searchListRl = (LinearLayout) findViewById(R.id.searchListRl);
 		searchListView = (ListView) findViewById(R.id.searchListView);
-		searchBarEditText = (EditText) findViewById(R.id.searchBarEditText); searchBarEditText.setTypeface(Data.regularFont(getApplicationContext()));
-		searchBtn = (Button) findViewById(R.id.searchBtn); searchBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		searchBarEditText = (EditText) findViewById(R.id.searchBarEditText); searchBarEditText.setTypeface(Data.latoRegular(getApplicationContext()));
+		searchBtn = (Button) findViewById(R.id.searchBtn); searchBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch);
 		searchBtn.setVisibility(View.GONE);
 		progressBarSearch.setVisibility(View.GONE);
@@ -582,7 +582,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 				holder = new ViewHolderScheduleSearch();
 				convertView = mInflater.inflate(R.layout.list_item_search, null);
 				
-				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
+				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.latoRegular(getApplicationContext()));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);
@@ -749,7 +749,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 
@@ -769,16 +769,16 @@ public class ScheduleRideActivity extends FragmentActivity{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
+										DialogPopup.alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
 											
 											@Override
 											public void onClick(View v) {
@@ -791,7 +791,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -799,7 +799,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	
@@ -837,7 +837,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 
@@ -857,16 +857,16 @@ public class ScheduleRideActivity extends FragmentActivity{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
+										DialogPopup.alertPopupWithListener(activity, "", jObj.getString("message"), new View.OnClickListener() {
 											
 											@Override
 											public void onClick(View v) {
@@ -879,7 +879,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -887,7 +887,7 @@ public class ScheduleRideActivity extends FragmentActivity{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	

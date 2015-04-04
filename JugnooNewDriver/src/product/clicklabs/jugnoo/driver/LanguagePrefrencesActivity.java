@@ -44,7 +44,7 @@ public class LanguagePrefrencesActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		languageList = (ListView) findViewById(R.id.languageList);
 		languageListAdapter = new LanguageListAdapter();
@@ -141,7 +141,7 @@ public class LanguagePrefrencesActivity extends Activity{
 				holder = new ViewHolderLanguage();
 				convertView = mInflater.inflate(R.layout.language_list_item, null);
 				
-				holder.languageName = (TextView) convertView.findViewById(R.id.languageName); holder.languageName.setTypeface(Data.regularFont(getApplicationContext()));
+				holder.languageName = (TextView) convertView.findViewById(R.id.languageName); holder.languageName.setTypeface(Data.latoRegular(getApplicationContext()));
 				holder.tick = (ImageView) convertView.findViewById(R.id.tick);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 

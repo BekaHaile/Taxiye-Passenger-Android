@@ -238,7 +238,7 @@ public class LocationFetcher implements GooglePlayServicesClient.ConnectionCallb
 	public void onLocationChanged(Location location) {
 		try{
 			if(location!=null){
-				Log.i("loc chanfged ________---------******","="+location);
+//				Log.i("loc chanfged ________---------******","="+location);
 				this.location = location;
 				locationUpdate.onLocationChanged(location, priority);
 				saveLatLngToSP(location.getLatitude(), location.getLongitude());

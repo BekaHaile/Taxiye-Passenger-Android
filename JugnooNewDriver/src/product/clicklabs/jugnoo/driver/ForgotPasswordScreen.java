@@ -65,14 +65,14 @@ public class ForgotPasswordScreen extends Activity{
 		new ASSL(ForgotPasswordScreen.this, relative, 1134, 720, false);
 		
 		
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
-		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		forgotPasswordHelpText = (TextView) findViewById(R.id.forgotPasswordHelpText); forgotPasswordHelpText.setTypeface(Data.regularFont(getApplicationContext()));
+		forgotPasswordHelpText = (TextView) findViewById(R.id.forgotPasswordHelpText); forgotPasswordHelpText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.regularFont(getApplicationContext()));
+		emailEt = (EditText) findViewById(R.id.emailEt); emailEt.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn); sendEmailBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		sendEmailBtn = (Button) findViewById(R.id.sendEmailBtn); sendEmailBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 
@@ -222,15 +222,15 @@ public class ForgotPasswordScreen extends Activity{
 								}
 								else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
 									String errorMessage = jObj.getString("error");
-									new DialogPopup().alertPopup(activity, "", errorMessage);
+									DialogPopup.alertPopup(activity, "", errorMessage);
 								}
 								else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
 									String message = jObj.getString("message");
-									new DialogPopup().alertPopup(activity, "", message);
+									DialogPopup.alertPopup(activity, "", message);
 								}
 								else if(ApiResponseFlags.NO_SUCH_USER.getOrdinal() == flag){
 									String errorMessage = jObj.getString("error");
-									new DialogPopup().alertPopup(activity, "", errorMessage);
+									DialogPopup.alertPopup(activity, "", errorMessage);
 								}
 								else if(ApiResponseFlags.CUSTOMER_LOGGING_IN.getOrdinal() == flag){
 									String errorMessage = jObj.getString("error");
@@ -238,18 +238,18 @@ public class ForgotPasswordScreen extends Activity{
 								}
 								else if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
 									String errorMessage = jObj.getString("error");
-									new DialogPopup().alertPopup(activity, "", errorMessage);
+									DialogPopup.alertPopup(activity, "", errorMessage);
 								}
 								else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 									String message = jObj.getString("message");
-									new DialogPopup().alertPopup(activity, "", message);
+									DialogPopup.alertPopup(activity, "", message);
 								}
 								else{
-									new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
@@ -258,13 +258,13 @@ public class ForgotPasswordScreen extends Activity{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}

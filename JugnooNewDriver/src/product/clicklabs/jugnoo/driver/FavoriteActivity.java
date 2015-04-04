@@ -60,9 +60,9 @@ public class FavoriteActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn); 
-		favTitleText = (TextView) findViewById(R.id.favTitleText); favTitleText.setTypeface(Data.regularFont(getApplicationContext()));
+		favTitleText = (TextView) findViewById(R.id.favTitleText); favTitleText.setTypeface(Data.latoRegular(getApplicationContext()));
 		noFavoriteLocationsText = (TextView) findViewById(R.id.noFavoriteLocationsText); 
-		noFavoriteLocationsText.setTypeface(Data.regularFont(getApplicationContext()));
+		noFavoriteLocationsText.setTypeface(Data.latoRegular(getApplicationContext()));
 		progressBarFavorites = (ProgressBar) findViewById(R.id.progressBarFavorites);
 		
 		progressBarFavorites.setVisibility(View.GONE);
@@ -154,7 +154,7 @@ public class FavoriteActivity extends Activity{
 				holder = new ViewHolderFavorite();
 				convertView = mInflater.inflate(R.layout.favorite_list_item, null);
 				
-				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.regularFont(getApplicationContext()));
+				holder.name = (TextView) convertView.findViewById(R.id.name); holder.name.setTypeface(Data.latoRegular(getApplicationContext()));
 				holder.favDeleteBtn = (ImageView) convertView.findViewById(R.id.favDeleteBtn);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
@@ -327,17 +327,17 @@ public class FavoriteActivity extends Activity{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(0 == flag){ // {"error": 'some parameter missing',"flag":0}//error
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
 									
 //									{"log":"Removed from favourite successfully"}	//result
 									
-									new DialogPopup().alertPopup(activity, "", jObj.getString("log"));
+									DialogPopup.alertPopup(activity, "", jObj.getString("log"));
 									
 									favoriteLocations.remove(index);
 									updateListData("No favorites", false);
@@ -345,7 +345,7 @@ public class FavoriteActivity extends Activity{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -355,13 +355,13 @@ public class FavoriteActivity extends Activity{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 						
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}

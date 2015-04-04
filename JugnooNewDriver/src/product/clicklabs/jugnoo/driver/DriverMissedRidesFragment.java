@@ -59,7 +59,7 @@ public class DriverMissedRidesFragment extends Fragment {
 		ASSL.DoMagic(main);
 
 		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.regularFont(getActivity()));
+		textViewInfoDisplay = (TextView) rootView.findViewById(R.id.textViewInfoDisplay); textViewInfoDisplay.setTypeface(Data.latoRegular(getActivity()));
 		listView = (ListView) rootView.findViewById(R.id.listView);
 		
 		driverMissedRidesListAdapter = new DriverMissedRidesListAdapter();
@@ -153,16 +153,16 @@ public class DriverMissedRidesFragment extends Fragment {
 				holder = new ViewHolderDriverMissedRides();
 				convertView = mInflater.inflate(R.layout.list_item_missed_rides, null);
 				
-				holder.textViewMissedRideFrom = (TextView) convertView.findViewById(R.id.textViewMissedRideFrom); holder.textViewMissedRideFrom.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
-				holder.textViewMissedRideFromValue = (TextView) convertView.findViewById(R.id.textViewMissedRideFromValue); holder.textViewMissedRideFromValue.setTypeface(Data.regularFont(getActivity()));
+				holder.textViewMissedRideFrom = (TextView) convertView.findViewById(R.id.textViewMissedRideFrom); holder.textViewMissedRideFrom.setTypeface(Data.latoRegular(getActivity()), Typeface.BOLD);
+				holder.textViewMissedRideFromValue = (TextView) convertView.findViewById(R.id.textViewMissedRideFromValue); holder.textViewMissedRideFromValue.setTypeface(Data.latoRegular(getActivity()));
 				
-				holder.textViewMissedRideTime = (TextView) convertView.findViewById(R.id.textViewMissedRideTime); holder.textViewMissedRideTime.setTypeface(Data.regularFont(getActivity()));
+				holder.textViewMissedRideTime = (TextView) convertView.findViewById(R.id.textViewMissedRideTime); holder.textViewMissedRideTime.setTypeface(Data.latoRegular(getActivity()));
 				
-				holder.textViewMissedRideCustomerName = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerName); holder.textViewMissedRideCustomerName.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
-				holder.textViewMissedRideCustomerNameValue = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerNameValue); holder.textViewMissedRideCustomerNameValue.setTypeface(Data.regularFont(getActivity()));
+				holder.textViewMissedRideCustomerName = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerName); holder.textViewMissedRideCustomerName.setTypeface(Data.latoRegular(getActivity()), Typeface.BOLD);
+				holder.textViewMissedRideCustomerNameValue = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerNameValue); holder.textViewMissedRideCustomerNameValue.setTypeface(Data.latoRegular(getActivity()));
 				
-				holder.textViewMissedRideCustomerDistance = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerDistance); holder.textViewMissedRideCustomerDistance.setTypeface(Data.regularFont(getActivity()), Typeface.BOLD);
-				holder.textViewMissedRideCustomerDistanceValue = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerDistanceValue); holder.textViewMissedRideCustomerDistanceValue.setTypeface(Data.regularFont(getActivity()));
+				holder.textViewMissedRideCustomerDistance = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerDistance); holder.textViewMissedRideCustomerDistance.setTypeface(Data.latoRegular(getActivity()), Typeface.BOLD);
+				holder.textViewMissedRideCustomerDistanceValue = (TextView) convertView.findViewById(R.id.textViewMissedRideCustomerDistanceValue); holder.textViewMissedRideCustomerDistanceValue.setTypeface(Data.latoRegular(getActivity()));
 				
 				
 				

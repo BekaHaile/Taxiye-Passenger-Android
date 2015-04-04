@@ -18,7 +18,8 @@ public enum PushFlags {
 	MANUAL_ENGAGEMENT(23),
 	HEARTBEAT(40),
 	STATION_CHANGED(50),
-	CHANGE_PORT(60)
+	CHANGE_PORT(60),
+	UPDATE_CUSTOMER_BALANCE(71)
 	;
 
 	private int ordinal;

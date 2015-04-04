@@ -48,13 +48,13 @@ public class PMGPromoActivity extends FragmentActivity{
 		
 		backBtn = (ImageView) findViewById(R.id.backBtn);
 		
-		continueBtn = (Button) findViewById(R.id.continueBtn); continueBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		continueBtn = (Button) findViewById(R.id.continueBtn); continueBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		promoText = (TextView) findViewById(R.id.promoText); promoText.setTypeface(Data.regularFont(getApplicationContext()));
-		promoDeliverText = (TextView) findViewById(R.id.promoDeliverText); promoDeliverText.setTypeface(Data.regularFont(getApplicationContext()));
+		promoText = (TextView) findViewById(R.id.promoText); promoText.setTypeface(Data.latoRegular(getApplicationContext()));
+		promoDeliverText = (TextView) findViewById(R.id.promoDeliverText); promoDeliverText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		tncText = (TextView) findViewById(R.id.tncText); tncText.setTypeface(Data.regularFont(getApplicationContext()), Typeface.BOLD);
-		tncDescText = (TextView) findViewById(R.id.tncDescText); tncDescText.setTypeface(Data.regularFont(getApplicationContext()));
+		tncText = (TextView) findViewById(R.id.tncText); tncText.setTypeface(Data.latoRegular(getApplicationContext()), Typeface.BOLD);
+		tncDescText = (TextView) findViewById(R.id.tncDescText); tncDescText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		promoText.setText("It's vacation time. Show your love for your near and dear ones by gifting them a cake and a greeting card. Sit back and relax while Jugnoo delivers your order the very same day.");

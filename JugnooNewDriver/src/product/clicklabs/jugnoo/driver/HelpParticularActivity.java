@@ -45,10 +45,10 @@ public class HelpParticularActivity extends FragmentActivity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(getApplicationContext()));
 		webview = (WebView) findViewById(R.id.webview);
 		
 		if(helpSection != null){

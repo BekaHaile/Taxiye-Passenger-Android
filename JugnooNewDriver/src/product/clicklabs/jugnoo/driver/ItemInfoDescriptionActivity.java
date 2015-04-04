@@ -47,15 +47,15 @@ public class ItemInfoDescriptionActivity extends Activity{
 		
 		
 		backBtn = (Button) findViewById(R.id.backBtn);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		imageViewItem = (ImageView) findViewById(R.id.imageViewItem);
 		
-		textViewItemName = (TextView) findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Data.regularFont(getApplicationContext()));
-		textViewItemPrice = (TextView) findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Data.regularFont(getApplicationContext()));
-		textViewItemDescription = (TextView) findViewById(R.id.textViewItemDescription); textViewItemDescription.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewItemName = (TextView) findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewItemPrice = (TextView) findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewItemDescription = (TextView) findViewById(R.id.textViewItemDescription); textViewItemDescription.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		buttonAddToCart = (Button) findViewById(R.id.buttonAddToCart); buttonAddToCart.setTypeface(Data.regularFont(getApplicationContext()));
+		buttonAddToCart = (Button) findViewById(R.id.buttonAddToCart); buttonAddToCart.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
 		

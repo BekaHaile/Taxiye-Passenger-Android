@@ -12,12 +12,12 @@ public class CouponInfo {
 	public String image;
 	public String redeemedOn;
 	public String expiryDate;
-	public double discountPrecent, maximumDiscountableValue;
+	public double discountPrecent, maximumDiscountValue, cappedFare, cappedFareMaximum;
 	public int count;
 	public boolean enabled;
 	
 	public CouponInfo(int type, int status, String title, String subtitle, String description, String image, 
-			String redeemedOn, String expiryDate, double discountPrecent, double maximumDiscountableValue){
+			String redeemedOn, String expiryDate, double discountPrecent, double maximumDiscountValue){
 		this.type = type;
 		this.status = status;
 		this.title = title;
@@ -27,12 +27,15 @@ public class CouponInfo {
 		this.redeemedOn = redeemedOn;
 		this.expiryDate = expiryDate;
 		this.discountPrecent = discountPrecent;
-		this.maximumDiscountableValue = maximumDiscountableValue;
+		this.maximumDiscountValue = maximumDiscountValue;
+		this.cappedFare = 0;
+		this.cappedFareMaximum = 0;
 		this.count = 1;
 		this.enabled = true;
 	}
 	
-	public CouponInfo(int type, String title, String subtitle, String description, double discountPrecent, double maximumDiscountableValue){
+	public CouponInfo(int type, String title, String subtitle, String description, 
+			double discountPrecent, double maximumDiscountValue, double cappedFare, double cappedFareMaximum){
 		this.type = type;
 		this.status = CouponStatus.ACTIVE.getOrdinal();
 		this.title = title;
@@ -42,7 +45,9 @@ public class CouponInfo {
 		this.redeemedOn = DateOperations.getCurrentTime();
 		this.expiryDate = DateOperations.getCurrentTime();
 		this.discountPrecent = discountPrecent;
-		this.maximumDiscountableValue = maximumDiscountableValue;
+		this.maximumDiscountValue = maximumDiscountValue;
+		this.cappedFare = cappedFare;
+		this.cappedFareMaximum = cappedFareMaximum;
 		this.count = 1;
 		this.enabled = true;
 	}
@@ -63,7 +68,8 @@ public class CouponInfo {
 	
 	@Override
 	public String toString() {
-		return status + " " + title + " " + count;
+		return status+", "+title+", "+discountPrecent+", "+maximumDiscountValue
+				+", "+cappedFare+", "+cappedFareMaximum;
 	}
 	
 }

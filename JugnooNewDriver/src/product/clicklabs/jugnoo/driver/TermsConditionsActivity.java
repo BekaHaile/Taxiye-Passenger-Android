@@ -40,11 +40,11 @@ public class TermsConditionsActivity extends Activity{
 		
 		termsAgreedApiDone = false;
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.regularFont(getApplicationContext()));
-		textViewTermsAndConditions = (TextView) findViewById(R.id.textViewTermsAndConditions); textViewTermsAndConditions.setTypeface(Data.regularFont(getApplicationContext()));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(getApplicationContext()));
+		textViewTermsAndConditions = (TextView) findViewById(R.id.textViewTermsAndConditions); textViewTermsAndConditions.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		buttonAgree = (Button) findViewById(R.id.buttonAgree); buttonAgree.setTypeface(Data.regularFont(getApplicationContext()));
-		buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Data.regularFont(getApplicationContext()));
+		buttonAgree = (Button) findViewById(R.id.buttonAgree); buttonAgree.setTypeface(Data.latoRegular(getApplicationContext()));
+		buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		buttonAgree.setOnClickListener(new View.OnClickListener() {
 			
@@ -242,7 +242,7 @@ public class TermsConditionsActivity extends Activity{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -258,7 +258,7 @@ public class TermsConditionsActivity extends Activity{
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -266,7 +266,7 @@ public class TermsConditionsActivity extends Activity{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							DialogPopup.dismissLoadingDialog();
@@ -274,7 +274,7 @@ public class TermsConditionsActivity extends Activity{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 	

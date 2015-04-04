@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.driver;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.driver.datastructure.PendingAPICall;
+import product.clicklabs.jugnoo.driver.datastructure.RideData;
 import product.clicklabs.jugnoo.driver.utils.Utils;
 import android.content.ContentValues;
 import android.content.Context;
@@ -91,6 +92,13 @@ public class Database2 {																	// class for handling database related 
 	private static final String DEFAULT_SALES_PORT = "8200";
 	
 	
+	private static final String TABLE_RIDE_DATA = "table_ride_data";
+	private static final String RIDE_DATA_I = "i";
+	private static final String RIDE_DATA_LAT = "lat";
+	private static final String RIDE_DATA_LNG = "lng";
+	private static final String RIDE_DATA_T = "t";
+	
+	
 	/**
 	 * Creates and opens database for the application use 
 	 * @author shankar
@@ -168,6 +176,14 @@ public class Database2 {																	// class for handling database related 
 				+ LIVE_PORT_NUMBER + " TEXT, " 
 				+ DEV_PORT_NUMBER + " TEXT, " 
 				+ SALES_PORT_NUMBER + " TEXT" 
+				+ ");");
+		
+		
+		database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_RIDE_DATA + " ("
+				+ RIDE_DATA_I + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+				+ RIDE_DATA_LAT + " TEXT, " 
+				+ RIDE_DATA_LNG + " TEXT, " 
+				+ RIDE_DATA_T + " TEXT" 
 				+ ");");
 		
 	}
@@ -943,5 +959,85 @@ public class Database2 {																	// class for handling database related 
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public String getRideData() {
+		String rideDataStr = "";
+		String template = "i,lat,lng,t";
+		String newLine = "\n";
+		boolean hasValues = false;
+		try {
+			String[] columns = new String[] { Database2.RIDE_DATA_I, Database2.RIDE_DATA_LAT, Database2.RIDE_DATA_LNG, Database2.RIDE_DATA_T };
+			Cursor cursor = database.query(Database2.TABLE_RIDE_DATA, columns, null, null, null, null, null);
+			
+			int i0 = cursor.getColumnIndex(Database2.RIDE_DATA_I);
+			int i1 = cursor.getColumnIndex(Database2.RIDE_DATA_LAT);
+			int i2 = cursor.getColumnIndex(Database2.RIDE_DATA_LNG);
+			int i3 = cursor.getColumnIndex(Database2.RIDE_DATA_T);
+			
+			for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+				try {
+					RideData rideData = new RideData(cursor.getInt(i0), 
+							Double.parseDouble(cursor.getString(i1)), 
+							Double.parseDouble(cursor.getString(i2)), 
+							Long.parseLong(cursor.getString(i3)));
+					
+					rideDataStr = rideDataStr + rideData.toString() + newLine;
+					hasValues = true;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if(hasValues){
+				rideDataStr = template + newLine + rideDataStr;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return rideDataStr;
+	}
+	
+	public void insertRideData(String lat, String lng, String t) {
+		try{
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(Database2.RIDE_DATA_LAT, lat);
+			contentValues.put(Database2.RIDE_DATA_LNG, lng);
+			contentValues.put(Database2.RIDE_DATA_T, t);
+			database.insert(Database2.TABLE_RIDE_DATA, null, contentValues);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void deleteRideData(){
+		try{
+			database.delete(Database2.TABLE_RIDE_DATA, null, null);
+			database.execSQL("DROP TABLE "+Database2.TABLE_RIDE_DATA);
+			createAllTables(database);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 }

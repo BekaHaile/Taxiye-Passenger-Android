@@ -27,8 +27,8 @@ public class DialogPopup {
 	public DialogPopup(){
 	}
 	
-	Dialog dialog;
-	public void alertPopup(Activity activity, String title, String message) {
+	public static Dialog dialog;
+	public static void alertPopup(Activity activity, String title, String message) {
 		try {
 			try{
 				if(dialog != null && dialog.isShowing()){
@@ -54,8 +54,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -65,7 +65,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -81,7 +81,7 @@ public class DialogPopup {
 		}
 	}
 	
-	public void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
+	public static void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
 		try {
 			try{
 				if(dialog != null && dialog.isShowing()){
@@ -107,8 +107,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.regularFont(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.regularFont(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -118,7 +118,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.regularFont(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -162,7 +162,7 @@ public class DialogPopup {
 			FrameLayout frameLayout = (FrameLayout) progressDialog.findViewById(R.id.rv);
 			new ASSL((Activity)context, frameLayout, 1134, 720, false);
 			
-			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.regularFont(context));
+			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.latoRegular(context));
 			messageText.setText(message); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -203,12 +203,12 @@ public class DialogPopup {
 	
 	
 	
-	AlertDialog googlePlayAlertDialog;
+	public static AlertDialog googlePlayAlertDialog;
 	/**
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
-	public void showGooglePlayErrorAlert(final Activity mContext){
+	public static void showGooglePlayErrorAlert(final Activity mContext){
 		try{
 			if(googlePlayAlertDialog != null && googlePlayAlertDialog.isShowing()){
 				googlePlayAlertDialog.dismiss();
@@ -258,12 +258,12 @@ public class DialogPopup {
 	
 	
 	
-	AlertDialog locationAlertDialog;
+	public static AlertDialog locationAlertDialog;
 	/**
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will lauch Settings Options
 	 * */
-	public void showLocationSettingsAlert(final Context mContext){
+	public static void showLocationSettingsAlert(final Context mContext){
 		try{
 			if(!((LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 					&&

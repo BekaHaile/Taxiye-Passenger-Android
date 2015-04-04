@@ -19,6 +19,26 @@
             android:splitMotionEvents="false" >
 
             <LinearLayout
+                android:id="@+id/linearLayoutRideId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:splitMotionEvents="false" >
+
+                <TextView
+                    android:id="@+id/textViewRideId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginTop="10px"
+                    android:singleLine="true"
+                    android:text="Ride ID: 1111"
+                    android:textColor="@color/bg_grey_opaque"
+                    android:textSize="30px" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/customerPaidRl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -219,8 +239,6 @@
             android:gravity="right"
             android:orientation="vertical" >
 
-            
-
             <ImageView
                 android:id="@+id/couponImg"
                 android:layout_width="72px"
@@ -229,7 +247,7 @@
                 android:src="@drawable/free_ride_icon"
                 android:tag="mwar"
                 android:visibility="visible" />
-            
+
             <ImageView
                 android:id="@+id/jugnooCashImg"
                 android:layout_width="72px"
@@ -239,7 +257,6 @@
                 android:src="@drawable/jugnoo_cash_icon"
                 android:tag="mwar"
                 android:visibility="visible" />
-            
         </LinearLayout>
     </RelativeLayout>
 

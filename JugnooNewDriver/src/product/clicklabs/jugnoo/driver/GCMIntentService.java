@@ -223,7 +223,7 @@ public class GCMIntentService extends IntentService {
 	        		if(!"".equalsIgnoreCase(accessToken)){
 	            	
 	    	    	try{
-	    		    	 Log.e("Recieved a gcm message arg1...", ","+intent.getExtras());
+	    		    	 Log.i("Recieved a gcm message arg1...", ","+intent.getExtras());
 	    		    	 
 	    		    	 if(!"".equalsIgnoreCase(intent.getExtras().getString("message", ""))){
 	    		    		 
@@ -251,14 +251,42 @@ public class GCMIntentService extends IntentService {
 		    	    					 double longitude = jObj.getDouble("longitude");
 		    	    					 String startTime = jObj.getString("start_time");
 		    	    					 String address = jObj.getString("address");
+
+		    	    					 String startTimeLocal = DateOperations.utcToLocal(startTime);
+		    	    					 
+		    	    					 Log.i("startTimeLocal = ", "="+startTimeLocal);
+		    	    					 
+		    	    					 String endTime = "";
+		    	    					 if(jObj.has("end_time")){
+		    	    						 endTime = jObj.getString("end_time");
+		    	    					 }
+
+		    	    					 long requestTimeOutMillis = 60000;
+		    	    					 
+		    	    					 if("".equalsIgnoreCase(endTime)){
+		    	    						 long serverStartTimeLocalMillis = DateOperations.getMilliseconds(startTimeLocal);
+		    	    						 long serverStartTimeLocalMillisPlus60 = serverStartTimeLocalMillis + 60000;
+		    	    						 requestTimeOutMillis = serverStartTimeLocalMillisPlus60 - System.currentTimeMillis();
+		    	    					 }
+		    	    					 else{
+		    	    						 long startEndDiffMillis = DateOperations.getTimeDifference(DateOperations.utcToLocal(endTime), 
+		    	    								 startTimeLocal);
+		    	    						 Log.i("startEndDiffMillis = ", "="+startEndDiffMillis);
+		    	    						 if(startEndDiffMillis < 90000){
+		    	    							 requestTimeOutMillis = startEndDiffMillis;
+		    	    						 }
+		    	    						 else{
+		    	    							 requestTimeOutMillis = 90000;
+		    	    						 }
+		    	    					 }
+		    	    					 
+		    	    					 Log.e("requestTimeOutTime", "="+requestTimeOutMillis);
 		    	    					 
 		    	    					 sendRequestAckToServer(this, engagementId, currentTimeUTC);
 		    	    					 
 		    	    					 FlurryEventLogger.requestPushReceived(this, engagementId, DateOperations.utcToLocal(startTime), currentTime);
-		    	    					 
-		    	    					 long startTimeMillis = DateOperations.getMilliseconds(startTime);
 
-		    	    					 startTime = DateOperations.getSixtySecAfterCurrentTime();
+		    	    					 startTime = DateOperations.getDelayMillisAfterCurrentTime(requestTimeOutMillis);
 		    	    					 
 		    	    					 if(HomeActivity.appInterruptHandler != null){
 		    	    						 if(UserMode.DRIVER == HomeActivity.userMode){
@@ -270,8 +298,9 @@ public class GCMIntentService extends IntentService {
 		    	    											new LatLng(latitude, longitude), startTime, address));
 		    	    								 
 					    	    					 startRing(this);
+					    	    					 
 					    	    					 RequestTimeoutTimerTask requestTimeoutTimerTask = new RequestTimeoutTimerTask(this, engagementId);
-					    	    					 requestTimeoutTimerTask.startTimer(0, 20000, startTimeMillis, 60000);
+					    	    					 requestTimeoutTimerTask.startTimer(requestTimeOutMillis);
 					    	    					 
 		    	    								 notificationManagerResume(this, "You have got a new ride request.", true);
 				    	    						 HomeActivity.appInterruptHandler.onNewRideRequest();
@@ -283,9 +312,9 @@ public class GCMIntentService extends IntentService {
 		    	    						 
 			    	    					 startRing(this);
 			    	    					 RequestTimeoutTimerTask requestTimeoutTimerTask = new RequestTimeoutTimerTask(this, engagementId);
-			    	    					 requestTimeoutTimerTask.startTimer(0, 20000, startTimeMillis, 60000);
+			    	    					 requestTimeoutTimerTask.startTimer(requestTimeOutMillis);
 		    	    					 }
-	    	    					 
+		    	    					 
 	    	    				 }
 	    	    				 else if(PushFlags.RIDE_ACCEPTED.getOrdinal() == flag){
 									if (HomeActivity.appInterruptHandler != null) {
@@ -473,6 +502,13 @@ public class GCMIntentService extends IntentService {
 	    	    				else if(PushFlags.CHANGE_PORT.getOrdinal() == flag){
 	    	    					sendChangePortAckToServer(this, jObj);
 	    	    				 }
+	    	    				else if(PushFlags.UPDATE_CUSTOMER_BALANCE.getOrdinal() == flag){
+	    	    					String userId = jObj.getString("user_id");
+	    	    					double balance = jObj.getDouble("balance");
+	    	    					if (HomeActivity.appInterruptHandler != null) {
+										HomeActivity.appInterruptHandler.onCashAddedToWalletByCustomer(userId, balance);
+									}
+	    	    				}
 	    	    				 
 	    		    		 } catch(Exception e){
 	    		    			 
@@ -619,82 +655,55 @@ public class GCMIntentService extends IntentService {
 		}
 
 	    
-	    
-		
-		
-		
 		
 		
 		
 	    
+	    
+		
 	    class RequestTimeoutTimerTask{
 	    	
 	    	public Timer timer;
 	    	public TimerTask timerTask;
 	    	public Context context;
-	    	
 	    	public String engagementId;
-	    	
-	    	public long startTime, lifeTime, endTime, period, executionTime;
+	    	public long millisInFuture;
 	    	
 	    	public RequestTimeoutTimerTask(Context context, String engagementId){
 	    		this.context = context;
 	    		this.engagementId = engagementId;
+	    		Log.i("RequestTimeoutTimerTask", "=instantiated");
 	    	}
 	    	
-	    	public void startTimer(long delay, long period, long startTime, long lifeTime){
+	    	public void startTimer(long millisInFuture){
 	    		stopTimer();
 	    		
-	    		this.startTime = startTime;
-	    		this.lifeTime = lifeTime;
-	    		this.endTime = startTime + lifeTime;
-	    		this.period = period;
-	    		this.executionTime = -1;
+	    		this.millisInFuture = millisInFuture;
 	    		
 	    		timer = new Timer();
 	    		timerTask = new TimerTask() {
 	    			@Override
-	    			public void run() {
-	    				long start = System.currentTimeMillis();
-	    				
-	    				if(executionTime == -1){
-							executionTime = RequestTimeoutTimerTask.this.startTime;
+				public void run() {
+					if (Data.driverRideRequests != null) {
+						boolean removed = Data.driverRideRequests.remove(new DriverRideRequest(engagementId));
+						if (removed) {
+							if (HomeActivity.appInterruptHandler != null) {
+								HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
+							}
+							clearNotifications(context);
+							stopRing();
 						}
-	    				
-		    			if(executionTime >= RequestTimeoutTimerTask.this.endTime){
-		    				if(Data.driverRideRequests != null){
-			    				boolean removed = Data.driverRideRequests.remove(new DriverRideRequest(engagementId));
-			    				if(removed){
-			    					if(HomeActivity.appInterruptHandler != null){
-				    					HomeActivity.appInterruptHandler.onRideRequestTimeout(engagementId);
-				    				}
-			    					clearNotifications(context);
-			    					stopRing();
-			    				}
-		    				}
-		    				stopTimer();
-		    			}
-		    			long stop = System.currentTimeMillis();
-					    long elapsedTime = stop - start;
-					    if(executionTime != -1){
-					    	if(elapsedTime >= RequestTimeoutTimerTask.this.period){
-					    		executionTime = executionTime + elapsedTime;
-					    	}
-					    	else{
-					    		executionTime = executionTime + RequestTimeoutTimerTask.this.period;
-					    	}
-					    }
-					    Log.i("RequestTimeoutTimerTask execution", "="+(RequestTimeoutTimerTask.this.endTime - executionTime));
-	    			}
+					}
+					Log.i("RequestTimeoutTimerTask", "onFinish");
+					stopTimer();
+				}
 	    		};
-	    		timer.scheduleAtFixedRate(timerTask, delay, period);
+	    		timer.schedule(timerTask, millisInFuture);
 	    	}
 	    	
 	    	public void stopTimer(){
 	    		try{
-	    			Log.e("RequestTimeoutTimerTask","stopTimer");
-	    			startTime = 0;
-	    			lifeTime = 0;
+	    			this.millisInFuture = 0;
 	    			if(timerTask != null){
 	    				timerTask.cancel();
 	    				timerTask = null;
@@ -711,7 +720,7 @@ public class GCMIntentService extends IntentService {
 	    	
 	    	
 	    }
-	    
+		
 	    
 	    
 	    public String getNetworkName(Context context){

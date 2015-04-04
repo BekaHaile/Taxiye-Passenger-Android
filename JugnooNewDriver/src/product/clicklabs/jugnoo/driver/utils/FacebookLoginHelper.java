@@ -29,7 +29,7 @@ public class FacebookLoginHelper {
 	
 	public void openFacebookSessionForPublish(final Activity activity, final FacebookLoginCallback facebookLoginCallback){
 		if (!AppStatus.getInstance(activity).isOnline(activity)) {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		} else {
 			session = new Session(activity);
 			Session.setActiveSession(session);
@@ -60,7 +60,7 @@ public class FacebookLoginHelper {
 	public void openFacebookSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback,
 			final boolean fetchFBData){
 		if (!AppStatus.getInstance(activity).isOnline(activity)) {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		} else {
 			session = Session.getActiveSession();
 			Log.i("session", "="+session);
@@ -140,7 +140,7 @@ public class FacebookLoginHelper {
 							Log.e("Data.userEmail after","="+Data.fbUserEmail);
 						}
 						else{
-							new DialogPopup().alertPopup(activity, "Facebook Error", "Error in fetching information from Facebook.");
+							DialogPopup.alertPopup(activity, "Facebook Error", "Error in fetching information from Facebook.");
 						}
 						facebookLoginCallback.facebookLoginDone();
 					}

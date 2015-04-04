@@ -24,6 +24,10 @@
 	<string name="language_hindi_text">हिंदी</string>
 	
 	
+	<string name="rupee">\u20B9</string> 
+	<string name="rupee_zero">\u20B9 0.0</string> 
+	
+	
 	
 	    <!-- \n\nPeople with autos can offer rides to users who find taxis a bit too expensive. -->
 	

@@ -76,17 +76,17 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
-		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.regularFont(getApplicationContext()));
+		backBtn = (Button) findViewById(R.id.backBtn); backBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		otpHelpText = (TextView) findViewById(R.id.otpHelpText); otpHelpText.setTypeface(Data.regularFont(getApplicationContext()));
-		pleaseWaitText = (TextView) findViewById(R.id.pleaseWaitText); pleaseWaitText.setTypeface(Data.regularFont(getApplicationContext()));
-		weWillCallText = (TextView) findViewById(R.id.weWillCallText); weWillCallText.setTypeface(Data.regularFont(getApplicationContext()));
+		otpHelpText = (TextView) findViewById(R.id.otpHelpText); otpHelpText.setTypeface(Data.latoRegular(getApplicationContext()));
+		pleaseWaitText = (TextView) findViewById(R.id.pleaseWaitText); pleaseWaitText.setTypeface(Data.latoRegular(getApplicationContext()));
+		weWillCallText = (TextView) findViewById(R.id.weWillCallText); weWillCallText.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		otpEt = (EditText) findViewById(R.id.otpEt); otpEt.setTypeface(Data.regularFont(getApplicationContext()));
+		otpEt = (EditText) findViewById(R.id.otpEt); otpEt.setTypeface(Data.latoRegular(getApplicationContext()));
 		
-		confirmBtn = (Button) findViewById(R.id.confirmBtn); confirmBtn.setTypeface(Data.regularFont(getApplicationContext()));
-		callMeBtn = (Button) findViewById(R.id.callMeBtn); callMeBtn.setTypeface(Data.regularFont(getApplicationContext()));
+		confirmBtn = (Button) findViewById(R.id.confirmBtn); confirmBtn.setTypeface(Data.latoRegular(getApplicationContext()));
+		callMeBtn = (Button) findViewById(R.id.callMeBtn); callMeBtn.setTypeface(Data.latoRegular(getApplicationContext()));
 		
 		
 		backBtn.setOnClickListener(new View.OnClickListener() {
@@ -365,7 +365,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -386,7 +386,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -406,7 +406,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 	
@@ -415,7 +415,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -491,7 +491,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -513,7 +513,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 										HomeActivity.logoutUser(activity);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 								}
 								else{
@@ -532,7 +532,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 							}  catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.dismissLoadingDialog();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
 	
 							
@@ -540,7 +540,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
@@ -568,7 +568,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 						public void onFailure(Throwable arg3) {
 							Log.e("request fail", arg3.toString());
 							DialogPopup.dismissLoadingDialog();
-							new DialogPopup().alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						}
 
 						@Override
@@ -585,10 +585,10 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 										HomeActivity.logoutUser(activity);
 									}
 									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									else{
-										new DialogPopup().alertPopup(activity, "", errorMessage);
+										DialogPopup.alertPopup(activity, "", errorMessage);
 									}
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -596,21 +596,21 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 									String message = jObj.getString("message");
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										new DialogPopup().alertPopup(activity, "", message);
+										DialogPopup.alertPopup(activity, "", message);
 									}
 									startPleaseWaitHandler();
 									DialogPopup.dismissLoadingDialog();
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();
-								new DialogPopup().alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 						}
 					});
 		}
 		else {
-			new DialogPopup().alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}

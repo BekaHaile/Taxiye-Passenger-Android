@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="product.clicklabs.jugnoo.driver"
-<<<<<<< HEAD
-    android:versionCode="156"
-    android:versionName="1.5.6" >
-=======
-    android:versionCode="154"
-    android:versionName="1.5.4" >
->>>>>>> 2547f4c528e412aa85371923c4ca06f9e0fe422a
+    android:versionCode="165"
+    android:versionName="1.6.5" >
 
     
     <uses-sdk
@@ -58,23 +53,6 @@
         android:theme="@style/AppTheme" 
         
         >
-        
-        <receiver android:name="product.clicklabs.jugnoo.driver.LocationReceiverDriver" />
-        
-        
-        <receiver
-            android:name="product.clicklabs.jugnoo.driver.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="product.clicklabs.jugnoo.driver" />
-            </intent-filter>
-          
-        </receiver>
-
-        <service android:name="product.clicklabs.jugnoo.driver.GCMIntentService" />
         
         <activity
             android:name="product.clicklabs.jugnoo.driver.SplashNewActivity"
@@ -214,6 +192,14 @@
             android:screenOrientation="portrait" >
         </activity>
           
+             
+             <activity
+            android:name="product.clicklabs.jugnoo.driver.AddCustomerCashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+             
+             
           
         <service
             android:name="product.clicklabs.jugnoo.driver.DriverLocationUpdateService"
@@ -228,6 +214,22 @@
             android:exported="true"
              >
         </service>
+        
+        <receiver android:name="product.clicklabs.jugnoo.driver.LocationReceiverDriver" />
+        
+        <receiver
+            android:name="product.clicklabs.jugnoo.driver.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="product.clicklabs.jugnoo.driver" />
+            </intent-filter>
+          
+        </receiver>
+
+        <service android:name="product.clicklabs.jugnoo.driver.GCMIntentService" />
         
         
         <receiver android:name="product.clicklabs.jugnoo.driver.BootCompletedReceiver" >
@@ -248,7 +250,6 @@
                 <action android:name="product.clicklabs.jugnoo.driver.START_SERVICE" />
             </intent-filter>
         </receiver>
-        
         
         
 
