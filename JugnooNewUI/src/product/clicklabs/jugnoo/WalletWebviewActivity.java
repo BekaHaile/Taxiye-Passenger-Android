@@ -178,6 +178,7 @@ public class WalletWebviewActivity extends Activity{
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         	
         	Log.e("onReceivedError url", "== errorCode="+errorCode+" description="+description+" failingUrl="+failingUrl);
+        	//== errorCode=-6 description=net::ERR_CONNECTION_REFUSED failingUrl=https://www.test.jugnoo.in/jugnoo/wallet/payments.php
         	
         	String excepUrl = "payu.in";
         	

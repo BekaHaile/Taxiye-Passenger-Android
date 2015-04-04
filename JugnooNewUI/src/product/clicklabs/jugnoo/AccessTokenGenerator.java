@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import product.clicklabs.jugnoo.utils.AuthKeySaver;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 import android.content.Context;
@@ -66,13 +65,13 @@ public class AccessTokenGenerator {
 		final String accessTokenIni = prefIni.getString(Data.SP_ACCESS_TOKEN_KEY, "");
 		if(!"".equalsIgnoreCase(accessTokenIni)){
 			pair = new Pair<String, Integer>(accessTokenIni, 0);
-			Log.e("Accesstoken previous pair", "=" + pair.first + " " + pair.second);
+//			Log.e("Accesstoken previous pair", "=" + pair.first + " " + pair.second);
 			return pair;
 		}
 		
 		String authKey = "";
 		authKey = AuthKeySaver.readAuthFromFile();
-		Log.e("authKey", "="+authKey);
+//		Log.e("authKey", "="+authKey);
 		
 		
 		if(AuthKeySaver.NOT_FOUND.equalsIgnoreCase(authKey)){
@@ -110,7 +109,7 @@ public class AccessTokenGenerator {
 			if("".equalsIgnoreCase(freshInstall)){
 				boolean otherAppsInstalled = false;
 				for(String appPackage : OTHER_JUGNOO_APP_PACKAGES){
-					Log.e("appPackage="+appPackage, "=Utils.appInstalledOrNot(context, "+appPackage+")="+Utils.appInstalledOrNot(context, appPackage));
+//					Log.e("appPackage="+appPackage, "=Utils.appInstalledOrNot(context, "+appPackage+")="+Utils.appInstalledOrNot(context, appPackage));
 					if(Utils.appInstalledOrNot(context, appPackage)){
 						otherAppsInstalled = true;
 						break;
@@ -134,7 +133,7 @@ public class AccessTokenGenerator {
 			String accessToken = SHA256Convertor.getSHA256String(authSecret);
 			
 			pair = new Pair<String, Integer>(accessToken, 1);
-			Log.e("pair", "before sending "+pair.first + " " + pair.second);
+//			Log.e("pair", "before sending "+pair.first + " " + pair.second);
 			return pair;
 		} catch (Exception e) {
 			e.printStackTrace();

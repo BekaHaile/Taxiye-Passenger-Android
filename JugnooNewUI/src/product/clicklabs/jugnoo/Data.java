@@ -11,6 +11,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.utils.Config;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
@@ -318,7 +319,7 @@ public class Data {
 	
 	public static AsyncHttpClient getClient() {
 		if (mainClient == null) {
-			mainClient = new AsyncHttpClient();
+			mainClient = Config.getAsyncHttpClient();
 			try {
 				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 				trustStore.load(null, null);

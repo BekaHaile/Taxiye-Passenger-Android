@@ -1090,22 +1090,24 @@
                 android:splitMotionEvents="false" >
 
                 <RelativeLayout
-                    android:layout_width="100px"
-                    android:layout_height="400px"
+                    android:layout_width="130px"
+                    android:layout_height="450px"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="-10px" >
+                    android:layout_marginTop="-40px"
+                    android:layout_marginRight="-20px"
+                     >
 
                     <ImageView
                         android:id="@+id/imageViewMeals"
-                        android:layout_width="100px"
-                        android:layout_height="100px"
+                        android:layout_width="130px"
+                        android:layout_height="130px"
                         android:src="@drawable/meals_icon_bubble"
                         android:tag="mwar" />
 
                     <ImageView
                         android:id="@+id/imageViewFatafat"
-                        android:layout_width="100px"
-                        android:layout_height="100px"
+                        android:layout_width="130px"
+                        android:layout_height="130px"
                         android:src="@drawable/fatafat_icon_bubble"
                         android:tag="mwar" />
                 </RelativeLayout>
@@ -1190,8 +1192,8 @@
                             android:layout_width="80px"
                             android:layout_height="80px"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginRight="10px"
                             android:layout_marginLeft="10px"
+                            android:layout_marginRight="10px"
                             android:background="@drawable/background_transparent"
                             android:tag="mwar" />
                     </LinearLayout>
@@ -1464,13 +1466,11 @@
                         android:background="@drawable/circle_yellow"
                         android:gravity="center"
                         android:padding="10px"
+                        android:tag="mwar"
                         android:text="0"
                         android:textColor="@color/black"
-                        android:textSize="30px"
-                        android:tag="mwar"
-                         />
-                    
-                    
+                        android:textSize="30px" />
+
                     <ImageView
                         android:id="@+id/imageViewPromotionsArrow"
                         android:layout_width="13px"

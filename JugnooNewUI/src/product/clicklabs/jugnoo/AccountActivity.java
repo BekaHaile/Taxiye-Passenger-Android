@@ -900,12 +900,6 @@ public class AccountActivity extends Activity {
 							DialogPopup.dismissLoadingDialog();
 						}
 						
-						@Override
-						public void onRetry(int retryNo) {
-							Log.e("retryNo","="+retryNo);
-							super.onRetry(retryNo);
-						}
-						
 					});
 		}
 		else {
