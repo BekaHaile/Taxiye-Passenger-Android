@@ -1230,8 +1230,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						if(appMode == AppMode.DEBUG){
 							String driverId = arg0.getSnippet();
 							try{
-								DriverInfo driverInfo = Data.driverInfos.get(Data.driverInfos.indexOf(new DriverInfo(driverId)));
-								debugDriverInfoPopup(HomeActivity.this, driverInfo);
+								final DriverInfo driverInfo = Data.driverInfos.get(Data.driverInfos.indexOf(new DriverInfo(driverId)));
+								DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Driver Info", ""+driverInfo.toString(),
+										"Call", "Cancel", new View.OnClickListener() {
+											
+											@Override
+											public void onClick(View v) {
+												Intent callIntent = new Intent(Intent.ACTION_VIEW);
+										        callIntent.setData(Uri.parse("tel:"+driverInfo.phoneNumber));
+										        startActivity(callIntent);
+											}
+										}, 
+										new View.OnClickListener() {
+											
+											@Override
+											public void onClick(View v) {
+											}
+										}, true, false);
+								
 							} catch(Exception e){
 								e.printStackTrace();
 							}
@@ -1324,13 +1340,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	}
 	
 	
-	public long animDuration = 300;
+	public long animDuration = 350;
 	
 	public void startShowAnimMeals(){
 		Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0, 
 				TranslateAnimation.ABSOLUTE, 0, 
 				TranslateAnimation.ABSOLUTE, 0, 
-				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * 110);
+				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * 150);
 		translateAnimation.setDuration(animDuration);
 		translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 		translateAnimation.setFillAfter(false);
@@ -1353,7 +1369,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals.getLayoutParams());
-				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 110)), 0, 0);
+				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 150)), 0, 0);
 				imageViewMeals.clearAnimation();
 				imageViewMeals.setLayoutParams(layoutParams);
 				imageViewMeals.setEnabled(true);
@@ -1369,7 +1385,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0, 
 				TranslateAnimation.ABSOLUTE, 0, 
 				TranslateAnimation.ABSOLUTE, 0, 
-				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * -110);
+				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * -150);
 		translateAnimation.setDuration(animDuration);
 		translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 		translateAnimation.setFillAfter(false);
@@ -1379,7 +1395,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onAnimationStart(Animation animation) {
 				mealsAnimating = true;
 				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals.getLayoutParams());
-				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 110)), 0, 0);
+				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 150)), 0, 0);
 				imageViewMeals.setLayoutParams(layoutParams);
 				imageViewMeals.setEnabled(false);
 			}
@@ -1403,13 +1419,33 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		imageViewMeals.startAnimation(translateAnimation);
 	}
 	
+	public void clearBubbleIconAmins(){
+		try {
+			RelativeLayout.LayoutParams layoutParamsM = new RelativeLayout.LayoutParams(imageViewMeals.getLayoutParams());
+			layoutParamsM.setMargins(0, 0, 0, 0);
+			imageViewMeals.clearAnimation();
+			imageViewMeals.setLayoutParams(layoutParamsM);
+			imageViewMeals.setTag("");
+			mealsAnimating = false;
+
+			RelativeLayout.LayoutParams layoutParamsF = new RelativeLayout.LayoutParams(imageViewFatafat.getLayoutParams());
+			layoutParamsF.setMargins(0, 0, 0, 0);
+			imageViewFatafat.clearAnimation();
+			imageViewFatafat.setLayoutParams(layoutParamsF);
+			imageViewFatafat.setTag("");
+			fatafatAnimating = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	
 	public void startShowAnimFatafat(){
 		Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0, 
 				TranslateAnimation.ABSOLUTE, 0, 
 				TranslateAnimation.ABSOLUTE, 0, 
-				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * 220);
+				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * 290);
 		translateAnimation.setDuration(animDuration);
 		translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 		translateAnimation.setFillAfter(false);
@@ -1432,7 +1468,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat.getLayoutParams());
-				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 220)), 0, 0);
+				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 290)), 0, 0);
 				imageViewFatafat.clearAnimation();
 				imageViewFatafat.setLayoutParams(layoutParams);
 				imageViewFatafat.setEnabled(true);
@@ -1448,7 +1484,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0, 
 				TranslateAnimation.ABSOLUTE, 0, 
 				TranslateAnimation.ABSOLUTE, 0, 
-				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * -220);
+				TranslateAnimation.ABSOLUTE, ASSL.Yscale() * -290);
 		translateAnimation.setDuration(animDuration);
 		translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 		translateAnimation.setFillAfter(false);
@@ -1458,7 +1494,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			public void onAnimationStart(Animation animation) {
 				fatafatAnimating = true;
 				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat.getLayoutParams());
-				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 220)), 0, 0);
+				layoutParams.setMargins(0, ((int)(ASSL.Yscale() * 290)), 0, 0);
 				imageViewFatafat.setLayoutParams(layoutParams);
 				imageViewFatafat.setEnabled(false);
 			}
@@ -1723,6 +1759,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void switchPassengerScreen(PassengerScreenMode mode){
 		if(userMode == UserMode.PASSENGER){
 			initializeFusedLocationFetchers();
+			
+			clearBubbleIconAmins();
 			
 			if(currentLocationMarker != null){
 				currentLocationMarker.remove();
@@ -2245,11 +2283,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		if(!checkIfUserDataNull(HomeActivity.this)){
 				setUserData();
-		//		SplashNewActivity.isLastLocationUpdateFine(HomeActivity.this);
 				
-				if(userMode == UserMode.PASSENGER && 
-						(PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
-					  startTimerUpdateDrivers();
+				try {
+					if(userMode == UserMode.PASSENGER && 
+							(PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
+						if(map != null && myLocation != null){
+							map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+						}
+						startTimerUpdateDrivers();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			    
 			    initializeFusedLocationFetchers();
@@ -2758,7 +2802,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							public void run() {
 								dontCallRefreshDriver = false;
 							}
-						}, 10000);
+						}, 5000);
 				        
 				        if(!"error".equalsIgnoreCase(result)){
 					        if(!driverAcceptPushRecieved){
@@ -2826,7 +2870,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		markerOptions.snippet(""+driverInfo.userId);
 		markerOptions.position(driverInfo.latLng);
 		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
-		markerOptions.anchor(0.5f, 0.7f);
+		markerOptions.anchor(0.5f, 0.5f);
 		map.addMarker(markerOptions);
 	}
 	
@@ -3966,148 +4010,34 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		void changeDebugModePopup(final Activity activity) {
 			try {
-				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.dialog_custom_two_buttons);
-
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-				new ASSL(activity, frameLayout, 1134, 720, true);
-				
-				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-				layoutParams.dimAmount = 0.6f;
-				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
-				
-				
-				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-				
-				
+				String message = "";
 				if(appMode == AppMode.DEBUG){
-					textMessage.setText("App is in DEBUG mode.\nChange to:");
+					message = "App is in DEBUG mode.\nChange to:";
 				}
-				else if(appMode == AppMode.NORMAL){
-					textMessage.setText("App is in NORMAL mode.\nChange to:");
+				else{
+					message = "App is in NORMAL mode.\nChange to:";
 				}
-				
-				
-				
-				
-				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-				btnOk.setText("NORMAL");
-				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
-				btnCancel.setText("DEBUG");
-				
-				
-				btnOk.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						appMode = AppMode.NORMAL;
-						dialog.dismiss();
-					}
-					
-					
-				});
-				
-				btnCancel.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						appMode = AppMode.DEBUG;
-						dialog.dismiss();
-					}
-					
-				});
-				
-				frameLayout.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-					}
-				});
-				
-				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-					}
-				});
-				
-
-				dialog.show();
+				DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message, "NORMAL", "DEBUG", 
+						new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								appMode = AppMode.NORMAL;
+							}
+						}, 
+						new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								appMode = AppMode.DEBUG;
+							}
+						}, true, false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
 		
-		
-		
-		void debugDriverInfoPopup(final Activity activity, final DriverInfo driverInfo){
-			try {
-				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.dialog_custom_two_buttons);
-
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-				new ASSL(activity, frameLayout, 1134, 720, true);
-				
-				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-				layoutParams.dimAmount = 0.6f;
-				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
-				
-				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-
-				textMessage.setMovementMethod(new ScrollingMovementMethod());
-				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
-				
-				textHead.setText("Driver Info");
-				textMessage.setText(driverInfo.toString());
-				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD); btnOk.setText("Call");
-				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
-				
-				btnOk.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-						Intent callIntent = new Intent(Intent.ACTION_VIEW);
-				        callIntent.setData(Uri.parse("tel:"+driverInfo.phoneNumber));
-				        startActivity(callIntent);
-					}
-				});
-				
-				btnCancel.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-					}
-					
-				});
-				
-				frameLayout.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-					}
-				});
-				
-				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-					}
-				});
-
-				dialog.show();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		
 		
 

@@ -18,17 +18,6 @@
     </style>
     
     
-     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/star_rating_bar_full</item>
-        <item name="android:minHeight">56dip</item>
-        <item name="android:maxHeight">56dip</item>
-    </style>
-    
-     <style name="YellowRatingBar" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/rating_star_yellow_selector</item>
-        <item name="android:minHeight">46dip</item>
-        <item name="android:maxHeight">46dip</item>
-    </style>
     
      <style name="YellowRatingBarNew" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/rating_star_yellow_new_selector</item>

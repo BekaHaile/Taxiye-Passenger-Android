@@ -196,7 +196,6 @@ public class ShareActivity extends Activity{
 
 			waIntent.putExtra(Intent.EXTRA_TEXT, text);
 			startActivity(Intent.createChooser(waIntent, "Share with"));
-
 		} catch (NameNotFoundException e) {
 			Toast.makeText(this, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
 		}

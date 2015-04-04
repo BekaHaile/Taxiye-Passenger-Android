@@ -444,18 +444,10 @@ public class RegisterScreen extends Activity implements LocationUpdate{
 		});
 		
 
-		
-//		nameEt.setText("Test");
-//		lastNameEt.setText("Passenger84");
-//		emailIdEt.setText("passenger84@click-labs.com");
-//		phoneNoEt.setText("9999999999");
-//		passwordEt.setText("passenger");
-//		confirmPasswordEt.setText("passenger");
-		
-//		phoneNoEt.setText("+"+GetCountryZipCode());
-		
-//		Toast.makeText(getApplicationContext(), ""+GetCountryZipCode(), Toast.LENGTH_LONG).show();
-		
+		editTextUserName.setText("Support Fatafat 1");
+		editTextEmail.setText("support+f1@jugnoo.in");
+		editTextPhone.setText("+919000000201");
+		editTextPassword.setText("jugnoopass");
 		
 	}
 	
