@@ -134,7 +134,6 @@
                         android:textSize="30px" />
 
                     <ImageView
-                        android:id="@+id/imageViewOTPArrow"
                         android:layout_width="13px"
                         android:layout_height="26px"
                         android:layout_alignParentRight="true"
@@ -150,6 +149,55 @@
                         android:layout_gravity="center_horizontal"
                         android:src="@color/yellow_alpha" />
                 </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutChangePhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="100px"
+                    android:layout_marginTop="50px"
+                    android:background="@color/white_light_grey" >
+
+                    <TextView
+                        android:id="@+id/textViewChangePhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:gravity="center"
+                        android:text="Change phone number"
+                        android:textColor="@color/black_text"
+                        android:textSize="30px" />
+
+                    <TextView
+                        android:id="@+id/textViewChange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="80px"
+                        android:gravity="center"
+                        android:text="CHANGE"
+                        android:textColor="@drawable/text_color_black_alpha_selector"
+                        android:textSize="30px" />
+
+                    <ImageView
+                        android:layout_width="13px"
+                        android:layout_height="26px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="40px"
+                        android:src="@drawable/arrow_icon_selector"
+                        android:tag="mwar" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@color/yellow_alpha" />
+                </RelativeLayout>
+
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

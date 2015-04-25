@@ -141,6 +141,87 @@ public class Utils {
         return appInstalled;
     }
 	
-	
-	
+
+
+
+    public static String hideEmailString(String email){
+        String returnEmail = "";
+        if(email.length() > 0 && email.contains("@")){
+            int charLength = email.indexOf('@');
+            int stars = (charLength - 4) > 0 ? (charLength - 4) : 4;
+            stars = stars < 4 ? 4 : stars;
+            int starsToShow = stars > charLength ? charLength : stars;
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int i=0; i<starsToShow; i++){
+                stringBuilder.append("*");
+            }
+            returnEmail = stringBuilder.toString() + email.substring(starsToShow, email.length());
+        }
+        else if(email.length() > 0){
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int i=0; i<email.length(); i++){
+                stringBuilder.append("*");
+            }
+            returnEmail = stringBuilder.toString();
+        }
+        return returnEmail;
+    }
+
+
+    public static String hidePhoneNoString(String phoneNo){
+        String returnPhoneNo = "";
+        if(phoneNo.length() > 0){
+            int charLength = phoneNo.length();
+            int stars = (charLength < 3) ? 0 : (charLength - 3);
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int i=0; i<stars; i++){
+                stringBuilder.append("*");
+            }
+            returnPhoneNo = stringBuilder.toString() + phoneNo.substring(stars, phoneNo.length());
+        }
+        return returnPhoneNo;
+    }
+
+
+    public static String retrievePhoneNumberTenChars(String phoneNo){
+        phoneNo = phoneNo.replace(" ", "");
+        phoneNo = phoneNo.replace("(", "");
+        phoneNo = phoneNo.replace("/", "");
+        phoneNo = phoneNo.replace(")", "");
+        phoneNo = phoneNo.replace("N", "");
+        phoneNo = phoneNo.replace(",", "");
+        phoneNo = phoneNo.replace("*", "");
+        phoneNo = phoneNo.replace(";", "");
+        phoneNo = phoneNo.replace("#", "");
+        phoneNo = phoneNo.replace("-", "");
+        phoneNo = phoneNo.replace(".", "");
+        if(phoneNo.length() >= 10){
+            phoneNo = phoneNo.substring(phoneNo.length()-10, phoneNo.length());
+        }
+        return phoneNo;
+    }
+
+    public static boolean validPhoneNumber(String phoneNo){
+        if(phoneNo.length() >= 10){
+            if(phoneNo.charAt(0) == '0' || phoneNo.charAt(0) == '1' || phoneNo.contains("+")){
+                return false;
+            }
+            else{
+                return isPhoneValid(phoneNo);
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static boolean isPhoneValid(CharSequence phone) {
+        return android.util.Patterns.PHONE.matcher(phone).matches();
+    }
+
+
+    public static boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
 }

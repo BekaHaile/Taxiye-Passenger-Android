@@ -50,6 +50,7 @@ public enum ApiResponseFlags {
 	
 	
 	//new authentication server flags
+    AUTH_DUPLICATE_REGISTRATION(400),
 	AUTH_REGISTRATION_SUCCESSFUL(401),
 	AUTH_REGISTRATION_FAILURE(402),
 	AUTH_ALREADY_REGISTERED(403),

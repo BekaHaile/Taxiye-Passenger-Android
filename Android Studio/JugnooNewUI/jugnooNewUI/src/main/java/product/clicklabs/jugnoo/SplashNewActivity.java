@@ -5,6 +5,7 @@ import java.util.Locale;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AppMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -30,10 +31,12 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -46,6 +49,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,7 +67,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	
 	LinearLayout relative;
 	
-	ImageView imageViewJugnooLogo;
+	ImageView imageViewJugnooLogo, imageViewDebug;
 	
 	ProgressBar progressBar;
 	
@@ -74,7 +78,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	TextView textViewNoNet;
 	Button buttonNoNetCall;
 	
-	boolean loginDataFetched = false, resumed = false;
+	boolean loginDataFetched = false, resumed = false, cracked = false;
+
+    public static AppMode appMode = AppMode.NORMAL;
 	
 	// *****************************Used for flurry work***************//
 	@Override
@@ -179,6 +185,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 		
 		imageViewJugnooLogo = (ImageView) findViewById(R.id.imageViewJugnooLogo);
+
+        imageViewDebug = (ImageView) findViewById(R.id.imageViewDebug);
+
 		
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		progressBar.setVisibility(View.GONE);
@@ -283,11 +292,40 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			animation.setAnimationListener(new ShowAnimListener());
 			imageViewJugnooLogo.startAnimation(animation);
 		}
-		
-		
-		
-	    
-	}
+
+
+        appMode = AppMode.NORMAL;
+        cracked = false;
+
+        imageViewDebug.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cracked) {
+
+                    PopupMenu popupMenu = new PopupMenu(SplashNewActivity.this, imageViewDebug);
+                    popupMenu.getMenu().add(0, 0, 0, "AppMode = "+appMode);
+                    popupMenu.show();
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(0 == item.getItemId()){
+                                if(AppMode.NORMAL == appMode){
+                                    appMode = AppMode.DEBUG;
+                                }
+                                else{
+                                    appMode = AppMode.NORMAL;
+                                }
+                            }
+                            return true;
+                        }
+                    });
+
+                }
+            }
+        });
+
+
+    }
 	
 	public void getDeviceToken(){
 	    relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
@@ -809,6 +847,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 							if(Data.DEBUG_PASSWORD.equalsIgnoreCase(code)){
 								dialog.dismiss();
 								changeServerLinkPopup(activity);
+                                cracked = true;
 							}
 							else{
 								etCode.requestFocus();
@@ -904,13 +943,13 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
 					
 					if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
-						textMessage.setText("Current server is SALES \n"+Data.SERVER_URL+".\nChange to:");
+						textMessage.setText("Current server is SALES.\nChange to:");
 					}
 					else if(link.equalsIgnoreCase(Data.LIVE_SERVER_URL)){
-						textMessage.setText("Current server is LIVE \n"+Data.SERVER_URL+".\nChange to:");
+						textMessage.setText("Current server is LIVE.\nChange to:");
 					}
 					else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
-						textMessage.setText("Current server is DEV \n"+Data.SERVER_URL+".\nChange to:");
+						textMessage.setText("Current server is DEV.\nChange to:");
 					}
 					
 					
@@ -986,7 +1025,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 					
 					
 					dialog.show();
-					Toast.makeText(activity, "SERVER_URL = "+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
@@ -28,7 +29,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -340,13 +340,21 @@ public class AccountActivity extends Activity {
 						editTextPhone.setError("Phone number can't be empty");
 					}
 					else{
-						if(Data.userData.phoneNo.equalsIgnoreCase(phoneNoChanged)){
-							editTextPhone.requestFocus();
-							editTextPhone.setError("Changed Phone number is same as the previous one.");
-						}
-						else{
-							updateUserProfileAPI(AccountActivity.this, phoneNoChanged, ProfileUpdateMode.PHONE);
-						}
+                        phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
+                        if(Utils.validPhoneNumber(phoneNoChanged)) {
+                            phoneNoChanged = "+91" + phoneNoChanged;
+                            if(Data.userData.phoneNo.equalsIgnoreCase(phoneNoChanged)){
+                                editTextPhone.requestFocus();
+                                editTextPhone.setError("Changed Phone number is same as the previous one.");
+                            }
+                            else{
+                                updateUserProfileAPI(AccountActivity.this, phoneNoChanged, ProfileUpdateMode.PHONE);
+                            }
+                        }
+                        else{
+                            editTextPhone.requestFocus();
+                            editTextPhone.setError("Please enter valid phone number");
+                        }
 					}
 				}
 				else{

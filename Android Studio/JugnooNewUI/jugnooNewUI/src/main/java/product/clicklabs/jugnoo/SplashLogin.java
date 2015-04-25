@@ -6,6 +6,8 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
+import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
@@ -72,10 +74,10 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	LinearLayout relative;
 	
 	
-	boolean loginDataFetched = false, facebookRegister = false, sendToOtpScreen = false;
+	boolean loginDataFetched = false, facebookRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
 	int otpFlag = 0; 
-	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "";
-	
+	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "";
+
 
 	
 	public static boolean isSystemPackage(PackageInfo pkgInfo) {
@@ -345,6 +347,23 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
 			}
 		});
+
+
+
+        try {
+            if (getIntent().hasExtra("previous_login_email")) {
+                String previousLoginEmail = getIntent().getStringExtra("previous_login_email");
+                editTextEmail.setText(previousLoginEmail);
+                editTextEmail.setSelection(editTextEmail.getText().length());
+                fromPreviousAccounts = true;
+            }
+            else{
+                fromPreviousAccounts = false;
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            fromPreviousAccounts = false;
+        }
 		
 		
 	}
@@ -409,12 +428,20 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	
 	
 	public void performBackPressed(){
-		new FacebookLoginHelper().logoutFacebook();
-		Intent intent = new Intent(SplashLogin.this, SplashNewActivity.class);
-		intent.putExtra("no_anim", "yes");
-		startActivity(intent);
-		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        if(fromPreviousAccounts){
+            Intent intent = new Intent(SplashLogin.this, MultipleAccountsActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
+        else {
+            new FacebookLoginHelper().logoutFacebook();
+            Intent intent = new Intent(SplashLogin.this, SplashNewActivity.class);
+            intent.putExtra("no_anim", "yes");
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
 	}
 
 	
@@ -501,6 +528,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 										enteredEmail = emailId;
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+                                        accessToken = jObj.getString("access_token");
 										otpErrorMsg = jObj.getString("error");
 										otpFlag = 0;
 										sendToOtpScreen = true;
@@ -626,6 +654,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+                                        accessToken = jObj.getString("access_token");
 										otpErrorMsg = jObj.getString("error");
 										otpFlag = 1;
 										sendToOtpScreen = true;
@@ -678,7 +707,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				if(0 == otpFlag){
 					RegisterScreen.facebookLogin = false;
 					OTPConfirmScreen.intentFromRegister = false;
-					OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "");
+					OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "", accessToken);
 					startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
 					finish();
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -686,7 +715,12 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				else if(1 == otpFlag){
 					RegisterScreen.facebookLogin = true;
 					OTPConfirmScreen.intentFromRegister = false;
-					OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(phoneNoOfUnverifiedAccount, "", "");
+					OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
+                        Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
+                        Data.facebookUserData.accessToken,
+                        Data.facebookUserData.userEmail,
+                        Data.facebookUserData.userName,
+                        phoneNoOfUnverifiedAccount, "", "", accessToken);
 					startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
 					finish();
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);

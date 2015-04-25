@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
@@ -816,7 +817,7 @@ public class JSONParser {
 //          "Driver is late",
 //          "Driver denied duty",
 //          "Changed my mind",
-//          "Booked another cab"
+//          "Booked another auto"
 //      ]
 //  }
 
@@ -827,7 +828,7 @@ public class JSONParser {
 			options.add(new CancelOption("Driver is late"));
 			options.add(new CancelOption("Driver denied duty"));
 			options.add(new CancelOption("Changed my mind"));
-			options.add(new CancelOption("Booked another cab"));
+			options.add(new CancelOption("Booked another auto"));
 			
 			Data.cancelOptionsList = new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
 					"will lead to cancellation charges of Rs. 20");
@@ -850,7 +851,49 @@ public class JSONParser {
 		}
 		
 	}
-	
+
+
+
+
+
+
+
+    public static ArrayList<PreviousAccountInfo> parsePreviousAccounts(JSONObject jsonObject){
+        ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
+
+//        {
+//            "flag": 400,
+//            "users": [
+//            {
+//                "user_id": 145,
+//                "user_name": "Shankar16",
+//                "user_email": "shankar+16@jugnoo.in",
+//                "phone_no": "+919780111116",
+//                "date_registered": "2015-01-26T13:55:58.000Z"
+//            }
+//            ]
+//        }
+
+        try{
+
+            JSONArray jPreviousAccountsArr = jsonObject.getJSONArray("users");
+            for(int i=0; i<jPreviousAccountsArr.length(); i++){
+                JSONObject jPreviousAccount = jPreviousAccountsArr.getJSONObject(i);
+                previousAccountInfoList.add(new PreviousAccountInfo(jPreviousAccount.getInt("user_id"),
+                    jPreviousAccount.getString("user_name"),
+                    jPreviousAccount.getString("user_email"),
+                    jPreviousAccount.getString("phone_no"),
+                    jPreviousAccount.getString("date_registered")));
+            }
+
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+
+        return previousAccountInfoList;
+    }
 	
 	
 }

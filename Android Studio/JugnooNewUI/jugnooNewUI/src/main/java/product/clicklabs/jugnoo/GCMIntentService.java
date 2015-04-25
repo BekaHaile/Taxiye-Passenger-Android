@@ -37,19 +37,6 @@ public class GCMIntentService extends IntentService {
         super("GcmIntentService");
     }
 
-		protected void onError(Context arg0, String arg1) {
-	    	 Log.e("Registration", "Got an error1!");
-	         Log.e("Registration",arg1.toString());
-	    }
-
-	    protected boolean onRecoverableError(Context context, String errorId){
-	    	Log.d("onRecoverableError", errorId);
-	        return false;	    
-	    }
-
-	    
-		
-
 	  
 		@SuppressWarnings("deprecation")
 		private void notificationManager(Context context, String message, boolean ring) {

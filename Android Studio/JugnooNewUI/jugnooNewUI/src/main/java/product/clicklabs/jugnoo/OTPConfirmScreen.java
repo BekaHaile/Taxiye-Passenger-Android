@@ -1,16 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
-import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
-import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
-import product.clicklabs.jugnoo.utils.Log;
-import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -33,6 +22,20 @@ import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
+import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.Log;
+import rmn.androidscreenlibrary.ASSL;
+
 public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	
 	ImageView imageViewBack;
@@ -44,6 +47,9 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	
 	RelativeLayout relativeLayoutOTPThroughCall;
 	TextView textViewOTPNotReceived, textViewCallMe;
+
+    RelativeLayout relativeLayoutChangePhone;
+    TextView textViewChangePhone, textViewChange;
 	
 	
 	LinearLayout relative;
@@ -55,7 +61,6 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	public static FacebookRegisterData facebookRegisterData;
 	
 	String otpHelpStr = "Please enter the One Time Password you just received via SMS at ";
-	String waitStr = "Please wait for ";
 	
 	@Override
 	protected void onStart() {
@@ -92,6 +97,10 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		relativeLayoutOTPThroughCall = (RelativeLayout) findViewById(R.id.relativeLayoutOTPThroughCall);
 		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Data.latoLight(this));
 		textViewCallMe = (TextView) findViewById(R.id.textViewCallMe); textViewCallMe.setTypeface(Data.latoLight(this), Typeface.BOLD);
+
+        relativeLayoutChangePhone = (RelativeLayout) findViewById(R.id.relativeLayoutChangePhone);
+        textViewChangePhone = (TextView) findViewById(R.id.textViewChangePhone); textViewChangePhone.setTypeface(Data.latoLight(this));
+        textViewChange = (TextView) findViewById(R.id.textViewChange); textViewChange.setTypeface(Data.latoLight(this), Typeface.BOLD);
 		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +176,16 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 				}
 			}
 		});
+
+        relativeLayoutChangePhone.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class));
+                finish();
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
 		
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -589,22 +608,6 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 }
 
 
-class EmailRegisterData{
-	String name, emailId, phoneNo, password, referralCode;
-	public EmailRegisterData(String name, String emailId, String phoneNo, String password, String referralCode){
-		this.name = name;
-		this.emailId = emailId;
-		this.phoneNo = phoneNo;
-		this.password = password;
-		this.referralCode = referralCode;
-	}
-}
 
-class FacebookRegisterData{
-	String phoneNo, password, referralCode;
-	public FacebookRegisterData(String phoneNo, String password, String referralCode){
-		this.phoneNo = phoneNo;
-		this.password = password;
-		this.referralCode = referralCode;
-	}
-}
+
+
