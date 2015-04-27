@@ -123,6 +123,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
+
+
 		
 //		SharedPreferences preferences = getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
 //		String languageSelected = preferences.getString(Data.LANGUAGE_SELECTED, "default");
