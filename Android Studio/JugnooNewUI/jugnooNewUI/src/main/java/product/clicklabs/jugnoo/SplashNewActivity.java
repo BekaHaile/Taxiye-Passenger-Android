@@ -270,10 +270,11 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
 			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
+            Data.uniqueDeviceId = Data.uniqueDeviceId;
 			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 			
 		} catch (Exception e) {
-			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
+			Log.e("error in fetching appVersion and gcm key", ".." + e.toString());
 		}
 		
 
@@ -300,26 +301,27 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
         imageViewDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cracked) {
+                if(Data.DEFAULT_SERVER_URL.contains(Data.DEV_SERVER_URL)) {
+                    if (cracked) {
 
-                    PopupMenu popupMenu = new PopupMenu(SplashNewActivity.this, imageViewDebug);
-                    popupMenu.getMenu().add(0, 0, 0, "AppMode = "+appMode);
-                    popupMenu.show();
+                        PopupMenu popupMenu = new PopupMenu(SplashNewActivity.this, imageViewDebug);
+                        popupMenu.getMenu().add(0, 0, 0, "AppMode = " + appMode);
+                        popupMenu.show();
 
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if(0 == item.getItemId()){
-                                if(AppMode.NORMAL == appMode){
-                                    appMode = AppMode.DEBUG;
+                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            public boolean onMenuItemClick(MenuItem item) {
+                                if (0 == item.getItemId()) {
+                                    if (AppMode.NORMAL == appMode) {
+                                        appMode = AppMode.DEBUG;
+                                    } else {
+                                        appMode = AppMode.NORMAL;
+                                    }
                                 }
-                                else{
-                                    appMode = AppMode.NORMAL;
-                                }
+                                return true;
                             }
-                            return true;
-                        }
-                    });
+                        });
 
+                    }
                 }
             }
         });

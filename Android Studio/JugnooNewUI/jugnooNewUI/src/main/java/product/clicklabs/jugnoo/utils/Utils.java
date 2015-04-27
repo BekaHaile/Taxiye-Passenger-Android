@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import product.clicklabs.jugnoo.R;
 
 
 public class Utils {
@@ -223,5 +226,28 @@ public class Utils {
     public static boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+
+
+    public static String getCountryZipCode(Context context) {
+
+        String CountryID = "";
+        String CountryZipCode = "";
+
+        TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        // getNetworkCountryIso
+        CountryID = manager.getSimCountryIso().toUpperCase();
+        Log.e("CountryID", "=" + CountryID);
+        String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
+        for (int i = 0; i < rl.length; i++) {
+            String[] g = rl[i].split(",");
+            if (g[1].trim().equals(CountryID.trim())) {
+                CountryZipCode = g[0];
+                return CountryZipCode;
+            }
+        }
+        return "";
+    }
+
 
 }

@@ -76,12 +76,11 @@ public class RegisterScreen extends Activity implements LocationUpdate {
     String name = "", referralCode = "", emailId = "", phoneNo = "", password = "", accessToken = "";
 
     public static boolean facebookLogin = false;
-    boolean loginDataFetched = false, sendToOtpScreen = false;
+    boolean sendToOtpScreen = false;
 
     public static JSONObject multipleCaseJSON;
 
     public void resetFlags() {
-        loginDataFetched = false;
         sendToOtpScreen = false;
     }
 
@@ -105,8 +104,6 @@ public class RegisterScreen extends Activity implements LocationUpdate {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        loginDataFetched = false;
 
         relative = (LinearLayout) findViewById(R.id.relative);
         new ASSL(RegisterScreen.this, relative, 1134, 720, false);
@@ -339,16 +336,20 @@ public class RegisterScreen extends Activity implements LocationUpdate {
         });
 
 
-        if (facebookLogin) {
-            editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
-            editTextUserName.setEnabled(false);
-            if ("".equalsIgnoreCase(Data.facebookUserData.userEmail)) {
-                editTextEmail.setText("");
-                editTextEmail.setEnabled(true);
-            } else {
-                editTextEmail.setText(Data.facebookUserData.userEmail);
-                editTextEmail.setEnabled(false);
+        try {
+            if (facebookLogin) {
+                editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+                editTextUserName.setEnabled(false);
+                if ("".equalsIgnoreCase(Data.facebookUserData.userEmail)) {
+                    editTextEmail.setText("");
+                    editTextEmail.setEnabled(true);
+                } else {
+                    editTextEmail.setText(Data.facebookUserData.userEmail);
+                    editTextEmail.setEnabled(false);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         try {
@@ -468,25 +469,7 @@ public class RegisterScreen extends Activity implements LocationUpdate {
     }
 
 
-    String GetCountryZipCode() {
 
-        String CountryID = "";
-        String CountryZipCode = "";
-
-        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        // getNetworkCountryIso
-        CountryID = manager.getSimCountryIso().toUpperCase();
-        Log.e("CountryID", "=" + CountryID);
-        String[] rl = this.getResources().getStringArray(R.array.CountryCodes);
-        for (int i = 0; i < rl.length; i++) {
-            String[] g = rl[i].split(",");
-            if (g[1].trim().equals(CountryID.trim())) {
-                CountryZipCode = g[0];
-                return CountryZipCode;
-            }
-        }
-        return "";
-    }
 
 
     @Override
@@ -548,14 +531,22 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             params.put("client_id", Data.CLIENT_ID);
             params.put("referral_code", referralCode);
 
-            if(AppMode.DEBUG == SplashNewActivity.appMode){
-                params.put("device_token", "");
-                params.put("unique_device_id", "");
+            if(Data.DEFAULT_SERVER_URL.contains(Data.DEV_SERVER_URL)){
+                if(AppMode.DEBUG == SplashNewActivity.appMode){
+                    params.put("device_token", "");
+                    params.put("unique_device_id", "");
+                }
+                else{
+                    params.put("device_token", Data.deviceToken);
+                    params.put("unique_device_id", Data.uniqueDeviceId);
+                }
             }
             else{
                 params.put("device_token", Data.deviceToken);
                 params.put("unique_device_id", Data.uniqueDeviceId);
             }
+
+
 
 
             Log.i("register_using_email params", params.toString());
@@ -781,14 +772,7 @@ public class RegisterScreen extends Activity implements LocationUpdate {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        if (hasFocus && loginDataFetched) {
-            loginDataFetched = false;
-            Database2.getInstance(RegisterScreen.this).updateDriverLastLocationTime();
-            Database2.getInstance(RegisterScreen.this).close();
-            startActivity(new Intent(RegisterScreen.this, HomeActivity.class));
-            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            ActivityCompat.finishAffinity(this);
-        } else if (hasFocus && sendToOtpScreen) {
+        if (hasFocus && sendToOtpScreen) {
             sendIntentToOtpScreen();
         }
 

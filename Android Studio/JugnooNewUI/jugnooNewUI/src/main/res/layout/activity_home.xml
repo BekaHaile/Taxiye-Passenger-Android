@@ -72,19 +72,39 @@
                                 android:textColor="@color/black_text"
                                 android:textSize="30px"/>
 
-                            <TextView
-                                android:id="@+id/textViewCurrentRatesInfo"
-                                android:layout_width="match_parent"
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutInitialFareFactor"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/textViewNearestDriverETA"
-                                android:layout_marginLeft="20px"
-                                android:layout_marginRight="20px"
+                                android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="10px"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="Current rates are 1.2x higher than normal to maintain availablity"
-                                android:textColor="@color/grey_dark"
-                                android:textSize="22px"/>
+                                >
+
+                                <TextView
+                                    android:id="@+id/textViewCurrentFareFactor"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:singleLine="true"
+                                    android:text="1.2x"
+                                    android:textColor="@color/black_text_grey"
+                                    android:textSize="26px"/>
+
+
+                                <TextView
+                                    android:id="@+id/textViewCurrentRatesInfo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignBottom="@+id/textViewCurrentFareFactor"
+                                    android:layout_marginLeft="10px"
+                                    android:layout_toRightOf="@+id/textViewCurrentFareFactor"
+                                    android:gravity="left"
+                                    android:singleLine="true"
+                                    android:text="of standard rates applicable right now"
+                                    android:textColor="@color/grey_dark"
+                                    android:textSize="24px"/>
+
+                            </RelativeLayout>
                         </LinearLayout>
 
                     </RelativeLayout>

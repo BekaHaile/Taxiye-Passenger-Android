@@ -311,22 +311,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				});
 		
 		
-		
-		try {																						// to get AppVersion, OS version, country code and device name
-			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			Data.appVersion = pInfo.versionCode;
-			Log.i("appVersion", Data.appVersion + "..");
-			Data.osVersion = android.os.Build.VERSION.RELEASE;
-			Log.i("osVersion", Data.osVersion + "..");
-			Data.country = getApplicationContext().getResources().getConfiguration().locale.getCountry();
-			Log.i("countryCode", Data.country + "..");
-			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
-			Log.i("deviceName", Data.deviceName + "..");
-		} catch (Exception e) {
-			Log.e("error in fetching appversion and gcm key", ".." + e.toString());
-		}
-		
-		
+
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		
@@ -364,7 +349,16 @@ public class SplashLogin extends Activity implements LocationUpdate{
             e.printStackTrace();
             fromPreviousAccounts = false;
         }
-		
+
+        try {
+            if (getIntent().hasExtra("forgot_login_email")) {
+                String forgotLoginEmail = getIntent().getStringExtra("forgot_login_email");
+                editTextEmail.setText(forgotLoginEmail);
+                editTextEmail.setSelection(editTextEmail.getText().length());
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 		
 	}
 	

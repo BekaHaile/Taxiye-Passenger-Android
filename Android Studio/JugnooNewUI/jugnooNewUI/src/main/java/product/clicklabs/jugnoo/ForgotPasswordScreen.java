@@ -232,7 +232,17 @@ public class ForgotPasswordScreen extends Activity{
 									DialogPopup.alertPopup(activity, "", errorMessage);
 								}
 								else{
-									DialogPopup.alertPopup(activity, "", jObj.getString("log"));
+                                    DialogPopup.alertPopupWithListener(activity, "", jObj.getString("log"), new View.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(ForgotPasswordScreen.this, SplashLogin.class);
+                                            intent.putExtra("forgot_login_email", email);
+                                            startActivity(intent);
+                                            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                                            finish();
+                                        }
+                                    });
 								}
 							}  catch (Exception exception) {
 								exception.printStackTrace();

@@ -166,9 +166,7 @@ public class GCMIntentService extends IntentService {
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
 				builder.setSmallIcon(R.drawable.notification_icon);
 				builder.setContentIntent(intent);
-				
-				
-				
+
 				Notification notification = builder.build();
 				notificationManager.notify(notificationId, notification);
 				

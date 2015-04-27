@@ -126,6 +126,7 @@ public class RequestDuplicateRegistrationActivity extends Activity {
                 textViewRegisterEmailValue.setText(OTPConfirmScreen.emailRegisterData.emailId);
                 textViewRegisterPhoneValue.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
             }
+            editTextMessage.setHint("You have already created "+Data.previousAccountInfoList.size()+" accounts from this device. Please explain the reason for creating a new account.");
         } catch(Exception e){
             e.printStackTrace();
             performBackPressed();

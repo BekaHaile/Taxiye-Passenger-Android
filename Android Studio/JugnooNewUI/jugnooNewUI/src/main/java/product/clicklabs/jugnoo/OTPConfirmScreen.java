@@ -321,6 +321,10 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 											loginDataFetched = true;
 										}
 									}
+                                    else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+                                        String error = jObj.getString("error");
+                                        DialogPopup.alertPopup(activity, "", error);
+                                    }
 									else{
 										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
@@ -440,6 +444,10 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 											Database.getInstance(OTPConfirmScreen.this).close();
 										}
 									}
+                                    else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+                                        String error = jObj.getString("error");
+                                        DialogPopup.alertPopup(activity, "", error);
+                                    }
 									else{
 										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
@@ -548,16 +556,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		}
 	}
 	
-	boolean isEmailValid(CharSequence email) {
-		return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-	}
 
-	
-	boolean isPhoneValid(CharSequence phone) {
-		return android.util.Patterns.PHONE.matcher(phone).matches();
-	}
-	
-	
 	@Override
 	public void onBackPressed() {
 		performBackPressed();

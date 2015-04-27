@@ -191,7 +191,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	//Initial layout
 	RelativeLayout initialLayout;
-	TextView textViewNearestDriverETA, textViewCurrentRatesInfo;
+	TextView textViewNearestDriverETA;
+    RelativeLayout relativeLayoutInitialFareFactor;
+    TextView textViewCurrentFareFactor;
 	Button initialMyLocationBtn, requestRideBtn, requestRideLaterBtn, changeLocalityBtn;
 	RelativeLayout relativeLayoutInitialSearchBar;
 	TextView textViewInitialSearch;
@@ -498,7 +500,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		//Initial layout 
 		initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
 		textViewNearestDriverETA = (TextView) findViewById(R.id.textViewNearestDriverETA); textViewNearestDriverETA.setTypeface(Data.latoRegular(this));
-		textViewCurrentRatesInfo = (TextView) findViewById(R.id.textViewCurrentRatesInfo); textViewCurrentRatesInfo.setTypeface(Data.latoRegular(this));
+
+        relativeLayoutInitialFareFactor = (RelativeLayout) findViewById(R.id.relativeLayoutInitialFareFactor);
+        textViewCurrentFareFactor = (TextView) findViewById(R.id.textViewCurrentFareFactor); textViewCurrentFareFactor.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		((TextView) findViewById(R.id.textViewCurrentRatesInfo)).setTypeface(Data.latoRegular(this));
+
 		initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
 		requestRideBtn = (Button) findViewById(R.id.requestRideBtn); requestRideBtn.setTypeface(Data.latoRegular(this));
 		requestRideLaterBtn = (Button) findViewById(R.id.requestRideLaterBtn); requestRideLaterBtn.setTypeface(Data.latoRegular(this));
@@ -2097,20 +2103,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	public void setFareFactorToInitialState(){
 		try {
 			if((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
-				if(Data.userData.fareFactor > 1){
-					textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
-					textViewCurrentRatesInfo.setText("Current rates are "
-							+decimalFormat.format(Data.userData.fareFactor)
-							+"x higher than normal to maintain avaliability");
-				}
-				else if(Data.userData.fareFactor < 1){
-					textViewCurrentRatesInfo.setVisibility(View.VISIBLE);
-					textViewCurrentRatesInfo.setText("Current rates are "
-							+decimalFormat.format(Data.userData.fareFactor)
-							+"x lower than normal to maintain avaliability");
+				if(Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1){
+                    relativeLayoutInitialFareFactor.setVisibility(View.VISIBLE);
+					textViewCurrentFareFactor.setText(decimalFormat.format(Data.userData.fareFactor) +"x");
 				}
 				else{
-					textViewCurrentRatesInfo.setVisibility(View.GONE);
+                    relativeLayoutInitialFareFactor.setVisibility(View.GONE);
 				}
 			}
 		} catch (Exception e) {

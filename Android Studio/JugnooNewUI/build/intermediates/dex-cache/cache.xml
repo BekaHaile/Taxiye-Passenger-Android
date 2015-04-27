@@ -5,15 +5,8 @@
         jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/JugnooNewUI/facebookSDK/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="740500c6d4603b6f0399dc7c45185573e3518ea1">
+        sha1="599943ea244740514503327c073e43ab720a9dcb">
         <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-06f52a98b6321989cf5fb2e0ee941c06182ea395.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-acc6eca703037c6372b0f8dd939a7914477de00a.jar" />
     </item>
     <item
         jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/libs/android-async-http.jar"
@@ -21,6 +14,13 @@
         revision="21.1.2"
         sha1="a845a88238be0b5be9d238652c1bc0605ef91f52">
         <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/android-async-http-c4376acb58ea22492dffcb972dad1690020f89dd.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-acc6eca703037c6372b0f8dd939a7914477de00a.jar" />
     </item>
     <item
         jar="/Users/shankar/Desktop/android studio sdk/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
