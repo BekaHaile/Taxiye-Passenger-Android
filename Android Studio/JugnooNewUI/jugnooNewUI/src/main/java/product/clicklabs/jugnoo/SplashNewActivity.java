@@ -272,7 +272,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
 			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
-            Data.uniqueDeviceId = Data.uniqueDeviceId;
 			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 			
 		} catch (Exception e) {
@@ -303,7 +302,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
         imageViewDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Data.DEFAULT_SERVER_URL.contains(Data.DEV_SERVER_URL)) {
+                if(Data.SERVER_URL.contains(Data.DEV_SERVER_URL.substring(0, Data.DEV_SERVER_URL.length()-5))) {
                     if (cracked) {
 
                         PopupMenu popupMenu = new PopupMenu(SplashNewActivity.this, imageViewDebug);

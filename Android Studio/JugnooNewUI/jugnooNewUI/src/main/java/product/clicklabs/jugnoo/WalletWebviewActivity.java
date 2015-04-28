@@ -59,7 +59,7 @@ public class WalletWebviewActivity extends Activity{
 				if(getIntent().hasExtra("amount")){
 					amount = getIntent().getStringExtra("amount");
 					
-					String urlStart = "https://www.dev.jugnoo.in";
+					String urlStart = "https://www.dev.jugnoo.in/jugnoo-phpfiles/wallet/payments.php";
 					
 					if(Data.SERVER_URL.contains(Data.LIVE_SERVER_URL.substring(0, Data.LIVE_SERVER_URL.length()-5))){
 						urlStart = "https://www.dev.jugnoo.in/jugnoo-phpfiles/wallet/payments.php";

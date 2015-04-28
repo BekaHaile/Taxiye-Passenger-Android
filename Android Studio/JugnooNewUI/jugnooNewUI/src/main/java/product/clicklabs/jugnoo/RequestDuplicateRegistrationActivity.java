@@ -62,17 +62,17 @@ public class RequestDuplicateRegistrationActivity extends Activity {
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-        textViewRegisterNameValue = (TextView) findViewById(R.id.textViewRegisterNameValue); textViewRegisterNameValue.setTypeface(Data.latoRegular(this));
-        textViewRegisterEmailValue = (TextView) findViewById(R.id.textViewRegisterEmailValue); textViewRegisterEmailValue.setTypeface(Data.latoRegular(this));
-        textViewRegisterPhoneValue = (TextView) findViewById(R.id.textViewRegisterPhoneValue); textViewRegisterPhoneValue.setTypeface(Data.latoRegular(this));
+        textViewRegisterNameValue = (TextView) findViewById(R.id.textViewRegisterNameValue); textViewRegisterNameValue.setTypeface(Data.latoLight(this), Typeface.BOLD);
+        textViewRegisterEmailValue = (TextView) findViewById(R.id.textViewRegisterEmailValue); textViewRegisterEmailValue.setTypeface(Data.latoLight(this), Typeface.BOLD);
+        textViewRegisterPhoneValue = (TextView) findViewById(R.id.textViewRegisterPhoneValue); textViewRegisterPhoneValue.setTypeface(Data.latoLight(this), Typeface.BOLD);
         textViewRegisterHelp = (TextView) findViewById(R.id.textViewRegisterHelp); textViewRegisterHelp.setTypeface(Data.latoLight(this), Typeface.BOLD);
 
         ((TextView) findViewById(R.id.textViewRegistration)).setTypeface(Data.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewRegisterName)).setTypeface(Data.latoLight(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewRegisterEmail)).setTypeface(Data.latoLight(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewRegisterPhone)).setTypeface(Data.latoLight(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewRegisterName)).setTypeface(Data.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewRegisterEmail)).setTypeface(Data.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewRegisterPhone)).setTypeface(Data.latoRegular(this));
 
-        editTextMessage = (EditText) findViewById(R.id.editTextMessage); editTextMessage.setTypeface(Data.latoRegular(this));
+        editTextMessage = (EditText) findViewById(R.id.editTextMessage); editTextMessage.setTypeface(Data.latoLight(this), Typeface.BOLD);
 
         buttonSubmitRequest = (Button) findViewById(R.id.buttonSubmitRequest); buttonSubmitRequest.setTypeface(Data.latoRegular(this));
 

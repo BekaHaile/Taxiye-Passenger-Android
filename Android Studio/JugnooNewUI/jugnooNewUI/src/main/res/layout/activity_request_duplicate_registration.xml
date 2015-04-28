@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="50px"
+                    android:layout_marginTop="40px"
                     android:textColor="@color/black_text"
                     android:textSize="30px"
                     android:text="Registration Information"/>
@@ -76,7 +76,7 @@
                             android:id="@+id/textViewRegisterName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text_alpha"
+                            android:textColor="@color/black_text"
                             android:textSize="28px"
                             android:layout_marginLeft="40px"
                             android:text="Name:"/>
@@ -85,7 +85,7 @@
                             android:id="@+id/textViewRegisterNameValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text"
+                            android:textColor="@color/black_text_grey"
                             android:textSize="28px"
                             android:text="User1"
                             android:layout_marginLeft="180px"
@@ -105,7 +105,7 @@
                             android:id="@+id/textViewRegisterEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text_alpha"
+                            android:textColor="@color/black_text"
                             android:textSize="28px"
                             android:layout_marginLeft="40px"
                             android:text="Email:"/>
@@ -114,7 +114,7 @@
                             android:id="@+id/textViewRegisterEmailValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text"
+                            android:textColor="@color/black_text_grey"
                             android:textSize="28px"
                             android:text="User1"
                             android:layout_marginLeft="180px"
@@ -134,16 +134,16 @@
                             android:id="@+id/textViewRegisterPhone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text_alpha"
+                            android:textColor="@color/black_text"
                             android:textSize="28px"
                             android:layout_marginLeft="40px"
-                            android:text="Phone No:"/>
+                            android:text="Phone:"/>
 
                         <TextView
                             android:id="@+id/textViewRegisterPhoneValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text"
+                            android:textColor="@color/black_text_grey"
                             android:textSize="28px"
                             android:text="User1"
                             android:layout_marginLeft="180px"
@@ -162,13 +162,16 @@
                     android:layout_height="310px"
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
-                    android:layout_marginTop="40px"
+                    android:layout_marginTop="50px"
                     android:background="@drawable/background_white_rounded"
                     android:gravity="left"
                     android:hint="You have already created 2 accounts from this device. Please explain the reason for creating a new account."
                     android:padding="20px"
                     android:scrollbars="vertical"
-                    android:textSize="28px" />
+                    android:textSize="24px"
+                    android:textColor="@color/black_text"
+                    android:textColorHint="@color/black_text_alpha"
+                    />
 
 
                 <TextView
@@ -182,7 +185,7 @@
                     android:layout_marginTop="40px"
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
-                    android:text="We will use your registration information to create your account. Once the registration is complete, we will revert to you."/>
+                    android:text="We will revert to you soon"/>
 
 
                 <Button

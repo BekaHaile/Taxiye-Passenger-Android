@@ -222,7 +222,14 @@ public class WalletActivity extends Activity{
 		getTransactionInfoAsync(this);
 		
 	}
-	
+
+    public ArrayList<TransactionInfo> getTransactionInfoList(){
+        if(transactionInfoList == null){
+            transactionInfoList = new ArrayList<TransactionInfo>();
+        }
+        return transactionInfoList;
+    }
+
 	@Override
 	public void onBackPressed() {
 		finish();
@@ -359,44 +366,45 @@ public class WalletActivity extends Activity{
 	
 	
 	public void getTransactionInfoAsync(final Activity activity) {
-        if(!HomeActivity.checkIfUserDataNull(activity)) {
-            relativeLayoutShowMore.setVisibility(View.GONE);
-            if (fetchTransactionInfoClient == null) {
-                if (AppStatus.getInstance(activity).isOnline(activity)) {
+        try {
+            if(!HomeActivity.checkIfUserDataNull(activity)) {
+                relativeLayoutShowMore.setVisibility(View.GONE);
+                if (fetchTransactionInfoClient == null) {
+                    if (AppStatus.getInstance(activity).isOnline(activity)) {
 
-                    progressBar.setVisibility(View.VISIBLE);
-                    textViewInfo.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.VISIBLE);
+                        textViewInfo.setVisibility(View.GONE);
 
-                    RequestParams params = new RequestParams();
-                    params.put("access_token", Data.userData.accessToken);
-                    params.put("client_id", Data.CLIENT_ID);
-                    params.put("is_access_token_new", "1");
-                    params.put("start_from", "" + transactionInfoList.size());
+                        RequestParams params = new RequestParams();
+                        params.put("access_token", Data.userData.accessToken);
+                        params.put("client_id", Data.CLIENT_ID);
+                        params.put("is_access_token_new", "1");
+                        params.put("start_from", "" + getTransactionInfoList().size());
 
 
-                    fetchTransactionInfoClient = Data.getClient();
-                    fetchTransactionInfoClient.post(Data.SERVER_URL + "/get_transaction_history", params,
-                        new CustomAsyncHttpResponseHandler() {
-                            private JSONObject jObj;
+                        fetchTransactionInfoClient = Data.getClient();
+                        fetchTransactionInfoClient.post(Data.SERVER_URL + "/get_transaction_history", params,
+                            new CustomAsyncHttpResponseHandler() {
+                                private JSONObject jObj;
 
-                            @Override
-                            public void onFailure(Throwable arg3) {
-                                Log.e("request fail", arg3.toString());
-                                progressBar.setVisibility(View.GONE);
-                                updateListData("Some error occurred. Tap to retry", true);
-                            }
+                                @Override
+                                public void onFailure(Throwable arg3) {
+                                    Log.e("request fail", arg3.toString());
+                                    progressBar.setVisibility(View.GONE);
+                                    updateListData("Some error occurred. Tap to retry", true);
+                                }
 
-                            @Override
-                            public void onSuccess(String response) {
-                                Log.e("Server response", "response = " + response);
-                                try {
-                                    jObj = new JSONObject(response);
-                                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                        int flag = jObj.getInt("flag");
-                                        if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                            String error = jObj.getString("error");
-                                            updateListData(error, true);
-                                        } else if (ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag) {
+                                @Override
+                                public void onSuccess(String response) {
+                                    Log.e("Server response", "response = " + response);
+                                    try {
+                                        jObj = new JSONObject(response);
+                                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                            int flag = jObj.getInt("flag");
+                                            if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                                String error = jObj.getString("error");
+                                                updateListData(error, true);
+                                            } else if (ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag) {
 
 //											{
 //											    "flag": 423,
@@ -416,58 +424,61 @@ public class WalletActivity extends Activity{
 //											    ]
 //											}
 
-                                            jugnooBalance = jObj.getDouble("balance");
-                                            totalTransactions = jObj.getInt("num_txns");
-                                            pageSize = jObj.getInt("page_size");
+                                                jugnooBalance = jObj.getDouble("balance");
+                                                totalTransactions = jObj.getInt("num_txns");
+                                                pageSize = jObj.getInt("page_size");
 
-                                            promoBanner = "";
-                                            if (jObj.has("banner")) {
-                                                promoBanner = jObj.getString("banner");
+                                                promoBanner = "";
+                                                if (jObj.has("banner")) {
+                                                    promoBanner = jObj.getString("banner");
+                                                }
+
+
+                                                JSONArray jTransactions = jObj.getJSONArray("transactions");
+                                                for (int i = 0; i < jTransactions.length(); i++) {
+                                                    JSONObject jTransactionI = jTransactions.getJSONObject(i);
+                                                    transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
+                                                        jTransactionI.getInt("txn_type"),
+                                                        jTransactionI.getString("txn_time"),
+                                                        jTransactionI.getString("txn_date"),
+                                                        jTransactionI.getString("txn_text"),
+                                                        jTransactionI.getDouble("amount")));
+                                                }
+
+                                                if (Data.userData != null) {
+                                                    Data.userData.jugnooBalance = jugnooBalance;
+                                                }
+
+                                                showPromoBanner();
+                                                updateListData("No transactions currently", false);
+                                            } else {
+                                                updateListData("Some error occurred. Tap to retry", true);
                                             }
-
-
-                                            JSONArray jTransactions = jObj.getJSONArray("transactions");
-                                            for (int i = 0; i < jTransactions.length(); i++) {
-                                                JSONObject jTransactionI = jTransactions.getJSONObject(i);
-                                                transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
-                                                    jTransactionI.getInt("txn_type"),
-                                                    jTransactionI.getString("txn_time"),
-                                                    jTransactionI.getString("txn_date"),
-                                                    jTransactionI.getString("txn_text"),
-                                                    jTransactionI.getDouble("amount")));
-                                            }
-
-                                            if (Data.userData != null) {
-                                                Data.userData.jugnooBalance = jugnooBalance;
-                                            }
-
-                                            showPromoBanner();
-                                            updateListData("No transactions currently", false);
                                         } else {
                                             updateListData("Some error occurred. Tap to retry", true);
                                         }
-                                    } else {
+
+                                    } catch (Exception exception) {
+                                        exception.printStackTrace();
                                         updateListData("Some error occurred. Tap to retry", true);
                                     }
-
-                                } catch (Exception exception) {
-                                    exception.printStackTrace();
-                                    updateListData("Some error occurred. Tap to retry", true);
+                                    progressBar.setVisibility(View.GONE);
                                 }
-                                progressBar.setVisibility(View.GONE);
-                            }
 
-                            @Override
-                            public void onFinish() {
-                                fetchTransactionInfoClient = null;
-                                super.onFinish();
-                            }
+                                @Override
+                                public void onFinish() {
+                                    fetchTransactionInfoClient = null;
+                                    super.onFinish();
+                                }
 
-                        });
-                } else {
-                    updateListData("No Internet connection. Tap to retry", true);
+                            });
+                    } else {
+                        updateListData("No Internet connection. Tap to retry", true);
+                    }
                 }
             }
+        } catch(Exception e){
+            e.printStackTrace();
         }
 	}
 

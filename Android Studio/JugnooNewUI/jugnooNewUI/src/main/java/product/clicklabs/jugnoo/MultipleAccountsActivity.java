@@ -206,7 +206,7 @@ public class MultipleAccountsActivity extends Activity {
 			
 			holder.id = position;
 
-            holder.textViewAccountEmail.setText(Utils.hideEmailString(Data.previousAccountInfoList.get(position).userEmail));
+            holder.textViewAccountEmail.setText(Data.previousAccountInfoList.get(position).userEmail);
             holder.textViewAccountPhone.setText(Utils.hidePhoneNoString(Data.previousAccountInfoList.get(position).phoneNo));
 
 
