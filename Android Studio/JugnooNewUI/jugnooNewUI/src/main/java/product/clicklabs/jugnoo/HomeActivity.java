@@ -1,49 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.AppMode;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.EndRideData;
-import product.clicklabs.jugnoo.datastructure.FeedbackMode;
-import product.clicklabs.jugnoo.datastructure.HelpSection;
-import product.clicklabs.jugnoo.datastructure.LatLngPair;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.PromotionApplyMode;
-import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
-import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.datastructure.UserMode;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAppLauncher;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
-import product.clicklabs.jugnoo.utils.CustomInfoWindow;
-import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
-import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.HttpRequester;
-import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.MapStateListener;
-import product.clicklabs.jugnoo.utils.MapUtils;
-import product.clicklabs.jugnoo.utils.TouchableMapFragment;
-import product.clicklabs.jugnoo.utils.Utils;
-import rmn.androidscreenlibrary.ASSL;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -80,7 +36,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
@@ -112,6 +67,53 @@ import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AppMode;
+import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.FeedbackMode;
+import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.datastructure.LatLngPair;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionApplyMode;
+import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAppLauncher;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.CustomInfoWindow;
+import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapStateListener;
+import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.TouchableMapFragment;
+import product.clicklabs.jugnoo.utils.Utils;
+import rmn.androidscreenlibrary.ASSL;
 
 @SuppressLint("DefaultLocale")
 public class HomeActivity extends FragmentActivity implements AppInterruptHandler, LocationUpdate {
@@ -430,31 +432,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		linearLayoutProfile = (LinearLayout) findViewById(R.id.linearLayoutProfile);
 		imageViewProfile = (ImageView) findViewById(R.id.imageViewProfile);
-		textViewUserName = (TextView) findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Data.latoRegular(this), Typeface.BOLD);
-		textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Data.latoLight(this), Typeface.BOLD);
+		textViewUserName = (TextView) findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
 		
 		relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
-		textViewGetRide = (TextView) findViewById(R.id.textViewGetRide); textViewGetRide.setTypeface(Data.latoRegular(this));
+		textViewGetRide = (TextView) findViewById(R.id.textViewGetRide); textViewGetRide.setTypeface(Fonts.latoRegular(this));
 		
 		relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
-		textViewInvite = (TextView) findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Data.latoRegular(this));
+		textViewInvite = (TextView) findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Fonts.latoRegular(this));
 		
 		relativeLayoutJugnooCash = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooCash);
-		textViewJugnooCash = (TextView) findViewById(R.id.textViewJugnooCash); textViewJugnooCash.setTypeface(Data.latoRegular(this));
-		textViewJugnooCashValue = (TextView) findViewById(R.id.textViewJugnooCashValue); textViewJugnooCashValue.setTypeface(Data.latoRegular(this));
+		textViewJugnooCash = (TextView) findViewById(R.id.textViewJugnooCash); textViewJugnooCash.setTypeface(Fonts.latoRegular(this));
+		textViewJugnooCashValue = (TextView) findViewById(R.id.textViewJugnooCashValue); textViewJugnooCashValue.setTypeface(Fonts.latoRegular(this));
 
 		relativeLayoutPromotions = (RelativeLayout) findViewById(R.id.relativeLayoutPromotions);
-		textViewPromotions = (TextView) findViewById(R.id.textViewPromotions); textViewPromotions.setTypeface(Data.latoRegular(this));
-		textViewPromotionsValue = (TextView) findViewById(R.id.textViewPromotionsValue); textViewPromotionsValue.setTypeface(Data.latoRegular(this));
+		textViewPromotions = (TextView) findViewById(R.id.textViewPromotions); textViewPromotions.setTypeface(Fonts.latoRegular(this));
+		textViewPromotionsValue = (TextView) findViewById(R.id.textViewPromotionsValue); textViewPromotionsValue.setTypeface(Fonts.latoRegular(this));
 
 		relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails);
-		textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails); textViewFareDetails.setTypeface(Data.latoRegular(this));
+		textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails); textViewFareDetails.setTypeface(Fonts.latoRegular(this));
 
 		relativeLayoutSupport = (RelativeLayout) findViewById(R.id.relativeLayoutSupport);
-		textViewSupport = (TextView) findViewById(R.id.textViewSupport); textViewSupport.setTypeface(Data.latoRegular(this));
+		textViewSupport = (TextView) findViewById(R.id.textViewSupport); textViewSupport.setTypeface(Fonts.latoRegular(this));
 
 		relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
-		textViewAbout = (TextView) findViewById(R.id.textViewAbout); textViewAbout.setTypeface(Data.latoRegular(this));
+		textViewAbout = (TextView) findViewById(R.id.textViewAbout); textViewAbout.setTypeface(Fonts.latoRegular(this));
 		
 		
 		
@@ -472,7 +474,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		topRl = (RelativeLayout) findViewById(R.id.topRl);
 		imageViewMenu = (ImageView) findViewById(R.id.imageViewMenu);
 		imageViewSearchCancel = (ImageView) findViewById(R.id.imageViewSearchCancel);
-		title = (TextView) findViewById(R.id.title); title.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		title = (TextView) findViewById(R.id.title); title.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
 		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn);
 		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
@@ -504,14 +506,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		//Initial layout 
 		initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
-		textViewNearestDriverETA = (TextView) findViewById(R.id.textViewNearestDriverETA); textViewNearestDriverETA.setTypeface(Data.latoRegular(this));
+		textViewNearestDriverETA = (TextView) findViewById(R.id.textViewNearestDriverETA); textViewNearestDriverETA.setTypeface(Fonts.latoRegular(this));
 
         relativeLayoutInitialFareFactor = (RelativeLayout) findViewById(R.id.relativeLayoutInitialFareFactor);
-        textViewCurrentFareFactor = (TextView) findViewById(R.id.textViewCurrentFareFactor); textViewCurrentFareFactor.setTypeface(Data.latoRegular(this), Typeface.BOLD);
-		((TextView) findViewById(R.id.textViewCurrentRatesInfo)).setTypeface(Data.latoRegular(this));
+        textViewCurrentFareFactor = (TextView) findViewById(R.id.textViewCurrentFareFactor); textViewCurrentFareFactor.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		((TextView) findViewById(R.id.textViewCurrentRatesInfo)).setTypeface(Fonts.latoRegular(this));
 
 		initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
-        changeLocalityBtn = (Button) findViewById(R.id.changeLocalityBtn); changeLocalityBtn.setTypeface(Data.latoRegular(this));
+        changeLocalityBtn = (Button) findViewById(R.id.changeLocalityBtn); changeLocalityBtn.setTypeface(Fonts.latoRegular(this));
         changeLocalityBtn.setVisibility(View.GONE);
 
         imageViewRideLater = (ImageView) findViewById(R.id.imageViewRideLater);
@@ -524,21 +526,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
 		relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
-		textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Data.latoRegular(this));
+		textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
 		progressBarInitialSearch = (ProgressBar) findViewById(R.id.progressBarInitialSearch); progressBarInitialSearch.setVisibility(View.GONE);
 
 
         //Assigning layout
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
-        textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver); textViewFindingDriver.setTypeface(Data.latoRegular(this));
+        textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver); textViewFindingDriver.setTypeface(Fonts.latoRegular(this));
         assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
-        initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn); initialCancelRideBtn.setTypeface(Data.latoRegular(this));
+        initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn); initialCancelRideBtn.setTypeface(Fonts.latoRegular(this));
 		
 		
 		
 		//Search Layout 
 		linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
-		editTextSearch = (EditText) findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Data.latoRegular(this));
+		editTextSearch = (EditText) findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Fonts.latoRegular(this));
 		progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		listViewSearch = (ListView) findViewById(R.id.listViewSearch);
 		searchListAdapter = new SearchListAdapter();
@@ -553,23 +555,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		requestFinalLayout = (RelativeLayout) findViewById(R.id.requestFinalLayout);
 		
 		relativeLayoutInRideInfo = (RelativeLayout) findViewById(R.id.relativeLayoutInRideInfo);
-		textViewInRidePromoName = (TextView) findViewById(R.id.textViewInRidePromoName); textViewInRidePromoName.setTypeface(Data.latoLight(this), Typeface.BOLD);
-		textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor); textViewInRideFareFactor.setTypeface(Data.latoRegular(this));
+		textViewInRidePromoName = (TextView) findViewById(R.id.textViewInRidePromoName); textViewInRidePromoName.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+		textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor); textViewInRideFareFactor.setTypeface(Fonts.latoRegular(this));
 		
 		customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
 		
 		imageViewInRideDriver = (ImageView) findViewById(R.id.imageViewInRideDriver);
 		imageViewInRideDriverCar = (ImageView) findViewById(R.id.imageViewInRideDriverCar);
 		
-		textViewInRideDriverName = (TextView) findViewById(R.id.textViewInRideDriverName); textViewInRideDriverName.setTypeface(Data.latoRegular(this));
-		textViewInRideDriverCarNumber = (TextView) findViewById(R.id.textViewInRideDriverCarNumber); textViewInRideDriverCarNumber.setTypeface(Data.latoRegular(this));
-		textViewInRideState = (TextView) findViewById(R.id.textViewInRideState); textViewInRideState.setTypeface(Data.latoLight(this), Typeface.BOLD);
-		textViewInRideLowJugnooCash = (TextView) findViewById(R.id.textViewInRideLowJugnooCash); textViewInRideLowJugnooCash.setTypeface(Data.latoRegular(this));
+		textViewInRideDriverName = (TextView) findViewById(R.id.textViewInRideDriverName); textViewInRideDriverName.setTypeface(Fonts.latoRegular(this));
+		textViewInRideDriverCarNumber = (TextView) findViewById(R.id.textViewInRideDriverCarNumber); textViewInRideDriverCarNumber.setTypeface(Fonts.latoRegular(this));
+		textViewInRideState = (TextView) findViewById(R.id.textViewInRideState); textViewInRideState.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+		textViewInRideLowJugnooCash = (TextView) findViewById(R.id.textViewInRideLowJugnooCash); textViewInRideLowJugnooCash.setTypeface(Fonts.latoRegular(this));
 		textViewInRideLowJugnooCash.setVisibility(View.GONE);
 		
-		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Data.latoRegular(this));
-		buttonAddJugnooCash = (Button) findViewById(R.id.buttonAddJugnooCash); buttonAddJugnooCash.setTypeface(Data.latoRegular(this));
-		buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver); buttonCallDriver.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Fonts.latoRegular(this));
+		buttonAddJugnooCash = (Button) findViewById(R.id.buttonAddJugnooCash); buttonAddJugnooCash.setTypeface(Fonts.latoRegular(this));
+		buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver); buttonCallDriver.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		
 		
 		
@@ -606,45 +608,45 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
 		scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
 		
-		textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Data.latoRegular(this));
-		textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Data.latoRegular(this));
+		textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.latoRegular(this));
 
-		textViewEndRideStartLocationValue = (TextView) findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideEndLocationValue = (TextView) findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideStartTimeValue = (TextView) findViewById(R.id.textViewEndRideStartTimeValue); textViewEndRideStartTimeValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideEndTimeValue = (TextView) findViewById(R.id.textViewEndRideEndTimeValue); textViewEndRideEndTimeValue.setTypeface(Data.latoRegular(this));
+		textViewEndRideStartLocationValue = (TextView) findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideEndLocationValue = (TextView) findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideStartTimeValue = (TextView) findViewById(R.id.textViewEndRideStartTimeValue); textViewEndRideStartTimeValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideEndTimeValue = (TextView) findViewById(R.id.textViewEndRideEndTimeValue); textViewEndRideEndTimeValue.setTypeface(Fonts.latoRegular(this));
 		
-		textViewEndRideFareValue = (TextView) findViewById(R.id.textViewEndRideFareValue); textViewEndRideFareValue.setTypeface(Data.latoRegular(this));
-		textViewEndRidePromotionDiscountValue = (TextView) findViewById(R.id.textViewEndRidePromotionDiscountValue); textViewEndRidePromotionDiscountValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideFinalFareValue = (TextView) findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideJugnooCashValue = (TextView) findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideToBePaidValue = (TextView) findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Data.latoRegular(this));
-		textViewEndRideAddJugnooCashInfo = (TextView) findViewById(R.id.textViewEndRideAddJugnooCashInfo); textViewEndRideAddJugnooCashInfo.setTypeface(Data.latoRegular(this));
+		textViewEndRideFareValue = (TextView) findViewById(R.id.textViewEndRideFareValue); textViewEndRideFareValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRidePromotionDiscountValue = (TextView) findViewById(R.id.textViewEndRidePromotionDiscountValue); textViewEndRidePromotionDiscountValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideFinalFareValue = (TextView) findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideJugnooCashValue = (TextView) findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideToBePaidValue = (TextView) findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideAddJugnooCashInfo = (TextView) findViewById(R.id.textViewEndRideAddJugnooCashInfo); textViewEndRideAddJugnooCashInfo.setTypeface(Fonts.latoRegular(this));
 		
-		buttonEndRideOk = (Button) findViewById(R.id.buttonEndRideOk); buttonEndRideOk.setTypeface(Data.latoRegular(this));
+		buttonEndRideOk = (Button) findViewById(R.id.buttonEndRideOk); buttonEndRideOk.setTypeface(Fonts.latoRegular(this));
 		
 		
-		((TextView)findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideStartTime)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideEndTime)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideSummary)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideFare)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideFareRupee)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRidePromotionDiscount)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRidePromotionDiscountRupee)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideFinalFareRupee)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideJugnooCashRupee)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideToBePaidRupee)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideDistance)).setTypeface(Data.latoRegular(this));
-		((TextView)findViewById(R.id.textViewEndRideTime)).setTypeface(Data.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideStartTime)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideEndTime)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideFareRupee)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRidePromotionDiscount)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRidePromotionDiscountRupee)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideFinalFareRupee)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideJugnooCashRupee)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideToBePaidRupee)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(this));
 				 
 		
 		
@@ -678,7 +680,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public boolean onLongClick(View v) {
 				
-				Toast.makeText(getApplicationContext(), "url = "+Data.SERVER_URL, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "url = "+ Config.getServerUrl(), Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				
 				return false;
@@ -1362,7 +1364,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			startUIAfterGettingUserStatus();
 			
 
-			Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Data.SERVER_URL);
+			Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Config.getServerUrl());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2690,9 +2692,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				convertView = mInflater.inflate(R.layout.list_item_search_item, null);
 				
 				holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName); 
-				holder.textViewSearchName.setTypeface(Data.latoRegular(HomeActivity.this));
+				holder.textViewSearchName.setTypeface(Fonts.latoRegular(HomeActivity.this));
 				holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress); 
-				holder.textViewSearchAddress.setTypeface(Data.latoRegular(HomeActivity.this));
+				holder.textViewSearchAddress.setTypeface(Fonts.latoRegular(HomeActivity.this));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);
@@ -2812,7 +2814,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		    			Log.i("nameValuePairs in find_a_driver", "="+nameValuePairs);
 		    			
 		    			HttpRequester simpleJSONParser = new HttpRequester();
-		    			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/find_a_driver", nameValuePairs);
+		    			String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/find_a_driver", nameValuePairs);
 		    			Log.i("result in find_a_driver", "="+result);
 		    			simpleJSONParser = null;
 		    			nameValuePairs = null;
@@ -3120,7 +3122,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/cancel_the_request", params,
+			client.post(Config.getServerUrl() + "/cancel_the_request", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 					
@@ -3239,11 +3241,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			noDriversDialog.setCanceledOnTouchOutside(true);
 
 			TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
-			textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			textHead.setVisibility(View.GONE);
 			
 			TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
-			textMessage.setTypeface(Data.latoRegular(activity));
+			textMessage.setTypeface(Fonts.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -3262,7 +3264,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 
 			Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
-			btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -3313,7 +3315,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/accept_app_rating_request", params,
+				client.post(Config.getServerUrl() + "/accept_app_rating_request", params,
 						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 							@Override
@@ -3362,7 +3364,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				params.put("access_token", Data.userData.accessToken);
 				params.put("engagement_id", engagementId);
 				AsyncHttpClient client = Data.getClient();
-				client.post(Data.SERVER_URL + "/get_ride_summary", params,
+				client.post(Config.getServerUrl() + "/get_ride_summary", params,
 						new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 							@Override
@@ -3500,7 +3502,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Log.i("params add_promotion_to_schedule", "=" + params);
 			
 			AsyncHttpClient fetchPromotionClient = Data.getClient();
-			fetchPromotionClient.post(Data.SERVER_URL + "/add_promotion_to_schedule", params,
+			fetchPromotionClient.post(Config.getServerUrl() + "/add_promotion_to_schedule", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 					
@@ -3589,7 +3591,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							
 							
 							HttpRequester simpleJSONParser = new HttpRequester();
-							String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_driver_current_location", nameValuePairs);
+							String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_driver_current_location", nameValuePairs);
 							
 							Log.e("result of get_driver_current_location", "="+result);
 							if(result.contains(HttpRequester.SERVER_TIMEOUT)){
@@ -3843,15 +3845,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
 			
 			textHead.setVisibility(View.VISIBLE);
 			textHead.setText("Chalo Jugnoo Se");
 			
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Fonts.latoRegular(activity));
 			
 			btnOk.setText("OK");
 			btnCancel.setText("Cancel");
@@ -3968,8 +3970,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				dialog.setCanceledOnTouchOutside(true);
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity));
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
 
 				textMessage.setMovementMethod(new ScrollingMovementMethod());
 				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -3978,8 +3980,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textHead.setText("Rate Us");
 				textMessage.setText("Liked our services!!! Please rate us on Play Store");
 				
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD); btnOk.setText("RATE NOW");
-				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Data.latoRegular(activity)); btnCancel.setText("LATER");
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD); btnOk.setText("RATE NOW");
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Fonts.latoRegular(activity)); btnCancel.setText("LATER");
 				
 				btnOk.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -4039,9 +4041,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				dialog.setCanceledOnTouchOutside(true);
 				
 				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
-				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Data.latoRegular(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
+				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Fonts.latoRegular(activity));
 				
 				textHead.setText("Confirm Debug Password");
 				textMessage.setText("Please enter password to continue.");
@@ -4049,7 +4051,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				textHead.setVisibility(View.GONE);
 				textMessage.setVisibility(View.GONE);
 				
-				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Data.latoRegular(activity));
+				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Fonts.latoRegular(activity));
 				
 				btnConfirm.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -4060,7 +4062,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							etCode.setError("Code can't be empty.");
 						}
 						else{
-							if(Data.DEBUG_PASSWORD.equalsIgnoreCase(code)){
+							if(Config.getDebugPassword().equalsIgnoreCase(code)){
 								dialog.dismiss();
 								changeDebugModePopup(activity);
 							}
@@ -4645,8 +4647,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	@Override
 	protected void onStart() {
 		super.onStart();
-		FlurryAgent.init(this, Data.FLURRY_KEY);
-		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+		FlurryAgent.init(this, Config.getFlurryKey());
+		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 		FlurryAgent.onEvent("HomeActivity started");
 	}
 
@@ -4869,7 +4871,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								}
 								
 								Log.i("nameValuePairs of request_ride", "="+nameValuePairs);
-								String response = new HttpRequester().getJSONFromUrlParams(Data.SERVER_URL+"/request_ride", nameValuePairs);
+								String response = new HttpRequester().getJSONFromUrlParams(Config.getServerUrl()+"/request_ride", nameValuePairs);
 								
 								Log.e("response of request_ride", "="+response);
 								
@@ -5099,7 +5101,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								
 								@Override
 								public void onClick(View v) {
-									Utils.openCallIntent(HomeActivity.this, Data.SUPPORT_NUMBER);
+									Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber());
 								}
 							}, true, true);
 				} catch (Exception e) {

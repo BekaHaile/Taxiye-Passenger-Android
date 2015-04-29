@@ -1,15 +1,12 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -38,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppMode;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
@@ -51,6 +49,7 @@ import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -88,8 +87,8 @@ public class RegisterScreen extends Activity implements LocationUpdate {
     @Override
     protected void onStart() {
         super.onStart();
-        FlurryAgent.init(this, Data.FLURRY_KEY);
-        FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+        FlurryAgent.init(this, Config.getFlurryKey());
+        FlurryAgent.onStartSession(this, Config.getFlurryKey());
         FlurryAgent.onEvent("Register started");
     }
 
@@ -109,30 +108,30 @@ public class RegisterScreen extends Activity implements LocationUpdate {
         new ASSL(RegisterScreen.this, relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup);
-        buttonFacebookSignup.setTypeface(Data.latoRegular(this));
+        buttonFacebookSignup.setTypeface(Fonts.latoRegular(this));
         orText = (TextView) findViewById(R.id.orText);
-        orText.setTypeface(Data.latoRegular(getApplicationContext()));
+        orText.setTypeface(Fonts.latoRegular(getApplicationContext()));
 
         editTextUserName = (EditText) findViewById(R.id.editTextUserName);
-        editTextUserName.setTypeface(Data.latoRegular(this));
+        editTextUserName.setTypeface(Fonts.latoRegular(this));
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextEmail.setTypeface(Data.latoRegular(this));
+        editTextEmail.setTypeface(Fonts.latoRegular(this));
         editTextPhone = (EditText) findViewById(R.id.editTextPhone);
-        editTextPhone.setTypeface(Data.latoRegular(this));
+        editTextPhone.setTypeface(Fonts.latoRegular(this));
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        editTextPassword.setTypeface(Data.latoRegular(this));
+        editTextPassword.setTypeface(Fonts.latoRegular(this));
         editTextReferralCode = (EditText) findViewById(R.id.editTextReferralCode);
-        editTextReferralCode.setTypeface(Data.latoRegular(this));
+        editTextReferralCode.setTypeface(Fonts.latoRegular(this));
 
         textViewPolicy = (TextView) findViewById(R.id.textViewPolicy);
-        textViewPolicy.setTypeface(Data.latoLight(this), Typeface.BOLD);
+        textViewPolicy.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
 
         buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
-        buttonEmailSignup.setTypeface(Data.latoRegular(this));
+        buttonEmailSignup.setTypeface(Fonts.latoRegular(this));
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -528,10 +527,10 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             params.put("os_version", Data.osVersion);
             params.put("country", Data.country);
 
-            params.put("client_id", Data.CLIENT_ID);
+            params.put("client_id", Config.getClientId());
             params.put("referral_code", referralCode);
 
-            if(Data.DEFAULT_SERVER_URL.contains(Data.DEV_SERVER_URL)){
+            if(Config.getServerUrl().contains(Config.getDevServerUrl().substring(0, Config.getDevServerUrl().length() - 5))){
                 if(AppMode.DEBUG == SplashNewActivity.appMode){
                     params.put("device_token", "");
                     params.put("unique_device_id", "");
@@ -553,7 +552,7 @@ public class RegisterScreen extends Activity implements LocationUpdate {
 
 
             AsyncHttpClient client = Data.getClient();
-            client.post(Data.SERVER_URL + "/register_using_email", params,
+            client.post(Config.getServerUrl() + "/register_using_email", params,
                 new CustomAsyncHttpResponseHandler() {
                     private JSONObject jObj;
 
@@ -652,14 +651,14 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             params.put("os_version", Data.osVersion);
             params.put("country", Data.country);
             params.put("unique_device_id", Data.uniqueDeviceId);
-            params.put("client_id", Data.CLIENT_ID);
+            params.put("client_id", Config.getClientId());
 
 
             Log.e("register_using_facebook params", params.toString());
 
 
             AsyncHttpClient client = Data.getClient();
-            client.post(Data.SERVER_URL + "/register_using_facebook", params,
+            client.post(Config.getServerUrl() + "/register_using_facebook", params,
                 new CustomAsyncHttpResponseHandler() {
                     private JSONObject jObj;
 

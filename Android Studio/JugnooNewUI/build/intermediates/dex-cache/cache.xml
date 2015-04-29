@@ -2,10 +2,17 @@
 <items version="2" >
 
     <item
+        jar="/Users/shankar/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/retrofit-1.9.0-e9e90a6880cb473da6fa4ed7a2d930deb07c6247.jar" />
+    </item>
+    <item
         jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/JugnooNewUI/facebookSDK/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="35a9dbcd4117435a80a87f1baf156fe244136add">
+        sha1="3874b17146ed85fb97723fe2689a829e34cbaac7">
         <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-06f52a98b6321989cf5fb2e0ee941c06182ea395.jar" />
     </item>
     <item
@@ -35,6 +42,13 @@
         revision="21.1.2"
         sha1="9143ea9b390b4f6eeee3673533402669de23ab7e">
         <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/FlurryAnalytics-5.0.0-eb13e9cc63689cfea5ce112092c742c947db0dc3.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/gson-2.3.1-9a02fd6ba44bf3db5d634de9b1593571e4e99b23.jar" />
     </item>
     <item
         jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/libs/picasso-2.4.0.jar"

@@ -1,15 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.datastructure.PushFlags;
-import product.clicklabs.jugnoo.utils.HttpRequester;
-import product.clicklabs.jugnoo.utils.Log;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -27,6 +17,18 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Pair;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
 
 public class GCMIntentService extends IntentService {
 	
@@ -349,10 +351,10 @@ public class GCMIntentService extends IntentService {
 						nameValuePairs.add(new BasicNameValuePair("access_token", accessTokenPair.first));
 						
 						Log.i("nameValuePairs", "="+nameValuePairs);
-						Log.e("Data.SERVER_URL", "="+Data.SERVER_URL);
+						Log.e("Config.getServerUrl()", "="+ Config.getServerUrl());
 						
 						HttpRequester simpleJSONParser = new HttpRequester();
-						String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL+"/acknowledge_port_change", nameValuePairs);
+						String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl()+"/acknowledge_port_change", nameValuePairs);
 						
 						Log.e("result ","="+result);
 						

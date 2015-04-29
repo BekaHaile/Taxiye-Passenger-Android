@@ -1,8 +1,5 @@
 package product.clicklabs.jugnoo.utils;
 
-import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.R;
-import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,6 +20,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import product.clicklabs.jugnoo.R;
+import rmn.androidscreenlibrary.ASSL;
 
 public class DialogPopup {
 
@@ -50,8 +50,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -61,7 +61,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -98,8 +98,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -109,7 +109,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -147,8 +147,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -161,7 +161,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -208,8 +208,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Data.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -219,7 +219,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -256,10 +256,10 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(cancelable);
 
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-			textHead.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			TextView textMessage = (TextView) dialog
 					.findViewById(R.id.textMessage);
-			textMessage.setTypeface(Data.latoRegular(activity));
+			textMessage.setTypeface(Fonts.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -275,13 +275,13 @@ public class DialogPopup {
 			}
 
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-			btnOk.setTypeface(Data.latoRegular(activity), Typeface.BOLD);
+			btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			if(!"".equalsIgnoreCase(okText)){
 				btnOk.setText(okText);
 			}
 			
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-			btnCancel.setTypeface(Data.latoRegular(activity));
+			btnCancel.setTypeface(Fonts.latoRegular(activity));
 			if(!"".equalsIgnoreCase(canceltext)){
 				btnCancel.setText(canceltext);
 			}
@@ -344,7 +344,7 @@ public class DialogPopup {
 			dialog.setCancelable(true);
 			dialog.setCanceledOnTouchOutside(true);
 			
-			TextView textViewBanner = (TextView) dialog.findViewById(R.id.textViewBanner); textViewBanner.setTypeface(Data.latoRegular(activity));
+			TextView textViewBanner = (TextView) dialog.findViewById(R.id.textViewBanner); textViewBanner.setTypeface(Fonts.latoRegular(activity));
 			textViewBanner.setText(message);
 
 			linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -397,7 +397,7 @@ public class DialogPopup {
 			FrameLayout frameLayout = (FrameLayout) progressDialog.findViewById(R.id.rv);
 			new ASSL((Activity)context, frameLayout, 1134, 720, false);
 			
-			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Data.latoRegular(context));
+			TextView messageText = (TextView) progressDialog.findViewById(R.id.textView1); messageText.setTypeface(Fonts.latoRegular(context));
 			messageText.setText(message); 
 		} catch (Exception e) {
 			e.printStackTrace();

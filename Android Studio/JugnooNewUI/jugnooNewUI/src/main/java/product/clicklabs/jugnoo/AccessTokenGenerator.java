@@ -1,12 +1,14 @@
 package product.clicklabs.jugnoo;
 
-import product.clicklabs.jugnoo.utils.AuthKeySaver;
-import product.clicklabs.jugnoo.utils.SHA256Convertor;
-import product.clicklabs.jugnoo.utils.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Pair;
+
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.AuthKeySaver;
+import product.clicklabs.jugnoo.utils.SHA256Convertor;
+import product.clicklabs.jugnoo.utils.Utils;
 
 public class AccessTokenGenerator {
 
@@ -129,7 +131,7 @@ public class AccessTokenGenerator {
 			return pair;
 		}
 		try {																										// auth key present
-			String authSecret = authKey + Data.CLIENT_SHARED_SECRET;
+			String authSecret = authKey + Config.getClientSharedSecret();
 			String accessToken = SHA256Convertor.getSHA256String(authSecret);
 			
 			pair = new Pair<String, Integer>(accessToken, 1);
