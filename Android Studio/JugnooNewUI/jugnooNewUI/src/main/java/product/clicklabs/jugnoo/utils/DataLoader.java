@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.utils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -11,19 +10,12 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 
 import javax.net.ssl.SSLContext;
@@ -63,37 +55,47 @@ public class DataLoader {
 	}
 
 
-public HttpResponse secureLoadData(String url, ArrayList<NameValuePair> nameValuePairs)
-        throws ClientProtocolException, IOException,
-        NoSuchAlgorithmException, KeyManagementException,
-        URISyntaxException, KeyStoreException, UnrecoverableKeyException {
-	
-    SSLContext ctx = SSLContext.getInstance("TLS");
-    ctx.init(null, new TrustManager[] { new CustomX509TrustManager() },
-            new SecureRandom());
+    public HttpResponse secureLoadData(String url, ArrayList<NameValuePair> nameValuePairs)
+            throws Exception{
+        HttpPost post = new HttpPost(new URI(url));
+        post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        HttpResponse response = getHttpClientSecure().execute(post);
+        return response;
+    }
 
-    //Added timeout
-    HttpParams httpParameters = new BasicHttpParams();
-    HttpConnectionParams.setConnectionTimeout(httpParameters, HttpRequester.TIMEOUT_CONNECTION);
-    HttpConnectionParams.setSoTimeout(httpParameters, HttpRequester.TIMEOUT_SOCKET);
-    
-    HttpClient client = new DefaultHttpClient(httpParameters);
 
-    SSLSocketFactory ssf = new CustomSSLSocketFactory(ctx);
-    ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-    ClientConnectionManager ccm = client.getConnectionManager();
-    SchemeRegistry sr = ccm.getSchemeRegistry();
-    sr.register(new Scheme("https", ssf, 443));
-    
-    DefaultHttpClient sslClient = new DefaultHttpClient(ccm, client.getParams());
-    sslClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(5, true));
+    private static HttpClient httpClientInstance = null;
 
-    HttpPost post = new HttpPost(new URI(url));
-    post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-	
-    HttpResponse response = sslClient.execute(post);
+    public static HttpClient getHttpClientSecure(){
+        if(httpClientInstance == null) {
+            try {
+                SSLContext ctx = SSLContext.getInstance("TLS");
+                ctx.init(null, new TrustManager[]{new CustomX509TrustManager()},
+                    new SecureRandom());
 
-    return response;
-}
+                //Added timeout
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(httpParameters, HttpRequester.TIMEOUT_CONNECTION);
+                HttpConnectionParams.setSoTimeout(httpParameters, HttpRequester.TIMEOUT_SOCKET);
+
+                HttpClient client = new DefaultHttpClient(httpParameters);
+
+                SSLSocketFactory ssf = new CustomSSLSocketFactory(ctx);
+                ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                ClientConnectionManager ccm = client.getConnectionManager();
+                SchemeRegistry sr = ccm.getSchemeRegistry();
+                sr.register(new Scheme("https", ssf, 443));
+
+                httpClientInstance = new DefaultHttpClient(ccm, client.getParams());
+//                httpClientInstance.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(5, true));
+
+                return httpClientInstance;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return httpClientInstance;
+    }
 
 }

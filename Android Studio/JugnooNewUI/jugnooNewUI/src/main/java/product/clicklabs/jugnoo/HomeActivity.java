@@ -3580,9 +3580,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				
 				@Override
 				public void run() {
+                    try{
 					if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 						
-						if(passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL){
+						if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
 								
 							ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 							nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
@@ -3667,7 +3668,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 							}
 						}
 					}
-					
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 				}
 			};
 			

@@ -1,7 +1,9 @@
 package product.clicklabs.jugnoo.retrofit;
 
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.DataLoader;
 import retrofit.RestAdapter;
+import retrofit.client.ApacheClient;
 
 
 /**
@@ -22,6 +24,8 @@ public class RestClient {
 //            //For type string response
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint(Config.getServerUrl())
+                    .setClient(new ApacheClient(DataLoader.getHttpClientSecure()))
+
                     .setConverter(new StringConverter())    //converter for response type
                     .build();
 

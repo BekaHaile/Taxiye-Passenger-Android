@@ -10,17 +10,6 @@ import retrofit.http.POST;
  */
 public interface ApiService {
 
-//    /**
-//     *
-//     * @param accessToken
-//     * @param deviceToken
-//     * @param regType
-//     * @param callback
-//     */
-//    @FormUrlEncoded
-//    @POST("/login_through_accesstoken")
-//    public void login(@Field("access_token") String accessToken, @Field("device_token") String deviceToken, @Field("registration_type") String regType, Callback<String> callback);
-
 
     @FormUrlEncoded
     @POST("/login_using_access_token")

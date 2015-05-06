@@ -284,18 +284,9 @@ public class FacebookLoginHelper {
 	
 	
 	public void logoutFacebook(){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					if(Session.getActiveSession() != null){
-						Session.getActiveSession().closeAndClearTokenInformation();
-					}
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}).start();
+        if(Session.getActiveSession() != null){
+            Session.getActiveSession().closeAndClearTokenInformation();
+        }
 	}
 	
 }
