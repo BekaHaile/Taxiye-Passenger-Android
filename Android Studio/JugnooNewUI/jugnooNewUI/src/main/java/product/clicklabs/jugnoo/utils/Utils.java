@@ -278,4 +278,10 @@ public class Utils {
     }
 
 
+
+
+    public static boolean hasAlphabets(String name){
+        return name.matches(".*[a-zA-Z]+.*");
+    }
+
 }

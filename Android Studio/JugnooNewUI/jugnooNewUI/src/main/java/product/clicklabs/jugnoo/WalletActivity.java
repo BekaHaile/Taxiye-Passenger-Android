@@ -70,7 +70,8 @@ public class WalletActivity extends Activity{
 	public String promoBanner = "";
 	ArrayList<TransactionInfo> transactionInfoList = new ArrayList<TransactionInfo>();
 	
-	DecimalFormat decimalFormat = new DecimalFormat("#.##");
+//	DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    DecimalFormat decimalFormat = new DecimalFormat("####0.00");
 	
 	@Override
 	protected void onStart() {
@@ -216,7 +217,7 @@ public class WalletActivity extends Activity{
 		
 		try{
 			if(Data.userData != null){
-				textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.jugnooBalance);
+				textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+decimalFormat.format(Data.userData.jugnooBalance));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -275,7 +276,7 @@ public class WalletActivity extends Activity{
 				textViewInfo.setVisibility(View.GONE);
 			}
 			transactionListAdapter.notifyDataSetChanged();
-			textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+jugnooBalance);
+			textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+decimalFormat.format(jugnooBalance));
 		}
 		Utils.expandListForVariableHeight(listViewTransactions);
 	}

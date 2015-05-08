@@ -415,7 +415,7 @@ public class JSONParser {
 			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 			HttpRequester simpleJSONParser = new HttpRequester();
 			String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_current_user_status", nameValuePairs);
-			Log.e("result of = user_status", "="+result);
+//			Log.e("result of = user_status", "="+result);
 			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 				returnResponse = HttpRequester.SERVER_TIMEOUT;
 				return returnResponse;
@@ -460,7 +460,7 @@ public class JSONParser {
 	
 	
 	public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1){
-		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
+//		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
 		String returnResponse = "";
 		
 		if(currentUserStatus == 2){

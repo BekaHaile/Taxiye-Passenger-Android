@@ -14,11 +14,15 @@ public class AccessTokenGenerator {
 
 	
 	public static final String LOGOUT = "logout";
-	
-	public static final String MEALS_PACKAGE = "com.cdk23.nlk";
-	public static final String FATAFAT_PACKAGE = "com.cdk23.nlkf";
-	
-	
+
+    public static final String AUTOS_PACKAGE = "product.clicklabs.jugnoo";
+	public static final String MEALS_PACKAGE = "com.cdk23.nlk", MEALS_CLIENT_ID = "QNrWRzMToQNnxrQ5";
+	public static final String FATAFAT_PACKAGE = "com.cdk23.nlkf", FATAFAT_CLIENT_ID = "g3Ql58Kx2VCDYVk3";
+
+
+
+
+
 	private static final String[] OTHER_JUGNOO_APP_PACKAGES = new String[]{ MEALS_PACKAGE, FATAFAT_PACKAGE };
 	
 	@SuppressWarnings("deprecation")

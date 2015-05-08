@@ -10,6 +10,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -64,10 +65,8 @@ public class DataLoader {
     }
 
 
-    private static HttpClient httpClientInstance = null;
 
     public static HttpClient getHttpClientSecure(){
-        if(httpClientInstance == null) {
             try {
                 SSLContext ctx = SSLContext.getInstance("TLS");
                 ctx.init(null, new TrustManager[]{new CustomX509TrustManager()},
@@ -86,16 +85,14 @@ public class DataLoader {
                 SchemeRegistry sr = ccm.getSchemeRegistry();
                 sr.register(new Scheme("https", ssf, 443));
 
-                httpClientInstance = new DefaultHttpClient(ccm, client.getParams());
-//                httpClientInstance.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(5, true));
+                HttpClient httpClientInstance = new DefaultHttpClient(ccm, client.getParams());
+                ((DefaultHttpClient) httpClientInstance).setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(5, true));
 
                 return httpClientInstance;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-        }
-        return httpClientInstance;
     }
 
 }

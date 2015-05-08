@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
@@ -13,15 +12,12 @@ import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -67,8 +63,8 @@ public class RegisterScreen extends Activity implements LocationUpdate {
     TextView textViewPolicy;
     Button buttonEmailSignup;
 
-    TextView textViewScroll;
-    ScrollView scrollView;
+//    TextView textViewScroll;
+//    ScrollView scrollView;
 
     LinearLayout relative;
 
@@ -133,8 +129,8 @@ public class RegisterScreen extends Activity implements LocationUpdate {
         buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
         buttonEmailSignup.setTypeface(Fonts.latoRegular(this));
 
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
-        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+//        scrollView = (ScrollView) findViewById(R.id.scrollView);
+//        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
 
         buttonFacebookSignup.setOnClickListener(new View.OnClickListener() {
@@ -158,9 +154,11 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    scrollView.smoothScrollTo(0, editTextUserName.getBottom());
+//                    scrollView.smoothScrollTo(0, editTextUserName.getBottom());
                 }
-                editTextUserName.setError(null);
+                else {
+                    editTextUserName.setError(null);
+                }
             }
         });
 
@@ -169,9 +167,11 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    scrollView.smoothScrollTo(0, editTextEmail.getBottom());
+//                    scrollView.smoothScrollTo(0, editTextEmail.getBottom());
                 }
-                editTextEmail.setError(null);
+                else {
+                    editTextEmail.setError(null);
+                }
             }
         });
 
@@ -181,9 +181,11 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    scrollView.smoothScrollTo(0, editTextPhone.getBottom());
+//                    scrollView.smoothScrollTo(0, editTextPhone.getBottom());
                 }
-                editTextPhone.setError(null);
+                else {
+                    editTextPhone.setError(null);
+                }
             }
         });
 
@@ -192,9 +194,11 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    scrollView.smoothScrollTo(0, editTextPassword.getBottom());
+//                    scrollView.smoothScrollTo(0, editTextPassword.getBottom());
                 }
-                editTextPassword.setError(null);
+                else {
+                    editTextPassword.setError(null);
+                }
             }
         });
 
@@ -203,9 +207,11 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    scrollView.smoothScrollTo(0, editTextReferralCode.getBottom());
+//                    scrollView.smoothScrollTo(0, editTextReferralCode.getBottom());
                 }
-                editTextReferralCode.setError(null);
+                else {
+                    editTextReferralCode.setError(null);
+                }
             }
         });
 
@@ -236,7 +242,12 @@ public class RegisterScreen extends Activity implements LocationUpdate {
                 if ("".equalsIgnoreCase(name)) {
                     editTextUserName.requestFocus();
                     editTextUserName.setError("Please enter name");
-                } else {
+                }
+                else if(!Utils.hasAlphabets(name)) {
+                    editTextUserName.requestFocus();
+                    editTextUserName.setError("Please enter at least one alphabet");
+                }
+                else {
                     if ("".equalsIgnoreCase(emailId)) {
                         editTextEmail.requestFocus();
                         editTextEmail.setError("Please enter email id");
@@ -372,43 +383,43 @@ public class RegisterScreen extends Activity implements LocationUpdate {
         }
 
 
-        final View activityRootView = findViewById(R.id.linearLayoutMain);
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-            new OnGlobalLayoutListener() {
-
-                @Override
-                public void onGlobalLayout() {
-                    Rect r = new Rect();
-                    // r will be populated with the coordinates of your view
-                    // that area still visible.
-                    activityRootView.getWindowVisibleDisplayFrame(r);
-
-                    int heightDiff = activityRootView.getRootView()
-                        .getHeight() - (r.bottom - r.top);
-                    if (heightDiff > 100) { // if more than 100 pixels, its
-                        // probably a keyboard...
-
-                        /************** Adapter for the parent List *************/
-
-                        ViewGroup.LayoutParams params_12 = textViewScroll
-                            .getLayoutParams();
-
-                        params_12.height = (int) (heightDiff);
-
-                        textViewScroll.setLayoutParams(params_12);
-                        textViewScroll.requestLayout();
-
-                    } else {
-
-                        ViewGroup.LayoutParams params = textViewScroll
-                            .getLayoutParams();
-                        params.height = 0;
-                        textViewScroll.setLayoutParams(params);
-                        textViewScroll.requestLayout();
-
-                    }
-                }
-            });
+//        final View activityRootView = findViewById(R.id.linearLayoutMain);
+//        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
+//            new OnGlobalLayoutListener() {
+//
+//                @Override
+//                public void onGlobalLayout() {
+//                    Rect r = new Rect();
+//                    // r will be populated with the coordinates of your view
+//                    // that area still visible.
+//                    activityRootView.getWindowVisibleDisplayFrame(r);
+//
+//                    int heightDiff = activityRootView.getRootView()
+//                        .getHeight() - (r.bottom - r.top);
+//                    if (heightDiff > 100) { // if more than 100 pixels, its
+//                        // probably a keyboard...
+//
+//                        /************** Adapter for the parent List *************/
+//
+//                        ViewGroup.LayoutParams params_12 = textViewScroll
+//                            .getLayoutParams();
+//
+//                        params_12.height = (int) (heightDiff);
+//
+//                        textViewScroll.setLayoutParams(params_12);
+//                        textViewScroll.requestLayout();
+//
+//                    } else {
+//
+//                        ViewGroup.LayoutParams params = textViewScroll
+//                            .getLayoutParams();
+//                        params.height = 0;
+//                        textViewScroll.setLayoutParams(params);
+//                        textViewScroll.requestLayout();
+//
+//                    }
+//                }
+//            });
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
