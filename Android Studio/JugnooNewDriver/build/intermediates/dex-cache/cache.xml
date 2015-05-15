@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0f6d5c1ef2e982c3b7858408e3df389cf5d202da">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/classes-6883e1117fd699ac4b237909b77226fb42d82cad.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Desktop/android studio sdk/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-c84963d20302c795b981a10d6b81e67764a0d39a.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/exploded-aar/JugnooNewDriver/facebookSDK/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="673b4f0a480360ed0de453ad00726a807536bf2c">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/classes-3dca2e6438a74d533865e083a25950ac46ed05eb.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-9e5585007478ccebaff718c93b6884e23af5f0a9.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/libs/picasso-2.4.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/picasso-2.4.0-d0e3fc20bd9e8d648a3c6e45db45863ddeecceaa.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/classes-8664639a6f5ccd665011448a7d62605491ef069f.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/libs/android-async-http.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a845a88238be0b5be9d238652c1bc0605ef91f52">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/android-async-http-77d0a41bbf8f544288ca358bb10a0ce829c5fc20.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/libs/FlurryAnalytics-5.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9143ea9b390b4f6eeee3673533402669de23ab7e">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/FlurryAnalytics-5.0.0-31c496f5dd028f8ff145621d368b0d097fe66418.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/libs/crashlytics.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0e821eafa1bf489a26bdb71f95078c26785b37a1">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/crashlytics-ee87d4ec91f7679038a0b978ece21f6d1de26550.jar" />
+    </item>
+    <item
+        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/libs/assl.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="857083e7958ac1fece98b2bffc83969b5b493a78">
+        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewDriver/jugnooNewDriver/build/intermediates/pre-dexed/debug/assl-e4fd3715c1b6e1fadb8bc5afbcd389a6863d8db9.jar" />
+    </item>
+
+</items>

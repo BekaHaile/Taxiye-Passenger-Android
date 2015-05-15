@@ -1,6 +1,10 @@
 package product.clicklabs.jugnoo;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -8,6 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
@@ -27,11 +34,6 @@ import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-
-import com.google.android.gms.maps.model.LatLng;
 
 public class JSONParser {
 
@@ -211,7 +213,7 @@ public class JSONParser {
 		String authKey = userData.getString("auth_key");
 		AccessTokenGenerator.saveAuthKey(context, authKey);
 		
-		String authSecret = authKey + Data.CLIENT_SHARED_SECRET;
+		String authSecret = authKey + Config.getClientSharedSecret();
 		String accessToken = SHA256Convertor.getSHA256String(authSecret);
 		
 		return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus, 
@@ -311,12 +313,12 @@ public class JSONParser {
 	
 	public void updatePortNumber(Context context, String port){
 		SharedPreferences preferences = context.getSharedPreferences(Data.SETTINGS_SHARED_PREF_NAME, 0);
-		String link = preferences.getString(Data.SP_SERVER_LINK, Data.DEFAULT_SERVER_URL);
+		String link = preferences.getString(Data.SP_SERVER_LINK, Config.getDefaultServerUrl());
 		
-		if(link.equalsIgnoreCase(Data.TRIAL_SERVER_URL)){
+		if(link.equalsIgnoreCase(Config.getTrialServerUrl())){
 			Database2.getInstance(context).updateSalesPortNumber(port);
 		}
-		else if(link.equalsIgnoreCase(Data.DEV_SERVER_URL)){
+		else if(link.equalsIgnoreCase(Config.getDevServerUrl())){
 			Database2.getInstance(context).updateDevPortNumber(port);
 		}
 		else{
@@ -412,8 +414,8 @@ public class JSONParser {
 			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 			nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
 			HttpRequester simpleJSONParser = new HttpRequester();
-			String result = simpleJSONParser.getJSONFromUrlParams(Data.SERVER_URL + "/get_current_user_status", nameValuePairs);
-			Log.e("result of = user_status", "="+result);
+			String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_current_user_status", nameValuePairs);
+//			Log.e("result of = user_status", "="+result);
 			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
 				returnResponse = HttpRequester.SERVER_TIMEOUT;
 				return returnResponse;
@@ -458,7 +460,7 @@ public class JSONParser {
 	
 	
 	public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1){
-		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
+//		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
 		String returnResponse = "";
 		
 		if(currentUserStatus == 2){
@@ -695,41 +697,12 @@ public class JSONParser {
 		SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 		Editor editor = pref.edit();
 
-		editor.putString(Data.SP_DRIVER_SCREEN_MODE, "");
-
-		editor.putString(Data.SP_D_ENGAGEMENT_ID, "");
-		editor.putString(Data.SP_D_CUSTOMER_ID, "");
-		editor.putString(Data.SP_D_LATITUDE, "0");
-		editor.putString(Data.SP_D_LONGITUDE, "0");
-		editor.putString(Data.SP_D_CUSTOMER_NAME, "");
-		editor.putString(Data.SP_D_CUSTOMER_IMAGE, "");
-		editor.putString(Data.SP_D_CUSTOMER_PHONE, "");
-		editor.putString(Data.SP_D_CUSTOMER_RATING, "");
-
 		editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
 		editor.putString(Data.SP_WAIT_TIME, "0");
 		editor.putString(Data.SP_RIDE_TIME, "0");
 		editor.putString(Data.SP_RIDE_START_TIME, ""+System.currentTimeMillis());
 		editor.putString(Data.SP_LAST_LATITUDE, "0");
 		editor.putString(Data.SP_LAST_LONGITUDE, "0");
-
-		editor.putString(Data.SP_CUSTOMER_SCREEN_MODE, "");
-
-		editor.putString(Data.SP_C_SESSION_ID, "");
-		editor.putString(Data.SP_C_ENGAGEMENT_ID, "");
-		editor.putString(Data.SP_C_DRIVER_ID, "");
-		editor.putString(Data.SP_C_LATITUDE, "0");
-		editor.putString(Data.SP_C_LONGITUDE, "0");
-		editor.putString(Data.SP_C_DRIVER_NAME, "");
-		editor.putString(Data.SP_C_DRIVER_IMAGE, "");
-		editor.putString(Data.SP_C_DRIVER_CAR_IMAGE, "");
-		editor.putString(Data.SP_C_DRIVER_PHONE, "");
-		editor.putString(Data.SP_C_DRIVER_RATING, "");
-
-		editor.putString(Data.SP_C_TOTAL_DISTANCE, "0");
-		editor.putString(Data.SP_C_TOTAL_FARE, "0");
-		editor.putString(Data.SP_C_WAIT_TIME, "0");
-		editor.putString(Data.SP_C_RIDE_TIME, "0");
 
 		editor.commit();
 

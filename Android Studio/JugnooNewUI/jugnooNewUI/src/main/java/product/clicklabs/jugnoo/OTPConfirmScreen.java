@@ -24,6 +24,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
@@ -32,6 +33,7 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
@@ -65,8 +67,8 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 	@Override
 	protected void onStart() {
 		super.onStart();
-		FlurryAgent.init(this, Data.FLURRY_KEY);
-		FlurryAgent.onStartSession(this, Data.FLURRY_KEY);
+		FlurryAgent.init(this, Config.getFlurryKey());
+		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 	}
 
 	@Override
@@ -86,21 +88,21 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		
-		otpHelpText = (TextView) findViewById(R.id.otpHelpText); otpHelpText.setTypeface(Data.latoRegular(this));
+		otpHelpText = (TextView) findViewById(R.id.otpHelpText); otpHelpText.setTypeface(Fonts.latoRegular(this));
 		
-		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Data.latoRegular(this));
+		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
 		
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Data.latoRegular(this));
+		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.latoRegular(this));
 		
 		relativeLayoutOTPThroughCall = (RelativeLayout) findViewById(R.id.relativeLayoutOTPThroughCall);
-		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Data.latoLight(this));
-		textViewCallMe = (TextView) findViewById(R.id.textViewCallMe); textViewCallMe.setTypeface(Data.latoLight(this), Typeface.BOLD);
+		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Fonts.latoLight(this));
+		textViewCallMe = (TextView) findViewById(R.id.textViewCallMe); textViewCallMe.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
 
         relativeLayoutChangePhone = (RelativeLayout) findViewById(R.id.relativeLayoutChangePhone);
-        textViewChangePhone = (TextView) findViewById(R.id.textViewChangePhone); textViewChangePhone.setTypeface(Data.latoLight(this));
-        textViewChange = (TextView) findViewById(R.id.textViewChange); textViewChange.setTypeface(Data.latoLight(this), Typeface.BOLD);
+        textViewChangePhone = (TextView) findViewById(R.id.textViewChangePhone); textViewChangePhone.setTypeface(Fonts.latoLight(this));
+        textViewChange = (TextView) findViewById(R.id.textViewChange); textViewChange.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
 		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -209,6 +211,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
 			}
 		});
+
 	}
 	
 	
@@ -219,7 +222,25 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			Data.locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000, 1);
 		}
 		HomeActivity.checkForAccessTokenChange(this);
+
+        checkIfRegisterDataNull(this);
+
 	}
+
+
+
+    public static void checkIfRegisterDataNull(Activity activity){
+        try {
+            if(emailRegisterData == null && facebookRegisterData == null){
+                activity.startActivity(new Intent(activity, SplashNewActivity.class));
+                activity.finish();
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 	
 	@Override
 	protected void onPause() {
@@ -264,27 +285,15 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
-			params.put("client_id", Data.CLIENT_ID);
+			params.put("client_id", Config.getClientId());
 			params.put("otp", otp);
 			
 
-			Log.i("email", emailRegisterData.emailId);
-			Log.i("password", emailRegisterData.password);
-			Log.i("device_token", Data.deviceToken);
-			Log.i("device_type", Data.DEVICE_TYPE);
-			Log.i("device_name", Data.deviceName);
-			Log.i("app_version", ""+Data.appVersion);
-			Log.i("os_version", Data.osVersion);
-			Log.i("country", Data.country);
-			Log.i("unique_device_id", Data.uniqueDeviceId);
-			Log.i("latitude", ""+Data.latitude);
-			Log.i("longitude", ""+Data.longitude);
-			Log.i("client_id", Data.CLIENT_ID);
-			Log.i("otp", otp);
-			
+			Log.i("params", ""+params.toString());
+
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/verify_otp", params,
+			client.post(Config.getServerUrl() + "/verify_otp", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -382,32 +391,15 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
-			params.put("client_id", Data.CLIENT_ID);
+			params.put("client_id", Config.getClientId());
 			params.put("otp", otp);
 			
 
-			Log.i("user_fb_id", Data.facebookUserData.fbId);
-			Log.i("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
-			Log.i("fb_access_token", Data.facebookUserData.accessToken);
-			Log.i("fb_mail", Data.facebookUserData.userEmail);
-			Log.i("username", Data.facebookUserData.userName);
-			
-			Log.i("device_token", Data.deviceToken);
-			Log.i("device_type", Data.DEVICE_TYPE);
-			Log.i("device_name", Data.deviceName);
-			Log.i("app_version", ""+Data.appVersion);
-			Log.i("os_version", Data.osVersion);
-			Log.i("country", Data.country);
-			Log.i("unique_device_id", Data.uniqueDeviceId);
-			Log.i("latitude", ""+Data.latitude);
-			Log.i("longitude", ""+Data.longitude);
-			Log.i("client_id", Data.CLIENT_ID);
-			Log.i("otp", otp);
-			
-			
-		
+			Log.i("params", ""+params);
+
+
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/verify_otp", params,
+			client.post(Config.getServerUrl() + "/verify_otp", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -486,7 +478,7 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 			Log.i("phone_no", ">"+phoneNo);
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/send_otp_via_call", params,
+			client.post(Config.getServerUrl() + "/send_otp_via_call", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 

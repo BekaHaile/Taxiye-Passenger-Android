@@ -1,16 +1,11 @@
 package product.clicklabs.jugnoo;
 
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.datastructure.HelpSection;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
-import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JsResult;
@@ -25,6 +20,15 @@ import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.Fonts;
+import rmn.androidscreenlibrary.ASSL;
 
 public class HelpParticularActivity extends Activity{
 	
@@ -52,10 +56,10 @@ public class HelpParticularActivity extends Activity{
 		
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Data.latoRegular(this));
+		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
 		webview = (WebView) findViewById(R.id.webview);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.setWebChromeClient(new WebChromeClient());
@@ -190,7 +194,7 @@ public class HelpParticularActivity extends Activity{
 					params.put("section", ""+helpSection.getOrdinal());
 					
 					fetchHelpDataClient = Data.getClient();
-					fetchHelpDataClient.post(Data.SERVER_URL + "/get_information", params,
+					fetchHelpDataClient.post(Config.getServerUrl() + "/get_information", params,
 							new CustomAsyncHttpResponseHandler() {
 							private JSONObject jObj;
 		
@@ -217,7 +221,18 @@ public class HelpParticularActivity extends Activity{
 										exception.printStackTrace();
 										openHelpData("Some error occured. Tap to retry.", true);
 									}
-									progressBar.setVisibility(View.GONE);
+
+                                    if(HelpSection.FARE_DETAILS == helpSection){
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+                                        }, 1000);
+                                    }
+                                    else{
+                                        progressBar.setVisibility(View.GONE);
+                                    }
 								}
 								
 								@Override

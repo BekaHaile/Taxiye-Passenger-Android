@@ -1,23 +1,13 @@
 package product.clicklabs.jugnoo;
 
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.FeedbackMode;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
-import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.Log;
-import rmn.androidscreenlibrary.ASSL;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +21,19 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.FeedbackMode;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import rmn.androidscreenlibrary.ASSL;
+
 public class FeedbackActivity extends Activity {
 
 	RelativeLayout relative;
@@ -39,6 +42,7 @@ public class FeedbackActivity extends Activity {
 	ImageView imageViewBack;
 	
 	RatingBar ratingBarFeedback;
+    TextView textViewRateText;
 	EditText editTextFeedback;
 	Button buttonSubmitFeedback;
 	
@@ -64,17 +68,18 @@ public class FeedbackActivity extends Activity {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Data.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
 		ratingBarFeedback = (RatingBar) findViewById(R.id.ratingBarFeedback);
 		ratingBarFeedback.setRating(0);
-		
-		editTextFeedback = (EditText) findViewById(R.id.editTextFeedback); editTextFeedback.setTypeface(Data.latoRegular(this));
-		buttonSubmitFeedback = (Button) findViewById(R.id.buttonSubmitFeedback); buttonSubmitFeedback.setTypeface(Data.latoRegular(this));
+        textViewRateText = (TextView) findViewById(R.id.textViewRateText); textViewRateText.setTypeface(Fonts.latoRegular(this));
+        textViewRateText.setText("Hated it");
+		editTextFeedback = (EditText) findViewById(R.id.editTextFeedback); editTextFeedback.setTypeface(Fonts.latoRegular(this));
+		buttonSubmitFeedback = (Button) findViewById(R.id.buttonSubmitFeedback); buttonSubmitFeedback.setTypeface(Fonts.latoRegular(this));
 		
 		relativeLayoutSkip = (RelativeLayout) findViewById(R.id.relativeLayoutSkip);
-		textViewSkip = (TextView) findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Data.latoRegular(this));
+		textViewSkip = (TextView) findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.latoRegular(this));
 		
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -87,6 +92,27 @@ public class FeedbackActivity extends Activity {
 				performBackPressed();
 			}
 		});
+
+        ratingBarFeedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if(rating <= 1){
+                    textViewRateText.setText("Hated it");
+                }
+                else if(rating > 1 && rating <= 2){
+                    textViewRateText.setText("Disliked it");
+                }
+                else if(rating > 2 && rating <= 3){
+                    textViewRateText.setText("It's OK");
+                }
+                else if(rating > 3 && rating <= 4){
+                    textViewRateText.setText("Liked it");
+                }
+                else if(rating > 4 && rating <= 5){
+                    textViewRateText.setText("Loved it");
+                }
+            }
+        });
 		
 		
 		buttonSubmitFeedback.setOnClickListener(new View.OnClickListener() {
@@ -247,7 +273,7 @@ public class FeedbackActivity extends Activity {
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/rate_the_driver", params,
+			client.post(Config.getServerUrl() + "/rate_the_driver", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 	
@@ -304,7 +330,7 @@ public class FeedbackActivity extends Activity {
 			Log.i("engagement_id", engagementId);
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/skip_rating_by_customer", params,
+			client.post(Config.getServerUrl() + "/skip_rating_by_customer", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 	
@@ -364,7 +390,7 @@ public class FeedbackActivity extends Activity {
 			Log.i("params", "=" + params);
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Data.SERVER_URL + "/submit_feedback", params,
+			client.post(Config.getServerUrl() + "/submit_feedback", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 	
