@@ -60,6 +60,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -275,7 +276,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this)+"118";
+			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 			
 		} catch (Exception e) {
@@ -374,7 +375,8 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		}
 		else{
-			DialogPopup.showLocationSettingsAlert(SplashNewActivity.this);
+//			DialogPopup.showLocationSettingsAlert(SplashNewActivity.this);
+            LocationInit.showLocationAlertDialog(this);
 		}
 
 		
@@ -403,8 +405,19 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 		super.onPause();
 	}
-	
-	
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(LocationInit.LOCATION_REQUEST_CODE == requestCode){
+            if(0 == resultCode){
+                loginDataFetched = false;
+                ActivityCompat.finishAffinity(this);
+            }
+        }
+    }
+
+
 	
 	
 	

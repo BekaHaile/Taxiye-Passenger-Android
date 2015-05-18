@@ -108,6 +108,7 @@ import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -2519,6 +2520,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		HomeActivity.checkForAccessTokenChange(this);
 		
 		activityResumed = true;
+
+        LocationInit.showLocationAlertDialog(this);
 	}
 	
 	
@@ -2805,9 +2808,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
                         if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
                             textViewInitialSearch.setText(autoCompleteSearchResult.name);
-                            passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                            switchPassengerScreen(passengerScreenMode);
-                            getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
+                            if(PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                switchPassengerScreen(passengerScreenMode);
+                                getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
+                            }
                         }
                     }
                 });
@@ -4180,6 +4185,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+        if(LocationInit.LOCATION_REQUEST_CODE == requestCode){
+            if(0 == resultCode){
+                ActivityCompat.finishAffinity(this);
+            }
+        }
 	}
 	
 	
@@ -4209,9 +4219,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				finish();
 				overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
-			else{
-				buildAlertMessageNoGps();
-			}
+//			else{
+//				buildAlertMessageNoGps();
+//			}
 		}
 	}
 	
@@ -4247,9 +4257,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 						@Override
 						public void run() {
 							Log.i("in in herestartRideForCustomer  run class","=");
-							passengerScreenMode = PassengerScreenMode.P_INITIAL;
-							switchPassengerScreen(passengerScreenMode);
-							DialogPopup.alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
+                            if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                switchPassengerScreen(passengerScreenMode);
+                                DialogPopup.alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
+                            }
 						}
 					});
 				}
@@ -4769,7 +4781,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	long requestRideLifeTime;
 	long serverRequestStartTime = 0;
 	long serverRequestEndTime = 0;
-	long executionTime = -1;
+	long executionTime = -10;
 	long requestPeriod = 20000;
 	
 	public void startTimerRequestRide(){
@@ -4779,7 +4791,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			requestRideLifeTime = ((2 * 60 * 1000) + (1 * 60 * 1000));
 			serverRequestStartTime = 0;
 			serverRequestEndTime = 0;
-			executionTime = -1;
+			executionTime = -10;
 			requestPeriod = 20000;
 			
 			timerRequestRide = new Timer();
@@ -4896,7 +4908,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												final String log = jObj.getString("log");
 												Log.e("ASSIGNING_DRIVERS log", "="+log);
 												final String start_time = jObj.getString("start_time");
-												if(executionTime == -1){
+												if(executionTime < 0){
 													serverRequestStartTime = new DateOperations().getMilliseconds(start_time);
 													serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
 													long stopTime = System.currentTimeMillis();
@@ -4950,7 +4962,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					long stopTime = System.currentTimeMillis();
 				    long elapsedTime = stopTime - startTime;
 				    
-				    if(executionTime != -1){
+				    if(executionTime > 0){
 				    	if(elapsedTime >= requestPeriod){
 				    		executionTime = executionTime + elapsedTime;
 				    	}
