@@ -388,9 +388,6 @@
     <string name="check_internet_message">Check your internet connection.</string>
     <string name="check_your_registered_email_phone_number_for_otp">Check your registered email/phone number for OTP</string>
     <string name="click_to_view">Click to view</string>
-    <!-- From: file:/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/src/main/res/values/com_crashlytics_export_strings.xml -->
-    <eat-comment/>
-    <string name="com.crashlytics.android.build_id" translatable="false">f8d5c0cf-2971-43ef-a9ca-2fc43768d073</string>
     <!-- From: file:/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/JugnooNewUI/facebookSDK/unspecified/res/values/values.xml -->
     <eat-comment/>
     <string name="com_facebook_choose_friends">Choose Friends</string>
