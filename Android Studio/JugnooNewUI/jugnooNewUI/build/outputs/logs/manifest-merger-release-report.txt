@@ -560,40 +560,10 @@ ADDED from AndroidManifest.xml:261:9
 		ADDED from AndroidManifest.xml:262:13
 activity#product.clicklabs.jugnoo.DebugOptionsActivity
 ADDED from AndroidManifest.xml:267:9
-<<<<<<< HEAD
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:270:13
 	android:label
 		ADDED from AndroidManifest.xml:269:13
-=======
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
-MERGED from com.google.android.gms:play-services-base:7.3.0:21:9
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
 	android:name
 		ADDED from AndroidManifest.xml:268:13
 meta-data#com.google.android.gms.version
@@ -648,7 +618,6 @@ ADDED from AndroidManifest.xml:287:9
 	android:theme
 		ADDED from AndroidManifest.xml:290:13
 	android:name
-<<<<<<< HEAD
 		ADDED from AndroidManifest.xml:288:13
 meta-data#io.fabric.ApiKey
 ADDED from AndroidManifest.xml:294:9
@@ -656,12 +625,3 @@ ADDED from AndroidManifest.xml:294:9
 		ADDED from AndroidManifest.xml:295:13
 	android:value
 		ADDED from AndroidManifest.xml:296:13
-=======
-		ADDED from AndroidManifest.xml:280:13
-meta-data#io.fabric.ApiKey
-ADDED from AndroidManifest.xml:286:9
-	android:name
-		ADDED from AndroidManifest.xml:287:13
-	android:value
-		ADDED from AndroidManifest.xml:288:13
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950

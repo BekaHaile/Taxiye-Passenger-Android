@@ -9,7 +9,6 @@
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-73104e1fc1d3b104bb3d29f62bb4a44ceff25a00.jar" />
     </item>
     <item
-<<<<<<< HEAD
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.2/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -18,16 +17,12 @@
     </item>
     <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.3.0/classes.jar"
-=======
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.3.0/classes.jar"
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
         jumboMode="false"
         revision="21.1.2"
         sha1="3b4ff5c39dace8f3b4ab4cab8191785547a0815f">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-13c84e757a0f0bf5e5a205c482dc30f3058854a8.jar" />
     </item>
     <item
-<<<<<<< HEAD
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.3.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -40,13 +35,6 @@
         revision="21.1.2"
         sha1="a0ce76dfaccbfbd6c551ed2174280aaabe60fe47">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-e4ba7767f709bc5792a713013ddf8aeb779a2e4c.jar" />
-=======
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="b2c07cdb814fe988ad05f7b4d767a841514a5991">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-0cb89357ebed146a029adfca6aa47e3583b3b18c.jar" />
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
     </item>
     <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.3.0/classes.jar"
@@ -63,7 +51,6 @@
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-10aaaa054252d66d53d7a10847949d5837f5d992.jar" />
     </item>
     <item
-<<<<<<< HEAD
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.3.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -90,20 +77,6 @@
         revision="21.1.2"
         sha1="bb36004beb02b69562cbec9aa7d6a3cf16bf5d1b">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-dcd3fe608235eedee493ef20f388cb95f8c210af.jar" />
-=======
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.2.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="5bba805ab6e6eed90593bb115e78880d7accafed">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-7bfa105bc032dc1ab421ae0bca6041f9d8158d13.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.3.1/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="62753ea30b9fd44e248c50952a36c4b6a4b3eb73">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-6b373a2cfa094fdcc1186837278d49f4087edf06.jar" />
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
     </item>
     <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.3.0/classes.jar"
@@ -113,7 +86,6 @@
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-070dd5fd0eaf7e32f7acd8ddc028d3a5852a2a3a.jar" />
     </item>
     <item
-<<<<<<< HEAD
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.2.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -122,40 +94,24 @@
     </item>
     <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.2.4/classes.jar"
-=======
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.3.0/classes.jar"
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
         jumboMode="false"
         revision="21.1.2"
         sha1="d0d81ee0db83fd6c59100ee80c6c2b051b6a9cee">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-18fe9c7392fe086e549ccf4a685ed4a6a4f710e8.jar" />
     </item>
     <item
-<<<<<<< HEAD
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.3.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="b2c07cdb814fe988ad05f7b4d767a841514a5991">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-16616a93f12dbf5ff66ba06a5ce9f31da99fb61e.jar" />
-=======
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.2/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0d6546c1c73cb64a6907f694e6c4bf4b50fefa70">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-93d08bfd5595d7068dc138099db38ca91c5bf3c4.jar" />
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
     </item>
     <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.3.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-<<<<<<< HEAD
         sha1="6046e5cdaf799120b7c56a5a061d80e8854c4d34">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-b8007b3a5fbe946bd6f12203db207df1d27f85fe.jar" />
-=======
-        sha1="4326e177e4c16e4e14c5aa41fe7d369da5e51731">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-06f52a98b6321989cf5fb2e0ee941c06182ea395.jar" />
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
     </item>
     <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/libs/assl_sdk_rmn_jugnoo.jar"
@@ -207,7 +163,6 @@
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-80a59db605d508b720691d5e72b76d4137eaf1a9.jar" />
     </item>
     <item
-<<<<<<< HEAD
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.3.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -216,9 +171,6 @@
     </item>
     <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/7.3.0/classes.jar"
-=======
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/libs/picasso-2.4.0.jar"
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
         jumboMode="false"
         revision="21.1.2"
         sha1="565a01f90f1529f73362707c4c185d0623a68782">
@@ -246,7 +198,6 @@
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-bc69e9c9572671bd7071a5007c9815964acebf5f.jar" />
     </item>
     <item
-<<<<<<< HEAD
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/libs/android-async-http.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -273,83 +224,6 @@
         revision="21.1.2"
         sha1="b48d5c51a9a9e329005106b4667f54948de4d4d8">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-f5f61274ced2c0b33bb0938c67df435aea35ded1.jar" />
-=======
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="6046e5cdaf799120b7c56a5a061d80e8854c4d34">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-3802babc33017b839b8ad0ecdf5319233f08633a.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="f2f7ec211ce4d244ee97a57523eeb4526dc3cf8a">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-fab1105c60a65652c15bb27a4405edbf231afcf5.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3b4ff5c39dace8f3b4ab4cab8191785547a0815f">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-24f5cf673401f96266cade568cf8f06f5b81033e.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="7215ac1f2fca947b9415a6ee2a1bf991364aab24">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-163cd8c7913d46c8acc77064ef6c29dab933c820.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0708ef60917bf94913fe9ef972a655b99462dca7">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-d90ed83741772d90f5bf1c38b13ae1b00a1ac49a.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Desktop/android studio sdk/sdk/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-143a0e0452036daea1c22c78e72f5c290959b335.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="a0ce76dfaccbfbd6c551ed2174280aaabe60fe47">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-d4b8b4a7ef2c99f96dfb5847916ce2dd0f4002a9.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3988694bf9d8186ff97ad5cdfa4ed88b5010fe08">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-94e5697f090672ef1d321dffbc3683763505f10e.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.2.4/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="d0d81ee0db83fd6c59100ee80c6c2b051b6a9cee">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-d28272d180751ed06b25c33af28a80eec133c112.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-appstate/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0180d031a7b54dabb93b4af3869468b55dc938bd">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-45a6b4c318ee3e87f1f1b06beddb2eabcca9d0e7.jar" />
-    </item>
-    <item
-        jar="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4f4fe3c23776540625f3c2844152a7510fddf9f1">
-        <dex dex="/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-2d333d11f591e8fbfa57d194d84162249bdf9429.jar" />
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
     </item>
 
 </items>

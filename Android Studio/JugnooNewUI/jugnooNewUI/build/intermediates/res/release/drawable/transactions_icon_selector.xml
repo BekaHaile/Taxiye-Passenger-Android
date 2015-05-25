@@ -5,8 +5,4 @@
     <item android:drawable="@drawable/transactions_icon_normal"/>
     
 </selector>
-<<<<<<< HEAD
 <!-- From: file:/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/src/main/res/drawable/transactions_icon_selector.xml -->
-=======
-<!-- From: file:/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/src/main/res/drawable/transactions_icon_selector.xml -->
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950

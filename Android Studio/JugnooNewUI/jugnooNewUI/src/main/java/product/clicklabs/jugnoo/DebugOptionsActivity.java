@@ -30,22 +30,14 @@ public class DebugOptionsActivity extends Activity {
     RelativeLayout relativeLayoutShowAllDrivers, relativeLayoutShowDriverInfo;
     ImageView imageViewShowAllDrivers, imageViewShowDriverInfo;
 
-<<<<<<< HEAD
     RelativeLayout relativeLayoutLive4012, relativeLayoutTest8012, relativeLayoutTest8012_1, relativeLayoutTest8013, relativeLayoutTest8014;
     ImageView imageViewLive4012, imageViewTest8012, imageViewTest8012_1, imageViewTest8013, imageViewTest8014;
-=======
-    RelativeLayout relativeLayoutLive4012, relativeLayoutTest8012, relativeLayoutTest8013, relativeLayoutTest8014;
-    ImageView imageViewLive4012, imageViewTest8012, imageViewTest8013, imageViewTest8014;
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
 
     Button buttonSave, buttonCancel;
 
     int showAllDriversValue = 0;
     int showDriverInfoValue = 0;
-<<<<<<< HEAD
     int trainingSelected = 0;
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
 
     String selectedServer = Config.getDefaultServerUrl();
 
@@ -84,28 +76,19 @@ public class DebugOptionsActivity extends Activity {
 
         relativeLayoutLive4012 = (RelativeLayout) findViewById(R.id.relativeLayoutLive4012);
         relativeLayoutTest8012 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8012);
-<<<<<<< HEAD
         relativeLayoutTest8012_1 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8012_1);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
         relativeLayoutTest8013 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8013);
         relativeLayoutTest8014 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8014);
 
         imageViewLive4012 = (ImageView) findViewById(R.id.imageViewLive4012);
         imageViewTest8012 = (ImageView) findViewById(R.id.imageViewTest8012);
-<<<<<<< HEAD
         imageViewTest8012_1 = (ImageView) findViewById(R.id.imageViewTest8012_1);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
         imageViewTest8013 = (ImageView) findViewById(R.id.imageViewTest8013);
         imageViewTest8014 = (ImageView) findViewById(R.id.imageViewTest8014);
 
         ((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.latoRegular(this));
-<<<<<<< HEAD
         ((TextView) findViewById(R.id.textViewTest8012_1)).setTypeface(Fonts.latoRegular(this));
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
         ((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.latoRegular(this));
 
@@ -130,10 +113,7 @@ public class DebugOptionsActivity extends Activity {
                 Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
                 Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
                 Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
-<<<<<<< HEAD
                 Prefs.with(DebugOptionsActivity.this).save(SPLabels.TRAINING_SELECTED, trainingSelected);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
                 performBackPressed();
             }
         });
@@ -152,11 +132,8 @@ public class DebugOptionsActivity extends Activity {
 
         selectedServer = Prefs.with(this).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
-<<<<<<< HEAD
         trainingSelected = Prefs.with(this).getInt(SPLabels.TRAINING_SELECTED, 0);
 
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
 
         if(showAllDriversValue == 1){
             relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
@@ -227,7 +204,6 @@ public class DebugOptionsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 selectedServer = Config.getDevServerUrl();
-<<<<<<< HEAD
                 trainingSelected = 1;
                 setServerUI(selectedServer);
             }
@@ -238,8 +214,6 @@ public class DebugOptionsActivity extends Activity {
             public void onClick(View v) {
                 selectedServer = Config.getDevServerUrl();
                 trainingSelected = 0;
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
                 setServerUI(selectedServer);
             }
         });
@@ -268,24 +242,17 @@ public class DebugOptionsActivity extends Activity {
         if(selectedServer.equalsIgnoreCase(Config.getLiveServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.WHITE);
             relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
-<<<<<<< HEAD
             relativeLayoutTest8012_1.setBackgroundColor(Color.TRANSPARENT);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
             relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
 
             imageViewLive4012.setImageResource(R.drawable.check_box_checked_new);
             imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-<<<<<<< HEAD
             imageViewTest8012_1.setImageResource(R.drawable.check_box_unchecked_new);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
             imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
             imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDevServerUrl())){
-<<<<<<< HEAD
             if(trainingSelected == 1){
                 relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
                 relativeLayoutTest8012.setBackgroundColor(Color.WHITE);
@@ -312,53 +279,30 @@ public class DebugOptionsActivity extends Activity {
                 imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
                 imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
             }
-=======
-            relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
-            relativeLayoutTest8012.setBackgroundColor(Color.WHITE);
-            relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
-            relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
-
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
-<<<<<<< HEAD
             relativeLayoutTest8012_1.setBackgroundColor(Color.TRANSPARENT);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
             relativeLayoutTest8013.setBackgroundColor(Color.WHITE);
             relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
 
             imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
             imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-<<<<<<< HEAD
             imageViewTest8012_1.setImageResource(R.drawable.check_box_unchecked_new);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
             imageViewTest8013.setImageResource(R.drawable.check_box_checked_new);
             imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
-<<<<<<< HEAD
             relativeLayoutTest8012_1.setBackgroundColor(Color.TRANSPARENT);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
             relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8014.setBackgroundColor(Color.WHITE);
 
             imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
             imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-<<<<<<< HEAD
             imageViewTest8012_1.setImageResource(R.drawable.check_box_unchecked_new);
-=======
->>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
             imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
             imageViewTest8014.setImageResource(R.drawable.check_box_checked_new);
         }
