@@ -1981,6 +1981,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     if(!"".equalsIgnoreCase(Data.endRideData.banner)){
                         textViewEndRideAddJugnooCashInfo.setText(Data.endRideData.banner);
                     }
+<<<<<<< HEAD
 
                     textViewEndRideAddJugnooCashInfo.setVisibility(View.GONE);
 
@@ -2005,9 +2006,55 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 mapLayout.setVisibility(View.VISIBLE);
                 endRideReviewRl.setVisibility(View.GONE);
             }
+=======
+
+                    textViewEndRideAddJugnooCashInfo.setVisibility(View.GONE);
+
+                    double totalDistanceInKm = Data.endRideData.distance;
+                    String kmsStr = "";
+                    if(totalDistanceInKm > 1){
+                        kmsStr = "kms";
+                    }
+                    else{
+                        kmsStr = "km";
+                    }
+                    textViewEndRideDistanceValue.setText(""+decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
+
+                    textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(Data.endRideData.rideTime)+" min");
+                }
+                else{
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
+                }
+            }
+            else{
+                mapLayout.setVisibility(View.VISIBLE);
+                endRideReviewRl.setVisibility(View.GONE);
+            }
 
 
+            enableJugnooShopUI();
 
+<<<<<<< HEAD
+            switch(mode){
+
+                case P_INITIAL:
+
+                    clearAnims();
+
+                    try{pickupLocationMarker.remove();} catch(Exception e){}
+                    try{driverLocationMarker.remove();} catch(Exception e){}
+
+
+                    GCMIntentService.clearNotifications(getApplicationContext());
+
+                    if(findDriversETAAsync != null){
+                        findDriversETAAsync.cancel(true);
+                        findDriversETAAsync = null;
+                    }
+
+=======
             enableJugnooShopUI();
 
             switch(mode){
@@ -2027,6 +2074,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         findDriversETAAsync = null;
                     }
 
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
 
                     initialLayout.setVisibility(View.VISIBLE);
                     assigningLayout.setVisibility(View.GONE);
@@ -2045,10 +2093,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     imageViewRideNow.setVisibility(View.VISIBLE);
                     imageViewRideLater.setVisibility(View.GONE);
                     relativeLayoutJugnooAnim.setVisibility(View.VISIBLE);
+<<<<<<< HEAD
 
                     initialMyLocationBtn.setVisibility(View.VISIBLE);
                     changeLocalityBtn.setVisibility(View.GONE);
                     initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
+=======
+                    changeLocalityBtn.setVisibility(View.GONE);
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
 
                     setFareFactorToInitialState();
 
@@ -3917,7 +3969,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             if(myLocation == null){
                 //We could not detect your location. Are you sure you want to request and auto to pick you at this location
+<<<<<<< HEAD
                 myLocation = new Location(LocationManager.GPS_PROVIDER);
+=======
+                myLocation = new Location(LocationManager.NETWORK_PROVIDER);
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
                 myLocation.setLatitude(Data.pickupLatLng.latitude);
                 myLocation.setLongitude(Data.pickupLatLng.longitude);
                 myLocation.setAccuracy(100);
@@ -4075,7 +4131,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
 		
 	
 	

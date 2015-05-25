@@ -87,6 +87,7 @@ public final class R {
 		public static final int com_facebook_usersettingsfragment_background_gradient = 0x7f02007e;
 	}
 	public static final class id {
+<<<<<<< HEAD
 		public static final int com_facebook_login_activity_progress_bar = 0x7f0c017a;
 		public static final int com_facebook_picker_activity_circle = 0x7f0c0179;
 		public static final int com_facebook_picker_checkbox = 0x7f0c017c;
@@ -110,6 +111,31 @@ public final class R {
 		public static final int large = 0x7f0c0018;
 		public static final int normal = 0x7f0c0005;
 		public static final int picker_subtitle = 0x7f0c0187;
+=======
+		public static final int com_facebook_login_activity_progress_bar = 0x7f0c015e;
+		public static final int com_facebook_picker_activity_circle = 0x7f0c015d;
+		public static final int com_facebook_picker_checkbox = 0x7f0c0160;
+		public static final int com_facebook_picker_checkbox_stub = 0x7f0c0164;
+		public static final int com_facebook_picker_divider = 0x7f0c0168;
+		public static final int com_facebook_picker_done_button = 0x7f0c0167;
+		public static final int com_facebook_picker_image = 0x7f0c0161;
+		public static final int com_facebook_picker_list_section_header = 0x7f0c0165;
+		public static final int com_facebook_picker_list_view = 0x7f0c015c;
+		public static final int com_facebook_picker_profile_pic_stub = 0x7f0c0162;
+		public static final int com_facebook_picker_row_activity_circle = 0x7f0c015f;
+		public static final int com_facebook_picker_search_text = 0x7f0c016d;
+		public static final int com_facebook_picker_title = 0x7f0c0163;
+		public static final int com_facebook_picker_title_bar = 0x7f0c016a;
+		public static final int com_facebook_picker_title_bar_stub = 0x7f0c0169;
+		public static final int com_facebook_picker_top_bar = 0x7f0c0166;
+		public static final int com_facebook_search_bar_view = 0x7f0c016c;
+		public static final int com_facebook_usersettingsfragment_login_button = 0x7f0c0170;
+		public static final int com_facebook_usersettingsfragment_logo_image = 0x7f0c016e;
+		public static final int com_facebook_usersettingsfragment_profile_name = 0x7f0c016f;
+		public static final int large = 0x7f0c0018;
+		public static final int normal = 0x7f0c0005;
+		public static final int picker_subtitle = 0x7f0c016b;
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
 		public static final int small = 0x7f0c0019;
 	}
 	public static final class layout {

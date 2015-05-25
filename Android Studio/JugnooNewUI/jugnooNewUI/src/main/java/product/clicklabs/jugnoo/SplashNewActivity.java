@@ -246,6 +246,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 //
 //            }
 //        });
+<<<<<<< HEAD
 
 
         imageViewDebug1.setOnClickListener(new View.OnClickListener() {
@@ -331,6 +332,93 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
                     }
                 }
 
+=======
+
+
+        imageViewDebug1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                touchedDown1 = false;
+            }
+        });
+
+        imageViewDebug1.setOnTouchListener(new View.OnTouchListener() {
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if(touchedDown1){
+                        debugState = 1;
+                        relative.setBackgroundColor(getResources().getColor(R.color.yellow_alpha));
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                relative.setBackgroundColor(getResources().getColor(R.color.yellow));
+                            }
+                        }, 200);
+                    }
+                }
+            };
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        debugState = 0;
+                        touchedDown1 = true;
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, 4000);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        touchedDown1 = false;
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+
+        imageViewDebug2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                touchedDown2 = false;
+            }
+        });
+
+        imageViewDebug2.setOnTouchListener(new View.OnTouchListener() {
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if(touchedDown2 && debugState == 1){
+                        debugState = 0;
+                        confirmDebugPasswordPopup(SplashNewActivity.this);
+                    }
+                }
+            };
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                if(debugState == 1) {
+                    switch (action) {
+                        case MotionEvent.ACTION_DOWN:
+                            touchedDown2 = true;
+                            handler.removeCallbacks(runnable);
+                            handler.postDelayed(runnable, 4000);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            touchedDown2 = false;
+                            debugState = 0;
+                            break;
+                    }
+                }
+
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
                 return false;
             }
         });

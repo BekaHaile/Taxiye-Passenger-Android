@@ -180,7 +180,11 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:padding="30px"
+<<<<<<< HEAD
                         android:text="Training (8012)"
+=======
+                        android:text="Dev/Test (8012)"
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
                         android:textColor="@color/grey_dark"
                         android:textSize="30px" />
 
@@ -197,6 +201,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+<<<<<<< HEAD
                     android:id="@+id/relativeLayoutTest8012_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -225,6 +230,8 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+=======
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
                     android:id="@+id/relativeLayoutTest8013"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -323,4 +330,8 @@
         </ScrollView>
     </LinearLayout>
 
+<<<<<<< HEAD
 </RelativeLayout><!-- From: file:/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/src/main/res/layout/activity_debug_options.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/src/main/res/layout/activity_debug_options.xml -->
+>>>>>>> 232f8346011f113e588bf20a07ae7b75f0143950
