@@ -43,7 +43,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutRequestInfo"
@@ -153,10 +153,15 @@
                         android:layout_width="80px"
                         android:layout_height="80px"
                         android:layout_above="@+id/relativeLayoutRequestInfo"
-                        android:layout_marginBottom="200px"
-                        android:layout_marginLeft="40px"
+                        android:layout_marginBottom="77px"
+                        android:layout_marginLeft="92px"
                         android:background="@drawable/mylocation_btn_selector"
-                        android:tag="mwar"/>
+                        android:tag="mwar"
+                        />
+
+
+
+
 
                     <ImageView
                         android:id="@+id/imageViewRideLater"
@@ -167,6 +172,7 @@
                         android:layout_marginLeft="65px"
                         android:src="@drawable/time_icon_r_selector"
                         android:tag="mwar"
+                        android:visibility="gone"
                         />
 
 
@@ -190,6 +196,7 @@
                         android:layout_marginBottom="50px"
                         android:layout_marginRight="65px"
                         android:layout_above="@+id/relativeLayoutRequestInfo"
+
                         >
 
                         <ImageView
@@ -232,6 +239,19 @@
 
                     </RelativeLayout>
 
+
+
+                    <Button
+                        android:id="@+id/initialMyLocationBtnChangeLoc"
+                        android:layout_width="80px"
+                        android:layout_height="80px"
+                        android:layout_above="@+id/changeLocalityBtn"
+                        android:layout_marginBottom="40px"
+                        android:layout_marginLeft="50px"
+                        android:background="@drawable/mylocation_btn_selector"
+                        android:tag="mwar"
+                        android:visibility="gone"
+                        />
 
                     <Button
                         android:id="@+id/changeLocalityBtn"
@@ -284,10 +304,10 @@
                         android:id="@+id/assigningMyLocationBtn"
                         android:layout_width="80px"
                         android:layout_height="80px"
+                        android:background="@drawable/mylocation_btn_selector"
                         android:layout_above="@+id/relativeLayoutAssigningButtons"
                         android:layout_marginBottom="40px"
-                        android:layout_marginLeft="40px"
-                        android:background="@drawable/mylocation_btn_selector"
+                        android:layout_marginLeft="50px"
                         android:tag="mwar"/>
 
                     <RelativeLayout
@@ -378,7 +398,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="gone">
+                    android:visibility="visible"
+
+                    >
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutInRideInfo"
@@ -416,9 +438,9 @@
                         android:id="@+id/customerInRideMyLocationBtn"
                         android:layout_width="80px"
                         android:layout_height="80px"
-                        android:layout_above="@+id/linearLayoutInRideDriverInfo"
-                        android:layout_marginBottom="20px"
+                        android:layout_marginBottom="40px"
                         android:layout_marginLeft="50px"
+                        android:layout_above="@+id/linearLayoutInRideDriverInfo"
                         android:background="@drawable/mylocation_btn_selector"
                         android:tag="mwar"/>
 
@@ -1294,62 +1316,6 @@
         android:orientation="vertical"
         android:splitMotionEvents="false">
 
-        <LinearLayout
-            android:id="@+id/linearLayoutProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutProfileImage"
-                android:layout_width="211px"
-                android:layout_height="211px"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="60px"
-                android:splitMotionEvents="false"
-                android:tag="mwar">
-
-                <ImageView
-                    android:id="@+id/imageViewProfileImageBack"
-                    android:layout_width="211px"
-                    android:layout_height="211px"
-                    android:background="@drawable/circle_grey"
-                    android:tag="mwar"/>
-
-                <ImageView
-                    android:id="@+id/imageViewProfile"
-                    android:layout_width="190px"
-                    android:layout_height="190px"
-                    android:layout_centerInParent="true"
-                    android:tag="mwar"/>
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/textViewUserName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30px"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="UserName"
-                android:textColor="@color/grey_dark"
-                android:textSize="32px"/>
-
-            <TextView
-                android:id="@+id/textViewViewAccount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10px"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="View Account"
-                android:textColor="@color/grey_dark"
-                android:textSize="26px"/>
-        </LinearLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -1361,11 +1327,67 @@
                 android:orientation="vertical"
                 android:splitMotionEvents="false">
 
+                <LinearLayout
+                    android:id="@+id/linearLayoutProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutProfileImage"
+                        android:layout_width="211px"
+                        android:layout_height="211px"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20px"
+                        android:splitMotionEvents="false"
+                        android:tag="mwar">
+
+                        <ImageView
+                            android:id="@+id/imageViewProfileImageBack"
+                            android:layout_width="211px"
+                            android:layout_height="211px"
+                            android:background="@drawable/circle_grey"
+                            android:tag="mwar"/>
+
+                        <ImageView
+                            android:id="@+id/imageViewProfile"
+                            android:layout_width="190px"
+                            android:layout_height="190px"
+                            android:layout_centerInParent="true"
+                            android:tag="mwar"/>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/textViewUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20px"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="UserName"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="32px"/>
+
+                    <TextView
+                        android:id="@+id/textViewViewAccount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10px"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="View Account"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="26px"/>
+                </LinearLayout>
+
                 <RelativeLayout
                     android:id="@+id/relativeLayoutGetRide"
                     android:layout_width="match_parent"
                     android:layout_height="100px"
-                    android:layout_marginTop="20px"
+                    android:layout_marginTop="10px"
                     android:background="@drawable/background_white_yellow_selector"
                     android:splitMotionEvents="false">
 
@@ -1572,6 +1594,51 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutTransactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="100px"
+                    android:background="@drawable/background_white_yellow_selector"
+                    android:splitMotionEvents="false">
+
+                    <ImageView
+                        android:id="@+id/imageViewTransactions"
+                        android:layout_width="38px"
+                        android:layout_height="47px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="50px"
+                        android:src="@drawable/transactions_icon_selector"
+                        android:tag="mwar"/>
+
+                    <TextView
+                        android:id="@+id/textViewTransactions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="35px"
+                        android:layout_toRightOf="@+id/imageViewTransactions"
+                        android:text="Ride History"
+                        android:textColor="@drawable/text_color_grey_dark_white_selector"
+                        android:textSize="30px"/>
+
+                    <ImageView
+                        android:layout_width="13px"
+                        android:layout_height="26px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="40px"
+                        android:src="@drawable/arrow_icon_selector"
+                        android:tag="mwar"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="60px"
+                        android:background="@color/grey_light"/>
+                </RelativeLayout>
+
+
+                <RelativeLayout
                     android:id="@+id/relativeLayoutFareDetails"
                     android:layout_width="match_parent"
                     android:layout_height="100px"
@@ -1580,8 +1647,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewFareDetails"
-                        android:layout_width="38px"
-                        android:layout_height="47px"
+                        android:layout_width="36px"
+                        android:layout_height="45px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
                         android:src="@drawable/fare_details_icon_selector"
@@ -1710,4 +1777,4 @@
         </ScrollView>
     </LinearLayout>
 
-</android.support.v4.widget.DrawerLayout><!-- From: file:/Users/shankar/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/src/main/res/layout/activity_home.xml -->
+</android.support.v4.widget.DrawerLayout><!-- From: file:/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/src/main/res/layout/activity_home.xml -->
