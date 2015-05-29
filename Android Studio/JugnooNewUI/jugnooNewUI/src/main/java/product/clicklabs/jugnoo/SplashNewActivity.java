@@ -419,7 +419,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		}
 		else{
-//			DialogPopup.showLocationSettingsAlert(SplashNewActivity.this);
             LocationInit.showLocationAlertDialog(this);
 		}
 
