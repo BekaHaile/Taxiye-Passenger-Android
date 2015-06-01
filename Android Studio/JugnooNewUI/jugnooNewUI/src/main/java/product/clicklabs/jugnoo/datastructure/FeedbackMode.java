@@ -2,7 +2,8 @@ package product.clicklabs.jugnoo.datastructure;
 
 public enum FeedbackMode {
 	AFTER_RIDE(0), 
-	SUPPORT(1)
+	SUPPORT(1),
+	PAST_RIDE(2)
 	;
 
 	private int ordinal;
