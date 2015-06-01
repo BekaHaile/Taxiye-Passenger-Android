@@ -53,6 +53,7 @@ public class FeedbackActivity extends Activity {
 	TextView textViewScroll;
 	
 	FeedbackMode feedbackMode = FeedbackMode.SUPPORT;
+    int pastEngagementId = 0;
 	
 	@Override
 	protected void onResume() {
@@ -63,7 +64,9 @@ public class FeedbackActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_feedback);
+        setContentView(R.layout.activity_feedback);
+
+        feedbackMode = FeedbackMode.SUPPORT;
 		
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, (ViewGroup) relative, 1134, 720, false);
@@ -113,39 +116,42 @@ public class FeedbackActivity extends Activity {
                 }
             }
         });
-		
-		
-		buttonSubmitFeedback.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String feedbackStr = editTextFeedback.getText().toString().trim();
-				int rating = (int) ratingBarFeedback.getRating();
-				rating = Math.abs(rating);
-				Log.e("rating screen =", "= feedbackStr = "+feedbackStr+" , rating = "+rating);
-				
-				if("".equalsIgnoreCase(feedbackStr) && 0 == rating){
-					editTextFeedback.requestFocus();
-					editTextFeedback.setError("Please enter some feedback");
-				}
-				else{
-					if(feedbackStr.length() > 300){
-						editTextFeedback.requestFocus();
-						editTextFeedback.setError("Review must be in 300 letters.");
-					}
-					else{
-						if(FeedbackMode.AFTER_RIDE == feedbackMode){
-							submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr);
-							FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
-						}
-						else{
-							submitFeedbackSupportAsync(FeedbackActivity.this, rating, feedbackStr);
-						}
-					}
-				}
-				
-			}
-		});
+
+
+        buttonSubmitFeedback.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String feedbackStr = editTextFeedback.getText().toString().trim();
+                int rating = (int) ratingBarFeedback.getRating();
+                rating = Math.abs(rating);
+                Log.e("rating screen =", "= feedbackStr = "+feedbackStr+" , rating = "+rating);
+
+                if("".equalsIgnoreCase(feedbackStr) && 0 == rating){
+                    editTextFeedback.requestFocus();
+                    editTextFeedback.setError("Please enter some feedback");
+                }
+                else{
+                    if(feedbackStr.length() > 300){
+                        editTextFeedback.requestFocus();
+                        editTextFeedback.setError("Review must be in 300 letters.");
+                    }
+                    else{
+                        if(FeedbackMode.AFTER_RIDE == feedbackMode){
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr);
+                            FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
+                        }
+                        else if(FeedbackMode.PAST_RIDE == feedbackMode){
+                            submitPastRideFeedbackAPI(FeedbackActivity.this, pastEngagementId, rating, feedbackStr);
+                        }
+                        else{
+                            submitFeedbackSupportAsync(FeedbackActivity.this, rating, feedbackStr);
+                        }
+                    }
+                }
+
+            }
+        });
 		
 		relativeLayoutSkip.setOnClickListener(new View.OnClickListener() {
 			
@@ -154,28 +160,32 @@ public class FeedbackActivity extends Activity {
 				skipFeedbackForCustomerAsync(FeedbackActivity.this, Data.cEngagementId);
 			}
 		});
+
+
+        try {
+            if(getIntent().hasExtra(FeedbackMode.class.getName())){
+                int mode = getIntent().getIntExtra(FeedbackMode.class.getName(), feedbackMode.getOrdinal());
+                if(FeedbackMode.AFTER_RIDE.getOrdinal() == mode){
+                    feedbackMode = FeedbackMode.AFTER_RIDE;
+                }
+                else if(FeedbackMode.PAST_RIDE.getOrdinal() == mode){
+                    feedbackMode = FeedbackMode.PAST_RIDE;
+                    pastEngagementId = getIntent().getIntExtra("engagement_id", 0);
+                }
+                else{
+                    feedbackMode = FeedbackMode.SUPPORT;
+                }
+            }
+            else{
+                performBackPressed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            performBackPressed();
+        }
 		
 		
-		try {
-			if(getIntent().hasExtra(FeedbackMode.class.getName())){
-				int mode = getIntent().getIntExtra(FeedbackMode.class.getName(), feedbackMode.getOrdinal());
-				if(FeedbackMode.AFTER_RIDE.getOrdinal() == mode){
-					feedbackMode = FeedbackMode.AFTER_RIDE;
-				}
-				else{
-					feedbackMode = FeedbackMode.SUPPORT;
-				}
-			}
-			else{
-				performBackPressed();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			performBackPressed();
-		}
-		
-		
-		if(FeedbackMode.AFTER_RIDE == feedbackMode){
+		if(FeedbackMode.AFTER_RIDE == feedbackMode || FeedbackMode.PAST_RIDE == feedbackMode){
 			textViewTitle.setText("RATE YOUR EXPERIENCE");
 			relativeLayoutSkip.setVisibility(View.VISIBLE);
 		}
@@ -266,7 +276,7 @@ public class FeedbackActivity extends Activity {
 			params.put("feedback", feedbackText);
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-			Log.i("given_rating", ""+givenRating);
+			Log.i("given_rating", "" + givenRating);
 			Log.i("engagement_id", engagementId);
 			Log.i("driver_id", ratingReceiverId);
 			Log.i("feedback", feedbackText);
@@ -311,13 +321,12 @@ public class FeedbackActivity extends Activity {
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-		}
-	}
-	
-	
-	
-	public void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        }
+    }
+
+
+    public void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
+        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
@@ -347,7 +356,7 @@ public class FeedbackActivity extends Activity {
 							try {
 								jObj = new JSONObject(response);
 								int flag = jObj.getInt("flag");
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+                                if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
 										String error = jObj.getString("error");
 										DialogPopup.alertPopup(activity, "", error);
@@ -378,8 +387,8 @@ public class FeedbackActivity extends Activity {
 	
 	public void submitFeedbackSupportAsync(final Activity activity, int givenRating, String feedbackText) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+            DialogPopup.showLoadingDialog(activity, "Loading...");
 			
 			RequestParams params = new RequestParams();
 			
@@ -410,7 +419,7 @@ public class FeedbackActivity extends Activity {
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", error);
+                                        DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 										Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
@@ -432,6 +441,62 @@ public class FeedbackActivity extends Activity {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
-	
-	
+
+
+
+    public void submitPastRideFeedbackAPI(final Activity activity, int engagementId, final int givenRating, String feedbackText) {
+        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+
+            RequestParams params = new RequestParams();
+
+            params.put("access_token", Data.userData.accessToken);
+            params.put("given_rating", "" + givenRating);
+            params.put("engagement_id", "" + engagementId);
+            params.put("feedback", feedbackText);
+
+            Log.i("params", "=" +params);
+
+            AsyncHttpClient client = Data.getClient();
+            client.post(Config.getServerUrl() + "/submit_feedback", params,
+                new CustomAsyncHttpResponseHandler() {
+                    private JSONObject jObj;
+
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    }
+
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.i("Server response", "response = " + response);
+                        try {
+                            jObj = new JSONObject(response);
+                            int flag = jObj.getInt("flag");
+                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                    Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
+                                    performBackPressed();
+                                }
+                                else{
+                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                }
+                            }
+                        }  catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                });
+        }
+        else {
+            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+        }
+    }
+
+
 }
