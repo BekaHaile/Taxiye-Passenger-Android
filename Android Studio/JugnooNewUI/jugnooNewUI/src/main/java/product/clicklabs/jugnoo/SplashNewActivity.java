@@ -71,7 +71,9 @@ import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class SplashNewActivity extends Activity implements LocationUpdate{
-	
+
+    //adding drop location
+
 	LinearLayout relative;
 	
 	ImageView imageViewJugnooLogo;
