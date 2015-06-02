@@ -19,7 +19,7 @@ public class RideInfo {
 		this.rideTime = rideTime;
 		this.date = date;
 		this.engagementId = 1;
-		this.rideRated = 1;
+		this.rideRated = 0;
 	}
 	
 	@Override

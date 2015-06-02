@@ -364,6 +364,7 @@ public class RideTransactionsActivity extends Activity {
             }
 
 
+
             holder.id = position;
 
             if(futureSchedule != null){
