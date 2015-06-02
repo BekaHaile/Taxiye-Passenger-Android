@@ -22,6 +22,7 @@ public class RideInfo {
         this.rideRated = 1;
 	}
 	
+	
 	@Override
 	public String toString() {
 		return pickupAddress + " " + dropAddress + " " + amount + " " + distance + " " + date;

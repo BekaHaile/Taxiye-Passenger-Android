@@ -16,18 +16,18 @@
         <dex dex="/Users/socomo20/Documents/github/jugnoo-android-autos-new/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-c660ba9a457ae464448b57f1a33f90a969098f84.jar" />
     </item>
     <item
-        jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.2/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0d6546c1c73cb64a6907f694e6c4bf4b50fefa70">
-        <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-bed3c6598e89a65e49bdea0f159ca67e1ccf8166.jar" />
-    </item>
-    <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.3.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="3b4ff5c39dace8f3b4ab4cab8191785547a0815f">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-13c84e757a0f0bf5e5a205c482dc30f3058854a8.jar" />
+    </item>
+    <item
+        jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0d6546c1c73cb64a6907f694e6c4bf4b50fefa70">
+        <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-bed3c6598e89a65e49bdea0f159ca67e1ccf8166.jar" />
     </item>
     <item
         jar="/Users/socomo20/Documents/github/jugnoo-android-autos-new/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/libs/FlurryAnalytics-5.0.0.jar"
@@ -89,7 +89,7 @@
         jar="/Users/socomo20/Documents/github/jugnoo-android-autos-new/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/JugnooNewUI/facebookSDK/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="998bb7cc64cbc99065f0d0705caa0954b937db33">
+        sha1="494fa7230560be77ce400e06d4107efa3f59b5eb">
         <dex dex="/Users/socomo20/Documents/github/jugnoo-android-autos-new/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-dee19edbc395d359a482a54cb0953b71a69db64b.jar" />
     </item>
     <item
@@ -205,18 +205,18 @@
         <dex dex="/Users/socomo20/Documents/github/jugnoo-android-autos-new/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/android-async-http-87c07abf23a4be62b2be72f155e7462dd9ef325b.jar" />
     </item>
     <item
-        jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="f2f7ec211ce4d244ee97a57523eeb4526dc3cf8a">
-        <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-cf2599ea90f1bfbc994ff19101e4b6ebddee2068.jar" />
-    </item>
-    <item
         jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/libs/assl_sdk_rmn_jugnoo.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="b85f1ee120476138f76ed5bd161120b102a9674b">
         <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/assl_sdk_rmn_jugnoo-d3e60fd20db30d123bb2e066f9a7e505edfc3efe.jar" />
+    </item>
+    <item
+        jar="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f2f7ec211ce4d244ee97a57523eeb4526dc3cf8a">
+        <dex dex="/Users/socomo20/Documents/android_studio_workspace/JugnooNewUI/jugnooNewUI/build/intermediates/pre-dexed/debug/classes-cf2599ea90f1bfbc994ff19101e4b6ebddee2068.jar" />
     </item>
     <item
         jar="/Users/socomo20/Desktop/android studio sdk/sdk/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
