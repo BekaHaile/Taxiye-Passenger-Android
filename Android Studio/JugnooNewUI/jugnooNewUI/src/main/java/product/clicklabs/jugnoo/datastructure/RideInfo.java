@@ -8,7 +8,7 @@ public class RideInfo {
 	public double distance;
 	public double rideTime;
 	public String date;
-    public int engagementId;
+	public int engagementId;
 	public int rideRated;
 	
 	public RideInfo(String pickupAddress, String dropAddress, double amount, double distance, double rideTime, String date){
@@ -18,10 +18,9 @@ public class RideInfo {
 		this.distance = distance;
 		this.rideTime = rideTime;
 		this.date = date;
-        this.engagementId = 1;
-        this.rideRated = 1;
+		this.engagementId = 1;
+		this.rideRated = 0;
 	}
-	
 	
 	@Override
 	public String toString() {

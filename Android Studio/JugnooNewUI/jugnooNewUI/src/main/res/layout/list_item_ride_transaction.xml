@@ -118,21 +118,22 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/relativeLayoutRateExperience"
+            android:id="@+id/relativeLayoutRateRide"
             android:layout_width="match_parent"
-            android:layout_height="60px"
+            android:layout_height="80px"
             android:layout_marginTop="10px"
+            android:background="@drawable/background_white_white_light_grey_selector"
             >
 
             <TextView
-                android:id="@+id/textViewRateExperience"
+                android:id="@+id/textViewRateRide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="80px"
                 android:gravity="center"
-                android:text="Rate your experience"
+                android:text="Rate this ride"
                 android:textColor="@drawable/text_color_black_alpha_selector"
                 android:textSize="28px" />
 
@@ -140,19 +141,25 @@
                 android:layout_width="13px"
                 android:layout_height="26px"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="40px"
                 android:src="@drawable/arrow_icon_selector"
                 android:tag="mwar" />
 
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/imageViewDiv"
+            android:layout_width="match_parent"
+            android:layout_height="20px"
+            />
+
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:layout_marginTop="20px"
             android:background="@color/yellow_alpha" />
+
     </LinearLayout>
 
     <RelativeLayout
