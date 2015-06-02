@@ -291,8 +291,9 @@ public class RideTransactionsActivity extends Activity {
 
     class ViewHolderRideTransaction {
         TextView textViewPickupAt, textViewFrom, textViewFromValue, textViewTo,
-            textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel, textViewRateExperience;
-        RelativeLayout relativeLayoutCancel, relativeLayoutTo, relativeLayoutRateExperience;
+            textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel, textViewRateRide;
+        ImageView imageViewDiv;
+        RelativeLayout relativeLayoutCancel, relativeLayoutTo, relativeLayoutRateRide;
         RelativeLayout relative;
         int id;
     }
@@ -341,16 +342,18 @@ public class RideTransactionsActivity extends Activity {
                 holder.textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); holder.textViewDetailsValue.setTypeface(Fonts.latoRegular(context));
                 holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
                 holder.textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); holder.textViewCancel.setTypeface(Fonts.latoRegular(context));
-                holder.textViewRateExperience = (TextView) convertView.findViewById(R.id.textViewRateExperience); holder.textViewRateExperience.setTypeface(Fonts.latoRegular(context));
+                holder.textViewRateRide = (TextView) convertView.findViewById(R.id.textViewRateRide); holder.textViewRateRide.setTypeface(Fonts.latoRegular(context));
+
+                holder.imageViewDiv = (ImageView) convertView.findViewById(R.id.imageViewDiv);
 
                 holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
                 holder.relativeLayoutCancel = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutCancel);
                 holder.relativeLayoutTo = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutTo);
-                holder.relativeLayoutRateExperience = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutRateExperience);
+                holder.relativeLayoutRateRide = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutRateRide);
 
                 holder.relative.setTag(holder);
                 holder.relativeLayoutCancel.setTag(holder);
-                holder.relativeLayoutRateExperience.setTag(holder);
+                holder.relativeLayoutRateRide.setTag(holder);
 
                 holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
                 ASSL.DoMagic(holder.relative);
@@ -367,7 +370,8 @@ public class RideTransactionsActivity extends Activity {
                 if(position == 0){
                     holder.textViewPickupAt.setVisibility(View.VISIBLE);
                     holder.relativeLayoutTo.setVisibility(View.GONE);
-                    holder.relativeLayoutRateExperience.setVisibility(View.GONE);
+                    holder.relativeLayoutRateRide.setVisibility(View.GONE);
+                    holder.imageViewDiv.setVisibility(View.VISIBLE);
 
                     holder.textViewAmount.setVisibility(View.GONE);
 
@@ -404,10 +408,12 @@ public class RideTransactionsActivity extends Activity {
                     holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfo.amount));
 
                     if(1 == rideInfo.rideRated){
-                        holder.relativeLayoutRateExperience.setVisibility(View.VISIBLE);
+                        holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
+                        holder.imageViewDiv.setVisibility(View.GONE);
                     }
                     else{
-                        holder.relativeLayoutRateExperience.setVisibility(View.GONE);
+                        holder.relativeLayoutRateRide.setVisibility(View.GONE);
+                        holder.imageViewDiv.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -418,7 +424,6 @@ public class RideTransactionsActivity extends Activity {
                 holder.relativeLayoutTo.setVisibility(View.VISIBLE);
                 holder.textViewAmount.setVisibility(View.VISIBLE);
                 holder.relativeLayoutCancel.setVisibility(View.GONE);
-                holder.relativeLayoutRateExperience.setVisibility(View.VISIBLE);
 
                 holder.textViewFromValue.setText(rideInfo.pickupAddress);
                 holder.textViewToValue.setText(rideInfo.dropAddress);
@@ -434,10 +439,12 @@ public class RideTransactionsActivity extends Activity {
                 holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDec.format(rideInfo.amount));
 
                 if(1 == rideInfo.rideRated){
-                    holder.relativeLayoutRateExperience.setVisibility(View.VISIBLE);
+                    holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
+                    holder.imageViewDiv.setVisibility(View.GONE);
                 }
                 else{
-                    holder.relativeLayoutRateExperience.setVisibility(View.GONE);
+                    holder.relativeLayoutRateRide.setVisibility(View.GONE);
+                    holder.imageViewDiv.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -474,7 +481,7 @@ public class RideTransactionsActivity extends Activity {
             });
 
 
-            holder.relativeLayoutRateExperience.setOnClickListener(new OnClickListener() {
+            holder.relativeLayoutRateRide.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {

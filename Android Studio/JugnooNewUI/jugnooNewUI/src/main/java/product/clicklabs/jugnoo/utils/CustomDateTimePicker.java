@@ -222,7 +222,7 @@ public class CustomDateTimePicker implements OnClickListener {
 			selectedHour = calendar_date.get(Calendar.HOUR_OF_DAY);
 			selectedMinute = calendar_date.get(Calendar.MINUTE);
 
-			timePicker.setIs24HourView(is24HourView);
+//			timePicker.setIs24HourView(is24HourView);
 			timePicker.setCurrentHour(selectedHour);
 			timePicker.setCurrentMinute(selectedMinute);
 			
