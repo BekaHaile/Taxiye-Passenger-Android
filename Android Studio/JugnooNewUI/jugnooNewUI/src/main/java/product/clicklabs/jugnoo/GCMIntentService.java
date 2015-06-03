@@ -53,7 +53,7 @@ public class GCMIntentService extends IntentService {
 				
 				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 				builder.setAutoCancel(true);
-				builder.setContentTitle("Jugnoo");
+				builder.setContentTitle("Autos");
 				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
@@ -104,7 +104,7 @@ public class GCMIntentService extends IntentService {
 				
 				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 				builder.setAutoCancel(true);
-				builder.setContentTitle("Jugnoo");
+				builder.setContentTitle("Autos");
 				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
@@ -154,7 +154,7 @@ public class GCMIntentService extends IntentService {
 				
 				NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 				builder.setAutoCancel(true);
-				builder.setContentTitle("Jugnoo");
+				builder.setContentTitle("Autos");
 				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 				builder.setContentText(message);
 				builder.setTicker(message);
@@ -205,7 +205,7 @@ public class GCMIntentService extends IntentService {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setContentTitle("Jugnoo");
+            builder.setContentTitle("Autos");
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);

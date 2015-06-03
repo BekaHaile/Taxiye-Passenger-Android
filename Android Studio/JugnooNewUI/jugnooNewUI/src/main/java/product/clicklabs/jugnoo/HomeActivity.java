@@ -217,6 +217,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
     Button assigningMyLocationBtn, initialCancelRideBtn;
+	ProgressBar progressBarFindingDriver;
 
 
 
@@ -548,7 +549,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver); textViewFindingDriver.setTypeface(Fonts.latoRegular(this));
         assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn); initialCancelRideBtn.setTypeface(Fonts.latoRegular(this));
-		
+        progressBarFindingDriver = (ProgressBar) findViewById(R.id.progressBarFindingDriver);
+        progressBarFindingDriver.getIndeterminateDrawable().setColorFilter(
+            getResources().getColor(R.color.yellow),
+            android.graphics.PorterDuff.Mode.SRC_IN);
+
+
 		
 		
 		//Search Layout 

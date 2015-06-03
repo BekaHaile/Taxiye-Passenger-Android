@@ -122,6 +122,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
         else if(link.equalsIgnoreCase(Config.getDev2ServerUrl())){
             Config.setConfigMode(ConfigMode.DEV_2);
         }
+		else if(link.equalsIgnoreCase(Config.getDev3ServerUrl())){
+			Config.setConfigMode(ConfigMode.DEV_3);
+		}
 		else{
             Config.setConfigMode(ConfigMode.LIVE);
 		}
