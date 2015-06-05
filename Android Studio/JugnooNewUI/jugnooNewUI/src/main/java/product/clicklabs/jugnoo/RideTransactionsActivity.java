@@ -241,7 +241,7 @@ public class RideTransactionsActivity extends Activity implements UpdateRideTran
                                         JSONArray jRidesArr = jObj.getJSONArray("rides");
                                         for (int i = 0; i < jRidesArr.length(); i++) {
                                             JSONObject jRide = jRidesArr.getJSONObject(i);
-                                            int isRatedBefore = 0;
+                                            int isRatedBefore = 1;
                                             if (jRide.has("is_rated_before")) {
                                                 isRatedBefore = jRide.getInt("is_rated_before");
                                             }

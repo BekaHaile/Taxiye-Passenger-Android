@@ -115,12 +115,6 @@
     <color name="dialog_border_color">#AA7E7D78</color>
 
 
-
-
- <integer-array name="pocket_bar_colors">
-  <item>@color/yellow</item>
-  <item>@color/yellow_alpha</item>
- </integer-array>
     
    
 </resources>

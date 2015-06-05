@@ -212,6 +212,7 @@ public class RequestDuplicateRegistrationActivity extends Activity {
             params.put("user_email", email);
             params.put("phone_no", phone);
 			params.put("user_message", ""+messageStr);
+			params.put("client_id", Config.getClientId());
 
             try {
                 if (RegisterScreen.multipleCaseJSON != null) {
