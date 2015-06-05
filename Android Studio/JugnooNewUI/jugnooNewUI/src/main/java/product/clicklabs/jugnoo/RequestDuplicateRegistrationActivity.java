@@ -196,9 +196,12 @@ public class RequestDuplicateRegistrationActivity extends Activity {
         ASSL.closeActivity(relative);
         System.gc();
 		super.onDestroy();
+        Log.e("test", "test");
 	}
 	
-	
+
+
+
 	
 	
 	public void submitDuplicateRegistrationRequestAPI(final Activity activity, String messageStr, String name, String email, String phone) {
