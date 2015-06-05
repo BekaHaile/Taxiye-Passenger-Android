@@ -17,19 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.EnglishNumberToWords;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -233,73 +222,6 @@ public class MultipleAccountsActivity extends Activity {
 
 		
 	}
-
-
-
-
-
-    /**
-     * ASync for initiating OTP Call from server
-     */
-    public void requestDupRegistrationsAPI(final Activity activity, String phoneNo) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-
-            DialogPopup.showLoadingDialog(activity, "Loading...");
-
-            RequestParams params = new RequestParams();
-
-            params.put("client_id", Config.getClientId());
-            params.put("access_token", Data.userData.accessToken);
-            params.put("is_access_token_new", "1");
-            params.put("phone_no", phoneNo);
-            Log.i("params", ">" + params);
-
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/send_new_number_otp_via_call", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        try {
-                            jObj = new JSONObject(response);
-                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                                int flag = jObj.getInt("flag");
-                                if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-                                    String error = jObj.getString("error");
-                                    DialogPopup.dialogBanner(activity, error);
-                                }
-                                else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-                                    String message = jObj.getString("message");
-                                    DialogPopup.dialogBanner(activity, message);
-                                }
-                                else{
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                }
-                            }
-                        }  catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                });
-        }
-        else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-        }
-
-    }
-	
-	
 
 
 }

@@ -8,18 +8,20 @@ public class RideInfo {
 	public double distance;
 	public double rideTime;
 	public String date;
+    public int isRatedBefore;
+	public int driverId;
 	public int engagementId;
-	public int rideRated;
 	
-	public RideInfo(String pickupAddress, String dropAddress, double amount, double distance, double rideTime, String date){
+	public RideInfo(String pickupAddress, String dropAddress, double amount, double distance, double rideTime, String date, int isRatedBefore, int driverId, int engagementId){
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
 		this.amount = amount;
 		this.distance = distance;
 		this.rideTime = rideTime;
 		this.date = date;
-		this.engagementId = 1;
-		this.rideRated = 0;
+        this.isRatedBefore = isRatedBefore;
+        this.driverId = driverId;
+		this.engagementId = engagementId;
 	}
 	
 	@Override

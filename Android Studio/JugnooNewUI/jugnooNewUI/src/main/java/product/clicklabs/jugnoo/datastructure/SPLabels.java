@@ -9,9 +9,7 @@ public class SPLabels {
         SHOW_ALL_DRIVERS = "showAllDrivers",
         SHOW_DRIVER_INFO = "showDriverInfo",
 
-        SERVER_SELECTED = "serverSelected",
-        TRAINING_SELECTED = "trainingSelected"
-
+        SERVER_SELECTED = "serverSelected"
             ;
 
 }

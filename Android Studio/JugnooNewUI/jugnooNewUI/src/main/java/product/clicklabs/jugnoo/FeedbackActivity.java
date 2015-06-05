@@ -53,7 +53,7 @@ public class FeedbackActivity extends Activity {
     TextView textViewScroll;
 
     FeedbackMode feedbackMode = FeedbackMode.SUPPORT;
-    int pastEngagementId = 0;
+    int pastDriverId = 0, pastEngagementId = 0, position = 0;
 
     @Override
     protected void onResume() {
@@ -142,7 +142,8 @@ public class FeedbackActivity extends Activity {
                             submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr);
                             FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
                         } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
-                            submitPastRideFeedbackAPI(FeedbackActivity.this, pastEngagementId, rating, feedbackStr);
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, ""+pastEngagementId, ""+pastDriverId, rating, feedbackStr);
+                            FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, ""+pastEngagementId);
                         } else {
                             submitFeedbackSupportAsync(FeedbackActivity.this, rating, feedbackStr);
                         }
@@ -168,6 +169,8 @@ public class FeedbackActivity extends Activity {
                     feedbackMode = FeedbackMode.AFTER_RIDE;
                 } else if (FeedbackMode.PAST_RIDE.getOrdinal() == mode) {
                     feedbackMode = FeedbackMode.PAST_RIDE;
+                    position = getIntent().getIntExtra("position", 0);
+                    pastDriverId = getIntent().getIntExtra("driver_id", 0);
                     pastEngagementId = getIntent().getIntExtra("engagement_id", 0);
                 } else {
                     feedbackMode = FeedbackMode.SUPPORT;
@@ -269,12 +272,7 @@ public class FeedbackActivity extends Activity {
             params.put("driver_id", ratingReceiverId);
             params.put("feedback", feedbackText);
 
-            Log.i("access_token", "=" + Data.userData.accessToken);
-            Log.i("given_rating", "" + givenRating);
-            Log.i("engagement_id", engagementId);
-            Log.i("driver_id", ratingReceiverId);
-            Log.i("feedback", feedbackText);
-
+            Log.i("params", "=" + params);
 
             AsyncHttpClient client = Data.getClient();
             client.post(Config.getServerUrl() + "/rate_the_driver", params,
@@ -297,7 +295,12 @@ public class FeedbackActivity extends Activity {
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
-                                    HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating);
+                                    if (FeedbackMode.AFTER_RIDE == feedbackMode && HomeActivity.appInterruptHandler != null) {
+                                        HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating);
+                                    }
+                                    else if(FeedbackMode.PAST_RIDE == feedbackMode && RideTransactionsActivity.updateRideTransaction != null){
+                                        RideTransactionsActivity.updateRideTransaction.updateRideTransaction(position);
+                                    }
                                     finish();
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 } else {
@@ -409,59 +412,6 @@ public class FeedbackActivity extends Activity {
                                     String error = jObj.getString("error");
                                     DialogPopup.alertPopup(activity, "", error);
                                 } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
-                                    performBackPressed();
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                });
-        } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-        }
-    }
-
-
-    public void submitPastRideFeedbackAPI(final Activity activity, int engagementId, final int givenRating, String feedbackText) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-
-            DialogPopup.showLoadingDialog(activity, "Loading...");
-
-            RequestParams params = new RequestParams();
-
-            params.put("access_token", Data.userData.accessToken);
-            params.put("given_rating", "" + givenRating);
-            params.put("engagement_id", "" + engagementId);
-            params.put("feedback", feedbackText);
-
-            Log.i("params", "=" + params);
-
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/submit_feedback", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        try {
-                            jObj = new JSONObject(response);
-                            int flag = jObj.getInt("flag");
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
                                     performBackPressed();
                                 } else {

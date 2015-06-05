@@ -540,15 +540,8 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             params.put("client_id", Config.getClientId());
             params.put("referral_code", referralCode);
 
-            if(Config.getServerUrl().contains(Config.getDevServerUrl().substring(0, Config.getDevServerUrl().length() - 5))){
-
-                    params.put("device_token", Data.deviceToken);
-                    params.put("unique_device_id", Data.uniqueDeviceId);
-            }
-            else{
-                params.put("device_token", Data.deviceToken);
-                params.put("unique_device_id", Data.uniqueDeviceId);
-            }
+            params.put("device_token", Data.deviceToken);
+            params.put("unique_device_id", Data.uniqueDeviceId);
 
 
 

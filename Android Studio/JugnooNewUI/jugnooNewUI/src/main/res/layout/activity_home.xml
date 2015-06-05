@@ -299,6 +299,19 @@
                             android:textSize="30px"/>
                     </RelativeLayout>
 
+                    <ProgressBar
+                        android:id="@+id/progressBarFindingDriver"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/relativeLayoutAssigningInfo"
+                        android:padding="0px"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:indeterminateOnly="true"
+                        android:indeterminate="true"
+                        android:layout_marginTop="-20px"
+                        />
+
+
 
                     <Button
                         android:id="@+id/assigningMyLocationBtn"

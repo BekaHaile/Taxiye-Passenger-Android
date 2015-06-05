@@ -2,8 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
@@ -74,13 +72,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "";
 
 
-	
-	public static boolean isSystemPackage(PackageInfo pkgInfo) {
-		return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true
-				: false;
-	}
-	
-	
+
 	
 	
 	String enteredEmail = "";

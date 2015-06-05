@@ -36,13 +36,14 @@ import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.datastructure.ScheduleCancelListener;
+import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideTransactionsActivity extends Activity {
+public class RideTransactionsActivity extends Activity implements UpdateRideTransaction {
 
 	RelativeLayout relative;
 	
@@ -65,17 +66,26 @@ public class RideTransactionsActivity extends Activity {
 
 	DecimalFormat decimalFormat = new DecimalFormat("#.#");
 	DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
-	
+
+    public static UpdateRideTransaction updateRideTransaction;
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-	}
+        try {
+            rideTransactionAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rides_transactions);
+
+        updateRideTransaction = this;
 
         futureSchedule = null;
         rideInfosList = new ArrayList<RideInfo>();
@@ -184,80 +194,92 @@ public class RideTransactionsActivity extends Activity {
 			RequestParams params = new RequestParams();
 		
 			params.put("access_token", Data.userData.accessToken);
-			params.put("start_from", ""+rideInfosList.size());
+			params.put("start_from", "" + rideInfosList.size());
 			
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/get_recent_rides", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+                new CustomAsyncHttpResponseHandler() {
+                    private JSONObject jObj;
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							updateListData("Some error occurred, tap to retry", true);
-							progressBarList.setVisibility(View.GONE);
-						}
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                        updateListData("Some error occurred, tap to retry", true);
+                        progressBarList.setVisibility(View.GONE);
+                    }
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							try {
-								
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag){
-										
-										totalRides = jObj.getInt("num_rides");
-										
-										if(jObj.has("schedule")){
-											JSONObject jSchedule = jObj.getJSONObject("schedule");
-											futureSchedule = new FutureSchedule(jSchedule.getString("pickup_id"),
-													jSchedule.getString("address"), 
-													jSchedule.getString("pickup_date"), 
-													jSchedule.getString("pickup_time"), 
-													new LatLng(jSchedule.getDouble("latitude"), jSchedule.getDouble("longitude")), 
-													jSchedule.getInt("modifiable"),
-													jSchedule.getInt("status"));
-											totalRides = totalRides + 1;
-										}
-										else{
-											if(rideInfosList.size() == 0){
-												futureSchedule = null;
-											}
-										}
-										
-										
-										if(jObj.has("rides")){
-											JSONArray jRidesArr = jObj.getJSONArray("rides");
-											for(int i=0; i<jRidesArr.length(); i++){
-												JSONObject jRide = jRidesArr.getJSONObject(i);
-												rideInfosList.add(new RideInfo(jRide.getString("pickup_address"),
-														jRide.getString("drop_address"), 
-														jRide.getDouble("amount"), 
-														jRide.getDouble("distance"), 
-														jRide.getDouble("ride_time"), 
-														jRide.getString("date")));
-											}
-										}
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.i("Server response", "response = " + response);
+                        try {
 
-										updateListData("You haven't tried Jugnoo yet.", false);
-										
-									}
-									else{
-										updateListData("Some error occurred, tap to retry", true);
-									}
-								}
-								else{
-									updateListData("Some error occurred, tap to retry", true);
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								updateListData("Some error occurred, tap to retry", true);
-							}
-							progressBarList.setVisibility(View.GONE);
-						}
-					});
+                            jObj = new JSONObject(response);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt("flag");
+                                if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+
+                                    totalRides = jObj.getInt("num_rides");
+
+                                    if (jObj.has("schedule")) {
+                                        JSONObject jSchedule = jObj.getJSONObject("schedule");
+                                        futureSchedule = new FutureSchedule(jSchedule.getString("pickup_id"),
+                                            jSchedule.getString("address"),
+                                            jSchedule.getString("pickup_date"),
+                                            jSchedule.getString("pickup_time"),
+                                            new LatLng(jSchedule.getDouble("latitude"), jSchedule.getDouble("longitude")),
+                                            jSchedule.getInt("modifiable"),
+                                            jSchedule.getInt("status"));
+                                        totalRides = totalRides + 1;
+                                    } else {
+                                        if (rideInfosList.size() == 0) {
+                                            futureSchedule = null;
+                                        }
+                                    }
+
+
+                                    if (jObj.has("rides")) {
+                                        JSONArray jRidesArr = jObj.getJSONArray("rides");
+                                        for (int i = 0; i < jRidesArr.length(); i++) {
+                                            JSONObject jRide = jRidesArr.getJSONObject(i);
+                                            int isRatedBefore = 1;
+                                            if (jRide.has("is_rated_before")) {
+                                                isRatedBefore = jRide.getInt("is_rated_before");
+                                            }
+
+                                            int driverId = 0;
+                                            if (jRide.has("driver_id")) {
+                                                driverId = jRide.getInt("driver_id");
+                                            }
+
+                                            int engagementId = 0;
+                                            if (jRide.has("engagement_id")) {
+                                                engagementId = jRide.getInt("engagement_id");
+                                            }
+
+                                            rideInfosList.add(new RideInfo(jRide.getString("pickup_address"),
+                                                jRide.getString("drop_address"),
+                                                jRide.getDouble("amount"),
+                                                jRide.getDouble("distance"),
+                                                jRide.getDouble("ride_time"),
+                                                jRide.getString("date"), isRatedBefore, driverId, engagementId));
+                                        }
+                                    }
+
+                                    updateListData("You haven't tried Jugnoo yet.", false);
+
+                                } else {
+                                    updateListData("Some error occurred, tap to retry", true);
+                                }
+                            } else {
+                                updateListData("Some error occurred, tap to retry", true);
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            updateListData("Some error occurred, tap to retry", true);
+                        }
+                        progressBarList.setVisibility(View.GONE);
+                    }
+                });
 		}
 		else {
 			updateListData("No internet connection, tap to retry", true);
@@ -287,6 +309,8 @@ public class RideTransactionsActivity extends Activity {
 			rideTransactionAdapter.notifyDataSetChanged();
 		}
 	}
+
+
 
 
     class ViewHolderRideTransaction {
@@ -408,7 +432,7 @@ public class RideTransactionsActivity extends Activity {
                     }
                     holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfo.amount));
 
-                    if(1 == rideInfo.rideRated){
+                    if(1 != rideInfo.isRatedBefore){
                         holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
                         holder.imageViewDiv.setVisibility(View.GONE);
                     }
@@ -439,7 +463,7 @@ public class RideTransactionsActivity extends Activity {
                 }
                 holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDec.format(rideInfo.amount));
 
-                if(1 == rideInfo.rideRated){
+                if(1 != rideInfo.isRatedBefore){
                     holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
                     holder.imageViewDiv.setVisibility(View.GONE);
                 }
@@ -492,9 +516,13 @@ public class RideTransactionsActivity extends Activity {
                         intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.PAST_RIDE.getOrdinal());
 
                         if(futureSchedule != null) {
+                            intent.putExtra("position", holder.id-1);
+                            intent.putExtra("driver_id", rideInfosList.get(holder.id-1).driverId);
                             intent.putExtra("engagement_id", rideInfosList.get(holder.id-1).engagementId);
                         }
                         else{
+                            intent.putExtra("position", holder.id);
+                            intent.putExtra("driver_id", rideInfosList.get(holder.id).driverId);
                             intent.putExtra("engagement_id", rideInfosList.get(holder.id).engagementId);
                         }
 
@@ -591,6 +619,17 @@ public class RideTransactionsActivity extends Activity {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
 
+    }
+
+    @Override
+    public void updateRideTransaction(int position) {
+        try {
+            if (rideInfosList.size() > 0) {
+                rideInfosList.get(position).isRatedBefore = 1;
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 	
 }
