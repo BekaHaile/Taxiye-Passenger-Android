@@ -3376,21 +3376,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 								try {
 									jObj = new JSONObject(response);
 									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
-										HomeActivity.logoutUser(activity);
-									}
-									else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-										String errorMessage = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", errorMessage);
-									}
-									else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										DialogPopup.alertPopup(activity, "", message);
-									}
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-										
-									}
-									else{
+									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+
 									}
 								}  catch (Exception exception) {
 									exception.printStackTrace();
@@ -4951,23 +4938,27 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	
 	@Override
-	public void onAfterRideFeedbackSubmitted(final int givenRating) {
+	public void onAfterRideFeedbackSubmitted(final int givenRating, final boolean skipped) {
 		runOnUiThread(new Runnable() {
 
-            @Override
-            public void run() {
-                userMode = UserMode.PASSENGER;
+			@Override
+			public void run() {
+				userMode = UserMode.PASSENGER;
 
-                switchUserScreen();
+				switchUserScreen();
 
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
 
-                if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
-                    rateAppPopup(activity);
-                }
-            }
-        });
+				if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
+					rateAppPopup(activity);
+				} else {
+					if (skipped && Data.customerRateAppFlag == 1) {
+						rateAppPopup(activity);
+					}
+				}
+			}
+		});
 		
 	}
 	
