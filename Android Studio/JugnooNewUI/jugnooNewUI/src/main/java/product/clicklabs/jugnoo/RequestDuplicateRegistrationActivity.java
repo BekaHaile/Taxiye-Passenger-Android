@@ -222,6 +222,7 @@ public class RequestDuplicateRegistrationActivity extends Activity {
                 e.printStackTrace();
             }
 
+
 			Log.i("params request_dup_registration", "=" + params);
 
 		
