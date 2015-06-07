@@ -35,6 +35,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -179,8 +180,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	RelativeLayout topRl;
 	ImageView imageViewMenu, imageViewSearchCancel;
 	TextView title;
-	Button checkServerBtn, toggleDebugModeBtn;
+	Button checkServerBtn;
 	ImageView jugnooShopImageView;
+    ImageView imageViewGift;
 	boolean mealsAnimating1 = false, fatafatAnimating1 = false;
 	
 	
@@ -217,7 +219,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
     Button assigningMyLocationBtn, initialCancelRideBtn;
-//	ProgressBar progressBarFindingDriver;
 
 
 
@@ -307,7 +308,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
-	
+	Handler shakeHandler;
 	
 	Location lastLocation;
 	
@@ -485,10 +486,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		imageViewSearchCancel = (ImageView) findViewById(R.id.imageViewSearchCancel);
 		title = (TextView) findViewById(R.id.title); title.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
-		toggleDebugModeBtn = (Button) findViewById(R.id.toggleDebugModeBtn); toggleDebugModeBtn.setVisibility(View.GONE);
+        imageViewGift = (ImageView) findViewById(R.id.imageViewGift);
 		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
 
-		
+        shakeHandler = new Handler();
+        shakeHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                shakeView(imageViewGift);
+                shakeHandler.postDelayed(this, 5000);
+            }
+        }, 5000);
 		
 		
 		
@@ -549,10 +557,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver); textViewFindingDriver.setTypeface(Fonts.latoRegular(this));
         assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn); initialCancelRideBtn.setTypeface(Fonts.latoRegular(this));
-//        progressBarFindingDriver = (ProgressBar) findViewById(R.id.progressBarFindingDriver);
-//        progressBarFindingDriver.getIndeterminateDrawable().setColorFilter(
-//            getResources().getColor(R.color.yellow),
-//            android.graphics.PorterDuff.Mode.SRC_IN);
 
 
 		
@@ -725,30 +729,30 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 		checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
-			
-			@Override
-			public boolean onLongClick(View v) {
-				Toast.makeText(getApplicationContext(), ""+ Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
-				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
-				return false;
-			}
-		});
+
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getApplicationContext(), "" + Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
+                FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
+                return false;
+            }
+        });
 		
 
 		jugnooShopImageView.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(Data.userData != null){
-		    		if(Data.userData.nukkadEnable == 1){
-		    			startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
-						overridePendingTransition(R.anim.right_in, R.anim.right_out);
-						FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
-		    		}
-				}
+
+            @Override
+            public void onClick(View v) {
+                if (Data.userData != null) {
+                    if (Data.userData.nukkadEnable == 1) {
+                        startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
+                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
+                    }
+                }
                 hideAnims();
-			}
-		});
+            }
+        });
 
 		imageViewSearchCancel.setOnClickListener(new View.OnClickListener() {
 			
@@ -759,6 +763,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				switchPassengerScreen(passengerScreenMode);
 			}
 		});
+
+        imageViewGift.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, ShareActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
+            }
+        });
 		
 		
 		
@@ -803,9 +816,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, ShareActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
+                imageViewGift.performClick();
 			}
 		});
 
@@ -1433,7 +1444,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
 
-
+    private void shakeView(View v) {
+        // Create shake effect from xml resource
+        Animation shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+        // Perform animation
+        v.startAnimation(shake);
+    }
 
 
     public long animDurationShow = 300;
@@ -1715,37 +1731,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
 	
-	public void enableJugnooShopUI(){
-		if(UserMode.PASSENGER == userMode){
-			if(Data.userData != null){
-	    		if(Data.userData.nukkadEnable == 1){
-	    			jugnooShopImageView.setVisibility(View.VISIBLE);
-	    			try{
-	    				if(!"".equalsIgnoreCase(Data.userData.nukkadIcon)){
-	    					Picasso.with(HomeActivity.this).load(Data.userData.nukkadIcon).into(jugnooShopImageView);
-	    				}
-	    				else{
-	    					jugnooShopImageView.setImageResource(R.drawable.gift_button_selector);
-	    				}
-	    			}catch(Exception e){}
-	    		}
-	    		else{
-	    			jugnooShopImageView.setVisibility(View.GONE);
-	    		}
-			}
-			else{
-				jugnooShopImageView.setVisibility(View.GONE);
-			}
-		}
-		else{
-			jugnooShopImageView.setVisibility(View.GONE);
-		}
-	}
-	
-	
-	
-	
-	public void callMapTouchedRefreshDrivers(){
+	public void enableJugnooShopUI() {
+        if ((UserMode.PASSENGER == userMode) && (Data.userData != null) && (Data.userData.nukkadEnable == 1)) {
+            jugnooShopImageView.setVisibility(View.VISIBLE);
+            try {
+                if (!"".equalsIgnoreCase(Data.userData.nukkadIcon)) {
+                    Picasso.with(HomeActivity.this).load(Data.userData.nukkadIcon).into(jugnooShopImageView);
+                } else {
+                    jugnooShopImageView.setImageResource(R.drawable.gift_button_selector);
+                }
+            } catch (Exception e) {
+            }
+        } else {
+            jugnooShopImageView.setVisibility(View.GONE);
+        }
+    }
+
+
+    public void callMapTouchedRefreshDrivers(){
 		try {
 			if(Data.userData != null){
 				if(UserMode.PASSENGER == userMode &&
@@ -2062,7 +2065,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
                     Log.e("Data.latitude", "="+Data.latitude);
-                    Log.e("myLocation", "="+myLocation);
+                    Log.e("myLocation", "=" + myLocation);
 
                     if (Data.latitude != 0 && Data.longitude != 0) {
                         showDriverMarkersAndPanMap(new LatLng(Data.latitude, Data.longitude));
@@ -2071,6 +2074,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     }
 
 
+                    imageViewGift.setVisibility(View.VISIBLE);
                     imageViewSearchCancel.setVisibility(View.GONE);
 
                     break;
@@ -2085,8 +2089,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     centreLocationRl.setVisibility(View.GONE);
 
                     jugnooShopImageView.setVisibility(View.GONE);
-
-
+                    imageViewGift.setVisibility(View.GONE);
                     imageViewSearchCancel.setVisibility(View.VISIBLE);
 
 
@@ -2101,6 +2104,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     requestFinalLayout.setVisibility(View.GONE);
                     centreLocationRl.setVisibility(View.GONE);
 
+					initialCancelRideBtn.setVisibility(View.GONE);
+
                     if(map != null){
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.title("pickup location");
@@ -2114,6 +2119,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
 
+                    imageViewGift.setVisibility(View.VISIBLE);
                     imageViewSearchCancel.setVisibility(View.GONE);
 
                     break;
@@ -2176,6 +2182,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
 
+                    imageViewGift.setVisibility(View.VISIBLE);
                     imageViewSearchCancel.setVisibility(View.GONE);
 
                     break;
@@ -2219,6 +2226,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     updateLowJugnooCashBanner(mode);
 
 
+                    imageViewGift.setVisibility(View.VISIBLE);
                     imageViewSearchCancel.setVisibility(View.GONE);
 
                     break;
@@ -2234,6 +2242,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     centreLocationRl.setVisibility(View.GONE);
 
                     imageViewSearchCancel.setVisibility(View.GONE);
+                    imageViewGift.setVisibility(View.VISIBLE);
 
                     break;
 
@@ -2247,6 +2256,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     endRideReviewRl.setVisibility(View.GONE);
                     centreLocationRl.setVisibility(View.GONE);
 
+                    imageViewGift.setVisibility(View.VISIBLE);
                     imageViewSearchCancel.setVisibility(View.GONE);
 
 
@@ -4901,12 +4911,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			@Override
 			public void run() {
 				if("".equalsIgnoreCase(Data.cSessionId)){
-					initialCancelRideBtn.setBackgroundResource(R.drawable.button_yellow_pressed);
-					initialCancelRideBtn.setTextColor(getResources().getColor(R.color.white_alpha));
+//					initialCancelRideBtn.setBackgroundResource(R.drawable.button_yellow_pressed);
+//					initialCancelRideBtn.setTextColor(getResources().getColor(R.color.white_alpha));
+					initialCancelRideBtn.setVisibility(View.GONE);
 				}
 				else{
-					initialCancelRideBtn.setBackgroundResource(R.drawable.button_yellow_selector);
-					initialCancelRideBtn.setTextColor(getResources().getColor(R.drawable.text_color_white_alpha_selector));
+//					initialCancelRideBtn.setBackgroundResource(R.drawable.button_yellow_selector);
+//					initialCancelRideBtn.setTextColor(getResources().getColor(R.drawable.text_color_white_alpha_selector));
+                    initialCancelRideBtn.setVisibility(View.VISIBLE);
 				}
 			}
 		});
