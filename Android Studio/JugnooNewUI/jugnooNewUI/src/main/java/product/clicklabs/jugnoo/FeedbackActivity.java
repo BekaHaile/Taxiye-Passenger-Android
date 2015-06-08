@@ -294,7 +294,7 @@ public class FeedbackActivity extends Activity {
                             int flag = jObj.getInt("flag");
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
                                     if (FeedbackMode.AFTER_RIDE == feedbackMode && HomeActivity.appInterruptHandler != null) {
                                         HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating, false);
                                     }
@@ -412,7 +412,7 @@ public class FeedbackActivity extends Activity {
                                     String error = jObj.getString("error");
                                     DialogPopup.alertPopup(activity, "", error);
                                 } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
                                     performBackPressed();
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

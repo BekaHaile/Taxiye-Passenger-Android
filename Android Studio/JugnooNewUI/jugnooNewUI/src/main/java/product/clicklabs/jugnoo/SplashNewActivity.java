@@ -513,7 +513,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 				
 				if(Data.locationFetcher != null){
 					Data.latitude = Data.locationFetcher.getLatitude();
