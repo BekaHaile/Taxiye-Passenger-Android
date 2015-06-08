@@ -2535,9 +2535,25 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
         LocationInit.showLocationAlertDialog(this);
 	}
-	
-	
-	
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		try {
+			super.onActivityResult(requestCode, resultCode, data);
+			Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(LocationInit.LOCATION_REQUEST_CODE == requestCode){
+			if(0 == resultCode){
+				ActivityCompat.finishAffinity(this);
+			}
+		}
+	}
+
+
+
+
 	public static void checkForAccessTokenChange(Activity activity){
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
 		if(!"".equalsIgnoreCase(pair.first)){
@@ -4081,22 +4097,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		
 		
 	
-	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		try {
-			super.onActivityResult(requestCode, resultCode, data);
-			Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        if(LocationInit.LOCATION_REQUEST_CODE == requestCode){
-            if(0 == resultCode){
-                ActivityCompat.finishAffinity(this);
-            }
-        }
-	}
-	
+
 	
 	
 	

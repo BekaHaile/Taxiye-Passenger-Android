@@ -188,7 +188,7 @@ public class FeedbackActivity extends Activity {
             textViewTitle.setText("RATE YOUR EXPERIENCE");
             relativeLayoutSkip.setVisibility(View.VISIBLE);
         } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
-            textViewTitle.setText("RATE YOUR RIDE");
+            textViewTitle.setText("RATE YOUR EXPERIENCE");
             relativeLayoutSkip.setVisibility(View.GONE);
         } else {
             textViewTitle.setText("FEEDBACK");
