@@ -2881,7 +2881,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 	    LatLng destination;
 	    
-	    String etaMinutes = "1", farAwayCity = "";
+	    String etaMinutes = "5", farAwayCity = "";
 	    
 	    public FindDriversETAAsync(LatLng destination){
 	    	this.destination = destination;
@@ -2900,7 +2900,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				        dontCallRefreshDriver = false;
 					}
 				});
-		        etaMinutes = "1";
+		        etaMinutes = "5";
 	        }
 	    }
 	    
@@ -3655,7 +3655,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                 int flag = jObj.getInt("flag");
                                 if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
                                     final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble("latitude"), jObj.getDouble("longitude"));
-                                    String eta = "";
+                                    String eta = "5";
                                     if (jObj.has("eta")) {
                                         eta = jObj.getString("eta");
                                     }
@@ -3670,19 +3670,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                         public void run() {
                                             try {
                                                 if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
-                                                    if (myLocation != null && map != null) {
+                                                    if (map != null) {
                                                         if (HomeActivity.this.hasWindowFocus()) {
                                                             driverLocationMarker.setPosition(driverCurrentLatLng);
                                                             updateDriverETAText();
-                                                            LatLng myLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                                                            double distance = MapUtils.distance(myLatLng, driverCurrentLatLng);
-                                                            if (distance > 1000) {
-                                                                final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                                                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-                                                                boundsBuilder.include(myLatLng);
-                                                                boundsBuilder.include(driverCurrentLatLng);
-                                                                LatLngBounds bounds = boundsBuilder.build();
-                                                                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+                                                            if(Data.pickupLatLng != null) {
+                                                                double distance = MapUtils.distance(Data.pickupLatLng, driverCurrentLatLng);
+                                                                if (distance > 1000) {
+                                                                    final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                                                                    LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+                                                                    boundsBuilder.include(Data.pickupLatLng);
+                                                                    boundsBuilder.include(driverCurrentLatLng);
+                                                                    LatLngBounds bounds = boundsBuilder.build();
+                                                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (260 * minScaleRatio)), 1000, null);
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -4279,7 +4280,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
 			
 			String promoName = JSONParser.getPromoName(jObj);
-			String eta = "";
+			String eta = "5";
 			if(jObj.has("eta")){
 				eta = jObj.getString("eta");
 			}
@@ -4359,7 +4360,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			String promoName = JSONParser.getPromoName(jObj);
 			
-			String eta = "";
+			String eta = "5";
 			if(jObj.has("eta")){
 				eta = jObj.getString("eta");
 			}
