@@ -333,6 +333,9 @@ public class SplashLogin extends Activity implements LocationUpdate{
 						FacebookLoginHelper.USER_DATA.userEmail);
 				sendFacebookLoginValues(SplashLogin.this);
 				FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
+
+//				new FacebookLoginHelper().getFriendsList();
+
 			}
 			else{
 				Toast.makeText(getApplicationContext(), "Error occured during Facebook authentication", Toast.LENGTH_SHORT).show();

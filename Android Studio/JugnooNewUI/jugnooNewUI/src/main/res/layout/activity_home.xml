@@ -1306,9 +1306,9 @@
 
                         <ImageView
                             android:id="@+id/imageViewGift"
-                            android:layout_width="58px"
-                            android:layout_height="62px"
-                            android:padding="0px"
+                            android:layout_width="65px"
+                            android:layout_height="68px"
+                            android:padding="10px"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_gift_jugnoo"
                             android:layout_alignParentRight="true"/>
