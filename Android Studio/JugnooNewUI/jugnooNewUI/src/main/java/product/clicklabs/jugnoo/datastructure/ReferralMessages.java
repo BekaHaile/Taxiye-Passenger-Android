@@ -6,12 +6,15 @@ public class ReferralMessages{
 	public String referralSharingMessage;
 	public String fbShareCaption;
 	public String fbShareDescription;
-	
-	public ReferralMessages(String referralMessage, String referralSharingMessage, String fbShareCaption, String fbShareDescription){
+    public String referralCaption;
+
+
+	public ReferralMessages(String referralMessage, String referralSharingMessage, String fbShareCaption, String fbShareDescription, String referralCaption){
 		this.referralMessage = referralMessage;
 		this.referralSharingMessage = referralSharingMessage;
 		this.fbShareCaption = fbShareCaption;
 		this.fbShareDescription = fbShareDescription;
+        this.referralCaption = referralCaption;
 	}
 	
 }
