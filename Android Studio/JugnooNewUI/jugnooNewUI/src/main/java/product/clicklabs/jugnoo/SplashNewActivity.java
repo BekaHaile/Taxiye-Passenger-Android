@@ -36,12 +36,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+
 
 import org.json.JSONObject;
 
@@ -69,7 +71,9 @@ import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class SplashNewActivity extends Activity implements LocationUpdate{
-	
+
+    //adding drop location
+
 	LinearLayout relative;
 	
 	ImageView imageViewJugnooLogo;
@@ -118,6 +122,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
         else if(link.equalsIgnoreCase(Config.getDev2ServerUrl())){
             Config.setConfigMode(ConfigMode.DEV_2);
         }
+		else if(link.equalsIgnoreCase(Config.getDev3ServerUrl())){
+			Config.setConfigMode(ConfigMode.DEV_3);
+		}
 		else{
             Config.setConfigMode(ConfigMode.LIVE);
 		}
@@ -419,7 +426,6 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		}
 		else{
-//			DialogPopup.showLocationSettingsAlert(SplashNewActivity.this);
             LocationInit.showLocationAlertDialog(this);
 		}
 
@@ -507,7 +513,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 			
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 				
 				if(Data.locationFetcher != null){
 					Data.latitude = Data.locationFetcher.getLatitude();

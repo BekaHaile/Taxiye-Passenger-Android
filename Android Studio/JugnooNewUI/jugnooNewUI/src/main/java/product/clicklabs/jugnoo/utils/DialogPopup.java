@@ -413,6 +413,45 @@ public class DialogPopup {
         }
     }
 
+
+	/**
+	 * @param context
+	 * @param message
+	 */
+	public static void showLoadingDialogDownwards(Context context, String message) {
+		try {
+			if (isDialogShowing()) {
+				dismissLoadingDialog();
+			}
+
+
+			if (context instanceof Activity) {
+				Activity activity = (Activity) context;
+				if (activity.isFinishing()) {
+					return;
+				}
+			}
+
+			progressDialog = new ProgressDialog(context, android.R.style.Theme_Translucent_NoTitleBar);
+			progressDialog.show();
+			WindowManager.LayoutParams layoutParams = progressDialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+
+			progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			progressDialog.setCancelable(false);
+			progressDialog.setContentView(R.layout.dialog_loading_box_downwards);
+			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
+			new ASSL((Activity) context, frameLayout, 1134, 720, false);
+
+
+			((ProgressWheel) progressDialog.findViewById(R.id.progress_wheel)).spin();
+			TextView messageText = (TextView) progressDialog.findViewById(R.id.tvProgress);
+			messageText.setTypeface(Fonts.latoRegular(context));
+			messageText.setText(message);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
     public static boolean isDialogShowing() {
         try {
             if (progressDialog == null) {

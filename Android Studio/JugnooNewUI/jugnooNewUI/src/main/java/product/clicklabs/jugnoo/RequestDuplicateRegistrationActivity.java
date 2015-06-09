@@ -196,9 +196,12 @@ public class RequestDuplicateRegistrationActivity extends Activity {
         ASSL.closeActivity(relative);
         System.gc();
 		super.onDestroy();
+        Log.e("test", "test");
 	}
 	
-	
+
+
+
 	
 	
 	public void submitDuplicateRegistrationRequestAPI(final Activity activity, String messageStr, String name, String email, String phone) {
@@ -212,6 +215,7 @@ public class RequestDuplicateRegistrationActivity extends Activity {
             params.put("user_email", email);
             params.put("phone_no", phone);
 			params.put("user_message", ""+messageStr);
+			params.put("client_id", Config.getClientId());
 
             try {
                 if (RegisterScreen.multipleCaseJSON != null) {
@@ -220,6 +224,7 @@ public class RequestDuplicateRegistrationActivity extends Activity {
             } catch(Exception e){
                 e.printStackTrace();
             }
+
 
 			Log.i("params request_dup_registration", "=" + params);
 

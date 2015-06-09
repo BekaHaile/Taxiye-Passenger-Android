@@ -98,6 +98,7 @@ MERGED from com.android.support:support-v4:22.0.0:20:5
 MERGED from com.google.android.gms:play-services-wearable:7.3.0:18:5
 MERGED from com.google.android.gms:play-services-base:7.3.0:18:5
 MERGED from com.android.support:support-v4:22.0.0:20:5
+MERGED from com.github.castorflex.smoothprogressbar:library:1.1.0:8:5
 MERGED from com.crashlytics.sdk.android:crashlytics:2.2.4:7:5
 MERGED from com.crashlytics.sdk.android:answers:1.2.0:7:5
 MERGED from io.fabric.sdk.android:fabric:1.3.1:7:5
@@ -275,6 +276,7 @@ MERGED from com.android.support:support-v4:22.0.0:22:5
 MERGED from com.google.android.gms:play-services-wearable:7.3.0:19:5
 MERGED from com.google.android.gms:play-services-base:7.3.0:20:5
 MERGED from com.android.support:support-v4:22.0.0:22:5
+MERGED from com.github.castorflex.smoothprogressbar:library:1.1.0:12:5
 MERGED from com.crashlytics.sdk.android:crashlytics:2.2.4:11:5
 MERGED from com.crashlytics.sdk.android:answers:1.2.0:9:5
 MERGED from io.fabric.sdk.android:fabric:1.3.1:9:5

@@ -86,7 +86,7 @@ public class FacebookLoginHelper {
 
 		Session.OpenRequest openRequest = null;
 		openRequest = new Session.OpenRequest(activity);
-		openRequest.setPermissions(Arrays.asList("email"));
+		openRequest.setPermissions(Arrays.asList("email", "user_friends")); //"user_friends"
 		openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
 
 		openRequest.setCallback(new Session.StatusCallback() {
@@ -260,6 +260,29 @@ public class FacebookLoginHelper {
 	        .build();
 	    feedDialog.show();
 	}
+
+
+
+	public void getFriendsList(){
+
+		new Request(
+			Session.getActiveSession(),
+			"/me/friends",
+			null,
+			HttpMethod.GET,
+			new Request.Callback()
+			{
+				public void onCompleted(Response response)
+				{
+                    /* handle the result */
+                    String list = response.toString();
+					Log.e("members","Members: " + list);
+				}
+			}
+		).executeAsync();
+	}
+
+
 	
 	
 	public ProgressDialog progressDialog;
