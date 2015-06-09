@@ -3330,7 +3330,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 					textMessage.setText(message);
 				}
 			}
-			
+
+
 
 			Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
 			btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
