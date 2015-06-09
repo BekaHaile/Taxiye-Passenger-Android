@@ -7,7 +7,11 @@ public class Config {
 	public static AppRunMode appRunMode = AppRunMode.DEV;
 
 	public enum AppRunMode {
+<<<<<<< HEAD
 		DEV, TEST
+=======
+		DEV, TEST, LIVE
+>>>>>>> develop
 	}
 
 	

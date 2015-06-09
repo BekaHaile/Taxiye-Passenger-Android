@@ -4242,6 +4242,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 										
 										
 										CouponInfo couponInfo = null;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+										
+>>>>>>> develop
 										if(jObj.has("coupon")){
 											try{
 												couponInfo = JSONParser.parseCouponInfo(jObj.getJSONObject("coupon"));
@@ -4265,6 +4270,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 												userImage, phoneNo, rating, freeRide, couponInfo, promoInfo, jugnooBalance);
 										Data.assignedCustomerInfo.schedulePickupTime = pickupTime;
 										
+<<<<<<< HEAD
+=======
+>>>>>>> customer_new_ui1.1
+>>>>>>> develop
 										Data.driverRideRequests.clear();
 	
 								        GCMIntentService.clearNotifications(getApplicationContext());
@@ -4743,12 +4752,330 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 	
 	
 	
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+	/**
+	 * ASync for uploading path data file to server
+	 */
+	public void driverUploadPathDataFileAsync(final Activity activity, final String engagementId) {
+		
+		Thread fileUploadThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				
+				File pathLogFile = null;
+				try {
+					pathLogFile = Log.getPathLogFile(engagementId);
+					if (pathLogFile != null) {
+						String fileData = FileOperations.readFromFile(pathLogFile);
+						
+						int oneMBSize = (int) (1024 * 1024);
+						int onePointEightMBSize = (int) (1.8 * oneMBSize);
+						
+						Log.i("onePointEightMBSize", "="+onePointEightMBSize);
+						Log.i("fileData.length()", "="+fileData.length());
+						
+						if(fileData.length() < onePointEightMBSize){
+							sendPathFileDataToServer(activity, engagementId, fileData);
+						}
+						else{
+							for(String smallFileData : Utils.splitStringInParts(fileData, oneMBSize)){
+								sendPathFileDataToServer(activity, engagementId, smallFileData);
+							}
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		fileUploadThread.start();
+=======
+//	/**
+//	 * ASync for uploading path data file to server
+//	 */
+//	public void driverUploadPathDataFileAsync(final Activity activity, final String engagementId) {
+//		
+//		Thread fileUploadThread = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				
+//				File pathLogFile = null;
+//				try {
+//					pathLogFile = Log.getPathLogFile(engagementId);
+//					if (pathLogFile != null) {
+//						String fileData = FileOperations.readFromFile(pathLogFile);
+//						
+//						int oneMBSize = (int) (1024 * 1024);
+//						int onePointEightMBSize = (int) (1.8 * oneMBSize);
+//						
+//						Log.i("onePointEightMBSize", "="+onePointEightMBSize);
+//						Log.i("fileData.length()", "="+fileData.length());
+//						
+//						if(fileData.length() < onePointEightMBSize){
+//							sendPathFileDataToServer(activity, engagementId, fileData);
+//						}
+//						else{
+//							for(String smallFileData : Utils.splitStringInParts(fileData, oneMBSize)){
+//								sendPathFileDataToServer(activity, engagementId, smallFileData);
+//							}
+//						}
+//					}
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//		fileUploadThread.start();
+//		
+//	}
+//	
+//	
+//	public void sendPathFileDataToServer(Activity activity, String engagementId, String fileData){
+//		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//		nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+//		nameValuePairs.add(new BasicNameValuePair("engagement_id", engagementId));
+//		nameValuePairs.add(new BasicNameValuePair("ride_path_data", fileData));
+//		
+//		String url = Data.SERVER_URL + "/upload_file_data";
+//		// old  /upload_file
+//		
+//		HttpRequester simpleJSONParser = new HttpRequester();
+//		String result = simpleJSONParser.getJSONFromUrlParams(url, nameValuePairs);
+//		
+//		Log.e("result of = user_status", "="+result);
+//		if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+////			RequestParams params = new RequestParams();
+////			params.put("access_token", Data.userData.accessToken);
+////			params.put("engagement_id", engagementId);
+////			params.put("ride_path", fileData);
+////			Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+//		}
+//	}
 	
 	
 	
 	
 	
 	
+	public void displayCouponApplied(JSONObject jObj){
+		
+		try {
+			int paymentMode = PaymentMode.CASH.getOrdinal();
+			if(jObj.has("payment_mode")){
+				paymentMode = jObj.getInt("payment_mode");
+			}
+			
+			String moneyToPay = decimalFormat.format(jObj.getDouble("to_pay"));
+			
+			try {
+				if(jObj.has("coupon")){
+					endRideInfoRl.setVisibility(View.GONE);
+					relativeLayoutCoupon.setVisibility(View.VISIBLE);
+					
+					JSONObject couponObject = jObj.getJSONObject("coupon");
+					
+					String couponTitle = couponObject.getString("title");
+					String couponSubTitle = couponObject.getString("subtitle");
+					
+					if(PaymentMode.WALLET.getOrdinal() == paymentMode){					// wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText(couponTitle + "\n& Jugnoo Cash");
+						textViewCouponSubTitle.setVisibility(View.GONE);
+					}
+					else{																			// no wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText(couponTitle);
+						textViewCouponSubTitle.setText(couponSubTitle);
+						textViewCouponSubTitle.setVisibility(View.VISIBLE);
+					}
+					
+					if(UserMode.DRIVER == HomeActivity.userMode){
+						textViewCouponPayTakeText.setText("Take");
+					}
+					else{
+						textViewCouponPayTakeText.setText("Pay");
+					}
+				}
+				else{
+					if(PaymentMode.WALLET.getOrdinal() == paymentMode){								// wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText("Jugnoo Cash");
+						textViewCouponSubTitle.setVisibility(View.GONE);
+						if(UserMode.DRIVER == HomeActivity.userMode){
+							textViewCouponPayTakeText.setText("Take");
+						}
+						else{
+							textViewCouponPayTakeText.setText("Pay");
+						}
+							
+						endRideInfoRl.setVisibility(View.GONE);
+						relativeLayoutCoupon.setVisibility(View.VISIBLE);
+					}
+					else{																			// no wallet
+						endRideInfoRl.setVisibility(View.VISIBLE);
+						relativeLayoutCoupon.setVisibility(View.GONE);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+
+				if(PaymentMode.WALLET.getOrdinal() == paymentMode){								// wallet
+					textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+					textViewCouponTitle.setText("Jugnoo Cash");
+					textViewCouponSubTitle.setVisibility(View.GONE);
+					if(UserMode.DRIVER == HomeActivity.userMode){
+						textViewCouponPayTakeText.setText("Take");
+					}
+					else{
+						textViewCouponPayTakeText.setText("Pay");
+					}
+						
+					endRideInfoRl.setVisibility(View.GONE);
+					relativeLayoutCoupon.setVisibility(View.VISIBLE);
+				}
+				else{																			// no wallet
+					endRideInfoRl.setVisibility(View.VISIBLE);
+					relativeLayoutCoupon.setVisibility(View.GONE);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			
+			endRideInfoRl.setVisibility(View.VISIBLE);
+			relativeLayoutCoupon.setVisibility(View.GONE);
+		}
+>>>>>>> customer_new_ui1.1
+		
+	}
+	
+	
+<<<<<<< HEAD
+	public void sendPathFileDataToServer(Activity activity, String engagementId, String fileData){
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+		nameValuePairs.add(new BasicNameValuePair("engagement_id", engagementId));
+		nameValuePairs.add(new BasicNameValuePair("ride_path_data", fileData));
+		
+		String url = Data.SERVER_URL + "/upload_file_data";
+		// old  /upload_file
+		
+		HttpRequester simpleJSONParser = new HttpRequester();
+		String result = simpleJSONParser.getJSONFromUrlParams(url, nameValuePairs);
+		
+		Log.e("result of = user_status", "="+result);
+		if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+			RequestParams params = new RequestParams();
+			params.put("access_token", Data.userData.accessToken);
+			params.put("engagement_id", engagementId);
+			params.put("ride_path", fileData);
+			Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+		}
+	}
+>>>>>>> develop
+	
+	
+	
+	
+	
+	
+<<<<<<< HEAD
+=======
+	public void displayCouponApplied(JSONObject jObj){
+		
+		try {
+			int paymentMode = PaymentMode.CASH.getOrdinal();
+			if(jObj.has("payment_mode")){
+				paymentMode = jObj.getInt("payment_mode");
+			}
+			
+			String moneyToPay = decimalFormat.format(jObj.getDouble("to_pay"));
+			
+			try {
+				if(jObj.has("coupon")){
+					endRideInfoRl.setVisibility(View.GONE);
+					relativeLayoutCoupon.setVisibility(View.VISIBLE);
+					
+					JSONObject couponObject = jObj.getJSONObject("coupon");
+					
+					String couponTitle = couponObject.getString("title");
+					String couponSubTitle = couponObject.getString("subtitle");
+					
+					if(PaymentMode.WALLET.getOrdinal() == paymentMode){					// wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText(couponTitle + "\n& Jugnoo Cash");
+						textViewCouponSubTitle.setVisibility(View.GONE);
+					}
+					else{																			// no wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText(couponTitle);
+						textViewCouponSubTitle.setText(couponSubTitle);
+						textViewCouponSubTitle.setVisibility(View.VISIBLE);
+					}
+					
+					if(UserMode.DRIVER == HomeActivity.userMode){
+						textViewCouponPayTakeText.setText("Take");
+					}
+					else{
+						textViewCouponPayTakeText.setText("Pay");
+					}
+				}
+				else{
+					if(PaymentMode.WALLET.getOrdinal() == paymentMode){								// wallet
+						textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+						textViewCouponTitle.setText("Jugnoo Cash");
+						textViewCouponSubTitle.setVisibility(View.GONE);
+						if(UserMode.DRIVER == HomeActivity.userMode){
+							textViewCouponPayTakeText.setText("Take");
+						}
+						else{
+							textViewCouponPayTakeText.setText("Pay");
+						}
+							
+						endRideInfoRl.setVisibility(View.GONE);
+						relativeLayoutCoupon.setVisibility(View.VISIBLE);
+					}
+					else{																			// no wallet
+						endRideInfoRl.setVisibility(View.VISIBLE);
+						relativeLayoutCoupon.setVisibility(View.GONE);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+
+				if(PaymentMode.WALLET.getOrdinal() == paymentMode){								// wallet
+					textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+					textViewCouponTitle.setText("Jugnoo Cash");
+					textViewCouponSubTitle.setVisibility(View.GONE);
+					if(UserMode.DRIVER == HomeActivity.userMode){
+						textViewCouponPayTakeText.setText("Take");
+					}
+					else{
+						textViewCouponPayTakeText.setText("Pay");
+					}
+						
+					endRideInfoRl.setVisibility(View.GONE);
+					relativeLayoutCoupon.setVisibility(View.VISIBLE);
+				}
+				else{																			// no wallet
+					endRideInfoRl.setVisibility(View.VISIBLE);
+					relativeLayoutCoupon.setVisibility(View.GONE);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			
+			endRideInfoRl.setVisibility(View.VISIBLE);
+			relativeLayoutCoupon.setVisibility(View.GONE);
+		}
+		
+	}
+	
+	
+=======
+>>>>>>> customer_new_ui1.1
+>>>>>>> develop
 	//TODOÊend ride offline
 	public void endRideOffline(Activity activity, String url, RequestParams params, double rideTime, double waitTime){
 		try{
@@ -4782,6 +5109,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 			
 			
+<<<<<<< HEAD
 			
 			actualFare = totalFare;
 			
@@ -4847,6 +5175,76 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			    else{
 			    	finalDiscount = 0;
 			    }
+=======
+			if(Data.assignedCustomerInfo.couponInfo != null){
+				endRideInfoRl.setVisibility(View.GONE);
+				relativeLayoutCoupon.setVisibility(View.VISIBLE);
+				
+				String moneyToPay = "0";
+				
+				double discountableAmount = (totalFare > Data.assignedCustomerInfo.couponInfo.maximumDiscountableValue) ? Data.assignedCustomerInfo.couponInfo.maximumDiscountableValue : totalFare;
+				double discountApplied = ((discountableAmount * Data.assignedCustomerInfo.couponInfo.discountPrecent) / 100);
+				
+				if(totalFare > discountApplied){
+					fareToBeGiven = totalFare - discountApplied;
+				}
+				else{
+					fareToBeGiven = 0;
+				}
+				moneyToPay = decimalFormat.format(fareToBeGiven);
+<<<<<<< HEAD
+				
+				Log.e("discountApplied == endride offline ", "="+discountApplied);
+				Log.e("moneyToPay == endride offline ", "="+moneyToPay);
+				
+				
+				if(fareToBeGiven > 0 && Data.assignedCustomerInfo.jugnooBalance > 0 && Data.assignedCustomerInfo.jugnooBalance >= fareToBeGiven){					// wallet
+					textViewCouponDiscountedFare.setText("Rs. 0");
+					textViewCouponTitle.setText(Data.assignedCustomerInfo.couponInfo.title + "\n& Jugnoo Cash");
+					textViewCouponSubTitle.setVisibility(View.GONE);
+						
+					params.put("payment_mode", ""+PaymentMode.WALLET.getOrdinal());
+				}
+				else{																			// no wallet
+					textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+					textViewCouponTitle.setText(Data.assignedCustomerInfo.couponInfo.title);
+					textViewCouponSubTitle.setText(Data.assignedCustomerInfo.couponInfo.subtitle);
+					textViewCouponSubTitle.setVisibility(View.VISIBLE);
+					
+					params.put("payment_mode", ""+PaymentMode.CASH.getOrdinal());
+				}
+				
+=======
+				
+				Log.e("discountApplied == endride offline ", "="+discountApplied);
+				Log.e("moneyToPay == endride offline ", "="+moneyToPay);
+				
+				
+				if(fareToBeGiven > 0 && Data.assignedCustomerInfo.jugnooBalance > 0 && Data.assignedCustomerInfo.jugnooBalance >= fareToBeGiven){					// wallet
+					textViewCouponDiscountedFare.setText("Rs. 0");
+					textViewCouponTitle.setText(Data.assignedCustomerInfo.couponInfo.title + "\n& Jugnoo Cash");
+					textViewCouponSubTitle.setVisibility(View.GONE);
+						
+					params.put("payment_mode", ""+PaymentMode.WALLET.getOrdinal());
+				}
+				else{																			// no wallet
+					textViewCouponDiscountedFare.setText("Rs. "+moneyToPay);
+					textViewCouponTitle.setText(Data.assignedCustomerInfo.couponInfo.title);
+					textViewCouponSubTitle.setText(Data.assignedCustomerInfo.couponInfo.subtitle);
+					textViewCouponSubTitle.setVisibility(View.VISIBLE);
+					
+					params.put("payment_mode", ""+PaymentMode.CASH.getOrdinal());
+				}
+				
+>>>>>>> customer_new_ui1.1
+				if(UserMode.DRIVER == HomeActivity.userMode){
+					textViewCouponPayTakeText.setText("Take");
+				}
+				else{
+					textViewCouponPayTakeText.setText("Pay");
+				}
+				
+>>>>>>> develop
 				
 				Log.i("finalDiscount == endride offline ", "="+finalDiscount);
 			}
@@ -4922,9 +5320,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 				e.printStackTrace();
 			}
 			
+<<<<<<< HEAD
 			driverUploadPathDataFileAsync(activity, Data.dEngagementId);
 			
 			initializeStartRideVariables();
+=======
+<<<<<<< HEAD
+			driverUploadPathDataFileAsync(activity, Data.dEngagementId);
+=======
+//			driverUploadPathDataFileAsync(activity, Data.dEngagementId);
+>>>>>>> customer_new_ui1.1
+>>>>>>> develop
 			
 		} catch(Exception e){
 			e.printStackTrace();

@@ -6,5 +6,9 @@
 
   Do NOT modify, delete, or commit to source control!
 -->
+<<<<<<< HEAD:JugnooNewUI/res/values/com_crashlytics_export_strings.xml
 <string name="com.crashlytics.android.build_id" translatable="false">69671432-ae09-439b-ba49-7d249ac1de12</string>
+=======
+<string name="com.crashlytics.android.build_id" translatable="false">c9f30bac-e7df-4449-9cab-68a07a7db1de</string>
+>>>>>>> develop:JugnooNewUI/res/values/com_crashlytics_export_strings.xml
 </resources>

@@ -489,18 +489,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         imageViewGift = (ImageView) findViewById(R.id.imageViewGift);
 		jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
 
-        shakeHandler = new Handler();
-        shakeHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                shakeView(imageViewGift);
-                shakeHandler.postDelayed(this, 5000);
-            }
-        }, 5000);
-		
-		
-		
-		
+
 		
 		
 		
@@ -1427,7 +1416,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 
 			Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Config.getServerUrl());
-			
+
+			shakeHandler = new Handler();
+			shakeHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+                        imageViewGift.clearAnimation();
+						imageViewGift.setVisibility(View.GONE);
+					} else {
+						if (View.VISIBLE != imageViewGift.getVisibility()) {
+							imageViewGift.setVisibility(View.VISIBLE);
+						}
+						shakeView(imageViewGift);
+					}
+					shakeHandler.postDelayed(this, 5000);
+				}
+			}, 5000);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2089,6 +2095,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     centreLocationRl.setVisibility(View.GONE);
 
                     jugnooShopImageView.setVisibility(View.GONE);
+                    imageViewGift.clearAnimation();
                     imageViewGift.setVisibility(View.GONE);
                     imageViewSearchCancel.setVisibility(View.VISIBLE);
 
@@ -4457,7 +4464,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 	}
-
 
 	@Override
 	public void onChangeStatePushReceived() {
