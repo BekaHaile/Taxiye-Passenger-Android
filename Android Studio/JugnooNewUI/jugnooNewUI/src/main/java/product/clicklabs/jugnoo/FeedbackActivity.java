@@ -188,7 +188,7 @@ public class FeedbackActivity extends Activity {
             textViewTitle.setText("RATE YOUR EXPERIENCE");
             relativeLayoutSkip.setVisibility(View.VISIBLE);
         } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
-            textViewTitle.setText("RATE YOUR RIDE");
+            textViewTitle.setText("RATE YOUR EXPERIENCE");
             relativeLayoutSkip.setVisibility(View.GONE);
         } else {
             textViewTitle.setText("FEEDBACK");
@@ -294,9 +294,9 @@ public class FeedbackActivity extends Activity {
                             int flag = jObj.getInt("flag");
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
                                     if (FeedbackMode.AFTER_RIDE == feedbackMode && HomeActivity.appInterruptHandler != null) {
-                                        HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating);
+                                        HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating, false);
                                     }
                                     else if(FeedbackMode.PAST_RIDE == feedbackMode && RideTransactionsActivity.updateRideTransaction != null){
                                         RideTransactionsActivity.updateRideTransaction.updateRideTransaction(position);
@@ -356,7 +356,7 @@ public class FeedbackActivity extends Activity {
                                     String error = jObj.getString("error");
                                     DialogPopup.alertPopup(activity, "", error);
                                 } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0);
+                                    HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
                                     finish();
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 } else {
@@ -412,7 +412,7 @@ public class FeedbackActivity extends Activity {
                                     String error = jObj.getString("error");
                                     DialogPopup.alertPopup(activity, "", error);
                                 } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, "Thank you for the feedback.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
                                     performBackPressed();
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

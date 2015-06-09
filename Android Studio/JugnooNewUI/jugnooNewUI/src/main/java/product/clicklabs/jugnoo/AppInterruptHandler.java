@@ -18,7 +18,7 @@ public interface AppInterruptHandler {
 	
 	public void customerEndRideInterrupt(String engagementId);
 	
-	public void onAfterRideFeedbackSubmitted(int givenRating);
+	public void onAfterRideFeedbackSubmitted(int givenRating, boolean skipped);
 	
 	public void onJugnooCashAddedByDriver(double jugnooBalance, String message);
 	
