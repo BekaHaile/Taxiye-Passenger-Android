@@ -39,6 +39,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/relativeLayoutShare"
             android:layout_width="match_parent"
             android:layout_height="620px" >
 
@@ -46,10 +47,22 @@
                 android:id="@+id/imageViewLogo"
                 android:layout_width="341px"
                 android:layout_height="291px"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="90px"
                 android:background="@drawable/jugnoo_logo_big_yellow"
                 android:tag="mwar"
                 android:visibility="visible" />
+
+            <WebView
+                android:id="@+id/webViewReferralCaption"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/imageViewLogo"
+                android:layout_margin="20px"
+                />
+
+
         </RelativeLayout>
 
         <RelativeLayout
