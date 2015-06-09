@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/socomo20/Documents/github/jugnoo-android-autos-new/jugnoo-android-autos/Android%20Studio/JugnooNewUI/jugnooNewUI/build/intermediates/exploded-aar/com.github.castorflex.smoothprogressbar/library/1.1.0/res/values-v21/values.xml -->
+    <eat-comment/>
+    <style name="SPB" parent="android:Widget.Material.ProgressBar.Horizontal">
+    </style>
+</resources>
