@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,20 +33,27 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
 
 public class RideCancellationActivity extends Activity implements ActivityCloser{
 	
 	
-	RelativeLayout relative;
+	LinearLayout relative;
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
 	TextView textViewWantToCancel;
 	
-	ListView listViewCancelOptions;
+	NonScrollListView listViewCancelOptions;
 	CancelOptionsListAdapter cancelOptionsListAdapter;
+
+    RelativeLayout relativeLayoutOtherCancelOptionInner;
+    ImageView imageViewOtherCancelOptionCheck;
+    EditText editTextOtherCancelOption;
+    boolean otherChecked = false;
+
 	
 	Button buttonCancelRide;
 	
@@ -71,6 +79,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
+
 	}
 	
 	@Override
@@ -83,7 +92,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 		}
 		
 		
-		relative = (RelativeLayout) findViewById(R.id.relative);
+		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(RideCancellationActivity.this, relative, 1134, 720, false);
 		
 		
@@ -92,21 +101,30 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 
 		textViewWantToCancel = (TextView) findViewById(R.id.textViewWantToCancel); textViewWantToCancel.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
 		
-		listViewCancelOptions = (ListView) findViewById(R.id.listViewCancelOptions);
+		listViewCancelOptions = (NonScrollListView) findViewById(R.id.listViewCancelOptions);
 		cancelOptionsListAdapter = new CancelOptionsListAdapter(RideCancellationActivity.this);
 		listViewCancelOptions.setAdapter(cancelOptionsListAdapter);
+
+        relativeLayoutOtherCancelOptionInner = (RelativeLayout) findViewById(R.id.relativeLayoutOtherCancelOptionInner);
+        ((TextView) findViewById(R.id.textViewOtherCancelOption)).setTypeface(Fonts.latoRegular(this));
+        imageViewOtherCancelOptionCheck = (ImageView) findViewById(R.id.imageViewOtherCancelOptionCheck);
+        editTextOtherCancelOption = (EditText) findViewById(R.id.editTextOtherCancelOption); editTextOtherCancelOption.setTypeface(Fonts.latoRegular(this));
+
+
+
+
 		
 		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Fonts.latoRegular(this));
 		
 		textViewCancelInfo = (TextView) findViewById(R.id.textViewCancelInfo); textViewCancelInfo.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
-		
-			@Override
-			public void onClick(View v) {
-				performBackPressed();
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                performBackPressed();
+            }
+        });
 		
 		
 		buttonCancelRide.setOnClickListener(new View.OnClickListener() {
@@ -132,12 +150,24 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 				
 			}
 		});
-		
+
+        relativeLayoutOtherCancelOptionInner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                otherChecked = true;
+                updateCheckBoxes();
+            }
+        });
+
+
 		textViewCancelInfo.setText(Data.cancelOptionsList.message);
 		
 		
 		RideCancellationActivity.activityCloser = this;
-		
+
+        otherChecked = false;
+        updateCheckBoxes();
+
 	}
 	
 	
@@ -163,7 +193,9 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
         System.gc();
 	}
 	
-	
+
+
+
 	
 	class ViewHolderCancelOption {
 		TextView textViewCancelOption;
@@ -246,14 +278,36 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 							Data.cancelOptionsList.cancelOptions.get(i).checked = false;
 						}
 					}
-					notifyDataSetChanged();
+                    otherChecked = false;
+                    updateCheckBoxes();
 				}
 			});
 			
 			return convertView;
 		}
-
 	}
+
+    private void updateCheckBoxes(){
+        if(otherChecked){
+            for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
+                Data.cancelOptionsList.cancelOptions.get(i).checked = false;
+            }
+            relativeLayoutOtherCancelOptionInner.setBackgroundColor(Color.WHITE);
+            imageViewOtherCancelOptionCheck.setImageResource(R.drawable.check_box_checked_new);
+            if(View.VISIBLE != editTextOtherCancelOption.getVisibility()) {
+                editTextOtherCancelOption.setVisibility(View.VISIBLE);
+            }
+        }
+        else{
+            relativeLayoutOtherCancelOptionInner.setBackgroundColor(Color.TRANSPARENT);
+            imageViewOtherCancelOptionCheck.setImageResource(R.drawable.check_box_unchecked_new);
+            if(View.GONE != editTextOtherCancelOption.getVisibility()) {
+                editTextOtherCancelOption.setVisibility(View.GONE);
+            }
+        }
+        cancelOptionsListAdapter.notifyDataSetChanged();
+    }
+
 	
 
 	public void cancelRideAPI(final Activity activity, final String reasons) {
