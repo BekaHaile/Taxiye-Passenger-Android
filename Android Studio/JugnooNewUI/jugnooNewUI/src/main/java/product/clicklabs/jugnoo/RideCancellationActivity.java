@@ -49,7 +49,8 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 	NonScrollListView listViewCancelOptions;
 	CancelOptionsListAdapter cancelOptionsListAdapter;
 
-    RelativeLayout relativeLayoutOtherCancelOptionInner;
+    RelativeLayout relativeLayoutOtherCancelOption, relativeLayoutOtherCancelOptionInner;
+    TextView textViewOtherCancelOption;
     ImageView imageViewOtherCancelOptionCheck;
     EditText editTextOtherCancelOption;
     boolean otherChecked = false;
@@ -84,13 +85,9 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cancel_ride);
-		
-		for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
-			Data.cancelOptionsList.cancelOptions.get(i).checked = false;
-		}
-		
+
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(RideCancellationActivity.this, relative, 1134, 720, false);
@@ -105,10 +102,12 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 		cancelOptionsListAdapter = new CancelOptionsListAdapter(RideCancellationActivity.this);
 		listViewCancelOptions.setAdapter(cancelOptionsListAdapter);
 
+        relativeLayoutOtherCancelOption = (RelativeLayout) findViewById(R.id.relativeLayoutOtherCancelOption);
         relativeLayoutOtherCancelOptionInner = (RelativeLayout) findViewById(R.id.relativeLayoutOtherCancelOptionInner);
-        ((TextView) findViewById(R.id.textViewOtherCancelOption)).setTypeface(Fonts.latoRegular(this));
+        textViewOtherCancelOption = (TextView) findViewById(R.id.textViewOtherCancelOption); textViewOtherCancelOption.setTypeface(Fonts.latoRegular(this));
         imageViewOtherCancelOptionCheck = (ImageView) findViewById(R.id.imageViewOtherCancelOptionCheck);
         editTextOtherCancelOption = (EditText) findViewById(R.id.editTextOtherCancelOption); editTextOtherCancelOption.setTypeface(Fonts.latoRegular(this));
+        editTextOtherCancelOption.setMinHeight((int) (ASSL.Yscale() * 200));
 
 
 
@@ -131,22 +130,35 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 			
 			@Override
 			public void onClick(View v) {
-				
-				String cancelReasonsStr = "";
-				
-				for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
-					if(Data.cancelOptionsList.cancelOptions.get(i).checked){
-						cancelReasonsStr = Data.cancelOptionsList.cancelOptions.get(i).name;
-						break;
-					}
-				}
-				
-				if("".equalsIgnoreCase(cancelReasonsStr)){
-					DialogPopup.alertPopup(RideCancellationActivity.this, "", "Please select one reason");
-				}
-				else{
-					cancelRideAPI(RideCancellationActivity.this, cancelReasonsStr);
-				}
+                if(Data.cancelOptionsList != null) {
+                    String cancelReasonsStr = "";
+
+                    if("".equalsIgnoreCase(Data.cancelOptionsList.additionalReason)){
+                        otherChecked = false;
+                    }
+
+                    if (otherChecked) {
+                        cancelReasonsStr = editTextOtherCancelOption.getText().toString().trim();
+                        if ("".equalsIgnoreCase(cancelReasonsStr)) {
+                            DialogPopup.alertPopup(RideCancellationActivity.this, "", "Please give some reason");
+                        } else {
+                            cancelRideAPI(RideCancellationActivity.this, Data.cancelOptionsList.additionalReason, cancelReasonsStr);
+                        }
+                    } else {
+                        for (int i = 0; i < Data.cancelOptionsList.cancelOptions.size(); i++) {
+                            if (Data.cancelOptionsList.cancelOptions.get(i).checked) {
+                                cancelReasonsStr = Data.cancelOptionsList.cancelOptions.get(i).name;
+                                break;
+                            }
+                        }
+
+                        if ("".equalsIgnoreCase(cancelReasonsStr)) {
+                            DialogPopup.alertPopup(RideCancellationActivity.this, "", "Please select one reason");
+                        } else {
+                            cancelRideAPI(RideCancellationActivity.this, cancelReasonsStr, "");
+                        }
+                    }
+                }
 				
 			}
 		});
@@ -154,25 +166,57 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
         relativeLayoutOtherCancelOptionInner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                otherChecked = true;
-                updateCheckBoxes();
+                if(Data.cancelOptionsList != null && !"".equalsIgnoreCase(Data.cancelOptionsList.additionalReason)) {
+                    otherChecked = true;
+                    updateCheckBoxes();
+                }
             }
         });
 
 
-		textViewCancelInfo.setText(Data.cancelOptionsList.message);
+
+
 		
 		
 		RideCancellationActivity.activityCloser = this;
 
-        otherChecked = false;
-        updateCheckBoxes();
+        setCancellationOptions();
+
 
 	}
-	
-	
-	
-	public void performBackPressed(){
+
+
+    private void setCancellationOptions() {
+        try {
+            if(Data.cancelOptionsList != null){
+                for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
+                    Data.cancelOptionsList.cancelOptions.get(i).checked = false;
+                }
+
+                textViewCancelInfo.setText(Data.cancelOptionsList.message);
+
+                if("".equalsIgnoreCase(Data.cancelOptionsList.additionalReason)){
+                    relativeLayoutOtherCancelOption.setVisibility(View.GONE);
+                }
+                else{
+                    relativeLayoutOtherCancelOption.setVisibility(View.VISIBLE);
+                    textViewOtherCancelOption.setText(Data.cancelOptionsList.additionalReason);
+                }
+
+                otherChecked = false;
+                updateCheckBoxes();
+            }
+            else{
+                performBackPressed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            performBackPressed();
+        }
+    }
+
+
+    public void performBackPressed(){
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
@@ -310,7 +354,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 
 	
 
-	public void cancelRideAPI(final Activity activity, final String reasons) {
+	public void cancelRideAPI(final Activity activity, final String reasons, final String addtionalReason) {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
@@ -318,74 +362,72 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 				
 				params.put("access_token", Data.userData.accessToken);
 				params.put("reasons", reasons);
-			
+                params.put("addn_reason", addtionalReason);
+
 				AsyncHttpClient asyncHttpClient = Data.getClient();
 				asyncHttpClient.post(Config.getServerUrl() + "/cancel_ride_by_customer", params,
-						new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
-	
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								DialogPopup.dismissLoadingDialog();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							}
-							
-	
-							@Override
-							public void onSuccess(String response) {
-								Log.i("Server response", "response = " + response);
-								try {
-									jObj = new JSONObject(response);
-									
-									if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-										int flag = jObj.getInt("flag");
-										if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-											String error = jObj.getString("error");
-											DialogPopup.alertPopup(activity, "", error);
-										}
-										else if(ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag){
-											String message = jObj.getString("message");
-											
-											if(jObj.has("jugnoo_balance")){
-												Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
-											}
-											
-											if(HomeActivity.appInterruptHandler != null){
-												HomeActivity.appInterruptHandler.onCancelCompleted();
-											}
-											
-											DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-												
-												@Override
-												public void onClick(View v) {
-													performBackPressed();
-												}
-											});
-										}
-										else{
-											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-										}
-									}
-									else{
-									}
-									
-								}  catch (Exception exception) {
-									exception.printStackTrace();
-									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								}
-								DialogPopup.dismissLoadingDialog();
-							}
-							
-							@Override
-							public void onFinish() {
-								super.onFinish();
-							}
-							
-						});
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
+
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                            DialogPopup.dismissLoadingDialog();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        }
+
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Server response", "response = " + response);
+                            try {
+                                jObj = new JSONObject(response);
+
+                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                    int flag = jObj.getInt("flag");
+                                    if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                        String error = jObj.getString("error");
+                                        DialogPopup.alertPopup(activity, "", error);
+                                    } else if (ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag) {
+                                        String message = jObj.getString("message");
+
+                                        if (jObj.has("jugnoo_balance")) {
+                                            Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
+                                        }
+
+                                        if (HomeActivity.appInterruptHandler != null) {
+                                            HomeActivity.appInterruptHandler.onCancelCompleted();
+                                        }
+
+                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(View v) {
+                                                performBackPressed();
+                                            }
+                                        });
+                                    } else {
+                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    }
+                                } else {
+                                }
+
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+                            DialogPopup.dismissLoadingDialog();
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                        }
+
+                    });
 			}
 			else {
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 			}
 	}
 

@@ -104,7 +104,7 @@
                 <EditText
                     android:id="@+id/editTextOtherCancelOption"
                     android:layout_width="match_parent"
-                    android:layout_height="200px"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/relativeLayoutOtherCancelOptionInner"
                     android:textSize="30px"
                     android:hint="Please specify the reason. It would help us in making your experience better next time."
@@ -114,6 +114,8 @@
                     android:layout_marginTop="10px"
                     android:gravity="left"
                     android:padding="20px"
+                    android:minHeight="200px"
+                    android:maxLength="250"
                     />
 
 
@@ -138,6 +140,7 @@
                 android:layout_marginLeft="50px"
                 android:layout_marginRight="50px"
                 android:layout_marginTop="50px"
+                android:layout_marginBottom="50px"
                 android:gravity="center"
                 android:text="Cancellation of a ride more than 5 minutes\nafter the driver is allocated will lead to\ncancellation charges of Rs. 20"
                 android:textColor="@color/grey_dark"
