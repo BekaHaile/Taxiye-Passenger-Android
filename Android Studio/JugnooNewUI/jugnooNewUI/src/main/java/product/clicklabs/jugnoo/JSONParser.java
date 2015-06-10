@@ -747,7 +747,8 @@ public class JSONParser {
 //          "Driver denied duty",
 //          "Changed my mind",
 //          "Booked another auto"
-//      ]
+//      ],
+//        "addn_reason":"foo"
 //  }
 
 
@@ -760,7 +761,7 @@ public class JSONParser {
 			options.add(new CancelOption("Booked another auto"));
 			
 			Data.cancelOptionsList = new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
-					"will lead to cancellation charges of Rs. 20", "foo");
+					"will lead to cancellation charges of Rs. 20", "");
 			
 			JSONObject jCancellation = jObj.getJSONObject("cancellation");
 
