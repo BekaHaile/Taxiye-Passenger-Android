@@ -394,6 +394,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     private int showAllDrivers = 0, showDriverInfo = 0;
 
+    private boolean intentFired = false;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -2521,10 +2523,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     if(activityResumed) {
                         callAndHandleStateRestoreAPI(false);
                         initiateTimersForStates(passengerScreenMode);
-                        if (userMode == UserMode.PASSENGER &&
-                            (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
-                            if (map != null && myLocation != null) {
-                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+
+                        if(!intentFired) {
+                            if (userMode == UserMode.PASSENGER &&
+                                (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
+                                if (map != null && myLocation != null) {
+                                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+                                }
                             }
                         }
                     }
@@ -2539,11 +2544,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		HomeActivity.checkForAccessTokenChange(this);
 		
 		activityResumed = true;
+        intentFired = false;
 
         LocationInit.showLocationAlertDialog(this);
 	}
 
-	@Override
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+
+    @Override
+    public void startActivity(Intent intent) {
+        intentFired = true;
+        super.startActivity(intent);
+    }
+
+    @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
