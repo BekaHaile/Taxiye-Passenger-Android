@@ -535,8 +535,9 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", ""+pair.second);
 
-				Log.e("params login_using_access_token", "="+params);
-			
+				Log.e("params login_using_access_token", "=" + params);
+
+                Log.e("Config.getServerUrl() + \"/login_using_access_token\"", "="+Config.getServerUrl() + "/login_using_access_token");
 				
 				AsyncHttpClient client = Data.getClient();
 				client.post(Config.getServerUrl() + "/login_using_access_token", params,

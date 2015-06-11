@@ -394,6 +394,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     private int showAllDrivers = 0, showDriverInfo = 0;
 
+    private boolean intentFired = false;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -2521,10 +2523,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     if(activityResumed) {
                         callAndHandleStateRestoreAPI(false);
                         initiateTimersForStates(passengerScreenMode);
-                        if (userMode == UserMode.PASSENGER &&
-                            (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
-                            if (map != null && myLocation != null) {
-                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+
+                        if(!intentFired) {
+                            if (userMode == UserMode.PASSENGER &&
+                                (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
+                                if (map != null && myLocation != null) {
+                                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+                                }
                             }
                         }
                     }
@@ -2539,11 +2544,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 		HomeActivity.checkForAccessTokenChange(this);
 		
 		activityResumed = true;
+        intentFired = false;
 
         LocationInit.showLocationAlertDialog(this);
 	}
 
-	@Override
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+
+    @Override
+    public void startActivity(Intent intent) {
+        intentFired = true;
+        super.startActivity(intent);
+    }
+
+    @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
@@ -3909,48 +3927,47 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			btnCancel.setText("Cancel");
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-					initiateRequestRide(true);
-				}
-				
-			});
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    initiateRequestRide(true);
+                }
+
+            });
 			
 			btnCancel.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-				}
-			});
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
 			
 			
 			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-				}
-			});
+                @Override
+                public void onClick(View v) {
+                }
+            });
 			
 			
 			dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
+
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
 
             Data.pickupLatLng = pickupLatLng;
 
-
             if(myLocation == null){
-                //We could not detect your location. Are you sure you want to request and auto to pick you at this location
+                //We could not detect your location. Are you sure you want to request an auto to pick you at this location
                 myLocation = new Location(LocationManager.GPS_PROVIDER);
                 myLocation.setLatitude(Data.pickupLatLng.latitude);
                 myLocation.setLongitude(Data.pickupLatLng.longitude);
                 myLocation.setAccuracy(100);
                 myLocation.setTime(System.currentTimeMillis());
-                textMessage.setText("We could not detect your location. Are you sure you want to request and auto to pick you at this location?");
+                textMessage.setText("We could not detect your location. Are you sure you want to request an auto to pick you at this location?");
                 dialog.show();
             }
             else{

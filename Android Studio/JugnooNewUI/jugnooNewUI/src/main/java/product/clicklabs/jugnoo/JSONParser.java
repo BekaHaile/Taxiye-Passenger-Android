@@ -40,7 +40,24 @@ public class JSONParser {
 	public JSONParser(){
 		
 	}
-	
+
+    public static String getServerMessage(JSONObject jObj){
+        String message = Data.SERVER_ERROR_MSG;
+        try{
+            if(jObj.has("message")){
+                message = jObj.getString("message");
+            }
+            else if(jObj.has("log")){
+                message = jObj.getString("log");
+            }
+            else if(jObj.has("error")){
+                message = jObj.getString("error");
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return message;
+    }
 	
 	public void parseFareDetails(JSONObject userData){
 		try{
@@ -264,43 +281,7 @@ public class JSONParser {
 		return resp;
 	}
 	
-	
-	public ReferralMessages parseReferralMessages(JSONObject jObj){
-		String referralMessage = "Share your referral code "+Data.userData.referralCode+
-				" with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, you will earn a FREE ride (up to Rs. 100) as well.";
-		String referralSharingMessage = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
-				" Use this referral code: "+Data.userData.referralCode+" to get FREE ride up to Rs. 100." +
-						"\nDownload it from here: http://smarturl.it/jugnoo";
-		String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
-		String fbShareDescription = "Try Jugnoo app to call an auto at your doorsteps with just a tap.";
-        String referralCaption = "<center><font face=\"verdana\" size=\"2\">invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
-		
-		try {
-			if(jObj.has("referral_message")){
-				referralMessage = jObj.getString("referral_message");
-			}
-			if(jObj.has("referral_sharing_message")){
-				referralSharingMessage = jObj.getString("referral_sharing_message");
-			}
-			if(jObj.has("fb_share_caption")){
-				fbShareCaption = jObj.getString("fb_share_caption");
-			}
-			if(jObj.has("fb_share_description")){
-				fbShareDescription = jObj.getString("fb_share_description");
-			}
-            if(jObj.has("referral_caption")){
-                referralCaption = jObj.getString("referral_caption");
-                referralCaption = referralCaption.replaceAll("</br>", "<br/>");
-            }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage, fbShareCaption, fbShareDescription, referralCaption);
-		
-		return referralMessages;
-	}
-	
+
 	
 
 	
@@ -410,31 +391,7 @@ public class JSONParser {
 		}
 	}
 	
-	
-	public void parseDriversToShow(JSONObject jObject, String jsonArrayKey){
-		try{
-			JSONArray data = jObject.getJSONArray(jsonArrayKey);
-			Data.driverInfos.clear();
-			
-			for(int i=0; i<data.length(); i++){
-				JSONObject dataI = data.getJSONObject(i);
-				String userId = dataI.getString("user_id");
-				double latitude = dataI.getDouble("latitude");
-				double longitude = dataI.getDouble("longitude");
-				String userName = dataI.getString("user_name");
-				String phoneNo = dataI.getString("phone_no");
-				String rating = dataI.getString("rating");
-				String userImage = "";
-				String driverCarImage = "";
-				String carNumber = "";
-				Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0));
-			}
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
+
 	
 	
 	public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1){
@@ -686,13 +643,34 @@ public class JSONParser {
 
 		Database.getInstance(context).deleteSavedPath();
 		Database.getInstance(context).close();
-
 	}
-	
-	
-	
-	
-	
+
+
+
+
+    public void parseDriversToShow(JSONObject jObject, String jsonArrayKey){
+        try{
+            JSONArray data = jObject.getJSONArray(jsonArrayKey);
+            Data.driverInfos.clear();
+
+            for(int i=0; i<data.length(); i++){
+                JSONObject dataI = data.getJSONObject(i);
+                String userId = dataI.getString("user_id");
+                double latitude = dataI.getDouble("latitude");
+                double longitude = dataI.getDouble("longitude");
+                String userName = dataI.getString("user_name");
+                String phoneNo = dataI.getString("phone_no");
+                String rating = dataI.getString("rating");
+                String userImage = "";
+                String driverCarImage = "";
+                String carNumber = "";
+                Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0));
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 	
 	
 	
@@ -769,7 +747,8 @@ public class JSONParser {
 //          "Driver denied duty",
 //          "Changed my mind",
 //          "Booked another auto"
-//      ]
+//      ],
+//        "addn_reason":"foo"
 //  }
 
 
@@ -782,21 +761,23 @@ public class JSONParser {
 			options.add(new CancelOption("Booked another auto"));
 			
 			Data.cancelOptionsList = new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
-					"will lead to cancellation charges of Rs. 20");
+					"will lead to cancellation charges of Rs. 20", "");
 			
 			JSONObject jCancellation = jObj.getJSONObject("cancellation");
-			
+
 			String message = jCancellation.getString("message");
-			
-			JSONArray jReasons = jCancellation.getJSONArray("reasons");
-			
+
+            String additionalReason = jCancellation.getString("addn_reason");
+
+            JSONArray jReasons = jCancellation.getJSONArray("reasons");
+
 			options.clear();
-			
+
 			for(int i=0; i<jReasons.length(); i++){
 				options.add(new CancelOption(jReasons.getString(i)));
 			}
-			
-			Data.cancelOptionsList = new CancelOptionsList(options, message);
+
+			Data.cancelOptionsList = new CancelOptionsList(options, message, additionalReason);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -844,6 +825,43 @@ public class JSONParser {
 
 
         return previousAccountInfoList;
+    }
+
+
+    public ReferralMessages parseReferralMessages(JSONObject jObj){
+        String referralMessage = "Share your referral code "+Data.userData.referralCode+
+            " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, you will earn a FREE ride (up to Rs. 100) as well.";
+        String referralSharingMessage = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
+            " Use this referral code: "+Data.userData.referralCode+" to get FREE ride up to Rs. 100." +
+            "\nDownload it from here: http://smarturl.it/jugnoo";
+        String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
+        String fbShareDescription = "Try Jugnoo app to call an auto at your doorsteps with just a tap.";
+        String referralCaption = "";
+
+        try {
+            if(jObj.has("referral_message")){
+                referralMessage = jObj.getString("referral_message");
+            }
+            if(jObj.has("referral_sharing_message")){
+                referralSharingMessage = jObj.getString("referral_sharing_message");
+            }
+            if(jObj.has("fb_share_caption")){
+                fbShareCaption = jObj.getString("fb_share_caption");
+            }
+            if(jObj.has("fb_share_description")){
+                fbShareDescription = jObj.getString("fb_share_description");
+            }
+            if(jObj.has("referral_caption")){
+                referralCaption = jObj.getString("referral_caption");
+                referralCaption = referralCaption.replaceAll("</br>", "<br/>");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage, fbShareCaption, fbShareDescription, referralCaption);
+
+        return referralMessages;
     }
 	
 	

@@ -215,7 +215,7 @@ public class Utils {
 
     public static boolean validPhoneNumber(String phoneNo){
         if(phoneNo.length() >= 10){
-            if(phoneNo.charAt(0) == '0' || phoneNo.charAt(0) == '1' || phoneNo.contains("+")){
+            if(phoneNo.charAt(0) == '0' || phoneNo.contains("+")){
                 return false;
             }
             else{
