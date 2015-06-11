@@ -122,6 +122,8 @@ public class RegisterScreen extends Activity implements LocationUpdate {
         editTextReferralCode = (EditText) findViewById(R.id.editTextReferralCode);
         editTextReferralCode.setTypeface(Fonts.latoRegular(this));
 
+        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
+
         textViewPolicy = (TextView) findViewById(R.id.textViewPolicy);
         textViewPolicy.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
 
