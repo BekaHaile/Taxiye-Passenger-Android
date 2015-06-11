@@ -69,7 +69,8 @@ public class ChangePhoneBeforeOTPActivity extends Activity{
         textViewChangePhoneNoHelp = (TextView) findViewById(R.id.textViewChangePhoneNoHelp); textViewChangePhoneNoHelp.setTypeface(Fonts.latoRegular(this));
         editTextNewPhoneNumber = (EditText) findViewById(R.id.editTextNewPhoneNumber); editTextNewPhoneNumber.setTypeface(Fonts.latoRegular(this));
         buttonChangePhoneNumber = (Button) findViewById(R.id.buttonChangePhoneNumber); buttonChangePhoneNumber.setTypeface(Fonts.latoRegular(this));
-		
+
+        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			
