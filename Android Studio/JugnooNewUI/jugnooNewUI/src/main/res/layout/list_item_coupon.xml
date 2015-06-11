@@ -1,47 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="720px"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
     android:orientation="vertical"
     android:splitMotionEvents="false" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_white_selector"
-        android:orientation="vertical"
-        android:splitMotionEvents="false" >
+    <RelativeLayout
+        android:layout_width="276px"
+        android:layout_height="177px"
+        android:background="@drawable/coupon_ticket"
+        android:splitMotionEvents="false"
+        android:layout_marginLeft="42px"
+        android:layout_marginRight="42px"
+        android:layout_marginTop="12px"
+        android:layout_marginBottom="12px"
+        >
 
         <TextView
             android:id="@+id/textViewCouponTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35px"
             android:layout_marginRight="35px"
-            android:layout_marginTop="25px"
+            android:layout_marginTop="35px"
             android:gravity="center_vertical"
-            android:text="1 Free Ride"
+            android:text="1 Free Ride\n re"
             android:textColor="@color/black_text"
-            android:textSize="34px" />
+            android:textSize="24px"
+            android:maxLines="2"
+            />
 
         <TextView
             android:id="@+id/textViewExpiryDate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25px"
+            android:layout_marginBottom="10px"
             android:layout_marginLeft="35px"
             android:layout_marginRight="35px"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="5px"
             android:text="12:00 PM"
             android:textColor="@color/grey_dark"
-            android:textSize="30px" />
-    </LinearLayout>
+            android:layout_below="@+id/textViewCouponTitle"
+            android:textSize="18px" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="@color/grey_light" />
+        <TextView
+            android:id="@+id/textViewTNC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30px"
+            android:layout_marginRight="30px"
+            android:text="T&amp;C"
+            android:textColor="@color/black_text"
+            android:textSize="24px"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            />
+
+    </RelativeLayout>
 
 </LinearLayout>
