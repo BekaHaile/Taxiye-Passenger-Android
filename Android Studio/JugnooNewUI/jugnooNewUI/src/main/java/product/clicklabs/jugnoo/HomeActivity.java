@@ -2740,6 +2740,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         refreshingAutoComplete = true;
                         autoCompleteSearchResults.clear();
                         autoCompleteSearchResults.addAll(MapUtils.getAutoCompleteSearchResultsFromGooglePlaces(searchText, latLng));
+
+                        recallLatestTextSearch(searchText, latLng);
+
                         setSearchResultsToList();
                         refreshingAutoComplete = false;
                         autoCompleteThread = null;
@@ -2751,6 +2754,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			e.printStackTrace();
 		}
 	}
+
+    public void recallLatestTextSearch(final String searchText, final LatLng latLng){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String currentText = editTextSearch.getText().toString().trim();
+                if(searchText.equalsIgnoreCase(currentText)){
+
+                }
+                else{
+                    autoCompleteSearchResults.clear();
+                    searchListAdapter.notifyDataSetChanged();
+                    if(currentText.length() > 0) {
+                        if (map != null) {
+                            getSearchResults(currentText, latLng);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
 	
 	public synchronized void setSearchResultsToList(){
 		runOnUiThread(new Runnable() {
