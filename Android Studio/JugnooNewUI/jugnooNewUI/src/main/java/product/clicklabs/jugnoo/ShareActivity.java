@@ -39,7 +39,7 @@ public class ShareActivity extends Activity{
 	TextView textViewTitle;
 
 	ImageView imageViewFacebook, imageViewWhatsapp, imageViewSMS, imageViewEmail;
-	TextView textViewReferralCode;
+	TextView textViewReferralCode, textViewReferralCaption;
     WebView webViewReferralCaption;
 
 //	
@@ -93,6 +93,7 @@ public class ShareActivity extends Activity{
 
         webViewReferralCaption = (WebView) findViewById(R.id.webViewReferralCaption);
 		textViewReferralCode = (TextView) findViewById(R.id.textViewReferralCode); textViewReferralCode.setTypeface(Fonts.latoRegular(this));
+        textViewReferralCaption = (TextView) findViewById(R.id.textViewReferralCaption); textViewReferralCaption.setTypeface(Fonts.latoRegular(this));
 
         webViewReferralCaption.getSettings().setJavaScriptEnabled(true);
         webViewReferralCaption.getSettings().setDomStorageEnabled(true);
@@ -122,7 +123,27 @@ public class ShareActivity extends Activity{
 				textViewReferralCode.append(strPost);
 
 
-                loadHTMLContent(Data.referralMessages.referralCaption);
+                if(1 == Data.referralMessages.referralCaptionEnabled) {
+                    webViewReferralCaption.setVisibility(View.VISIBLE);
+                    textViewReferralCaption.setVisibility(View.GONE);
+                    loadHTMLContent(Data.referralMessages.referralCaption);
+                }
+                else{
+                    webViewReferralCaption.setVisibility(View.GONE);
+                    textViewReferralCaption.setVisibility(View.VISIBLE);
+
+                    SpannableString spanFriends = new SpannableString("friends");
+                    spanFriends.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, spanFriends.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    SpannableString spanFreeRides = new SpannableString("FREE rides");
+                    spanFreeRides.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, spanFreeRides.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    textViewReferralCaption.setText("");
+                    textViewReferralCaption.append("Invite ");
+                    textViewReferralCaption.append(spanFriends);
+                    textViewReferralCaption.append(" and\nget ");
+                    textViewReferralCaption.append(spanFreeRides);
+
+                }
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
