@@ -48,7 +48,7 @@ import rmn.androidscreenlibrary.ASSL;
 public class PromotionsActivity extends Activity{
 	
 	
-	LinearLayout relative;
+	RelativeLayout relative;
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
@@ -100,7 +100,7 @@ public class PromotionsActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_promotions);
 		
-		relative = (LinearLayout) findViewById(R.id.relative);
+		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(PromotionsActivity.this, relative, 1134, 720, false);
 		
 		
@@ -434,7 +434,7 @@ public class PromotionsActivity extends Activity{
             PromotionInfo promotionInfo = promotionInfoList.get(position);
 
             holder.textViewPromotionTitle.setText(promotionInfo.title);
-            holder.textViewExpiryDate.setText("Valid until "+DateOperations.getDate(DateOperations.utcToLocal(promotionInfo.expiryDate)));
+            holder.textViewExpiryDate.setText("Valid until "+promotionInfo.expiryDate);
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 
