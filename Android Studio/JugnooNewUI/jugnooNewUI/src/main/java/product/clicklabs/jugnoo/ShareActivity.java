@@ -160,7 +160,8 @@ public class ShareActivity extends Activity{
 				performbackPressed();
 			}
 		});
-		
+
+
 		
 		imageViewFacebook.setOnClickListener(new View.OnClickListener() {
 			
