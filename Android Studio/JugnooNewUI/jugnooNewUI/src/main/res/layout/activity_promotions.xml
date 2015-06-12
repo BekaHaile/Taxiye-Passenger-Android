@@ -202,7 +202,7 @@
             android:gravity="center"
             android:paddingBottom="30px"
             android:paddingTop="30px"
-            android:text="Invite your friends &amp; get more coupons"
+            android:text="Invite your friends and get more coupons"
             android:textColor="@drawable/text_color_black_alpha_selector"
             android:textSize="32px"/>
 
