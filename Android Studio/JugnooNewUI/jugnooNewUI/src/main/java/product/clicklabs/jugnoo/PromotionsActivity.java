@@ -241,9 +241,11 @@ public class PromotionsActivity extends Activity{
             textViewCouponInfo.setText(message);
             textViewCouponInfo.setVisibility(View.VISIBLE);
             textViewCouponsAvailable.setVisibility(View.GONE);
+            listViewCoupons.setVisibility(View.GONE);
 
-            textViewPromoInfo.setVisibility(View.GONE);
             textViewOngoingOffers.setVisibility(View.GONE);
+            listViewPromotions.setVisibility(View.GONE);
+            textViewPromoInfo.setVisibility(View.GONE);
 			
 			couponInfosList.clear();
 			couponsListAdapter.notifyDataSetChanged();
@@ -252,25 +254,45 @@ public class PromotionsActivity extends Activity{
             promotionListAdapter.notifyDataSetChanged();
 		}
 		else{
-			if(couponInfosList.size() == 0){
-                textViewCouponInfo.setText(message);
-                textViewCouponInfo.setVisibility(View.VISIBLE);
-				textViewCouponsAvailable.setVisibility(View.GONE);
-			}
-			else{
-                textViewCouponInfo.setVisibility(View.GONE);
+			if(couponInfosList.size() == 0 && promotionInfoList.size() == 0){
 				textViewCouponsAvailable.setVisibility(View.VISIBLE);
-			}
+                textViewCouponsAvailable.setText("No offers available");
+                listViewCoupons.setVisibility(View.GONE);
+                textViewCouponInfo.setVisibility(View.GONE);
 
-            if(promotionInfoList.size() == 0){
-                textViewPromoInfo.setText(headMessage);
-                textViewPromoInfo.setVisibility(View.VISIBLE);
                 textViewOngoingOffers.setVisibility(View.GONE);
-            }
-            else{
+                listViewPromotions.setVisibility(View.GONE);
                 textViewPromoInfo.setVisibility(View.GONE);
-                textViewOngoingOffers.setVisibility(View.VISIBLE);
+			}
+            else if(couponInfosList.size() > 0 && promotionInfoList.size() == 0){
+                textViewCouponsAvailable.setVisibility(View.VISIBLE);
+                textViewCouponsAvailable.setText("Coupons Available");
+                listViewCoupons.setVisibility(View.VISIBLE);
+                textViewCouponInfo.setVisibility(View.GONE);
+
+                textViewOngoingOffers.setVisibility(View.GONE);
+                listViewPromotions.setVisibility(View.GONE);
+                textViewPromoInfo.setVisibility(View.GONE);
             }
+            else if(couponInfosList.size() == 0 && promotionInfoList.size() > 0){
+                textViewCouponsAvailable.setVisibility(View.GONE);
+                listViewCoupons.setVisibility(View.GONE);
+                textViewCouponInfo.setVisibility(View.GONE);
+
+                textViewOngoingOffers.setVisibility(View.VISIBLE);
+                listViewPromotions.setVisibility(View.VISIBLE);
+                textViewPromoInfo.setVisibility(View.GONE);
+            }
+			else{
+                textViewCouponsAvailable.setVisibility(View.VISIBLE);
+                textViewCouponsAvailable.setText("Coupons Available");
+                listViewCoupons.setVisibility(View.VISIBLE);
+                textViewCouponInfo.setVisibility(View.GONE);
+
+                textViewOngoingOffers.setVisibility(View.VISIBLE);
+                listViewPromotions.setVisibility(View.VISIBLE);
+                textViewPromoInfo.setVisibility(View.GONE);
+			}
 
             textViewInvite.setText(inviteMessage);
 
@@ -336,7 +358,7 @@ public class PromotionsActivity extends Activity{
 			CouponInfo couponInfo = couponInfosList.get(position);
 
 			holder.textViewCouponTitle.setText(couponInfo.title);
-			holder.textViewExpiryDate.setText("Expiring on "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
+			holder.textViewExpiryDate.setText("Valid until "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
 				
@@ -412,7 +434,7 @@ public class PromotionsActivity extends Activity{
             PromotionInfo promotionInfo = promotionInfoList.get(position);
 
             holder.textViewPromotionTitle.setText(promotionInfo.title);
-            holder.textViewExpiryDate.setText("Expiring on "+DateOperations.getDate(DateOperations.utcToLocal(promotionInfo.expiryDate)));
+            holder.textViewExpiryDate.setText("Valid until "+DateOperations.getDate(DateOperations.utcToLocal(promotionInfo.expiryDate)));
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 

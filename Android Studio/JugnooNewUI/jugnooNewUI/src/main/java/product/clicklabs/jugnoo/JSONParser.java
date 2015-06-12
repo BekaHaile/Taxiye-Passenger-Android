@@ -917,7 +917,8 @@ public class JSONParser {
                     for (int i = 0; i < promotionsData.length(); i++) {
                         JSONObject poData = promotionsData.getJSONObject(i);
 
-                        PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"), poData.getString("terms_n_conds"));
+                        PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"),
+                            poData.getString("terms_n_conds"), poData.getString("end_on"));
 
                         promotionInfoList.add(promotionInfo);
                     }
