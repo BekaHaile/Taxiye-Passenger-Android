@@ -177,15 +177,18 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutInvite"
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:layout_marginTop="40px"
                 >
                 <TextView
                     android:id="@+id/textViewInvite"
-                    android:layout_width="wrap_content"
+                    android:layout_width="600px"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:padding="30px"
+                    android:gravity="center"
+                    android:paddingTop="30px"
+                    android:paddingBottom="30px"
                     android:text="Invite your friends &amp; get more coupons"
                     android:textColor="@drawable/text_color_black_alpha_selector"
                     android:textSize="32px"/>
@@ -195,7 +198,7 @@
                     android:layout_height="26px"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
+                    android:layout_marginRight="30px"
                     android:src="@drawable/arrow_icon_selector"
                     android:tag="mwar" />
 
