@@ -108,6 +108,37 @@ public class HttpRequesterFinal{
     }
 
 
+    public String getJSONFromUrlParamsFinalGet(String url, ArrayList<NameValuePair> nameValuePairs){
+        try {
+            DataLoader dl = new DataLoader();
+            HttpResponse response = dl.secureLoadDataRetryGet(url, nameValuePairs);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("HEADERS:\n\n");
+
+            Header[] headers = response.getAllHeaders();
+            for (int i = 0; i < headers.length; i++) {
+                Header h = headers[i];
+                sb.append(h.getName()).append(":\t").append(h.getValue()).append("\n");
+            }
+
+            InputStream is = response.getEntity().getContent();
+            StringBuilder out = new StringBuilder();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            for (String line = br.readLine(); line != null; line = br.readLine())
+                out.append(line);
+            br.close();
+
+            sb.append("\n\nCONTENT:\n\n").append(out.toString());
+
+            return out.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HttpRequester.SERVER_TIMEOUT + " " +e;
+        }
+    }
+
     public static void writeJSONToFile(String response, String filePrefix) {
         try {
             String fileName = Environment.getExternalStorageDirectory() + "/"

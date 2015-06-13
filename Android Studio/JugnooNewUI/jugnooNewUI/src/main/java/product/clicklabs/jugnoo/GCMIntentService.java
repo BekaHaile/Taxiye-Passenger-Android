@@ -306,7 +306,20 @@ public class GCMIntentService extends IntentService {
 	    	    						 notificationManager(this, "Your ride has started.", false);
 	    	    					 }
 	    	    				 }
-	    	    				 else if(PushFlags.RIDE_ENDED.getOrdinal() == flag){
+                                 else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
+
+                                     String driverArrivedMessage = jObj.getString("message");
+
+                                     if (HomeActivity.appInterruptHandler != null) {
+                                         notificationManagerResume(this, driverArrivedMessage, false);
+                                         HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
+                                     } else {
+                                         notificationManager(this, driverArrivedMessage, false);
+                                     }
+
+                                 }
+
+                                 else if(PushFlags.RIDE_ENDED.getOrdinal() == flag){
 	    	    					 String engagementId = jObj.getString("engagement_id");
 	    	    					 
 	    	    					 if (HomeActivity.appInterruptHandler != null) {

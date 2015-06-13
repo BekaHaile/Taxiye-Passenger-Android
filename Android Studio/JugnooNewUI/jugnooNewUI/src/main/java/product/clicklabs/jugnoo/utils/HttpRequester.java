@@ -28,6 +28,11 @@ public class HttpRequester {
 		return Config.getHttpRequester().getJSONFromUrlParamsFinal(url, nameValuePairs);
 	}
 
+    public String getJSONFromUrlParamsViaGetRequest(String url, ArrayList<NameValuePair> nameValuePairs){
+
+        return Config.getHttpRequester().getJSONFromUrlParamsFinalGet(url, nameValuePairs);
+    }
+
 	
 }
 
