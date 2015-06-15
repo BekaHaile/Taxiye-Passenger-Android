@@ -1488,8 +1488,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         if (userMode == UserMode.PASSENGER) {
             if (passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                 initiateRequestRide(false);
-            }
-            else if (passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+            } else if (passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
                 clearSPData();
                 switchPassengerScreen(passengerScreenMode);
             } else {
@@ -1689,6 +1688,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
+                        Log.d("RidePath DB", "Deleted");
                     } else {
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
@@ -1704,6 +1704,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 switch (mode) {
 
                     case P_INITIAL:
+
+                        Database2.getInstance(HomeActivity.this).deleteRidePathTable();
 
                         clearAnims();
 
@@ -2164,7 +2166,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
     public void updateDriverETAText(PassengerScreenMode passengerScreenMode) {
-        if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+        if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
             if (!"".equalsIgnoreCase(Data.assignedDriverInfo.eta)) {
                 try {
                     double etaMin = Double.parseDouble(Data.assignedDriverInfo.eta);
@@ -2178,8 +2180,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minutes");
                 }
             }
-        }
-        else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+        } else if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
             textViewInRideState.setText("Driver arrived at pick up point");
         }
     }
@@ -3461,73 +3462,95 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         final PolylineOptions polylineOptions = new PolylineOptions();
                         ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
+                        RidePath ridePath = null;
 
-                        /*if (!fetchedRidePathsFromDb) {
-                            Log.d("fetched from Db ", "fetched");
-                            fetchedRidePathsFromDb = true;
-                            ArrayList<RidePath> ridePaths1;
-                            ridePaths1 = Database2.getInstance(HomeActivity.this).getRidePathInfo();
-
-
-                            for (int j = 0; j < ridePaths1.size(); j++) {
-                                LatLng start = new LatLng(
-                                        ridePaths1.get(j).getSourceLatitude(),
-                                        ridePaths1.get(j).getSourceLongitude());
-
-                                LatLng end = new LatLng(
-                                        ridePaths1.get(j).getDestinationLatitude(),
-                                        ridePaths1.get(j).getDestinationLongitude());
-
-                                polylineOptions.add(start, end);
-                            }
-                        }else {*/
-
+//                        if (!fetchedRidePathsFromDb) {
+//                            Log.d("fetched from Db ", "fetched");
+//                            fetchedRidePathsFromDb = true;
+//                            ArrayList<RidePath> ridePaths1;
+//                            // this step gets the arraylist of RidePath type objects
+//                            ridePaths1 = Database2.getInstance(HomeActivity.this).getRidePathInfo();
+//
+//
+//                            for (int j = 0; j < ridePaths1.size(); j++) {
+//                                LatLng start = new LatLng(
+//                                        ridePaths1.get(j).getSourceLatitude(),
+//                                        ridePaths1.get(j).getSourceLongitude());
+//
+//                                LatLng end = new LatLng(
+//                                        ridePaths1.get(j).getDestinationLatitude(),
+//                                        ridePaths1.get(j).getDestinationLongitude());
+//
+//                                polylineOptions.add(start, end);
+//                            }
+//                        } else {
+//
+//                            nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.cEngagementId));
+//                            nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
+//                            nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" +
+//                                    Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
+//
+//                            Log.d("Further location request", String.valueOf(Database2.getInstance
+//                                    (HomeActivity.this).getLastRowIdInRideInfo()));
 
                         if (appRestart) {
-                            nameValuePairs.add(new BasicNameValuePair("last_sent_maxId", "" + "0"));
                             appRestart = false;
+                            nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" + "0"));
+                            Log.d("First location request", "last_sent_max_id = 0");
+
                         } else {
-                            nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.cEngagementId));
-                            nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-                            nameValuePairs.add(new BasicNameValuePair("last_sent_maxId", "" +
+                            nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" +
                                     Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
 
-                            Log.d("last_location_id", String.valueOf(Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
+                            Log.d("Further location request", String.valueOf(Database2.getInstance
+                                    (HomeActivity.this).getLastRowIdInRideInfo()));
+                        }
 
-                            HttpRequester simpleJSONParser = new HttpRequester();
-                            String result = simpleJSONParser.getJSONFromUrlParamsViaGetRequest
-                                    (Config.getServerUrl() + "/get_ongoing_ride_path", nameValuePairs);
+                        nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.cEngagementId));
+                        nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 
-                            Log.e("result of get_ongoing_ride_path", "=" + result);
+                        HttpRequester simpleJSONParser = new HttpRequester();
+                        String result = simpleJSONParser.getJSONFromUrlParamsViaGetRequest
+                                (Config.getServerUrl() + "/get_ongoing_ride_path", nameValuePairs);
 
-                            try {
-                                JSONObject jObj = new JSONObject(result);
-                                int flag = jObj.getInt("flag");
+                        Log.e("result of get_ongoing_ride_path", "=" + result);
 
-                                if (ApiResponseFlags.RIDE_PATH_INFO_SUCCESS.getOrdinal() == flag) {
-                                    JSONArray jsonArray = jObj.getJSONArray("locations");
-                                    ArrayList<RidePath> ridePaths = new ArrayList<>();
-                                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            JSONObject jObj = new JSONObject(result);
+                            int flag = jObj.getInt("flag");
 
-                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                        ridePaths.add(new RidePath(
-                                                jsonObject.getInt("id"),
+                            if (ApiResponseFlags.RIDE_PATH_INFO_SUCCESS.getOrdinal() == flag) {
+                                JSONArray jsonArray = jObj.getJSONArray("locations");
+                                ArrayList<RidePath> ridePaths = new ArrayList<>();
+                                for (int i = 0; i < jsonArray.length(); i++) {
+
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    ridePaths.add(new RidePath(
+                                            jsonObject.getInt("id"),
+                                            jsonObject.getDouble("source_latitude"),
+                                            jsonObject.getDouble("source_longitude"),
+                                            jsonObject.getDouble("destination_latitude"),
+                                            jsonObject.getDouble("destination_longitude")
+                                    ));
+
+                                    LatLng start = new LatLng(
+                                            jsonObject.getDouble("source_latitude"),
+                                            jsonObject.getDouble("source_longitude"));
+
+                                    LatLng end = new LatLng(
+                                            jsonObject.getDouble("destination_latitude"),
+                                            jsonObject.getDouble("destination_longitude"));
+
+                                    polylineOptions.add(start, end);
+
+                                    if (i == jsonArray.length() - 1) {
+                                        ridePath = new RidePath(jsonObject.getInt("id"),
                                                 jsonObject.getDouble("source_latitude"),
                                                 jsonObject.getDouble("source_longitude"),
                                                 jsonObject.getDouble("destination_latitude"),
-                                                jsonObject.getDouble("destination_longitude")
-                                        ));
-
-                                        LatLng start = new LatLng(
-                                                jsonObject.getDouble("source_latitude"),
-                                                jsonObject.getDouble("source_longitude"));
-
-                                        LatLng end = new LatLng(
-                                                jsonObject.getDouble("destination_latitude"),
                                                 jsonObject.getDouble("destination_longitude"));
-
-                                        polylineOptions.add(start, end);
                                     }
+
 
                                     try {
                                         Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePaths);
@@ -3536,22 +3559,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                     }
 
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
 
-                        polylineOptions.width(2);
+
+                        polylineOptions.width(3);
                         polylineOptions.color(Color.RED);
                         polylineOptions.geodesic(false);
 
                         if (myLocation != null &&
                                 map != null) {
+                            final RidePath finalRidePath = ridePath;
                             HomeActivity.this.runOnUiThread(new Runnable() {
 
                                 @Override
                                 public void run() {
-                                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+                                    if (finalRidePath != null) {
+                                        map.animateCamera(CameraUpdateFactory.newLatLng(new
+                                                LatLng(finalRidePath.getDestinationLatitude(),
+                                                finalRidePath.getDestinationLongitude())));
+                                    }
                                     // Drawing poly-line in the Google Map
                                     map.addPolyline(polylineOptions);
                                 }
@@ -3559,7 +3588,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         }
 
 
-                    } catch (Exception e) {
+                    } catch (Exception e){
                         e.printStackTrace();
                     }
                 }
@@ -3567,7 +3596,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 15000);
             Log.i("timerMapAnimateAndUpdateRideData", "started");
-        } catch (Exception e) {
+        } catch (
+                Exception e
+                )
+
+        {
             e.printStackTrace();
         }
 

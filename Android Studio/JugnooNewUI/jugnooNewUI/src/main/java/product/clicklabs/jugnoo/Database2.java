@@ -201,6 +201,7 @@ public class Database2 {                                                        
         Cursor cursor = database.query(TABLE_RIDE_INFO, columns, null, null, null, null, null);
         if (cursor.getCount() > 0) {
             cursor.moveToLast();
+            Log.d("ride_path_db_current_size", String.valueOf(cursor.getCount()));
             return cursor.getInt(cursor.getColumnIndex(POSITION_ID));
         } else {
             return 0;
@@ -208,11 +209,12 @@ public class Database2 {                                                        
     }
 
     public void createRideInfoRecords(ArrayList<RidePath> ridePathArrayList) {
-
         for (int i = 0; i < ridePathArrayList.size(); i++){
             createRideInfoEntry(ridePathArrayList.get(i));
         }
     }
+
+
 
 
     public long createRideInfoEntry(RidePath ridePath) {
