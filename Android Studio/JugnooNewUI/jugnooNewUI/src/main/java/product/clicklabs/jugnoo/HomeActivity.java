@@ -246,6 +246,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
     Boolean fetchedRidePathsFromDb = false;
+    Boolean appRestart = true;
 
 
     DecimalFormat decimalFormat = new DecimalFormat("#.#");
@@ -1494,9 +1495,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         if (userMode == UserMode.PASSENGER) {
             if (passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                 initiateRequestRide(false);
-            } else if (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL) {
-                switchPassengerScreen(passengerScreenMode);
-            } else if (passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+            }
+            else if (passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
                 clearSPData();
                 switchPassengerScreen(passengerScreenMode);
             } else {
@@ -1724,7 +1724,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         }
 
 
-                        GCMIntentService.clearNotifications(getApplicationContext());
+//                        GCMIntentService.clearNotifications(getApplicationContext());
 
                         if (findDriversETAAsync != null) {
                             findDriversETAAsync.cancel(true);
@@ -1820,6 +1820,65 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
                     case P_REQUEST_FINAL:
+
+                        if (map != null) {
+
+                            if (Data.pickupLatLng == null) {
+                                Log.e("Data.mapTarget", "=null");
+                                SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+                                String lat = pref.getString(Data.SP_LAST_LATITUDE, "0");
+                                String lng = pref.getString(Data.SP_LAST_LONGITUDE, "0");
+                                Data.pickupLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+                            } else {
+                                Log.e("Data.mapTarget", "=not null");
+                            }
+
+                            Log.e("Data.mapTarget", "=" + Data.pickupLatLng);
+                            Log.e("Data.assignedDriverInfo.latLng", "=" + Data.assignedDriverInfo.latLng);
+
+                            map.clear();
+
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.title("pickup location");
+                            markerOptions.snippet("");
+                            markerOptions.position(Data.pickupLatLng);
+                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+
+                            pickupLocationMarker = map.addMarker(markerOptions);
+
+                            MarkerOptions markerOptions1 = new MarkerOptions();
+                            markerOptions1.title("driver position");
+                            markerOptions1.snippet("");
+                            markerOptions1.position(Data.assignedDriverInfo.latLng);
+                            markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
+                            markerOptions1.anchor(0.5f, 0.7f);
+
+                            driverLocationMarker = map.addMarker(markerOptions1);
+
+                            Log.i("marker added", "REQUEST_FINAL");
+                        }
+
+
+                        initialLayout.setVisibility(View.GONE);
+                        assigningLayout.setVisibility(View.GONE);
+                        linearLayoutSearch.setVisibility(View.GONE);
+                        requestFinalLayout.setVisibility(View.VISIBLE);
+                        centreLocationRl.setVisibility(View.GONE);
+
+                        setAssignedDriverData(mode);
+
+                        buttonCancelRide.setVisibility(View.VISIBLE);
+                        buttonAddJugnooCash.setVisibility(View.GONE);
+
+                        textViewInRideLowJugnooCash.setVisibility(View.GONE);
+
+
+                        imageViewGift.setVisibility(View.VISIBLE);
+                        imageViewSearchCancel.setVisibility(View.GONE);
+
+                        break;
+
+                    case P_DRIVER_ARRIVED:
 
                         if (map != null) {
 
@@ -1986,6 +2045,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     cancelMapAnimateAndUpdateRideDataTimer();
                     break;
 
+                case P_DRIVER_ARRIVED:
+                    cancelTimerUpdateDrivers();
+                    startDriverLocationUpdateTimer();
+                    cancelMapAnimateAndUpdateRideDataTimer();
+                    break;
+
                 case P_IN_RIDE:
                     cancelTimerUpdateDrivers();
                     cancelDriverLocationUpdateTimer();
@@ -2082,8 +2147,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         }
 
 
-        if (PassengerScreenMode.P_REQUEST_FINAL == mode) {
-            updateDriverETAText();
+        if (PassengerScreenMode.P_REQUEST_FINAL == mode || PassengerScreenMode.P_DRIVER_ARRIVED == mode) {
+            updateDriverETAText(mode);
         } else {
             textViewInRideState.setText("Ride in progress");
         }
@@ -2105,19 +2170,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
 
-    public void updateDriverETAText() {
-        if (!"".equalsIgnoreCase(Data.assignedDriverInfo.eta)) {
-            try {
-                double etaMin = Double.parseDouble(Data.assignedDriverInfo.eta);
-                if (etaMin > 1) {
+    public void updateDriverETAText(PassengerScreenMode passengerScreenMode) {
+        if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+            if (!"".equalsIgnoreCase(Data.assignedDriverInfo.eta)) {
+                try {
+                    double etaMin = Double.parseDouble(Data.assignedDriverInfo.eta);
+                    if (etaMin > 1) {
+                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minutes");
+                    } else {
+                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minute");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minutes");
-                } else {
-                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minute");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minutes");
             }
+        }
+        else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+            textViewInRideState.setText("Driver arrived at pick up point");
         }
     }
 
@@ -3230,7 +3300,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 public void run() {
                     try {
                         if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)
-                                && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode)
+                                && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
                                 && (Data.userData != null)
                                 && (Data.assignedDriverInfo != null)) {
 
@@ -3270,11 +3340,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                             @Override
                                             public void run() {
                                                 try {
-                                                    if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+                                                    if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                                                         if (map != null) {
                                                             if (HomeActivity.this.hasWindowFocus()) {
                                                                 driverLocationMarker.setPosition(driverCurrentLatLng);
-                                                                updateDriverETAText();
+                                                                updateDriverETAText(passengerScreenMode);
                                                                 if (Data.pickupLatLng != null) {
                                                                     double distance = MapUtils.distance(Data.pickupLatLng, driverCurrentLatLng);
                                                                     if (distance > 1000) {
@@ -3397,6 +3467,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     try {
 
                         final PolylineOptions polylineOptions = new PolylineOptions();
+                        ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
 
                         /*if (!fetchedRidePathsFromDb) {
                             Log.d("fetched from Db ", "fetched");
@@ -3418,17 +3489,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             }
                         }else {*/
 
-                            ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
 
+                        if (appRestart) {
+                            nameValuePairs.add(new BasicNameValuePair("last_sent_maxId", "" + "0"));
+                            appRestart = false;
+                        } else {
                             nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.cEngagementId));
                             nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-                            nameValuePairs.add(new BasicNameValuePair("last_sent_maxId", "" + "0"));
+                            nameValuePairs.add(new BasicNameValuePair("last_sent_maxId", "" +
+                                    Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
 
-                            Log.d("last location id", String.valueOf(Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
+                            Log.d("last_location_id", String.valueOf(Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
 
                             HttpRequester simpleJSONParser = new HttpRequester();
-                            String result = simpleJSONParser.getJSONFromUrlParamsViaGetRequest(Config.getServerUrl()
-                                    + "/get_ongoing_ride_path", nameValuePairs);
+                            String result = simpleJSONParser.getJSONFromUrlParamsViaGetRequest
+                                    (Config.getServerUrl() + "/get_ongoing_ride_path", nameValuePairs);
 
                             Log.e("result of get_ongoing_ride_path", "=" + result);
 
@@ -3461,18 +3536,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                         polylineOptions.add(start, end);
                                     }
 
-                                    /*try {
+                                    try {
                                         Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePaths);
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                    }*/
+                                    }
 
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-//                        }
-
+                        }
 
                         polylineOptions.width(2);
                         polylineOptions.color(Color.RED);
@@ -3778,7 +3852,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     @Override
     public void startRideForCustomer(final int flag) {
         try {
-            if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL) {
+            if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)) {
                 Log.e("in ", "herestartRideForCustomer");
 
                 closeCancelActivity();
@@ -3800,7 +3874,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         @Override
                         public void run() {
                             Log.i("in in herestartRideForCustomer  run class", "=");
-                            if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+                            if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
                                 DialogPopup.alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
@@ -4612,7 +4686,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             @Override
             public void run() {
-                DialogPopup.alertPopup(HomeActivity.this, "", logMessage);
+                passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
+                switchPassengerScreen(passengerScreenMode);
             }
         });
     }
