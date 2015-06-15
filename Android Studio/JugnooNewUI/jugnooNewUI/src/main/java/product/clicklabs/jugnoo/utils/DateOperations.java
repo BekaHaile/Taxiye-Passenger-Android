@@ -182,22 +182,7 @@ public class DateOperations {
 		
 		String year = date.split("-")[0];
 		String month = date.split("-")[1];
-		String day = date.split("-")[2];
-		
-		int dayInt = Integer.parseInt(day);
-		
-		if(dayInt == 1){
-			day = dayInt + "st";
-		}
-		else if(dayInt == 2){
-			day = dayInt + "nd";
-		}
-		else if(dayInt == 3){
-			day = dayInt + "rd";
-		}
-		else{
-			day = dayInt + "th";
-		}
+		String day = ""+Integer.parseInt(date.split("-")[2]);
 		
 		if("01".equalsIgnoreCase(month)){
 			month = "Jan";

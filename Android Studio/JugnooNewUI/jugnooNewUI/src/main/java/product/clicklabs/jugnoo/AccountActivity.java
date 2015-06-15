@@ -99,6 +99,8 @@ public class AccountActivity extends Activity {
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.latoRegular(this));
 		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.latoRegular(this));
 		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.latoRegular(this));
+
+        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
 		
 		imageViewEditName = (ImageView) findViewById(R.id.imageViewEditName);
 		imageViewEditEmail = (ImageView) findViewById(R.id.imageViewEditEmail);
@@ -455,7 +457,7 @@ public class AccountActivity extends Activity {
 			
 			editTextUserName.setText(Data.userData.userName);
 			editTextEmail.setText(Data.userData.userEmail);
-			editTextPhone.setText(Data.userData.phoneNo);
+			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
 			
 			if(EmailVerificationStatus.EMAIL_UNVERIFIED.getOrdinal() == Data.userData.emailVerificationStatus){
 				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);

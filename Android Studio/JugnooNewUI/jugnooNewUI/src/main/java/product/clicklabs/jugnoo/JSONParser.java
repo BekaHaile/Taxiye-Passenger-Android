@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -30,6 +31,8 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
+import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
@@ -868,5 +871,64 @@ public class JSONParser {
     }
 
 
-	
+
+
+    public static ArrayList<CouponInfo> parseCouponsArray(JSONObject jObj){
+        ArrayList<CouponInfo> couponInfoList = new ArrayList<CouponInfo>();
+
+        try{
+            if (jObj.has("coupons")) {
+                JSONArray couponsData = jObj.getJSONArray("coupons");
+                if (couponsData.length() > 0) {
+                    for (int i = 0; i < couponsData.length(); i++) {
+                        JSONObject coData = couponsData.getJSONObject(i);
+
+                        CouponInfo couponInfo = new CouponInfo(coData.getInt("account_id"),
+                            coData.getInt("type"),
+                            coData.getInt("status"),
+                            coData.getString("title"),
+                            coData.getString("subtitle"),
+                            coData.getString("description"),
+                            coData.getString("image"),
+                            coData.getString("redeemed_on"),
+                            coData.getString("expiry_date"),
+                            coData.getDouble("discount"),
+                            coData.getDouble("maximum"));
+
+                        couponInfoList.add(couponInfo);
+                    }
+                    Collections.sort(couponInfoList, new DateComparatorCoupon());
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return couponInfoList;
+    }
+
+
+    public static ArrayList<PromotionInfo> parsePromotionsArray(JSONObject jObj){
+        ArrayList<PromotionInfo> promotionInfoList = new ArrayList<PromotionInfo>();
+
+        try{
+            if (jObj.has("promotions")) {
+                JSONArray promotionsData = jObj.getJSONArray("promotions");
+                if (promotionsData.length() > 0) {
+                    for (int i = 0; i < promotionsData.length(); i++) {
+                        JSONObject poData = promotionsData.getJSONObject(i);
+
+                        PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"),
+                            poData.getString("terms_n_conds"), poData.getString("end_on"));
+
+                        promotionInfoList.add(promotionInfo);
+                    }
+                    Collections.sort(promotionInfoList, new DateComparatorPromotion());
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return promotionInfoList;
+    }
+
 }

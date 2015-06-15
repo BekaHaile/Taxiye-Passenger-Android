@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -14,10 +15,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -25,49 +27,53 @@ import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
-import product.clicklabs.jugnoo.utils.DateComparator;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
 
 public class PromotionsActivity extends Activity{
 	
 	
-	LinearLayout relative;
+	RelativeLayout relative;
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
 	EditText editTextPromoCode;
 	Button buttonApplyPromo;
-	TextView textViewCouponsAvailable;
-	
-	ListView listViewCoupons;
+
+	TextView textViewCouponsAvailable, textViewCouponInfo;
+	GridView listViewCoupons;
 	CouponsListAdapter couponsListAdapter;
 
-	TextView textViewInfo;
-	ProgressBar progressBar;
-	
-	
+	TextView textViewOngoingOffers, textViewPromoInfo;
+    NonScrollListView listViewPromotions;
+    PromotionListAdapter promotionListAdapter;
+
+    RelativeLayout relativeLayoutInvite;
+    TextView textViewInvite;
+
 	
 	
 	AsyncHttpClient fetchAccountInfoClient;
 	
 	ArrayList<CouponInfo> couponInfosList = new ArrayList<CouponInfo>();
+    ArrayList<PromotionInfo> promotionInfoList = new ArrayList<PromotionInfo>();
+    String headMessage = "", inviteMessage = "";
 	
 	
 	@Override
@@ -94,7 +100,7 @@ public class PromotionsActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_promotions);
 		
-		relative = (LinearLayout) findViewById(R.id.relative);
+		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(PromotionsActivity.this, relative, 1134, 720, false);
 		
 		
@@ -105,20 +111,29 @@ public class PromotionsActivity extends Activity{
 		buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo); buttonApplyPromo.setTypeface(Fonts.latoRegular(this));
 		textViewCouponsAvailable = (TextView) findViewById(R.id.textViewCouponsAvailable); textViewCouponsAvailable.setTypeface(Fonts.latoRegular(this));
 		textViewCouponsAvailable.setVisibility(View.GONE);
+        textViewCouponInfo = (TextView) findViewById(R.id.textViewCouponInfo); textViewCouponInfo.setTypeface(Fonts.latoRegular(this));
+        textViewCouponInfo.setVisibility(View.GONE);
 		
 		couponInfosList.clear();
 		
-		listViewCoupons = (ListView) findViewById(R.id.listViewCoupons);
+		listViewCoupons = (GridView) findViewById(R.id.listViewCoupons);
 		couponsListAdapter = new CouponsListAdapter(PromotionsActivity.this);
 		listViewCoupons.setAdapter(couponsListAdapter);
-		
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		
-		
-		textViewInfo.setVisibility(View.GONE);
-		progressBar.setVisibility(View.GONE);
-		
+
+
+        textViewOngoingOffers = (TextView) findViewById(R.id.textViewOngoingOffers); textViewOngoingOffers.setTypeface(Fonts.latoRegular(this));
+        textViewOngoingOffers.setVisibility(View.GONE);
+        textViewPromoInfo = (TextView) findViewById(R.id.textViewPromoInfo); textViewPromoInfo.setTypeface(Fonts.latoRegular(this));
+        textViewPromoInfo.setVisibility(View.GONE);
+
+        listViewPromotions = (NonScrollListView) findViewById(R.id.listViewPromotions);
+        promotionListAdapter = new PromotionListAdapter(this);
+        listViewPromotions.setAdapter(promotionListAdapter);
+
+        relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
+        textViewInvite =(TextView)findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Fonts.latoRegular(this));
+
+
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 		
@@ -127,9 +142,9 @@ public class PromotionsActivity extends Activity{
 				performBackPressed();
 			}
 		});
-		
-		
-		textViewInfo.setOnClickListener(new View.OnClickListener() {
+
+
+        textViewCouponInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getAccountInfoAsync(PromotionsActivity.this);
@@ -154,31 +169,42 @@ public class PromotionsActivity extends Activity{
 		});
 		
 		editTextPromoCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				editTextPromoCode.setError(null);
-			}
-		});
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                editTextPromoCode.setError(null);
+            }
+        });
 		
 		editTextPromoCode.setOnEditorActionListener(new OnEditorActionListener() {
 
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						buttonApplyPromo.performClick();
-						return false;
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                int result = actionId & EditorInfo.IME_MASK_ACTION;
+                switch (result) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        buttonApplyPromo.performClick();
+                        return false;
 
-					case EditorInfo.IME_ACTION_NEXT:
-						return false;
+                    case EditorInfo.IME_ACTION_NEXT:
+                        return false;
 
-					default:
-						return false;
-				}
-			}
-		});
+                    default:
+                        return false;
+                }
+            }
+        });
+
+
+        relativeLayoutInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PromotionsActivity.this, ShareActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
+            }
+        });
+
 		
 		getAccountInfoAsync(PromotionsActivity.this);
 		
@@ -212,23 +238,66 @@ public class PromotionsActivity extends Activity{
 	
 	public void updateListData(String message, boolean errorOccurred){
 		if(errorOccurred){
-			textViewInfo.setText(message);
-			textViewInfo.setVisibility(View.VISIBLE);
+            textViewCouponInfo.setText(message);
+            textViewCouponInfo.setVisibility(View.VISIBLE);
+            textViewCouponsAvailable.setVisibility(View.GONE);
+            listViewCoupons.setVisibility(View.GONE);
+
+            textViewOngoingOffers.setVisibility(View.GONE);
+            listViewPromotions.setVisibility(View.GONE);
+            textViewPromoInfo.setVisibility(View.GONE);
 			
 			couponInfosList.clear();
 			couponsListAdapter.notifyDataSetChanged();
+
+            promotionInfoList.clear();
+            promotionListAdapter.notifyDataSetChanged();
 		}
 		else{
-			if(couponInfosList.size() == 0){
-				textViewInfo.setText(message);
-				textViewInfo.setVisibility(View.VISIBLE);
-				textViewCouponsAvailable.setVisibility(View.GONE);
-			}
-			else{
-				textViewInfo.setVisibility(View.GONE);
+			if(couponInfosList.size() == 0 && promotionInfoList.size() == 0){
 				textViewCouponsAvailable.setVisibility(View.VISIBLE);
+                textViewCouponsAvailable.setText("No offers available");
+                listViewCoupons.setVisibility(View.GONE);
+                textViewCouponInfo.setVisibility(View.GONE);
+
+                textViewOngoingOffers.setVisibility(View.GONE);
+                listViewPromotions.setVisibility(View.GONE);
+                textViewPromoInfo.setVisibility(View.GONE);
 			}
+            else if(couponInfosList.size() > 0 && promotionInfoList.size() == 0){
+                textViewCouponsAvailable.setVisibility(View.VISIBLE);
+                textViewCouponsAvailable.setText("Coupons Available");
+                listViewCoupons.setVisibility(View.VISIBLE);
+                textViewCouponInfo.setVisibility(View.GONE);
+
+                textViewOngoingOffers.setVisibility(View.GONE);
+                listViewPromotions.setVisibility(View.GONE);
+                textViewPromoInfo.setVisibility(View.GONE);
+            }
+            else if(couponInfosList.size() == 0 && promotionInfoList.size() > 0){
+                textViewCouponsAvailable.setVisibility(View.GONE);
+                listViewCoupons.setVisibility(View.GONE);
+                textViewCouponInfo.setVisibility(View.GONE);
+
+                textViewOngoingOffers.setVisibility(View.VISIBLE);
+                listViewPromotions.setVisibility(View.VISIBLE);
+                textViewPromoInfo.setVisibility(View.GONE);
+            }
+			else{
+                textViewCouponsAvailable.setVisibility(View.VISIBLE);
+                textViewCouponsAvailable.setText("Coupons Available");
+                listViewCoupons.setVisibility(View.VISIBLE);
+                textViewCouponInfo.setVisibility(View.GONE);
+
+                textViewOngoingOffers.setVisibility(View.VISIBLE);
+                listViewPromotions.setVisibility(View.VISIBLE);
+                textViewPromoInfo.setVisibility(View.GONE);
+			}
+
+            textViewInvite.setText(inviteMessage);
+
 			couponsListAdapter.notifyDataSetChanged();
+            promotionListAdapter.notifyDataSetChanged();
 		}
 	}
 	
@@ -289,7 +358,7 @@ public class PromotionsActivity extends Activity{
 			CouponInfo couponInfo = couponInfosList.get(position);
 
 			holder.textViewCouponTitle.setText(couponInfo.title);
-			holder.textViewExpiryDate.setText("Expiring on "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
+			holder.textViewExpiryDate.setText("Valid until "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
 				
@@ -306,7 +375,82 @@ public class PromotionsActivity extends Activity{
 		}
 
 	}
-	
+
+
+
+    class ViewHolderPromotion {
+        TextView textViewPromotionTitle, textViewExpiryDate;
+        LinearLayout relative;
+        int id;
+    }
+
+    class PromotionListAdapter extends BaseAdapter {
+        LayoutInflater mInflater;
+        ViewHolderPromotion holder;
+        Context context;
+        public PromotionListAdapter(Context context) {
+            this.context = context;
+            this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public int getCount() {
+            return promotionInfoList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                holder = new ViewHolderPromotion();
+                convertView = mInflater.inflate(R.layout.list_item_promotion, null);
+
+                holder.textViewPromotionTitle = (TextView) convertView.findViewById(R.id.textViewPromotionTitle); holder.textViewPromotionTitle.setTypeface(Fonts.latoRegular(context));
+                holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Fonts.latoLight(context), Typeface.BOLD);
+
+                holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
+
+                holder.relative.setTag(holder);
+
+                holder.relative.setLayoutParams(new ListView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+                ASSL.DoMagic(holder.relative);
+
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolderPromotion) convertView.getTag();
+            }
+
+            holder.id = position;
+
+            PromotionInfo promotionInfo = promotionInfoList.get(position);
+
+            holder.textViewPromotionTitle.setText(promotionInfo.title);
+            holder.textViewExpiryDate.setText("Valid until "+promotionInfo.expiryDate);
+
+            holder.relative.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    holder = (ViewHolderPromotion) v.getTag();
+                    PromotionInfo promotionInfo = promotionInfoList.get(holder.id);
+                    DialogPopup.alertPopupHtml(PromotionsActivity.this, "", promotionInfo.terms);
+                }
+            });
+
+            return convertView;
+        }
+
+    }
+
 	
 	/**
 	 * ASync for get Account info from server
@@ -315,21 +459,26 @@ public class PromotionsActivity extends Activity{
         if(!HomeActivity.checkIfUserDataNull(activity)) {
             if (fetchAccountInfoClient == null) {
                 if (AppStatus.getInstance(activity).isOnline(activity)) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    DialogPopup.showLoadingDialog(activity, "Loading...");
                     couponInfosList.clear();
                     couponsListAdapter.notifyDataSetChanged();
-                    textViewInfo.setVisibility(View.GONE);
+                    textViewCouponInfo.setVisibility(View.GONE);
+
                     RequestParams params = new RequestParams();
                     params.put("access_token", Data.userData.accessToken);
+                    params.put("latitude", ""+Data.latitude);
+                    params.put("longitude", ""+Data.longitude);
+
+
                     fetchAccountInfoClient = Data.getClient();
-                    fetchAccountInfoClient.post(Config.getServerUrl() + "/get_coupons", params,
+                    fetchAccountInfoClient.post(Config.getServerUrl() + "/get_coupons_and_promotions", params,
                         new CustomAsyncHttpResponseHandler() {
                             private JSONObject jObj;
 
                             @Override
                             public void onFailure(Throwable arg3) {
                                 Log.e("request fail", arg3.toString());
-                                progressBar.setVisibility(View.GONE);
+                                DialogPopup.dismissLoadingDialog();
                                 updateListData("Some error occurred. Tap to retry", true);
                             }
 
@@ -343,52 +492,51 @@ public class PromotionsActivity extends Activity{
                                         int flag = jObj.getInt("flag");
                                         if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
 
-//											{
-//											    "coupons": [
-//											        {
-//											            "title": "Free ride",
-//											            "description": "upte 100/-",
-//											            "discount": 100,
-//											            "maximum": 100,
-//											            "image": null,
-//											            "type": 0,
-//											            "redeemed_on": null,
-//											            "status": 1,
-//											            "expiry_date": "2014-11-07T18:29:59.000Z"
-//											        }
-//											    ]
-//											}
+
+//                                            {
+//                                                "flag": 140,
+//                                                "coupons": [
+//                                                {
+//                                                    "title": "Free ride",
+//                                                    "subtitle": "upto Rs. 100",
+//                                                    "description": "Your next ride with Jugnoo upto Rs. 100 will be FREE.Terms of Use:1. The coupon will be applied automatically at the end of your next ride.2. Only one coupon will be applied in one ride.3. The maximum value of this coupon is Rs. 100 and you will have to pay the remaining amount at the end of the ride.4. Jugnoo reserves the right to discontinue the coupon at its discretion.",
+//                                                    "discount": 100,
+//                                                    "maximum": 100,
+//                                                    "image": "",
+//                                                    "type": 0,
+//                                                    "account_id": 546,
+//                                                    "redeemed_on": "0000-00-00 00:00:00",
+//                                                    "status": 1,
+//                                                    "expiry_date": "2015-10-30 18:29:59"
+//                                                }
+//                                                ],
+//                                                "promotions": [
+//                                                {
+//                                                    "promo_id": 12,
+//                                                    "title": "CDCL drop 20% cashback",
+//                                                    "max_allowed": 0,
+//                                                    "terms_n_conds": "Terms and conditions for drop to CDCL"
+//                                                }
+//                                                ],
+//                                                "head": "Ongoing offers in chandigarh",
+//                                                "invite_message": "Invite your friends and get more coupons"
+//                                            }
 
                                             couponInfosList.clear();
+                                            couponInfosList.addAll(JSONParser.parseCouponsArray(jObj));
 
-                                            if (jObj.has("coupons")) {
-                                                JSONArray couponsData = jObj.getJSONArray("coupons");
-                                                if (couponsData.length() > 0) {
-                                                    for (int i = 0; i < couponsData.length(); i++) {
-                                                        JSONObject coData = couponsData.getJSONObject(i);
+                                            promotionInfoList.clear();
+                                            promotionInfoList.addAll(JSONParser.parsePromotionsArray(jObj));
 
-                                                        CouponInfo couponInfo = new CouponInfo(1,
-                                                            coData.getInt("type"),
-                                                            coData.getInt("status"),
-                                                            coData.getString("title"),
-                                                            coData.getString("subtitle"),
-                                                            coData.getString("description"),
-                                                            coData.getString("image"),
-                                                            coData.getString("redeemed_on"),
-                                                            coData.getString("expiry_date"),
-                                                            coData.getDouble("discount"),
-                                                            coData.getDouble("maximum"));
+                                            headMessage = jObj.getString("head");
+                                            inviteMessage = jObj.getString("invite_message");
 
-                                                        couponInfosList.add(couponInfo);
-                                                    }
-                                                    Collections.sort(couponInfosList, new DateComparator());
-                                                }
-                                            }
                                             updateListData("No Coupons available", false);
 
                                             if (Data.userData != null) {
                                                 Data.userData.numCouponsAvaliable = couponInfosList.size();
                                             }
+
                                         } else {
                                             updateListData("Some error occurred. Tap to retry", true);
                                         }
@@ -400,7 +548,7 @@ public class PromotionsActivity extends Activity{
                                     exception.printStackTrace();
                                     updateListData("Some error occurred. Tap to retry", true);
                                 }
-                                progressBar.setVisibility(View.GONE);
+                                DialogPopup.dismissLoadingDialog();
                             }
 
                             @Override

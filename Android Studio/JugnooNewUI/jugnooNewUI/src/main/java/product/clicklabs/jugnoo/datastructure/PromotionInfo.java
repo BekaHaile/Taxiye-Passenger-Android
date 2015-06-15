@@ -4,12 +4,21 @@ public class PromotionInfo extends PromoCoupon{
 	
 	public String title;
 	public String terms;
+    public String expiryDate;
 	
-	public PromotionInfo(int id, String title, String terms){
+	public PromotionInfo(int id, String title, String terms, String endOn){
 		this.id = id;
 		this.title = title;
 		this.terms = terms;
+        this.expiryDate = endOn;
 	}
+
+    public PromotionInfo(int id, String title, String terms){
+        this.id = id;
+        this.title = title;
+        this.terms = terms;
+        this.expiryDate = "";
+    }
 	
 	@Override
 	public boolean equals(Object o) {

@@ -825,9 +825,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
+                if(map != null) {
+                    Data.latitude = map.getCameraPosition().target.latitude;
+                    Data.longitude = map.getCameraPosition().target.longitude;
+                    startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Waiting for location...", Toast.LENGTH_SHORT).show();
+                }
 			}
 		});
 
