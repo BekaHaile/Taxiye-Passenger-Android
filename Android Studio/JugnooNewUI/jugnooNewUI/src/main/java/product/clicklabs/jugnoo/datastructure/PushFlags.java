@@ -18,7 +18,8 @@ public enum PushFlags {
 	MANUAL_ENGAGEMENT(23),
 	HEARTBEAT(40),
 	CHANGE_PORT(60),
-	PAYMENT_RECEIVED(70)
+	PAYMENT_RECEIVED(70),
+    DRIVER_ARRIVED(72)
 	;
 
 	private int ordinal;
