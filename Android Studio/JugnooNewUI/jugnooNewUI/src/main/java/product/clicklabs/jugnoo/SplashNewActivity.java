@@ -137,8 +137,14 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		Fabric.with(this, new Crashlytics());
 
 
-		
-		Data.userData = null;
+        try {
+            Log.e("getIntent =", "="+getIntent().getData().getQuery());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        Data.userData = null;
 		
 		initializeServerURL(this);
 		
