@@ -345,7 +345,7 @@ public class PromotionsActivity extends Activity{
 				
 				holder.relative.setTag(holder);
 				
-				holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
+				holder.relative.setLayoutParams(new ListView.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 				ASSL.DoMagic(holder.relative);
 				
 				convertView.setTag(holder);
@@ -434,7 +434,7 @@ public class PromotionsActivity extends Activity{
             PromotionInfo promotionInfo = promotionInfoList.get(position);
 
             holder.textViewPromotionTitle.setText(promotionInfo.title);
-            holder.textViewExpiryDate.setText("Valid until "+promotionInfo.expiryDate);
+            holder.textViewExpiryDate.setText(promotionInfo.expiryDate);
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 

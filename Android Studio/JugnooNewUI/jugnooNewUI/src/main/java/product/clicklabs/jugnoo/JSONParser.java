@@ -373,6 +373,11 @@ public class JSONParser {
             if (jLastRideData.has("banner")) {
                 banner = jLastRideData.getString("banner");
             }
+            double fareFactor = 1;
+            if(jLastRideData.has("fare_factor")){
+                fareFactor = jLastRideData.getDouble("fare_factor");
+            }
+
 
             Data.endRideData = new EndRideData(jLastRideData.getString("engagement_id"),
                     jLastRideData.getString("pickup_address"),
@@ -386,7 +391,7 @@ public class JSONParser {
                     jLastRideData.getDouble("to_pay"),
                     jLastRideData.getDouble("distance"),
                     jLastRideData.getDouble("ride_time"),
-                    baseFare);
+                    baseFare, fareFactor);
 
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 
@@ -877,7 +882,7 @@ public class JSONParser {
                         JSONObject poData = promotionsData.getJSONObject(i);
 
                         PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"),
-                            poData.getString("terms_n_conds"), poData.getString("end_on"));
+                            poData.getString("terms_n_conds"), poData.getString("validity_text"));
 
                         promotionInfoList.add(promotionInfo);
                     }

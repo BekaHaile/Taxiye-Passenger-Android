@@ -368,6 +368,7 @@ public class RideTransactionsActivity extends Activity implements UpdateRideTran
                 holder.textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); holder.textViewCancel.setTypeface(Fonts.latoRegular(context));
                 holder.textViewRateRide = (TextView) convertView.findViewById(R.id.textViewRateRide); holder.textViewRateRide.setTypeface(Fonts.latoRegular(context));
 
+
                 holder.imageViewDiv = (ImageView) convertView.findViewById(R.id.imageViewDiv);
 
                 holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);

@@ -6,10 +6,10 @@ public class EndRideData {
 	pickupAddress, dropAddress, 
 	pickupTime, dropTime, banner;
 	public double fare, discount, paidUsingWallet, toPay, 
-	distance, rideTime, baseFare;
+	distance, rideTime, baseFare, fareFactor;
 	
 	public EndRideData(String engagementId, String pickupAddress, String dropAddress, String pickupTime, String dropTime, String banner, 
-			double fare, double discount, double paidUsingWallet, double toPay, double distance, double rideTime, double baseFare){
+			double fare, double discount, double paidUsingWallet, double toPay, double distance, double rideTime, double baseFare, double fareFactor){
 		this.engagementId = engagementId;
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
@@ -25,6 +25,7 @@ public class EndRideData {
 		this.distance = distance;
 		this.rideTime = rideTime;
 		this.baseFare = baseFare;
+        this.fareFactor = fareFactor;
 	}
 	
 }

@@ -231,7 +231,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     TextView textViewEndRideFareValue, textViewEndRidePromotionDiscountValue, textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue,
-            textViewEndRideToBePaidValue, textViewEndRideBaseFareValue, textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideAddJugnooCashInfo;
+            textViewEndRideToBePaidValue, textViewEndRideBaseFareValue, textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideAddJugnooCashInfo,
+        textViewEndRideFareFactorValue;
     Button buttonEndRideOk;
 
 
@@ -547,6 +548,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         textViewEndRideTimeValue.setTypeface(Fonts.latoRegular(this));
         textViewEndRideAddJugnooCashInfo = (TextView) findViewById(R.id.textViewEndRideAddJugnooCashInfo);
         textViewEndRideAddJugnooCashInfo.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue);
+        textViewEndRideFareFactorValue.setTypeface(Fonts.latoRegular(this));
 
         buttonEndRideOk = (Button) findViewById(R.id.buttonEndRideOk);
         buttonEndRideOk.setTypeface(Fonts.latoRegular(this));
@@ -570,6 +573,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         ((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));
+
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -1673,6 +1678,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         textViewEndRideFinalFareValue.setText(decimalFormatNoDecimal.format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
                         textViewEndRideJugnooCashValue.setText(decimalFormatNoDecimal.format(Data.endRideData.paidUsingWallet));
                         textViewEndRideToBePaidValue.setText(decimalFormatNoDecimal.format(Data.endRideData.toPay));
+                        textViewEndRideFareFactorValue.setText(decimalFormat.format(Data.endRideData.fareFactor)+"x");
 
                         textViewEndRideBaseFareValue.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(Data.endRideData.baseFare));
 
@@ -3168,6 +3174,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                             banner = jObj.getString("banner");
                                         }
 
+                                        double fareFactor = 1;
+                                        if(jObj.has("fare_factor")){
+                                            fareFactor = jObj.getDouble("fare_factor");
+                                        }
+
                                         Data.endRideData = new EndRideData(engagementId,
                                                 jObj.getString("pickup_address"),
                                                 jObj.getString("drop_address"),
@@ -3180,7 +3191,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                                 jObj.getDouble("to_pay"),
                                                 jObj.getDouble("distance"),
                                                 jObj.getDouble("ride_time"),
-                                                baseFare);
+                                                baseFare, fareFactor);
 
                                         lastLocation = null;
                                         clearSPData();
