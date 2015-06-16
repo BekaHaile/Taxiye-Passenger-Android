@@ -60,7 +60,7 @@
             android:background="#0000"
             android:gravity="center"
             android:hint="@string/rupee_0"
-            android:inputType="numberDecimal"
+            android:inputType="number"
             android:maxLength="10"
             android:paddingLeft="20px"
             android:paddingRight="20px"

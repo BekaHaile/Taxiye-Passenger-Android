@@ -1928,8 +1928,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         setAssignedDriverData(mode);
 
-                        buttonCancelRide.setVisibility(View.VISIBLE);
-                        buttonAddJugnooCash.setVisibility(View.GONE);
+                        buttonCancelRide.setVisibility(View.GONE);
+                        buttonAddJugnooCash.setVisibility(View.VISIBLE);
 
                         textViewInRideLowJugnooCash.setVisibility(View.GONE);
 
