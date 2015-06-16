@@ -596,7 +596,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
         //Top bar events
-        imageViewMenu.setOnClickListener(new View.OnClickListener() {
+        imageViewMenu.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -624,7 +624,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        jugnooShopImageView.setOnClickListener(new View.OnClickListener() {
+        jugnooShopImageView.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -639,7 +639,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        imageViewSearchCancel.setOnClickListener(new View.OnClickListener() {
+        imageViewSearchCancel.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -661,7 +661,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
         // menu events\
 
-        linearLayoutProfile.setOnClickListener(new View.OnClickListener() {
+        linearLayoutProfile.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -670,7 +670,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        relativeLayoutGetRide.setOnClickListener(new View.OnClickListener() {
+        relativeLayoutGetRide.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -678,7 +678,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        relativeLayoutInvite.setOnClickListener(new View.OnClickListener() {
+        relativeLayoutInvite.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -686,7 +686,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 
-		relativeLayoutJugnooCash.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutJugnooCash.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -696,7 +696,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 			}
 		});
 
-		relativeLayoutPromotions.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutPromotions.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -722,7 +722,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        relativeLayoutFareDetails.setOnClickListener(new View.OnClickListener() {
+        relativeLayoutFareDetails.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -730,7 +730,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        relativeLayoutSupport.setOnClickListener(new View.OnClickListener() {
+        relativeLayoutSupport.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -740,7 +740,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        relativeLayoutAbout.setOnClickListener(new View.OnClickListener() {
+        relativeLayoutAbout.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -751,7 +751,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        menuLayout.setOnClickListener(new View.OnClickListener() {
+        menuLayout.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -761,7 +761,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
         // Customer initial layout events
-        imageViewRideNow.setOnClickListener(new View.OnClickListener() {
+        imageViewRideNow.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -806,7 +806,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        imageViewRideLater.setOnClickListener(new View.OnClickListener() {
+        imageViewRideLater.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -816,7 +816,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        imageViewJugnoo1.setOnClickListener(new View.OnClickListener() {
+        imageViewJugnoo1.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -837,7 +837,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        imageViewMeals1.setOnClickListener(new View.OnClickListener() {
+        imageViewMeals1.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -851,7 +851,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        imageViewFatafat1.setOnClickListener(new View.OnClickListener() {
+        imageViewFatafat1.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -866,7 +866,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        relativeLayoutInitialSearchBar.setOnClickListener(new View.OnClickListener() {
+        relativeLayoutInitialSearchBar.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -882,7 +882,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        changeLocalityBtn.setOnClickListener(new View.OnClickListener() {
+        changeLocalityBtn.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -894,7 +894,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
         // Assigning layout events
-        initialCancelRideBtn.setOnClickListener(new View.OnClickListener() {
+        initialCancelRideBtn.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -913,7 +913,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
         //Search Layout Events
-        linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
+        linearLayoutSearch.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -943,7 +943,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        editTextSearch.setOnClickListener(new View.OnClickListener() {
+        editTextSearch.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -954,7 +954,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
         // customer request final layout events
-        buttonCancelRide.setOnClickListener(new View.OnClickListener() {
+        buttonCancelRide.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -963,7 +963,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        buttonAddJugnooCash.setOnClickListener(new View.OnClickListener() {
+        buttonAddJugnooCash.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -973,7 +973,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        buttonCallDriver.setOnClickListener(new View.OnClickListener() {
+        buttonCallDriver.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -983,7 +983,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        textViewInRideLowJugnooCash.setOnClickListener(new View.OnClickListener() {
+        textViewInRideLowJugnooCash.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -993,7 +993,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
         // End ride review layout events
-        endRideReviewRl.setOnClickListener(new View.OnClickListener() {
+        endRideReviewRl.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -1002,7 +1002,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        buttonEndRideOk.setOnClickListener(new View.OnClickListener() {
+        buttonEndRideOk.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -1072,7 +1072,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             try {
                                 final DriverInfo driverInfo = Data.driverInfos.get(Data.driverInfos.indexOf(new DriverInfo(driverId)));
                                 DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Driver Info", "" + driverInfo.toString(),
-                                        "Call", "Cancel", new View.OnClickListener() {
+                                        "Call", "Cancel", new OnClickListener() {
 
                                             @Override
                                             public void onClick(View v) {
@@ -1081,7 +1081,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                                 startActivity(callIntent);
                                             }
                                         },
-                                        new View.OnClickListener() {
+                                        new OnClickListener() {
 
                                             @Override
                                             public void onClick(View v) {
@@ -3030,7 +3030,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 
-            btnOk.setOnClickListener(new View.OnClickListener() {
+            btnOk.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (noDriversDialog != null) {
@@ -3040,7 +3040,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
             });
 
-            frameLayout.setOnClickListener(new View.OnClickListener() {
+            frameLayout.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -3051,7 +3051,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
             });
 
-            noDriversDialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+            noDriversDialog.findViewById(R.id.rl1).setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -3206,7 +3206,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
     public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage) {
-        DialogPopup.alertPopupWithListener(activity, "", errorMessage + "\nTap OK to retry", new View.OnClickListener() {
+        DialogPopup.alertPopupWithListener(activity, "", errorMessage + "\nTap OK to retry", new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -3665,7 +3665,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             btnOk.setText("OK");
             btnCancel.setText("Cancel");
 
-            btnOk.setOnClickListener(new View.OnClickListener() {
+            btnOk.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
@@ -3674,7 +3674,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             });
 
-            btnCancel.setOnClickListener(new View.OnClickListener() {
+            btnCancel.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
@@ -3682,14 +3682,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             });
 
 
-            dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+            dialog.findViewById(R.id.rl1).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                 }
             });
 
 
-            dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
+            dialog.findViewById(R.id.rv).setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -3811,7 +3811,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             btnCancel.setTypeface(Fonts.latoRegular(activity));
             btnCancel.setText("LATER");
 
-            btnOk.setOnClickListener(new View.OnClickListener() {
+            btnOk.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
@@ -3822,21 +3822,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
             });
 
-            btnCancel.setOnClickListener(new View.OnClickListener() {
+            btnCancel.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
                 }
             });
 
-            dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+            dialog.findViewById(R.id.rl1).setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                 }
             });
 
-            frameLayout.setOnClickListener(new View.OnClickListener() {
+            frameLayout.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -4691,7 +4691,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             "Jugnoo Cash added",
                             message,
                             "Check Balance", "Call Support",
-                            new View.OnClickListener() {
+                            new OnClickListener() {
 
                                 @Override
                                 public void onClick(View v) {
@@ -4699,7 +4699,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 }
                             },
-                            new View.OnClickListener() {
+                            new OnClickListener() {
 
                                 @Override
                                 public void onClick(View v) {
