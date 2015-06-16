@@ -122,6 +122,8 @@ public class RegisterScreen extends Activity implements LocationUpdate {
         editTextReferralCode = (EditText) findViewById(R.id.editTextReferralCode);
         editTextReferralCode.setTypeface(Fonts.latoRegular(this));
 
+        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
+
         textViewPolicy = (TextView) findViewById(R.id.textViewPolicy);
         textViewPolicy.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
 
@@ -365,13 +367,13 @@ public class RegisterScreen extends Activity implements LocationUpdate {
             if (getIntent().hasExtra("back_from_otp")) {
                 if (facebookLogin) {
                     editTextReferralCode.setText(OTPConfirmScreen.facebookRegisterData.referralCode);
-                    editTextPhone.setText(OTPConfirmScreen.facebookRegisterData.phoneNo);
+                    editTextPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo));
                     editTextPassword.setText(OTPConfirmScreen.facebookRegisterData.password);
                 } else {
                     editTextUserName.setText(OTPConfirmScreen.emailRegisterData.name);
                     editTextEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
                     editTextReferralCode.setText(OTPConfirmScreen.emailRegisterData.referralCode);
-                    editTextPhone.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
+                    editTextPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.emailRegisterData.phoneNo));
                     editTextPassword.setText(OTPConfirmScreen.emailRegisterData.password);
                 }
 

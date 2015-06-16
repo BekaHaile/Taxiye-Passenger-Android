@@ -692,7 +692,7 @@
                 android:layout_marginTop="96px"
                 android:background="@color/white_light_grey"
                 android:splitMotionEvents="false"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ScrollView
                     android:id="@+id/scrollViewEndRide"
@@ -1224,12 +1224,44 @@
                             </LinearLayout>
                         </RelativeLayout>
 
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="20px"
+
+                            >
+
+                            <TextView
+                                android:id="@+id/textViewEndRideFareFactor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:gravity="center"
+                                android:text="Rate"
+                                android:textColor="@color/grey_dark_more"
+                                android:textSize="30px"/>
+
+                            <TextView
+                                android:id="@+id/textViewEndRideFareFactorValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="1x"
+                                android:textColor="@color/grey_dark"
+                                android:textSize="26px"/>
+                        </LinearLayout>
+
                         <Button
                             android:id="@+id/buttonEndRideOk"
                             android:layout_width="648px"
                             android:layout_height="100px"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="110px"
+                            android:layout_marginTop="40px"
                             android:background="@drawable/button_yellow_selector"
                             android:text="OK"
                             android:textColor="@drawable/text_color_white_alpha_selector"

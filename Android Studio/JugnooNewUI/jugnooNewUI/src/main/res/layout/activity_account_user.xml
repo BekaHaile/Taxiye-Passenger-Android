@@ -260,15 +260,30 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5px" >
 
+                            <TextView
+                                android:id="@+id/textViewPhone91"
+                                android:layout_width="wrap_content"
+                                android:layout_height="70px"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
+                                android:text="+91"
+                                android:textColor="@color/black_text"
+                                android:textSize="30px"
+                                />
+
+
                             <EditText
                                 android:id="@+id/editTextPhone"
-                                android:layout_width="590px"
+                                android:layout_width="match_parent"
                                 android:layout_height="70px"
+                                android:layout_toLeftOf="@+id/imageViewEditPhoneNo"
+                                android:layout_toRightOf="@+id/textViewPhone91"
                                 android:background="#0000"
                                 android:gravity="center_vertical"
                                 android:hint="Phone Number"
-                                android:inputType="phone"
-                                android:paddingLeft="20px"
+                                android:inputType="number"
+                                android:maxLength="10"
+                                android:paddingLeft="10px"
                                 android:paddingRight="20px"
                                 android:singleLine="true"
                                 android:textColor="@color/black_text"

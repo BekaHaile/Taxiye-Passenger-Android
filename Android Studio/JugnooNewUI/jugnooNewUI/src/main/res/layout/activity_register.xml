@@ -164,22 +164,43 @@
                     android:layout_height="2px"
                     android:src="@color/yellow_alpha" />
 
-                <EditText
-                    android:id="@+id/editTextPhone"
+                <LinearLayout
                     android:layout_width="628px"
-                    android:layout_height="70px"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginTop="5px"
-                    android:background="#0000"
-                    android:gravity="center_vertical"
-                    android:hint="Phone Number"
-                    android:inputType="phone"
-                    android:paddingLeft="20px"
-                    android:paddingRight="20px"
-                    android:singleLine="true"
-                    android:textColor="@color/black_text"
-                    android:textColorHint="@color/black_text_alpha"
-                    android:textCursorDrawable="@null"
-                    android:textSize="30px" />
+                    >
+                    <TextView
+                        android:id="@+id/textViewPhone91"
+                        android:layout_width="wrap_content"
+                        android:layout_height="70px"
+                        android:textColor="@color/black_text"
+                        android:textSize="30px"
+                        android:text="+91"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        />
+
+                    <EditText
+                        android:id="@+id/editTextPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="70px"
+                        android:background="#0000"
+                        android:gravity="center_vertical"
+                        android:hint="Phone Number"
+                        android:inputType="number"
+                        android:paddingLeft="10px"
+                        android:paddingRight="20px"
+                        android:maxLength="10"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textColor="@color/black_text"
+                        android:textColorHint="@color/black_text_alpha"
+                        android:textCursorDrawable="@null"
+                        android:textSize="30px" />
+
+                </LinearLayout>
+
 
                 <ImageView
                     android:layout_width="628px"

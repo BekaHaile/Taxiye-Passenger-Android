@@ -71,7 +71,7 @@ public class WalletActivity extends Activity{
 	ArrayList<TransactionInfo> transactionInfoList = new ArrayList<TransactionInfo>();
 	
 //	DecimalFormat decimalFormat = new DecimalFormat("#.##");
-    DecimalFormat decimalFormat = new DecimalFormat("####0.00");
+    DecimalFormat decimalFormat = new DecimalFormat("#");
 	
 	@Override
 	protected void onStart() {

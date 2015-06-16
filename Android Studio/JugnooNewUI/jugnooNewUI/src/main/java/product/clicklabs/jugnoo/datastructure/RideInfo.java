@@ -11,7 +11,7 @@ public class RideInfo {
     public int isRatedBefore;
 	public int driverId;
 	public int engagementId;
-	
+
 	public RideInfo(String pickupAddress, String dropAddress, double amount, double distance, double rideTime, String date, int isRatedBefore, int driverId, int engagementId){
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;

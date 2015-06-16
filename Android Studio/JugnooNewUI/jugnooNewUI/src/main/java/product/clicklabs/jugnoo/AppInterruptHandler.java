@@ -21,5 +21,6 @@ public interface AppInterruptHandler {
 	public void onAfterRideFeedbackSubmitted(int givenRating, boolean skipped);
 	
 	public void onJugnooCashAddedByDriver(double jugnooBalance, String message);
-	
+
+    public void onDriverArrived(String logMessage);
 }

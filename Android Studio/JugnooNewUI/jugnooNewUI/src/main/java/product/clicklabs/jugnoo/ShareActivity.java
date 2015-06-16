@@ -14,6 +14,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,21 +37,12 @@ public class ShareActivity extends Activity{
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
-	
+
 	ImageView imageViewFacebook, imageViewWhatsapp, imageViewSMS, imageViewEmail;
-	TextView textViewReferralCode;
-	
-//	
-//	String str1 = "Share your referral code ",
-//			str2 = " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, " +
-//					"you will earn a FREE ride (up to Rs. 100) as well.",
-//			str3 = "Your Referral Code is ";
-//	
-//	
-//	String shareStr1 = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
-//	String shareStr11 = "Use Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling. Use this referral code: ";
-//	String shareStr2 = " to get FREE ride up to Rs. 100.\nDownload it from here: http://smarturl.it/jugnoo";
-	
+	TextView textViewReferralCode, textViewReferralCaption;
+    WebView webViewReferralCaption;
+
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -69,6 +61,8 @@ public class ShareActivity extends Activity{
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
 	}
+
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,13 +75,26 @@ public class ShareActivity extends Activity{
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-		
+
 		imageViewFacebook = (ImageView) findViewById(R.id.imageViewFacebook);
 		imageViewWhatsapp = (ImageView) findViewById(R.id.imageViewWhatsapp);
 		imageViewSMS = (ImageView) findViewById(R.id.imageViewSMS);
 		imageViewEmail = (ImageView) findViewById(R.id.imageViewEmail);
-		
+
+        webViewReferralCaption = (WebView) findViewById(R.id.webViewReferralCaption);
 		textViewReferralCode = (TextView) findViewById(R.id.textViewReferralCode); textViewReferralCode.setTypeface(Fonts.latoRegular(this));
+        textViewReferralCaption = (TextView) findViewById(R.id.textViewReferralCaption); textViewReferralCaption.setTypeface(Fonts.latoRegular(this));
+
+        webViewReferralCaption.getSettings().setJavaScriptEnabled(true);
+        webViewReferralCaption.getSettings().setDomStorageEnabled(true);
+        webViewReferralCaption.getSettings().setDatabaseEnabled(true);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params.addRule(RelativeLayout.BELOW, R.id.imageViewLogo);
+        params.setMargins((int)(ASSL.Xscale()*20.0f), (int)(ASSL.Yscale()*20.0f), (int)(ASSL.Xscale()*20.0f), (int)(ASSL.Yscale()*20.0f));
+
+
 		
 		try {
 			if(Data.referralMessages.referralMessage.contains(Data.userData.referralCode)){
@@ -104,6 +111,29 @@ public class ShareActivity extends Activity{
 				textViewReferralCode.append(strPre);
 				textViewReferralCode.append(sstr);
 				textViewReferralCode.append(strPost);
+
+
+                if(1 == Data.referralMessages.referralCaptionEnabled) {
+                    webViewReferralCaption.setVisibility(View.VISIBLE);
+                    textViewReferralCaption.setVisibility(View.GONE);
+                    loadHTMLContent(Data.referralMessages.referralCaption);
+                }
+                else{
+                    webViewReferralCaption.setVisibility(View.GONE);
+                    textViewReferralCaption.setVisibility(View.VISIBLE);
+
+                    SpannableString spanFriends = new SpannableString("friends");
+                    spanFriends.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, spanFriends.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    SpannableString spanFreeRides = new SpannableString("FREE rides");
+                    spanFreeRides.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, spanFreeRides.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    textViewReferralCaption.setText("");
+                    textViewReferralCaption.append("Invite ");
+                    textViewReferralCaption.append(spanFriends);
+                    textViewReferralCaption.append(" and\nget ");
+                    textViewReferralCaption.append(spanFreeRides);
+
+                }
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,7 +150,8 @@ public class ShareActivity extends Activity{
 				performbackPressed();
 			}
 		});
-		
+
+
 		
 		imageViewFacebook.setOnClickListener(new View.OnClickListener() {
 			
@@ -163,7 +194,13 @@ public class ShareActivity extends Activity{
 		Log.e("Data.userData.jugnooFbBanner=", "="+Data.userData.jugnooFbBanner);
 		
 	}
-	
+
+    public void loadHTMLContent(String data) {
+        final String mimeType = "text/html";
+        final String encoding = "UTF-8";
+        webViewReferralCaption.loadDataWithBaseURL("", data, mimeType, encoding, "");
+    }
+
 	
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
