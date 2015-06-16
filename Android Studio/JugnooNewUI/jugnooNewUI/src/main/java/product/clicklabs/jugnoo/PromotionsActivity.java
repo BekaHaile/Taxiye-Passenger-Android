@@ -256,7 +256,7 @@ public class PromotionsActivity extends Activity{
 		else{
 			if(couponInfosList.size() == 0 && promotionInfoList.size() == 0){
 				textViewCouponsAvailable.setVisibility(View.VISIBLE);
-                textViewCouponsAvailable.setText("No offers available");
+                textViewCouponsAvailable.setText(message);
                 listViewCoupons.setVisibility(View.GONE);
                 textViewCouponInfo.setVisibility(View.GONE);
 
@@ -294,7 +294,9 @@ public class PromotionsActivity extends Activity{
                 textViewPromoInfo.setVisibility(View.GONE);
 			}
 
-            textViewInvite.setText(inviteMessage);
+            if(!"".equalsIgnoreCase(inviteMessage)) {
+                textViewInvite.setText(inviteMessage);
+            }
 
 			couponsListAdapter.notifyDataSetChanged();
             promotionListAdapter.notifyDataSetChanged();
@@ -492,7 +494,6 @@ public class PromotionsActivity extends Activity{
                                         int flag = jObj.getInt("flag");
                                         if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
 
-
 //                                            {
 //                                                "flag": 140,
 //                                                "coupons": [
@@ -529,9 +530,11 @@ public class PromotionsActivity extends Activity{
                                             promotionInfoList.addAll(JSONParser.parsePromotionsArray(jObj));
 
                                             headMessage = jObj.getString("head");
-                                            inviteMessage = jObj.getString("invite_message");
+                                            if(jObj.has("invite_message")) {
+                                                inviteMessage = jObj.getString("invite_message");
+                                            }
 
-                                            updateListData("No Coupons available", false);
+                                            updateListData(headMessage, false);
 
                                             if (Data.userData != null) {
                                                 Data.userData.numCouponsAvaliable = couponInfosList.size();

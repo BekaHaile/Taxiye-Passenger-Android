@@ -210,7 +210,7 @@ public class ShareActivity extends Activity{
 						"Jugnoo - autos on demand",
 						Data.referralMessages.fbShareCaption, 
 						Data.referralMessages.fbShareDescription,
-						"jungooautos://name=abc",
+						"https://jugnoo.in",
 						Data.userData.jugnooFbBanner);
 
 			}
