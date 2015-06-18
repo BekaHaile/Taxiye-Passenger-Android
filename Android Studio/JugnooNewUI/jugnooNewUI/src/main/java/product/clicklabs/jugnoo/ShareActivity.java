@@ -124,13 +124,13 @@ public class ShareActivity extends Activity{
 
                     SpannableString spanFriends = new SpannableString("friends");
                     spanFriends.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, spanFriends.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    SpannableString spanFreeRides = new SpannableString("FREE rides");
+                    SpannableString spanFreeRides = new SpannableString("Jugnoo Cash");
                     spanFreeRides.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, spanFreeRides.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     textViewReferralCaption.setText("");
                     textViewReferralCaption.append("Invite ");
                     textViewReferralCaption.append(spanFriends);
-                    textViewReferralCaption.append(" and\nget ");
+                    textViewReferralCaption.append(" and\nearn ");
                     textViewReferralCaption.append(spanFreeRides);
 
                 }
@@ -250,7 +250,7 @@ public class ShareActivity extends Activity{
 	public void openMailIntent(){
 		Intent email = new Intent(Intent.ACTION_SEND);
 		email.putExtra(Intent.EXTRA_EMAIL, new String[] { "" });
-		email.putExtra(Intent.EXTRA_SUBJECT, "Jugnoo Invite");
+		email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
 		email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage);
 		email.setType("message/rfc822");
 		startActivity(Intent.createChooser(email, "Choose an Email client:"));

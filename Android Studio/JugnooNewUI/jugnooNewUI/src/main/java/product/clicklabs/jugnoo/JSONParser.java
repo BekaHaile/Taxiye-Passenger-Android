@@ -285,6 +285,7 @@ public class JSONParser {
         String fbShareDescription = "Try Jugnoo app to call an auto at your doorsteps with just a tap.";
         String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
         int referralCaptionEnabled = 0;
+        String referralEmailSubject = "Hey! Have you used Jugnoo Autos yet?";
 
         try {
             if (jObj.has("referral_message")) {
@@ -306,11 +307,15 @@ public class JSONParser {
             if (jObj.has("referral_caption_enabled")) {
                 referralCaptionEnabled = jObj.getInt("referral_caption_enabled");
             }
+            if(jObj.has("referral_email_subject")){
+                referralEmailSubject = jObj.getString("referral_email_subject");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage, fbShareCaption, fbShareDescription, referralCaption, referralCaptionEnabled);
+        ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage, fbShareCaption, fbShareDescription, referralCaption, referralCaptionEnabled,
+            referralEmailSubject);
 
         return referralMessages;
     }

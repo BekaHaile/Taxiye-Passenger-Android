@@ -47,60 +47,66 @@ public class LocationInit {
     public static final int LOCATION_REQUEST_CODE = 1000;
 
     public static void showLocationAlertDialog(final Activity activity){
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(activity)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(connectionCallbacks)
-                .addOnConnectionFailedListener(onConnectionFailedListener).build();
-            googleApiClient.connect();
+        int sdkInt = android.os.Build.VERSION.SDK_INT;
+        if(sdkInt >= 19) {
+            if (googleApiClient == null) {
+                googleApiClient = new GoogleApiClient.Builder(activity)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(connectionCallbacks)
+                    .addOnConnectionFailedListener(onConnectionFailedListener).build();
+                googleApiClient.connect();
 
-            LocationRequest locationRequest = LocationRequest.create();
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            locationRequest.setInterval(30 * 1000);
-            locationRequest.setFastestInterval(5 * 1000);
-            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
+                LocationRequest locationRequest = LocationRequest.create();
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                locationRequest.setInterval(30 * 1000);
+                locationRequest.setFastestInterval(5 * 1000);
+                LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(locationRequest);
 
-            //**************************
-            builder.setAlwaysShow(true); //this is the key ingredient
-            //**************************
+                //**************************
+                builder.setAlwaysShow(true); //this is the key ingredient
+                //**************************
 
-            PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-            result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-                @Override
-                public void onResult(LocationSettingsResult result) {
-                    Log.e("result", "=" + result.getStatus());
-                    final Status status = result.getStatus();
-                    final LocationSettingsStates state = result.getLocationSettingsStates();
-                    switch (status.getStatusCode()) {
-                        case LocationSettingsStatusCodes.SUCCESS:
-                            // All location settings are satisfied. The client can initialize location
-                            // requests here.
-                            break;
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location settings are not satisfied. But could be fixed by showing the user
-                            // a dialog.
-                            try {
-                                // Show the dialog by calling startResolutionForResult(),
-                                // and check the result in onActivityResult().
-                                status.startResolutionForResult(
-                                    activity, LOCATION_REQUEST_CODE);
-                            } catch (IntentSender.SendIntentException e) {
-                                // Ignore the error.
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have no way to fix the
-                            // settings so we won't show the dialog.
-                            break;
+                PendingResult<LocationSettingsResult> result =
+                    LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+                result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+                    @Override
+                    public void onResult(LocationSettingsResult result) {
+                        Log.e("result", "=" + result.getStatus());
+                        final Status status = result.getStatus();
+                        final LocationSettingsStates state = result.getLocationSettingsStates();
+                        switch (status.getStatusCode()) {
+                            case LocationSettingsStatusCodes.SUCCESS:
+                                // All location settings are satisfied. The client can initialize location
+                                // requests here.
+                                break;
+                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                // Location settings are not satisfied. But could be fixed by showing the user
+                                // a dialog.
+                                try {
+                                    // Show the dialog by calling startResolutionForResult(),
+                                    // and check the result in onActivityResult().
+                                    status.startResolutionForResult(
+                                        activity, LOCATION_REQUEST_CODE);
+                                } catch (IntentSender.SendIntentException e) {
+                                    // Ignore the error.
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                // Location settings are not satisfied. However, we have no way to fix the
+                                // settings so we won't show the dialog.
+                                break;
+                        }
+
+                        googleApiClient.unregisterConnectionCallbacks(connectionCallbacks);
+                        googleApiClient.unregisterConnectionFailedListener(onConnectionFailedListener);
+                        googleApiClient = null;
                     }
-
-                    googleApiClient.unregisterConnectionCallbacks(connectionCallbacks);
-                    googleApiClient.unregisterConnectionFailedListener(onConnectionFailedListener);
-                    googleApiClient = null;
-                }
-            });
+                });
+            }
+        }
+        else{
+            DialogPopup.showLocationSettingsAlertGPS(activity);
         }
     }
 

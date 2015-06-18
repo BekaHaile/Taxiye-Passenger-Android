@@ -546,6 +546,7 @@ public class DialogPopup {
 	 * */
 	public static void showLocationSettingsAlert(final Context mContext){
 		try{
+
 			if(!((LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 					&&
 					!((LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
@@ -579,6 +580,41 @@ public class DialogPopup {
 			e.printStackTrace();
 		}
 	}
-	
+
+
+    public static void showLocationSettingsAlertGPS(final Context mContext){
+        try{
+
+            if(!((LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                if(locationAlertDialog != null && locationAlertDialog.isShowing()){
+                    locationAlertDialog.dismiss();
+                }
+                AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
+
+                // Setting Dialog Title
+                alertDialogPrepare.setTitle("Location Settings");
+                alertDialogPrepare.setCancelable(false);
+
+                // Setting Dialog Message
+                alertDialogPrepare.setMessage("GPS Location is not enabled. Do you want to enable it from settings menu?");
+
+                // On pressing Settings button
+                alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int which) {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        mContext.startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+
+                locationAlertDialog = alertDialogPrepare.create();
+
+                // Showing Alert Message
+                locationAlertDialog.show();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 	
 }

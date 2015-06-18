@@ -3108,13 +3108,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
-        if (AppStatus.getInstance(activity).isOnline(activity)) {
-            DialogPopup.showLoadingDialog(activity, "Loading...");
-            RequestParams params = new RequestParams();
-            params.put("access_token", Data.userData.accessToken);
-            params.put("engagement_id", engagementId);
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/get_ride_summary", params,
+        if(!checkIfUserDataNull(activity)) {
+            if (AppStatus.getInstance(activity).isOnline(activity)) {
+                DialogPopup.showLoadingDialog(activity, "Loading...");
+                RequestParams params = new RequestParams();
+                params.put("access_token", Data.userData.accessToken);
+                params.put("engagement_id", engagementId);
+                AsyncHttpClient client = Data.getClient();
+                client.post(Config.getServerUrl() + "/get_ride_summary", params,
                     new CustomAsyncHttpResponseHandler() {
                         private JSONObject jObj;
 
@@ -3175,23 +3176,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                         }
 
                                         double fareFactor = 1;
-                                        if(jObj.has("fare_factor")){
+                                        if (jObj.has("fare_factor")) {
                                             fareFactor = jObj.getDouble("fare_factor");
                                         }
 
                                         Data.endRideData = new EndRideData(engagementId,
-                                                jObj.getString("pickup_address"),
-                                                jObj.getString("drop_address"),
-                                                jObj.getString("pickup_time"),
-                                                jObj.getString("drop_time"),
-                                                banner,
-                                                jObj.getDouble("fare"),
-                                                jObj.getDouble("discount"),
-                                                jObj.getDouble("paid_using_wallet"),
-                                                jObj.getDouble("to_pay"),
-                                                jObj.getDouble("distance"),
-                                                jObj.getDouble("ride_time"),
-                                                baseFare, fareFactor);
+                                            jObj.getString("pickup_address"),
+                                            jObj.getString("drop_address"),
+                                            jObj.getString("pickup_time"),
+                                            jObj.getString("drop_time"),
+                                            banner,
+                                            jObj.getDouble("fare"),
+                                            jObj.getDouble("discount"),
+                                            jObj.getDouble("paid_using_wallet"),
+                                            jObj.getDouble("to_pay"),
+                                            jObj.getDouble("distance"),
+                                            jObj.getDouble("ride_time"),
+                                            baseFare, fareFactor);
 
                                         lastLocation = null;
                                         clearSPData();
@@ -3211,8 +3212,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             }
                         }
                     });
-        } else {
-            endRideRetryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
+            } else {
+                endRideRetryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
+            }
         }
     }
 
@@ -3470,143 +3472,94 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     public void startMapAnimateAndUpdateRideDataTimer() {
         cancelMapAnimateAndUpdateRideDataTimer();
         try {
+            appRestart = true;
             timerMapAnimateAndUpdateRideData = new Timer();
-
             timerTaskMapAnimateAndUpdateRideData = new TimerTask() {
 
                 @Override
                 public void run() {
                     try {
-
-                        final PolylineOptions polylineOptions = new PolylineOptions();
                         ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
-                        RidePath ridePath = null;
-
-//                        if (!fetchedRidePathsFromDb) {
-//                            Log.d("fetched from Db ", "fetched");
-//                            fetchedRidePathsFromDb = true;
-//                            ArrayList<RidePath> ridePaths1;
-//                            // this step gets the arraylist of RidePath type objects
-//                            ridePaths1 = Database2.getInstance(HomeActivity.this).getRidePathInfo();
-//
-//
-//                            for (int j = 0; j < ridePaths1.size(); j++) {
-//                                LatLng start = new LatLng(
-//                                        ridePaths1.get(j).getSourceLatitude(),
-//                                        ridePaths1.get(j).getSourceLongitude());
-//
-//                                LatLng end = new LatLng(
-//                                        ridePaths1.get(j).getDestinationLatitude(),
-//                                        ridePaths1.get(j).getDestinationLongitude());
-//
-//                                polylineOptions.add(start, end);
-//                            }
-//                        } else {
-//
-//                            nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.cEngagementId));
-//                            nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-//                            nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" +
-//                                    Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
-//
-//                            Log.d("Further location request", String.valueOf(Database2.getInstance
-//                                    (HomeActivity.this).getLastRowIdInRideInfo()));
-
                         if (appRestart) {
                             appRestart = false;
-                            nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" + "0"));
-                            Log.d("First location request", "last_sent_max_id = 0");
-
-                        } else {
-                            nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" +
-                                    Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
-
-                            Log.d("Further location request", String.valueOf(Database2.getInstance
-                                    (HomeActivity.this).getLastRowIdInRideInfo()));
+                            displayOldPath();
                         }
 
+                        nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" +
+                            Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
                         nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.cEngagementId));
                         nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 
                         HttpRequester simpleJSONParser = new HttpRequester();
                         String result = simpleJSONParser.getJSONFromUrlParamsViaGetRequest
-                                (Config.getServerUrl() + "/get_ongoing_ride_path", nameValuePairs);
+                            (Config.getServerUrl() + "/get_ongoing_ride_path", nameValuePairs);
 
                         Log.e("result of get_ongoing_ride_path", "=" + result);
 
                         try {
-                            JSONObject jObj = new JSONObject(result);
-                            int flag = jObj.getInt("flag");
+                            final JSONObject jObj = new JSONObject(result);
+                            final int flag = jObj.getInt("flag");
 
-                            if (ApiResponseFlags.RIDE_PATH_INFO_SUCCESS.getOrdinal() == flag) {
-                                JSONArray jsonArray = jObj.getJSONArray("locations");
-                                ArrayList<RidePath> ridePaths = new ArrayList<>();
-                                for (int i = 0; i < jsonArray.length(); i++) {
-
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    ridePaths.add(new RidePath(
-                                            jsonObject.getInt("id"),
-                                            jsonObject.getDouble("source_latitude"),
-                                            jsonObject.getDouble("source_longitude"),
-                                            jsonObject.getDouble("destination_latitude"),
-                                            jsonObject.getDouble("destination_longitude")
-                                    ));
-
-                                    LatLng start = new LatLng(
-                                            jsonObject.getDouble("source_latitude"),
-                                            jsonObject.getDouble("source_longitude"));
-
-                                    LatLng end = new LatLng(
-                                            jsonObject.getDouble("destination_latitude"),
-                                            jsonObject.getDouble("destination_longitude"));
-
-                                    polylineOptions.add(start, end);
-
-                                    if (i == jsonArray.length() - 1) {
-                                        ridePath = new RidePath(jsonObject.getInt("id"),
-                                                jsonObject.getDouble("source_latitude"),
-                                                jsonObject.getDouble("source_longitude"),
-                                                jsonObject.getDouble("destination_latitude"),
-                                                jsonObject.getDouble("destination_longitude"));
-                                    }
-
-
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
                                     try {
-                                        Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePaths);
+                                        if (ApiResponseFlags.RIDE_PATH_INFO_SUCCESS.getOrdinal() == flag) {
+
+                                            RidePath ridePath = null;
+                                            ArrayList<RidePath> ridePathsList = new ArrayList<>();
+
+                                            JSONArray jsonArray = jObj.getJSONArray("locations");
+                                            for (int i = 0; i < jsonArray.length(); i++) {
+                                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                                RidePath currentRidePath = new RidePath(
+                                                    jsonObject.getInt("id"),
+                                                    jsonObject.getDouble("source_latitude"),
+                                                    jsonObject.getDouble("source_longitude"),
+                                                    jsonObject.getDouble("destination_latitude"),
+                                                    jsonObject.getDouble("destination_longitude"));
+
+                                                ridePathsList.add(currentRidePath);
+
+                                                LatLng start = new LatLng(currentRidePath.sourceLatitude, currentRidePath.sourceLongitude);
+                                                LatLng end = new LatLng(currentRidePath.destinationLatitude, currentRidePath.destinationLongitude);
+
+                                                if (i == jsonArray.length() - 1) {
+                                                    ridePath = currentRidePath;
+                                                }
+                                                final PolylineOptions polylineOptions = new PolylineOptions();
+                                                polylineOptions.add(start, end);
+                                                polylineOptions.width(ASSL.Xscale() * 5);
+                                                polylineOptions.color(Color.RED);
+                                                polylineOptions.geodesic(false);
+
+                                                // Drawing poly-line in the Google Map
+                                                if (map != null && polylineOptions != null) {
+                                                    map.addPolyline(polylineOptions);
+                                                }
+                                            }
+                                            if (map != null && ridePath != null) {
+                                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude)));
+                                            }
+
+                                            try {
+                                                Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-
                                 }
-                            }
+                            });
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
 
-                        polylineOptions.width(3);
-                        polylineOptions.color(Color.RED);
-                        polylineOptions.geodesic(false);
-
-                        if (myLocation != null &&
-                                map != null) {
-                            final RidePath finalRidePath = ridePath;
-                            HomeActivity.this.runOnUiThread(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    if (finalRidePath != null) {
-                                        map.animateCamera(CameraUpdateFactory.newLatLng(new
-                                                LatLng(finalRidePath.getDestinationLatitude(),
-                                                finalRidePath.getDestinationLongitude())));
-                                    }
-                                    // Drawing poly-line in the Google Map
-                                    map.addPolyline(polylineOptions);
-                                }
-                            });
-                        }
-
-
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -3614,11 +3567,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 15000);
             Log.i("timerMapAnimateAndUpdateRideData", "started");
-        } catch (
-                Exception e
-                )
-
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -3641,6 +3590,36 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             e.printStackTrace();
         }
     }
+
+    public void displayOldPath() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ArrayList<RidePath> ridePathsList = new ArrayList<>();
+                    ridePathsList.addAll(Database2.getInstance(HomeActivity.this).getRidePathInfo());
+
+                    for (RidePath ridePath : ridePathsList) {
+                        final PolylineOptions polylineOptions = new PolylineOptions();
+                        polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
+                            new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
+                        polylineOptions.width(ASSL.Xscale() * 5);
+                        polylineOptions.color(Color.RED);
+                        polylineOptions.geodesic(false);
+                        if (map != null && polylineOptions != null) {
+                            map.addPolyline(polylineOptions);
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+
 
 
     void callAnAutoPopup(final Activity activity, int totalPromoCoupons, LatLng pickupLatLng) {

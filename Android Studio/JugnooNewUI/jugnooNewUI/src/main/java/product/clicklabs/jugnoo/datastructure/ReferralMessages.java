@@ -8,15 +8,18 @@ public class ReferralMessages{
 	public String fbShareDescription;
     public String referralCaption;
     public int referralCaptionEnabled;
+    public String referralEmailSubject;
 
 
-	public ReferralMessages(String referralMessage, String referralSharingMessage, String fbShareCaption, String fbShareDescription, String referralCaption, int referralCaptionEnabled){
+	public ReferralMessages(String referralMessage, String referralSharingMessage, String fbShareCaption, String fbShareDescription, String referralCaption, int referralCaptionEnabled,
+                            String referralEmailSubject){
 		this.referralMessage = referralMessage;
 		this.referralSharingMessage = referralSharingMessage;
 		this.fbShareCaption = fbShareCaption;
 		this.fbShareDescription = fbShareDescription;
         this.referralCaption = referralCaption;
         this.referralCaptionEnabled = referralCaptionEnabled;
+        this.referralEmailSubject = referralEmailSubject;
 	}
 	
 }
