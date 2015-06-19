@@ -294,7 +294,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     public static final long LOCATION_UPDATE_TIME_PERIOD = 6 * 10000; //in milliseconds
 
 
-    public static final double MIN_BALANCE_ALERT_VALUE = 150; //in Rupees
+    public static final double MIN_BALANCE_ALERT_VALUE = 100; //in Rupees
 
 
     public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;  //in meters

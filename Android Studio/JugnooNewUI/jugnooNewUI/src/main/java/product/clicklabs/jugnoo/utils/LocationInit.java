@@ -106,7 +106,7 @@ public class LocationInit {
             }
         }
         else{
-            DialogPopup.showLocationSettingsAlertGPS(activity);
+            DialogPopup.showLocationSettingsAlert(activity);
         }
     }
 
