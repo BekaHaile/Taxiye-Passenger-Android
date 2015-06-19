@@ -207,7 +207,7 @@ public class ShareActivity extends Activity{
 		public void facebookLoginDone() {
 			if(Data.userData != null){
 				new FacebookLoginHelper().publishFeedDialog(ShareActivity.this, 
-						"Jugnoo - autos on demand",
+						"Jugnoo Autos - Autos on demand",
 						Data.referralMessages.fbShareCaption, 
 						Data.referralMessages.fbShareDescription,
 						"https://jugnoo.in",
