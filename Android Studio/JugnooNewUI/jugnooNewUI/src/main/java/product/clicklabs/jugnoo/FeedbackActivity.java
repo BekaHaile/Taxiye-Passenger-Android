@@ -45,6 +45,7 @@ public class FeedbackActivity extends Activity {
     TextView textViewTitle;
     ImageView imageViewBack;
 
+    TextView textViewRateYourExp;
     RatingBar ratingBarFeedback;
     TextView textViewRateText;
     EditText editTextFeedback;
@@ -81,6 +82,8 @@ public class FeedbackActivity extends Activity {
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
+        textViewRateYourExp = (TextView) findViewById(R.id.textViewRateYourExp);
+        textViewRateYourExp.setTypeface(Fonts.latoLight(this));
         ratingBarFeedback = (RatingBar) findViewById(R.id.ratingBarFeedback);
         ratingBarFeedback.setRating(0);
         textViewRateText = (TextView) findViewById(R.id.textViewRateText);
@@ -109,6 +112,12 @@ public class FeedbackActivity extends Activity {
         });
 
 
+        scrollView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetEditText();
+            }
+        });
         topBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,7 +201,7 @@ public class FeedbackActivity extends Activity {
         editTextFeedback.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                editTextFeedback.setHint("");
+                editTextFeedback.setHint("Please share your valuable feedback");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
