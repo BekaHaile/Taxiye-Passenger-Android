@@ -281,6 +281,18 @@ public class DateOperations {
 		}
 		return 60000;
 	}
+
+    public static long getTimeDifference(long time1, long time2){
+        try {
+            Date date1 = new Date(time1);
+            Date date2 = new Date(time2);
+            long millis = date1.getTime() - date2.getTime();
+            return millis;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 60000;
+    }
 	
 	public long getMilliseconds(String time1){
 		try {
