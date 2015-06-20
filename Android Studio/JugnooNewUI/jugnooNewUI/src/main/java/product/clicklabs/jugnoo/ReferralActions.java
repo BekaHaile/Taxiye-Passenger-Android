@@ -58,7 +58,7 @@ public class ReferralActions {
             if(showDialog) {
                 final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
                 dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-                dialog.setContentView(R.layout.dialog_ride_promotion);
+                dialog.setContentView(R.layout.dialog_referral);
 
                 RelativeLayout rv = (RelativeLayout) dialog.findViewById(R.id.rv);
                 new ASSL(activity, rv, 1134, 720, true);
@@ -125,6 +125,7 @@ public class ReferralActions {
                 });
 
                 dialog.show();
+                resetTransactionCount(activity);
                 updateOpenDate(activity);
             }
 
@@ -204,14 +205,24 @@ public class ReferralActions {
 
     public static void incrementAppOpen(Context context){
         long lastAppOpen = Prefs.with(context).getLong(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
+        if(lastAppOpen >= 100){
+            lastAppOpen = 0;
+        }
         lastAppOpen = lastAppOpen + 1;
         Prefs.with(context).save(SPLabels.REFERRAL_APP_OPEN_COUNT, lastAppOpen);
     }
 
     public static void incrementTransactionCount(Context context){
         long lastTransactionCount = Prefs.with(context).getLong(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
+        if(lastTransactionCount >= 100){
+            lastTransactionCount = 0;
+        }
         lastTransactionCount = lastTransactionCount + 1;
         Prefs.with(context).save(SPLabels.REFERRAL_TRANSACTION_COUNT, lastTransactionCount);
+    }
+
+    public static void resetTransactionCount(Context context){
+        Prefs.with(context).save(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
     }
 
     public static void updateOpenDate(Context context){
