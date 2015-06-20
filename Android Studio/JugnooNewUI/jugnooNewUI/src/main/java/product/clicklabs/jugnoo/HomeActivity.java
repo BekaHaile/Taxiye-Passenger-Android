@@ -2455,8 +2455,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         autoCompleteSearchResults.clear();
                         autoCompleteSearchResults.addAll(MapUtils.getAutoCompleteSearchResultsFromGooglePlaces(searchText, latLng));
 
-                        recallLatestTextSearch(searchText, latLng);
-
                         setSearchResultsToList();
                         refreshingAutoComplete = false;
                         autoCompleteThread = null;
@@ -2467,26 +2465,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void recallLatestTextSearch(final String searchText, final LatLng latLng) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String currentText = editTextSearch.getText().toString().trim();
-                if (searchText.equalsIgnoreCase(currentText)) {
-
-                } else {
-                    autoCompleteSearchResults.clear();
-                    searchListAdapter.notifyDataSetChanged();
-                    if (currentText.length() > 0) {
-                        if (map != null) {
-                            getSearchResults(currentText, latLng);
-                        }
-                    }
-                }
-            }
-        });
     }
 
 
@@ -2541,8 +2519,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         LayoutInflater mInflater;
         ViewHolderSearchItem holder;
 
+        ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults;
+
         public SearchListAdapter() {
-            mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.autoCompleteSearchResults = new ArrayList<>();
+        }
+
+        public synchronized void setResults(ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults){
+            this.autoCompleteSearchResults.clear();
+            this.autoCompleteSearchResults.addAll(autoCompleteSearchResults);
         }
 
         @Override
