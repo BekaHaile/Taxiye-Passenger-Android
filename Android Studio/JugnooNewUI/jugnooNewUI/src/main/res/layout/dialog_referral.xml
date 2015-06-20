@@ -156,7 +156,7 @@
 
 
         <ImageView
-            android:id="@+id/cancelBtnView"
+            android:id="@+id/imageViewCross"
             android:layout_width="60px"
             android:layout_height="60px"
             android:padding="5px"

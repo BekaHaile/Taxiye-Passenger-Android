@@ -322,6 +322,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
+        ReferralActions.incrementAppOpen(this);
+
         HomeActivity.appInterruptHandler = HomeActivity.this;
 
 
@@ -1186,7 +1189,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Database2.getInstance(HomeActivity.this).close();
 
     }
 
@@ -2020,6 +2022,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
 
                 initiateTimersForStates(mode);
+
+                ReferralActions.showReferralDialog(HomeActivity.this);
 
             }
         } catch (Exception e) {
@@ -4645,6 +4649,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             @Override
             public void run() {
+                ReferralActions.incrementTransactionCount(HomeActivity.this);
                 userMode = UserMode.PASSENGER;
 
                 switchUserScreen();
