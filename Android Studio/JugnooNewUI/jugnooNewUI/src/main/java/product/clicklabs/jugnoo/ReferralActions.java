@@ -1,15 +1,26 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
+import rmn.androidscreenlibrary.ASSL;
 
 /**
  * Created by socomo20 on 6/19/15.
@@ -17,18 +28,127 @@ import product.clicklabs.jugnoo.utils.Log;
 public class ReferralActions {
 
 
+    public static void showReferralDialog(final Activity activity){
+        try{
+
+            boolean showDialog = false;
+            long lastOpenDate = Prefs.with(activity).getLong(SPLabels.REFERRAL_OPEN_DATE_MILLIS, -1);
+            long oneDayMillis = 24 * 60 * 60 * 1000;
+            long dateDiff = DateOperations.getTimeDifference(System.currentTimeMillis(), lastOpenDate);
+
+            long lastAppOpen = Prefs.with(activity).getLong(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
+            long lastTransactionCount = Prefs.with(activity).getLong(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
+
+            if(dateDiff >= oneDayMillis){
+                if((lastTransactionCount > 0) && (lastTransactionCount % 2 == 0)){
+                    showDialog = true;
+                }
+                else if((lastAppOpen > 0) && (lastAppOpen % 5 == 0)){
+                    showDialog = true;
+                }
+                else{
+                    showDialog = false;
+                }
+            }
+            else{
+                showDialog = false;
+            }
+
+
+            if(showDialog) {
+                final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+                dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+                dialog.setContentView(R.layout.dialog_ride_promotion);
+
+                RelativeLayout rv = (RelativeLayout) dialog.findViewById(R.id.rv);
+                new ASSL(activity, rv, 1134, 720, true);
+
+                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+                layoutParams.dimAmount = 0.6f;
+                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                dialog.setCancelable(true);
+                dialog.setCanceledOnTouchOutside(true);
+
+                ((TextView) dialog.findViewById(R.id.textViewGiftGet)).setTypeface(Fonts.latoRegular(activity));
+                TextView textViewAmount = (TextView) dialog.findViewById(R.id.textViewAmount);
+                textViewAmount.setTypeface(Fonts.latoRegular(activity));
+                ((TextView) dialog.findViewById(R.id.textViewShareCodeToday)).setTypeface(Fonts.latoRegular(activity));
+
+
+                (dialog.findViewById(R.id.imageViewFacebook)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        shareToFacebook(activity);
+                    }
+                });
+
+                (dialog.findViewById(R.id.imageViewWhatsapp)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        shareToWhatsapp(activity);
+                    }
+                });
+
+                (dialog.findViewById(R.id.imageViewSMS)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendSMSIntent(activity);
+                    }
+                });
+
+                (dialog.findViewById(R.id.imageViewEmail)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openMailIntent(activity);
+                    }
+                });
+
+                (dialog.findViewById(R.id.imageViewCross)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                (dialog.findViewById(R.id.innerRl)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                rv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+                updateOpenDate(activity);
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     public static void shareToFacebook(final Activity activity){
         new FacebookLoginHelper().openFacebookSession(activity, new FacebookLoginCallback() {
             @Override
             public void facebookLoginDone() {
-                if(Data.userData != null){
-                    new FacebookLoginHelper().publishFeedDialog(activity,
-                        "Jugnoo Autos - Autos on demand",
-                        Data.referralMessages.fbShareCaption,
-                        Data.referralMessages.fbShareDescription,
-                        "https://jugnoo.in",
-                        Data.userData.jugnooFbBanner);
+                try {
+                    if(Data.userData != null){
+                        new FacebookLoginHelper().publishFeedDialog(activity,
+                            "Jugnoo Autos - Autos on demand",
+                            Data.referralMessages.fbShareCaption,
+                            Data.referralMessages.fbShareDescription,
+                            "https://jugnoo.in",
+                            Data.userData.jugnooFbBanner);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }, false);
@@ -77,6 +197,26 @@ public class ReferralActions {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+
+
+    public static void incrementAppOpen(Context context){
+        long lastAppOpen = Prefs.with(context).getLong(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
+        lastAppOpen = lastAppOpen + 1;
+        Prefs.with(context).save(SPLabels.REFERRAL_APP_OPEN_COUNT, lastAppOpen);
+    }
+
+    public static void incrementTransactionCount(Context context){
+        long lastTransactionCount = Prefs.with(context).getLong(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
+        lastTransactionCount = lastTransactionCount + 1;
+        Prefs.with(context).save(SPLabels.REFERRAL_TRANSACTION_COUNT, lastTransactionCount);
+    }
+
+    public static void updateOpenDate(Context context){
+        long dateMillis = System.currentTimeMillis();
+        Prefs.with(context).save(SPLabels.REFERRAL_OPEN_DATE_MILLIS, dateMillis);
     }
 
 }
