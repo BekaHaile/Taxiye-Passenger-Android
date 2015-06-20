@@ -77,9 +77,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10px"
                 android:gravity="center"
-                android:text="Up to Rs. 100 in Jugnoo Cash\n ahskjdhjklsa"
+                android:text="Up to Rs. 100 in Jugnoo Cash"
                 android:textColor="@color/black_light"
-                android:textSize="24px"
+                android:textSize="28px"
                 />
 
 
@@ -94,7 +94,7 @@
                 android:gravity="center"
                 android:text="Share your code Today!"
                 android:textColor="@color/black_text_alpha"
-                android:textSize="19px"
+                android:textSize="24px"
                 />
 
 
