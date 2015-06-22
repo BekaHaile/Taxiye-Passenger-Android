@@ -32,12 +32,13 @@ public class ReferralActions {
         try{
 
             boolean showDialog = false;
-            long lastOpenDate = Prefs.with(activity).getLong(SPLabels.REFERRAL_OPEN_DATE_MILLIS, -1);
+            long minus1 = -1l;
+            long lastOpenDate = Prefs.with(activity).getLong(SPLabels.REFERRAL_OPEN_DATE_MILLIS, minus1);
             long oneDayMillis = 24 * 60 * 60 * 1000;
             long dateDiff = DateOperations.getTimeDifference(System.currentTimeMillis(), lastOpenDate);
 
-            long lastAppOpen = Prefs.with(activity).getLong(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
-            long lastTransactionCount = Prefs.with(activity).getLong(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
+            int lastAppOpen = Prefs.with(activity).getInt(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
+            int lastTransactionCount = Prefs.with(activity).getInt(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
 
             if(dateDiff >= oneDayMillis){
                 if((lastTransactionCount > 0) && (lastTransactionCount % 2 == 0)){
@@ -70,6 +71,7 @@ public class ReferralActions {
                 dialog.setCanceledOnTouchOutside(true);
 
                 ((TextView) dialog.findViewById(R.id.textViewGiftGet)).setTypeface(Fonts.latoRegular(activity));
+                ((TextView) dialog.findViewById(R.id.textViewInviteFriends)).setTypeface(Fonts.latoRegular(activity));
                 TextView textViewAmount = (TextView) dialog.findViewById(R.id.textViewAmount);
                 textViewAmount.setTypeface(Fonts.latoRegular(activity));
                 ((TextView) dialog.findViewById(R.id.textViewShareCodeToday)).setTypeface(Fonts.latoRegular(activity));
@@ -125,6 +127,7 @@ public class ReferralActions {
                 });
 
                 dialog.show();
+                resetAppOpen(activity);
                 resetTransactionCount(activity);
                 updateOpenDate(activity);
             }
@@ -204,7 +207,7 @@ public class ReferralActions {
 
 
     public static void incrementAppOpen(Context context){
-        long lastAppOpen = Prefs.with(context).getLong(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
+        int lastAppOpen = Prefs.with(context).getInt(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
         if(lastAppOpen >= 100){
             lastAppOpen = 0;
         }
@@ -212,8 +215,12 @@ public class ReferralActions {
         Prefs.with(context).save(SPLabels.REFERRAL_APP_OPEN_COUNT, lastAppOpen);
     }
 
+    public static void resetAppOpen(Context context){
+        Prefs.with(context).save(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
+    }
+
     public static void incrementTransactionCount(Context context){
-        long lastTransactionCount = Prefs.with(context).getLong(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
+        int lastTransactionCount = Prefs.with(context).getInt(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
         if(lastTransactionCount >= 100){
             lastTransactionCount = 0;
         }

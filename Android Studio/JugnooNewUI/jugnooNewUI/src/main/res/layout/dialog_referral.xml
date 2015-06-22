@@ -69,6 +69,18 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/textViewInviteFriends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="4px"
+                android:layout_marginTop="10px"
+                android:gravity="center"
+                android:text="Invite your friends to Jugnoo and you both get"
+                android:textColor="@color/black_text_alpha"
+                android:textSize="24px"
+                />
 
             <TextView
                 android:id="@+id/textViewAmount"
@@ -87,7 +99,6 @@
                 android:id="@+id/textViewShareCodeToday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="4px"
                 android:layout_marginTop="10px"
