@@ -4635,6 +4635,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             @Override
             public void run() {
+
                 ReferralActions.incrementTransactionCount(HomeActivity.this);
                 userMode = UserMode.PASSENGER;
 
