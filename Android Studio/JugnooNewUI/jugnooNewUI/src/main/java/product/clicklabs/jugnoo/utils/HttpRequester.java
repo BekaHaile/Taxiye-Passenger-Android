@@ -33,7 +33,13 @@ public class HttpRequester {
         return Config.getHttpRequester().getJSONFromUrlParamsFinalGet(url, nameValuePairs);
     }
 
-	
+    public static void setTimeouts(int requestedTimeout){
+        TIMEOUT_CONNECTION = requestedTimeout;
+        TIMEOUT_SOCKET = requestedTimeout;
+    }
+
+
+
 }
 
 

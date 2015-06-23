@@ -307,14 +307,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
     public boolean activityResumed = false;
-    public static boolean rechargedOnce = false;
+    public static boolean rechargedOnce = false, feedbackAutoSkipped = false;
 
     public ASSL assl;
 
 
     private int showAllDrivers = 0, showDriverInfo = 0;
 
-    private boolean intentFired = false;
+    private boolean intentFired = false, referralDialogShown = false;
 
 
     @Override
@@ -2023,7 +2023,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                 initiateTimersForStates(mode);
 
-                ReferralActions.showReferralDialog(HomeActivity.this);
+                referralDialogShown = ReferralActions.showReferralDialog(HomeActivity.this);
 
             }
         } catch (Exception e) {
@@ -2256,7 +2256,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             try {
                 if (activityResumed) {
                     callAndHandleStateRestoreAPI(false);
-                    initiateTimersForStates(passengerScreenMode);
+                    if(!feedbackAutoSkipped) {
+                        initiateTimersForStates(passengerScreenMode);
+                    }
 
                     if (!intentFired) {
                         if (userMode == UserMode.PASSENGER &&
@@ -2279,6 +2281,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
         activityResumed = true;
         intentFired = false;
+        feedbackAutoSkipped = false;
 
         LocationInit.showLocationAlertDialog(this);
     }
@@ -4150,7 +4153,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     @Override
     public void customerEndRideInterrupt(final String engagementId) {
         try {
-            if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_IN_RIDE) {
+            if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.cEngagementId)) {
                 closeCancelActivity();
                 runOnUiThread(new Runnable() {
 
@@ -4644,11 +4647,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
 
-                if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
-                    rateAppPopup(activity);
-                } else {
-                    if (skipped && Data.customerRateAppFlag == 1) {
+                if (!referralDialogShown) {
+                    if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
                         rateAppPopup(activity);
+                    } else {
+                        if (skipped && Data.customerRateAppFlag == 1) {
+                            rateAppPopup(activity);
+                        }
                     }
                 }
             }
@@ -4670,24 +4675,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         setUserData();
                     }
                     DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
-                            "Jugnoo Cash added",
-                            message,
-                            "Check Balance", "Call Support",
-                            new OnClickListener() {
+                        "Jugnoo Cash added",
+                        message,
+                        "Check Balance", "Call Support",
+                        new OnClickListener() {
 
-                                @Override
-                                public void onClick(View v) {
-                                    HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
-                                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                }
-                            },
-                            new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            }
+                        },
+                        new OnClickListener() {
 
-                                @Override
-                                public void onClick(View v) {
-                                    Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber());
-                                }
-                            }, true, true);
+                            @Override
+                            public void onClick(View v) {
+                                Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber());
+                            }
+                        }, true, true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -4706,6 +4711,36 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
     }
+
+    @Override
+    public void refreshOnPendingCallsDone() {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+            }
+        });
+    }
+
+
+//    public void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
+//
+//        RequestParams params = new RequestParams();
+//        params.put("access_token", Data.userData.accessToken);
+//        params.put("engagement_id", engagementId);
+//
+//        String url = Config.getServerUrl() + "/skip_rating_by_customer";
+//
+//        Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+//
+//        HomeActivity.feedbackAutoSkipped = true;
+//        HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
+//        finish();
+//        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//
+//    }
+
+
 
 
     public void callAndHandleStateRestoreAPI(final boolean showDialogs) {

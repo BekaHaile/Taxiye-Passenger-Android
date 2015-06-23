@@ -23,4 +23,6 @@ public interface AppInterruptHandler {
 	public void onJugnooCashAddedByDriver(double jugnooBalance, String message);
 
     public void onDriverArrived(String logMessage);
+
+    public void refreshOnPendingCallsDone();
 }

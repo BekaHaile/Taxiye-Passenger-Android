@@ -383,7 +383,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 
 
-
+        startService(new Intent(this, PushPendingCallsService.class));
 
     }
 	
