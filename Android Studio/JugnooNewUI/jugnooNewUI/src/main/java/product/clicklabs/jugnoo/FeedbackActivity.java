@@ -376,58 +376,36 @@ public class FeedbackActivity extends Activity {
 
 
     public void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+        final RequestParams params = new RequestParams();
+        params.put("access_token", Data.userData.accessToken);
+        params.put("engagement_id", engagementId);
 
-            RequestParams params = new RequestParams();
+        final String url = Config.getServerUrl() + "/skip_rating_by_customer";
 
-            params.put("access_token", Data.userData.accessToken);
-            params.put("engagement_id", engagementId);
+        Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
 
-            Log.i("access_token", "=" + Data.userData.accessToken);
-            Log.i("engagement_id", engagementId);
+        HomeActivity.feedbackAutoSkipped = true;
+        HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
+        finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/skip_rating_by_customer", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
+        AsyncHttpClient client = Data.getClient();
+        client.post(url, params,
+            new CustomAsyncHttpResponseHandler() {
 
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
+                @Override
+                public void onFailure(Throwable arg3) {
+                    Log.e("request fail", arg3.toString());
+                    Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+                }
 
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        try {
-                            jObj = new JSONObject(response);
-                            int flag = jObj.getInt("flag");
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                    String error = jObj.getString("error");
-                                    DialogPopup.alertPopup(activity, "", error);
-                                } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
-                                    finish();
-                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                });
-        } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-        }
+                @Override
+                public void onSuccess(String response) {
+                    Log.i("Server response", "response = " + response);
+
+                }
+            });
     }
 
 

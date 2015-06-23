@@ -13,7 +13,10 @@ public class SPLabels {
 
         REFERRAL_OPEN_DATE_MILLIS = "referralOpenDateMillis",
         REFERRAL_TRANSACTION_COUNT = "referralTransactionCount",
-        REFERRAL_APP_OPEN_COUNT = "referralAppOpenCount"
+        REFERRAL_APP_OPEN_COUNT = "referralAppOpenCount",
+
+
+        PENDING_CALLS_RETRY_COUNT = "pendingCallsRetryCount"
 
             ;
 
