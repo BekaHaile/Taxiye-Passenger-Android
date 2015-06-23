@@ -115,7 +115,7 @@
             android:id="@+id/relativeLayoutShareActions"
             android:layout_width="match_parent"
             android:layout_height="66px"
-            android:layout_marginTop="20px"
+            android:layout_marginTop="10px"
             android:background="@color/transparent"
             android:gravity="center_vertical"
             android:layout_below="@+id/linearLayoutGiftParent"

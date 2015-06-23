@@ -28,9 +28,8 @@ import rmn.androidscreenlibrary.ASSL;
 public class ReferralActions {
 
 
-    public static void showReferralDialog(final Activity activity){
+    public static boolean showReferralDialog(final Activity activity){
         try{
-
             boolean showDialog = false;
             long minus1 = -1l;
             long lastOpenDate = Prefs.with(activity).getLong(SPLabels.REFERRAL_OPEN_DATE_MILLIS, minus1);
@@ -131,10 +130,11 @@ public class ReferralActions {
                 resetTransactionCount(activity);
                 updateOpenDate(activity);
             }
-
+            return showDialog;
         } catch(Exception e){
             e.printStackTrace();
         }
+        return false;
     }
 
 

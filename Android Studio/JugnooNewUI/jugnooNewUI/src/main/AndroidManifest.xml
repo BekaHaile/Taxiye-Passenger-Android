@@ -271,6 +271,18 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <service
+            android:name="product.clicklabs.jugnoo.PushPendingCallsService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <receiver android:name="product.clicklabs.jugnoo.PushPendingCallsReceiver" >
+            <intent-filter>
+                <action android:name="product.clicklabs.jugnoo.PUSH_PENDING_CALLS" />
+            </intent-filter>
+        </receiver>
+
 
 
         <meta-data
