@@ -383,8 +383,6 @@ public class FeedbackActivity extends Activity {
 
         final String url = Config.getServerUrl() + "/skip_rating_by_customer";
 
-        Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
-
         HomeActivity.feedbackAutoSkipped = true;
         HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
         finish();
@@ -397,7 +395,6 @@ public class FeedbackActivity extends Activity {
                 @Override
                 public void onFailure(Throwable arg3) {
                     Log.e("request fail", arg3.toString());
-                    Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
                 }
 
                 @Override
@@ -406,6 +403,8 @@ public class FeedbackActivity extends Activity {
 
                 }
             });
+
+        Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
     }
 
 
