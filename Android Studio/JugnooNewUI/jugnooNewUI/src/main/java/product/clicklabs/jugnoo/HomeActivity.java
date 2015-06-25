@@ -193,6 +193,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     RelativeLayout relativeLayoutInitialSearchBar;
     TextView textViewInitialSearch;
     ProgressBar progressBarInitialSearch;
+    RelativeLayout relativeLayoutRequestInfo;
 
 
     //Assigining layout
@@ -449,6 +450,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         imageViewMeals1 = (ImageView) findViewById(R.id.imageViewMeals1);
         imageViewFatafat1 = (ImageView) findViewById(R.id.imageViewFatafat1);
         imageViewJugnoo1 = (ImageView) findViewById(R.id.imageViewJugnoo1);
+
+        relativeLayoutRequestInfo = (RelativeLayout) findViewById(R.id.relativeLayoutRequestInfo);
+
+        relativeLayoutJugnooAnim.setVisibility(View.GONE);
 
 
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
@@ -1188,6 +1193,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
             ReferralActions.showReferralDialog(HomeActivity.this);
+
+            new GenieLayout(this).addGenieLayout(initialLayout, relativeLayoutRequestInfo);
 
         } catch (Exception e) {
             e.printStackTrace();
