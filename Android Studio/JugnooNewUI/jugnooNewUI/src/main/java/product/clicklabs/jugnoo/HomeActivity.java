@@ -314,7 +314,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     private int showAllDrivers = 0, showDriverInfo = 0;
 
-    private boolean intentFired = false, referralDialogShown = false;
+    private boolean intentFired = false;
 
 
     @Override
@@ -1186,6 +1186,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
             }, 5000);
 
+
+            ReferralActions.showReferralDialog(HomeActivity.this);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1782,6 +1785,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
+
                         break;
 
 
@@ -2023,7 +2027,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                 initiateTimersForStates(mode);
 
-                referralDialogShown = ReferralActions.showReferralDialog(HomeActivity.this);
 
             }
         } catch (Exception e) {
@@ -4644,18 +4647,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                 switchUserScreen();
 
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
-
-                if (!referralDialogShown) {
-                    if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
+                if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
+                    rateAppPopup(activity);
+                } else {
+                    if (skipped && Data.customerRateAppFlag == 1) {
                         rateAppPopup(activity);
-                    } else {
-                        if (skipped && Data.customerRateAppFlag == 1) {
-                            rateAppPopup(activity);
-                        }
+                    }
+                    else{
                     }
                 }
+
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
             }
         });
 
@@ -4721,24 +4724,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
     }
-
-
-//    public void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
-//
-//        RequestParams params = new RequestParams();
-//        params.put("access_token", Data.userData.accessToken);
-//        params.put("engagement_id", engagementId);
-//
-//        String url = Config.getServerUrl() + "/skip_rating_by_customer";
-//
-//        Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
-//
-//        HomeActivity.feedbackAutoSkipped = true;
-//        HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
-//        finish();
-//        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//
-//    }
 
 
 
