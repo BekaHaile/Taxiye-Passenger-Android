@@ -267,91 +267,6 @@
                         android:layout_marginBottom="40px"
                         />
 
-
-
-
-                    <AbsoluteLayout
-                        android:id="@+id/rootAbsoluteLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <RelativeLayout
-                            android:id="@+id/animLayout"
-                            android:layout_width="112px"
-                            android:layout_height="415px"
-                            android:layout_x="580px"
-                            android:layout_y="580px"
-                            android:layout_centerHorizontal="true">
-
-                            <RelativeLayout
-                                android:id="@+id/relativeUpward"
-                                android:layout_width="112px"
-                                android:layout_height="415px"
-                                android:layout_centerHorizontal="true">
-
-                                <ImageView
-                                    android:id="@+id/imageViewMeals1"
-                                    android:layout_width="112px"
-                                    android:layout_height="112px"
-                                    android:layout_marginTop="280px"
-                                    android:src="@drawable/meals_icon_r_selector"
-                                    android:tag="mwar"
-                                    android:visibility="gone" />
-
-                                <ImageView
-                                    android:id="@+id/imageViewFatafat1"
-                                    android:layout_width="112px"
-                                    android:layout_height="112px"
-                                    android:layout_marginTop="280px"
-                                    android:src="@drawable/fatafat_icon_r_selector"
-                                    android:tag="mwar"
-                                    android:visibility="gone" />
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:id="@+id/relativeDownward"
-                                android:layout_width="112px"
-                                android:layout_height="415px"
-
-                                android:layout_centerHorizontal="true">
-
-                                <ImageView
-                                    android:id="@+id/imageViewMeals2"
-                                    android:layout_width="112px"
-                                    android:layout_height="112px"
-                                    android:src="@drawable/meals_icon_r_selector"
-                                    android:tag="mwar"
-                                    android:visibility="gone" />
-
-                                <ImageView
-                                    android:id="@+id/imageViewFatafat2"
-                                    android:layout_width="112px"
-                                    android:layout_height="112px"
-                                    android:src="@drawable/fatafat_icon_r_selector"
-                                    android:tag="mwar"
-                                    android:visibility="gone" />
-                            </RelativeLayout>
-
-                        </RelativeLayout>
-
-                        <ImageView
-                            android:id="@+id/imageViewJugnoo"
-                            android:layout_width="140px"
-                            android:layout_height="140px"
-                            android:layout_x="565px"
-                            android:layout_y="860px"
-                            android:src="@drawable/jugnoo_icon_r_selector"
-                            android:tag="mwar" />
-
-
-
-                    </AbsoluteLayout>
-
-
-
-
-
-
                 </RelativeLayout>
 
 
@@ -768,6 +683,88 @@
                         android:layout_height="1px"
                         android:layout_centerInParent="true"/>
                 </RelativeLayout>
+
+
+
+                <AbsoluteLayout
+                    android:id="@+id/rootAbsoluteLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:id="@+id/animLayout"
+                        android:layout_width="112px"
+                        android:layout_height="415px"
+                        android:layout_x="580px"
+                        android:layout_y="580px"
+                        android:layout_centerHorizontal="true">
+
+                        <RelativeLayout
+                            android:id="@+id/relativeUpward"
+                            android:layout_width="112px"
+                            android:layout_height="415px"
+                            android:layout_centerHorizontal="true">
+
+                            <ImageView
+                                android:id="@+id/imageViewMeals1"
+                                android:layout_width="112px"
+                                android:layout_height="112px"
+                                android:layout_marginTop="280px"
+                                android:src="@drawable/meals_icon_r_selector"
+                                android:tag="mwar"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/imageViewFatafat1"
+                                android:layout_width="112px"
+                                android:layout_height="112px"
+                                android:layout_marginTop="280px"
+                                android:src="@drawable/fatafat_icon_r_selector"
+                                android:tag="mwar"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeDownward"
+                            android:layout_width="112px"
+                            android:layout_height="415px"
+
+                            android:layout_centerHorizontal="true">
+
+                            <ImageView
+                                android:id="@+id/imageViewMeals2"
+                                android:layout_width="112px"
+                                android:layout_height="112px"
+                                android:src="@drawable/meals_icon_r_selector"
+                                android:tag="mwar"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/imageViewFatafat2"
+                                android:layout_width="112px"
+                                android:layout_height="112px"
+                                android:src="@drawable/fatafat_icon_r_selector"
+                                android:tag="mwar"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewJugnoo"
+                        android:layout_width="140px"
+                        android:layout_height="140px"
+                        android:layout_x="565px"
+                        android:layout_y="860px"
+                        android:src="@drawable/jugnoo_icon_r_selector"
+                        android:tag="mwar" />
+
+
+
+                </AbsoluteLayout>
+
+
+
             </RelativeLayout>
 
             <RelativeLayout
