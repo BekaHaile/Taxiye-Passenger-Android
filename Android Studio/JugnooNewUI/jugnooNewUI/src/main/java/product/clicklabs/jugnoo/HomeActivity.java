@@ -1194,7 +1194,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             ReferralActions.showReferralDialog(HomeActivity.this);
 
-            new GenieLayout(this).addGenieLayout(initialLayout, relativeLayoutRequestInfo);
+            new GenieLayout(this).addGenieLayout(passengerMainLayout, relativeLayoutRequestInfo);
 
         } catch (Exception e) {
             e.printStackTrace();
