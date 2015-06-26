@@ -385,11 +385,10 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 
                                 if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                     int flag = jObj.getInt("flag");
+                                    String serverMessage = JSONParser.getServerMessage(jObj);
                                     if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
+                                        DialogPopup.alertPopup(activity, "", serverMessage);
                                     } else if (ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag) {
-                                        String message = jObj.getString("message");
 
                                         if (jObj.has("jugnoo_balance")) {
                                             Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
@@ -399,7 +398,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
                                             HomeActivity.appInterruptHandler.onCancelCompleted();
                                         }
 
-                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                        DialogPopup.alertPopupWithListener(activity, "", serverMessage, new View.OnClickListener() {
 
                                             @Override
                                             public void onClick(View v) {
@@ -407,7 +406,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
                                             }
                                         });
                                     } else {
-                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                        DialogPopup.alertPopup(activity, "", serverMessage);
                                     }
                                 } else {
                                 }

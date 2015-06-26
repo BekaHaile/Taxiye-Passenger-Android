@@ -37,7 +37,7 @@ public class GenieLayout {
     private Point szWindow = new Point();
 
     private int appsAnim = 0;
-    private long animDuration = 350;
+    private long animDuration = 300;
 
     private ImageView imageViewMeals1, imageViewFatafat1, imageViewMeals2, imageViewFatafat2;
     private boolean mealsAnimating1 = false, fatafatAnimating1 = false, mealsAnimating2 = false, fatafatAnimating2 = false;
@@ -49,13 +49,13 @@ public class GenieLayout {
         animLayout = (RelativeLayout) rootView.findViewById(R.id.animLayout);
 
         AbsoluteLayout.LayoutParams params = (AbsoluteLayout.LayoutParams) imageViewJugnoo.getLayoutParams();
-        params.x = (int) (565 * ASSL.Xscale());
-        params.y = (int) (860 * ASSL.Yscale());
+        params.x = (int) (520 * ASSL.Xscale());
+        params.y = (int) (845 * ASSL.Yscale());
         absoluteLayout.updateViewLayout(imageViewJugnoo, params);
 
         AbsoluteLayout.LayoutParams paramsAnimLayout = (AbsoluteLayout.LayoutParams) animLayout.getLayoutParams();
-        paramsAnimLayout.x = (int) (580 * ASSL.Xscale());
-        paramsAnimLayout.y = (int) (580 * ASSL.Yscale());
+        paramsAnimLayout.x = (int) (535 * ASSL.Xscale());
+        paramsAnimLayout.y = (int) (570 * ASSL.Yscale());
         absoluteLayout.updateViewLayout(animLayout, paramsAnimLayout);
 
         absoluteLayout.setVisibility(View.VISIBLE);
@@ -85,15 +85,8 @@ public class GenieLayout {
                 int x_cord = (int) event.getRawX();
                 int y_cord = (int) event.getRawY();
                 int x_cord_Destination, y_cord_Destination;
-                /*if (genieRestoringToLeft || genieRestoringToRight) {
-                    // we do not have to register touch events
-                    Log.d("animation in progress", "");
-                    return false;
-                } else {*/
 
                 AbsoluteLayout.LayoutParams paramsGenie = getParamsF();
-
-                int BarHeight = getStatusBarHeight();
 
                 switch (event.getAction()) {
 
@@ -148,55 +141,17 @@ public class GenieLayout {
                         int x_start;
                         x_start = x_cord_Destination;
 
-                        /*int BarHeight = getStatusBarHeight();
-                        if (y_cord_Destination < 0) {
-                            y_cord_Destination = 0;
-                        } else if (y_cord_Destination + (imageViewJugnoo.getHeight() + BarHeight) > szWindow.y) {
-                            y_cord_Destination = szWindow.y - (imageViewJugnoo.getHeight() + BarHeight);
-                        }*/
-//                        paramsGenie.y = y_cord_Destination;
-
                         if (Math.abs(x_diff) < 10 && Math.abs(y_diff) < 10) {
-                            Log.d("x_diff", "" + x_diff);
-                            Log.d("y_diff", "" + y_diff);
                             time_end = System.currentTimeMillis();
-                            Log.d("inside a", "");
-//                            if ((time_end - time_start) < 200) {
                             chathead_click();
-                            Log.d("inside b", "");
-//                            }else{
-//                                resetPosition(x_start);
-//                                Log.d("inside c", "");
-//                            }
                         } else {
-                            if (relativeLayoutMainCheckout.getVisibility() == View.VISIBLE &&
-                                    ((paramsGenie.y + imageViewJugnoo.getHeight()) > (szWindow.y - ASSL.Yscale() * 100))) {
-                                Log.d("Genie needs to shifted", "");
-                                Log.d("Genie needs to shifted", "" + (paramsGenie.y + imageViewJugnoo.getWidth() / 2));
-                                Log.d("Genie needs to shifted", "" + (szWindow.y - ASSL.Yscale() * 100));
+                            if (((paramsGenie.y + imageViewJugnoo.getHeight()) > (szWindow.y - ASSL.Yscale() * 230))) {
                                 getToDefaultPosition(paramsGenie.x, paramsGenie.y);
-                            } else if (paramsGenie.y < (ASSL.Yscale() * 186)) {
-                                Log.d("Genie needs to shifted", "");
+                            } else if (paramsGenie.y < (ASSL.Yscale() * 210)) {
                                 shiftDownwardsFromTaskbar(paramsGenie.x, paramsGenie.y);
                             } else {
-//                                if (y_cord_Destination + (imageViewJugnoo.getHeight()) > szWindow.y) {
-//                                    if (relativeLayoutMainCheckout.getVisibility() == View.GONE) {
-//                                        comeUpSlowly(x_start, y_cord_Destination);
-//                                    }
-//                                    /*if (y_cord_Destination < 0) {
-//                                        y_cord_Destination = 0;
-//                                    } else if (y_cord_Destination + (imageViewJugnoo.getHeight() + BarHeight) > szWindow.y) {
-//                                        y_cord_Destination = szWindow.y - (imageViewJugnoo.getHeight());
-//
-//                                    }*/
-////                                    getParamsF().y = y_cord_Destination;
-//                                }else{
                                 resetPosition(x_start);
-                                Log.d("inside d", "");
-//                                }
-
                             }
-
                         }
                         break;
                 }
@@ -211,7 +166,7 @@ public class GenieLayout {
             public void onClick(View v) {
                 if (!mealsAnimating1) {
                     try {
-                        CustomAppLauncher.launchApp((Activity) context, AccessTokenGenerator.AUTOS_PACKAGE);
+                        CustomAppLauncher.launchApp((Activity) context, AccessTokenGenerator.MEALS_PACKAGE);
                         clearAnims();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -265,6 +220,10 @@ public class GenieLayout {
         });
     }
 
+    public void setVisibility(int visibility){
+        absoluteLayout.setVisibility(visibility);
+    }
+
     private AbsoluteLayout.LayoutParams getParamsF() {
         return (AbsoluteLayout.LayoutParams) imageViewJugnoo.getLayoutParams();
     }
@@ -273,14 +232,8 @@ public class GenieLayout {
         return (AbsoluteLayout.LayoutParams) animLayout.getLayoutParams();
     }
 
-    private int getStatusBarHeight() {
-        int statusBarHeight = (int) ((int) ASSL.Yscale() * Math.ceil(25 * context.getResources().getDisplayMetrics().density));
-        return statusBarHeight;
-    }
 
     private void chathead_click() {
-        Log.d("Jugnoo Genie is clicked", "yeah!");
-
         if (getParamsF().y < szWindow.y / 2) {
             appsAnim = -1;
         } else {
@@ -327,6 +280,8 @@ public class GenieLayout {
         }
     }
 
+
+
     private void resetPosition(int x_cord_now) {
         int w = imageViewJugnoo.getWidth();
 
@@ -343,13 +298,13 @@ public class GenieLayout {
     private void updateAnimLayoutParams() {
         if (getParamsF().y < szWindow.y / 2) {
             final AbsoluteLayout.LayoutParams paramsA = getParamsAnimLayout();
-            paramsA.x = getParamsF().x + (int) ASSL.Xscale() * 10;
-            paramsA.y = getParamsF().y;
+            paramsA.x = getParamsF().x + (int) ASSL.Xscale() * 20;
+            paramsA.y = getParamsF().y + (int) ASSL.Xscale() * 35;
             absoluteLayout.updateViewLayout(animLayout, paramsA);
             appsAnim = -1;
         } else {
             final AbsoluteLayout.LayoutParams paramsA = getParamsAnimLayout();
-            paramsA.x = getParamsF().x + (int) ASSL.Xscale() * 10;
+            paramsA.x = getParamsF().x + (int) ASSL.Xscale() * 20;
             paramsA.y = ((imageViewJugnoo.getHeight() + getParamsF().y - animLayout.getHeight()) > 0) ? (imageViewJugnoo.getHeight() + getParamsF().y - animLayout.getHeight()) : 0;
             absoluteLayout.updateViewLayout(animLayout, paramsA);
             appsAnim = 1;
@@ -365,24 +320,13 @@ public class GenieLayout {
 
         Log.d("get to", "default");
 
-        /*int BarHeight = getStatusBarHeight();
-        if (y_cord_now + (imageViewJugnoo.getHeight() + BarHeight) > szWindow.y) {
-            y_cord_now = szWindow.y - (imageViewJugnoo.getHeight() + BarHeight);
-        }*/
         Animation translateAnimation = null;
-        if (x_cord_now < szWindow.x / 2) {
             translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
-                    TranslateAnimation.ABSOLUTE, -(10*ASSL.Xscale() + x_cord_now),
+                    TranslateAnimation.ABSOLUTE, -(x_cord_now - (int) (520 * ASSL.Xscale())),
                     TranslateAnimation.ABSOLUTE, 0,
-                    TranslateAnimation.ABSOLUTE, -(y_cord_now - (int) (860 * ASSL.Yscale())));
-        } else {
-            translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
-                    TranslateAnimation.ABSOLUTE, -(x_cord_now - (int) (565 * ASSL.Xscale())),
-                    TranslateAnimation.ABSOLUTE, 0,
-                    TranslateAnimation.ABSOLUTE, -(y_cord_now - (int) (860 * ASSL.Yscale())));
-        }
+                    TranslateAnimation.ABSOLUTE, -(y_cord_now - (int) (845 * ASSL.Yscale())));
 
-        translateAnimation.setDuration(400);
+        translateAnimation.setDuration(350);
         translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 
         translateAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -394,13 +338,8 @@ public class GenieLayout {
             @Override
             public void onAnimationEnd(Animation animation) {
                 AbsoluteLayout.LayoutParams paramsGenie = getParamsF();
-                if (x_cord_now < szWindow.x / 2) {
-                    paramsGenie.x = (int) (- 10*ASSL.Xscale());
-                    paramsGenie.y = (int) (860 * ASSL.Yscale());
-                } else {
-                    paramsGenie.x = (int) (565 * ASSL.Xscale());
-                    paramsGenie.y = (int) (860 * ASSL.Yscale());
-                }
+                paramsGenie.x = (int) (520 * ASSL.Xscale());
+                paramsGenie.y = (int) (845 * ASSL.Yscale());
                 imageViewJugnoo.clearAnimation();
                 absoluteLayout.updateViewLayout(imageViewJugnoo, paramsGenie);
                 updateAnimLayoutParams();
@@ -425,15 +364,15 @@ public class GenieLayout {
             translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
                     TranslateAnimation.ABSOLUTE, -x_cord_now,
                     TranslateAnimation.ABSOLUTE, 0,
-                    TranslateAnimation.ABSOLUTE, (int) (ASSL.Yscale() * 186) - y_cord_now);
+                    TranslateAnimation.ABSOLUTE, (int) (ASSL.Yscale() * 210) - y_cord_now);
         } else {
             translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
                     TranslateAnimation.ABSOLUTE, szWindow.x - x_cord_now - imageViewJugnoo.getWidth(),
                     TranslateAnimation.ABSOLUTE, 0,
-                    TranslateAnimation.ABSOLUTE, (int) (ASSL.Yscale() * 186) - y_cord_now);
+                    TranslateAnimation.ABSOLUTE, (int) (ASSL.Yscale() * 210) - y_cord_now);
         }
 
-        translateAnimation.setDuration(300);
+        translateAnimation.setDuration(350);
         translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 
         translateAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -451,7 +390,7 @@ public class GenieLayout {
                     params.x = szWindow.x - imageViewJugnoo.getWidth();
                 }
 
-                params.y = (int) (ASSL.Yscale() * 186);
+                params.y = (int) (ASSL.Yscale() * 210);
                 imageViewJugnoo.clearAnimation();
                 absoluteLayout.updateViewLayout(imageViewJugnoo, params);
                 updateAnimLayoutParams();
@@ -1135,6 +1074,51 @@ public class GenieLayout {
         imageViewFatafat2.setTag("");
         imageViewFatafat2.setVisibility(View.GONE);
         fatafatAnimating2 = false;
+    }
+
+
+    public void hideAnims(){
+        if (getParamsF().y < szWindow.y / 2) {
+            appsAnim = -1;
+        } else {
+            appsAnim = 1;
+        }
+
+        animLayout.setVisibility(View.VISIBLE);
+        if (appsAnim == 1) {
+            // when the icon is in the lower half
+            relativeUpward.setVisibility(View.VISIBLE);
+            relativeDownward.setVisibility(View.GONE);
+            if (!mealsAnimating1) {
+                if (imageViewMeals1.getTag() == "shown") {
+                    startHideAnimMeals1();
+                }
+            }
+            if (!fatafatAnimating1) {
+                if (imageViewFatafat1.getTag() == "shown") {
+                    startHideAnimFatafat1();
+                }
+            }
+        } else if (appsAnim == -1) {
+            // when the icon is in the upper half
+            relativeUpward.setVisibility(View.GONE);
+            relativeDownward.setVisibility(View.VISIBLE);
+            if (!mealsAnimating2) {
+                if (imageViewMeals2.getTag() == "shown") {
+                    startHideAnimMeals2();
+                }
+            }
+            if (!fatafatAnimating2) {
+                if (imageViewFatafat2.getTag() == "shown") {
+                    startHideAnimFatafat2();
+                }
+            }
+        }
+    }
+
+    public void clearAllAnims(){
+        clearAnims();
+        clearAnims2();
     }
 
 }
