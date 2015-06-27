@@ -415,7 +415,7 @@ public class ItemInfosListActivity extends Activity{
 //										            "discount": 100,
 //										            "maximum": 100,
 //										            "image": null,
-//										            "type": 0,
+//										            "couponType": 0,
 //										            "redeemed_on": null,
 //										            "status": 1,
 //										            "expiry_date": "2014-11-07T18:29:59.000Z"

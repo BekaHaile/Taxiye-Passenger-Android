@@ -14,7 +14,7 @@ package product.clicklabs.jugnoo.retrofit;
 public class StringConverter {//implements Converter {
 
 //    @Override
-//    public Object fromBody(TypedInput typedInput, Type type) throws ConversionException {
+//    public Object fromBody(TypedInput typedInput, Type couponType) throws ConversionException {
 //        String text = null;
 //        try {
 //            text = fromStream(typedInput.in());
