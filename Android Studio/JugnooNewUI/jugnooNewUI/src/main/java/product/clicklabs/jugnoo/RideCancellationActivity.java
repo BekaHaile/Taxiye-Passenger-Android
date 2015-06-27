@@ -111,8 +111,6 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 
 
 
-
-		
 		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Fonts.latoRegular(this));
 		
 		textViewCancelInfo = (TextView) findViewById(R.id.textViewCancelInfo); textViewCancelInfo.setTypeface(Fonts.latoLight(this), Typeface.BOLD);

@@ -3422,8 +3422,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             } else {
                 boolean cached = false;
                 try {
-                    Bundle bundle = myLocation.getExtras();
-                    cached = bundle.getBoolean("cached");
+                    if(myLocation != null) {
+                        Bundle bundle = myLocation.getExtras();
+                        cached = bundle.getBoolean("cached");
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

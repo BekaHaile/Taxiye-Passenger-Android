@@ -285,7 +285,7 @@ public class MapUtils {
 			searchText = URLEncoder.encode(searchText, "utf8");
 			String ignr2 = "https://maps.googleapis.com/maps/api/place/autocomplete/json?"+
 					"input="+ URLEncoder.encode(searchText, "utf8")
-					+"&type=address&location=" 
+					+"&couponType=address&location="
 					+ latLng.latitude + "," + latLng.longitude + "&radius=50"
 					+"&key="+Config.getMapsBrowserKey();
 			//https://maps.googleapis.com/maps/api/place/autocomplete/json?input=pizza&type=address&location=30.75,76.78&radius=500&key=
