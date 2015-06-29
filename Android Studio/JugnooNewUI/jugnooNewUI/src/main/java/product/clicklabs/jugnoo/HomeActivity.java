@@ -294,7 +294,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     public static final long LOCATION_UPDATE_TIME_PERIOD = 6 * 10000; //in milliseconds
 
 
-    public static final double MIN_BALANCE_ALERT_VALUE = 150; //in Rupees
+    public static final double MIN_BALANCE_ALERT_VALUE = 100; //in Rupees
 
 
     public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;  //in meters
@@ -307,7 +307,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
     public boolean activityResumed = false;
-    public static boolean rechargedOnce = false;
+    public static boolean rechargedOnce = false, feedbackAutoSkipped = false;
 
     public ASSL assl;
 
@@ -321,6 +321,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        ReferralActions.incrementAppOpen(this);
 
         HomeActivity.appInterruptHandler = HomeActivity.this;
 
@@ -1183,10 +1186,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
             }, 5000);
 
+
+            ReferralActions.showReferralDialog(HomeActivity.this);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Database2.getInstance(HomeActivity.this).close();
 
     }
 
@@ -1780,6 +1785,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
+
                         break;
 
 
@@ -2021,6 +2027,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                 initiateTimersForStates(mode);
 
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2252,7 +2259,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             try {
                 if (activityResumed) {
                     callAndHandleStateRestoreAPI(false);
-                    initiateTimersForStates(passengerScreenMode);
+                    if(!feedbackAutoSkipped) {
+                        initiateTimersForStates(passengerScreenMode);
+                    }
 
                     if (!intentFired) {
                         if (userMode == UserMode.PASSENGER &&
@@ -2275,6 +2284,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
         activityResumed = true;
         intentFired = false;
+        feedbackAutoSkipped = false;
 
         LocationInit.showLocationAlertDialog(this);
     }
@@ -2451,8 +2461,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         autoCompleteSearchResults.clear();
                         autoCompleteSearchResults.addAll(MapUtils.getAutoCompleteSearchResultsFromGooglePlaces(searchText, latLng));
 
-                        recallLatestTextSearch(searchText, latLng);
-
                         setSearchResultsToList();
                         refreshingAutoComplete = false;
                         autoCompleteThread = null;
@@ -2463,26 +2471,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void recallLatestTextSearch(final String searchText, final LatLng latLng) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String currentText = editTextSearch.getText().toString().trim();
-                if (searchText.equalsIgnoreCase(currentText)) {
-
-                } else {
-                    autoCompleteSearchResults.clear();
-                    searchListAdapter.notifyDataSetChanged();
-                    if (currentText.length() > 0) {
-                        if (map != null) {
-                            getSearchResults(currentText, latLng);
-                        }
-                    }
-                }
-            }
-        });
     }
 
 
@@ -2537,8 +2525,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         LayoutInflater mInflater;
         ViewHolderSearchItem holder;
 
+        ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults;
+
         public SearchListAdapter() {
-            mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.autoCompleteSearchResults = new ArrayList<>();
+        }
+
+        public synchronized void setResults(ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults){
+            this.autoCompleteSearchResults.clear();
+            this.autoCompleteSearchResults.addAll(autoCompleteSearchResults);
         }
 
         @Override
@@ -4160,7 +4156,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     @Override
     public void customerEndRideInterrupt(final String engagementId) {
         try {
-            if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_IN_RIDE) {
+            if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.cEngagementId)) {
                 closeCancelActivity();
                 runOnUiThread(new Runnable() {
 
@@ -4645,12 +4641,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             @Override
             public void run() {
+
+                ReferralActions.incrementTransactionCount(HomeActivity.this);
                 userMode = UserMode.PASSENGER;
 
                 switchUserScreen();
-
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
 
                 if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
                     rateAppPopup(activity);
@@ -4658,7 +4653,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     if (skipped && Data.customerRateAppFlag == 1) {
                         rateAppPopup(activity);
                     }
+                    else{
+                    }
                 }
+
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
             }
         });
 
@@ -4678,24 +4678,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         setUserData();
                     }
                     DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
-                            "Jugnoo Cash added",
-                            message,
-                            "Check Balance", "Call Support",
-                            new OnClickListener() {
+                        "Jugnoo Cash added",
+                        message,
+                        "Check Balance", "Call Support",
+                        new OnClickListener() {
 
-                                @Override
-                                public void onClick(View v) {
-                                    HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
-                                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                }
-                            },
-                            new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            }
+                        },
+                        new OnClickListener() {
 
-                                @Override
-                                public void onClick(View v) {
-                                    Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber());
-                                }
-                            }, true, true);
+                            @Override
+                            public void onClick(View v) {
+                                Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber());
+                            }
+                        }, true, true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -4714,6 +4714,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
     }
+
+    @Override
+    public void refreshOnPendingCallsDone() {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+            }
+        });
+    }
+
+
 
 
     public void callAndHandleStateRestoreAPI(final boolean showDialogs) {
