@@ -220,11 +220,11 @@ public class Database2 {                                                        
     public long createRideInfoEntry(RidePath ridePath) {
 
         ContentValues fields = new ContentValues();
-        fields.put(POSITION_ID, ridePath.getRidePathId());
-        fields.put(SOURCE_LATITUDE, ridePath.getSourceLatitude());
-        fields.put(SOURCE_LONGITUDE, ridePath.getSourceLongitude());
-        fields.put(DESTINATION_LATITUDE, ridePath.getDestinationLatitude());
-        fields.put(DESTINATION_LONGITUDE, ridePath.getDestinationLongitude());
+        fields.put(POSITION_ID, ridePath.ridePathId);
+        fields.put(SOURCE_LATITUDE, ridePath.sourceLatitude);
+        fields.put(SOURCE_LONGITUDE, ridePath.sourceLongitude);
+        fields.put(DESTINATION_LATITUDE, ridePath.destinationLatitude);
+        fields.put(DESTINATION_LONGITUDE, ridePath.destinationLongitude);
         try {
             return database.insert(TABLE_RIDE_INFO, null, fields);
         } catch (Exception e) {
@@ -234,23 +234,26 @@ public class Database2 {                                                        
 
     public ArrayList<RidePath> getRidePathInfo(){
         ArrayList<RidePath> ridePaths = new ArrayList<>();
+        try {
+            String[] columns = new String[]{POSITION_ID, SOURCE_LATITUDE,SOURCE_LONGITUDE,
+                    DESTINATION_LATITUDE, DESTINATION_LONGITUDE};
+            Cursor cursor = database.query(TABLE_RIDE_INFO, columns, null, null, null, null, null);
 
-        String[] columns = new String[]{POSITION_ID, SOURCE_LATITUDE,SOURCE_LONGITUDE,
-                DESTINATION_LATITUDE, DESTINATION_LONGITUDE};
-        Cursor cursor = database.query(TABLE_RIDE_INFO, columns, null, null, null, null, null);
+            int iId = cursor.getColumnIndex(POSITION_ID);
+            int iSrcLat = cursor.getColumnIndex(SOURCE_LATITUDE);
+            int iSrcLong = cursor.getColumnIndex(SOURCE_LONGITUDE);
+            int iDestLat = cursor.getColumnIndex(DESTINATION_LATITUDE);
+            int iDestLong = cursor.getColumnIndex(DESTINATION_LONGITUDE);
 
-        int iId = cursor.getColumnIndex(POSITION_ID);
-        int iSrcLat = cursor.getColumnIndex(SOURCE_LATITUDE);
-        int iSrcLong = cursor.getColumnIndex(SOURCE_LONGITUDE);
-        int iDestLat = cursor.getColumnIndex(DESTINATION_LATITUDE);
-        int iDestLong = cursor.getColumnIndex(DESTINATION_LONGITUDE);
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            ridePaths.add(new RidePath(cursor.getInt(iId),
-                    cursor.getDouble(iSrcLat),
-                    cursor.getDouble(iSrcLong),
-                    cursor.getDouble(iDestLat),
-                    cursor.getDouble(iDestLong)));
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                ridePaths.add(new RidePath(cursor.getInt(iId),
+                        cursor.getDouble(iSrcLat),
+                        cursor.getDouble(iSrcLong),
+                        cursor.getDouble(iDestLat),
+                        cursor.getDouble(iDestLong)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return ridePaths;
     }

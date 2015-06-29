@@ -631,65 +631,67 @@ public class AccountActivity extends Activity {
 	
 	
 	public void reloadProfileAPI(final Activity activity) {
-		if(AppStatus.getInstance(activity).isOnline(activity)) {
-			
-			progressBarProfileUpdate.setVisibility(View.VISIBLE);
-			
-			RequestParams params = new RequestParams();
-		
-			params.put("client_id", Config.getClientId());
-			params.put("access_token", Data.userData.accessToken);
-			params.put("is_access_token_new", "1");
-			
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/reload_my_profile", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+        if(!HomeActivity.checkIfUserDataNull(activity)) {
+            if (AppStatus.getInstance(activity).isOnline(activity)) {
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							progressBarProfileUpdate.setVisibility(View.GONE);
-						}
+                progressBarProfileUpdate.setVisibility(View.VISIBLE);
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.PROFILE_INFORMATION.getOrdinal() == flag){
-										
-										String userName = jObj.getString("user_name");
-										String email = jObj.getString("user_email");
-										String phoneNo = jObj.getString("phone_no");
-										int emailVerificationStatus = jObj.getInt("email_verification_status");
-										
-										Data.userData.userName = userName;
-										Data.userData.phoneNo = phoneNo;
-										Data.userData.userEmail = email;
-										
-										boolean refresh = false;
-										
-										if(EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() != Data.userData.emailVerificationStatus
-												&& EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() == emailVerificationStatus){
-											refresh = true;
-										}
-										
-										Data.userData.emailVerificationStatus = emailVerificationStatus;
-										
-										
-										setUserData(refresh);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-							}
-							progressBarProfileUpdate.setVisibility(View.GONE);
-						}
-					});
-		}
+                RequestParams params = new RequestParams();
+
+                params.put("client_id", Config.getClientId());
+                params.put("access_token", Data.userData.accessToken);
+                params.put("is_access_token_new", "1");
+
+                AsyncHttpClient client = Data.getClient();
+                client.post(Config.getServerUrl() + "/reload_my_profile", params,
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
+
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                            progressBarProfileUpdate.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Server response", "response = " + response);
+                            try {
+                                jObj = new JSONObject(response);
+                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                    int flag = jObj.getInt("flag");
+                                    if (ApiResponseFlags.PROFILE_INFORMATION.getOrdinal() == flag) {
+
+                                        String userName = jObj.getString("user_name");
+                                        String email = jObj.getString("user_email");
+                                        String phoneNo = jObj.getString("phone_no");
+                                        int emailVerificationStatus = jObj.getInt("email_verification_status");
+
+                                        Data.userData.userName = userName;
+                                        Data.userData.phoneNo = phoneNo;
+                                        Data.userData.userEmail = email;
+
+                                        boolean refresh = false;
+
+                                        if (EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() != Data.userData.emailVerificationStatus
+                                            && EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() == emailVerificationStatus) {
+                                            refresh = true;
+                                        }
+
+                                        Data.userData.emailVerificationStatus = emailVerificationStatus;
+
+
+                                        setUserData(refresh);
+                                    }
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            progressBarProfileUpdate.setVisibility(View.GONE);
+                        }
+                    });
+            }
+        }
 	}
 	
 	

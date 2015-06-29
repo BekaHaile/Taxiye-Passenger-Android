@@ -76,7 +76,7 @@
                     android:textColor="@color/black_text"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:text="Invite friends and\nget FREE rides"
+                    android:text="Invite friends and\nget Jugnoo Cash"
                     />
 
             </RelativeLayout>
