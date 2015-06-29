@@ -711,7 +711,7 @@ public class JSONParser {
 //	            "discount": 100,
 //	            "maximum": 100,
 //	            "image": "",
-//	            "type": 0,
+//	            "couponType": 0,
 //	            "redeemed_on": "0000-00-00 00:00:00",
 //	            "status": 1,
 //	            "expiry_date": "December 31st 2015"
@@ -732,16 +732,14 @@ public class JSONParser {
         for (int i = 0; i < jCouponsArr.length(); i++) {
             JSONObject coData = jCouponsArr.getJSONObject(i);
             promoCouponList.add(new CouponInfo(coData.getInt("account_id"),
-                    coData.getInt("type"),
+                    coData.getInt("coupon_type"),
                     coData.getInt("status"),
                     coData.getString("title"),
                     coData.getString("subtitle"),
                     coData.getString("description"),
                     coData.getString("image"),
                     coData.getString("redeemed_on"),
-                    coData.getString("expiry_date"),
-                    coData.getDouble("discount"),
-                    coData.getDouble("maximum")));
+                    coData.getString("expiry_date")));
         }
 
         JSONArray jPromoArr = jObj.getJSONArray("promotions");
@@ -853,16 +851,14 @@ public class JSONParser {
                         JSONObject coData = couponsData.getJSONObject(i);
 
                         CouponInfo couponInfo = new CouponInfo(coData.getInt("account_id"),
-                            coData.getInt("type"),
+                            coData.getInt("coupon_type"),
                             coData.getInt("status"),
                             coData.getString("title"),
                             coData.getString("subtitle"),
                             coData.getString("description"),
                             coData.getString("image"),
                             coData.getString("redeemed_on"),
-                            coData.getString("expiry_date"),
-                            coData.getDouble("discount"),
-                            coData.getDouble("maximum"));
+                            coData.getString("expiry_date"));
 
                         couponInfoList.add(couponInfo);
                     }

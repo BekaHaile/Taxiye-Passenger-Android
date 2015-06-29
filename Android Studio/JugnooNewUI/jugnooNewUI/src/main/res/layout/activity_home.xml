@@ -16,6 +16,7 @@
             android:orientation="vertical"
             android:splitMotionEvents="false">
 
+            <!-- map layout -->
             <RelativeLayout
                 android:id="@+id/mapLayout"
                 android:layout_width="match_parent"
@@ -30,6 +31,7 @@
                     android:layout_height="match_parent"/>
             </RelativeLayout>
 
+            <!-- passenger main layout -->
             <RelativeLayout
                 android:id="@+id/passengerMainLayout"
                 android:layout_width="match_parent"
@@ -37,6 +39,7 @@
                 android:splitMotionEvents="false"
                 android:visibility="visible">
 
+                <!-- initial layout -->
                 <RelativeLayout
                     android:id="@+id/initialLayout"
                     android:layout_width="match_parent"
@@ -188,57 +191,6 @@
                         />
 
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutJugnooAnim"
-                        android:layout_width="135px"
-                        android:layout_height="415px"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginBottom="50px"
-                        android:layout_marginRight="65px"
-                        android:layout_above="@+id/relativeLayoutRequestInfo"
-
-                        >
-
-                        <ImageView
-                            android:id="@+id/imageViewMeals1"
-                            android:layout_width="112px"
-                            android:layout_height="112px"
-                            android:src="@drawable/meals_icon_r_selector"
-                            android:layout_marginTop="280px"
-                            android:visibility="gone"
-                            android:layout_centerHorizontal="true"
-                            android:tag="mwar"
-
-
-
-                            />
-
-                        <ImageView
-                            android:id="@+id/imageViewFatafat1"
-                            android:layout_width="112px"
-                            android:layout_height="112px"
-                            android:src="@drawable/fatafat_icon_r_selector"
-                            android:layout_marginTop="280px"
-                            android:visibility="gone"
-                            android:layout_centerHorizontal="true"
-                            android:tag="mwar"
-                            />
-
-
-                        <ImageView
-                            android:id="@+id/imageViewJugnoo1"
-                            android:layout_width="135px"
-                            android:layout_height="135px"
-                            android:src="@drawable/jugnoo_icon_r_selector"
-                            android:layout_marginTop="280px"
-                            android:layout_centerHorizontal="true"
-                            android:tag="mwar"
-
-                            />
-
-
-                    </RelativeLayout>
-
 
 
                     <Button
@@ -269,7 +221,7 @@
 
                 </RelativeLayout>
 
-
+                <!-- assigning layout -->
                 <RelativeLayout
                     android:id="@+id/assigningLayout"
                     android:layout_width="match_parent"
@@ -363,6 +315,7 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
+                <!-- search layout -->
                 <LinearLayout
                     android:id="@+id/linearLayoutSearch"
                     android:layout_width="match_parent"
@@ -424,6 +377,7 @@
                     </ListView>
                 </LinearLayout>
 
+                <!-- request final layout -->
                 <RelativeLayout
                     android:id="@+id/requestFinalLayout"
                     android:layout_width="match_parent"
@@ -661,6 +615,7 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
+                <!-- centre pin layout -->
                 <RelativeLayout
                     android:id="@+id/centreLocationRl"
                     android:layout_width="match_parent"
@@ -683,8 +638,11 @@
                         android:layout_height="1px"
                         android:layout_centerInParent="true"/>
                 </RelativeLayout>
+
+
             </RelativeLayout>
 
+            <!-- end ride layout -->
             <RelativeLayout
                 android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
@@ -1285,6 +1243,7 @@
                 </ScrollView>
             </RelativeLayout>
 
+            <!-- top bar layout -->
             <RelativeLayout
                 android:id="@+id/topRlOuter"
                 android:layout_width="match_parent"
@@ -1366,9 +1325,90 @@
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
+
+            <!-- genie layout -->
+            <AbsoluteLayout
+                android:id="@+id/rootAbsoluteLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/animLayout"
+                    android:layout_width="112px"
+                    android:layout_height="415px"
+                    android:layout_x="535px"
+                    android:layout_y="570px"
+                    android:layout_centerHorizontal="true">
+
+                    <RelativeLayout
+                        android:id="@+id/relativeUpward"
+                        android:layout_width="112px"
+                        android:layout_height="415px"
+                        android:layout_centerHorizontal="true">
+
+                        <ImageView
+                            android:id="@+id/imageViewMeals1"
+                            android:layout_width="112px"
+                            android:layout_height="112px"
+                            android:layout_marginTop="280px"
+                            android:src="@drawable/meals_icon_r_selector"
+                            android:tag="mwar"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/imageViewFatafat1"
+                            android:layout_width="112px"
+                            android:layout_height="112px"
+                            android:layout_marginTop="280px"
+                            android:src="@drawable/fatafat_icon_r_selector"
+                            android:tag="mwar"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeDownward"
+                        android:layout_width="112px"
+                        android:layout_height="415px"
+
+                        android:layout_centerHorizontal="true">
+
+                        <ImageView
+                            android:id="@+id/imageViewMeals2"
+                            android:layout_width="112px"
+                            android:layout_height="112px"
+                            android:src="@drawable/meals_icon_r_selector"
+                            android:tag="mwar"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/imageViewFatafat2"
+                            android:layout_width="112px"
+                            android:layout_height="112px"
+                            android:src="@drawable/fatafat_icon_r_selector"
+                            android:tag="mwar"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/imageViewJugnoo"
+                    android:layout_width="140px"
+                    android:layout_height="140px"
+                    android:layout_x="520px"
+                    android:layout_y="845px"
+                    android:src="@drawable/jugnoo_icon_r_selector"
+                    android:tag="mwar" />
+
+
+
+            </AbsoluteLayout>
+
+
         </RelativeLayout>
     </FrameLayout>
 
+    <!-- menu layout -->
     <LinearLayout
         android:id="@+id/menuLayout"
         android:layout_width="585px"

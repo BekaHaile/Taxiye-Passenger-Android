@@ -31,13 +31,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,7 +95,6 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -187,12 +181,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn;
 
     ImageView imageViewRideLater, imageViewRideNow;
-    RelativeLayout relativeLayoutJugnooAnim;
-    ImageView imageViewMeals1, imageViewFatafat1, imageViewJugnoo1;
 
     RelativeLayout relativeLayoutInitialSearchBar;
     TextView textViewInitialSearch;
     ProgressBar progressBarInitialSearch;
+    RelativeLayout relativeLayoutRequestInfo;
 
 
     //Assigining layout
@@ -315,6 +308,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     private int showAllDrivers = 0, showDriverInfo = 0;
 
     private boolean intentFired = false;
+
+    GenieLayout genieLayout;
 
 
     @Override
@@ -445,10 +440,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
         imageViewRideLater.setVisibility(View.GONE);
 
-        relativeLayoutJugnooAnim = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooAnim);
-        imageViewMeals1 = (ImageView) findViewById(R.id.imageViewMeals1);
-        imageViewFatafat1 = (ImageView) findViewById(R.id.imageViewFatafat1);
-        imageViewJugnoo1 = (ImageView) findViewById(R.id.imageViewJugnoo1);
+        relativeLayoutRequestInfo = (RelativeLayout) findViewById(R.id.relativeLayoutRequestInfo);
+
 
 
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
@@ -824,55 +817,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        imageViewJugnoo1.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (!mealsAnimating1) {
-                    if (imageViewMeals1.getTag() != "shown") {
-                        startShowAnimMeals1();
-                    } else {
-                        startHideAnimMeals1();
-                    }
-                }
-                if (!fatafatAnimating1) {
-                    if (imageViewFatafat1.getTag() != "shown") {
-                        startShowAnimFatafat1();
-                    } else {
-                        startHideAnimFatafat1();
-                    }
-                }
-            }
-        });
-
-        imageViewMeals1.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (!mealsAnimating1) {
-                    try {
-                        CustomAppLauncher.launchApp(HomeActivity.this, AccessTokenGenerator.MEALS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        imageViewFatafat1.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (!fatafatAnimating1) {
-                    try {
-                        CustomAppLauncher.launchApp(HomeActivity.this, AccessTokenGenerator.FATAFAT_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
 
         relativeLayoutInitialSearchBar.setOnClickListener(new OnClickListener() {
 
@@ -1149,6 +1093,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         }
 
 
+        genieLayout = new GenieLayout(this);
+        genieLayout.addGenieLayout(drawerLayout, relativeLayoutRequestInfo);
+
         try {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -1189,9 +1136,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             ReferralActions.showReferralDialog(HomeActivity.this);
 
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -1204,258 +1154,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
 
-    public long animDurationShow = 300;
-    public long animDurationHide = 300;
-
-    public void startShowAnimMeals1() {
-        Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, ASSL.Yscale() * -140);
-        translateAnimation.setDuration(animDurationShow);
-        translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        translateAnimation.setFillAfter(false);
-
-        Animation alphaAnimation = new AlphaAnimation(0, 1);
-        alphaAnimation.setDuration(animDurationShow);
-        alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        alphaAnimation.setFillAfter(false);
-
-        AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(translateAnimation);
-        animationSet.addAnimation(alphaAnimation);
-        animationSet.setDuration(animDurationShow);
-        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animationSet.setFillAfter(false);
-        animationSet.setAnimationListener(new AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-                mealsAnimating1 = true;
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals1.getLayoutParams());
-                layoutParams.setMargins(0, ((int) (ASSL.Yscale() * 280)), 0, 0);
-                layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                imageViewMeals1.setLayoutParams(layoutParams);
-                imageViewMeals1.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals1.getLayoutParams());
-                layoutParams.setMargins(0, ((int) (ASSL.Yscale() * 140)), 0, 0);
-                layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                imageViewMeals1.clearAnimation();
-                imageViewMeals1.setLayoutParams(layoutParams);
-                imageViewMeals1.setTag("shown");
-                mealsAnimating1 = false;
-            }
-        });
-
-        imageViewMeals1.clearAnimation();
-        imageViewMeals1.startAnimation(animationSet);
-    }
-
-
-    public void startShowAnimFatafat1() {
-        Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, ASSL.Yscale() * -280);
-        translateAnimation.setDuration(animDurationShow);
-        translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        translateAnimation.setFillAfter(false);
-
-        Animation alphaAnimation = new AlphaAnimation(0, 1);
-        alphaAnimation.setDuration(animDurationShow);
-        alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        alphaAnimation.setFillAfter(false);
-
-        AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(translateAnimation);
-        animationSet.addAnimation(alphaAnimation);
-        animationSet.setDuration(animDurationShow);
-        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animationSet.setFillAfter(false);
-        animationSet.setAnimationListener(new AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-                fatafatAnimating1 = true;
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat1.getLayoutParams());
-                layoutParams.setMargins(0, ((int) (ASSL.Yscale() * 280)), 0, 0);
-                layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                imageViewFatafat1.setLayoutParams(layoutParams);
-                imageViewFatafat1.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat1.getLayoutParams());
-                layoutParams.setMargins(0, 0, 0, 0);
-                layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                imageViewFatafat1.clearAnimation();
-                imageViewFatafat1.setLayoutParams(layoutParams);
-                imageViewFatafat1.setTag("shown");
-                fatafatAnimating1 = false;
-            }
-        });
-
-        imageViewFatafat1.clearAnimation();
-        imageViewFatafat1.startAnimation(animationSet);
-    }
-
-
-    public void startHideAnimMeals1() {
-        Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, ASSL.Yscale() * 140);
-        translateAnimation.setDuration(animDurationHide);
-        translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        translateAnimation.setFillAfter(false);
-
-        Animation alphaAnimation = new AlphaAnimation(1, 0);
-        alphaAnimation.setDuration(animDurationHide);
-        alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        alphaAnimation.setFillAfter(false);
-
-        AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(translateAnimation);
-        animationSet.addAnimation(alphaAnimation);
-        animationSet.setDuration(animDurationHide);
-        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animationSet.setFillAfter(false);
-        animationSet.setAnimationListener(new AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-                mealsAnimating1 = true;
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals1.getLayoutParams());
-                layoutParams.setMargins(0, ((int) (ASSL.Yscale() * 140)), 0, 0);
-                layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                imageViewMeals1.setLayoutParams(layoutParams);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewMeals1.getLayoutParams());
-                layoutParams.setMargins(0, ((int) (ASSL.Yscale() * 280)), 0, 0);
-                layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                imageViewMeals1.clearAnimation();
-                imageViewMeals1.setLayoutParams(layoutParams);
-                imageViewMeals1.setTag("");
-                imageViewMeals1.setVisibility(View.GONE);
-                mealsAnimating1 = false;
-            }
-        });
-
-        imageViewMeals1.clearAnimation();
-        imageViewMeals1.startAnimation(animationSet);
-    }
-
-
-    public void startHideAnimFatafat1() {
-        Animation translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, 0,
-                TranslateAnimation.ABSOLUTE, ASSL.Yscale() * 280);
-        translateAnimation.setDuration(animDurationHide);
-        translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        translateAnimation.setFillAfter(false);
-
-        Animation alphaAnimation = new AlphaAnimation(1, 0);
-        alphaAnimation.setDuration(animDurationHide);
-        alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        alphaAnimation.setFillAfter(false);
-
-        AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(translateAnimation);
-        animationSet.addAnimation(alphaAnimation);
-        animationSet.setDuration(animDurationHide);
-        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animationSet.setFillAfter(false);
-        animationSet.setAnimationListener(new AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-                fatafatAnimating1 = true;
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat1.getLayoutParams());
-                layoutParams.setMargins(0, 0, 0, 0);
-                layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                imageViewFatafat1.setLayoutParams(layoutParams);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(imageViewFatafat1.getLayoutParams());
-                layoutParams.setMargins(0, ((int) (ASSL.Yscale() * 280)), 0, 0);
-                layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                imageViewFatafat1.clearAnimation();
-                imageViewFatafat1.setLayoutParams(layoutParams);
-                imageViewFatafat1.setTag("");
-                imageViewFatafat1.setVisibility(View.GONE);
-                fatafatAnimating1 = false;
-            }
-        });
-
-        imageViewFatafat1.clearAnimation();
-        imageViewFatafat1.startAnimation(animationSet);
-    }
-
-    public void clearAnims() {
-        RelativeLayout.LayoutParams layoutParamsM = new RelativeLayout.LayoutParams(imageViewMeals1.getLayoutParams());
-        layoutParamsM.setMargins(0, ((int) (ASSL.Yscale() * 280)), 0, 0);
-        layoutParamsM.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        imageViewMeals1.clearAnimation();
-        imageViewMeals1.setLayoutParams(layoutParamsM);
-        imageViewMeals1.setTag("");
-        imageViewMeals1.setVisibility(View.GONE);
-        mealsAnimating1 = false;
-
-        RelativeLayout.LayoutParams layoutParamsF = new RelativeLayout.LayoutParams(imageViewFatafat1.getLayoutParams());
-        layoutParamsF.setMargins(0, ((int) (ASSL.Yscale() * 280)), 0, 0);
-        layoutParamsF.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        imageViewFatafat1.clearAnimation();
-        imageViewFatafat1.setLayoutParams(layoutParamsF);
-        imageViewFatafat1.setTag("");
-        imageViewFatafat1.setVisibility(View.GONE);
-        fatafatAnimating1 = false;
-    }
-
-    public void hideAnims() {
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-            if (!mealsAnimating1) {
-                if ("shown" == imageViewMeals1.getTag()) {
-                    startHideAnimMeals1();
-                }
-            }
-            if (!fatafatAnimating1) {
-                if ("shown" == imageViewFatafat1.getTag()) {
-                    startHideAnimFatafat1();
-                }
-            }
-        }
-    }
 
 
     public void enableJugnooShopUI() {
@@ -1590,6 +1288,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             hideAnims();
         }
     };
+
+    public void hideAnims(){
+        if(genieLayout != null){
+            genieLayout.hideAnims();
+        }
+    }
+
+    public void clearAnims(){
+        if(genieLayout != null){
+            genieLayout.clearAllAnims();
+        }
+    }
 
 
     Handler reconnectionHandler = null;
@@ -1761,7 +1471,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
                         imageViewRideLater.setVisibility(View.GONE);
-                        relativeLayoutJugnooAnim.setVisibility(View.VISIBLE);
 
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
                         changeLocalityBtn.setVisibility(View.GONE);
@@ -1785,6 +1494,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
+                        genieLayout.setVisibility(View.VISIBLE);
+
 
                         break;
 
@@ -1801,6 +1512,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         imageViewGift.clearAnimation();
                         imageViewGift.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.VISIBLE);
+
+                        genieLayout.setVisibility(View.GONE);
 
 
                         break;
@@ -1829,6 +1542,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
+
+                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -1890,6 +1605,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
+                        genieLayout.setVisibility(View.GONE);
+
                         break;
 
                     case P_DRIVER_ARRIVED:
@@ -1949,6 +1666,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
+                        genieLayout.setVisibility(View.GONE);
+
                         break;
 
 
@@ -1992,6 +1711,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
+                        genieLayout.setVisibility(View.GONE);
+
                         break;
 
                     case P_RIDE_END:
@@ -2007,6 +1728,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         imageViewSearchCancel.setVisibility(View.GONE);
                         imageViewGift.setVisibility(View.VISIBLE);
 
+                        genieLayout.setVisibility(View.GONE);
+
                         break;
 
 
@@ -2021,6 +1744,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
+
+                        genieLayout.setVisibility(View.VISIBLE);
 
 
                 }
@@ -2396,6 +2121,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             e.printStackTrace();
         }
 
+        clearAnims();
+
         super.onPause();
 
     }
@@ -2744,7 +2471,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                                 imageViewRideNow.setVisibility(View.GONE);
                                 imageViewRideLater.setVisibility(View.GONE);
-                                relativeLayoutJugnooAnim.setVisibility(View.GONE);
 
                                 initialMyLocationBtn.setVisibility(View.GONE);
                                 changeLocalityBtn.setVisibility(View.VISIBLE);
@@ -2752,7 +2478,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             } else {
                                 imageViewRideNow.setVisibility(View.VISIBLE);
                                 imageViewRideLater.setVisibility(View.GONE);
-                                relativeLayoutJugnooAnim.setVisibility(View.VISIBLE);
 
                                 initialMyLocationBtn.setVisibility(View.VISIBLE);
                                 changeLocalityBtn.setVisibility(View.GONE);
@@ -3697,8 +3422,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             } else {
                 boolean cached = false;
                 try {
-                    Bundle bundle = myLocation.getExtras();
-                    cached = bundle.getBoolean("cached");
+                    if(myLocation != null) {
+                        Bundle bundle = myLocation.getExtras();
+                        cached = bundle.getBoolean("cached");
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

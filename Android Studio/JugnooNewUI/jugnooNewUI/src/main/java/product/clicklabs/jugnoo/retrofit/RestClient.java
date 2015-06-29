@@ -15,13 +15,13 @@ public class RestClient {
 ////                    .build();
 //
 //
-////            //For type string response
+////            //For couponType string response
 //            try {
 //                RestAdapter restAdapter = new RestAdapter.Builder()
 //                    .setEndpoint(Config.getServerUrl())
 //                    .setClient(new ApacheClient(DataLoader.getHttpClientSecure()))
 //
-//                    .setConverter(new StringConverter())    //converter for response type
+//                    .setConverter(new StringConverter())    //converter for response couponType
 //                    .build();
 //
 //
