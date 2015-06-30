@@ -48,6 +48,8 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -95,19 +97,42 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	
 	// *****************************Used for flurry work***************//
-	@Override
-	protected void onStart() {
-		super.onStart();
-		FlurryAgent.init(this, Config.getFlurryKey());
-		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-		FlurryAgent.onEvent("Splash started");
-	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
 	}
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        try {
+            Branch branch = Branch.getInstance();
+            branch.initSession(new Branch.BranchReferralInitListener() {
+                @Override
+                public void onInitFinished(JSONObject referringParams, BranchError error) {
+                    if (error == null) {
+                        // params are the deep linked params associated with the link that the user clicked before showing up
+                        Log.i("BranchConfigTest", "deep link data: " + referringParams.toString());
+                    }
+                }
+            }, this.getIntent().getData(), this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FlurryAgent.init(this, Config.getFlurryKey());
+        FlurryAgent.onStartSession(this, Config.getFlurryKey());
+        FlurryAgent.onEvent("Splash started");
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
+    }
 	
 	
 	public static void initializeServerURL(Context context){
