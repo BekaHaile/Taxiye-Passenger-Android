@@ -68,8 +68,8 @@ public class AccountActivity extends Activity {
 	ImageView imageViewEmailVerifyStatus;
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
-	RelativeLayout relativeLayoutChangePassword;
-	TextView textViewChangePassword;
+	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
+	TextView textViewChangePassword, textViewEmergencyContact;
 
 	Button buttonLogout;
 	
@@ -115,6 +115,11 @@ public class AccountActivity extends Activity {
 		relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
 		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Fonts.latoRegular(this));
 
+        relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
+        textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.latoRegular(this));
+
+
+
 		buttonLogout = (Button) findViewById(R.id.buttonLogout); buttonLogout.setTypeface(Fonts.latoRegular(this));
 		
 		
@@ -123,24 +128,24 @@ public class AccountActivity extends Activity {
 		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				performBackPressed();
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                performBackPressed();
+            }
+        });
 		
 		
 		editTextUserName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(hasFocus){
-					scrollView.smoothScrollTo(0, editTextUserName.getTop());
-				}
-				editTextUserName.setError(null);
-			}
-		});
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    scrollView.smoothScrollTo(0, editTextUserName.getTop());
+                }
+                editTextUserName.setError(null);
+            }
+        });
 
 		editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
@@ -166,182 +171,171 @@ public class AccountActivity extends Activity {
 		
 		
 		imageViewEditName.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				editTextUserName.setError(null);
-				if(editTextUserName.isEnabled()){
-					String nameChanged = editTextUserName.getText().toString().trim();
-					if("".equalsIgnoreCase(nameChanged)){
-						editTextUserName.requestFocus();
-						editTextUserName.setError("Username can't be empty");
-					}
-					else{
-						if(Data.userData.userName.equalsIgnoreCase(nameChanged)){
-							editTextUserName.requestFocus();
-							editTextUserName.setError("Changed Username is same as the previous one.");
-						}
-						else{
-							updateUserProfileAPI(AccountActivity.this, nameChanged, ProfileUpdateMode.NAME);
-						}
-					}
-				}
-				else{
-					editTextUserName.requestFocus();
-					editTextUserName.setEnabled(true);
-					editTextUserName.setSelection(editTextUserName.getText().length());
-					Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
-				}
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                editTextUserName.setError(null);
+                if (editTextUserName.isEnabled()) {
+                    String nameChanged = editTextUserName.getText().toString().trim();
+                    if ("".equalsIgnoreCase(nameChanged)) {
+                        editTextUserName.requestFocus();
+                        editTextUserName.setError("Username can't be empty");
+                    } else {
+                        if (Data.userData.userName.equalsIgnoreCase(nameChanged)) {
+                            editTextUserName.requestFocus();
+                            editTextUserName.setError("Changed Username is same as the previous one.");
+                        } else {
+                            updateUserProfileAPI(AccountActivity.this, nameChanged, ProfileUpdateMode.NAME);
+                        }
+                    }
+                } else {
+                    editTextUserName.requestFocus();
+                    editTextUserName.setEnabled(true);
+                    editTextUserName.setSelection(editTextUserName.getText().length());
+                    Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
+                }
+            }
+        });
 		
 		editTextUserName.setOnEditorActionListener(new OnEditorActionListener() {
 
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						imageViewEditName.performClick();
-					break;
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                int result = actionId & EditorInfo.IME_MASK_ACTION;
+                switch (result) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        imageViewEditName.performClick();
+                        break;
 
-					case EditorInfo.IME_ACTION_NEXT:
-						imageViewEditName.performClick();
-					break;
+                    case EditorInfo.IME_ACTION_NEXT:
+                        imageViewEditName.performClick();
+                        break;
 
-					default:
-				}
-				return true;
-			}
-		});
+                    default:
+                }
+                return true;
+            }
+        });
 		
 		
 		
 		imageViewEditEmail.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				editTextEmail.setError(null);
-				imageViewEmailVerifyStatus.setVisibility(View.GONE);
-				
-				if(editTextEmail.isEnabled()){
-					String emailChanged = editTextEmail.getText().toString().trim();
-					if("".equalsIgnoreCase(emailChanged)){
-						editTextEmail.requestFocus();
-						editTextEmail.setError("Email can't be empty");
-					}
-					else{
-						if(Data.userData.userEmail.equalsIgnoreCase(emailChanged)){
-							editTextEmail.requestFocus();
-							editTextEmail.setError("Changed email is same as the previous one.");
-						}
-						else{
-							updateUserProfileAPI(AccountActivity.this, emailChanged, ProfileUpdateMode.EMAIL);
-						}
-					}
-				}
-				else{
-					editTextEmail.requestFocus();
-					editTextEmail.setEnabled(true);
-					editTextEmail.setSelection(editTextEmail.getText().length());
-					Utils.showSoftKeyboard(AccountActivity.this, editTextEmail);
-				}
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                editTextEmail.setError(null);
+                imageViewEmailVerifyStatus.setVisibility(View.GONE);
+
+                if (editTextEmail.isEnabled()) {
+                    String emailChanged = editTextEmail.getText().toString().trim();
+                    if ("".equalsIgnoreCase(emailChanged)) {
+                        editTextEmail.requestFocus();
+                        editTextEmail.setError("Email can't be empty");
+                    } else {
+                        if (Data.userData.userEmail.equalsIgnoreCase(emailChanged)) {
+                            editTextEmail.requestFocus();
+                            editTextEmail.setError("Changed email is same as the previous one.");
+                        } else {
+                            updateUserProfileAPI(AccountActivity.this, emailChanged, ProfileUpdateMode.EMAIL);
+                        }
+                    }
+                } else {
+                    editTextEmail.requestFocus();
+                    editTextEmail.setEnabled(true);
+                    editTextEmail.setSelection(editTextEmail.getText().length());
+                    Utils.showSoftKeyboard(AccountActivity.this, editTextEmail);
+                }
+            }
+        });
 		
 		editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
 
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						imageViewEditEmail.performClick();
-					break;
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                int result = actionId & EditorInfo.IME_MASK_ACTION;
+                switch (result) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        imageViewEditEmail.performClick();
+                        break;
 
-					case EditorInfo.IME_ACTION_NEXT:
-						imageViewEditEmail.performClick();
-					break;
+                    case EditorInfo.IME_ACTION_NEXT:
+                        imageViewEditEmail.performClick();
+                        break;
 
-					default:
-				}
-				return true;
-			}
-		});
+                    default:
+                }
+                return true;
+            }
+        });
 		
 
 		imageViewEditPhoneNo.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				editTextPhone.setError(null);
-				if(editTextPhone.isEnabled()){
-					String phoneNoChanged = editTextPhone.getText().toString().trim();
-					if("".equalsIgnoreCase(phoneNoChanged)){
-						editTextPhone.requestFocus();
-						editTextPhone.setError("Phone number can't be empty");
-					}
-					else{
+
+            @Override
+            public void onClick(View v) {
+                editTextPhone.setError(null);
+                if (editTextPhone.isEnabled()) {
+                    String phoneNoChanged = editTextPhone.getText().toString().trim();
+                    if ("".equalsIgnoreCase(phoneNoChanged)) {
+                        editTextPhone.requestFocus();
+                        editTextPhone.setError("Phone number can't be empty");
+                    } else {
                         phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
-                        if(Utils.validPhoneNumber(phoneNoChanged)) {
+                        if (Utils.validPhoneNumber(phoneNoChanged)) {
                             phoneNoChanged = "+91" + phoneNoChanged;
-                            if(Data.userData.phoneNo.equalsIgnoreCase(phoneNoChanged)){
+                            if (Data.userData.phoneNo.equalsIgnoreCase(phoneNoChanged)) {
                                 editTextPhone.requestFocus();
                                 editTextPhone.setError("Changed Phone number is same as the previous one.");
-                            }
-                            else{
+                            } else {
                                 updateUserProfileAPI(AccountActivity.this, phoneNoChanged, ProfileUpdateMode.PHONE);
                             }
-                        }
-                        else{
+                        } else {
                             editTextPhone.requestFocus();
                             editTextPhone.setError("Please enter valid phone number");
                         }
-					}
-				}
-				else{
-					editTextPhone.requestFocus();
-					editTextPhone.setEnabled(true);
-					editTextPhone.setSelection(editTextPhone.getText().length());
-					Utils.showSoftKeyboard(AccountActivity.this, editTextPhone);
-				}
-			}
-		});
+                    }
+                } else {
+                    editTextPhone.requestFocus();
+                    editTextPhone.setEnabled(true);
+                    editTextPhone.setSelection(editTextPhone.getText().length());
+                    Utils.showSoftKeyboard(AccountActivity.this, editTextPhone);
+                }
+            }
+        });
 		
 		editTextPhone.setOnEditorActionListener(new OnEditorActionListener() {
 
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						imageViewEditPhoneNo.performClick();
-					break;
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                int result = actionId & EditorInfo.IME_MASK_ACTION;
+                switch (result) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        imageViewEditPhoneNo.performClick();
+                        break;
 
-					case EditorInfo.IME_ACTION_NEXT:
-						imageViewEditPhoneNo.performClick();
-					break;
+                    case EditorInfo.IME_ACTION_NEXT:
+                        imageViewEditPhoneNo.performClick();
+                        break;
 
-					default:
-				}
-				return true;
-			}
-		});
+                    default:
+                }
+                return true;
+            }
+        });
 		
 		imageViewEmailVerifyStatus.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal()){
-					if(relativeLayoutEmailVerify.getVisibility() == View.GONE){
-						relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
-					}
-					else{
-						relativeLayoutEmailVerify.setVisibility(View.GONE);
-					}
-				}
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                if (Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal()) {
+                    if (relativeLayoutEmailVerify.getVisibility() == View.GONE) {
+                        relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
+                    } else {
+                        relativeLayoutEmailVerify.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
 		
 		linearLayoutMain.setOnClickListener(new View.OnClickListener() {
 			
@@ -376,7 +370,16 @@ public class AccountActivity extends Activity {
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
-		
+
+        relativeLayoutEmergencyContact.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, ChangePasswordActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
 		
 		buttonLogout.setOnClickListener(new View.OnClickListener() {
 			
