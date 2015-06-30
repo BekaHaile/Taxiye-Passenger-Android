@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
@@ -117,6 +118,7 @@ public class Data {
 	
 	
 	public static UserData userData;
+    public static ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	
 	public static LocationFetcher locationFetcher;
 	
@@ -132,12 +134,8 @@ public class Data {
 	
 	
 	
-	public static String dEngagementId = "", dCustomerId = "";
-	public static LatLng dCustLatLng;
-	
-	
-	public static boolean driversRefreshedFirstTime = false;
-	
+
+
 	
 	public static EndRideData endRideData;
 	
@@ -163,13 +161,18 @@ public class Data {
 	public static void clearDataOnLogout(Context context){
 		try{
 			driverInfos = new ArrayList<DriverInfo>();
+            emergencyContactsList = new ArrayList<>();
 			userData = null;
+            endRideData = null;
+            customerRateAppFlag = 0;
 			locationFetcher = null;
 			deviceToken = ""; country = ""; deviceName = ""; appVersion = 0; osVersion = "";
-			cEngagementId = ""; cDriverId = "";
+			cEngagementId = ""; cDriverId = ""; cSessionId = "";
 			assignedDriverInfo = null;
 			pickupLatLng = null;
 			facebookUserData = null;
+            fareStructure = null;
+            previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 			
 			AccessTokenGenerator.saveLogoutToken(context);
 			

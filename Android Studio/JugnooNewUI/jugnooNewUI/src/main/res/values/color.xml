@@ -72,9 +72,12 @@
     <color name="orange_dark">#F96f01</color>
     
     <color name="yellow_text">#FABB15</color>   
-    <color name="grey_text">#232323</color>  
-    
-    
+    <color name="grey_text">#232323</color>
+
+
+
+    <color name="red">#F23A30</color>
+    <color name="red_alpha">#99F23A30</color>
     
     
     

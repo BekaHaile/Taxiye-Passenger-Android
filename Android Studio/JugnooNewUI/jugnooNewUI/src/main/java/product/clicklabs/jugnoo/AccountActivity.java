@@ -32,8 +32,6 @@ import com.squareup.picasso.PicassoTools;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
-
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
@@ -72,10 +70,7 @@ public class AccountActivity extends Activity {
 	TextView textViewChangePassword, textViewEmergencyContact;
 
 	Button buttonLogout;
-	
-	DecimalFormat decimalFormat = new DecimalFormat("#.#");
-	DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -375,7 +370,7 @@ public class AccountActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, ChangePasswordActivity.class));
+                startActivity(new Intent(AccountActivity.this, EmergencyContactsActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });

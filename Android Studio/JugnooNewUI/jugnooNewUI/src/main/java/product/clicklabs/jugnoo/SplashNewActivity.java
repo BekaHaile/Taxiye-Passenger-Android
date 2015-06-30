@@ -345,7 +345,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		
 
 		
-		try {																						// to get AppVersion, OS version, country code and device name
+		try {																						// to get AppVersion, OS version, country code and device pickedName
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			Data.appVersion = pInfo.versionCode;
 			Log.i("appVersion", Data.appVersion + "..");

@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.datastructure.CancelOption;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
@@ -232,6 +233,8 @@ public class JSONParser {
         String authSecret = authKey + Config.getClientSharedSecret();
         String accessToken = SHA256Convertor.getSHA256String(authSecret);
 
+        Data.emergencyContactsList = JSONParser.parseEmergencyContacts(userData);
+
         return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
@@ -342,7 +345,7 @@ public class JSONParser {
 //        "promotion": null,
 //        "driver_info": {
 //            "id": 231,
-//            "name": "Driver 3",
+//            "pickedName": "Driver 3",
 //            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png"
 //        }
 //    }
@@ -357,7 +360,7 @@ public class JSONParser {
 
             Data.pickupLatLng = new LatLng(0, 0);
 
-            Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
+            Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("pickedName"), jDriverInfo.getString("user_image"),
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
 
             try {
@@ -894,6 +897,43 @@ public class JSONParser {
             e.printStackTrace();
         }
         return promotionInfoList;
+    }
+
+
+    public static ArrayList<EmergencyContact> parseEmergencyContacts(JSONObject jObj){
+        ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
+
+//        "emergency_contacts": [
+//        {
+//            "id": 1,
+//            "user_id": 493,
+//            "name": "Gagandeep",
+//            "email": "gagandeep@jugnoo.in",
+//            "phone_no": "8146536536",
+//            "verification_status": 0,
+//            "user_verification_token": "988e7c29",
+//            "contact_verification_token": "0b95b8d3",
+//            "requests_made": 3,
+//            "requested_on": "2015-06-30T10:02:44.000Z",
+//            "verified_on": "0000-00-00 00:00:00"
+//        }
+//        ],
+        try{
+            JSONArray jEmergencyContactsArr = jObj.getJSONArray("emergency_contacts");
+
+            for(int i=0; i<jEmergencyContactsArr.length(); i++){
+                JSONObject jECont = jEmergencyContactsArr.getJSONObject(i);
+                emergencyContactsList.add(new EmergencyContact(jECont.getInt("id"),
+                    jECont.getInt("user_id"),
+                    jECont.getString("name"),
+                    jECont.getString("email"),
+                    jECont.getString("phone_no"),
+                    jECont.getInt("verification_status")));
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return emergencyContactsList;
     }
 
 }

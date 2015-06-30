@@ -433,7 +433,7 @@ public class ItemInfosListActivity extends Activity{
 													if(itemsData.length() > 0){
 														for(int i=0; i<itemsData.length(); i++){
 															JSONObject itemData = itemsData.getJSONObject(i);
-															itemInfosList.add(new ItemInfo(itemData.getInt("item_id"), itemData.getString("name"), itemData.getInt("price"), 
+															itemInfosList.add(new ItemInfo(itemData.getInt("item_id"), itemData.getString("name"), itemData.getInt("price"),
 																	itemData.getString("description"), itemData.getString("image")));
 														}
 													}
