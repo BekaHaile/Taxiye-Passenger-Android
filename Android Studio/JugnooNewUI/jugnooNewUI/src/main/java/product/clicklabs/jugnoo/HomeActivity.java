@@ -4531,7 +4531,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             final RequestParams params = new RequestParams();
             params.put("access_token", Data.userData.accessToken);
             params.put("driver_id", Data.assignedDriverInfo.userId);
-            params.put("session_id", Data.cSessionId);
+            params.put("engagement_id", Data.cEngagementId);
             params.put("alert_type", alertType);
 
             if(myLocation != null) {

@@ -56,7 +56,7 @@ public class EmergencyContactsActivity extends Activity {
     LinearLayout linearLayoutEmergencyContact1Fields;
     EditText editTextEC1Name, editTextEC1Phone, editTextEC1Email;
     ImageView imageViewEC1PickContact;
-    TextView textViewEC1Delete;
+    RelativeLayout relativeLayoutEC1Delete;
     RelativeLayout relativeLayoutEC1Operations;
     Button buttonVerifyEC1, buttonResendSMSEC1;
     TextView textViewEC1NotVerified;
@@ -67,7 +67,7 @@ public class EmergencyContactsActivity extends Activity {
     LinearLayout linearLayoutEmergencyContact2Fields;
     EditText editTextEC2Name, editTextEC2Phone, editTextEC2Email;
     ImageView imageViewEC2PickContact;
-    TextView textViewEC2Delete;
+    RelativeLayout relativeLayoutEC2Delete;
     RelativeLayout relativeLayoutEC2Operations;
     Button buttonVerifyEC2, buttonResendSMSEC2;
     TextView textViewEC2NotVerified;
@@ -117,7 +117,8 @@ public class EmergencyContactsActivity extends Activity {
         editTextEC1Phone = (EditText) findViewById(R.id.editTextEC1Phone); editTextEC1Phone.setTypeface(Fonts.latoRegular(this));
         editTextEC1Email = (EditText) findViewById(R.id.editTextEC1Email); editTextEC1Email.setTypeface(Fonts.latoRegular(this));
         imageViewEC1PickContact = (ImageView) findViewById(R.id.imageViewEC1PickContact);
-        textViewEC1Delete = (TextView) findViewById(R.id.textViewEC1Delete); textViewEC1Delete.setTypeface(Fonts.latoRegular(this));
+        relativeLayoutEC1Delete = (RelativeLayout) findViewById(R.id.relativeLayoutEC1Delete);
+        ((TextView) findViewById(R.id.textViewEC1Delete)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEC1Phone91)).setTypeface(Fonts.latoRegular(this));
         relativeLayoutEC1Operations = (RelativeLayout) findViewById(R.id.relativeLayoutEC1Operations);
         buttonVerifyEC1 = (Button) findViewById(R.id.buttonVerifyEC1); buttonVerifyEC1.setTypeface(Fonts.latoRegular(this));
@@ -138,7 +139,8 @@ public class EmergencyContactsActivity extends Activity {
         editTextEC2Phone = (EditText) findViewById(R.id.editTextEC2Phone); editTextEC2Phone.setTypeface(Fonts.latoRegular(this));
         editTextEC2Email = (EditText) findViewById(R.id.editTextEC2Email); editTextEC2Email.setTypeface(Fonts.latoRegular(this));
         imageViewEC2PickContact = (ImageView) findViewById(R.id.imageViewEC2PickContact);
-        textViewEC2Delete = (TextView) findViewById(R.id.textViewEC2Delete); textViewEC2Delete.setTypeface(Fonts.latoRegular(this));
+        relativeLayoutEC2Delete = (RelativeLayout) findViewById(R.id.relativeLayoutEC2Delete);
+        ((TextView) findViewById(R.id.textViewEC2Delete)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEC2Phone91)).setTypeface(Fonts.latoRegular(this));
         relativeLayoutEC2Operations = (RelativeLayout) findViewById(R.id.relativeLayoutEC2Operations);
         buttonVerifyEC2 = (Button) findViewById(R.id.buttonVerifyEC2); buttonVerifyEC2.setTypeface(Fonts.latoRegular(this));
@@ -256,6 +258,7 @@ public class EmergencyContactsActivity extends Activity {
 
                         imageViewEC1PickContact.setVisibility(View.VISIBLE);
                         buttonVerifyEC1.setVisibility(View.VISIBLE);
+                        buttonVerifyEC1.setText("UPDATE");
                     } else {
                         editEC1 = 0;
 
@@ -270,6 +273,7 @@ public class EmergencyContactsActivity extends Activity {
 
                         imageViewEC1PickContact.setVisibility(View.GONE);
                         buttonVerifyEC1.setVisibility(View.GONE);
+                        buttonVerifyEC1.setText("VERIFY");
                     }
                 }
             }
@@ -292,6 +296,7 @@ public class EmergencyContactsActivity extends Activity {
 
                         imageViewEC2PickContact.setVisibility(View.VISIBLE);
                         buttonVerifyEC2.setVisibility(View.VISIBLE);
+                        buttonVerifyEC2.setText("UPDATE");
                     } else {
                         editEC2 = 0;
 
@@ -306,6 +311,7 @@ public class EmergencyContactsActivity extends Activity {
 
                         imageViewEC2PickContact.setVisibility(View.GONE);
                         buttonVerifyEC2.setVisibility(View.GONE);
+                        buttonVerifyEC2.setText("VERIFY");
                     }
                 }
             }
@@ -417,7 +423,7 @@ public class EmergencyContactsActivity extends Activity {
             }
         });
 
-        textViewEC1Delete.setOnClickListener(new OnClickListener() {
+        relativeLayoutEC1Delete.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogPopup.alertPopupTwoButtonsWithListeners(EmergencyContactsActivity.this, "", "Are you sure you want to delete this emergency contact?", "OK", "Cancel",
@@ -437,7 +443,7 @@ public class EmergencyContactsActivity extends Activity {
             }
         });
 
-        textViewEC2Delete.setOnClickListener(new OnClickListener() {
+        relativeLayoutEC2Delete.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogPopup.alertPopupTwoButtonsWithListeners(EmergencyContactsActivity.this, "", "Are you sure you want to delete this emergency contact?", "OK", "Cancel",
@@ -497,7 +503,8 @@ public class EmergencyContactsActivity extends Activity {
                     imageViewEmergencyContact1Edit.setVisibility(View.VISIBLE);
                     imageViewEC1PickContact.setVisibility(View.GONE);
                     buttonVerifyEC1.setVisibility(View.GONE);
-                    textViewEC1Delete.setVisibility(View.GONE);
+                    relativeLayoutEC1Delete.setVisibility(View.GONE);
+                    buttonVerifyEC1.setText("VERIFY");
 
                     if(1 == emergencyContact1.verificationStatus){
                         imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_verified_icon);
@@ -524,7 +531,8 @@ public class EmergencyContactsActivity extends Activity {
                     imageViewEmergencyContact2Edit.setVisibility(View.VISIBLE);
                     imageViewEC2PickContact.setVisibility(View.GONE);
                     buttonVerifyEC2.setVisibility(View.GONE);
-                    textViewEC2Delete.setVisibility(View.VISIBLE);
+                    relativeLayoutEC2Delete.setVisibility(View.VISIBLE);
+                    buttonVerifyEC2.setText("VERIFY");
 
                     if(1 == emergencyContact2.verificationStatus){
                         imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_verified_icon);
@@ -552,7 +560,8 @@ public class EmergencyContactsActivity extends Activity {
                     imageViewEmergencyContact1Edit.setVisibility(View.VISIBLE);
                     imageViewEC1PickContact.setVisibility(View.GONE);
                     buttonVerifyEC1.setVisibility(View.GONE);
-                    textViewEC1Delete.setVisibility(View.VISIBLE);
+                    relativeLayoutEC1Delete.setVisibility(View.VISIBLE);
+                    buttonVerifyEC1.setText("VERIFY");
 
                     if(1 == emergencyContact1.verificationStatus){
                         imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_verified_icon);
@@ -581,7 +590,8 @@ public class EmergencyContactsActivity extends Activity {
                     buttonVerifyEC2.setVisibility(View.VISIBLE);
                     textViewEC2NotVerified.setVisibility(View.GONE);
                     buttonResendSMSEC2.setVisibility(View.GONE);
-                    textViewEC2Delete.setVisibility(View.GONE);
+                    relativeLayoutEC2Delete.setVisibility(View.GONE);
+                    buttonVerifyEC2.setText("VERIFY");
                 }
                 else{
                     emergencyContact1 = null;
@@ -599,7 +609,8 @@ public class EmergencyContactsActivity extends Activity {
                     buttonVerifyEC1.setVisibility(View.VISIBLE);
                     textViewEC1NotVerified.setVisibility(View.GONE);
                     buttonResendSMSEC1.setVisibility(View.GONE);
-                    textViewEC1Delete.setVisibility(View.GONE);
+                    relativeLayoutEC1Delete.setVisibility(View.GONE);
+                    buttonVerifyEC1.setText("VERIFY");
 
 
 
@@ -618,7 +629,8 @@ public class EmergencyContactsActivity extends Activity {
                     buttonVerifyEC2.setVisibility(View.VISIBLE);
                     textViewEC2NotVerified.setVisibility(View.GONE);
                     buttonResendSMSEC2.setVisibility(View.GONE);
-                    textViewEC2Delete.setVisibility(View.GONE);
+                    relativeLayoutEC2Delete.setVisibility(View.GONE);
+                    buttonVerifyEC2.setText("VERIFY");
 
 
 
