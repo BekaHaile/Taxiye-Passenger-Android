@@ -159,7 +159,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     TextView title;
     Button checkServerBtn;
     ImageView jugnooShopImageView;
-    ImageView imageViewGift;
+    ImageView imageViewGift, imageViewHelp;
     boolean mealsAnimating1 = false, fatafatAnimating1 = false;
 
 
@@ -404,6 +404,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         title.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
         imageViewGift = (ImageView) findViewById(R.id.imageViewGift);
+        imageViewHelp = (ImageView) findViewById(R.id.imageViewHelp);
         jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
 
 
@@ -656,6 +657,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 startActivity(new Intent(HomeActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
+            }
+        });
+
+        imageViewHelp.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sosDialog(HomeActivity.this);
             }
         });
 
@@ -1492,6 +1500,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
                         imageViewGift.setVisibility(View.VISIBLE);
+                        imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
                         genieLayout.setVisibility(View.VISIBLE);
@@ -1511,6 +1520,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         jugnooShopImageView.setVisibility(View.GONE);
                         imageViewGift.clearAnimation();
                         imageViewGift.setVisibility(View.GONE);
+                        imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.VISIBLE);
 
                         genieLayout.setVisibility(View.GONE);
@@ -1541,6 +1551,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
                         imageViewGift.setVisibility(View.VISIBLE);
+                        imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
                         genieLayout.setVisibility(View.GONE);
@@ -1602,7 +1613,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         textViewInRideLowJugnooCash.setVisibility(View.GONE);
 
 
-                        imageViewGift.setVisibility(View.VISIBLE);
+                        imageViewGift.clearAnimation();
+                        imageViewGift.setVisibility(View.GONE);
+                        imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
                         genieLayout.setVisibility(View.GONE);
@@ -1663,7 +1676,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         textViewInRideLowJugnooCash.setVisibility(View.GONE);
 
 
-                        imageViewGift.setVisibility(View.VISIBLE);
+                        imageViewGift.clearAnimation();
+                        imageViewGift.setVisibility(View.GONE);
+                        imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
                         genieLayout.setVisibility(View.GONE);
@@ -1708,7 +1723,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         updateLowJugnooCashBanner(mode);
 
 
-                        imageViewGift.setVisibility(View.VISIBLE);
+                        imageViewGift.clearAnimation();
+                        imageViewGift.setVisibility(View.GONE);
+                        imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
                         genieLayout.setVisibility(View.GONE);
@@ -1727,6 +1744,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         imageViewSearchCancel.setVisibility(View.GONE);
                         imageViewGift.setVisibility(View.VISIBLE);
+                        imageViewHelp.setVisibility(View.GONE);
 
                         genieLayout.setVisibility(View.GONE);
 
@@ -1743,6 +1761,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         centreLocationRl.setVisibility(View.GONE);
 
                         imageViewGift.setVisibility(View.VISIBLE);
+                        imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
                         genieLayout.setVisibility(View.VISIBLE);
@@ -4379,8 +4398,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 } else {
                     if (skipped && Data.customerRateAppFlag == 1) {
                         rateAppPopup(activity);
-                    }
-                    else{
+                    } else {
                     }
                 }
 
@@ -4451,6 +4469,116 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
     }
+
+
+
+
+    public static String CALL = "CALL", SMS = "SMS", CALL_100 = "CALL_100";
+
+    private void sosDialog(final Activity activity){
+        if(Data.emergencyContactsList != null){
+            if(Data.emergencyContactsList.size() > 0){
+
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "ALERT Raised", "CALL", "MESSAGE",
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Utils.openCallIntent(activity, Data.emergencyContactsList.get(0).phoneNo);
+                            raiseSOSAlertAPI(activity, CALL);
+                        }
+                    },
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String numbers = ""+Data.emergencyContactsList.get(0).phoneNo;
+                            if(Data.emergencyContactsList.size() > 1){
+                                numbers = numbers+","+Data.emergencyContactsList.get(1).phoneNo;
+                            }
+                            Utils.openSMSIntent(activity, numbers, "test");
+                            raiseSOSAlertAPI(activity, SMS);
+                        }
+                    }, true, false);
+
+            }
+            else{
+                call100Dialog(activity);
+            }
+        }
+        else{
+            call100Dialog(activity);
+        }
+    }
+
+    private void call100Dialog(final Activity activity){
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "CALL 100?", "CALL", "Cancel",
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utils.openCallIntent(activity, "100");
+                    raiseSOSAlertAPI(activity, CALL_100);
+                }
+            },
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            }, true, false);
+    }
+
+
+    private void raiseSOSAlertAPI(final Activity activity, String alertType) {
+        try {
+            final RequestParams params = new RequestParams();
+            params.put("access_token", Data.userData.accessToken);
+            params.put("driver_id", Data.assignedDriverInfo.userId);
+            params.put("session_id", Data.cSessionId);
+            params.put("alert_type", alertType);
+
+            if(myLocation != null) {
+                params.put("latitude", ""+myLocation.getLatitude());
+                params.put("longitude", ""+myLocation.getLongitude());
+            }
+            else{
+                params.put("latitude", ""+LocationFetcher.getSavedLatFromSP(activity));
+                params.put("longitude", ""+LocationFetcher.getSavedLngFromSP(activity));
+            }
+
+            final String url = Config.getServerUrl() + "/emergency/alert";
+
+            AsyncHttpClient client = Data.getClient();
+            client.post(url, params,
+                new CustomAsyncHttpResponseHandler() {
+                    private JSONObject jObj;
+
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                        Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+                    }
+
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.i("Server response /emergency/alert", "response = " + response);
+                        try {
+                            jObj = new JSONObject(response);
+
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+                    }
+                });
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 

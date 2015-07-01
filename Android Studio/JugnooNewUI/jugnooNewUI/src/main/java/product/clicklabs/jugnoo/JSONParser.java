@@ -233,7 +233,11 @@ public class JSONParser {
         String authSecret = authKey + Config.getClientSharedSecret();
         String accessToken = SHA256Convertor.getSHA256String(authSecret);
 
-        Data.emergencyContactsList = JSONParser.parseEmergencyContacts(userData);
+        if(Data.emergencyContactsList == null){
+            Data.emergencyContactsList = new ArrayList<>();
+        }
+        Data.emergencyContactsList.clear();
+        Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(userData));
 
         return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
