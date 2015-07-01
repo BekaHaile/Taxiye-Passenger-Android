@@ -4479,7 +4479,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         if(Data.emergencyContactsList != null){
             if(Data.emergencyContactsList.size() > 0){
 
-                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "ALERT Raised", "CALL", "MESSAGE",
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL", "SMS",
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -4510,7 +4510,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
     private void call100Dialog(final Activity activity){
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "CALL 100?", "CALL", "Cancel",
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL 100", "Cancel",
             new OnClickListener() {
                 @Override
                 public void onClick(View v) {

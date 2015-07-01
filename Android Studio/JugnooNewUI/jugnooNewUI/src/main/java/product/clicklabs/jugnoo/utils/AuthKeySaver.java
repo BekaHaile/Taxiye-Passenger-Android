@@ -41,7 +41,7 @@ public class AuthKeySaver {
 				writer.close();
 			}
 		} catch (Exception e1) {
-			e1.printStackTrace();
+            Log.w("e1", "="+e1);
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class AuthKeySaver {
         	try {
 				in.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+                Log.w("e1", "=" + e);
 			}
         }
         return authKey;

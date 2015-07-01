@@ -68,7 +68,7 @@ public enum ApiResponseFlags {
 
     RIDE_PATH_INFO_SUCCESS(137),
 
-    EMERGENCY_CONTACTS(540)
+    EMERGENCY_CONTACTS(450)
 	
 
 	;

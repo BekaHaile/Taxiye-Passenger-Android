@@ -56,6 +56,7 @@ public class EmergencyContactsActivity extends Activity {
     LinearLayout linearLayoutEmergencyContact1Fields;
     EditText editTextEC1Name, editTextEC1Phone, editTextEC1Email;
     ImageView imageViewEC1PickContact;
+    TextView textViewEC1Delete;
     RelativeLayout relativeLayoutEC1Operations;
     Button buttonVerifyEC1, buttonResendSMSEC1;
     TextView textViewEC1NotVerified;
@@ -66,6 +67,7 @@ public class EmergencyContactsActivity extends Activity {
     LinearLayout linearLayoutEmergencyContact2Fields;
     EditText editTextEC2Name, editTextEC2Phone, editTextEC2Email;
     ImageView imageViewEC2PickContact;
+    TextView textViewEC2Delete;
     RelativeLayout relativeLayoutEC2Operations;
     Button buttonVerifyEC2, buttonResendSMSEC2;
     TextView textViewEC2NotVerified;
@@ -115,6 +117,7 @@ public class EmergencyContactsActivity extends Activity {
         editTextEC1Phone = (EditText) findViewById(R.id.editTextEC1Phone); editTextEC1Phone.setTypeface(Fonts.latoRegular(this));
         editTextEC1Email = (EditText) findViewById(R.id.editTextEC1Email); editTextEC1Email.setTypeface(Fonts.latoRegular(this));
         imageViewEC1PickContact = (ImageView) findViewById(R.id.imageViewEC1PickContact);
+        textViewEC1Delete = (TextView) findViewById(R.id.textViewEC1Delete); textViewEC1Delete.setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEC1Phone91)).setTypeface(Fonts.latoRegular(this));
         relativeLayoutEC1Operations = (RelativeLayout) findViewById(R.id.relativeLayoutEC1Operations);
         buttonVerifyEC1 = (Button) findViewById(R.id.buttonVerifyEC1); buttonVerifyEC1.setTypeface(Fonts.latoRegular(this));
@@ -135,6 +138,7 @@ public class EmergencyContactsActivity extends Activity {
         editTextEC2Phone = (EditText) findViewById(R.id.editTextEC2Phone); editTextEC2Phone.setTypeface(Fonts.latoRegular(this));
         editTextEC2Email = (EditText) findViewById(R.id.editTextEC2Email); editTextEC2Email.setTypeface(Fonts.latoRegular(this));
         imageViewEC2PickContact = (ImageView) findViewById(R.id.imageViewEC2PickContact);
+        textViewEC2Delete = (TextView) findViewById(R.id.textViewEC2Delete); textViewEC2Delete.setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEC2Phone91)).setTypeface(Fonts.latoRegular(this));
         relativeLayoutEC2Operations = (RelativeLayout) findViewById(R.id.relativeLayoutEC2Operations);
         buttonVerifyEC2 = (Button) findViewById(R.id.buttonVerifyEC2); buttonVerifyEC2.setTypeface(Fonts.latoRegular(this));
@@ -147,13 +151,11 @@ public class EmergencyContactsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (linearLayoutEmergencyContact1Fields.getVisibility() == View.GONE) {
-                    if(emergencyContact1 == null){
+                    if (emergencyContact1 == null) {
                         imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_minus_icon);
-                    }
-                    else{
-                        if(emergencyContact1.verificationStatus == 1){
-                        }
-                        else{
+                    } else {
+                        if (emergencyContact1.verificationStatus == 1) {
+                        } else {
                             imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_minus_icon);
                         }
                     }
@@ -328,12 +330,20 @@ public class EmergencyContactsActivity extends Activity {
                 else{
                     String reducedPhone = Utils.retrievePhoneNumberTenChars(phoneNo);
                     if(Utils.validPhoneNumber(reducedPhone)){
+                        reducedPhone = "+91"+reducedPhone;
                         if(0 == editEC1) {
                             addEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email);
                         }
                         else{
                             if(emergencyContact1 != null) {
-                                editEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email, emergencyContact1);
+                                if(name.equalsIgnoreCase(emergencyContact1.name)
+                                    && reducedPhone.equalsIgnoreCase(emergencyContact1.phoneNo)
+                                    && email.equalsIgnoreCase(emergencyContact1.email)){
+                                    Toast.makeText(EmergencyContactsActivity.this, "Entered fields are same as the previous", Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    editEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email, emergencyContact1);
+                                }
                             }
                             else{
                                 Toast.makeText(EmergencyContactsActivity.this, "Contact not added", Toast.LENGTH_SHORT).show();
@@ -367,6 +377,7 @@ public class EmergencyContactsActivity extends Activity {
                 else{
                     String reducedPhone = Utils.retrievePhoneNumberTenChars(phoneNo);
                     if(Utils.validPhoneNumber(reducedPhone)){
+                        reducedPhone = "+91"+reducedPhone;
                         if(0 == editEC2) {
                             addEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email);
                         }
@@ -403,6 +414,46 @@ public class EmergencyContactsActivity extends Activity {
                 if(emergencyContact2 != null){
                     resendVerificationAPI(EmergencyContactsActivity.this, emergencyContact2.phoneNo, emergencyContact2.email);
                 }
+            }
+        });
+
+        textViewEC1Delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogPopup.alertPopupTwoButtonsWithListeners(EmergencyContactsActivity.this, "", "Are you sure you want to delete this emergency contact?", "OK", "Cancel",
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(emergencyContact1 != null){
+                                deleteEmergencyContactAPI(EmergencyContactsActivity.this, emergencyContact1);
+                            }
+                        }
+                    }, new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }, true, false);
+            }
+        });
+
+        textViewEC2Delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogPopup.alertPopupTwoButtonsWithListeners(EmergencyContactsActivity.this, "", "Are you sure you want to delete this emergency contact?", "OK", "Cancel",
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(emergencyContact2 != null){
+                                deleteEmergencyContactAPI(EmergencyContactsActivity.this, emergencyContact2);
+                            }
+                        }
+                    }, new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }, true, false);
             }
         });
 
@@ -446,7 +497,8 @@ public class EmergencyContactsActivity extends Activity {
                     imageViewEmergencyContact1Edit.setVisibility(View.VISIBLE);
                     imageViewEC1PickContact.setVisibility(View.GONE);
                     buttonVerifyEC1.setVisibility(View.GONE);
-                    
+                    textViewEC1Delete.setVisibility(View.GONE);
+
                     if(1 == emergencyContact1.verificationStatus){
                         imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_verified_icon);
 
@@ -461,8 +513,8 @@ public class EmergencyContactsActivity extends Activity {
                     }
 
 
-                    
-                    
+
+                    relativeLayoutEmergencyContact2Top.setVisibility(View.VISIBLE);
                     
                     textViewEmergencyContact2.setText(emergencyContact2.name);
                     editTextEC2Name.setText(emergencyContact2.name); editTextEC2Name.setEnabled(false);
@@ -472,6 +524,7 @@ public class EmergencyContactsActivity extends Activity {
                     imageViewEmergencyContact2Edit.setVisibility(View.VISIBLE);
                     imageViewEC2PickContact.setVisibility(View.GONE);
                     buttonVerifyEC2.setVisibility(View.GONE);
+                    textViewEC2Delete.setVisibility(View.VISIBLE);
 
                     if(1 == emergencyContact2.verificationStatus){
                         imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_verified_icon);
@@ -499,6 +552,7 @@ public class EmergencyContactsActivity extends Activity {
                     imageViewEmergencyContact1Edit.setVisibility(View.VISIBLE);
                     imageViewEC1PickContact.setVisibility(View.GONE);
                     buttonVerifyEC1.setVisibility(View.GONE);
+                    textViewEC1Delete.setVisibility(View.VISIBLE);
 
                     if(1 == emergencyContact1.verificationStatus){
                         imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_verified_icon);
@@ -513,7 +567,7 @@ public class EmergencyContactsActivity extends Activity {
                         buttonResendSMSEC1.setVisibility(View.VISIBLE);
                     }
 
-                    
+                    relativeLayoutEmergencyContact2Top.setVisibility(View.VISIBLE);
                     
                     textViewEmergencyContact2.setText("Secondary Emergency Contact");
                     editTextEC2Name.setText(""); editTextEC2Name.setEnabled(true);
@@ -527,6 +581,7 @@ public class EmergencyContactsActivity extends Activity {
                     buttonVerifyEC2.setVisibility(View.VISIBLE);
                     textViewEC2NotVerified.setVisibility(View.GONE);
                     buttonResendSMSEC2.setVisibility(View.GONE);
+                    textViewEC2Delete.setVisibility(View.GONE);
                 }
                 else{
                     emergencyContact1 = null;
@@ -544,6 +599,7 @@ public class EmergencyContactsActivity extends Activity {
                     buttonVerifyEC1.setVisibility(View.VISIBLE);
                     textViewEC1NotVerified.setVisibility(View.GONE);
                     buttonResendSMSEC1.setVisibility(View.GONE);
+                    textViewEC1Delete.setVisibility(View.GONE);
 
 
 
@@ -562,6 +618,7 @@ public class EmergencyContactsActivity extends Activity {
                     buttonVerifyEC2.setVisibility(View.VISIBLE);
                     textViewEC2NotVerified.setVisibility(View.GONE);
                     buttonResendSMSEC2.setVisibility(View.GONE);
+                    textViewEC2Delete.setVisibility(View.GONE);
 
 
 
@@ -621,7 +678,7 @@ public class EmergencyContactsActivity extends Activity {
             Log.i("params", "="+params.toString());
 
             AsyncHttpClient client = Data.getClient();
-            client.get(Config.getServerUrl() + "/emergency/contacts/list'", params,
+            client.get(Config.getServerUrl() + "/emergency/contacts/list", params,
                 new CustomAsyncHttpResponseHandler() {
                     private JSONObject jObj;
 
@@ -639,21 +696,20 @@ public class EmergencyContactsActivity extends Activity {
                         try {
                             jObj = new JSONObject(response);
                             String message = JSONParser.getServerMessage(jObj);
-                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
-                                if(ApiResponseFlags.EMERGENCY_CONTACTS.getOrdinal() == flag){
-                                    if(Data.emergencyContactsList == null){
+                                if (ApiResponseFlags.EMERGENCY_CONTACTS.getOrdinal() == flag) {
+                                    if (Data.emergencyContactsList == null) {
                                         Data.emergencyContactsList = new ArrayList<>();
                                     }
                                     Data.emergencyContactsList.clear();
                                     Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jObj));
                                     setEmergencyContacts();
-                                }
-                                else{
+                                } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
                             }
-                        }  catch (Exception exception) {
+                        } catch (Exception exception) {
                             exception.printStackTrace();
                             DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
@@ -682,7 +738,7 @@ public class EmergencyContactsActivity extends Activity {
             params.put("phone_no", phoneNo);
             params.put("email", email);
 
-            Log.i("params", "="+params.toString());
+            Log.e("params", "="+params.toString());
 
             AsyncHttpClient client = Data.getClient();
             client.post(Config.getServerUrl() + "/emergency/contacts/add", params,
@@ -698,7 +754,7 @@ public class EmergencyContactsActivity extends Activity {
 
                     @Override
                     public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
+                        Log.e("Server response", "response = " + response);
                         DialogPopup.dismissLoadingDialog();
                         try {
                             jObj = new JSONObject(response);
@@ -710,7 +766,7 @@ public class EmergencyContactsActivity extends Activity {
                                 } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     getAllEmergencyContactsAPI(activity);
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", message);
+                                    DialogPopup.dialogBanner(activity, message);
                                 }
                             }
                         } catch (Exception exception) {
@@ -779,7 +835,7 @@ public class EmergencyContactsActivity extends Activity {
                                     getAllEmergencyContactsAPI(activity);
                                 }
                                 else{
-                                    DialogPopup.alertPopup(activity, "", message);
+                                    DialogPopup.dialogBanner(activity, message);
                                 }
                             }
                         }  catch (Exception exception) {
@@ -795,6 +851,63 @@ public class EmergencyContactsActivity extends Activity {
         }
     }
 
+
+    public void deleteEmergencyContactAPI(final Activity activity, EmergencyContact previousEmergencyContact) {
+        if(AppStatus.getInstance(activity).isOnline(activity)) {
+
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+
+            RequestParams params = new RequestParams();
+
+            params.put("access_token", Data.userData.accessToken);
+            params.put("id", ""+previousEmergencyContact.id);
+
+            Log.i("params", "="+params.toString());
+
+            AsyncHttpClient client = Data.getClient();
+            client.post(Config.getServerUrl() + "/emergency/contacts/delete", params,
+                new CustomAsyncHttpResponseHandler() {
+                    private JSONObject jObj;
+
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    }
+
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.i("Server response", "response = " + response);
+                        DialogPopup.dismissLoadingDialog();
+                        try {
+                            jObj = new JSONObject(response);
+                            String message = JSONParser.getServerMessage(jObj);
+                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+                                int flag = jObj.getInt("flag");
+                                if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+                                    DialogPopup.dialogBanner(activity, message);
+                                }
+                                else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                    DialogPopup.dialogBanner(activity, message);
+                                    getAllEmergencyContactsAPI(activity);
+                                }
+                                else{
+                                    DialogPopup.dialogBanner(activity, message);
+                                }
+                            }
+                        }  catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                });
+        }
+        else {
+            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+        }
+    }
 
 
 
@@ -836,10 +949,11 @@ public class EmergencyContactsActivity extends Activity {
                                     DialogPopup.dialogBanner(activity, message);
                                 }
                                 else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                    DialogPopup.dialogBanner(activity, message);
                                     getAllEmergencyContactsAPI(activity);
                                 }
                                 else{
-                                    DialogPopup.alertPopup(activity, "", message);
+                                    DialogPopup.dialogBanner(activity, message);
                                 }
                             }
                         }  catch (Exception exception) {

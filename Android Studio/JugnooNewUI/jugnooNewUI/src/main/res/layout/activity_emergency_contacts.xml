@@ -221,6 +221,20 @@
                         android:src="@color/yellow"/>
 
 
+                    <TextView
+                        android:id="@+id/textViewEC1Delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:padding="20px"
+                        android:text="Delete"
+                        android:textColor="@drawable/text_color_yellow_alpha_selector"
+                        android:textSize="28px"
+                        />
+
+
+
+
                     <RelativeLayout
                         android:id="@+id/relativeLayoutEC1Operations"
                         android:layout_width="match_parent"
@@ -330,7 +344,7 @@
                     android:layout_margin="40px"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="visible"
 
                     >
 
@@ -442,6 +456,17 @@
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
                         android:src="@color/yellow"/>
+
+                    <TextView
+                        android:id="@+id/textViewEC2Delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:padding="20px"
+                        android:text="Delete"
+                        android:textColor="@drawable/text_color_yellow_alpha_selector"
+                        android:textSize="28px"
+                        />
 
 
                     <RelativeLayout
