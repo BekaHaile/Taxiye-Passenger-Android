@@ -320,16 +320,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/transparent"
+                        android:layout_below="@+id/relativeLayoutAssigningInfo"
                         >
                         <RelativeLayout
                             android:id="@+id/relativeLayoutAssigningDropLocationBar"
                             android:layout_width="match_parent"
                             android:layout_height="90px"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="20px"
-                            android:layout_marginLeft="20px"
-                            android:layout_marginRight="20px"
-                            android:layout_marginTop="124px"
+                            android:layout_margin="20px"
                             android:background="@drawable/background_white_rounded"
                             android:splitMotionEvents="false">
 
@@ -355,6 +353,14 @@
                                 android:textColor="@color/black_text"
                                 android:textCursorDrawable="@null"
                                 android:textSize="30px"/>
+
+                            <ProgressBar
+                                android:id="@+id/progressBarAssigningDropLocation"
+                                android:layout_width="70px"
+                                android:layout_height="70px"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20px"/>
 
                         </RelativeLayout>
 
@@ -620,16 +626,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/transparent"
+                        android:layout_below="@+id/relativeLayoutInRideInfo"
                         >
                         <RelativeLayout
                             android:id="@+id/relativeLayoutFinalDropLocationBar"
                             android:layout_width="match_parent"
                             android:layout_height="90px"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="20px"
-                            android:layout_marginLeft="20px"
-                            android:layout_marginRight="20px"
-                            android:layout_marginTop="124px"
+                            android:layout_margin="20px"
                             android:background="@drawable/background_white_rounded"
                             android:splitMotionEvents="false">
 
@@ -656,6 +660,14 @@
                                 android:textCursorDrawable="@null"
                                 android:textSize="30px"/>
 
+                            <ProgressBar
+                                android:id="@+id/progressBarFinalDropLocation"
+                                android:layout_width="70px"
+                                android:layout_height="70px"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20px"/>
+
                         </RelativeLayout>
 
                         <ListView
@@ -673,7 +685,6 @@
                     </RelativeLayout>
 
                 </RelativeLayout>
-
 
                 <!-- search layout -->
                 <LinearLayout

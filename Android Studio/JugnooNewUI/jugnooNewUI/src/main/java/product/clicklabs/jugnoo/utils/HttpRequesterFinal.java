@@ -55,7 +55,8 @@ public class HttpRequesterFinal{
         try {
             if (inputStream != null) {
                 BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(inputStream, "iso-8859-1"), 8);
+                    new InputStreamReader(inputStream));
+
                 StringBuilder stringBuilder = new StringBuilder();
                 String line = null;
                 while ((line = reader.readLine()) != null) {

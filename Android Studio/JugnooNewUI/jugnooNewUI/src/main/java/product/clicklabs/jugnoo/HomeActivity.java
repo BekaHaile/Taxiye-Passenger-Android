@@ -93,6 +93,7 @@ import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -195,6 +196,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     Button assigningMyLocationBtn, initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent, relativeLayoutAssigningDropLocationBar;
     EditText editTextAssigningDropLocation;
+    ProgressBar progressBarAssigningDropLocation;
     ListView listViewAssigningDropLocationSearch;
 
     //Request Final Layout
@@ -207,7 +209,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     Button buttonCancelRide, buttonAddJugnooCash, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutFinalDropLocationBar;
     EditText editTextFinalDropLocation;
+    ProgressBar progressBarFinalDropLocation;
     ListView listViewFinalDropLocationSearch;
+
+    SearchListAdapter dropLocationSearchListAdapter;
 
 
     //Search Layout
@@ -216,9 +221,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     ProgressBar progressBarSearch;
     ListView listViewSearch;
     SearchListAdapter searchListAdapter;
-
-
-
 
 
     //Center Location Layout
@@ -233,7 +235,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     TextView textViewEndRideFareValue, textViewEndRidePromotionDiscountValue, textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue,
-            textViewEndRideToBePaidValue, textViewEndRideBaseFareValue, textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideAddJugnooCashInfo,
+        textViewEndRideToBePaidValue, textViewEndRideBaseFareValue, textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideAddJugnooCashInfo,
         textViewEndRideFareFactorValue;
     Button buttonEndRideOk;
 
@@ -279,8 +281,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     static Activity activity;
 
     boolean loggedOut = false,
-            zoomedToMyLocation = false,
-            mapTouchedOnce = false;
+        zoomedToMyLocation = false,
+        mapTouchedOnce = false;
     boolean dontCallRefreshDriver = false;
 
 
@@ -316,7 +318,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     private int showAllDrivers = 0, showDriverInfo = 0;
 
-    private boolean intentFired = false;
+    private boolean intentFired = false, dropLocationSearched = false;
 
     GenieLayout genieLayout;
 
@@ -340,6 +342,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         activityResumed = false;
         rechargedOnce = false;
         fetchedRidePathsFromDb = false;
+        dropLocationSearched = false;
 
         loggedOut = false;
         zoomedToMyLocation = false;
@@ -453,13 +456,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         relativeLayoutRequestInfo = (RelativeLayout) findViewById(R.id.relativeLayoutRequestInfo);
 
 
-
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
         textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch);
         textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
         progressBarInitialSearch = (ProgressBar) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
 
+
+        dropLocationSearchListAdapter = new SearchListAdapter(SearchMode.DROP);
 
         //Assigning layout
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
@@ -472,20 +476,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
         relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
         relativeLayoutAssigningDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationBar);
-        editTextAssigningDropLocation = (EditText) findViewById(R.id.editTextAssigningDropLocation); editTextAssigningDropLocation.setTypeface(Fonts.latoRegular(this));
+        editTextAssigningDropLocation = (EditText) findViewById(R.id.editTextAssigningDropLocation);
+        editTextAssigningDropLocation.setTypeface(Fonts.latoRegular(this));
+        progressBarAssigningDropLocation = (ProgressBar) findViewById(R.id.progressBarAssigningDropLocation);
         listViewAssigningDropLocationSearch = (ListView) findViewById(R.id.listViewAssigningDropLocationSearch);
         listViewAssigningDropLocationSearch.setVisibility(View.GONE);
+        listViewAssigningDropLocationSearch.setAdapter(dropLocationSearchListAdapter);
 
-
-        //Search Layout 
-        linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
-        editTextSearch = (EditText) findViewById(R.id.editTextSearch);
-        editTextSearch.setTypeface(Fonts.latoRegular(this));
-        progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch);
-        progressBarSearch.setVisibility(View.GONE);
-        listViewSearch = (ListView) findViewById(R.id.listViewSearch);
-        searchListAdapter = new SearchListAdapter();
-        listViewSearch.setAdapter(searchListAdapter);
 
 
         //Request Final Layout
@@ -522,13 +519,39 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
         relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
         relativeLayoutFinalDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationBar);
-        editTextFinalDropLocation = (EditText) findViewById(R.id.editTextFinalDropLocation); editTextFinalDropLocation.setTypeface(Fonts.latoRegular(this));
+        editTextFinalDropLocation = (EditText) findViewById(R.id.editTextFinalDropLocation);
+        editTextFinalDropLocation.setTypeface(Fonts.latoRegular(this));
+        progressBarFinalDropLocation = (ProgressBar) findViewById(R.id.progressBarFinalDropLocation);
         listViewFinalDropLocationSearch = (ListView) findViewById(R.id.listViewFinalDropLocationSearch);
+        listViewFinalDropLocationSearch.setVisibility(View.GONE);
+        listViewFinalDropLocationSearch.setAdapter(dropLocationSearchListAdapter);
+
+
+
+
+        //Search Layout
+        linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
+        editTextSearch = (EditText) findViewById(R.id.editTextSearch);
+        editTextSearch.setTypeface(Fonts.latoRegular(this));
+        progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch);
+        progressBarSearch.setVisibility(View.GONE);
+        listViewSearch = (ListView) findViewById(R.id.listViewSearch);
+        searchListAdapter = new SearchListAdapter(SearchMode.PICKUP);
+        listViewSearch.setAdapter(searchListAdapter);
+
+
+
+
 
 
         //Center location layout
         centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
         centreLocationPin = (ImageView) findViewById(R.id.centreLocationPin);
+
+
+
+
+
 
 
         //Review Layout
@@ -593,7 +616,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         ((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));
-
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -690,7 +712,18 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-        // menu events\
+
+
+
+
+
+
+
+
+
+
+
+        // menu events
 
         linearLayoutProfile.setOnClickListener(new OnClickListener() {
 
@@ -714,35 +747,34 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             @Override
             public void onClick(View v) {
                 imageViewGift.performClick();
-			}
-		});
+            }
+        });
 
-		relativeLayoutJugnooCash.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, WalletActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
-			}
-		});
+        relativeLayoutJugnooCash.setOnClickListener(new OnClickListener() {
 
-		relativeLayoutPromotions.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-                if(map != null) {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, WalletActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
+            }
+        });
+
+        relativeLayoutPromotions.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (map != null) {
                     Data.latitude = map.getCameraPosition().target.latitude;
                     Data.longitude = map.getCameraPosition().target.longitude;
                     startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
-                }
-                else{
+                } else {
                     Toast.makeText(getApplicationContext(), "Waiting for location...", Toast.LENGTH_SHORT).show();
                 }
-			}
-		});
+            }
+        });
 
         relativeLayoutTransactions.setOnClickListener(new OnClickListener() {
             @Override
@@ -791,6 +823,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // Customer initial layout events
         imageViewRideNow.setOnClickListener(new OnClickListener() {
 
@@ -828,7 +874,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         }
                     } else {
                         DialogPopup.alertPopup(HomeActivity.this, "",
-                                Data.CHECK_INTERNET_MSG);
+                            Data.CHECK_INTERNET_MSG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -847,7 +893,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
-
         relativeLayoutInitialSearchBar.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -857,7 +902,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 editTextSearch.setSelection(editTextSearch.getText().length());
                 Utils.showSoftKeyboard(HomeActivity.this, editTextSearch);
                 autoCompleteSearchResults.clear();
-                searchListAdapter.notifyDataSetChanged();
+                searchListAdapter.setResults(autoCompleteSearchResults);
                 passengerScreenMode = PassengerScreenMode.P_SEARCH;
                 switchPassengerScreen(passengerScreenMode);
             }
@@ -873,6 +918,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 hideAnims();
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         // Assigning layout events
@@ -892,6 +955,69 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
             }
         });
+
+        relativeLayoutAssigningDropLocationBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initDropLocationSearchUI(false);
+            }
+        });
+
+        editTextAssigningDropLocation.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initDropLocationSearchUI(false);
+            }
+        });
+
+        editTextAssigningDropLocation.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                autoCompleteSearchResults.clear();
+                dropLocationSearchListAdapter.setResults(autoCompleteSearchResults);
+                if (s.length() > 0) {
+                    if (map != null) {
+                        getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.DROP);
+                    }
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         //Search Layout Events
@@ -916,10 +1042,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             @Override
             public void afterTextChanged(Editable s) {
                 autoCompleteSearchResults.clear();
-                searchListAdapter.notifyDataSetChanged();
+                searchListAdapter.setResults(autoCompleteSearchResults);
                 if (s.length() > 0) {
                     if (map != null) {
-                        getSearchResults(s.toString().trim(), map.getCameraPosition().target);
+                        getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.PICKUP);
                     }
                 }
             }
@@ -933,6 +1059,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 Utils.showSoftKeyboard(HomeActivity.this, editTextSearch);
             }
         });
+
+
+
+
+
+
+
+
+
 
 
         // customer request final layout events
@@ -961,7 +1096,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             public void onClick(View v) {
                 Utils.openCallIntent(HomeActivity.this, Data.assignedDriverInfo.phoneNumber);
                 FlurryEventLogger.callDriverPressed(Data.userData.accessToken, Data.assignedDriverInfo.userId,
-                        Data.assignedDriverInfo.phoneNumber);
+                    Data.assignedDriverInfo.phoneNumber);
             }
         });
 
@@ -972,6 +1107,51 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 buttonAddJugnooCash.performClick();
             }
         });
+
+        relativeLayoutFinalDropLocationBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initDropLocationSearchUI(true);
+            }
+        });
+
+        editTextFinalDropLocation.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initDropLocationSearchUI(true);
+            }
+        });
+
+        editTextFinalDropLocation.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                autoCompleteSearchResults.clear();
+                dropLocationSearchListAdapter.setResults(autoCompleteSearchResults);
+                if (s.length() > 0) {
+                    if (map != null) {
+                        getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.DROP);
+                    }
+                }
+            }
+        });
+
+
+
+
+
+
+
+
 
 
         // End ride review layout events
@@ -1054,21 +1234,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             try {
                                 final DriverInfo driverInfo = Data.driverInfos.get(Data.driverInfos.indexOf(new DriverInfo(driverId)));
                                 DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Driver Info", "" + driverInfo.toString(),
-                                        "Call", "Cancel", new OnClickListener() {
+                                    "Call", "Cancel", new OnClickListener() {
 
-                                            @Override
-                                            public void onClick(View v) {
-                                                Intent callIntent = new Intent(Intent.ACTION_VIEW);
-                                                callIntent.setData(Uri.parse("tel:" + driverInfo.phoneNumber));
-                                                startActivity(callIntent);
-                                            }
-                                        },
-                                        new OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent callIntent = new Intent(Intent.ACTION_VIEW);
+                                            callIntent.setData(Uri.parse("tel:" + driverInfo.phoneNumber));
+                                            startActivity(callIntent);
+                                        }
+                                    },
+                                    new OnClickListener() {
 
-                                            @Override
-                                            public void onClick(View v) {
-                                            }
-                                        }, true, false);
+                                        @Override
+                                        public void onClick(View v) {
+                                        }
+                                    }, true, false);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1167,7 +1347,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             ReferralActions.showReferralDialog(HomeActivity.this);
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1182,8 +1361,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         // Perform animation
         v.startAnimation(shake);
     }
-
-
 
 
     public void enableJugnooShopUI() {
@@ -1207,9 +1384,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         try {
             if (Data.userData != null) {
                 if (UserMode.PASSENGER == userMode &&
-                        (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
-                        map != null &&
-                        HomeActivity.this.hasWindowFocus()) {
+                    (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
+                    map != null &&
+                    HomeActivity.this.hasWindowFocus()) {
                     if (Data.userData.canChangeLocation == 1) {
                         Data.pickupLatLng = map.getCameraPosition().target;
                     } else {
@@ -1319,14 +1496,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         }
     };
 
-    public void hideAnims(){
-        if(genieLayout != null){
+    public void hideAnims() {
+        if (genieLayout != null) {
             genieLayout.hideAnims();
         }
     }
 
-    public void clearAnims(){
-        if(genieLayout != null){
+    public void clearAnims() {
+        if (genieLayout != null) {
             genieLayout.clearAllAnims();
         }
     }
@@ -1423,7 +1600,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         textViewEndRideFinalFareValue.setText(decimalFormatNoDecimal.format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
                         textViewEndRideJugnooCashValue.setText(decimalFormatNoDecimal.format(Data.endRideData.paidUsingWallet));
                         textViewEndRideToBePaidValue.setText(decimalFormatNoDecimal.format(Data.endRideData.toPay));
-                        textViewEndRideFareFactorValue.setText(decimalFormat.format(Data.endRideData.fareFactor)+"x");
+                        textViewEndRideFareFactorValue.setText(decimalFormat.format(Data.endRideData.fareFactor) + "x");
 
                         textViewEndRideBaseFareValue.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(Data.endRideData.baseFare));
 
@@ -1571,6 +1748,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             pickupLocationMarker = map.addMarker(markerOptions);
                         }
 
+                        stopDropLocationSearchUI(false);
+
 
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewHelp.setVisibility(View.GONE);
@@ -1627,7 +1806,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
+                        relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
+
                         setAssignedDriverData(mode);
+
+                        stopDropLocationSearchUI(true);
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddJugnooCash.setVisibility(View.GONE);
@@ -1689,6 +1872,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         linearLayoutSearch.setVisibility(View.GONE);
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
+
+                        relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
 
                         setAssignedDriverData(mode);
 
@@ -1980,14 +2165,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("The app needs Location Services to be enabled. Enable it from Settings.")
-                        .setCancelable(false)
-                        .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
-                            public void onClick(final DialogInterface dialog, final int id) {
-                                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                dialog.dismiss();
-                                gpsDialogAlert = null;
-                            }
-                        })
+                    .setCancelable(false)
+                    .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            dialog.dismiss();
+                            gpsDialogAlert = null;
+                        }
+                    })
                 ;
                 gpsDialogAlert = null;
                 gpsDialogAlert = builder.create();
@@ -1999,6 +2184,57 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         }
     }
+
+
+
+    //TODO
+    private void initDropLocationSearchUI(boolean engaged){
+        dropLocationSearched = true;
+        if(!engaged) {
+            editTextAssigningDropLocation.requestFocus();
+            relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
+            relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+            listViewAssigningDropLocationSearch.setVisibility(View.VISIBLE);
+            Utils.showSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
+        }
+        else{
+            editTextFinalDropLocation.requestFocus();
+            relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
+            relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+            listViewFinalDropLocationSearch.setVisibility(View.VISIBLE);
+            Utils.showSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
+        }
+    }
+
+    private void stopDropLocationSearchUI(boolean engaged){
+        dropLocationSearched = false;
+        if(!engaged) {
+            relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+            relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
+            listViewAssigningDropLocationSearch.setVisibility(View.GONE);
+            progressBarAssigningDropLocation.setVisibility(View.GONE);
+        }
+        else{
+            relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+            relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
+            listViewFinalDropLocationSearch.setVisibility(View.GONE);
+            progressBarFinalDropLocation.setVisibility(View.GONE);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public static boolean checkIfUserDataNull(Activity activity) {
@@ -2025,13 +2261,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             try {
                 if (activityResumed) {
                     callAndHandleStateRestoreAPI(false);
-                    if(!feedbackAutoSkipped) {
+                    if (!feedbackAutoSkipped) {
                         initiateTimersForStates(passengerScreenMode);
                     }
 
                     if (!intentFired) {
                         if (userMode == UserMode.PASSENGER &&
-                                (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
+                            (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
                             if (map != null && myLocation != null) {
                                 map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
                             }
@@ -2175,7 +2411,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
-            } else {
+            }
+            else if(dropLocationSearched && PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+                stopDropLocationSearchUI(false);
+            }
+            else if(dropLocationSearched && PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+                stopDropLocationSearchUI(true);
+            }
+            else{
                 ActivityCompat.finishAffinity(this);
             }
         } catch (Exception e) {
@@ -2213,10 +2456,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     public Thread autoCompleteThread;
     public boolean refreshingAutoComplete = false;
 
-    public synchronized void getSearchResults(final String searchText, final LatLng latLng) {
+    public synchronized void getSearchResults(final String searchText, final LatLng latLng, final SearchMode searchMode) {
         try {
             if (!refreshingAutoComplete) {
-                progressBarSearch.setVisibility(View.VISIBLE);
+                if(SearchMode.PICKUP == searchMode) {
+                    progressBarSearch.setVisibility(View.VISIBLE);
+                }
+                else if(SearchMode.DROP == searchMode){
+                    if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+                        progressBarAssigningDropLocation.setVisibility(View.VISIBLE);
+                    }
+                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+                        progressBarFinalDropLocation.setVisibility(View.VISIBLE);
+                    }
+                }
 
                 if (autoCompleteThread != null) {
                     autoCompleteThread.interrupt();
@@ -2229,7 +2482,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         autoCompleteSearchResults.clear();
                         autoCompleteSearchResults.addAll(MapUtils.getAutoCompleteSearchResultsFromGooglePlaces(searchText, latLng));
 
-                        setSearchResultsToList();
+                        setSearchResultsToList(searchMode);
                         refreshingAutoComplete = false;
                         autoCompleteThread = null;
                     }
@@ -2242,41 +2495,70 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
 
-    public synchronized void setSearchResultsToList() {
+    public synchronized void setSearchResultsToList(final SearchMode searchMode) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressBarSearch.setVisibility(View.GONE);
-
                 if (autoCompleteSearchResults.size() == 0) {
                     autoCompleteSearchResults.add(new AutoCompleteSearchResult("No results found", "", ""));
                 }
 
-                searchListAdapter.notifyDataSetChanged();
+                if(SearchMode.PICKUP == searchMode) {
+                    progressBarSearch.setVisibility(View.GONE);
+                    searchListAdapter.setResults(autoCompleteSearchResults);
+                }
+                else if(SearchMode.DROP == searchMode){
+                    if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+                        progressBarAssigningDropLocation.setVisibility(View.GONE);
+                    }
+                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+                        progressBarFinalDropLocation.setVisibility(View.GONE);
+                    }
+                    dropLocationSearchListAdapter.setResults(autoCompleteSearchResults);
+                }
             }
         });
     }
 
 
-    public synchronized void getSearchResultFromPlaceId(final String placeId) {
-        progressBarInitialSearch.setVisibility(View.VISIBLE);
+    public synchronized void getSearchResultFromPlaceId(final String placeId, final SearchMode searchMode) {
+        if(SearchMode.PICKUP == searchMode){
+            progressBarInitialSearch.setVisibility(View.VISIBLE);
+        }
+        else if(SearchMode.DROP == searchMode){
+            DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
                 SearchResult searchResult = MapUtils.getSearchResultsFromPlaceIdGooglePlaces(placeId);
-                setSearchResultToMapAndText(searchResult);
+                setSearchResultToMapAndText(searchResult, searchMode);
             }
         }).start();
     }
 
-    public synchronized void setSearchResultToMapAndText(final SearchResult searchResult) {
+    public synchronized void setSearchResultToMapAndText(final SearchResult searchResult, final SearchMode searchMode) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressBarInitialSearch.setVisibility(View.GONE);
-                if (map != null && searchResult != null) {
-                    textViewInitialSearch.setText(searchResult.name);
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 14), 1000, null);
+                if(SearchMode.PICKUP == searchMode){
+                    progressBarInitialSearch.setVisibility(View.GONE);
+                    if (map != null && searchResult != null) {
+                        textViewInitialSearch.setText(searchResult.name);
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 14), 1000, null);
+                    }
+                }
+                else if(SearchMode.DROP == searchMode){
+                    DialogPopup.dismissLoadingDialog();
+                    if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+                        stopDropLocationSearchUI(false);
+                        relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+                    }
+                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+                        stopDropLocationSearchUI(true);
+                        relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+                    }
+                    //TODO call drop loc api here
                 }
             }
         });
@@ -2292,17 +2574,20 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     class SearchListAdapter extends BaseAdapter {
         LayoutInflater mInflater;
         ViewHolderSearchItem holder;
+        SearchMode searchMode;
 
         ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults;
 
-        public SearchListAdapter() {
+        public SearchListAdapter(SearchMode searchMode) {
             this.mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.autoCompleteSearchResults = new ArrayList<>();
+            this.searchMode = searchMode;
         }
 
-        public synchronized void setResults(ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults){
+        public synchronized void setResults(ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults) {
             this.autoCompleteSearchResults.clear();
             this.autoCompleteSearchResults.addAll(autoCompleteSearchResults);
+            this.notifyDataSetChanged();
         }
 
         @Override
@@ -2357,11 +2642,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
                         AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
                         if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
-                            textViewInitialSearch.setText(autoCompleteSearchResult.name);
-                            if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                                switchPassengerScreen(passengerScreenMode);
-                                getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
+                            if(SearchMode.PICKUP == searchMode) {
+                                if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+                                    textViewInitialSearch.setText(autoCompleteSearchResult.name);
+                                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                    switchPassengerScreen(passengerScreenMode);
+                                    getSearchResultFromPlaceId(autoCompleteSearchResult.placeId, searchMode);
+                                }
+                            }
+                            else if(SearchMode.DROP == searchMode){
+                                getSearchResultFromPlaceId(autoCompleteSearchResult.placeId, searchMode);
                             }
                         }
                     }
@@ -2579,8 +2869,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     public void showDriverMarkersAndPanMap(final LatLng userLatLng) {
         try {
             if (userMode == UserMode.PASSENGER &&
-                    ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
-                            || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
+                ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
+                    || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
                 if (map != null) {
                     map.clear();
                     addCurrentLocationAddressMarker(userLatLng);
@@ -2682,43 +2972,43 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             AsyncHttpClient client = Data.getClient();
             client.post(Config.getServerUrl() + "/cancel_the_request", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+                new CustomAsyncHttpResponseHandler() {
+                    private JSONObject jObj;
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            DialogPopup.dismissLoadingDialog();
-                            callAndHandleStateRestoreAPI(true);
-                        }
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        callAndHandleStateRestoreAPI(true);
+                    }
 
 
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.e("Server response", "response = " + response);
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.e("Server response", "response = " + response);
 
-                            try {
-                                jObj = new JSONObject(response);
+                        try {
+                            jObj = new JSONObject(response);
 
-                                if (!jObj.isNull("error")) {
-                                    String errorMessage = jObj.getString("error");
-                                    if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
-                                        HomeActivity.logoutUser(activity);
-                                    } else {
-                                        DialogPopup.alertPopup(activity, "", errorMessage);
-                                    }
+                            if (!jObj.isNull("error")) {
+                                String errorMessage = jObj.getString("error");
+                                if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+                                    HomeActivity.logoutUser(activity);
                                 } else {
-                                    customerUIBackToInitialAfterCancel();
-                                    FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
+                                    DialogPopup.alertPopup(activity, "", errorMessage);
                                 }
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            } else {
+                                customerUIBackToInitialAfterCancel();
+                                FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
                             }
-
-                            DialogPopup.dismissLoadingDialog();
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
-                    });
+
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                });
         } else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
@@ -2840,28 +3130,28 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 params.put("access_token", Data.userData.accessToken);
                 AsyncHttpClient client = Data.getClient();
                 client.post(Config.getServerUrl() + "/accept_app_rating_request", params,
-                        new CustomAsyncHttpResponseHandler() {
-                            private JSONObject jObj;
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
 
-                            @Override
-                            public void onFailure(Throwable arg3) {
-                                Log.e("request fail", arg3.toString());
-                            }
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                        }
 
-                            @Override
-                            public void onSuccess(String response) {
-                                Log.i("Server response accept_app_rating_request", "response = " + response);
-                                try {
-                                    jObj = new JSONObject(response);
-                                    int flag = jObj.getInt("flag");
-                                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Server response accept_app_rating_request", "response = " + response);
+                            try {
+                                jObj = new JSONObject(response);
+                                int flag = jObj.getInt("flag");
+                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 
-                                    }
-                                } catch (Exception exception) {
-                                    exception.printStackTrace();
                                 }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
                             }
-                        });
+                        }
+                    });
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2870,7 +3160,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
-        if(!checkIfUserDataNull(activity)) {
+        if (!checkIfUserDataNull(activity)) {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 RequestParams params = new RequestParams();
@@ -3016,43 +3306,43 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             AsyncHttpClient fetchPromotionClient = Data.getClient();
             fetchPromotionClient.post(Config.getServerUrl() + "/add_promotion_to_schedule", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+                new CustomAsyncHttpResponseHandler() {
+                    private JSONObject jObj;
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                            DialogPopup.dismissLoadingDialog();
-                        }
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        DialogPopup.dismissLoadingDialog();
+                    }
 
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.e("Server response show_available_promotions", "response = " + response);
-                            try {
-                                jObj = new JSONObject(response);
-                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                    int flag = jObj.getInt("flag");
-                                    if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.e("Server response show_available_promotions", "response = " + response);
+                        try {
+                            jObj = new JSONObject(response);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt("flag");
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
-                                        promotionDialog.dismissAlert();
+                                    promotionDialog.dismissAlert();
 
-                                        String message = jObj.getString("message");
-                                        DialogPopup.alertPopup(activity, "", message);
-                                    } else if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
-                                    } else {
-                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                    }
+                                    String message = jObj.getString("message");
+                                    DialogPopup.alertPopup(activity, "", message);
+                                } else if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                    String error = jObj.getString("error");
+                                    DialogPopup.alertPopup(activity, "", error);
+                                } else {
+                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
-                            DialogPopup.dismissLoadingDialog();
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
-                    });
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                });
         } else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
@@ -3076,9 +3366,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 public void run() {
                     try {
                         if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)
-                                && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
-                                && (Data.userData != null)
-                                && (Data.assignedDriverInfo != null)) {
+                            && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+                            && (Data.userData != null)
+                            && (Data.assignedDriverInfo != null)) {
 
                             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                             nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
@@ -3381,9 +3671,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
 
-
-
-
     void callAnAutoPopup(final Activity activity, int totalPromoCoupons, LatLng pickupLatLng) {
         try {
 
@@ -3463,7 +3750,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             } else {
                 boolean cached = false;
                 try {
-                    if(myLocation != null) {
+                    if (myLocation != null) {
                         Bundle bundle = myLocation.getExtras();
                         cached = bundle.getBoolean("cached");
                     }
@@ -3777,7 +4064,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
-                    driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta);
+                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta);
 
 
             double fareFactor = 1.0;
@@ -3856,7 +4143,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
-                    driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta);
+                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta);
 
 
             double fareFactor = 1.0;
@@ -4002,11 +4289,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                 cont.startActivity(intent);
                                 cont.finish();
                                 cont.overridePendingTransition(
-                                        R.anim.left_in,
-                                        R.anim.left_out);
+                                    R.anim.left_in,
+                                    R.anim.left_out);
                             } catch (Exception e) {
                                 Log.i("excption logout",
-                                        e.toString());
+                                    e.toString());
                             }
                         }
                     });
@@ -4373,12 +4660,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             @Override
             public void run() {
                 if ("".equalsIgnoreCase(Data.cSessionId)) {
-//					initialCancelRideBtn.setBackgroundResource(R.drawable.button_yellow_pressed);
-//					initialCancelRideBtn.setTextColor(getResources().getColor(R.color.white_alpha));
+                    relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                     initialCancelRideBtn.setVisibility(View.GONE);
                 } else {
-//					initialCancelRideBtn.setBackgroundResource(R.drawable.button_yellow_selector);
-//					initialCancelRideBtn.setTextColor(getResources().getColor(R.drawable.text_color_white_alpha_selector));
+                    relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
                     initialCancelRideBtn.setVisibility(View.VISIBLE);
                 }
             }
@@ -4496,9 +4781,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     public void onEmergencyContactVerified(int emergencyContactId) {
         try {
             EmergencyContact emergencyContact = new EmergencyContact(emergencyContactId);
-            if(Data.emergencyContactsList != null && Data.emergencyContactsList.contains(emergencyContact)){
+            if (Data.emergencyContactsList != null && Data.emergencyContactsList.contains(emergencyContact)) {
                 Data.emergencyContactsList.get(Data.emergencyContactsList.indexOf(emergencyContact)).verificationStatus = 1;
-                if(EmergencyContactsActivity.refreshEmergencyContacts != null){
+                if (EmergencyContactsActivity.refreshEmergencyContacts != null) {
                     EmergencyContactsActivity.refreshEmergencyContacts.refreshEmergencyContacts();
                 }
             }
@@ -4512,9 +4797,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     public static String CALL = "CALL", SMS = "SMS", CALL_100 = "CALL_100";
 
-    private void sosDialog(final Activity activity){
-        if(Data.emergencyContactsList != null){
-            if(Data.emergencyContactsList.size() > 0){
+    private void sosDialog(final Activity activity) {
+        if (Data.emergencyContactsList != null) {
+            if (Data.emergencyContactsList.size() > 0) {
 
                 DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL", "SMS",
                     new OnClickListener() {
@@ -4527,26 +4812,24 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String numbers = ""+Data.emergencyContactsList.get(0).phoneNo;
-                            if(Data.emergencyContactsList.size() > 1){
-                                numbers = numbers+","+Data.emergencyContactsList.get(1).phoneNo;
+                            String numbers = "" + Data.emergencyContactsList.get(0).phoneNo;
+                            if (Data.emergencyContactsList.size() > 1) {
+                                numbers = numbers + "," + Data.emergencyContactsList.get(1).phoneNo;
                             }
                             Utils.openSMSIntent(activity, numbers, "test");
                             raiseSOSAlertAPI(activity, SMS);
                         }
                     }, true, false);
 
-            }
-            else{
+            } else {
                 call100Dialog(activity);
             }
-        }
-        else{
+        } else {
             call100Dialog(activity);
         }
     }
 
-    private void call100Dialog(final Activity activity){
+    private void call100Dialog(final Activity activity) {
         DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL 100", "Cancel",
             new OnClickListener() {
                 @Override
@@ -4571,13 +4854,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             params.put("engagement_id", Data.cEngagementId);
             params.put("alert_type", alertType);
 
-            if(myLocation != null) {
-                params.put("latitude", ""+myLocation.getLatitude());
-                params.put("longitude", ""+myLocation.getLongitude());
-            }
-            else{
-                params.put("latitude", ""+LocationFetcher.getSavedLatFromSP(activity));
-                params.put("longitude", ""+LocationFetcher.getSavedLngFromSP(activity));
+            if (myLocation != null) {
+                params.put("latitude", "" + myLocation.getLatitude());
+                params.put("longitude", "" + myLocation.getLongitude());
+            } else {
+                params.put("latitude", "" + LocationFetcher.getSavedLatFromSP(activity));
+                params.put("longitude", "" + LocationFetcher.getSavedLngFromSP(activity));
             }
 
             final String url = Config.getServerUrl() + "/emergency/alert";
@@ -4604,20 +4886,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         }
                     }
                 });
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 
     public void callAndHandleStateRestoreAPI(final boolean showDialogs) {
@@ -4696,7 +4968,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     if (accuracy > HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND) {
                         displayLessAccurateToast(context);
                     } else if (accuracy <= HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND
-                            && accuracy > HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
+                        && accuracy > HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
                         startTimer(context, delay, period, startTime, lifeTime);
                         HomeActivity.this.switchRequestRideUI();
                     } else if (accuracy <= HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
