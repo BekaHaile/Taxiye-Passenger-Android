@@ -1323,6 +1323,17 @@
                             android:tag="mwar"/>
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewHelp"
+                        android:layout_width="71px"
+                        android:layout_height="71px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10px"
+                        android:src="@drawable/emergency_help_icon"
+                        android:tag="mwar"/>
+
                 </RelativeLayout>
             </RelativeLayout>
 

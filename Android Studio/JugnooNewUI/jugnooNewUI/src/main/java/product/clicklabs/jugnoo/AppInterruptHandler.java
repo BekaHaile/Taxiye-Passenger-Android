@@ -25,4 +25,7 @@ public interface AppInterruptHandler {
     public void onDriverArrived(String logMessage);
 
     public void refreshOnPendingCallsDone();
+
+    public void onEmergencyContactVerified(int emergencyContactId);
+
 }
