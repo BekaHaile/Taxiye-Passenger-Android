@@ -193,6 +193,21 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
     Button assigningMyLocationBtn, initialCancelRideBtn;
+    RelativeLayout relativeLayoutAssigningDropLocationParent, relativeLayoutAssigningDropLocationBar;
+    EditText editTextAssigningDropLocation;
+    ListView listViewAssigningDropLocationSearch;
+
+    //Request Final Layout
+    RelativeLayout requestFinalLayout;
+    RelativeLayout relativeLayoutInRideInfo;
+    TextView textViewInRidePromoName, textViewInRideFareFactor;
+    Button customerInRideMyLocationBtn;
+    ImageView imageViewInRideDriver, imageViewInRideDriverCar;
+    TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewInRideLowJugnooCash;
+    Button buttonCancelRide, buttonAddJugnooCash, buttonCallDriver;
+    RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutFinalDropLocationBar;
+    EditText editTextFinalDropLocation;
+    ListView listViewFinalDropLocationSearch;
 
 
     //Search Layout
@@ -203,14 +218,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     SearchListAdapter searchListAdapter;
 
 
-    //Request Final Layout
-    RelativeLayout requestFinalLayout;
-    RelativeLayout relativeLayoutInRideInfo;
-    TextView textViewInRidePromoName, textViewInRideFareFactor;
-    Button customerInRideMyLocationBtn;
-    ImageView imageViewInRideDriver, imageViewInRideDriverCar;
-    TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewInRideLowJugnooCash;
-    Button buttonCancelRide, buttonAddJugnooCash, buttonCallDriver;
+
 
 
     //Center Location Layout
@@ -461,6 +469,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
         initialCancelRideBtn.setTypeface(Fonts.latoRegular(this));
 
+        relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
+        relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+        relativeLayoutAssigningDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationBar);
+        editTextAssigningDropLocation = (EditText) findViewById(R.id.editTextAssigningDropLocation); editTextAssigningDropLocation.setTypeface(Fonts.latoRegular(this));
+        listViewAssigningDropLocationSearch = (ListView) findViewById(R.id.listViewAssigningDropLocationSearch);
+        listViewAssigningDropLocationSearch.setVisibility(View.GONE);
+
 
         //Search Layout 
         linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
@@ -503,6 +518,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         buttonAddJugnooCash.setTypeface(Fonts.latoRegular(this));
         buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver);
         buttonCallDriver.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+
+        relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
+        relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+        relativeLayoutFinalDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationBar);
+        editTextFinalDropLocation = (EditText) findViewById(R.id.editTextFinalDropLocation); editTextFinalDropLocation.setTypeface(Fonts.latoRegular(this));
+        listViewFinalDropLocationSearch = (ListView) findViewById(R.id.listViewFinalDropLocationSearch);
 
 
         //Center location layout
