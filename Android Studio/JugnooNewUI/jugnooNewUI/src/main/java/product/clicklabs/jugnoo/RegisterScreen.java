@@ -242,7 +242,7 @@ public class RegisterScreen extends Activity implements LocationUpdate {
 
                 if ("".equalsIgnoreCase(name)) {
                     editTextUserName.requestFocus();
-                    editTextUserName.setError("Please enter pickedName");
+                    editTextUserName.setError("Please enter name");
                 }
                 else if(!Utils.hasAlphabets(name)) {
                     editTextUserName.requestFocus();

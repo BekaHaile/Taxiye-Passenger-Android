@@ -349,7 +349,7 @@ public class JSONParser {
 //        "promotion": null,
 //        "driver_info": {
 //            "id": 231,
-//            "pickedName": "Driver 3",
+//            "name": "Driver 3",
 //            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png"
 //        }
 //    }
@@ -364,7 +364,7 @@ public class JSONParser {
 
             Data.pickupLatLng = new LatLng(0, 0);
 
-            Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("pickedName"), jDriverInfo.getString("user_image"),
+            Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
 
             try {
