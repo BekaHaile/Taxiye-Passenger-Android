@@ -81,6 +81,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
@@ -4470,8 +4471,23 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
     }
 
+    @Override
+    public void onEmergencyContactVerified(int emergencyContactId) {
+        try {
+            EmergencyContact emergencyContact = new EmergencyContact(emergencyContactId);
+            if(Data.emergencyContactsList != null && Data.emergencyContactsList.contains(emergencyContact)){
+                Data.emergencyContactsList.get(Data.emergencyContactsList.indexOf(emergencyContact)).verificationStatus = 1;
+                if(EmergencyContactsActivity.refreshEmergencyContacts != null){
+                    EmergencyContactsActivity.refreshEmergencyContacts.refreshEmergencyContacts();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
+    }
 
     public static String CALL = "CALL", SMS = "SMS", CALL_100 = "CALL_100";
 

@@ -17,4 +17,22 @@ public class EmergencyContact {
         this.verificationStatus = verificationStatus;
     }
 
+    public EmergencyContact(int id){
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        try{
+            if(((EmergencyContact)o).id == this.id){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

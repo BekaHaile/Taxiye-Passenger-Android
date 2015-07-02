@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
+import product.clicklabs.jugnoo.datastructure.RefreshEmergencyContacts;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -39,7 +40,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class EmergencyContactsActivity extends Activity {
+public class EmergencyContactsActivity extends Activity implements RefreshEmergencyContacts {
 
     LinearLayout relative;
 
@@ -79,6 +80,7 @@ public class EmergencyContactsActivity extends Activity {
     private static final int PICK_CONTACT_1 = 101, PICK_CONTACT_2 = 102;
 
 
+    public static RefreshEmergencyContacts refreshEmergencyContacts;
 
     @Override
     protected void onResume() {
@@ -86,10 +88,13 @@ public class EmergencyContactsActivity extends Activity {
         HomeActivity.checkForAccessTokenChange(this);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_contacts);
+
+        this.refreshEmergencyContacts = this;
 
         editEC1 = 0; editEC2 = 0;
 
@@ -337,22 +342,25 @@ public class EmergencyContactsActivity extends Activity {
                     String reducedPhone = Utils.retrievePhoneNumberTenChars(phoneNo);
                     if(Utils.validPhoneNumber(reducedPhone)){
                         reducedPhone = "+91"+reducedPhone;
-                        if(0 == editEC1) {
-                            addEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email);
+                        if(!"".equalsIgnoreCase(email) && !Utils.isEmailValid(email)){
+                            editTextEC1Email.requestFocus();
+                            editTextEC1Email.setError("Invalid email id");
                         }
-                        else{
-                            if(emergencyContact1 != null) {
-                                if(name.equalsIgnoreCase(emergencyContact1.name)
-                                    && reducedPhone.equalsIgnoreCase(emergencyContact1.phoneNo)
-                                    && email.equalsIgnoreCase(emergencyContact1.email)){
-                                    Toast.makeText(EmergencyContactsActivity.this, "Entered fields are same as the previous", Toast.LENGTH_SHORT).show();
+                        else {
+                            if (0 == editEC1) {
+                                addEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email);
+                            } else {
+                                if (emergencyContact1 != null) {
+                                    if (name.equalsIgnoreCase(emergencyContact1.name)
+                                        && reducedPhone.equalsIgnoreCase(emergencyContact1.phoneNo)
+                                        && email.equalsIgnoreCase(emergencyContact1.email)) {
+                                        Toast.makeText(EmergencyContactsActivity.this, "Entered fields are same as the previous", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        editEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email, emergencyContact1);
+                                    }
+                                } else {
+                                    Toast.makeText(EmergencyContactsActivity.this, "Contact not added", Toast.LENGTH_SHORT).show();
                                 }
-                                else{
-                                    editEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email, emergencyContact1);
-                                }
-                            }
-                            else{
-                                Toast.makeText(EmergencyContactsActivity.this, "Contact not added", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -384,15 +392,27 @@ public class EmergencyContactsActivity extends Activity {
                     String reducedPhone = Utils.retrievePhoneNumberTenChars(phoneNo);
                     if(Utils.validPhoneNumber(reducedPhone)){
                         reducedPhone = "+91"+reducedPhone;
-                        if(0 == editEC2) {
-                            addEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email);
+                        if(!"".equalsIgnoreCase(email) && !Utils.isEmailValid(email)){
+                            editTextEC2Email.requestFocus();
+                            editTextEC2Email.setError("Invalid email id");
                         }
                         else{
-                            if(emergencyContact2 != null) {
-                                editEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email, emergencyContact2);
+                            if(0 == editEC2) {
+                                addEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email);
                             }
                             else{
-                                Toast.makeText(EmergencyContactsActivity.this, "Contact not added", Toast.LENGTH_SHORT).show();
+                                if(emergencyContact2 != null) {
+                                    if (name.equalsIgnoreCase(emergencyContact2.name)
+                                        && reducedPhone.equalsIgnoreCase(emergencyContact2.phoneNo)
+                                        && email.equalsIgnoreCase(emergencyContact2.email)) {
+                                        Toast.makeText(EmergencyContactsActivity.this, "Entered fields are same as the previous", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        editEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email, emergencyContact2);
+                                    }
+                                }
+                                else{
+                                    Toast.makeText(EmergencyContactsActivity.this, "Contact not added", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     }
@@ -1081,9 +1101,24 @@ public class EmergencyContactsActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        refreshEmergencyContacts = null;
         ASSL.closeActivity(relative);
         System.gc();
         super.onDestroy();
+    }
+
+    @Override
+    public void refreshEmergencyContacts() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    setEmergencyContacts();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }
