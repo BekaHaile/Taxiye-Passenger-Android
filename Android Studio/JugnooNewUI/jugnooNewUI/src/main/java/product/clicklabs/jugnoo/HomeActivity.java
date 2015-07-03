@@ -56,6 +56,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
@@ -72,6 +73,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -274,7 +276,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     FindDriversETAAsync findDriversETAAsync;
 
 
-    Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker;
+    Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker;
+    Polyline pathToDropLocationPolyline;
 
     static AppInterruptHandler appInterruptHandler;
 
@@ -286,7 +289,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     boolean dontCallRefreshDriver = false;
 
 
-    AlertDialog gpsDialogAlert;
     Dialog noDriversDialog;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
@@ -296,6 +298,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     //TODO check final variables
     public static final long LOCATION_UPDATE_TIME_PERIOD = 6 * 10000; //in milliseconds
+
+    public static final int RIDE_ELAPSED_PATH_COLOR = Color.RED;
+    public static final int RIDE_LEFT_PATH = Color.BLUE;
 
 
     public static final double MIN_BALANCE_ALERT_VALUE = 100; //in Rupees
@@ -478,7 +483,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         relativeLayoutAssigningDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationBar);
         editTextAssigningDropLocation = (EditText) findViewById(R.id.editTextAssigningDropLocation);
         editTextAssigningDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarAssigningDropLocation = (ProgressBar) findViewById(R.id.progressBarAssigningDropLocation);
+        progressBarAssigningDropLocation = (ProgressBar) findViewById(R.id.progressBarAssigningDropLocation); progressBarAssigningDropLocation.setVisibility(View.GONE);
         listViewAssigningDropLocationSearch = (ListView) findViewById(R.id.listViewAssigningDropLocationSearch);
         listViewAssigningDropLocationSearch.setVisibility(View.GONE);
         listViewAssigningDropLocationSearch.setAdapter(dropLocationSearchListAdapter);
@@ -521,7 +526,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         relativeLayoutFinalDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationBar);
         editTextFinalDropLocation = (EditText) findViewById(R.id.editTextFinalDropLocation);
         editTextFinalDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarFinalDropLocation = (ProgressBar) findViewById(R.id.progressBarFinalDropLocation);
+        progressBarFinalDropLocation = (ProgressBar) findViewById(R.id.progressBarFinalDropLocation); progressBarFinalDropLocation.setVisibility(View.GONE);
         listViewFinalDropLocationSearch = (ListView) findViewById(R.id.listViewFinalDropLocationSearch);
         listViewFinalDropLocationSearch.setVisibility(View.GONE);
         listViewFinalDropLocationSearch.setAdapter(dropLocationSearchListAdapter);
@@ -983,8 +988,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             @Override
             public void afterTextChanged(Editable s) {
-                autoCompleteSearchResults.clear();
-                dropLocationSearchListAdapter.setResults(autoCompleteSearchResults);
                 if (s.length() > 0) {
                     if (map != null) {
                         getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.DROP);
@@ -1041,8 +1044,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             @Override
             public void afterTextChanged(Editable s) {
-                autoCompleteSearchResults.clear();
-                searchListAdapter.setResults(autoCompleteSearchResults);
                 if (s.length() > 0) {
                     if (map != null) {
                         getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.PICKUP);
@@ -1135,8 +1136,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             @Override
             public void afterTextChanged(Editable s) {
-                autoCompleteSearchResults.clear();
-                dropLocationSearchListAdapter.setResults(autoCompleteSearchResults);
                 if (s.length() > 0) {
                     if (map != null) {
                         getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.DROP);
@@ -1654,7 +1653,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         }
 
 
-//                        GCMIntentService.clearNotifications(getApplicationContext());
 
                         if (findDriversETAAsync != null) {
                             findDriversETAAsync.cancel(true);
@@ -1810,7 +1808,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         setAssignedDriverData(mode);
 
-                        stopDropLocationSearchUI(true);
+                        if(dropLocationSearched){
+                            editTextFinalDropLocation.setText(editTextAssigningDropLocation.getText().toString());
+                            editTextFinalDropLocation.setSelection(editTextFinalDropLocation.getText().toString().length());
+                            initDropLocationSearchUI(true);
+                        }
+                        else{
+                            stopDropLocationSearchUI(true);
+                        }
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddJugnooCash.setVisibility(View.GONE);
@@ -1895,12 +1900,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                     case P_IN_RIDE:
 
-                        cancelTimerUpdateDrivers();
-
-                        cancelDriverLocationUpdateTimer();
-
-                        startMapAnimateAndUpdateRideDataTimer();
-
                         if (map != null) {
                             map.clear();
 
@@ -1940,8 +1939,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         break;
 
                     case P_RIDE_END:
-
-                        cancelMapAnimateAndUpdateRideDataTimer();
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
@@ -2157,37 +2154,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
 
-    void buildAlertMessageNoGps() {
-//		!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-//		&&
-        if (!((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            if (gpsDialogAlert != null && gpsDialogAlert.isShowing()) {
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("The app needs Location Services to be enabled. Enable it from Settings.")
-                    .setCancelable(false)
-                    .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
-                        public void onClick(final DialogInterface dialog, final int id) {
-                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                            dialog.dismiss();
-                            gpsDialogAlert = null;
-                        }
-                    })
-                ;
-                gpsDialogAlert = null;
-                gpsDialogAlert = builder.create();
-                gpsDialogAlert.show();
-            }
-        } else {
-            if (gpsDialogAlert != null && gpsDialogAlert.isShowing()) {
-                gpsDialogAlert.dismiss();
-            }
-        }
-    }
 
-
-
-    //TODO
     private void initDropLocationSearchUI(boolean engaged){
         dropLocationSearched = true;
         if(!engaged) {
@@ -2553,12 +2520,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
                         stopDropLocationSearchUI(false);
                         relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+
                     }
                     else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
                         stopDropLocationSearchUI(true);
                         relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
                     }
                     //TODO call drop loc api here
+
+                    sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
                 }
             }
         });
@@ -2677,7 +2647,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
     class FindDriversETAAsync extends AsyncTask<Void, Void, String> {
-        String url;
 
         LatLng destination;
 
@@ -3143,7 +3112,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             Log.i("Server response accept_app_rating_request", "response = " + response);
                             try {
                                 jObj = new JSONObject(response);
-                                int flag = jObj.getInt("flag");
                                 if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 
                                 }
@@ -3349,6 +3317,71 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
 
+
+    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng) {
+        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+
+            RequestParams params = new RequestParams();
+
+            params.put("access_token", Data.userData.accessToken);
+            params.put("session_id", Data.cSessionId);
+            params.put("op_drop_latitude", ""+dropLatLng.latitude);
+            params.put("op_drop_longitude", "" + dropLatLng.longitude);
+
+            Log.i("params", "=" + params);
+
+            AsyncHttpClient client = Data.getClient();
+            client.post(Config.getServerUrl() + "/add_drop_location", params,
+                new CustomAsyncHttpResponseHandler() {
+                    private JSONObject jObj;
+
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    }
+
+
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.e("Server response", "response = " + response);
+
+                        try {
+                            jObj = new JSONObject(response);
+                            String message = JSONParser.getServerMessage(jObj);
+                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+                                int flag = jObj.getInt("flag");
+                                if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+                                    DialogPopup.alertPopup(activity, "", message);
+                                }
+                                else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                    Data.dropLatLng = dropLatLng;
+                                    getDropLocationPathAndDisplay(Data.pickupLatLng);
+                                }
+                                else{
+                                    DialogPopup.alertPopup(activity, "", message);
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                });
+        } else {
+            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+        }
+    }
+
+
+
+
+
+
     //Customer's timer
     Timer timerDriverLocationUpdater;
     TimerTask timerTaskDriverLocationUpdater;
@@ -3442,6 +3475,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
             };
 
+            getDropLocationPathAndDisplay(Data.pickupLatLng);
 
             timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 15000);
             Log.i("timerDriverLocationUpdater", "started");
@@ -3582,7 +3616,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                                 final PolylineOptions polylineOptions = new PolylineOptions();
                                                 polylineOptions.add(start, end);
                                                 polylineOptions.width(ASSL.Xscale() * 5);
-                                                polylineOptions.color(Color.RED);
+                                                polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
                                                 polylineOptions.geodesic(false);
 
                                                 // Drawing poly-line in the Google Map
@@ -3592,13 +3626,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                             }
                                             if (map != null && ridePath != null) {
                                                 map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude)));
+                                                getDropLocationPathAndDisplay(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
                                             }
 
-                                            try {
-                                                Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
+
+                                            try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -3606,7 +3638,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                 }
                             });
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -3656,7 +3688,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
                             new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
                         polylineOptions.width(ASSL.Xscale() * 5);
-                        polylineOptions.color(Color.RED);
+                        polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
                         polylineOptions.geodesic(false);
                         if (map != null && polylineOptions != null) {
                             map.addPolyline(polylineOptions);
@@ -3669,6 +3701,71 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
     }
+
+    public boolean toShowPathToDrop(){
+        return (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode ||
+            PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
+            PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
+    }
+
+    public void getDropLocationPathAndDisplay(final LatLng lastLatLng) {
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()) && Data.dropLatLng != null && lastLatLng != null && toShowPathToDrop()) {
+                        String url = MapUtils.makeDirectionsURL(Data.dropLatLng, lastLatLng);
+                        Log.i("url", "=" + url);
+                        String result = new HttpRequester().getJSONFromUrl(url);
+
+                        if (result != null) {
+                            final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+                            if (list.size() > 0) {
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            if (toShowPathToDrop()) {
+                                                if (pathToDropLocationPolyline != null) {
+                                                    pathToDropLocationPolyline.remove();
+                                                }
+
+                                                PolylineOptions polylineOptions = new PolylineOptions();
+                                                polylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
+                                                for (int z = 0; z < list.size(); z++) {
+                                                    polylineOptions.add(list.get(z));
+                                                }
+                                                pathToDropLocationPolyline = map.addPolyline(polylineOptions);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     void callAnAutoPopup(final Activity activity, int totalPromoCoupons, LatLng pickupLatLng) {
