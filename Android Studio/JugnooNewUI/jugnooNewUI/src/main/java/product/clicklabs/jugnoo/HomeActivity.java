@@ -1748,6 +1748,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                         stopDropLocationSearchUI(false);
 
+                        if(Data.dropLatLng == null){
+                            relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+                        }
+
+
 
                         imageViewGift.setVisibility(View.VISIBLE);
                         imageViewHelp.setVisibility(View.GONE);
@@ -1804,8 +1812,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
-
                         setAssignedDriverData(mode);
 
                         if(dropLocationSearched){
@@ -1815,6 +1821,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         }
                         else{
                             stopDropLocationSearchUI(true);
+                        }
+
+                        if(Data.dropLatLng == null){
+                            relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
                         }
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
@@ -1908,8 +1921,15 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                 markerOptions.snippet("");
                                 markerOptions.title("start ride location");
                                 markerOptions.position(Data.pickupLatLng);
-                                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+                                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
                                 map.addMarker(markerOptions);
+                            }
+
+                            if(Data.dropLatLng != null) {
+                                if(dropLocationMarker != null){
+                                    dropLocationMarker.remove();
+                                }
+                                dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
                             }
                         }
 
@@ -1919,6 +1939,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         linearLayoutSearch.setVisibility(View.GONE);
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
+
+                        relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
 
 
                         setAssignedDriverData(mode);
@@ -2517,17 +2539,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 }
                 else if(SearchMode.DROP == searchMode){
                     DialogPopup.dismissLoadingDialog();
-                    if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
-                        stopDropLocationSearchUI(false);
-                        relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
-
-                    }
-                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
-                        stopDropLocationSearchUI(true);
-                        relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
-                    }
                     //TODO call drop loc api here
-
                     sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
                 }
             }
@@ -3358,6 +3370,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
                                 else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+
+                                    if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+                                        stopDropLocationSearchUI(false);
+                                        relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+                                    }
+                                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+                                        stopDropLocationSearchUI(true);
+                                        relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+                                    }
+
                                     Data.dropLatLng = dropLatLng;
                                     getDropLocationPathAndDisplay(Data.pickupLatLng);
                                 }
@@ -3624,6 +3646,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                                     map.addPolyline(polylineOptions);
                                                 }
                                             }
+                                            if(dropLocationMarker != null){
+                                                dropLocationMarker.remove();
+                                            }
+                                            dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+
                                             if (map != null && ridePath != null) {
                                                 map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude)));
                                                 getDropLocationPathAndDisplay(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
@@ -3683,7 +3710,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     ArrayList<RidePath> ridePathsList = new ArrayList<>();
                     ridePathsList.addAll(Database2.getInstance(HomeActivity.this).getRidePathInfo());
 
-                    for (RidePath ridePath : ridePathsList) {
+                    RidePath finalRidePath = null;
+                    for (int i=0; i<ridePathsList.size(); i++) {
+                        RidePath ridePath = ridePathsList.get(i);
                         final PolylineOptions polylineOptions = new PolylineOptions();
                         polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
                             new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
@@ -3693,6 +3722,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         if (map != null && polylineOptions != null) {
                             map.addPolyline(polylineOptions);
                         }
+                        if (i == ridePathsList.size() - 1) {
+                            finalRidePath = ridePath;
+                        }
+                    }
+                    if(finalRidePath != null) {
+                        getDropLocationPathAndDisplay(new LatLng(finalRidePath.destinationLatitude, finalRidePath.destinationLongitude));
                     }
 
                 } catch (Exception e) {
@@ -3714,10 +3749,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 @Override
                 public void run() {
                     if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()) && Data.dropLatLng != null && lastLatLng != null && toShowPathToDrop()) {
-                        String url = MapUtils.makeDirectionsURL(Data.dropLatLng, lastLatLng);
+                        String url = MapUtils.makeDirectionsURL(lastLatLng, Data.dropLatLng);
                         Log.i("url", "=" + url);
                         String result = new HttpRequester().getJSONFromUrl(url);
-
+                        Log.i("result", "=" + result);
                         if (result != null) {
                             final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
                             if (list.size() > 0) {
@@ -3727,16 +3762,17 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                     public void run() {
                                         try {
                                             if (toShowPathToDrop()) {
-                                                if (pathToDropLocationPolyline != null) {
-                                                    pathToDropLocationPolyline.remove();
-                                                }
-
                                                 PolylineOptions polylineOptions = new PolylineOptions();
                                                 polylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
                                                 for (int z = 0; z < list.size(); z++) {
                                                     polylineOptions.add(list.get(z));
                                                 }
+
+                                                if (pathToDropLocationPolyline != null) {
+                                                    pathToDropLocationPolyline.remove();
+                                                }
                                                 pathToDropLocationPolyline = map.addPolyline(polylineOptions);
+
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -3753,7 +3789,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         }
     }
 
-
+    public MarkerOptions getCustomerLocationMarkerOptions(LatLng customerLatLng){
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.title("End Location");
+        markerOptions.snippet("");
+        markerOptions.position(customerLatLng);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this, assl)));
+        return markerOptions;
+    }
 
 
 
@@ -3834,6 +3877,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             });
 
             Data.pickupLatLng = pickupLatLng;
+            Data.dropLatLng = null;
 
             if (myLocation == null) {
                 //We could not detect your location. Are you sure you want to request an auto to pick you at this location
