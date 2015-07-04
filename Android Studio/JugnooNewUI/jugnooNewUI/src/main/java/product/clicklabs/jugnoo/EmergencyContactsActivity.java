@@ -94,7 +94,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_contacts);
 
-        this.refreshEmergencyContacts = this;
+        refreshEmergencyContacts = this;
 
         editEC1 = 0; editEC2 = 0;
 
@@ -179,7 +179,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                     closeEC2Layout();
                 } else if (linearLayoutEmergencyContact1Fields.getVisibility() == View.VISIBLE) {
                     if (emergencyContact1 != null) {
-                        if (!(emergencyContact1 != null && emergencyContact1.verificationStatus == 1)) {
+                        if (emergencyContact1.verificationStatus == 1) {
                             imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
                         }
                         linearLayoutEmergencyContact1Fields.setVisibility(View.GONE);
@@ -279,6 +279,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         imageViewEC1PickContact.setVisibility(View.GONE);
                         buttonVerifyEC1.setVisibility(View.GONE);
                         buttonVerifyEC1.setText("VERIFY");
+
                     }
                 }
             }
@@ -1058,6 +1059,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                     phones.moveToFirst();
                     phone = phones.getString(phones.getColumnIndex("data1"));
                     phone = phone.replaceAll(" ", "");
+                    phone = Utils.retrievePhoneNumberTenChars(phone);
                 }
 
                 Cursor emailCur = getContentResolver().query(

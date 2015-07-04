@@ -142,7 +142,7 @@ public class Data {
 	public static int customerRateAppFlag = 0;
 	
 	
-	public static LatLng pickupLatLng;
+	public static LatLng pickupLatLng, dropLatLng;
 
 	public static FacebookUserData facebookUserData;
 	

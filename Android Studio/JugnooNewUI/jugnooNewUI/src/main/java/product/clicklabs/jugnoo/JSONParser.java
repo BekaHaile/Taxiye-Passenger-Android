@@ -453,7 +453,7 @@ public class JSONParser {
                     pickupLatitude = "", pickupLongitude = "";
             int freeRide = 0;
             String promoName = "", eta = "";
-            double fareFactor = 1.0;
+            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -527,6 +527,12 @@ public class JSONParser {
                             driverRating = jObject.getString("rating");
                             pickupLatitude = jObject.getString("pickup_latitude");
                             pickupLongitude = jObject.getString("pickup_longitude");
+
+                            if(jObject.has("op_drop_latitude") && jObject.has("op_drop_longitude")) {
+                                dropLatitude = jObject.getDouble("op_drop_latitude");
+                                dropLongitude = jObject.getDouble("op_drop_longitude");
+                            }
+
                             if (jObject.has("driver_car_no")) {
                                 driverCarNumber = jObject.getString("driver_car_no");
                             }
@@ -587,6 +593,13 @@ public class JSONParser {
                 Data.cDriverId = userId;
 
                 Data.pickupLatLng = new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude));
+                if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
+                    Data.dropLatLng =null;
+                }
+                else{
+                    Data.dropLatLng = new LatLng(dropLatitude, dropLongitude);
+                }
+
 
                 double dLatitude = Double.parseDouble(latitude);
                 double dLongitude = Double.parseDouble(longitude);

@@ -223,19 +223,20 @@
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutEC1Delete"
-                        android:layout_width="120px"
+                        android:layout_width="130px"
                         android:layout_height="70px"
                         android:layout_gravity="right"
                         >
 
                         <TextView
                             android:id="@+id/textViewEC1Delete"
-                            android:layout_width="120px"
+                            android:layout_width="130px"
                             android:layout_height="70px"
-                            android:padding="20px"
+                            android:padding="0px"
                             android:text="Delete"
                             android:textColor="@drawable/text_color_yellow_alpha_selector"
                             android:textSize="28px"
+                            android:gravity="center"
                             />
                         <ImageView
                             android:layout_width="90px"
@@ -474,19 +475,20 @@
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutEC2Delete"
-                        android:layout_width="120px"
+                        android:layout_width="130px"
                         android:layout_height="70px"
                         android:layout_gravity="right"
                         >
 
                         <TextView
                             android:id="@+id/textViewEC2Delete"
-                            android:layout_width="120px"
+                            android:layout_width="130px"
                             android:layout_height="70px"
-                            android:padding="20px"
+                            android:padding="0px"
                             android:text="Delete"
                             android:textColor="@drawable/text_color_yellow_alpha_selector"
                             android:textSize="28px"
+                            android:gravity="center"
                             />
                         <ImageView
                             android:layout_width="90px"

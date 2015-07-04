@@ -49,7 +49,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 	NonScrollListView listViewCancelOptions;
 	CancelOptionsListAdapter cancelOptionsListAdapter;
 
-    RelativeLayout relativeLayoutOtherCancelOption, relativeLayoutOtherCancelOptionInner;
+    RelativeLayout relativeLayoutOtherCancelOptionInner;
     TextView textViewOtherCancelOption;
     ImageView imageViewOtherCancelOptionCheck;
     EditText editTextOtherCancelOption;
@@ -102,7 +102,6 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 		cancelOptionsListAdapter = new CancelOptionsListAdapter(RideCancellationActivity.this);
 		listViewCancelOptions.setAdapter(cancelOptionsListAdapter);
 
-        relativeLayoutOtherCancelOption = (RelativeLayout) findViewById(R.id.relativeLayoutOtherCancelOption);
         relativeLayoutOtherCancelOptionInner = (RelativeLayout) findViewById(R.id.relativeLayoutOtherCancelOptionInner);
         textViewOtherCancelOption = (TextView) findViewById(R.id.textViewOtherCancelOption); textViewOtherCancelOption.setTypeface(Fonts.latoRegular(this));
         imageViewOtherCancelOptionCheck = (ImageView) findViewById(R.id.imageViewOtherCancelOptionCheck);
@@ -194,10 +193,12 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
                 textViewCancelInfo.setText(Data.cancelOptionsList.message);
 
                 if("".equalsIgnoreCase(Data.cancelOptionsList.additionalReason)){
-                    relativeLayoutOtherCancelOption.setVisibility(View.GONE);
+                    relativeLayoutOtherCancelOptionInner.setVisibility(View.GONE);
+                    editTextOtherCancelOption.setVisibility(View.GONE);
                 }
                 else{
-                    relativeLayoutOtherCancelOption.setVisibility(View.VISIBLE);
+                    relativeLayoutOtherCancelOptionInner.setVisibility(View.VISIBLE);
+                    editTextOtherCancelOption.setVisibility(View.VISIBLE);
                     textViewOtherCancelOption.setText(Data.cancelOptionsList.additionalReason);
                 }
 
