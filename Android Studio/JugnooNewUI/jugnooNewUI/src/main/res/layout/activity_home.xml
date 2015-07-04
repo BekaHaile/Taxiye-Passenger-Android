@@ -40,7 +40,6 @@
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
                 android:visibility="visible"
-                android:animateLayoutChanges="true"
                 >
 
                 <!-- initial layout -->

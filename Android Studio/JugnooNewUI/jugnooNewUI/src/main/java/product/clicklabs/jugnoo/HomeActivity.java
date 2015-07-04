@@ -278,6 +278,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker;
     Polyline pathToDropLocationPolyline;
+    PolylineOptions pathToDropLocationPolylineOptions;
 
     static AppInterruptHandler appInterruptHandler;
 
@@ -1752,6 +1753,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
                         }
                         else{
+                            if(dropLocationMarker != null){
+                                dropLocationMarker.remove();
+                            }
+                            dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
                             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                         }
 
@@ -1827,6 +1832,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
                         }
                         else{
+                            if(dropLocationMarker != null){
+                                dropLocationMarker.remove();
+                            }
+                            dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
                             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
                         }
 
@@ -1891,6 +1900,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
+                        if(Data.dropLatLng != null){
+                            if(dropLocationMarker != null){
+                                dropLocationMarker.remove();
+                            }
+                            dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+                        }
                         relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
 
                         setAssignedDriverData(mode);
@@ -1930,6 +1945,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                     dropLocationMarker.remove();
                                 }
                                 dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+
+                                if(pathToDropLocationPolylineOptions != null) {
+                                    if (pathToDropLocationPolyline != null) {
+                                        pathToDropLocationPolyline.remove();
+                                    }
+                                    pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
+                                }
                             }
                         }
 
@@ -3381,6 +3403,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                     }
 
                                     Data.dropLatLng = dropLatLng;
+
+                                    if(Data.dropLatLng != null){
+                                        if(dropLocationMarker != null){
+                                            dropLocationMarker.remove();
+                                        }
+                                        dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+                                    }
+
                                     getDropLocationPathAndDisplay(Data.pickupLatLng);
                                 }
                                 else{
@@ -3646,16 +3676,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                                     map.addPolyline(polylineOptions);
                                                 }
                                             }
-                                            if(dropLocationMarker != null){
-                                                dropLocationMarker.remove();
-                                            }
-                                            dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
 
                                             if (map != null && ridePath != null) {
                                                 map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude)));
                                                 getDropLocationPathAndDisplay(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
                                             }
-
 
                                             try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
                                         }
@@ -3762,16 +3787,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                     public void run() {
                                         try {
                                             if (toShowPathToDrop()) {
-                                                PolylineOptions polylineOptions = new PolylineOptions();
-                                                polylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
+                                                pathToDropLocationPolylineOptions = new PolylineOptions();
+                                                pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
                                                 for (int z = 0; z < list.size(); z++) {
-                                                    polylineOptions.add(list.get(z));
+                                                    pathToDropLocationPolylineOptions.add(list.get(z));
                                                 }
 
                                                 if (pathToDropLocationPolyline != null) {
                                                     pathToDropLocationPolyline.remove();
                                                 }
-                                                pathToDropLocationPolyline = map.addPolyline(polylineOptions);
+                                                pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
 
                                             }
                                         } catch (Exception e) {
