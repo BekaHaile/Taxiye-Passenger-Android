@@ -21,19 +21,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -95,7 +89,6 @@ import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.datastructure.SearchMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -113,6 +106,8 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.SearchListActionsHandler;
+import product.clicklabs.jugnoo.utils.SearchListAdapter;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -214,7 +209,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     ProgressBar progressBarFinalDropLocation;
     ListView listViewFinalDropLocationSearch;
 
-    SearchListAdapter dropLocationSearchListAdapter;
 
 
     //Search Layout
@@ -222,7 +216,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     EditText editTextSearch;
     ProgressBar progressBarSearch;
     ListView listViewSearch;
-    SearchListAdapter searchListAdapter;
 
 
     //Center Location Layout
@@ -248,8 +241,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     Handler shakeHandler;
 
     Location lastLocation;
-
-    ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults = new ArrayList<AutoCompleteSearchResult>();
 
 
     Boolean fetchedRidePathsFromDb = false;
@@ -469,7 +460,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         progressBarInitialSearch.setVisibility(View.GONE);
 
 
-        dropLocationSearchListAdapter = new SearchListAdapter(SearchMode.DROP);
 
         //Assigning layout
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
@@ -487,7 +477,36 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         progressBarAssigningDropLocation = (ProgressBar) findViewById(R.id.progressBarAssigningDropLocation); progressBarAssigningDropLocation.setVisibility(View.GONE);
         listViewAssigningDropLocationSearch = (ListView) findViewById(R.id.listViewAssigningDropLocationSearch);
         listViewAssigningDropLocationSearch.setVisibility(View.GONE);
-        listViewAssigningDropLocationSearch.setAdapter(dropLocationSearchListAdapter);
+
+        SearchListAdapter dropLocationAssigningSearchListAdapter = new SearchListAdapter(this, editTextAssigningDropLocation, new LatLng(30.75, 76.78),
+            new SearchListActionsHandler() {
+                @Override
+                public void onSearchPre() {
+                    progressBarAssigningDropLocation.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onSearchPost() {
+                    progressBarAssigningDropLocation.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+                }
+
+                @Override
+                public void onPlaceSearchPre() {
+                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                }
+
+                @Override
+                public void onPlaceSearchPost(SearchResult searchResult) {
+                    DialogPopup.dismissLoadingDialog();
+                    sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
+                }
+            });
+
+        listViewAssigningDropLocationSearch.setAdapter(dropLocationAssigningSearchListAdapter);
 
 
 
@@ -530,8 +549,36 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         progressBarFinalDropLocation = (ProgressBar) findViewById(R.id.progressBarFinalDropLocation); progressBarFinalDropLocation.setVisibility(View.GONE);
         listViewFinalDropLocationSearch = (ListView) findViewById(R.id.listViewFinalDropLocationSearch);
         listViewFinalDropLocationSearch.setVisibility(View.GONE);
-        listViewFinalDropLocationSearch.setAdapter(dropLocationSearchListAdapter);
 
+
+        SearchListAdapter dropLocationFinalSearchListAdapter = new SearchListAdapter(this, editTextFinalDropLocation, new LatLng(30.75, 76.78),
+            new SearchListActionsHandler() {
+                @Override
+                public void onSearchPre() {
+                    progressBarFinalDropLocation.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onSearchPost() {
+                    progressBarFinalDropLocation.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+                }
+
+                @Override
+                public void onPlaceSearchPre() {
+                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                }
+
+                @Override
+                public void onPlaceSearchPost(SearchResult searchResult) {
+                    DialogPopup.dismissLoadingDialog();
+                    sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
+                }
+            });
+        listViewFinalDropLocationSearch.setAdapter(dropLocationFinalSearchListAdapter);
 
 
 
@@ -542,7 +589,41 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch);
         progressBarSearch.setVisibility(View.GONE);
         listViewSearch = (ListView) findViewById(R.id.listViewSearch);
-        searchListAdapter = new SearchListAdapter(SearchMode.PICKUP);
+
+        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78),
+            new SearchListActionsHandler() {
+                @Override
+                public void onSearchPre() {
+                    progressBarSearch.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onSearchPost() {
+                    progressBarSearch.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+                    textViewInitialSearch.setText(autoCompleteSearchResult.name);
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
+                }
+
+                @Override
+                public void onPlaceSearchPre() {
+                    progressBarInitialSearch.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onPlaceSearchPost(SearchResult searchResult) {
+                    progressBarInitialSearch.setVisibility(View.GONE);
+                    if (map != null && searchResult != null) {
+                        textViewInitialSearch.setText(searchResult.name);
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 14), 1000, null);
+                    }
+                }
+            });
+
         listViewSearch.setAdapter(searchListAdapter);
 
 
@@ -907,8 +988,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 editTextSearch.setText(textViewInitialSearch.getText().toString());
                 editTextSearch.setSelection(editTextSearch.getText().length());
                 Utils.showSoftKeyboard(HomeActivity.this, editTextSearch);
-                autoCompleteSearchResults.clear();
-                searchListAdapter.setResults(autoCompleteSearchResults);
                 passengerScreenMode = PassengerScreenMode.P_SEARCH;
                 switchPassengerScreen(passengerScreenMode);
             }
@@ -976,27 +1055,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-        editTextAssigningDropLocation.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    if (map != null) {
-                        getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.DROP);
-                    }
-                }
-            }
-        });
-
 
 
 
@@ -1029,27 +1087,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             @Override
             public void onClick(View v) {
-            }
-        });
-
-        editTextSearch.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    if (map != null) {
-                        getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.PICKUP);
-                    }
-                }
             }
         });
 
@@ -1121,27 +1158,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             @Override
             public void onClick(View v) {
                 initDropLocationSearchUI(true);
-            }
-        });
-
-        editTextFinalDropLocation.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    if (map != null) {
-                        getSearchResults(s.toString().trim(), map.getCameraPosition().target, SearchMode.DROP);
-                    }
-                }
             }
         });
 
@@ -2463,221 +2479,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         super.onDestroy();
     }
 
-
-    public Thread autoCompleteThread;
-    public boolean refreshingAutoComplete = false;
-
-    public synchronized void getSearchResults(final String searchText, final LatLng latLng, final SearchMode searchMode) {
-        try {
-            if (!refreshingAutoComplete) {
-                if(SearchMode.PICKUP == searchMode) {
-                    progressBarSearch.setVisibility(View.VISIBLE);
-                }
-                else if(SearchMode.DROP == searchMode){
-                    if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
-                        progressBarAssigningDropLocation.setVisibility(View.VISIBLE);
-                    }
-                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
-                        progressBarFinalDropLocation.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if (autoCompleteThread != null) {
-                    autoCompleteThread.interrupt();
-                }
-
-                autoCompleteThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshingAutoComplete = true;
-                        autoCompleteSearchResults.clear();
-                        autoCompleteSearchResults.addAll(MapUtils.getAutoCompleteSearchResultsFromGooglePlaces(searchText, latLng));
-
-                        setSearchResultsToList(searchMode);
-                        refreshingAutoComplete = false;
-                        autoCompleteThread = null;
-                    }
-                });
-                autoCompleteThread.start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public synchronized void setSearchResultsToList(final SearchMode searchMode) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (autoCompleteSearchResults.size() == 0) {
-                    autoCompleteSearchResults.add(new AutoCompleteSearchResult("No results found", "", ""));
-                }
-
-                if(SearchMode.PICKUP == searchMode) {
-                    progressBarSearch.setVisibility(View.GONE);
-                    searchListAdapter.setResults(autoCompleteSearchResults);
-                }
-                else if(SearchMode.DROP == searchMode){
-                    if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
-                        progressBarAssigningDropLocation.setVisibility(View.GONE);
-                    }
-                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
-                        progressBarFinalDropLocation.setVisibility(View.GONE);
-                    }
-                    dropLocationSearchListAdapter.setResults(autoCompleteSearchResults);
-                }
-            }
-        });
-    }
-
-
-    public synchronized void getSearchResultFromPlaceId(final String placeId, final SearchMode searchMode) {
-        if(SearchMode.PICKUP == searchMode){
-            progressBarInitialSearch.setVisibility(View.VISIBLE);
-        }
-        else if(SearchMode.DROP == searchMode){
-            DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SearchResult searchResult = MapUtils.getSearchResultsFromPlaceIdGooglePlaces(placeId);
-                setSearchResultToMapAndText(searchResult, searchMode);
-            }
-        }).start();
-    }
-
-    public synchronized void setSearchResultToMapAndText(final SearchResult searchResult, final SearchMode searchMode) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(SearchMode.PICKUP == searchMode){
-                    progressBarInitialSearch.setVisibility(View.GONE);
-                    if (map != null && searchResult != null) {
-                        textViewInitialSearch.setText(searchResult.name);
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 14), 1000, null);
-                    }
-                }
-                else if(SearchMode.DROP == searchMode){
-                    DialogPopup.dismissLoadingDialog();
-                    //TODO call drop loc api here
-                    sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
-                }
-            }
-        });
-    }
-
-
-    class ViewHolderSearchItem {
-        TextView textViewSearchName, textViewSearchAddress;
-        LinearLayout relative;
-        int id;
-    }
-
-    class SearchListAdapter extends BaseAdapter {
-        LayoutInflater mInflater;
-        ViewHolderSearchItem holder;
-        SearchMode searchMode;
-
-        ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults;
-
-        public SearchListAdapter(SearchMode searchMode) {
-            this.mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            this.autoCompleteSearchResults = new ArrayList<>();
-            this.searchMode = searchMode;
-        }
-
-        public synchronized void setResults(ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults) {
-            this.autoCompleteSearchResults.clear();
-            this.autoCompleteSearchResults.addAll(autoCompleteSearchResults);
-            this.notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return autoCompleteSearchResults.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                holder = new ViewHolderSearchItem();
-                convertView = mInflater.inflate(R.layout.list_item_search_item, null);
-
-                holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName);
-                holder.textViewSearchName.setTypeface(Fonts.latoRegular(HomeActivity.this));
-                holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
-                holder.textViewSearchAddress.setTypeface(Fonts.latoRegular(HomeActivity.this));
-                holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
-
-                holder.relative.setTag(holder);
-
-                holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
-                ASSL.DoMagic(holder.relative);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolderSearchItem) convertView.getTag();
-            }
-
-
-            try {
-                holder.id = position;
-
-                holder.textViewSearchName.setText(autoCompleteSearchResults.get(position).name);
-                holder.textViewSearchAddress.setText(autoCompleteSearchResults.get(position).address);
-
-                holder.relative.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        holder = (ViewHolderSearchItem) v.getTag();
-                        Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
-                        AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
-                        if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
-                            if(SearchMode.PICKUP == searchMode) {
-                                if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-                                    textViewInitialSearch.setText(autoCompleteSearchResult.name);
-                                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                                    switchPassengerScreen(passengerScreenMode);
-                                    getSearchResultFromPlaceId(autoCompleteSearchResult.placeId, searchMode);
-                                }
-                            }
-                            else if(SearchMode.DROP == searchMode){
-                                getSearchResultFromPlaceId(autoCompleteSearchResult.placeId, searchMode);
-                            }
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return convertView;
-        }
-
-        @Override
-        public synchronized void notifyDataSetChanged() {
-            if (autoCompleteSearchResults.size() > 1) {
-                if (autoCompleteSearchResults.contains(new AutoCompleteSearchResult("No results found", "", ""))) {
-                    autoCompleteSearchResults.remove(autoCompleteSearchResults.indexOf(new AutoCompleteSearchResult("No results found", "", "")));
-                }
-            }
-            super.notifyDataSetChanged();
-        }
-
-    }
 
 
     class FindDriversETAAsync extends AsyncTask<Void, Void, String> {

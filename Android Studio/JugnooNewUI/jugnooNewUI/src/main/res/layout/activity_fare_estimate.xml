@@ -1,0 +1,343 @@
+<LinearLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_light_grey"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="720px"
+        android:layout_height="96px"
+        android:background="@color/yellow">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="FARE ESTIMATE"
+            android:textColor="@color/white"
+            android:textSize="30.6px"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="60.7px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/back_white_selector"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+
+        >
+
+        <!-- Drop location layout -->
+        <RelativeLayout
+            android:id="@+id/relativeLayoutDropLocationBar"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20px"
+            android:background="@drawable/background_white_rounded"
+            android:splitMotionEvents="false"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/imageViewDropLocationGPSIcon"
+                android:layout_width="30px"
+                android:layout_height="44px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18px"
+                android:src="@drawable/search_location_icon"
+                android:tag="mwar"/>
+
+            <EditText
+                android:id="@+id/editTextDropLocation"
+                android:layout_width="580px"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@+id/imageViewDropLocationGPSIcon"
+                android:background="@color/transparent"
+                android:hint="Enter destination"
+                android:singleLine="true"
+                android:textColor="@color/black_text"
+                android:textCursorDrawable="@null"
+                android:textSize="30px"/>
+
+            <ProgressBar
+                android:id="@+id/progressBarDropLocation"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20px"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:background="@color/yellow"
+                />
+
+
+        </RelativeLayout>
+
+
+        <ListView
+            android:id="@+id/listViewDropLocationSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/transparent"
+            android:dividerHeight="0px"
+            android:splitMotionEvents="false"
+            android:visibility="gone"
+            >
+        </ListView>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutFareEstimateDetails"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+
+            <fragment
+                android:id="@+id/mapLite"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="172px"
+                android:layout_margin="30px"
+                />
+
+
+
+            <!-- start to end locations -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
+                android:gravity="center_vertical"
+                >
+
+                <!-- start to end images -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="39px"
+                        android:layout_height="39px"
+                        android:tag="mwar"
+                        android:src="@drawable/ic_fe_start_circle"
+                        />
+                    <ImageView
+                        android:layout_width="10px"
+                        android:layout_height="10px"
+                        android:tag="mwar"
+                        android:src="@drawable/ic_fe_small_circle"
+                        android:layout_marginTop="10px"
+                        />
+                    <ImageView
+                        android:layout_width="10px"
+                        android:layout_height="10px"
+                        android:tag="mwar"
+                        android:src="@drawable/ic_fe_small_circle"
+                        android:layout_marginTop="10px"
+                        />
+                    <ImageView
+                        android:layout_width="10px"
+                        android:layout_height="10px"
+                        android:tag="mwar"
+                        android:src="@drawable/ic_fe_small_circle"
+                        android:layout_marginTop="10px"
+                        />
+
+                    <ImageView
+                        android:layout_width="33px"
+                        android:layout_height="52px"
+                        android:tag="mwar"
+                        android:src="@drawable/ic_fe_map_marker"
+                        android:layout_marginTop="10px"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="522px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30px"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/textViewPickupLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/grey_text"
+                        android:textSize="32px"
+                        android:text="CDCL, Sector 28, ChandigarhIndia"
+                        android:layout_marginTop="10px"
+                        android:layout_marginBottom="25px"
+                        android:maxLines="2"
+                        />
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:src="@color/grey_light"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewDropLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/grey_text"
+                        android:textSize="32px"
+                        android:text="Phase 6, MohaliPunjab"
+                        android:layout_marginTop="25px"
+                        android:layout_marginBottom="10px"
+                        android:maxLines="2"
+                        />
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
+            <!-- Estimate time and distance -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="50px"
+                >
+
+                <LinearLayout
+                    android:layout_width="360px"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="53px"
+                        android:layout_height="53px"
+                        android:tag="mwar"
+                        android:src="@drawable/ic_fe_time"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/textViewEstimateTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/grey_text"
+                        android:textSize="32px"
+                        android:text="54 minutes"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="30px"
+
+                        />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="360px"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="65px"
+                        android:layout_height="56px"
+                        android:tag="mwar"
+                        android:src="@drawable/ic_fe_distance"
+                        android:layout_centerHorizontal="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewEstimateDistance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/grey_text"
+                        android:textSize="32px"
+                        android:text="23 Km"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="27px"
+
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textViewEstimateFare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_text"
+                android:textSize="82px"
+                android:text="Rs.100 - Rs.200"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="50px"
+
+                />
+
+
+            <TextView
+                android:id="@+id/textViewEstimateFareNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_text_alpha"
+                android:textSize="32px"
+                android:text="Note: This is just an estimate.\nActual cost, time and distance may vary."
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20px"
+
+                />
+
+
+
+            <Button
+                android:id="@+id/buttonOk"
+                android:layout_width="648px"
+                android:layout_height="100px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50px"
+                android:background="@drawable/button_yellow_selector"
+                android:text="OK"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/button_text_size" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
