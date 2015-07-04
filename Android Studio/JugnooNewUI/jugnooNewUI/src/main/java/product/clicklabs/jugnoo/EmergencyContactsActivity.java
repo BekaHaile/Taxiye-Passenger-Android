@@ -94,7 +94,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_contacts);
 
-        this.refreshEmergencyContacts = this;
+        refreshEmergencyContacts = this;
 
         editEC1 = 0; editEC2 = 0;
 
@@ -279,6 +279,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         imageViewEC1PickContact.setVisibility(View.GONE);
                         buttonVerifyEC1.setVisibility(View.GONE);
                         buttonVerifyEC1.setText("VERIFY");
+
                     }
                 }
             }
