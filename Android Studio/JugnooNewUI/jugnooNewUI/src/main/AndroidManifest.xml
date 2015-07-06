@@ -278,6 +278,11 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity
+            android:name="product.clicklabs.jugnoo.FareEstimateActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
 
 
 

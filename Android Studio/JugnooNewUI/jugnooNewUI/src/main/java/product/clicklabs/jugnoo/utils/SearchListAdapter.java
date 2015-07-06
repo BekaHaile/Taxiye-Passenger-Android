@@ -24,6 +24,8 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import rmn.androidscreenlibrary.ASSL;
 
 /**
+ * Base adapter for google autocomplete search and pressing on a search item fetches LatLng for that place.
+ *
  * Created by socomo20 on 7/4/15.
  */
 public class SearchListAdapter extends BaseAdapter {
@@ -44,6 +46,15 @@ public class SearchListAdapter extends BaseAdapter {
     ArrayList<AutoCompleteSearchResult> autoCompleteSearchResultsForSearch;
     ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults;
 
+    /**
+     * Constructor for initializing search base adapter
+     *
+     * @param context
+     * @param editTextForSearch edittext object whose text change will trigger autocomplete list
+     * @param searchPivotLatLng LatLng for searching autocomplete results
+     * @param searchListActionsHandler handler for custom actions
+     * @throws IllegalStateException
+     */
     public SearchListAdapter(Context context, EditText editTextForSearch, LatLng searchPivotLatLng, SearchListActionsHandler searchListActionsHandler) throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;

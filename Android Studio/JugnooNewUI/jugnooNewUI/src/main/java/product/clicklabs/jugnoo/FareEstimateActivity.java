@@ -1,8 +1,10 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,14 +16,33 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.List;
+
+import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.SearchListActionsHandler;
+import product.clicklabs.jugnoo.utils.SearchListAdapter;
 import rmn.androidscreenlibrary.ASSL;
 
-public class FareEstimateActivity extends Activity {
+public class FareEstimateActivity extends FragmentActivity {
 
-    RelativeLayout relative;
+    LinearLayout relative;
 
     TextView textViewTitle;
     ImageView imageViewBack;
@@ -36,6 +57,7 @@ public class FareEstimateActivity extends Activity {
     TextView textViewPickupLocation, textViewDropLocation, textViewEstimateTime, textViewEstimateDistance, textViewEstimateFare, textViewEstimateFareNote;
     Button buttonOk;
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -45,9 +67,9 @@ public class FareEstimateActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+        setContentView(R.layout.activity_fare_estimate);
 
-        relative = (RelativeLayout) findViewById(R.id.relative);
+        relative = (LinearLayout) findViewById(R.id.relative);
         new ASSL(this, relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
@@ -57,13 +79,67 @@ public class FareEstimateActivity extends Activity {
 
         relativeLayoutDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutDropLocationBar);
         editTextDropLocation = (EditText) findViewById(R.id.editTextDropLocation); editTextDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarDropLocation = (ProgressBar) findViewById(R.id.progressBarDropLocation);
+        progressBarDropLocation = (ProgressBar) findViewById(R.id.progressBarDropLocation); progressBarDropLocation.setVisibility(View.GONE);
         listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
 
+        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), new SearchListActionsHandler() {
+            @Override
+            public void onSearchPre() {
+                progressBarDropLocation.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onSearchPost() {
+                progressBarDropLocation.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+
+            }
+
+            @Override
+            public void onPlaceSearchPre() {
+                DialogPopup.showLoadingDialog(FareEstimateActivity.this, "Loading...");
+            }
+
+            @Override
+            public void onPlaceSearchPost(SearchResult searchResult) {
+                getDirectionsAndComputeFare(Data.pickupLatLng, searchResult.latLng);
+
+            }
+        });
+        listViewDropLocationSearch.setAdapter(searchListAdapter);
 
         linearLayoutFareEstimateDetails = (LinearLayout) findViewById(R.id.linearLayoutFareEstimateDetails);
 
+        mapLite = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapLite)).getMap();
+        if(mapLite != null) {
+            mapLite.getUiSettings().setAllGesturesEnabled(true);
+            mapLite.getUiSettings().setZoomGesturesEnabled(true);
+            mapLite.getUiSettings().setZoomControlsEnabled(false);
+            mapLite.setMyLocationEnabled(true);
+            mapLite.getUiSettings().setTiltGesturesEnabled(false);
+            mapLite.getUiSettings().setMyLocationButtonEnabled(false);
+            mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
 
+        textViewPickupLocation = (TextView) findViewById(R.id.textViewPickupLocation); textViewPickupLocation.setTypeface(Fonts.latoRegular(this));
+        textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation); textViewDropLocation.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime); textViewEstimateTime.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance); textViewEstimateDistance.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare); textViewEstimateFare.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateFareNote = (TextView) findViewById(R.id.textViewEstimateFareNote); textViewEstimateFareNote.setTypeface(Fonts.latoRegular(this));
+        buttonOk = (Button) findViewById(R.id.buttonOk); buttonOk.setTypeface(Fonts.latoRegular(this));
+
+
+
+
+
+
+        relativeLayoutDropLocationBar.setVisibility(View.VISIBLE);
+        listViewDropLocationSearch.setVisibility(View.VISIBLE);
+        linearLayoutFareEstimateDetails.setVisibility(View.GONE);
 
 
 
@@ -75,7 +151,145 @@ public class FareEstimateActivity extends Activity {
                 performBackPressed();
             }
         });
+
+        buttonOk.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                performBackPressed();
+            }
+        });
+
     }
+
+
+
+    private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng) {
+        try {
+            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (sourceLatLng != null && destLatLng != null) {
+                                String url = MapUtils.makeDirectionsURL(sourceLatLng, destLatLng);
+                                Log.i("url", "=" + url);
+                                String result = new HttpRequester().getJSONFromUrl(url);
+                                Log.i("result", "=" + result);
+                                if (result != null) {
+                                    JSONObject jObj = new JSONObject(result);
+                                    final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+                                    if(jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
+                                        final String startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address");
+                                        final String endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address");
+
+                                        final String distanceText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("text");
+                                        final String timeText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
+
+                                        final double distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
+                                        final double timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+
+
+                                        final LatLng bound1 = new LatLng(jObj.getJSONArray("routes").getJSONObject(0).getJSONObject("bounds").getJSONObject("northeast").getDouble("lat"),
+                                            jObj.getJSONArray("routes").getJSONObject(0).getJSONObject("bounds").getJSONObject("northeast").getDouble("lng"));
+                                        final LatLng bound2 = new LatLng(jObj.getJSONArray("routes").getJSONObject(0).getJSONObject("bounds").getJSONObject("southwest").getDouble("lat"),
+                                            jObj.getJSONArray("routes").getJSONObject(0).getJSONObject("bounds").getJSONObject("northeast").getDouble("lng"));
+                                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                        builder.include(bound1).include(bound2);
+                                        final LatLngBounds latLngBounds = builder.build();
+
+                                        runOnUiThread(new Runnable() {
+
+                                            @Override
+                                            public void run() {
+                                                try {
+
+                                                    relativeLayoutDropLocationBar.setVisibility(View.GONE);
+                                                    listViewDropLocationSearch.setVisibility(View.GONE);
+                                                    linearLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
+
+                                                    PolylineOptions polylineOptions = new PolylineOptions();
+                                                    polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
+                                                    for (int z = 0; z < list.size(); z++) {
+                                                        polylineOptions.add(list.get(z));
+                                                    }
+
+                                                    mapLite.clear();
+                                                    mapLite.addPolyline(polylineOptions);
+
+                                                    try {
+                                                        new Handler().postDelayed(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
+                                                            }
+                                                        }, 500);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+
+
+                                                    textViewPickupLocation.setText(startAddress);
+                                                    String startAdd = textViewPickupLocation.getText().toString();
+                                                    if(startAdd.charAt(startAdd.length()-1) == ','){
+                                                        textViewPickupLocation.setText(startAdd.substring(0, startAdd.length()-1));
+                                                    }
+
+                                                    textViewDropLocation.setText(endAddress);
+                                                    String endAdd = textViewDropLocation.getText().toString();
+                                                    if(endAdd.charAt(endAdd.length()-1) == ','){
+                                                        textViewDropLocation.setText(endAdd.substring(0, endAdd.length()-1));
+                                                    }
+
+                                                    textViewEstimateTime.setText(timeText);
+                                                    textViewEstimateDistance.setText(distanceText);
+
+
+                                                    DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
+                                                    double computedFare = Data.fareStructure.calculateFare(distanceValue/1000, timeValue/60);
+                                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFare) + " + 10%±");
+
+
+
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        runOnUiThread(new Runnable() {
+
+                                            @Override
+                                            public void run() {
+                                                DialogPopup.alertPopup(FareEstimateActivity.this, "", "No path between selected pickup and drop location");
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                DialogPopup.dismissLoadingDialog();
+                            }
+                        });
+                    }
+                }).start();
+            }
+            else {
+                DialogPopup.dismissLoadingDialog();
+                DialogPopup.alertPopup(FareEstimateActivity.this, "", Data.CHECK_INTERNET_MSG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public void performBackPressed() {

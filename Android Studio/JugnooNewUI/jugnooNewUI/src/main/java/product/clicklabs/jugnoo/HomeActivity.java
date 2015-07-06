@@ -735,6 +735,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             public void onClick(View v) {
                 drawerLayout.openDrawer(menuLayout);
                 hideAnims();
+                startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
             }
         });
 
@@ -1810,7 +1811,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             markerOptions.title("pickup location");
                             markerOptions.snippet("");
                             markerOptions.position(Data.pickupLatLng);
-                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
 
                             pickupLocationMarker = map.addMarker(markerOptions);
 
@@ -1893,7 +1894,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             markerOptions.title("pickup location");
                             markerOptions.snippet("");
                             markerOptions.position(Data.pickupLatLng);
-                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
 
                             pickupLocationMarker = map.addMarker(markerOptions);
 
@@ -4354,6 +4355,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 updatePickupLocation(location);
             }
         }
+        Data.latitude = location.getLatitude();
+        Data.longitude = location.getLongitude();
     }
 
 
