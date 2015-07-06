@@ -177,7 +177,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     TextView textViewNearestDriverETA;
     RelativeLayout relativeLayoutInitialFareFactor;
     TextView textViewCurrentFareFactor;
-    Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn;
+    Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn, initialMyLocationBtnPromo, buttonChalo;
+    LinearLayout linearLayoutPromo, linearLayoutCouponList;
+    TextView textViewPromoChooseCoupon;
+    ListView listViewPromotions;
+    LinearLayout linearLayoutFareEstimate, linearLayoutRateCard;
+    TextView textViewFareEstimate, textViewRateCard;
+
 
     ImageView imageViewRideLater, imageViewRideNow;
 

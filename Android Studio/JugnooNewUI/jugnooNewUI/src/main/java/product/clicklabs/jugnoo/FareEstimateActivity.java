@@ -246,7 +246,10 @@ public class FareEstimateActivity extends FragmentActivity {
 
                                                     DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
                                                     double computedFare = Data.fareStructure.calculateFare(distanceValue/1000, timeValue/60);
-                                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFare) + " + 10%±");
+                                                    double computedFarePlus = computedFare * 110.0/100.0;
+                                                    double computedFareMinus = computedFare * 90.0/100.0;
+                                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFareMinus) + "-" +
+                                                        getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFarePlus));
 
 
 

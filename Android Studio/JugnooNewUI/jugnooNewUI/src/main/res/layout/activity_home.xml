@@ -49,7 +49,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
 
                     <RelativeLayout
@@ -64,8 +64,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:orientation="vertical"
-                            android:animateLayoutChanges="true">
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/textViewNearestDriverETA"
@@ -169,34 +169,16 @@
                         />
 
 
-
-
-
-                    <ImageView
-                        android:id="@+id/imageViewRideLater"
-                        android:layout_width="135px"
-                        android:layout_height="135px"
-                        android:layout_above="@+id/relativeLayoutRequestInfo"
-                        android:layout_marginBottom="50px"
-                        android:layout_marginLeft="65px"
-                        android:src="@drawable/time_icon_r_selector"
-                        android:tag="mwar"
-                        android:visibility="gone"
-                        />
-
-
                     <ImageView
                         android:id="@+id/imageViewRideNow"
                         android:layout_width="180px"
                         android:layout_height="180px"
                         android:layout_above="@+id/relativeLayoutRequestInfo"
-                        android:layout_marginBottom="40px"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40px"
                         android:src="@drawable/auto_icon_r_selector"
                         android:tag="mwar"
                         />
-
-
 
 
                     <Button
@@ -215,15 +197,170 @@
                         android:id="@+id/changeLocalityBtn"
                         android:layout_width="648px"
                         android:layout_height="100px"
+                        android:layout_above="@+id/relativeLayoutRequestInfo"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40px"
                         android:background="@drawable/button_yellow_selector"
                         android:text="CHANGE LOCALITY"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/button_text_size"
                         android:visibility="gone"
-                        android:layout_above="@+id/relativeLayoutRequestInfo"
-                        android:layout_marginBottom="40px"
                         />
+
+
+                    <Button
+                        android:id="@+id/initialMyLocationBtnPromo"
+                        android:layout_width="80px"
+                        android:layout_height="80px"
+                        android:layout_above="@+id/linearLayoutPromoList"
+                        android:layout_marginBottom="40px"
+                        android:layout_marginLeft="50px"
+                        android:background="@drawable/mylocation_btn_selector"
+                        android:tag="mwar"
+                        android:visibility="gone"
+                        />
+                    <LinearLayout
+                        android:id="@+id/linearLayoutPromoList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/white"
+                        android:gravity="center_horizontal|bottom"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutCouponList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical"
+                            android:visibility="visible"
+                            >
+                            <TextView
+                                android:id="@+id/textViewPromoChooseCoupon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="20px"
+                                android:layout_marginTop="20px"
+                                android:text="CHOOSE YOUR COUPON"
+                                android:textColor="@color/black_text"
+                                android:textSize="28px"
+                                />
+
+                            <ImageView
+                                android:layout_width="520px"
+                                android:layout_height="2px"
+                                android:background="@color/grey_light_more"/>
+
+                            <ListView
+                                android:id="@+id/listViewPromotions"
+                                android:layout_width="match_parent"
+                                android:layout_height="234px"
+                                android:layout_marginTop="40px"
+                                android:divider="@color/grey_light"
+                                android:dividerHeight="1px"
+                                android:splitMotionEvents="false"
+                                android:visibility="visible"
+                                >
+                            </ListView>
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="3px"
+                                android:background="@color/yellow"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="140px"
+                            android:layout_marginTop="20px"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:splitMotionEvents="false"
+                            >
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutFareEstimate"
+                                android:layout_width="360px"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                >
+
+                                <ImageView
+                                    android:layout_width="56px"
+                                    android:layout_height="38px"
+                                    android:src="@drawable/ic_fe_pay"
+                                    android:tag="mwar"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/textViewFareEstimate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10px"
+                                    android:text="FARE ESTIMATE"
+                                    android:textColor="@drawable/text_color_black_alpha_selector"
+                                    android:textSize="28px"
+                                    />
+
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="3px"
+                                android:layout_height="76px"
+                                android:background="@color/yellow"
+                                />
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutRateCard"
+                                android:layout_width="360px"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                >
+
+                                <ImageView
+                                    android:layout_width="56px"
+                                    android:layout_height="38px"
+                                    android:src="@drawable/ic_fe_pay"
+                                    android:tag="mwar"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/textViewRateCard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10px"
+                                    android:text="RATE CARD"
+                                    android:textColor="@drawable/text_color_black_alpha_selector"
+                                    android:textSize="28px"
+                                    />
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/buttonChalo"
+                            android:layout_width="580px"
+                            android:layout_height="95px"
+                            android:layout_marginBottom="40px"
+                            android:layout_marginTop="20px"
+                            android:background="@drawable/button_yellow_selector"
+                            android:text="CHALO JUGNOO SE !"
+                            android:textColor="@drawable/text_color_white_alpha_selector"
+                            android:textSize="@dimen/button_text_size"/>
+
+
+                    </LinearLayout>
+
 
                 </RelativeLayout>
 
