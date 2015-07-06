@@ -66,11 +66,14 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import product.clicklabs.jugnoo.adapters.PromotionListEventHandler;
+import product.clicklabs.jugnoo.adapters.PromotionsListAdapter;
+import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
+import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -84,8 +87,6 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.LatLngPair;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.PromotionApplyMode;
-import product.clicklabs.jugnoo.datastructure.PromotionDialogEventHandler;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -106,8 +107,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.SearchListActionsHandler;
-import product.clicklabs.jugnoo.utils.SearchListAdapter;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -154,7 +153,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     //Top RL
     RelativeLayout topRl;
-    ImageView imageViewMenu, imageViewSearchCancel;
+    ImageView imageViewMenu, imageViewSearchCancel, imageViewBack;
     TextView title;
     Button checkServerBtn;
     ImageView jugnooShopImageView;
@@ -179,13 +178,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     TextView textViewCurrentFareFactor;
     Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn, initialMyLocationBtnPromo, buttonChalo;
     LinearLayout linearLayoutPromo, linearLayoutCouponList;
-    TextView textViewPromoChooseCoupon;
     ListView listViewPromotions;
+    PromotionsListAdapter promotionsListAdapter;
     LinearLayout linearLayoutFareEstimate, linearLayoutRateCard;
-    TextView textViewFareEstimate, textViewRateCard;
 
-
-    ImageView imageViewRideLater, imageViewRideNow;
+    ImageView imageViewRideNow;
 
     RelativeLayout relativeLayoutInitialSearchBar;
     TextView textViewInitialSearch;
@@ -321,7 +318,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     private int showAllDrivers = 0, showDriverInfo = 0;
 
-    private boolean intentFired = false, dropLocationSearched = false;
+    private boolean intentFired = false, dropLocationSearched = false, promoOpened = false;
 
     GenieLayout genieLayout;
 
@@ -346,6 +343,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         rechargedOnce = false;
         fetchedRidePathsFromDb = false;
         dropLocationSearched = false;
+        promoOpened = false;
 
         loggedOut = false;
         zoomedToMyLocation = false;
@@ -415,6 +413,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         topRl = (RelativeLayout) findViewById(R.id.topRl);
         imageViewMenu = (ImageView) findViewById(R.id.imageViewMenu);
         imageViewSearchCancel = (ImageView) findViewById(R.id.imageViewSearchCancel);
+        imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         title = (TextView) findViewById(R.id.title);
         title.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
@@ -452,9 +451,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         changeLocalityBtn.setVisibility(View.GONE);
         initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
-        imageViewRideLater = (ImageView) findViewById(R.id.imageViewRideLater);
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
-        imageViewRideLater.setVisibility(View.GONE);
 
         relativeLayoutRequestInfo = (RelativeLayout) findViewById(R.id.relativeLayoutRequestInfo);
 
@@ -464,6 +461,49 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
         progressBarInitialSearch = (ProgressBar) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
+
+        initialMyLocationBtnPromo = (Button) findViewById(R.id.initialMyLocationBtnPromo); initialMyLocationBtnPromo.setVisibility(View.GONE);
+        buttonChalo = (Button) findViewById(R.id.buttonChalo); buttonChalo.setTypeface(Fonts.latoRegular(this));
+        linearLayoutPromo = (LinearLayout) findViewById(R.id.linearLayoutPromo); linearLayoutPromo.setVisibility(View.GONE);
+        linearLayoutCouponList = (LinearLayout) findViewById(R.id.linearLayoutCouponList);
+        ((TextView) findViewById(R.id.textViewPromoChooseCoupon)).setTypeface(Fonts.latoRegular(this));
+        listViewPromotions = (ListView) findViewById(R.id.listViewPromotions);
+
+        promotionsListAdapter = new PromotionsListAdapter(this, new PromotionListEventHandler() {
+            @Override
+            public void onDismiss() {
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
+            }
+
+            @Override
+            public void onPromoListFetched(int totalPromoCoupons) {
+                promoOpened = true;
+                imageViewMenu.setVisibility(View.GONE);
+                imageViewBack.setVisibility(View.VISIBLE);
+                genieLayout.setVisibility(View.GONE);
+                centreLocationRl.setVisibility(View.GONE);
+                initialMyLocationBtnPromo.setVisibility(View.VISIBLE);
+                linearLayoutPromo.setVisibility(View.VISIBLE);
+
+                if(totalPromoCoupons > 0){
+                    linearLayoutCouponList.setVisibility(View.VISIBLE);
+                }
+                else{
+                    linearLayoutCouponList.setVisibility(View.GONE);
+                }
+            }
+        });
+        listViewPromotions.setAdapter(promotionsListAdapter);
+
+        linearLayoutFareEstimate = (LinearLayout) findViewById(R.id.linearLayoutFareEstimate);
+        linearLayoutRateCard = (LinearLayout) findViewById(R.id.linearLayoutRateCard);
+        ((TextView) findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewRateCard)).setTypeface(Fonts.latoRegular(this));
+
+
+
+
 
 
 
@@ -741,7 +781,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             public void onClick(View v) {
                 drawerLayout.openDrawer(menuLayout);
                 hideAnims();
-//                startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
+            }
+        });
+
+        imageViewBack.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
             }
         });
 
@@ -943,25 +990,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             if (map != null) {
                                 promoCouponSelectedForRide = null;
                                 final LatLng requestLatLng = map.getCameraPosition().target;
+                                Data.pickupLatLng = requestLatLng;
 
-                                final PromotionDialog promotionDialog = new PromotionDialog(requestLatLng, PromotionApplyMode.BEFORE_RIDE);
-                                promotionDialog.fetchPromotionsAPI(HomeActivity.this, new PromotionDialogEventHandler() {
-
-                                    @Override
-                                    public void onOkPressed(PromoCoupon promoCoupon, int totalPromoCoupons) {
-                                        promoCouponSelectedForRide = promoCoupon;
-                                        callAnAutoPopup(HomeActivity.this, totalPromoCoupons, requestLatLng);
-                                    }
-
-                                    @Override
-                                    public void onOkOnlyPressed(PromotionDialog promotionDialog, PromoCoupon promoCoupon, String pickupId) {
-                                    }
-
-                                    @Override
-                                    public void onCancelPressed() {
-                                        promoCouponSelectedForRide = null;
-                                    }
-                                });
+                                promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
                             }
                         } else {
                             LocationInit.showLocationAlertDialog(HomeActivity.this);
@@ -976,15 +1007,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
         });
 
-
-        imageViewRideLater.setOnClickListener(new OnClickListener() {
-
+        buttonChalo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideAnims();
-                switchToScheduleScreen(HomeActivity.this);
+                promoCouponSelectedForRide = promotionsListAdapter.getSelectedCoupon();
+                int totalPromoCoupons = promotionsListAdapter.getCount();
+                callAnAutoPopup(HomeActivity.this, totalPromoCoupons, Data.pickupLatLng);
             }
         });
+
+
 
 
         relativeLayoutInitialSearchBar.setOnClickListener(new OnClickListener() {
@@ -1012,6 +1044,31 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         });
 
 
+        linearLayoutPromo.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        linearLayoutFareEstimate.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                activityResumed = false;
+                startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
+        linearLayoutRateCard.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                activityResumed = false;
+                sendToFareDetails();
+            }
+        });
 
 
 
@@ -1319,6 +1376,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
             initialMyLocationBtnChangeLoc.setOnClickListener(mapMyLocationClick);
+            initialMyLocationBtnPromo.setOnClickListener(mapMyLocationClick);
             assigningMyLocationBtn.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 
@@ -1592,6 +1650,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     public void switchPassengerScreen(PassengerScreenMode mode) {
         try {
+            imageViewMenu.setVisibility(View.VISIBLE);
+            imageViewBack.setVisibility(View.GONE);
+
             if (userMode == UserMode.PASSENGER) {
                 initializeFusedLocationFetchers();
 
@@ -1699,11 +1760,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         textViewNearestDriverETA.setText("Finding nearby drivers...");
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
-                        imageViewRideLater.setVisibility(View.GONE);
 
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
                         changeLocalityBtn.setVisibility(View.GONE);
                         initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
+
+                        initialMyLocationBtnPromo.setVisibility(View.GONE);
+                        linearLayoutPromo.setVisibility(View.GONE);
+                        promoOpened = false;
 
                         setFareFactorToInitialState();
 
@@ -2442,7 +2506,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     @Override
     public void onBackPressed() {
         try {
-            if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+            if (PassengerScreenMode.P_SEARCH == passengerScreenMode || promoOpened) {
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
             }
@@ -2612,14 +2676,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                 textViewNearestDriverETA.setText(farAwayCity);
 
                                 imageViewRideNow.setVisibility(View.GONE);
-                                imageViewRideLater.setVisibility(View.GONE);
 
                                 initialMyLocationBtn.setVisibility(View.GONE);
                                 changeLocalityBtn.setVisibility(View.VISIBLE);
                                 initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
                             } else {
                                 imageViewRideNow.setVisibility(View.VISIBLE);
-                                imageViewRideLater.setVisibility(View.GONE);
 
                                 initialMyLocationBtn.setVisibility(View.VISIBLE);
                                 changeLocalityBtn.setVisibility(View.GONE);
@@ -3091,72 +3153,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
 
-    public void applyPromotionToScheduleAPI(final Activity activity, final PromotionDialog promotionDialog, PromoCoupon promoCoupon, String pickupId) {
-        if (AppStatus.getInstance(activity).isOnline(activity)) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
-
-            RequestParams params = new RequestParams();
-
-            params.put("access_token", Data.userData.accessToken);
-            params.put("pickup_id", pickupId);
-
-            if (promoCoupon != null) {
-                if (promoCoupon instanceof CouponInfo) {
-                    params.put("coupon_to_apply", "" + promoCoupon.id);
-                    if (promoCoupon.id == 0) {
-                        params.put("promo_to_apply", "" + promoCoupon.id);
-                    }
-                } else if (promoCoupon instanceof PromotionInfo) {
-                    params.put("promo_to_apply", "" + promoCoupon.id);
-                }
-            }
-
-            Log.i("params add_promotion_to_schedule", "=" + params);
-
-            AsyncHttpClient fetchPromotionClient = Data.getClient();
-            fetchPromotionClient.post(Config.getServerUrl() + "/add_promotion_to_schedule", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                        DialogPopup.dismissLoadingDialog();
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.e("Server response show_available_promotions", "response = " + response);
-                        try {
-                            jObj = new JSONObject(response);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-
-                                    promotionDialog.dismissAlert();
-
-                                    String message = jObj.getString("message");
-                                    DialogPopup.alertPopup(activity, "", message);
-                                } else if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                    String error = jObj.getString("error");
-                                    DialogPopup.alertPopup(activity, "", error);
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                });
-        } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-        }
-    }
 
 
 
@@ -3758,34 +3755,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     }
 
 
-    void switchToScheduleScreen(final Activity activity) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        calendar.add(Calendar.MINUTE, (5 - (calendar.get(Calendar.MINUTE) % 5)));
-
-        if (map != null) {
-            LatLng latLng = map.getCameraPosition().target;
-            if (latLng != null) {
-                ScheduleRideDialog scheduleRideDialog = new ScheduleRideDialog(HomeActivity.this, calendar, latLng, new PromotionDialogEventHandler() {
-
-                    @Override
-                    public void onOkPressed(PromoCoupon promoCoupon, int totalPromoCoupons) {
-                    }
-
-                    @Override
-                    public void onOkOnlyPressed(PromotionDialog promotionDialog, PromoCoupon promoCoupon, String pickupId) {
-                        applyPromotionToScheduleAPI(activity, promotionDialog, promoCoupon, pickupId);
-                    }
-
-                    @Override
-                    public void onCancelPressed() {
-                    }
-                });
-                scheduleRideDialog.showDialog(HomeActivity.this);
-            }
-        }
-
-    }
 
 
     /**

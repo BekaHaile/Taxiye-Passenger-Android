@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.utils;
+package product.clicklabs.jugnoo.adapters;
 
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;

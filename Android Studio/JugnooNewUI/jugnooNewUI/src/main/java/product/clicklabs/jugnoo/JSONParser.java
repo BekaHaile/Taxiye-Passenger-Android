@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
@@ -76,10 +77,10 @@ public class JSONParser {
             Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"),
                     fareDetails0.getDouble("fare_threshold_distance"),
                     fareDetails0.getDouble("fare_per_km"),
-                    farePerMin, freeMinutes);
+                    farePerMin, freeMinutes, 0, 0);
         } catch (Exception e) {
             e.printStackTrace();
-            Data.fareStructure = new FareStructure(25, 2, 6, 1, 6);
+            Data.fareStructure = new FareStructure(25, 2, 6, 1, 6, 0, 0);
         }
     }
 
@@ -952,5 +953,55 @@ public class JSONParser {
         }
         return emergencyContactsList;
     }
+
+
+    public static void parseCurrentFareStructure(JSONObject jObj){
+        try{
+
+//            {
+//                "fare_fixed": 20,
+//                "fare_per_km": 5,
+//                "fare_threshold_distance": 0,
+//                "fare_per_min": 1,
+//                "fare_threshold_time": 0,
+//                "fare_per_waiting_min": 0,
+//                "fare_threshold_waiting_time": 0,
+//                "start_time": "00:30:00",
+//                "end_time": "16:30:00"
+//            }
+
+
+            double fareFactor = jObj.getDouble("dynamic_factor");
+            JSONArray jFareStructures = jObj.getJSONArray("fare_structure");
+            for(int i=0; i<jFareStructures.length(); i++){
+                JSONObject jfs = jFareStructures.getJSONObject(i);
+
+                String startTime = jfs.getString("start_time");
+                String endTime = jfs.getString("end_time");
+
+                String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
+                String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
+
+                long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
+                long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
+
+                if(diffStart >= 0 && diffEnd <= 0){
+                    Data.fareStructure = new FareStructure(jfs.getDouble("fare_fixed"),
+                        jfs.getDouble("fare_threshold_distance"),
+                        jfs.getDouble("fare_per_km"),
+                        jfs.getDouble("fare_per_min"),
+                        jfs.getDouble("fare_threshold_time"),
+                        jfs.getDouble("fare_per_waiting_min"),
+                        jfs.getDouble("fare_threshold_waiting_time"));
+                    Data.fareStructure.fareFactor = fareFactor;
+                    break;
+                }
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 }

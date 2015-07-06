@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.utils;
+package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -21,6 +20,9 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 /**
@@ -231,7 +233,6 @@ public class SearchListAdapter extends BaseAdapter {
             @Override
             public void run() {
                 searchListActionsHandler.onPlaceSearchPost(searchResult);
-                Toast.makeText(context, "OOOOO Bhai saab", Toast.LENGTH_SHORT).show();
             }
         });
     }

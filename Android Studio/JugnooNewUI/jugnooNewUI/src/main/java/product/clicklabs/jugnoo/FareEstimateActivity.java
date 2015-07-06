@@ -28,6 +28,8 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
+import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -36,8 +38,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
-import product.clicklabs.jugnoo.utils.SearchListActionsHandler;
-import product.clicklabs.jugnoo.utils.SearchListAdapter;
 import rmn.androidscreenlibrary.ASSL;
 
 public class FareEstimateActivity extends FragmentActivity {
@@ -115,8 +115,8 @@ public class FareEstimateActivity extends FragmentActivity {
 
         mapLite = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapLite)).getMap();
         if(mapLite != null) {
-            mapLite.getUiSettings().setAllGesturesEnabled(true);
-            mapLite.getUiSettings().setZoomGesturesEnabled(true);
+            mapLite.getUiSettings().setAllGesturesEnabled(false);
+            mapLite.getUiSettings().setZoomGesturesEnabled(false);
             mapLite.getUiSettings().setZoomControlsEnabled(false);
             mapLite.setMyLocationEnabled(true);
             mapLite.getUiSettings().setTiltGesturesEnabled(false);
@@ -188,15 +188,6 @@ public class FareEstimateActivity extends FragmentActivity {
                                         final double distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
                                         final double timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
 
-
-                                        final LatLng bound1 = new LatLng(jObj.getJSONArray("routes").getJSONObject(0).getJSONObject("bounds").getJSONObject("northeast").getDouble("lat"),
-                                            jObj.getJSONArray("routes").getJSONObject(0).getJSONObject("bounds").getJSONObject("northeast").getDouble("lng"));
-                                        final LatLng bound2 = new LatLng(jObj.getJSONArray("routes").getJSONObject(0).getJSONObject("bounds").getJSONObject("southwest").getDouble("lat"),
-                                            jObj.getJSONArray("routes").getJSONObject(0).getJSONObject("bounds").getJSONObject("northeast").getDouble("lng"));
-                                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                                        builder.include(bound1).include(bound2);
-                                        final LatLngBounds latLngBounds = builder.build();
-
                                         runOnUiThread(new Runnable() {
 
                                             @Override
@@ -207,11 +198,16 @@ public class FareEstimateActivity extends FragmentActivity {
                                                     listViewDropLocationSearch.setVisibility(View.GONE);
                                                     linearLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
 
+                                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
                                                     PolylineOptions polylineOptions = new PolylineOptions();
                                                     polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
                                                     for (int z = 0; z < list.size(); z++) {
                                                         polylineOptions.add(list.get(z));
+                                                        builder.include(list.get(z));
                                                     }
+
+                                                    final LatLngBounds latLngBounds = builder.build();
 
                                                     mapLite.clear();
                                                     mapLite.addPolyline(polylineOptions);
@@ -245,10 +241,10 @@ public class FareEstimateActivity extends FragmentActivity {
 
 
                                                     DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
-                                                    double computedFare = Data.fareStructure.calculateFare(distanceValue/1000, timeValue/60);
+                                                    double computedFare = Data.fareStructure.calculateFare(distanceValue/1000, timeValue/60, 0);
                                                     double computedFarePlus = computedFare * 110.0/100.0;
                                                     double computedFareMinus = computedFare * 90.0/100.0;
-                                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFareMinus) + "-" +
+                                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFareMinus) + " - " +
                                                         getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFarePlus));
 
 
