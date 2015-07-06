@@ -735,7 +735,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             public void onClick(View v) {
                 drawerLayout.openDrawer(menuLayout);
                 hideAnims();
-                startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
+//                startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
             }
         });
 
