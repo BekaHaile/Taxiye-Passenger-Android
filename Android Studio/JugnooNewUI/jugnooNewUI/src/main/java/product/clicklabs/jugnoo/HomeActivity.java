@@ -292,7 +292,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
 
     //TODO check final variables
-    public static final long LOCATION_UPDATE_TIME_PERIOD = 6 * 10000; //in milliseconds
+    public static final long LOCATION_UPDATE_TIME_PERIOD = 1 * 10000; //in milliseconds
 
     public static final int RIDE_ELAPSED_PATH_COLOR = Color.RED;
     public static final int RIDE_LEFT_PATH = Color.BLUE;
@@ -991,6 +991,9 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                 promoCouponSelectedForRide = null;
                                 final LatLng requestLatLng = map.getCameraPosition().target;
                                 Data.pickupLatLng = requestLatLng;
+
+                                editTextAssigningDropLocation.setText("");
+                                editTextFinalDropLocation.setText("");
 
                                 promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
                             }
@@ -1837,7 +1840,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         stopDropLocationSearchUI(false);
 
                         if(Data.dropLatLng == null){
-                            relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+                            if ("".equalsIgnoreCase(Data.cSessionId)) {
+                                relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+                            }
+                            else{
+                                relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+                            }
                         }
                         else{
                             if(dropLocationMarker != null){
@@ -2506,7 +2514,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     @Override
     public void onBackPressed() {
         try {
-            if (PassengerScreenMode.P_SEARCH == passengerScreenMode || promoOpened) {
+            if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
+            }
+            else if (promoOpened && PassengerScreenMode.P_INITIAL == passengerScreenMode){
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
             }
@@ -3894,7 +3906,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
-                                DialogPopup.alertPopup(HomeActivity.this, "", "Driver has canceled the ride.");
+                                DialogPopup.alertPopup(HomeActivity.this, "", "Driver has cancelled the ride.");
                             }
                         }
                     });
@@ -4757,11 +4769,40 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            String separator = "; ";
+                            if(android.os.Build.MANUFACTURER.equalsIgnoreCase("Samsung")){
+                                separator = ", ";
+                            }
+
                             String numbers = "" + Data.emergencyContactsList.get(0).phoneNo;
                             if (Data.emergencyContactsList.size() > 1) {
-                                numbers = numbers + "," + Data.emergencyContactsList.get(1).phoneNo;
+                                numbers = numbers + separator + Data.emergencyContactsList.get(1).phoneNo;
                             }
-                            Utils.openSMSIntent(activity, numbers, "test");
+
+
+//                            Emergency Alert! 'So and so' needs your help.
+//                                Their alert location _____________________.
+//                                Driver Details : Name
+//                            Phone Number
+//                            Auto Details:  XXXXXXXXX"
+
+                            //https://www.google.co.in/maps/preview?q=30.723848,76.852293
+
+                            String locationLink = "https://maps.google.co.in/maps/preview?q=";
+                            if (myLocation != null) {
+                                locationLink = locationLink + myLocation.getLatitude() + "," + myLocation.getLongitude();
+                            } else {
+                                locationLink = locationLink + LocationFetcher.getSavedLatFromSP(activity) + "," + LocationFetcher.getSavedLngFromSP(activity);
+                            }
+
+                            String message = "Emergency Alert! "+Data.userData.userName+" needs your help.\n"+
+                                "Their alert location "+locationLink+".\n" +
+                                "Driver Details : "+Data.assignedDriverInfo.name+"\n" +
+                                Data.assignedDriverInfo.phoneNumber+"\n" +
+                                "Auto Details: "+Data.assignedDriverInfo.carNumber;
+
+                            Utils.openSMSIntent(activity, numbers, message);
                             raiseSOSAlertAPI(activity, SMS);
                         }
                     }, true, false);

@@ -19,8 +19,10 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
@@ -33,6 +35,7 @@ import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -57,6 +60,7 @@ public class FareEstimateActivity extends FragmentActivity {
     TextView textViewPickupLocation, textViewDropLocation, textViewEstimateTime, textViewEstimateDistance, textViewEstimateFare, textViewEstimateFareNote;
     Button buttonOk;
 
+    public ASSL assl;
 
     @Override
     protected void onResume() {
@@ -70,7 +74,7 @@ public class FareEstimateActivity extends FragmentActivity {
         setContentView(R.layout.activity_fare_estimate);
 
         relative = (LinearLayout) findViewById(R.id.relative);
-        new ASSL(this, relative, 1134, 720, false);
+        assl = new ASSL(this, relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
@@ -211,6 +215,22 @@ public class FareEstimateActivity extends FragmentActivity {
 
                                                     mapLite.clear();
                                                     mapLite.addPolyline(polylineOptions);
+
+
+                                                    MarkerOptions markerOptionsS = new MarkerOptions();
+                                                    markerOptionsS.title("Start");
+                                                    markerOptionsS.position(sourceLatLng);
+                                                    markerOptionsS.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
+                                                        assl, R.drawable.ic_small_pin_start)));
+                                                    mapLite.addMarker(markerOptionsS);
+
+                                                    MarkerOptions markerOptionsE = new MarkerOptions();
+                                                    markerOptionsE.title("Start");
+                                                    markerOptionsE.position(destLatLng);
+                                                    markerOptionsE.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
+                                                        assl, R.drawable.ic_small_pin_end)));
+                                                    mapLite.addMarker(markerOptionsE);
+
 
                                                     try {
                                                         new Handler().postDelayed(new Runnable() {

@@ -183,6 +183,14 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                             imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
                         }
                         linearLayoutEmergencyContact1Fields.setVisibility(View.GONE);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (editEC1 == 1) {
+                                    imageViewEmergencyContact1Edit.performClick();
+                                }
+                            }
+                        }, 250);
                     }
                 }
             }
@@ -220,6 +228,14 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         }
                         linearLayoutEmergencyContact2Fields.setVisibility(View.GONE);
                         closeEC1Layout();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(editEC2 == 1) {
+                                    imageViewEmergencyContact2Edit.performClick();
+                                }
+                            }
+                        }, 250);
                     }
                 }
                 else{
@@ -264,6 +280,10 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         imageViewEC1PickContact.setVisibility(View.VISIBLE);
                         buttonVerifyEC1.setVisibility(View.VISIBLE);
                         buttonVerifyEC1.setText("UPDATE");
+
+                        if(linearLayoutEmergencyContact1Fields.getVisibility() == View.GONE){
+                            relativeLayoutEmergencyContact1Top.performClick();
+                        }
                     } else {
                         editEC1 = 0;
 
@@ -303,6 +323,10 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         imageViewEC2PickContact.setVisibility(View.VISIBLE);
                         buttonVerifyEC2.setVisibility(View.VISIBLE);
                         buttonVerifyEC2.setText("UPDATE");
+
+                        if(linearLayoutEmergencyContact2Fields.getVisibility() == View.GONE){
+                            relativeLayoutEmergencyContact2Top.performClick();
+                        }
                     } else {
                         editEC2 = 0;
 
@@ -534,7 +558,12 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         buttonResendSMSEC1.setVisibility(View.GONE);
                     }
                     else{
-                        imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
+                        if(linearLayoutEmergencyContact1Fields.getVisibility() == View.GONE) {
+                            imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
+                        }
+                        else{
+                            imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_minus_icon);
+                        }
 
                         textViewEC1NotVerified.setVisibility(View.VISIBLE);
                         buttonResendSMSEC1.setVisibility(View.VISIBLE);
@@ -562,7 +591,12 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         buttonResendSMSEC2.setVisibility(View.GONE);
                     }
                     else{
-                        imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
+                        if(linearLayoutEmergencyContact2Fields.getVisibility() == View.GONE) {
+                            imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
+                        }
+                        else{
+                            imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_minus_icon);
+                        }
 
                         textViewEC2NotVerified.setVisibility(View.VISIBLE);
                         buttonResendSMSEC2.setVisibility(View.VISIBLE);
@@ -591,7 +625,12 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         buttonResendSMSEC1.setVisibility(View.GONE);
                     }
                     else{
-                        imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
+                        if(linearLayoutEmergencyContact1Fields.getVisibility() == View.GONE) {
+                            imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
+                        }
+                        else{
+                            imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_minus_icon);
+                        }
 
                         textViewEC1NotVerified.setVisibility(View.VISIBLE);
                         buttonResendSMSEC1.setVisibility(View.VISIBLE);
@@ -606,7 +645,12 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
 
                     imageViewEmergencyContact2Edit.setVisibility(View.GONE);
                     imageViewEC2PickContact.setVisibility(View.VISIBLE);
-                    imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
+                    if(linearLayoutEmergencyContact2Fields.getVisibility() == View.GONE) {
+                        imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
+                    }
+                    else{
+                        imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_minus_icon);
+                    }
 
                     buttonVerifyEC2.setVisibility(View.VISIBLE);
                     textViewEC2NotVerified.setVisibility(View.GONE);
@@ -625,7 +669,12 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
 
                     imageViewEmergencyContact1Edit.setVisibility(View.GONE);
                     imageViewEC1PickContact.setVisibility(View.VISIBLE);
-                    imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
+                    if(linearLayoutEmergencyContact1Fields.getVisibility() == View.GONE) {
+                        imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
+                    }
+                    else{
+                        imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_minus_icon);
+                    }
 
                     buttonVerifyEC1.setVisibility(View.VISIBLE);
                     textViewEC1NotVerified.setVisibility(View.GONE);
@@ -645,7 +694,12 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
 
                     imageViewEmergencyContact2Edit.setVisibility(View.GONE);
                     imageViewEC2PickContact.setVisibility(View.VISIBLE);
-                    imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
+                    if(linearLayoutEmergencyContact2Fields.getVisibility() == View.GONE) {
+                        imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
+                    }
+                    else{
+                        imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_minus_icon);
+                    }
 
                     buttonVerifyEC2.setVisibility(View.VISIBLE);
                     textViewEC2NotVerified.setVisibility(View.GONE);
@@ -865,6 +919,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                                     DialogPopup.dialogBanner(activity, message);
                                 }
                                 else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                    DialogPopup.dialogBanner(activity, message);
                                     getAllEmergencyContactsAPI(activity);
                                 }
                                 else{

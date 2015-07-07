@@ -82,6 +82,10 @@ public class SearchListAdapter extends BaseAdapter {
                     if (s.length() > 0) {
                         getSearchResults(s.toString().trim(), SearchListAdapter.this.searchPivotLatLng);
                     }
+                    else{
+                        autoCompleteSearchResultsForSearch.clear();
+                        setResults(autoCompleteSearchResultsForSearch);
+                    }
                 }
             });
         }
@@ -232,7 +236,9 @@ public class SearchListAdapter extends BaseAdapter {
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                searchListActionsHandler.onPlaceSearchPost(searchResult);
+                if(searchResult != null) {
+                    searchListActionsHandler.onPlaceSearchPost(searchResult);
+                }
             }
         });
     }

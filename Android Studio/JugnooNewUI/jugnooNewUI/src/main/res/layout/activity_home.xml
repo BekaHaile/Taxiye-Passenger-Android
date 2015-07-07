@@ -372,6 +372,7 @@
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
                     android:visibility="gone"
+                    android:animateLayoutChanges="true"
                     >
 
                     <!-- finding driver layout-->
@@ -464,6 +465,7 @@
                         android:layout_height="match_parent"
                         android:background="@color/transparent"
                         android:layout_below="@+id/relativeLayoutAssigningInfo"
+                        android:visibility="gone"
                         >
                         <RelativeLayout
                             android:id="@+id/relativeLayoutAssigningDropLocationBar"
@@ -531,6 +533,7 @@
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
                     android:visibility="visible"
+                    android:animateLayoutChanges="true"
 
                     >
 

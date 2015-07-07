@@ -529,9 +529,13 @@ public class JSONParser {
                             pickupLatitude = jObject.getString("pickup_latitude");
                             pickupLongitude = jObject.getString("pickup_longitude");
 
-                            if(jObject.has("op_drop_latitude") && jObject.has("op_drop_longitude")) {
-                                dropLatitude = jObject.getDouble("op_drop_latitude");
-                                dropLongitude = jObject.getDouble("op_drop_longitude");
+                            try {
+                                if(jObject.has("op_drop_latitude") && jObject.has("op_drop_longitude")) {
+                                    dropLatitude = jObject.getDouble("op_drop_latitude");
+                                    dropLongitude = jObject.getDouble("op_drop_longitude");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
 
                             if (jObject.has("driver_car_no")) {
@@ -969,7 +973,6 @@ public class JSONParser {
 //                "start_time": "00:30:00",
 //                "end_time": "16:30:00"
 //            }
-
 
             double fareFactor = jObj.getDouble("dynamic_factor");
             JSONArray jFareStructures = jObj.getJSONArray("fare_structure");
