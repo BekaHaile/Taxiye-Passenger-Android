@@ -216,9 +216,9 @@ public class JSONParser {
             emailVerificationStatus = userData.getInt("email_verification_status");
         }
 
-        if (userData.has("fare_factor")) {
-            fareFactor = userData.getDouble("fare_factor");
-        }
+//        if (userData.has("fare_factor")) {
+//            fareFactor = userData.getDouble("fare_factor");
+//        }
 
         if (userData.has("jugnoo_fb_banner")) {
             jugnooFbBanner = userData.getString("jugnoo_fb_banner");

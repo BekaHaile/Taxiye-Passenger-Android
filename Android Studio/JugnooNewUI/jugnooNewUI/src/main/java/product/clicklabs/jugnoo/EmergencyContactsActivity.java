@@ -179,7 +179,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                     closeEC2Layout();
                 } else if (linearLayoutEmergencyContact1Fields.getVisibility() == View.VISIBLE) {
                     if (emergencyContact1 != null) {
-                        if (emergencyContact1.verificationStatus == 1) {
+                        if (emergencyContact1.verificationStatus != 1) {
                             imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
                         }
                         linearLayoutEmergencyContact1Fields.setVisibility(View.GONE);
@@ -228,14 +228,16 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                         }
                         linearLayoutEmergencyContact2Fields.setVisibility(View.GONE);
                         closeEC1Layout();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(editEC2 == 1) {
-                                    imageViewEmergencyContact2Edit.performClick();
+                        if (emergencyContact2 != null){
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (editEC2 == 1) {
+                                        imageViewEmergencyContact2Edit.performClick();
+                                    }
                                 }
-                            }
-                        }, 250);
+                            }, 250);
+                        }
                     }
                 }
                 else{
@@ -605,7 +607,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                 }
                 else if(Data.emergencyContactsList.size() >= 1){
                     emergencyContact1 = Data.emergencyContactsList.get(0);
-                    emergencyContact2 = null;
+                    emergencyContact2 = null; editEC2 = 0;
 
                     textViewEmergencyContact1.setText(emergencyContact1.name);
                     editTextEC1Name.setText(emergencyContact1.name); editTextEC1Name.setEnabled(false);
@@ -645,6 +647,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
 
                     imageViewEmergencyContact2Edit.setVisibility(View.GONE);
                     imageViewEC2PickContact.setVisibility(View.VISIBLE);
+
                     if(linearLayoutEmergencyContact2Fields.getVisibility() == View.GONE) {
                         imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
                     }
@@ -659,8 +662,8 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                     buttonVerifyEC2.setText("VERIFY");
                 }
                 else{
-                    emergencyContact1 = null;
-                    emergencyContact2 = null;
+                    emergencyContact1 = null; editEC1 = 0;
+                    emergencyContact2 = null; editEC2 = 0;
 
                     textViewEmergencyContact1.setText("Primary Emergency Contact");
                     editTextEC1Name.setText(""); editTextEC1Name.setEnabled(true);
@@ -669,6 +672,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
 
                     imageViewEmergencyContact1Edit.setVisibility(View.GONE);
                     imageViewEC1PickContact.setVisibility(View.VISIBLE);
+
                     if(linearLayoutEmergencyContact1Fields.getVisibility() == View.GONE) {
                         imageViewEmergencyContact1PM.setImageResource(R.drawable.emergency_plus_icon);
                     }
@@ -694,6 +698,7 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
 
                     imageViewEmergencyContact2Edit.setVisibility(View.GONE);
                     imageViewEC2PickContact.setVisibility(View.VISIBLE);
+
                     if(linearLayoutEmergencyContact2Fields.getVisibility() == View.GONE) {
                         imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
                     }

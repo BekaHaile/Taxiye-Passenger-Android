@@ -70,7 +70,7 @@
                 android:layout_marginLeft="20px"
                 android:layout_toRightOf="@+id/imageViewDropLocationGPSIcon"
                 android:background="@color/transparent"
-                android:hint="Enter destination"
+                android:hint="Enter Destination"
                 android:singleLine="true"
                 android:textColor="@color/black_text"
                 android:textCursorDrawable="@null"

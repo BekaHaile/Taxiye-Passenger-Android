@@ -1379,9 +1379,29 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
             initialMyLocationBtnChangeLoc.setOnClickListener(mapMyLocationClick);
-            initialMyLocationBtnPromo.setOnClickListener(mapMyLocationClick);
             assigningMyLocationBtn.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
+
+            initialMyLocationBtnPromo.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    textViewInitialSearch.setText("");
+                    if (myLocation != null) {
+                        if (map.getCameraPosition().zoom < 12) {
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude()-0.04, myLocation.getLongitude()), 12));
+                        } else if (map.getCameraPosition().zoom < 15) {
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude()-0.005, myLocation.getLongitude()), 15));
+                        } else {
+                            map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
+                        reconnectLocationFetchers();
+                    }
+                    hideAnims();
+                }
+            });
 
 
         }
@@ -2692,12 +2712,19 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                 initialMyLocationBtn.setVisibility(View.GONE);
                                 changeLocalityBtn.setVisibility(View.VISIBLE);
                                 initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
+
+                                genieLayout.setVisibility(View.GONE);
+
                             } else {
                                 imageViewRideNow.setVisibility(View.VISIBLE);
 
                                 initialMyLocationBtn.setVisibility(View.VISIBLE);
                                 changeLocalityBtn.setVisibility(View.GONE);
                                 initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
+
+                                if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                                    genieLayout.setVisibility(View.VISIBLE);
+                                }
                             }
 
                             setFareFactorToInitialState();

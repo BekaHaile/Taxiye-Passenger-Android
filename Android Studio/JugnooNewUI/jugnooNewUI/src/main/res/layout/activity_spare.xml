@@ -252,12 +252,13 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:background="@drawable/background_white_yellow_selector"
                     >
 
                     <ImageView
                         android:layout_width="56px"
                         android:layout_height="38px"
-                        android:src="@drawable/ic_fe_pay"
+                        android:src="@drawable/ic_fe_pay_selector"
                         android:tag="mwar"
                         />
 
@@ -267,7 +268,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10px"
                         android:text="FARE ESTIMATE"
-                        android:textColor="@drawable/text_color_black_alpha_selector"
+                        android:textColor="@drawable/text_color_black_white_selector"
                         android:textSize="28px"
                         />
 
@@ -286,12 +287,13 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:background="@drawable/background_white_yellow_selector"
                     >
 
                     <ImageView
-                        android:layout_width="56px"
-                        android:layout_height="38px"
-                        android:src="@drawable/ic_fe_pay"
+                        android:layout_width="42px"
+                        android:layout_height="42px"
+                        android:src="@drawable/ic_fe_rate_selector"
                         android:tag="mwar"
                         />
 
@@ -301,7 +303,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10px"
                         android:text="RATE CARD"
-                        android:textColor="@drawable/text_color_black_alpha_selector"
+                        android:textColor="@drawable/text_color_black_white_selector"
                         android:textSize="28px"
                         />
 
