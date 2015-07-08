@@ -1083,6 +1083,11 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                     editTextEC1Email.setText(email);
                     editTextEC1Phone.setText(phone);
                     editTextEC1Name.setSelection(editTextEC1Name.getText().length());
+
+                    editTextEC1Name.setError(null);
+                    editTextEC1Email.setError(null);
+                    editTextEC1Phone.setError(null);
+
                     break;
 
                 case PICK_CONTACT_2:
@@ -1091,6 +1096,11 @@ public class EmergencyContactsActivity extends Activity implements RefreshEmerge
                     editTextEC2Email.setText(email);
                     editTextEC2Phone.setText(phone);
                     editTextEC2Name.setSelection(editTextEC2Name.getText().length());
+
+                    editTextEC2Name.setError(null);
+                    editTextEC2Email.setError(null);
+                    editTextEC2Phone.setError(null);
+
                     break;
             }
         }

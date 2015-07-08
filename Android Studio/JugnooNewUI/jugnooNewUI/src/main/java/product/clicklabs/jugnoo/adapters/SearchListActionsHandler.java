@@ -12,4 +12,5 @@ public interface SearchListActionsHandler {
     void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult);
     void onPlaceSearchPre();
     void onPlaceSearchPost(SearchResult searchResult);
+    void onPlaceSearchError();
 }

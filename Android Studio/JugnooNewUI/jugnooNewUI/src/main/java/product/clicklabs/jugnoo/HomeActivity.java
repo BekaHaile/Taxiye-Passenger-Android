@@ -176,8 +176,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     TextView textViewNearestDriverETA;
     RelativeLayout relativeLayoutInitialFareFactor;
     TextView textViewCurrentFareFactor;
-    Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn, initialMyLocationBtnPromo, buttonChalo;
-    LinearLayout linearLayoutPromo, linearLayoutCouponList;
+    Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn, buttonChalo;
+    LinearLayout linearLayoutPromo, linearLayoutCouponList, linearLayoutPromoShadow;
     ListView listViewPromotions;
     PromotionsListAdapter promotionsListAdapter;
     LinearLayout linearLayoutFareEstimate, linearLayoutRateCard;
@@ -462,10 +462,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         progressBarInitialSearch = (ProgressBar) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
 
-        initialMyLocationBtnPromo = (Button) findViewById(R.id.initialMyLocationBtnPromo); initialMyLocationBtnPromo.setVisibility(View.GONE);
         buttonChalo = (Button) findViewById(R.id.buttonChalo); buttonChalo.setTypeface(Fonts.latoRegular(this));
         linearLayoutPromo = (LinearLayout) findViewById(R.id.linearLayoutPromo); linearLayoutPromo.setVisibility(View.GONE);
         linearLayoutCouponList = (LinearLayout) findViewById(R.id.linearLayoutCouponList);
+        linearLayoutPromoShadow = (LinearLayout) findViewById(R.id.linearLayoutPromoShadow);
         ((TextView) findViewById(R.id.textViewPromoChooseCoupon)).setTypeface(Fonts.latoRegular(this));
         listViewPromotions = (ListView) findViewById(R.id.listViewPromotions);
 
@@ -483,7 +483,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 imageViewBack.setVisibility(View.VISIBLE);
                 genieLayout.setVisibility(View.GONE);
                 centreLocationRl.setVisibility(View.GONE);
-                initialMyLocationBtnPromo.setVisibility(View.VISIBLE);
                 linearLayoutPromo.setVisibility(View.VISIBLE);
 
                 if(totalPromoCoupons > 0){
@@ -549,6 +548,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 public void onPlaceSearchPost(SearchResult searchResult) {
                     DialogPopup.dismissLoadingDialog();
                     sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
+                }
+
+                @Override
+                public void onPlaceSearchError() {
+                    DialogPopup.dismissLoadingDialog();
                 }
             });
 
@@ -623,6 +627,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                     DialogPopup.dismissLoadingDialog();
                     sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
                 }
+
+                @Override
+                public void onPlaceSearchError() {
+                    DialogPopup.dismissLoadingDialog();
+                }
             });
         listViewFinalDropLocationSearch.setAdapter(dropLocationFinalSearchListAdapter);
 
@@ -667,6 +676,11 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         textViewInitialSearch.setText(searchResult.name);
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 14), 1000, null);
                     }
+                }
+
+                @Override
+                public void onPlaceSearchError() {
+                    progressBarInitialSearch.setVisibility(View.GONE);
                 }
             });
 
@@ -791,7 +805,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 switchPassengerScreen(passengerScreenMode);
             }
         });
-
 
         checkServerBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -1016,6 +1029,13 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                 promoCouponSelectedForRide = promotionsListAdapter.getSelectedCoupon();
                 int totalPromoCoupons = promotionsListAdapter.getCount();
                 callAnAutoPopup(HomeActivity.this, totalPromoCoupons, Data.pickupLatLng);
+            }
+        });
+
+        linearLayoutPromoShadow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageViewBack.performClick();
             }
         });
 
@@ -1381,28 +1401,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             initialMyLocationBtnChangeLoc.setOnClickListener(mapMyLocationClick);
             assigningMyLocationBtn.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
-
-            initialMyLocationBtnPromo.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    textViewInitialSearch.setText("");
-                    if (myLocation != null) {
-                        if (map.getCameraPosition().zoom < 12) {
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude()-0.04, myLocation.getLongitude()), 12));
-                        } else if (map.getCameraPosition().zoom < 15) {
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude()-0.005, myLocation.getLongitude()), 15));
-                        } else {
-                            map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
-                        reconnectLocationFetchers();
-                    }
-                    hideAnims();
-                }
-            });
-
 
         }
 
@@ -1788,7 +1786,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         changeLocalityBtn.setVisibility(View.GONE);
                         initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
-                        initialMyLocationBtnPromo.setVisibility(View.GONE);
                         linearLayoutPromo.setVisibility(View.GONE);
                         promoOpened = false;
 
@@ -2722,7 +2719,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                                 changeLocalityBtn.setVisibility(View.GONE);
                                 initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
-                                if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                                if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened){
                                     genieLayout.setVisibility(View.VISIBLE);
                                 }
                             }
@@ -3933,7 +3930,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
-                                DialogPopup.alertPopup(HomeActivity.this, "", "Driver has cancelled the ride.");
+                                DialogPopup.alertPopup(HomeActivity.this, "", "Your ride has been cancelled due to an unexpected issue");
                             }
                         }
                     });
@@ -4783,63 +4780,100 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
     private void sosDialog(final Activity activity) {
         if (Data.emergencyContactsList != null) {
-            if (Data.emergencyContactsList.size() > 0) {
+            boolean sosContactVerified = false;
+            String primaryPhone = "", phoneString = "";
+            EmergencyContact emergencyContact1 = null, emergencyContact2 = null;
 
-                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL", "SMS",
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Utils.openCallIntent(activity, Data.emergencyContactsList.get(0).phoneNo);
-                            raiseSOSAlertAPI(activity, CALL);
-                        }
-                    },
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+            String separator = "; ";
+            if(android.os.Build.MANUFACTURER.equalsIgnoreCase("Samsung")){
+                separator = ", ";
+            }
 
-                            String separator = "; ";
-                            if(android.os.Build.MANUFACTURER.equalsIgnoreCase("Samsung")){
-                                separator = ", ";
-                            }
+            if(Data.emergencyContactsList.size() > 1){
+                if(1 == Data.emergencyContactsList.get(0).verificationStatus && 1 == Data.emergencyContactsList.get(1).verificationStatus){
+                    sosContactVerified = true;
+                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+                    phoneString = Data.emergencyContactsList.get(0).phoneNo + separator + Data.emergencyContactsList.get(1).phoneNo;
+                }
+                else if(1 == Data.emergencyContactsList.get(0).verificationStatus){
+                    sosContactVerified = true;
+                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
+                }
+                else if(1 == Data.emergencyContactsList.get(1).verificationStatus){
+                    sosContactVerified = true;
+                    primaryPhone = Data.emergencyContactsList.get(1).phoneNo;
+                    phoneString = Data.emergencyContactsList.get(1).phoneNo;
+                }
+                else{
+                    sosContactVerified = false;
+                }
+            }
+            else if(Data.emergencyContactsList.size() > 0){
+                if(1 == Data.emergencyContactsList.get(0).verificationStatus){
+                    sosContactVerified = true;
+                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
+                }
+                else{
+                    sosContactVerified = false;
+                }
+            }
+            else{
+                sosContactVerified = false;
+            }
 
-                            String numbers = "" + Data.emergencyContactsList.get(0).phoneNo;
-                            if (Data.emergencyContactsList.size() > 1) {
-                                numbers = numbers + separator + Data.emergencyContactsList.get(1).phoneNo;
-                            }
+
+            if(sosContactVerified){
+                sosAlertDialog(activity, primaryPhone, phoneString);
+            }
+            else{
+                call100Dialog(activity);
+            }
+
+        } else {
+            call100Dialog(activity);
+        }
+    }
 
 
+    private void sosAlertDialog(final Activity activity, final String primaryPhone, final String phoneString){
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL", "SMS",
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utils.openCallIntent(activity, primaryPhone);
+                    raiseSOSAlertAPI(activity, CALL);
+                }
+            },
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
 //                            Emergency Alert! 'So and so' needs your help.
 //                                Their alert location _____________________.
 //                                Driver Details : Name
 //                            Phone Number
 //                            Auto Details:  XXXXXXXXX"
 
-                            //https://www.google.co.in/maps/preview?q=30.723848,76.852293
+                    //https://www.google.co.in/maps/preview?q=30.723848,76.852293
 
-                            String locationLink = "https://maps.google.co.in/maps/preview?q=";
-                            if (myLocation != null) {
-                                locationLink = locationLink + myLocation.getLatitude() + "," + myLocation.getLongitude();
-                            } else {
-                                locationLink = locationLink + LocationFetcher.getSavedLatFromSP(activity) + "," + LocationFetcher.getSavedLngFromSP(activity);
-                            }
+                    String locationLink = "https://maps.google.co.in/maps/preview?q=";
+                    if (myLocation != null) {
+                        locationLink = locationLink + myLocation.getLatitude() + "," + myLocation.getLongitude();
+                    } else {
+                        locationLink = locationLink + LocationFetcher.getSavedLatFromSP(activity) + "," + LocationFetcher.getSavedLngFromSP(activity);
+                    }
 
-                            String message = "Emergency Alert! "+Data.userData.userName+" needs your help.\n"+
-                                "Their alert location "+locationLink+".\n" +
-                                "Driver Details : "+Data.assignedDriverInfo.name+"\n" +
-                                Data.assignedDriverInfo.phoneNumber+"\n" +
-                                "Auto Details: "+Data.assignedDriverInfo.carNumber;
+                    String message = "Emergency Alert! "+Data.userData.userName+" needs your help.\n"+
+                        "Their alert location "+locationLink+".\n" +
+                        "Driver Details : "+Data.assignedDriverInfo.name+"\n" +
+                        Data.assignedDriverInfo.phoneNumber+"\n" +
+                        "Auto Details: "+Data.assignedDriverInfo.carNumber;
 
-                            Utils.openSMSIntent(activity, numbers, message);
-                            raiseSOSAlertAPI(activity, SMS);
-                        }
-                    }, true, false);
-
-            } else {
-                call100Dialog(activity);
-            }
-        } else {
-            call100Dialog(activity);
-        }
+                    Utils.openSMSIntent(activity, phoneString, message);
+                    raiseSOSAlertAPI(activity, SMS);
+                }
+            }, true, false);
     }
 
     private void call100Dialog(final Activity activity) {

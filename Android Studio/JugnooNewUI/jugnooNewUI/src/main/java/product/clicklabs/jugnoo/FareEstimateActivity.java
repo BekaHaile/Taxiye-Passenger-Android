@@ -110,7 +110,11 @@ public class FareEstimateActivity extends FragmentActivity {
             @Override
             public void onPlaceSearchPost(SearchResult searchResult) {
                 getDirectionsAndComputeFare(Data.pickupLatLng, searchResult.latLng);
+            }
 
+            @Override
+            public void onPlaceSearchError() {
+                DialogPopup.dismissLoadingDialog();
             }
         });
         listViewDropLocationSearch.setAdapter(searchListAdapter);
@@ -177,6 +181,7 @@ public class FareEstimateActivity extends FragmentActivity {
                             if (sourceLatLng != null && destLatLng != null) {
                                 String url = MapUtils.makeDirectionsURL(sourceLatLng, destLatLng);
                                 Log.i("url", "=" + url);
+                                HttpRequester.setTimeouts(30000);
                                 String result = new HttpRequester().getJSONFromUrl(url);
                                 Log.i("result", "=" + result);
                                 if (result != null) {
@@ -280,7 +285,7 @@ public class FareEstimateActivity extends FragmentActivity {
 
                                             @Override
                                             public void run() {
-                                                DialogPopup.alertPopup(FareEstimateActivity.this, "", "No path between selected pickup and drop location");
+                                                DialogPopup.alertPopup(FareEstimateActivity.this, "", "Fare could not be estimated between the selected pickup and drop location");
                                             }
                                         });
                                     }

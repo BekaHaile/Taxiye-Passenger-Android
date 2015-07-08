@@ -245,6 +245,18 @@ public class Utils {
         }
     }
 
+
+    public static boolean checkIfOnlyDigits(String strTocheck){
+        String regex = "[0-9+]+";
+        if(strTocheck.matches(regex)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
     public static boolean isPhoneValid(CharSequence phone) {
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }

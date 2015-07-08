@@ -239,6 +239,9 @@ public class SearchListAdapter extends BaseAdapter {
                 if(searchResult != null) {
                     searchListActionsHandler.onPlaceSearchPost(searchResult);
                 }
+                else{
+                    searchListActionsHandler.onPlaceSearchError();
+                }
             }
         });
     }
