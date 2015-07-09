@@ -291,6 +291,7 @@ public class MapUtils {
 			//https://maps.googleapis.com/maps/api/place/autocomplete/json?input=pizza&type=address&location=30.75,76.78&radius=500&key=
 			//AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
 			ignr2 = ignr2.replaceAll(" ", "%20");
+            HttpRequester.setTimeouts(30000);
 			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
 			Log.e("getAutoCompleteSearchResultsFromGooglePlaces", "=jsonObj"+jsonObj);
 			JSONArray info = null;
@@ -325,6 +326,7 @@ public class MapUtils {
 			String ignr2 = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId +"&key="+Config.getMapsBrowserKey();
 			//https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJqX9P5SDtDzkR2oUORhzrAhs&key=AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
 			ignr2 = ignr2.replaceAll(" ", "%20");
+            HttpRequester.setTimeouts(30000);
 			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
 			JSONObject info = null;
 			info = jsonObj.getJSONObject("result");

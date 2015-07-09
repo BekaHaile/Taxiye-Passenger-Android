@@ -34,7 +34,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class FeedbackActivity extends Activity {
@@ -75,7 +74,7 @@ public class FeedbackActivity extends Activity {
         feedbackMode = FeedbackMode.SUPPORT;
 
         relative = (RelativeLayout) findViewById(R.id.relative);
-        new ASSL(this, (ViewGroup) relative, 1134, 720, false);
+        new ASSL(this, relative, 1134, 720, false);
 
         topBar = (RelativeLayout) findViewById(R.id.topBar);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
@@ -112,25 +111,6 @@ public class FeedbackActivity extends Activity {
         });
 
 
-        scrollView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetEditText();
-            }
-        });
-        topBar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetEditText();
-            }
-        });
-        linearLayoutMain.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetEditText();
-            }
-        });
-
         ratingBarFeedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -147,7 +127,6 @@ public class FeedbackActivity extends Activity {
                 } else if (rating > 4 && rating <= 5) {
                     textViewRateText.setText("Loved it");
                 }
-                resetEditText();
             }
         });
 
@@ -183,7 +162,6 @@ public class FeedbackActivity extends Activity {
                         }
                     }
                 }
-                resetEditText();
             }
         });
 
@@ -192,24 +170,9 @@ public class FeedbackActivity extends Activity {
             @Override
             public void onClick(View v) {
                 skipFeedbackForCustomerAsync(FeedbackActivity.this, Data.cEngagementId);
-                resetEditText();
             }
         });
 
-
-
-        editTextFeedback.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editTextFeedback.setHint("Please share your valuable feedback");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.smoothScrollTo(0, buttonSubmitFeedback.getTop());
-                    }
-                }, 200);
-            }
-        });
 
 
 
@@ -271,6 +234,13 @@ public class FeedbackActivity extends Activity {
 
                         textViewScroll.setLayoutParams(params_12);
                         textViewScroll.requestLayout();
+                        editTextFeedback.setHint("");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.smoothScrollTo(0, editTextFeedback.getBottom());
+                            }
+                        }, 200);
 
                     } else {
 
@@ -279,6 +249,7 @@ public class FeedbackActivity extends Activity {
                         params.height = 0;
                         textViewScroll.setLayoutParams(params);
                         textViewScroll.requestLayout();
+                        editTextFeedback.setHint("Please share your valuable feedback");
 
                     }
                 }
@@ -287,11 +258,6 @@ public class FeedbackActivity extends Activity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-    }
-
-    private void resetEditText(){
-        editTextFeedback.setHint("How did you like your experience with Jugnoo? Please share your valuable feedback");
-        Utils.hideSoftKeyboard(FeedbackActivity.this, editTextFeedback);
     }
 
 
