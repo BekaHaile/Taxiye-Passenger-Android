@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
-import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.GeniePositonsSaver;
 import product.clicklabs.jugnoo.utils.SimpleAnimator;
 
 
@@ -504,8 +504,7 @@ public class GenieService extends Service implements View.OnClickListener {
                 mParams.x = 0;
                 windowManager.updateViewLayout(chatheadView, mParams);
 
-                Prefs.with(GenieService.this).save("genie_params_x", mParams.x);
-                Prefs.with(GenieService.this).save("genie_params_y", mParams.y);
+                saveGenieParams(mParams);
 
                 updateAnimLayoutParams();
                 Log.v("timeTaken", "left " + (System.currentTimeMillis() - start));
@@ -515,17 +514,25 @@ public class GenieService extends Service implements View.OnClickListener {
     }
 
 
+    public void saveGenieParams(WindowManager.LayoutParams params) {
+        GeniePositonsSaver.writeGenieParams(params.x, params.y);
+    }
+
+
     /**
      *
      */
     private void reflectParams() {
         WindowManager.LayoutParams mParams = (WindowManager.LayoutParams) chatheadView.getLayoutParams();
+        int[] paramsSaved = GeniePositonsSaver.readGenieParams(this);
 
-        mParams.x = Prefs.with(GenieService.this).getInt("genie_params_x", 0);
-        mParams.y = Prefs.with(GenieService.this).getInt("genie_params_y", 0);
+        mParams.x = paramsSaved[0];
+        mParams.y = paramsSaved[1];
         windowManager.updateViewLayout(chatheadView, mParams);
 
     }
+
+
 
 
     /**
@@ -554,8 +561,7 @@ public class GenieService extends Service implements View.OnClickListener {
                 mParams.x = szWindow.x - chatheadView.getWidth();
                 windowManager.updateViewLayout(chatheadView, mParams);
 
-                Prefs.with(GenieService.this).save("genie_params_x", mParams.x);
-                Prefs.with(GenieService.this).save("genie_params_y", mParams.y);
+                saveGenieParams(mParams);
 
                 updateAnimLayoutParams();
                 Log.v("timeTaken", "right " + (System.currentTimeMillis() - start));

@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
-import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.GeniePositonsSaver;
 import rmn.androidscreenlibrary.ASSL;
 
 /**
@@ -323,28 +323,31 @@ public class GenieLayout {
     }
 
 
+
+
+
     public void saveGenieParams() {
-
-        Prefs.with(context).save("genie_params_x", getParamsF().x);
-        Prefs.with(context).save("genie_params_y", getParamsF().y);
-
+        GeniePositonsSaver.writeGenieParams(getParamsF().x, getParamsF().y);
     }
 
     public void setGenieParams() {
         AbsoluteLayout.LayoutParams params = (AbsoluteLayout.LayoutParams) imageViewJugnoo.getLayoutParams();
 
-        if (Prefs.with(context).getInt("genie_params_y", 0) < (ASSL.Yscale() * 186)) {
-            shiftDownwardsFromTaskbar(Prefs.with(context).getInt("genie_params_x", 0),
-                Prefs.with(context).getInt("genie_params_y", 0));
-        } else {
-            params.x = Prefs.with(context).getInt("genie_params_x", 0);
-            params.y = Prefs.with(context).getInt("genie_params_y", 0);
-        }
+        int[] paramsSaved = GeniePositonsSaver.readGenieParams(context);
 
+        if (paramsSaved[1] < (ASSL.Yscale() * 186)) {
+            Log.d("Genie needs to shifted", "");
+            shiftDownwardsFromTaskbar(paramsSaved[0],
+                paramsSaved[1]);
+        } else {
+            params.x = paramsSaved[0];
+            params.y = paramsSaved[1];
+        }
 
         absoluteLayout.updateViewLayout(imageViewJugnoo, params);
         updateAnimLayoutParams();
     }
+
 
 
     public void callGetToDefaultPosition(){
