@@ -106,6 +106,7 @@ public class GenieService extends Service implements View.OnClickListener {
         imageViewAutos2.setOnClickListener(this);
 
 
+
         final WindowManager.LayoutParams paramsA = new WindowManager.LayoutParams(
                 112,
                 550,
@@ -1454,8 +1455,6 @@ public class GenieService extends Service implements View.OnClickListener {
                 if (!mealsAnimating1) {
                     try {
                         CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.MEALS_PACKAGE);
-                        clearAnims();
-                        clearAnims2();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1465,8 +1464,6 @@ public class GenieService extends Service implements View.OnClickListener {
                 if (!mealsAnimating2) {
                     try {
                         CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.MEALS_PACKAGE);
-                        clearAnims();
-                        clearAnims2();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1476,8 +1473,6 @@ public class GenieService extends Service implements View.OnClickListener {
                 if (!fatafatAnimating1) {
                     try {
                         CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.FATAFAT_PACKAGE);
-                        clearAnims();
-                        clearAnims2();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1487,8 +1482,6 @@ public class GenieService extends Service implements View.OnClickListener {
                 if (!fatafatAnimating2) {
                     try {
                         CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.FATAFAT_PACKAGE);
-                        clearAnims();
-                        clearAnims2();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1498,8 +1491,6 @@ public class GenieService extends Service implements View.OnClickListener {
                 if (!autosAnimating1) {
                     try {
                         CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.AUTOS_PACKAGE);
-                        clearAnims();
-                        clearAnims2();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1509,8 +1500,6 @@ public class GenieService extends Service implements View.OnClickListener {
                 if (!autosAnimating2) {
                     try {
                         CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.AUTOS_PACKAGE);
-                        clearAnims();
-                        clearAnims2();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1518,6 +1507,17 @@ public class GenieService extends Service implements View.OnClickListener {
                 break;
         }
 
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                clearAnims();
+                clearAnims2();
+            }
+        }, 500);
+
     }
+
+
 }
 

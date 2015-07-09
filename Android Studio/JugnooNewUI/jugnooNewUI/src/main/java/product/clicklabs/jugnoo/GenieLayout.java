@@ -181,7 +181,7 @@ public class GenieLayout {
             public void onClick(View v) {
                 if (!mealsAnimating2) {
                     try {
-                        CustomAppLauncher.launchApp((Activity) context, AccessTokenGenerator.AUTOS_PACKAGE);
+                        CustomAppLauncher.launchApp((Activity) context, AccessTokenGenerator.MEALS_PACKAGE);
                         clearAnims();
                     } catch (Exception e) {
                         e.printStackTrace();

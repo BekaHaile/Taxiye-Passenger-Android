@@ -18,10 +18,12 @@ public class CustomAppLauncher {
 		        throw new PackageManager.NameNotFoundException();
 		    }
 		    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		    activity.startActivity(intent);
 		} catch (Exception e) {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+packageName));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			activity.startActivity(intent);
 		}
 	}
