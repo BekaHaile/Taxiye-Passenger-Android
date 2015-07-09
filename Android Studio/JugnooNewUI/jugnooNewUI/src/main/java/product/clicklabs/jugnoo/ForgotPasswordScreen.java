@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class ForgotPasswordScreen extends Activity {
@@ -123,17 +127,55 @@ public class ForgotPasswordScreen extends Activity {
 
                 if ("".equalsIgnoreCase(email)) {
                     editTextEmail.requestFocus();
-                    editTextEmail.setError("Please enter email");
+                    editTextEmail.setError("Please enter email or phone number");
                 } else {
-                    if (isEmailValid(email)) {
-                        forgotPasswordAsync(ForgotPasswordScreen.this, email);
-                        FlurryEventLogger.forgotPasswordClicked(email);
+                    boolean onlyDigits = Utils.checkIfOnlyDigits(email);
+                    if (onlyDigits) {
+                        email = Utils.retrievePhoneNumberTenChars(email);
+                        if (!Utils.validPhoneNumber(email)) {
+                            editTextEmail.requestFocus();
+                            editTextEmail.setError("Please enter valid phone number");
+                        } else {
+                            email = "+91" + email;
+                            forgotPasswordAsync(ForgotPasswordScreen.this, email, true);
+                            FlurryEventLogger.emailLoginClicked(email);
+                        }
                     } else {
-                        editTextEmail.requestFocus();
-                        editTextEmail.setError("Please enter valid email");
+                        if (isEmailValid(email)) {
+                            forgotPasswordAsync(ForgotPasswordScreen.this, email, false);
+                            FlurryEventLogger.forgotPasswordClicked(email);
+                        } else {
+                            editTextEmail.requestFocus();
+                            editTextEmail.setError("Please enter valid email");
+                        }
                     }
                 }
 
+            }
+        });
+
+        editTextEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Utils.checkIfOnlyDigits(s.toString())) {
+                    InputFilter[] fArray = new InputFilter[1];
+                    fArray[0] = new InputFilter.LengthFilter(10);
+                    editTextEmail.setFilters(fArray);
+                } else {
+                    InputFilter[] fArray = new InputFilter[1];
+                    fArray[0] = new InputFilter.LengthFilter(1000);
+                    editTextEmail.setFilters(fArray);
+                }
             }
         });
 
@@ -207,16 +249,21 @@ public class ForgotPasswordScreen extends Activity {
     /**
      * ASync for register from server
      */
-    public void forgotPasswordAsync(final Activity activity, final String email) {
+    public void forgotPasswordAsync(final Activity activity, final String email, boolean isPhoneNumber) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
             RequestParams params = new RequestParams();
 
-            params.put("email", email);
+            if(isPhoneNumber){
+                params.put("phone_no", email);
+            }
+            else{
+                params.put("email", email);
+            }
 
-            Log.i("email", "=" + email);
+            Log.i("params", "=" + params);
 
             AsyncHttpClient client = Data.getClient();
             client.post(Config.getServerUrl() + "/forgot_password", params,

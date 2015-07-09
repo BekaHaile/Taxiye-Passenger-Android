@@ -73,6 +73,7 @@
     
     <color name="yellow_text">#FABB15</color>   
     <color name="grey_text">#232323</color>
+    <color name="grey_text_alpha">#77232323</color>
 
 
 

@@ -318,9 +318,9 @@ public class GCMIntentService extends IntentService {
                             } else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
                                 if (HomeActivity.appInterruptHandler != null) {
                                     HomeActivity.appInterruptHandler.startRideForCustomer(1);
-                                    notificationManagerResume(this, "Driver has canceled the ride.", false);
+                                    notificationManagerResume(this, "Your ride has been cancelled due to an unexpected issue", false);
                                 } else {
-                                    notificationManager(this, "Driver has canceled the ride.", false);
+                                    notificationManager(this, "Your ride has been cancelled due to an unexpected issue", false);
                                 }
                             } else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
                                 String message1 = jObj.getString("message");

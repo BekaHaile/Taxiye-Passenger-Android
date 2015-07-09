@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text_alpha"
                     android:textSize="40px"
-                    android:text="Rate your Jugnoo Experience."
+                    android:text="Rate your Jugnoo Experience"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="54px"
                     />

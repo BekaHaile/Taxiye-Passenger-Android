@@ -6,6 +6,9 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,6 +50,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class SplashLogin extends Activity implements LocationUpdate{
@@ -151,34 +155,71 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		
 		
 		buttonEmailLogin.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String email = editTextEmail.getText().toString().trim();
-				String password = editTextPassword.getText().toString().trim();
-				if("".equalsIgnoreCase(email)){
-					editTextEmail.requestFocus();
-					editTextEmail.setError("Please enter email");
-				}
-				else{
-					if("".equalsIgnoreCase(password)){
-						editTextPassword.requestFocus();
-						editTextPassword.setError("Please enter password");
-					}
-					else{
-						if(isEmailValid(email)){
-							enteredEmail = email;
-							sendLoginValues(SplashLogin.this, email, password);
-							FlurryEventLogger.emailLoginClicked(email);
-						}
-						else{
-							editTextEmail.requestFocus();
-							editTextEmail.setError("Please enter valid email");
-						}
-					}
-				}
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                String email = editTextEmail.getText().toString().trim();
+                String password = editTextPassword.getText().toString().trim();
+                if ("".equalsIgnoreCase(email)) {
+                    editTextEmail.requestFocus();
+                    editTextEmail.setError("Please enter email or phone number");
+                } else {
+                    if ("".equalsIgnoreCase(password)) {
+                        editTextPassword.requestFocus();
+                        editTextPassword.setError("Please enter password");
+                    } else {
+                        boolean onlyDigits = Utils.checkIfOnlyDigits(email);
+                        if (onlyDigits) {
+                            email = Utils.retrievePhoneNumberTenChars(email);
+                            if (!Utils.validPhoneNumber(email)) {
+                                editTextEmail.requestFocus();
+                                editTextEmail.setError("Please enter valid phone number");
+                            } else {
+                                email = "+91" + email;
+                                sendLoginValues(SplashLogin.this, email, password, true);
+                                FlurryEventLogger.emailLoginClicked(email);
+                            }
+                        } else {
+                            if (isEmailValid(email)) {
+                                enteredEmail = email;
+                                sendLoginValues(SplashLogin.this, email, password, false);
+                                FlurryEventLogger.emailLoginClicked(email);
+                            } else {
+                                editTextEmail.requestFocus();
+                                editTextEmail.setError("Please enter valid email");
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+
+        editTextEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(Utils.checkIfOnlyDigits(s.toString())){
+                    InputFilter[] fArray = new InputFilter[1];
+                    fArray[0] = new InputFilter.LengthFilter(10);
+                    editTextEmail.setFilters(fArray);
+                }
+                else{
+                    InputFilter[] fArray = new InputFilter[1];
+                    fArray[0] = new InputFilter.LengthFilter(1000);
+                    editTextEmail.setFilters(fArray);
+                }
+            }
+        });
 		
 		
 		
@@ -323,7 +364,9 @@ public class SplashLogin extends Activity implements LocationUpdate{
         }
 		
 	}
-	
+
+
+
 	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
 		@Override
 		public void facebookLoginDone() {
@@ -374,7 +417,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		super.onPause();
+        super.onPause();
 		
 	}
 	
@@ -412,7 +455,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 	/**
 	 * ASync for login from server
 	 */
-	public void sendLoginValues(final Activity activity, final String emailId, String password) {
+	public void sendLoginValues(final Activity activity, final String emailId, String password, final boolean isPhoneNumber) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -423,8 +466,13 @@ public class SplashLogin extends Activity implements LocationUpdate{
 				Data.latitude = Data.locationFetcher.getLatitude();
 				Data.longitude = Data.locationFetcher.getLongitude();
 			}
-			
-			params.put("email", emailId);
+
+            if(isPhoneNumber){
+                params.put("phone_no", emailId);
+            }
+            else{
+                params.put("email", emailId);
+            }
 			params.put("password", password);
 			params.put("device_token", Data.deviceToken);
 			params.put("device_type", Data.DEVICE_TYPE);
@@ -453,7 +501,7 @@ public class SplashLogin extends Activity implements LocationUpdate{
 			
 		
 			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/login_using_email", params,
+			client.post(Config.getServerUrl() + "/login_using_email_or_phone_no", params,
 					new CustomAsyncHttpResponseHandler() {
 					private JSONObject jObj;
 
@@ -484,7 +532,9 @@ public class SplashLogin extends Activity implements LocationUpdate{
 										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-										enteredEmail = emailId;
+                                        if(!isPhoneNumber) {
+                                            enteredEmail = emailId;
+                                        }
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
 										otpErrorMsg = jObj.getString("error");
