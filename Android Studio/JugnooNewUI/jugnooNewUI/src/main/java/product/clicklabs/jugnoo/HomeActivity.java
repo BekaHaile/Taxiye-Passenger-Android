@@ -1685,6 +1685,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
+                        genieLayout.setVisibility(View.GONE);
 
                         scrollViewEndRide.scrollTo(0, 0);
 
@@ -2935,6 +2936,14 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         }
 
         callMapTouchedRefreshDrivers();
+
+        if (userMode == UserMode.PASSENGER &&
+            (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
+            if (map != null && myLocation != null) {
+                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+            }
+        }
+
     }
 
 

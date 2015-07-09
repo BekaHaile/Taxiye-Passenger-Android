@@ -17,9 +17,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -240,6 +242,7 @@ public class SearchListAdapter extends BaseAdapter {
                     searchListActionsHandler.onPlaceSearchPost(searchResult);
                 }
                 else{
+                    DialogPopup.alertPopup((Activity) context, "", Data.CHECK_INTERNET_MSG);
                     searchListActionsHandler.onPlaceSearchError();
                 }
             }
