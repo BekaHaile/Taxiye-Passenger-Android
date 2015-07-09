@@ -1866,10 +1866,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             }
                         }
                         else{
-                            if(dropLocationMarker != null){
-                                dropLocationMarker.remove();
-                            }
-                            dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+                            setDropLocationMarker();
                             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                         }
 
@@ -1941,16 +1938,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             stopDropLocationSearchUI(true);
                         }
 
-                        if(Data.dropLatLng == null){
-                            relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
-                        }
-                        else{
-                            if(dropLocationMarker != null){
-                                dropLocationMarker.remove();
-                            }
-                            dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
-                            relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
-                        }
+                        setDropLocationEngagedUI();
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddJugnooCash.setVisibility(View.GONE);
@@ -2013,13 +2001,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        if(Data.dropLatLng != null){
-                            if(dropLocationMarker != null){
-                                dropLocationMarker.remove();
-                            }
-                            dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
-                        }
-                        relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+                        stopDropLocationSearchUI(true);
+                        setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
 
@@ -2190,6 +2173,26 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             e.printStackTrace();
         }
     }
+
+
+
+    private void setDropLocationEngagedUI(){
+        if(Data.dropLatLng == null){
+            relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
+        }
+        else{
+            setDropLocationMarker();
+            relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+        }
+    }
+
+    private void setDropLocationMarker(){
+        if(dropLocationMarker != null){
+            dropLocationMarker.remove();
+        }
+        dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+    }
+
 
     private void pauseAllTimers() {
         try {
