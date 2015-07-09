@@ -36,7 +36,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideCancellationActivity extends Activity implements ActivityCloser{
+public class RideCancellationActivity extends BaseActivity implements ActivityCloser{
 	
 	
 	LinearLayout relative;

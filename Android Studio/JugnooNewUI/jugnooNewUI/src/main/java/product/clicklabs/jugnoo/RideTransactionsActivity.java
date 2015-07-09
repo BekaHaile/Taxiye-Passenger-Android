@@ -43,7 +43,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideTransactionsActivity extends Activity implements UpdateRideTransaction {
+public class RideTransactionsActivity extends BaseActivity implements UpdateRideTransaction {
 
 	RelativeLayout relative;
 	

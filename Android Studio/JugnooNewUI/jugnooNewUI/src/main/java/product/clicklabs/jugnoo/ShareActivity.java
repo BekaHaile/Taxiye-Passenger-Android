@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,7 +23,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ShareActivity extends Activity{
+public class ShareActivity extends BaseActivity {
 	
 	RelativeLayout relative;
 	

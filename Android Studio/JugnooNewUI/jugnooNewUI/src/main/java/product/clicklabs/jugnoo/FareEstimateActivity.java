@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -43,7 +42,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class FareEstimateActivity extends FragmentActivity {
+public class FareEstimateActivity extends BaseFragmentActivity {
 
     LinearLayout relative;
 

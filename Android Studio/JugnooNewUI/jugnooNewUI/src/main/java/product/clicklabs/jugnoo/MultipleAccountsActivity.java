@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -22,7 +21,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class MultipleAccountsActivity extends Activity {
+public class MultipleAccountsActivity extends BaseActivity {
 
 	LinearLayout relative;
 

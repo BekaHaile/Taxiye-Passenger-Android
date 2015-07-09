@@ -45,7 +45,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
 
-public class PromotionsActivity extends Activity{
+public class PromotionsActivity extends BaseActivity{
 	
 	
 	RelativeLayout relative;

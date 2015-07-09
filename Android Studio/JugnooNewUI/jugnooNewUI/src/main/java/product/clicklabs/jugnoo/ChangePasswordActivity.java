@@ -32,7 +32,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ChangePasswordActivity extends Activity {
+public class ChangePasswordActivity extends BaseActivity {
 
 	LinearLayout relative;
 	

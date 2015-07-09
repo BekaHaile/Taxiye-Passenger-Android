@@ -53,7 +53,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashLogin extends Activity implements LocationUpdate{
+public class SplashLogin extends BaseActivity implements LocationUpdate{
 	
 	TextView textViewTitle;
 	ImageView imageViewBack;

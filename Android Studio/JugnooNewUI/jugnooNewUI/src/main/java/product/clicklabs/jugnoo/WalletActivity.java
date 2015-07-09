@@ -42,7 +42,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class WalletActivity extends Activity{
+public class WalletActivity extends BaseActivity{
 	
 	
 	LinearLayout relative;

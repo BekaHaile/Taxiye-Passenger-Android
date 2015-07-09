@@ -31,7 +31,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RequestDuplicateRegistrationActivity extends Activity {
+public class RequestDuplicateRegistrationActivity extends BaseActivity {
 
 	RelativeLayout relative;
 

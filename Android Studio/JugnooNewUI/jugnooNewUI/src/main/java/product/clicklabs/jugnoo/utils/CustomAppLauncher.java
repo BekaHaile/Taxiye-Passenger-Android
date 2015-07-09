@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.utils;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,7 +9,7 @@ public class CustomAppLauncher {
 
 	//product.clicklabs.postmygreetings
 	
-	public static void launchApp(Activity activity, String packageName){
+	public static void launchApp(Context activity, String packageName){
 		try {
 			Intent intent;
 			PackageManager manager = activity.getPackageManager();

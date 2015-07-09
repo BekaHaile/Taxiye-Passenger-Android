@@ -39,7 +39,7 @@ import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class OTPConfirmScreen extends Activity implements LocationUpdate{
+public class OTPConfirmScreen extends BaseActivity implements LocationUpdate{
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
