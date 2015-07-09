@@ -37,7 +37,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 
-import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -49,7 +48,6 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
-import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
