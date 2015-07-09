@@ -107,6 +107,13 @@ public class AccessTokenGenerator {
 				pair = new Pair<String, Integer>(accessToken, 0);
 				return pair;
 			}
+            else{
+                SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+                authKey = pref.getString("authKey", "");
+                if (!"".equalsIgnoreCase(authKey)) {
+                    saveAuthKey(context, authKey);
+                }
+            }
 		}
 		else{
 			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
