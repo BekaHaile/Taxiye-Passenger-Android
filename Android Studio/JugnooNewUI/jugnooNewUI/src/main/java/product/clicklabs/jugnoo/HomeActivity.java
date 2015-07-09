@@ -2814,13 +2814,16 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
                             boundsBuilder.include(userLatLng);
 
                             try {
-                                final LatLngBounds bounds = boundsBuilder.build();
-                                final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+//                                final LatLngBounds bounds = boundsBuilder.build();
+//                                final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         try {
-                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+//                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+
+                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), 15));
+
                                             mapTouchedOnce = true;
                                         } catch (Exception e) {
                                             e.printStackTrace();

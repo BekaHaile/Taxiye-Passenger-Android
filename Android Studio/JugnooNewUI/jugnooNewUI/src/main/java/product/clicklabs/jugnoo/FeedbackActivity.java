@@ -59,6 +59,7 @@ public class FeedbackActivity extends Activity {
 
     FeedbackMode feedbackMode = FeedbackMode.SUPPORT;
     int pastDriverId = 0, pastEngagementId = 0, position = 0;
+    boolean scrolled = false;
 
     @Override
     protected void onResume() {
@@ -72,6 +73,8 @@ public class FeedbackActivity extends Activity {
         setContentView(R.layout.activity_feedback);
 
         feedbackMode = FeedbackMode.SUPPORT;
+
+        scrolled = false;
 
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(this, relative, 1134, 720, false);
@@ -235,12 +238,15 @@ public class FeedbackActivity extends Activity {
                         textViewScroll.setLayoutParams(params_12);
                         textViewScroll.requestLayout();
                         editTextFeedback.setHint("");
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                scrollView.smoothScrollTo(0, editTextFeedback.getBottom());
-                            }
-                        }, 200);
+                        if(!scrolled) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    scrollView.smoothScrollTo(0, editTextFeedback.getBottom());
+                                }
+                            }, 200);
+                            scrolled = true;
+                        }
 
                     } else {
 
@@ -250,6 +256,7 @@ public class FeedbackActivity extends Activity {
                         textViewScroll.setLayoutParams(params);
                         textViewScroll.requestLayout();
                         editTextFeedback.setHint("Please share your valuable feedback");
+                        scrolled = false;
 
                     }
                 }
