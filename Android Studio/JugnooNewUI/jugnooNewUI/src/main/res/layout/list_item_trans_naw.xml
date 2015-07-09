@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/relative"
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="720px"
+     android:layout_height="108px"
+     android:background="@color/white"
+     android:orientation="vertical"
+     android:splitMotionEvents="false">
+
+    <RelativeLayout
+        android:layout_width="720px"
+        android:layout_height="108px">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/textViewTransactionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="36px"
+                android:text="27 Feb, 2015"
+                android:textColor="@color/black_text"
+                android:textSize="26px"/>
+
+            <TextView
+                android:id="@+id/textViewTransactionAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="36px"
+                android:text="Rs. 100"
+                android:textColor="@color/black_text"
+                android:textSize="31px"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px">
+
+            <TextView
+                android:id="@+id/textViewTransactionTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="36px"
+                android:text="12:00 PM"
+                android:textColor="@color/grey_dark"
+                android:textSize="26px"/>
+
+            <TextView
+                android:id="@+id/textViewTransactionType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="36px"
+                android:text="Cash Added"
+                android:textColor="@color/grey_dark"
+                android:textSize="26px"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/yellow"
+        android:layout_alignParentBottom="true"
+        />
+
+    </RelativeLayout>
+</LinearLayout>
