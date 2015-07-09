@@ -108,6 +108,7 @@ import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
 @SuppressLint("DefaultLocale")
@@ -909,7 +910,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, WalletActivity.class));
+                startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
             }
@@ -1211,8 +1212,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                WalletAddPaymentActivity.addPaymentPath = AddPaymentPath.FROM_IN_RIDE;
-                startActivity(new Intent(HomeActivity.this, WalletAddPaymentActivity.class));
+                PaymentActivity.addPaymentPath = AddPaymentPath.FROM_IN_RIDE;
+                startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
@@ -4747,7 +4748,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             @Override
                             public void onClick(View v) {
-                                HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
+//                                HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
+                                HomeActivity.this.startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                             }
                         },
@@ -4811,7 +4813,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (Data.emergencyContactsList != null) {
             boolean sosContactVerified = false;
             String primaryPhone = "", phoneString = "";
-            EmergencyContact emergencyContact1 = null, emergencyContact2 = null;
 
             String separator = "; ";
             if(android.os.Build.MANUFACTURER.equalsIgnoreCase("Samsung")){
