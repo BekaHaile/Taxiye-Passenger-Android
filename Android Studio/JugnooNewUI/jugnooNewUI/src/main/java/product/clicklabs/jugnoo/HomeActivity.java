@@ -472,8 +472,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         promotionsListAdapter = new PromotionsListAdapter(this, new PromotionListEventHandler() {
             @Override
             public void onDismiss() {
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
+                if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
+                }
             }
 
             @Override
