@@ -910,7 +910,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
-//                startActivity(new Intent(HomeActivity.this, WalletActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
             }
@@ -4797,7 +4796,6 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         if (Data.emergencyContactsList != null) {
             boolean sosContactVerified = false;
             String primaryPhone = "", phoneString = "";
-            EmergencyContact emergencyContact1 = null, emergencyContact2 = null;
 
             String separator = "; ";
             if(android.os.Build.MANUFACTURER.equalsIgnoreCase("Samsung")){
