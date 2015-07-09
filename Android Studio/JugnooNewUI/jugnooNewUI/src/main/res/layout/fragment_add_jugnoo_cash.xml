@@ -69,7 +69,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutDebitCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="70px">
 
         <ImageView
             android:id="@+id/imageViewSelectDebitCard"
@@ -94,7 +94,7 @@
     <!-- debit card details-->
     <LinearLayout
         android:id="@+id/linearLayoutDebitCardDetails"
-        android:layout_width="600px"
+        android:layout_width="620px"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
@@ -104,11 +104,12 @@
         <product.clicklabs.jugnoo.cardformat.CreditCardEditText
             android:id="@+id/editTextDebitCardNumber"
             android:inputType="number"
-            android:textColor="@color/color_card_details"
+            android:textColor="@color/color_payment_mode"
             android:layout_width="match_parent"
             android:layout_height="@dimen/card_details_layout_height"
             android:background="@drawable/payment_mode_edit_text_background"
             android:hint="@string/card_number"
+            android:textColorHint="@color/color_card_details"
             android:paddingLeft="@dimen/card_details_left_padding"
             android:textSize="@dimen/card_details_text_size"
             android:cursorVisible="true"
@@ -130,11 +131,12 @@
                 android:layout_weight="1"
                 android:inputType="number"
                 android:maxLength="2"
-                android:textColor="@color/color_card_details"
+                android:textColor="@color/color_payment_mode"
 
                 android:textCursorDrawable="@drawable/black_cursor"
                 android:background="@drawable/payment_mode_edit_text_background"
                 android:hint="@string/card_month"
+                android:textColorHint="@color/color_card_details"
                 android:paddingLeft="@dimen/card_details_left_padding"
                 android:textSize="@dimen/card_details_text_size" />
 
@@ -146,11 +148,12 @@
                 android:layout_weight="1"
                 android:inputType="number"
                 android:maxLength="4"
-                android:textColor="@color/color_card_details"
+                android:textColor="@color/color_payment_mode"
 
                 android:textCursorDrawable="@drawable/black_cursor"
                 android:background="@drawable/payment_mode_edit_text_background"
                 android:hint="@string/card_year"
+                android:textColorHint="@color/color_card_details"
                 android:paddingLeft="@dimen/card_details_left_padding"
                 android:textSize="@dimen/card_details_text_size" />
 
@@ -162,11 +165,12 @@
                 android:layout_weight="1"
                 android:inputType="numberPassword"
                 android:maxLength="4"
-                android:textColor="@color/color_card_details"
+                android:textColor="@color/color_payment_mode"
 
                 android:textCursorDrawable="@drawable/black_cursor"
                 android:background="@drawable/payment_mode_edit_text_background"
                 android:hint="@string/CVV"
+                android:textColorHint="@color/color_card_details"
                 android:paddingLeft="@dimen/card_details_left_padding"
                 android:textSize="@dimen/card_details_text_size" />
 
@@ -175,14 +179,15 @@
         <EditText
             android:id="@+id/editTextNameOnDebitCard"
             android:layout_width="match_parent"
-            android:textColor="@color/color_card_details"
             android:layout_height="@dimen/card_details_layout_height"
             android:layout_marginTop="19px"
             android:background="@drawable/payment_mode_edit_text_background"
             android:hint="@string/card_holder_name"
+            android:textColorHint="@color/color_card_details"
             android:cursorVisible="true"
-            android:inputType="textFilter"
+            android:inputType="textFilter|textCapCharacters"
             android:textCursorDrawable="@drawable/black_cursor"
+            android:textColor="@color/color_payment_mode"
             android:paddingLeft="@dimen/card_details_left_padding"
             android:textSize="@dimen/card_details_text_size" />
 
@@ -224,7 +229,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutCreditCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="70px">
 
         <ImageView
             android:id="@+id/imageViewSelectCreditCard"
@@ -249,7 +254,7 @@
     <!-- credit card details-->
     <LinearLayout
         android:id="@+id/linearLayoutCreditCardDetails"
-        android:layout_width="600px"
+        android:layout_width="620px"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
@@ -263,8 +268,9 @@
             android:layout_height="@dimen/card_details_layout_height"
             android:background="@drawable/payment_mode_edit_text_background"
             android:hint="@string/card_number"
+            android:textColorHint="@color/color_card_details"
             android:paddingLeft="@dimen/card_details_left_padding"
-            android:textColor="@color/color_card_details"
+            android:textColor="@color/color_payment_mode"
             android:textSize="@dimen/card_details_text_size"
             android:maxLength="19"
             android:cursorVisible="true"
@@ -285,11 +291,12 @@
                 android:layout_weight="1"
                 android:inputType="number"
                 android:maxLength="2"
-                android:textColor="@color/color_card_details"
+                android:textColor="@color/color_payment_mode"
 
                 android:textCursorDrawable="@drawable/black_cursor"
                 android:background="@drawable/payment_mode_edit_text_background"
                 android:hint="@string/card_month"
+                android:textColorHint="@color/color_card_details"
                 android:paddingLeft="@dimen/card_details_left_padding"
                 android:textSize="@dimen/card_details_text_size" />
 
@@ -301,11 +308,12 @@
                 android:layout_weight="1"
                 android:inputType="number"
                 android:maxLength="4"
-                android:textColor="@color/color_card_details"
+                android:textColor="@color/color_payment_mode"
 
                 android:textCursorDrawable="@drawable/black_cursor"
                 android:background="@drawable/payment_mode_edit_text_background"
                 android:hint="@string/card_year"
+                android:textColorHint="@color/color_card_details"
                 android:paddingLeft="@dimen/card_details_left_padding"
                 android:textSize="@dimen/card_details_text_size" />
 
@@ -317,11 +325,12 @@
                 android:layout_weight="1"
                 android:inputType="numberPassword"
                 android:maxLength="4"
-                android:textColor="@color/color_card_details"
+                android:textColor="@color/color_payment_mode"
 
                 android:textCursorDrawable="@drawable/black_cursor"
                 android:background="@drawable/payment_mode_edit_text_background"
                 android:hint="@string/CVV"
+                android:textColorHint="@color/color_card_details"
                 android:paddingLeft="@dimen/card_details_left_padding"
                 android:textSize="@dimen/card_details_text_size" />
 
@@ -332,12 +341,13 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/card_details_layout_height"
             android:layout_marginTop="19px"
-            android:textColor="@color/color_card_details"
+            android:textColor="@color/color_payment_mode"
             android:cursorVisible="true"
-            android:inputType="textFilter"
+            android:inputType="textFilter|textCapCharacters"
             android:textCursorDrawable="@drawable/black_cursor"
             android:background="@drawable/payment_mode_edit_text_background"
             android:hint="@string/card_holder_name"
+            android:textColorHint="@color/color_card_details"
             android:paddingLeft="@dimen/card_details_left_padding"
             android:textSize="@dimen/card_details_text_size" />
 
@@ -378,7 +388,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutNetBanking"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="70px">
 
         <ImageView
             android:id="@+id/imageViewSelectNetBanking"
@@ -409,15 +419,37 @@
         android:orientation="vertical"
         android:visibility="gone">
 
+        <RelativeLayout
+            android:layout_width="620px"
+            android:layout_height="81px"
+
+            android:background="@drawable/payment_mode_edit_text_background"
+            >
+
         <Spinner
             android:id="@+id/netBankingSpinner"
-            android:layout_width="600px"
-            android:layout_height="50px"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:textSize="26px"
+            android:padding="10px"
             android:gravity="left"
-            android:background="@color/white_light_grey"
+            android:spinnerMode="dialog"
+            android:background="@drawable/payment_mode_edit_text_background"
             android:textColor="@color/grey_text"
             />
+
+            <ImageView
+                android:layout_width="40px"
+                android:layout_height="23px"
+                android:background="@drawable/netbank_arrow"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30px"
+
+                />
+
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/netBankingErrorText"
@@ -435,10 +467,11 @@
             android:id="@+id/textViewRedirected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="20px"
             android:text="@string/redirect_to_bank"
             android:textColor="@color/color_jugnoo_cash_note"
-            android:textSize="@dimen/redirect_bank_text_size" />
+            android:textSize="22px" />
 
     </LinearLayout>
 
@@ -479,7 +512,7 @@
             android:id="@+id/nbPayButton"
             android:layout_width="648px"
             android:layout_height="100px"
-            android:layout_marginTop="@dimen/pay_now_top_margin"
+            android:layout_marginTop="30px"
             android:background="@drawable/button_yellow_selector"
             android:text="@string/pay_now"
             android:textColor="@drawable/text_color_white_alpha_selector"
@@ -490,19 +523,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/jugnoo_cash_note_top_margin"
+            android:layout_marginTop="24px"
             android:text="@string/jugnoo_cash_note"
             android:textColor="@color/color_jugnoo_cash_note"
-            android:textSize="@dimen/jugnoo_cash_note" />
+            android:textSize="18px" />
 
         <TextView
             android:id="@+id/textViewTermsAndConditions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24px"
             android:text="@string/view_terms_and_conditions"
             android:textColor="@color/color_jugnoo_cash_note"
-            android:textSize="@dimen/jugnoo_cash_note" />
+            android:visibility="gone"
+            android:textSize="18px" />
 
     </LinearLayout>
 

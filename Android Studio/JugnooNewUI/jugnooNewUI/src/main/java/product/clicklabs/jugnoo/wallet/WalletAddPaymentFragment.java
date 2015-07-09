@@ -223,7 +223,7 @@ try{
 //						double amount = Double.parseDouble(editTextAmount.getText().toString().trim());
                         int amountNew = Integer.parseInt(editTextAmount.getText().toString().trim());
                         if (AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-                            if(amountNew<1 || amountNew>5000) {
+                            if(amountNew<100 || amountNew>5000) {
                                 new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.amount_range));
                             } else {
 //                                paymentActivity.enterAmount = Double.toString(amount);

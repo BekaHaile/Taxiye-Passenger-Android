@@ -157,7 +157,7 @@ public class CreditCardEditText extends EditText implements CreditCardTextWatche
         mMaximumCreditCardLength = MAXIMUM_CREDIT_CARD_LENGTH;
         mNoMatchFoundDrawable = getResources().getDrawable(DEFAULT_NO_MATCH_FOUND_DRAWABLE);
         if (mNoMatchFoundDrawable != null) {
-            mNoMatchFoundDrawable.setBounds(0, 0, mNoMatchFoundDrawable.getIntrinsicWidth()*6/10, mNoMatchFoundDrawable.getIntrinsicHeight() * 6/10);
+            mNoMatchFoundDrawable.setBounds(0, 0, mNoMatchFoundDrawable.getIntrinsicWidth(), mNoMatchFoundDrawable.getIntrinsicHeight());
 
 
         }
@@ -209,7 +209,7 @@ public class CreditCardEditText extends EditText implements CreditCardTextWatche
 
     private void showRightDrawable(Drawable drawable) {
         if (drawable != null) {
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth() / 2, drawable.getIntrinsicHeight() / 2);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
             setCompoundDrawables(getCompoundDrawables()[0], getCompoundDrawables()[1], drawable, getCompoundDrawables()[3]);
         } else {
             mCurrentCreditCardMatch = null;

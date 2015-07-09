@@ -13,7 +13,7 @@
     <dimen name="menu_width">495px</dimen>
 
     <!--dimens used in activity_add_jugnoo_cash-->
-    <dimen name="select_payment_layout_height">85px</dimen>
+    <dimen name="select_payment_layout_height">75px</dimen>
     <dimen name="select_payment_text_size">24px</dimen>
     <dimen name="select_payment_left_margin">30px</dimen>
     <dimen name="select_payment_divider_height">2px</dimen>
@@ -24,18 +24,18 @@
     <dimen name="payment_modes_divider_height">1px</dimen>
     <dimen name="payment_modes_text_size">31px</dimen>
 
-    <dimen name="add_amount_top_margin">67px</dimen>
+    <dimen name="add_amount_top_margin">43px</dimen>
     <dimen name="add_amount_text_size">24px</dimen>
     <dimen name="add_amount_value_top_margin">30px</dimen>
     <dimen name="add_amount_value_text_size">64px</dimen>
 
-    <dimen name="pay_now_top_margin">49px</dimen>
+    <dimen name="pay_now_top_margin">30px</dimen>
 
     <dimen name="jugnoo_cash_note">16px</dimen>
     <dimen name="jugnoo_cash_note_top_margin">43px</dimen>
 
-    <dimen name="card_details_layout_height">45px</dimen>
-    <dimen name="card_details_text_size">23.06px</dimen>
+    <dimen name="card_details_layout_height">81px</dimen>
+    <dimen name="card_details_text_size">31px</dimen>
     <dimen name="card_details_left_padding">20px</dimen>
 
     <dimen name="save_card_margin_top">15px</dimen>
@@ -43,5 +43,6 @@
     <dimen name="save_card_details_text_size">15.37px</dimen>
 
     <dimen name="redirect_bank_text_size">19.21px</dimen>
+
 
 </resources>
