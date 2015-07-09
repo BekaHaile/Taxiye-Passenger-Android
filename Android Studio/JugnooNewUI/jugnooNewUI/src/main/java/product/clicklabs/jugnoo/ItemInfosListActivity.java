@@ -39,7 +39,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ItemInfosListActivity extends Activity{
+public class ItemInfosListActivity extends BaseActivity{
 	
 	
 	LinearLayout relative;

@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -34,7 +33,7 @@ import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ItemsCheckoutActivity extends Activity implements LocationUpdate{
+public class ItemsCheckoutActivity extends BaseActivity implements LocationUpdate{
 	
 	
 	LinearLayout relative;

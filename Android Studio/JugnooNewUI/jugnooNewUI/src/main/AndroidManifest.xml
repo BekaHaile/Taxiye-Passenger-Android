@@ -21,6 +21,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     
     
     
@@ -302,6 +304,19 @@
                 <action android:name="product.clicklabs.jugnoo.PUSH_PENDING_CALLS" />
             </intent-filter>
         </receiver>
+
+
+
+
+        <service
+            android:name=".GenieService"
+            android:exported="true"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="com.jugnoo.genie.GENIE_SERVICE" />
+            </intent-filter>
+        </service>
+
 
 
 

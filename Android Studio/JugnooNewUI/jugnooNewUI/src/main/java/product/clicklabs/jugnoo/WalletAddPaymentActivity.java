@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 
-public class WalletAddPaymentActivity extends Activity{
+public class WalletAddPaymentActivity extends BaseActivity{
 	
 	LinearLayout relative;
 	

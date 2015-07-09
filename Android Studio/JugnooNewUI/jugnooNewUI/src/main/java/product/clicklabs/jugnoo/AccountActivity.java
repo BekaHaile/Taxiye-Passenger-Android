@@ -47,7 +47,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class AccountActivity extends Activity {
+public class AccountActivity extends BaseActivity {
 
 	RelativeLayout relative;
 	

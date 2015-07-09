@@ -37,7 +37,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ForgotPasswordScreen extends Activity {
+public class ForgotPasswordScreen extends BaseActivity {
 
     TextView textViewTitle;
     ImageView imageViewBack;

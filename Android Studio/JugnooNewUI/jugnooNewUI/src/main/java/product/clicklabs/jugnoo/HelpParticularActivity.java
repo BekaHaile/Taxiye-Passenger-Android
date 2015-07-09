@@ -30,7 +30,7 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 
-public class HelpParticularActivity extends Activity {
+public class HelpParticularActivity extends BaseActivity {
 
 
     LinearLayout relative;

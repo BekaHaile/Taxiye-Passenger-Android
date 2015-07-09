@@ -40,7 +40,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class EmergencyContactsActivity extends Activity implements RefreshEmergencyContacts {
+public class EmergencyContactsActivity extends BaseActivity implements RefreshEmergencyContacts {
 
     LinearLayout relative;
 

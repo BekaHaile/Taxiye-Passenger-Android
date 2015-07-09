@@ -50,7 +50,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RegisterScreen extends Activity implements LocationUpdate {
+public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
     TextView textViewTitle;
     ImageView imageViewBack;

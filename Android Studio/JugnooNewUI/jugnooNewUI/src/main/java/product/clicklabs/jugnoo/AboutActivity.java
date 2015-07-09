@@ -18,7 +18,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends BaseActivity {
 
     RelativeLayout relative;
 

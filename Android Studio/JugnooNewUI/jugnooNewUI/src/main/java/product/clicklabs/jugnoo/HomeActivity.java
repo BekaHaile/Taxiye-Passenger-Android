@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
@@ -112,7 +111,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 @SuppressLint("DefaultLocale")
-public class HomeActivity extends FragmentActivity implements AppInterruptHandler, LocationUpdate {
+public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate {
 
 
     DrawerLayout drawerLayout;                                                                        // views declaration
@@ -2417,6 +2416,8 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
         intentFired = false;
         feedbackAutoSkipped = false;
 
+        genieLayout.setGenieParams();
+
         LocationInit.showLocationAlertDialog(this);
     }
 
@@ -2527,6 +2528,7 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             e.printStackTrace();
         }
 
+        genieLayout.saveGenieParams();
         clearAnims();
 
         super.onPause();
@@ -2537,6 +2539,10 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
     @Override
     public void onBackPressed() {
         try {
+            if (genieLayout.areJugnooIconsVisible()) {
+                genieLayout.hideAnims();
+            }
+
             if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
@@ -2553,6 +2559,12 @@ public class HomeActivity extends FragmentActivity implements AppInterruptHandle
             }
             else{
                 ActivityCompat.finishAffinity(this);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startService(new Intent(BaseActivity.GENIE_SERVICE));
+                    }
+                }, 2000);
             }
         } catch (Exception e) {
             e.printStackTrace();

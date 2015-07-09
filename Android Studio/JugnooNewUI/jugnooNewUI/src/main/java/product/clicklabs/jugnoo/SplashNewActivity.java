@@ -70,7 +70,7 @@ import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashNewActivity extends Activity implements LocationUpdate{
+public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 
     //adding drop location
 

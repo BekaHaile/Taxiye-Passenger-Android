@@ -31,7 +31,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ChangePhoneBeforeOTPActivity extends Activity{
+public class ChangePhoneBeforeOTPActivity extends BaseActivity {
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
