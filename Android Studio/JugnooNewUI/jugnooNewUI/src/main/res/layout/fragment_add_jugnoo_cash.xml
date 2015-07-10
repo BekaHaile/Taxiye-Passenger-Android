@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:animateLayoutChanges="true"
+    android:background="@color/white_light_grey"
+    android:orientation="vertical">
+
+    <!-- top bar-->
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="720px"
+        android:layout_height="96px"
+        android:background="@color/yellow">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/add_jugnoo_cash"
+            android:textColor="@color/white"
+            android:textSize="30.6px"/>
+
+        <RelativeLayout
+            android:id="@+id/layoutBackButton"
+            android:layout_width="100px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/imageViewBack"
+                android:layout_width="60.7px"
+                android:layout_height="76.9px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:padding="20px"
+                android:src="@drawable/back_white_selector"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true"
+            >
+
+            <!-- select payment mode-->
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSelectPayment"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/select_payment_layout_height">
+
+                <TextView
+                    android:id="@+id/textViewSelectPaymentMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:text="@string/select_payment_mode"
+                    android:textColor="@color/color_payment_mode"
+                    android:textSize="@dimen/select_payment_text_size"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/select_payment_divider_height"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/yellow"/>
+            </RelativeLayout>
+
+
+            <!-- debit card top-->
+            <RelativeLayout
+                android:id="@+id/relativeLayoutDebitCard"
+                android:layout_width="match_parent"
+                android:layout_height="70px">
+
+                <ImageView
+                    android:id="@+id/imageViewSelectDebitCard"
+                    android:layout_width="@dimen/payment_mode_selector"
+                    android:layout_height="@dimen/payment_mode_selector"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:background="@drawable/ic_payment_mode_unpressed"/>
+
+                <TextView
+                    android:id="@+id/textViewDebitCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/payment_mode_layout_min_height"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:layout_toRightOf="@+id/imageViewSelectDebitCard"
+                    android:gravity="center_vertical"
+                    android:text="@string/payment_mode_debit_card"
+                    android:textColor="@color/color_payment_mode"
+                    android:textSize="@dimen/payment_modes_text_size"/>
+            </RelativeLayout>
+
+            <!-- debit card details-->
+            <LinearLayout
+                android:id="@+id/linearLayoutDebitCardDetails"
+                android:layout_width="620px"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/card_details_left_padding"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <product.clicklabs.jugnoo.cardformat.CreditCardEditText
+                    android:id="@+id/editTextDebitCardNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/card_details_layout_height"
+                    android:background="@drawable/payment_mode_edit_text_background"
+                    android:cursorVisible="true"
+                    android:hint="@string/card_number"
+                    android:inputType="number"
+                    android:maxLength="19"
+                    android:paddingLeft="@dimen/card_details_left_padding"
+                    android:textColor="@color/color_payment_mode"
+                    android:textColorHint="@color/color_card_details"
+                    android:textCursorDrawable="@drawable/black_cursor"
+                    android:textSize="@dimen/card_details_text_size"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="19px"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <EditText
+                        android:id="@+id/editTextMonthDebitCard"
+                        android:layout_width="0px"
+                        android:layout_height="@dimen/card_details_layout_height"
+                        android:layout_marginRight="10px"
+                        android:layout_weight="1"
+                        android:background="@drawable/payment_mode_edit_text_background"
+                        android:hint="@string/card_month"
+                        android:inputType="number"
+
+                        android:maxLength="2"
+                        android:paddingLeft="@dimen/card_details_left_padding"
+                        android:textColor="@color/color_payment_mode"
+                        android:textColorHint="@color/color_card_details"
+                        android:textCursorDrawable="@drawable/black_cursor"
+                        android:textSize="@dimen/card_details_text_size"/>
+
+                    <EditText
+                        android:id="@+id/editTextYearDebitCard"
+                        android:layout_width="0px"
+                        android:layout_height="@dimen/card_details_layout_height"
+                        android:layout_marginRight="10px"
+                        android:layout_weight="1"
+                        android:background="@drawable/payment_mode_edit_text_background"
+                        android:hint="@string/card_year"
+                        android:inputType="number"
+
+                        android:maxLength="4"
+                        android:paddingLeft="@dimen/card_details_left_padding"
+                        android:textColor="@color/color_payment_mode"
+                        android:textColorHint="@color/color_card_details"
+                        android:textCursorDrawable="@drawable/black_cursor"
+                        android:textSize="@dimen/card_details_text_size"/>
+
+                    <EditText
+                        android:id="@+id/editTextCVVDebitCard"
+                        android:layout_width="0px"
+                        android:layout_height="@dimen/card_details_layout_height"
+                        android:layout_marginRight="10px"
+                        android:layout_weight="1"
+                        android:background="@drawable/payment_mode_edit_text_background"
+                        android:hint="@string/CVV"
+                        android:inputType="numberPassword"
+
+                        android:maxLength="4"
+                        android:paddingLeft="@dimen/card_details_left_padding"
+                        android:textColor="@color/color_payment_mode"
+                        android:textColorHint="@color/color_card_details"
+                        android:textCursorDrawable="@drawable/black_cursor"
+                        android:textSize="@dimen/card_details_text_size"/>
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/editTextNameOnDebitCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/card_details_layout_height"
+                    android:layout_marginTop="19px"
+                    android:background="@drawable/payment_mode_edit_text_background"
+                    android:cursorVisible="true"
+                    android:hint="@string/card_holder_name"
+                    android:inputType="textFilter|textCapCharacters"
+                    android:paddingLeft="@dimen/card_details_left_padding"
+                    android:textColor="@color/color_payment_mode"
+                    android:textColorHint="@color/color_card_details"
+                    android:textCursorDrawable="@drawable/black_cursor"
+                    android:textSize="@dimen/card_details_text_size"/>
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutSaveDebitCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/save_card_margin_top"
+                    android:layout_marginTop="@dimen/save_card_margin_top"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/imageViewSaveDebitCard"
+                        android:layout_width="@dimen/save_card_icon_size"
+                        android:layout_height="@dimen/save_card_icon_size"
+                        android:background="@drawable/ic_save_card_checked"/>
+
+                    <TextView
+                        android:id="@+id/textViewDebitCardDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:layout_toRightOf="@+id/imageViewSaveDebitCard"
+                        android:text="@string/save_card_details"
+                        android:textSize="@dimen/save_card_details_text_size"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/payment_modes_divider_height"
+                android:background="@color/yellow"/>
+
+
+            <!-- credit card top-->
+            <RelativeLayout
+                android:id="@+id/relativeLayoutCreditCard"
+                android:layout_width="match_parent"
+                android:layout_height="70px">
+
+                <ImageView
+                    android:id="@+id/imageViewSelectCreditCard"
+                    android:layout_width="@dimen/payment_mode_selector"
+                    android:layout_height="@dimen/payment_mode_selector"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:background="@drawable/ic_payment_mode_unpressed"/>
+
+                <TextView
+                    android:id="@+id/textViewCreditCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/payment_mode_layout_min_height"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:layout_toRightOf="@+id/imageViewSelectCreditCard"
+                    android:gravity="center_vertical"
+                    android:text="@string/payment_mode_credit_card"
+                    android:textColor="@color/color_payment_mode"
+                    android:textSize="@dimen/payment_modes_text_size"/>
+            </RelativeLayout>
+
+            <!-- credit card details-->
+            <LinearLayout
+                android:id="@+id/linearLayoutCreditCardDetails"
+                android:layout_width="620px"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/card_details_left_padding"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <product.clicklabs.jugnoo.cardformat.CreditCardEditText
+                    android:id="@+id/editTextCreditCardNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/card_details_layout_height"
+                    android:background="@drawable/payment_mode_edit_text_background"
+                    android:cursorVisible="true"
+                    android:hint="@string/card_number"
+                    android:inputType="number"
+                    android:maxLength="19"
+                    android:paddingLeft="@dimen/card_details_left_padding"
+                    android:textColor="@color/color_payment_mode"
+                    android:textColorHint="@color/color_card_details"
+                    android:textCursorDrawable="@drawable/black_cursor"
+                    android:textSize="@dimen/card_details_text_size"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="19px"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <EditText
+                        android:id="@+id/editTextMonthCreditCard"
+                        android:layout_width="0px"
+                        android:layout_height="@dimen/card_details_layout_height"
+                        android:layout_marginRight="10px"
+                        android:layout_weight="1"
+                        android:background="@drawable/payment_mode_edit_text_background"
+                        android:hint="@string/card_month"
+                        android:inputType="number"
+
+                        android:maxLength="2"
+                        android:paddingLeft="@dimen/card_details_left_padding"
+                        android:textColor="@color/color_payment_mode"
+                        android:textColorHint="@color/color_card_details"
+                        android:textCursorDrawable="@drawable/black_cursor"
+                        android:textSize="@dimen/card_details_text_size"/>
+
+                    <EditText
+                        android:id="@+id/editTextYearCreditCard"
+                        android:layout_width="0px"
+                        android:layout_height="@dimen/card_details_layout_height"
+                        android:layout_marginRight="10px"
+                        android:layout_weight="1"
+                        android:background="@drawable/payment_mode_edit_text_background"
+                        android:hint="@string/card_year"
+                        android:inputType="number"
+
+                        android:maxLength="4"
+                        android:paddingLeft="@dimen/card_details_left_padding"
+                        android:textColor="@color/color_payment_mode"
+                        android:textColorHint="@color/color_card_details"
+                        android:textCursorDrawable="@drawable/black_cursor"
+                        android:textSize="@dimen/card_details_text_size"/>
+
+                    <EditText
+                        android:id="@+id/editTextCVVCreditCard"
+                        android:layout_width="0px"
+                        android:layout_height="@dimen/card_details_layout_height"
+                        android:layout_marginRight="10px"
+                        android:layout_weight="1"
+                        android:background="@drawable/payment_mode_edit_text_background"
+                        android:hint="@string/CVV"
+                        android:inputType="numberPassword"
+
+                        android:maxLength="4"
+                        android:paddingLeft="@dimen/card_details_left_padding"
+                        android:textColor="@color/color_payment_mode"
+                        android:textColorHint="@color/color_card_details"
+                        android:textCursorDrawable="@drawable/black_cursor"
+                        android:textSize="@dimen/card_details_text_size"/>
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/editTextNameOnCreditCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/card_details_layout_height"
+                    android:layout_marginTop="19px"
+                    android:background="@drawable/payment_mode_edit_text_background"
+                    android:cursorVisible="true"
+                    android:hint="@string/card_holder_name"
+                    android:inputType="textFilter|textCapCharacters"
+                    android:paddingLeft="@dimen/card_details_left_padding"
+                    android:textColor="@color/color_payment_mode"
+                    android:textColorHint="@color/color_card_details"
+                    android:textCursorDrawable="@drawable/black_cursor"
+                    android:textSize="@dimen/card_details_text_size"/>
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutSaveCreditCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/save_card_margin_top"
+                    android:layout_marginTop="@dimen/save_card_margin_top"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/imageViewSaveCreditCard"
+                        android:layout_width="@dimen/save_card_icon_size"
+                        android:layout_height="@dimen/save_card_icon_size"
+                        android:background="@drawable/ic_save_card_checked"/>
+
+                    <TextView
+                        android:id="@+id/textViewCreditCardDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:layout_toRightOf="@+id/imageViewSaveCreditCard"
+                        android:text="@string/save_card_details"
+                        android:textSize="@dimen/save_card_details_text_size"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/payment_modes_divider_height"
+                android:background="@color/yellow"/>
+
+
+            <!-- net banking top-->
+            <RelativeLayout
+                android:id="@+id/relativeLayoutNetBanking"
+                android:layout_width="match_parent"
+                android:layout_height="70px">
+
+                <ImageView
+                    android:id="@+id/imageViewSelectNetBanking"
+                    android:layout_width="@dimen/payment_mode_selector"
+                    android:layout_height="@dimen/payment_mode_selector"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:background="@drawable/ic_payment_mode_unpressed"/>
+
+                <TextView
+                    android:id="@+id/textViewNetBanking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/payment_mode_layout_min_height"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:layout_toRightOf="@+id/imageViewSelectNetBanking"
+                    android:gravity="center_vertical"
+                    android:text="@string/payment_mode_net_banking"
+                    android:textColor="@color/color_payment_mode"
+                    android:textSize="@dimen/payment_modes_text_size"/>
+            </RelativeLayout>
+
+            <!-- net banking details-->
+            <LinearLayout
+                android:id="@+id/linearLayoutNetbankingDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="620px"
+                    android:layout_height="81px"
+
+                    android:background="@drawable/payment_mode_edit_text_background"
+                    >
+
+                    <Spinner
+                        android:id="@+id/netBankingSpinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/payment_mode_edit_text_background"
+                        android:gravity="left"
+                        android:padding="10px"
+                        android:paddingRight="70px"
+                        android:spinnerMode="dialog"
+                        android:textColor="@color/grey_text"
+                        android:textSize="26px"
+                        />
+
+                    <ImageView
+                        android:layout_width="40px"
+                        android:layout_height="23px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        android:background="@drawable/netbank_arrow"
+
+                        />
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/netBankingErrorText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/error_box"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="gravity"
+                    android:textColor="#FF0000"
+                    android:textSize="11dp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/textViewRedirected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20px"
+                    android:layout_marginTop="20px"
+                    android:text="@string/redirect_to_bank"
+                    android:textColor="@color/color_jugnoo_cash_note"
+                    android:textSize="22px"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/payment_modes_divider_height"
+                android:background="@color/yellow"/>
+
+
+            <LinearLayout
+                android:id="@+id/linearLayoutAddAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/add_amount_top_margin"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewAddAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/add_amount"
+                    android:textColor="@color/color_payment_mode"
+                    android:textSize="@dimen/add_amount_text_size"/>
+
+                <TextView
+                    android:id="@+id/textViewAddAmountValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/add_amount_value_top_margin"
+                    android:text="@string/add_amount_dummy_value"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/add_amount_value_text_size"/>
+
+                <Button
+                    android:id="@+id/nbPayButton"
+                    android:layout_width="648px"
+                    android:layout_height="100px"
+                    android:layout_marginTop="30px"
+                    android:background="@drawable/button_yellow_selector"
+                    android:text="@string/pay_now"
+                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textSize="@dimen/button_text_size"/>
+
+                <TextView
+                    android:id="@+id/textViewJugnooCashNote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24px"
+                    android:text="@string/jugnoo_cash_note"
+                    android:textColor="@color/color_jugnoo_cash_note"
+                    android:textSize="18px"/>
+
+                <TextView
+                    android:id="@+id/textViewTermsAndConditions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24px"
+                    android:text="@string/view_terms_and_conditions"
+                    android:textColor="@color/color_jugnoo_cash_note"
+                    android:textSize="18px"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewScroll"
+                android:layout_width="10px"
+                android:layout_height="10px"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

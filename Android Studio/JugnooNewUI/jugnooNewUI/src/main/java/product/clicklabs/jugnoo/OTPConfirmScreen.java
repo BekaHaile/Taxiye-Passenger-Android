@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -38,7 +39,7 @@ import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class OTPConfirmScreen extends Activity implements LocationUpdate{
+public class OTPConfirmScreen extends BaseActivity implements LocationUpdate{
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
@@ -76,13 +77,21 @@ public class OTPConfirmScreen extends Activity implements LocationUpdate{
 		super.onStop();
 		FlurryAgent.onEndSession(this);
 	}
-	
+
+
+    public static void init(Context context){
+        String temp = context.getResources().getString(R.string.email_id);
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_otp_confrim);
 		
 		loginDataFetched = false;
+
+        init(this);
+
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);

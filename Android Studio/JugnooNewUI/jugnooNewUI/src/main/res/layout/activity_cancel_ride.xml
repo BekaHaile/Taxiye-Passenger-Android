@@ -1,7 +1,6 @@
 <LinearLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -44,7 +43,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:splitMotionEvents="false">
+            android:splitMotionEvents="false"
+            android:animateLayoutChanges="true"
+            >
 
             <TextView
                 android:id="@+id/textViewWantToCancel"
@@ -68,58 +69,50 @@
             </product.clicklabs.jugnoo.utils.NonScrollListView>
 
             <RelativeLayout
-                android:id="@+id/relativeLayoutOtherCancelOption"
+                android:id="@+id/relativeLayoutOtherCancelOptionInner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10px"
                 >
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutOtherCancelOptionInner"
-                    android:layout_width="match_parent"
+
+                <TextView
+                    android:id="@+id/textViewOtherCancelOption"
+                    android:layout_width="600px"
                     android:layout_height="wrap_content"
-                    >
+                    android:gravity="center_vertical"
+                    android:padding="40px"
+                    android:text="Others"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="30px"/>
 
-                    <TextView
-                        android:id="@+id/textViewOtherCancelOption"
-                        android:layout_width="600px"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:padding="40px"
-                        android:text="Others"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="30px"/>
-
-                    <ImageView
-                        android:id="@+id/imageViewOtherCancelOptionCheck"
-                        android:layout_width="36px"
-                        android:layout_height="36px"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
-                        android:tag="mwar"
-                        />
-                </RelativeLayout>
-
-                <EditText
-                    android:id="@+id/editTextOtherCancelOption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/relativeLayoutOtherCancelOptionInner"
-                    android:textSize="30px"
-                    android:hint="Please specify the reason. It would help us in making your experience better next time."
-                    android:background="@drawable/edittext_background_white_yellow_border"
-                    android:layout_marginRight="30px"
-                    android:layout_marginLeft="30px"
-                    android:layout_marginTop="10px"
-                    android:gravity="left"
-                    android:padding="20px"
-                    android:minHeight="200px"
-                    android:maxLength="250"
+                <ImageView
+                    android:id="@+id/imageViewOtherCancelOptionCheck"
+                    android:layout_width="36px"
+                    android:layout_height="36px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:src="@drawable/check_box_checked_new"
+                    android:tag="mwar"
                     />
-
-
             </RelativeLayout>
+
+            <EditText
+                android:id="@+id/editTextOtherCancelOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:layout_marginTop="10px"
+                android:background="@drawable/edittext_background_white_yellow_border"
+                android:gravity="left"
+                android:hint="Please specify the reason. It would help us in making your experience better next time."
+                android:maxLength="250"
+                android:minHeight="200px"
+                android:padding="20px"
+                android:textSize="30px"
+                />
+
 
             <Button
                 android:id="@+id/buttonCancelRide"
@@ -137,10 +130,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="50px"
                 android:layout_marginLeft="50px"
                 android:layout_marginRight="50px"
                 android:layout_marginTop="50px"
-                android:layout_marginBottom="50px"
                 android:gravity="center"
                 android:text="Cancellation of a ride more than 5 minutes\nafter the driver is allocated will lead to\ncancellation charges of Rs. 20"
                 android:textColor="@color/grey_dark"

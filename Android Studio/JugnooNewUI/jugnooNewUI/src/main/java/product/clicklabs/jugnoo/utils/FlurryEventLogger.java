@@ -105,7 +105,15 @@ public class FlurryEventLogger {
 			e.printStackTrace();
 		}
 	}
-	
+
+    public static void screenOpened(String message) {
+        try {
+
+            FlurryAgent.logEvent(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	
 	public static void shareScreenOpened(String accessToken){
 		try{

@@ -36,7 +36,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideCancellationActivity extends Activity implements ActivityCloser{
+public class RideCancellationActivity extends BaseActivity implements ActivityCloser{
 	
 	
 	LinearLayout relative;
@@ -49,7 +49,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 	NonScrollListView listViewCancelOptions;
 	CancelOptionsListAdapter cancelOptionsListAdapter;
 
-    RelativeLayout relativeLayoutOtherCancelOption, relativeLayoutOtherCancelOptionInner;
+    RelativeLayout relativeLayoutOtherCancelOptionInner;
     TextView textViewOtherCancelOption;
     ImageView imageViewOtherCancelOptionCheck;
     EditText editTextOtherCancelOption;
@@ -102,7 +102,6 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 		cancelOptionsListAdapter = new CancelOptionsListAdapter(RideCancellationActivity.this);
 		listViewCancelOptions.setAdapter(cancelOptionsListAdapter);
 
-        relativeLayoutOtherCancelOption = (RelativeLayout) findViewById(R.id.relativeLayoutOtherCancelOption);
         relativeLayoutOtherCancelOptionInner = (RelativeLayout) findViewById(R.id.relativeLayoutOtherCancelOptionInner);
         textViewOtherCancelOption = (TextView) findViewById(R.id.textViewOtherCancelOption); textViewOtherCancelOption.setTypeface(Fonts.latoRegular(this));
         imageViewOtherCancelOptionCheck = (ImageView) findViewById(R.id.imageViewOtherCancelOptionCheck);
@@ -111,8 +110,6 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 
 
 
-
-		
 		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Fonts.latoRegular(this));
 		
 		textViewCancelInfo = (TextView) findViewById(R.id.textViewCancelInfo); textViewCancelInfo.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
@@ -196,10 +193,12 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
                 textViewCancelInfo.setText(Data.cancelOptionsList.message);
 
                 if("".equalsIgnoreCase(Data.cancelOptionsList.additionalReason)){
-                    relativeLayoutOtherCancelOption.setVisibility(View.GONE);
+                    relativeLayoutOtherCancelOptionInner.setVisibility(View.GONE);
+                    editTextOtherCancelOption.setVisibility(View.GONE);
                 }
                 else{
-                    relativeLayoutOtherCancelOption.setVisibility(View.VISIBLE);
+                    relativeLayoutOtherCancelOptionInner.setVisibility(View.VISIBLE);
+                    editTextOtherCancelOption.setVisibility(View.VISIBLE);
                     textViewOtherCancelOption.setText(Data.cancelOptionsList.additionalReason);
                 }
 
@@ -385,11 +384,10 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
 
                                 if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                     int flag = jObj.getInt("flag");
+                                    String serverMessage = JSONParser.getServerMessage(jObj);
                                     if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
+                                        DialogPopup.alertPopup(activity, "", serverMessage);
                                     } else if (ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag) {
-                                        String message = jObj.getString("message");
 
                                         if (jObj.has("jugnoo_balance")) {
                                             Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
@@ -399,7 +397,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
                                             HomeActivity.appInterruptHandler.onCancelCompleted();
                                         }
 
-                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                        DialogPopup.alertPopupWithListener(activity, "", serverMessage, new View.OnClickListener() {
 
                                             @Override
                                             public void onClick(View v) {
@@ -407,7 +405,7 @@ public class RideCancellationActivity extends Activity implements ActivityCloser
                                             }
                                         });
                                     } else {
-                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                        DialogPopup.alertPopup(activity, "", serverMessage);
                                     }
                                 } else {
                                 }

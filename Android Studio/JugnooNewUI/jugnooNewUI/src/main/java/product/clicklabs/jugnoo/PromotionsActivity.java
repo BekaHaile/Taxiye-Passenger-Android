@@ -45,7 +45,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
 
-public class PromotionsActivity extends Activity{
+public class PromotionsActivity extends BaseActivity{
 	
 	
 	RelativeLayout relative;
@@ -369,7 +369,7 @@ public class PromotionsActivity extends Activity{
 					holder = (ViewHolderCoupon) v.getTag();
 					CouponInfo couponInfo = couponInfosList.get(holder.id);
 					DialogPopup.alertPopupLeftOriented(PromotionsActivity.this, "", couponInfo.description);
-					FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.type);
+					FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.couponType);
 				}
 			});
 			
@@ -504,7 +504,7 @@ public class PromotionsActivity extends Activity{
 //                                                    "discount": 100,
 //                                                    "maximum": 100,
 //                                                    "image": "",
-//                                                    "type": 0,
+//                                                    "couponType": 0,
 //                                                    "account_id": 546,
 //                                                    "redeemed_on": "0000-00-00 00:00:00",
 //                                                    "status": 1,

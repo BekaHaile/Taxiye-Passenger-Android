@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +19,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 
@@ -137,6 +144,17 @@ public class Utils {
         callIntent.setData(Uri.parse("tel:"+phoneNumber));
         activity.startActivity(callIntent);
 	}
+
+    public static void openSMSIntent(Activity activity, String numbers, String message){
+        try {
+            Uri sms_uri = Uri.parse("smsto:"+numbers);
+            Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
+            sms_intent.putExtra("sms_body", message);
+            activity.startActivity(sms_intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	
 	
 	
@@ -227,6 +245,18 @@ public class Utils {
         }
     }
 
+
+    public static boolean checkIfOnlyDigits(String strTocheck){
+        String regex = "[0-9+]+";
+        if(strTocheck.matches(regex)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
     public static boolean isPhoneValid(CharSequence phone) {
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }
@@ -298,6 +328,29 @@ public class Utils {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+    public static ArrayList<NameValuePair> convertQueryToNameValuePairArr(String query) throws UnsupportedEncodingException {
+        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            nameValuePairs.add(new BasicNameValuePair(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8")));
+        }
+        return nameValuePairs;
+    }
+
+
+    public static boolean isServiceRunning(Context context, String className) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (className.equals(service.service.getClassName())) {
+                Log.e("service already running", "="+service.service.getClassName());
+                return true;
+            }
+        }
+        return false;
     }
 
 

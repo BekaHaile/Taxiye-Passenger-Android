@@ -269,18 +269,30 @@ public class DateOperations {
 	}
 	
 	
-	public long getTimeDifference(String time1, String time2){
+	public static long getTimeDifference(String time1, String time2){
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(time1);
 			Date date2 = format.parse(time2);
-			long millis = Math.abs(date1.getTime() - date2.getTime());
+			long millis = date1.getTime() - date2.getTime();
 			return millis;
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return 60000;
 	}
+
+    public static long getTimeDifference(long time1, long time2){
+        try {
+            Date date1 = new Date(time1);
+            Date date2 = new Date(time2);
+            long millis = date1.getTime() - date2.getTime();
+            return millis;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 60000;
+    }
 	
 	public long getMilliseconds(String time1){
 		try {
@@ -293,6 +305,30 @@ public class DateOperations {
 		}
 		return 60000;
 	}
-	
-	
+
+
+    public static String getUTCTimeInLocalTimeStamp(String utcTime){
+        try {
+            long foo = System.currentTimeMillis();
+            Date date = new Date(foo);
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String utcDate = formatter.format(date);
+
+            String utcTimeStamp = utcDate + " " + utcTime;
+            String localTimeStamp = utcToLocal(utcTimeStamp);
+            return localTimeStamp;
+        } catch (Exception e) {
+            e.printStackTrace();
+            long foo = System.currentTimeMillis();
+            Date date = new Date(foo);
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String utcDate = formatter.format(date);
+            String utcTimeStamp = utcDate + " " + utcTime;
+            return utcTimeStamp;
+        }
+    }
+
+
 }

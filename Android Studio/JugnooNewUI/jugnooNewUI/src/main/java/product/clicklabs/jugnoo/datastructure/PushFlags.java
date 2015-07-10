@@ -19,7 +19,9 @@ public enum PushFlags {
 	HEARTBEAT(40),
 	CHANGE_PORT(60),
 	PAYMENT_RECEIVED(70),
-    DRIVER_ARRIVED(72)
+    DRIVER_ARRIVED(72),
+    EMERGENCY_CONTACT_VERIFIED(80)
+
 	;
 
 	private int ordinal;

@@ -52,13 +52,24 @@
                 android:orientation="vertical"
                 android:splitMotionEvents="false" >
 
+                <TextView
+                    android:id="@+id/textViewRateYourExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text_alpha"
+                    android:textSize="40px"
+                    android:text="Rate your Jugnoo Experience"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="54px"
+                    />
+
                 <RatingBar
                     android:id="@+id/ratingBarFeedback"
                     style="@style/YellowRatingBarNew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="120px"
+                    android:layout_marginTop="40px"
                     android:numStars="5"
                     android:rating="1"
                     android:stepSize="1.0" />
@@ -68,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/yellow"
-                    android:textSize="34px"
+                    android:textSize="38px"
                     android:text="Liked it"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20px"
@@ -81,7 +92,7 @@
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
                     android:layout_marginTop="70px"
-                    android:background="@drawable/background_white_rounded"
+                    android:background="@drawable/background_white_yellow_bordered"
                     android:gravity="left"
                     android:hint="How did you like your experience with Jugnoo? Please share your valuable feedback"
                     android:padding="20px"

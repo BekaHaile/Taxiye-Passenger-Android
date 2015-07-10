@@ -1,13 +1,8 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -18,20 +13,17 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
-import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ShareActivity extends Activity{
+public class ShareActivity extends BaseActivity {
 	
 	RelativeLayout relative;
 	
@@ -157,7 +149,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				new FacebookLoginHelper().openFacebookSession(ShareActivity.this, facebookLoginCallback, false);
+                ReferralActions.shareToFacebook(ShareActivity.this);
 				FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);
 			}
 		});
@@ -167,7 +159,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				shareToWhatsapp();
+                ReferralActions.shareToWhatsapp(ShareActivity.this);
 				FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);
 			}
 		});
@@ -177,7 +169,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				sendSMSIntent();
+                ReferralActions.sendSMSIntent(ShareActivity.this);
 				FlurryEventLogger.sharedViaSMS(Data.userData.accessToken);
 			}
 		});
@@ -186,7 +178,7 @@ public class ShareActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				openMailIntent();
+                ReferralActions.openMailIntent(ShareActivity.this);
 				FlurryEventLogger.sharedViaEmail(Data.userData.accessToken);
 			}
 		});
@@ -201,60 +193,9 @@ public class ShareActivity extends Activity{
         webViewReferralCaption.loadDataWithBaseURL("", data, mimeType, encoding, "");
     }
 
-	
-	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
-		@Override
-		public void facebookLoginDone() {
-			if(Data.userData != null){
-				new FacebookLoginHelper().publishFeedDialog(ShareActivity.this, 
-						"Jugnoo - autos on demand",
-						Data.referralMessages.fbShareCaption, 
-						Data.referralMessages.fbShareDescription,
-						"https://jugnoo.in",
-						Data.userData.jugnooFbBanner);
 
-			}
-		}
-	};
 	
-	
-	
-	
-	public void shareToWhatsapp() {
-		PackageManager pm = getPackageManager();
-		try {
-			Intent waIntent = new Intent(Intent.ACTION_SEND);
-			waIntent.setType("text/plain");
-			String text = Data.referralMessages.referralSharingMessage;
 
-			PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-			Log.d("info", "="+info);
-			waIntent.setPackage("com.whatsapp");
-
-			waIntent.putExtra(Intent.EXTRA_TEXT, text);
-			startActivity(Intent.createChooser(waIntent, "Share with"));
-		} catch (NameNotFoundException e) {
-			Toast.makeText(this, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	
-	public void sendSMSIntent(){
-		Uri sms_uri = Uri.parse("smsto:"); 
-        Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri); 
-        sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage); 
-        startActivity(sms_intent); 
-	}
-	
-	
-	public void openMailIntent(){
-		Intent email = new Intent(Intent.ACTION_SEND);
-		email.putExtra(Intent.EXTRA_EMAIL, new String[] { "" });
-		email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-		email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage);
-		email.setType("message/rfc822");
-		startActivity(Intent.createChooser(email, "Choose an Email client:"));
-	}
 	
 	
 	@Override

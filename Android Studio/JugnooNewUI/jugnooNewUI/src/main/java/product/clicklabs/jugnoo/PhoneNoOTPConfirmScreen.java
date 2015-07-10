@@ -30,7 +30,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class PhoneNoOTPConfirmScreen extends Activity{
+public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;

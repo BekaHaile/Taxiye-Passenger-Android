@@ -36,14 +36,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-
 
 import org.json.JSONObject;
 
@@ -70,7 +68,7 @@ import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashNewActivity extends Activity implements LocationUpdate{
+public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 
     //adding drop location
 
@@ -383,7 +381,7 @@ public class SplashNewActivity extends Activity implements LocationUpdate{
 		}
 
 
-
+        startService(new Intent(this, PushPendingCallsService.class));
 
     }
 	

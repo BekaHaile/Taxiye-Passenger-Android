@@ -347,6 +347,45 @@
                     </RelativeLayout>
 
 
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutEmergencyContact"
+                        android:layout_width="match_parent"
+                        android:layout_height="90px"
+                        android:layout_marginTop="30px"
+                        android:background="@color/white" >
+
+
+                        <TextView
+                            android:id="@+id/textViewEmergencyContact"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="70px"
+                            android:gravity="center"
+                            android:text="Add Emergency Contact"
+                            android:textColor="@drawable/text_color_black_alpha_selector"
+                            android:textSize="28px" />
+
+                        <ImageView
+                            android:layout_width="13px"
+                            android:layout_height="26px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="40px"
+                            android:src="@drawable/arrow_icon_selector"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:layout_alignParentBottom="true"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@color/yellow_alpha" />
+                    </RelativeLayout>
+
+
+
                     <Button
                         android:id="@+id/buttonLogout"
                         android:layout_width="648px"

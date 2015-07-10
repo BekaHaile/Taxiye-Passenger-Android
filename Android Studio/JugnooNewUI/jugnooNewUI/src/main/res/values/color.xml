@@ -72,9 +72,13 @@
     <color name="orange_dark">#F96f01</color>
     
     <color name="yellow_text">#FABB15</color>   
-    <color name="grey_text">#232323</color>  
-    
-    
+    <color name="grey_text">#232323</color>
+    <color name="grey_text_alpha">#77232323</color>
+
+
+
+    <color name="red">#F23A30</color>
+    <color name="red_alpha">#99F23A30</color>
     
     
     
@@ -113,6 +117,14 @@
     <color name="green_transaction_type">#46B82F</color>
     
     <color name="dialog_border_color">#AA7E7D78</color>
+
+    <!--colors used in activity_add_jugnoo_cash-->
+    <color name="color_payment_mode">#484848</color>
+    <color name="color_jugnoo_cash_note">#4E4E4E</color>
+    <color name="color_card_details">#7D7C7C</color>
+    <color name="wallet_text_amount">#0D0D0D</color>
+
+    <color name="grey_lightest">#ffe8e8e8</color>
 
 
  <integer-array name="gplus_colors">

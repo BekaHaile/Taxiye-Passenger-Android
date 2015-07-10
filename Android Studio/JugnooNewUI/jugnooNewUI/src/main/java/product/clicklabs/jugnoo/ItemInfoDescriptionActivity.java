@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +14,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ItemInfoDescriptionActivity extends Activity{
+public class ItemInfoDescriptionActivity extends BaseActivity{
 	
 	
 	LinearLayout relative;

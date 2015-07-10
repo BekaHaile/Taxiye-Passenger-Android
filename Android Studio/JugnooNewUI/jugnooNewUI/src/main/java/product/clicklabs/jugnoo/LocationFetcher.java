@@ -33,7 +33,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	private Context context;
 	
 	
-	private String LOCATION_SP = "location_sp",
+	private static String LOCATION_SP = "location_sp",
 			LOCATION_LAT = "location_lat",
 			LOCATION_LNG = "location_lng";
 	
@@ -87,14 +87,14 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	}
 	
 	
-	private synchronized double getSavedLatFromSP(){
+	public static double getSavedLatFromSP(Context context){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String latitude = preferences.getString(LOCATION_LAT, ""+ 0);
 		Log.d("saved last lat", "==" + latitude);
 		return Double.parseDouble(latitude);
 	}
 	
-	private synchronized double getSavedLngFromSP(){
+	public static double getSavedLngFromSP(Context context){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String longitude = preferences.getString(LOCATION_LNG, ""+0);
 		return Double.parseDouble(longitude);
@@ -179,7 +179,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			}
 		} catch(Exception e){
             Log.e("e", "=" + e.toString());}
-		return getSavedLatFromSP();
+		return getSavedLatFromSP(context);
 	}
 	
 	/**
@@ -193,7 +193,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			}
 		} catch(Exception e){
             Log.e("e", "=" + e.toString());}
-		return getSavedLngFromSP();
+		return getSavedLngFromSP(context);
 	}
 	
 	public Location getLocation(){

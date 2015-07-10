@@ -39,7 +39,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ItemInfosListActivity extends Activity{
+public class ItemInfosListActivity extends BaseActivity{
 	
 	
 	LinearLayout relative;
@@ -415,7 +415,7 @@ public class ItemInfosListActivity extends Activity{
 //										            "discount": 100,
 //										            "maximum": 100,
 //										            "image": null,
-//										            "type": 0,
+//										            "couponType": 0,
 //										            "redeemed_on": null,
 //										            "status": 1,
 //										            "expiry_date": "2014-11-07T18:29:59.000Z"
@@ -433,7 +433,7 @@ public class ItemInfosListActivity extends Activity{
 													if(itemsData.length() > 0){
 														for(int i=0; i<itemsData.length(); i++){
 															JSONObject itemData = itemsData.getJSONObject(i);
-															itemInfosList.add(new ItemInfo(itemData.getInt("item_id"), itemData.getString("name"), itemData.getInt("price"), 
+															itemInfosList.add(new ItemInfo(itemData.getInt("item_id"), itemData.getString("name"), itemData.getInt("price"),
 																	itemData.getString("description"), itemData.getString("image")));
 														}
 													}

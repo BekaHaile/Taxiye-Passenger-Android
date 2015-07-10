@@ -28,7 +28,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ItemsCheckoutTNCActivity extends Activity{
+public class ItemsCheckoutTNCActivity extends BaseActivity{
 	
 	LinearLayout relative;
 	
