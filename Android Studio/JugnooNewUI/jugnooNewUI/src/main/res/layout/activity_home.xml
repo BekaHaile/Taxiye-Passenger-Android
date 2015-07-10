@@ -1710,7 +1710,7 @@
                     android:layout_width="140px"
                     android:layout_height="140px"
                     android:layout_x="520px"
-                    android:layout_y="845px"
+                    android:layout_y="840px"
                     android:src="@drawable/auto_head_main_selector"
                     android:tag="mwar" />
 

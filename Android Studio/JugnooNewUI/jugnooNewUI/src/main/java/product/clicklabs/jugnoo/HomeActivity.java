@@ -475,6 +475,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
+                    Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
                 }
             }
 
@@ -676,7 +677,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     progressBarInitialSearch.setVisibility(View.GONE);
                     if (map != null && searchResult != null) {
                         textViewInitialSearch.setText(searchResult.name);
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 14), 1000, null);
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, 15), 1000, null);
                     }
                 }
 
@@ -2089,8 +2090,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.GONE);
 
                         imageViewSearchCancel.setVisibility(View.GONE);
-                        imageViewGift.setVisibility(View.VISIBLE);
-                        imageViewHelp.setVisibility(View.GONE);
+                        imageViewGift.clearAnimation();
+                        imageViewGift.setVisibility(View.GONE);
+                        imageViewHelp.setVisibility(View.VISIBLE);
 
                         genieLayout.setVisibility(View.GONE);
 

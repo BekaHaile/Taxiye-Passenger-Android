@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,8 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -94,6 +97,11 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
     EditText editTextMonthDebitCard, editTextYearDebitCard, editTextCVVDebitCard, editTextNameOnDebitCard;
     EditText editTextMonthCreditCard, editTextYearCreditCard, editTextCVVCreditCard, editTextNameOnCreditCard;
 
+    ScrollView scrollView;
+    LinearLayout linearLayoutMain;
+    TextView textViewScroll;
+    boolean scrolled = false;
+
     int textLength;
     int optionSelect = 0;// 0= DC, 1 = CC, 2 = NB
 
@@ -124,10 +132,12 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH) + 1;
 
+        scrolled = false;
+
         initComponents();
         new ASSL(paymentActivity, relative, 1134, 720, false);
 
-        setupUI(rootView.findViewById(R.id.relative));
+//        setupUI(rootView.findViewById(R.id.relative));
 
         if (AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
             getTxtID();
@@ -217,6 +227,12 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
         buttonPayNow = (Button) rootView.findViewById(R.id.nbPayButton);
         buttonPayNow.setTypeface(Fonts.latoRegular(paymentActivity));
+
+
+        scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
+        linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
+        textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
+
 
         layoutBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,7 +331,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
         buttonPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(paymentActivity.pgName.equalsIgnoreCase("NB")) {
+                if (paymentActivity.pgName.equalsIgnoreCase("NB")) {
                     paymentActivity.bankCode = bankCode;
                     paymentActivity.ccNum = "";
                     paymentActivity.ccName = "";
@@ -325,7 +341,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                     makeNetbackingPayment();
                 } else {
                     paymentActivity.bankCode = "CC";
-                    if(optionSelect == 0) {
+                    if (optionSelect == 0) {
                         // DC
                         paymentActivity.ccNum = editTextDebitCardNumber.getText().toString().trim();
                         paymentActivity.ccNum = paymentActivity.ccNum.replace("-", "");
@@ -333,7 +349,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                         paymentActivity.ccvv = editTextCVVDebitCard.getText().toString().trim();
                         paymentActivity.ccexpmon = editTextMonthDebitCard.getText().toString().trim();
                         paymentActivity.ccexpyr = editTextYearDebitCard.getText().toString().trim();
-                    } else if(optionSelect == 1) {
+                    } else if (optionSelect == 1) {
                         // CC
                         paymentActivity.ccNum = editTextCreditCardNumber.getText().toString().trim();
                         paymentActivity.ccNum = paymentActivity.ccNum.replace("-", "");
@@ -344,28 +360,27 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                     }
 
 
-
-                    if(paymentActivity.ccNum.length()>10 && paymentActivity.ccName.length()>1 && paymentActivity.ccvv.length()>2 && paymentActivity.ccexpmon.length()>1 && paymentActivity.ccexpyr.length()>3) {
-                        if(Integer.parseInt(paymentActivity.ccexpyr) < year || Integer.parseInt(paymentActivity.ccexpyr) >= year+50) {
-                            new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.invalid_year));
-                        } else if(Integer.parseInt(paymentActivity.ccexpmon) < month && Integer.parseInt(paymentActivity.ccexpyr) == year) {
-                            new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.invalid_card_info));
+                    if (paymentActivity.ccNum.length() > 10 && paymentActivity.ccName.length() > 1 && paymentActivity.ccvv.length() > 2 && paymentActivity.ccexpmon.length() > 1 && paymentActivity.ccexpyr.length() > 3) {
+                        if (Integer.parseInt(paymentActivity.ccexpyr) < year || Integer.parseInt(paymentActivity.ccexpyr) >= year + 50) {
+                            new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.invalid_year));
+                        } else if (Integer.parseInt(paymentActivity.ccexpmon) < month && Integer.parseInt(paymentActivity.ccexpyr) == year) {
+                            new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.invalid_card_info));
                         } else {
                             makePayment();
                         }
-                    } else if(paymentActivity.ccNum.length()==0 || paymentActivity.ccName.length()==0 || paymentActivity.ccvv.length()==0 || paymentActivity.ccexpmon.length()==0 || paymentActivity.ccexpyr.length()==0) {
-                        new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.no_field_empty));
+                    } else if (paymentActivity.ccNum.length() == 0 || paymentActivity.ccName.length() == 0 || paymentActivity.ccvv.length() == 0 || paymentActivity.ccexpmon.length() == 0 || paymentActivity.ccexpyr.length() == 0) {
+                        new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.no_field_empty));
                     } else {
-                         if(paymentActivity.ccexpmon.length()<2) {
-                            new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.invalid_month));
-                        } else if(paymentActivity.ccexpyr.length()<4) {
-                            new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.invalid_year));
-                        } else if(paymentActivity.ccvv.length()<3) {
-                            new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.invalid_cvv));
-                        } else if(paymentActivity.ccName.length()<3) {
-                            new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.invalid_name));
+                        if (paymentActivity.ccexpmon.length() < 2) {
+                            new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.invalid_month));
+                        } else if (paymentActivity.ccexpyr.length() < 4) {
+                            new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.invalid_year));
+                        } else if (paymentActivity.ccvv.length() < 3) {
+                            new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.invalid_cvv));
+                        } else if (paymentActivity.ccName.length() < 3) {
+                            new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.invalid_name));
                         } else {
-                            new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.invalid_info));
+                            new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.invalid_info));
                         }
                     }
                 }
@@ -379,6 +394,29 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
             }
         });
+
+
+        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+//                if (!scrolled) {
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            scrollView.smoothScrollTo(0, buttonMakePayment.getTop());
+//                        }
+//                    }, 100);
+//                    scrolled = true;
+//                }
+            }
+
+            @Override
+            public void keyBoardClosed() {
+                scrolled = false;
+            }
+        }));
+
+
     }
 
     @Override

@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -59,7 +61,7 @@ public class SearchListAdapter extends BaseAdapter {
      * @param searchListActionsHandler handler for custom actions
      * @throws IllegalStateException
      */
-    public SearchListAdapter(Context context, EditText editTextForSearch, LatLng searchPivotLatLng, SearchListActionsHandler searchListActionsHandler) throws IllegalStateException{
+    public SearchListAdapter(final Context context, EditText editTextForSearch, LatLng searchPivotLatLng, SearchListActionsHandler searchListActionsHandler) throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
             this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -90,6 +92,31 @@ public class SearchListAdapter extends BaseAdapter {
                     }
                 }
             });
+
+            this.editTextForSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+                @Override
+                public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                    int result = actionId & EditorInfo.IME_MASK_ACTION;
+                    switch (result) {
+                        case EditorInfo.IME_ACTION_DONE:
+                            Utils.hideSoftKeyboard((Activity) context, SearchListAdapter.this.editTextForSearch);
+                            break;
+
+                        case EditorInfo.IME_ACTION_NEXT:
+                            Utils.hideSoftKeyboard((Activity) context, SearchListAdapter.this.editTextForSearch);
+                            break;
+
+                        case EditorInfo.IME_ACTION_SEARCH:
+                            Utils.hideSoftKeyboard((Activity) context, SearchListAdapter.this.editTextForSearch);
+                            break;
+
+                        default:
+                    }
+                    return true;
+                }
+            });
+
         }
         else{
             throw new IllegalStateException("context passed is not of Activity type");

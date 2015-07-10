@@ -51,7 +51,7 @@ public class GenieLayout {
 
         AbsoluteLayout.LayoutParams params = (AbsoluteLayout.LayoutParams) imageViewJugnoo.getLayoutParams();
         params.x = (int) (520 * ASSL.Xscale());
-        params.y = (int) (835 * ASSL.Yscale());
+        params.y = (int) (840 * ASSL.Yscale());
         absoluteLayout.updateViewLayout(imageViewJugnoo, params);
 
         AbsoluteLayout.LayoutParams paramsAnimLayout = (AbsoluteLayout.LayoutParams) animLayout.getLayoutParams();
@@ -370,7 +370,7 @@ public class GenieLayout {
             translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
                     TranslateAnimation.ABSOLUTE, -(x_cord_now - (int) (520 * ASSL.Xscale())),
                     TranslateAnimation.ABSOLUTE, 0,
-                    TranslateAnimation.ABSOLUTE, -(y_cord_now - (int) (835 * ASSL.Yscale())));
+                    TranslateAnimation.ABSOLUTE, -(y_cord_now - (int) (840 * ASSL.Yscale())));
 
         translateAnimation.setDuration(350);
         translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -385,7 +385,7 @@ public class GenieLayout {
             public void onAnimationEnd(Animation animation) {
                 AbsoluteLayout.LayoutParams paramsGenie = getParamsF();
                 paramsGenie.x = (int) (520 * ASSL.Xscale());
-                paramsGenie.y = (int) (835 * ASSL.Yscale());
+                paramsGenie.y = (int) (840 * ASSL.Yscale());
                 imageViewJugnoo.clearAnimation();
                 absoluteLayout.updateViewLayout(imageViewJugnoo, paramsGenie);
                 updateAnimLayoutParams();

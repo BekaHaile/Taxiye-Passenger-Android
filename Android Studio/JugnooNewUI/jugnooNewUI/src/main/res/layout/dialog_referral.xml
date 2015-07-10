@@ -127,7 +127,7 @@
                 android:id="@+id/imageViewFacebook"
                 android:layout_width="75px"
                 android:layout_height="75px"
-                android:layout_marginLeft="60px"
+                android:layout_marginLeft="50px"
                 android:src="@drawable/fb_share_icon_selector"
                 android:tag="mwar"/>
 
@@ -154,7 +154,7 @@
                 android:layout_width="75px"
                 android:layout_height="75px"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="60px"
+                android:layout_marginRight="50px"
                 android:src="@drawable/email_share_icon_selector"
                 android:tag="mwar"/>
         </RelativeLayout>
