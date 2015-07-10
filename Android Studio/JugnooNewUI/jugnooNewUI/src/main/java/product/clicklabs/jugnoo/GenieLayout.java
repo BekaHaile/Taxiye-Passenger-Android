@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -15,9 +14,8 @@ import android.widget.AbsoluteLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
-import product.clicklabs.jugnoo.utils.GeniePositonsSaver;
-import rmn.androidscreenlibrary.ASSL;
 
 /**
  * Created by clicklabs on 6/25/15.
@@ -45,13 +43,15 @@ public class GenieLayout {
 
     public void addGenieLayout(View rootView, final RelativeLayout relativeLayoutMainCheckout) {
 
+        new ASSL(context, 1134, 720, false);
+
         absoluteLayout = (AbsoluteLayout) rootView.findViewById(R.id.rootAbsoluteLayout);
         imageViewJugnoo = (ImageView) rootView.findViewById(R.id.imageViewJugnoo);
         animLayout = (RelativeLayout) rootView.findViewById(R.id.animLayout);
 
         AbsoluteLayout.LayoutParams params = (AbsoluteLayout.LayoutParams) imageViewJugnoo.getLayoutParams();
         params.x = (int) (520 * ASSL.Xscale());
-        params.y = (int) (845 * ASSL.Yscale());
+        params.y = (int) (835 * ASSL.Yscale());
         absoluteLayout.updateViewLayout(imageViewJugnoo, params);
 
         AbsoluteLayout.LayoutParams paramsAnimLayout = (AbsoluteLayout.LayoutParams) animLayout.getLayoutParams();
@@ -75,91 +75,98 @@ public class GenieLayout {
         szWindow.y = (int) (ASSL.Yscale() * 1134);
 
 
-        imageViewJugnoo.setOnTouchListener(new View.OnTouchListener() {
+//        imageViewJugnoo.setOnTouchListener(new View.OnTouchListener() {
+//
+//            long time_start = 0, time_end = 0;
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//
+//                int x_cord = (int) event.getRawX();
+//                int y_cord = (int) event.getRawY();
+//                int x_cord_Destination, y_cord_Destination;
+//
+//                AbsoluteLayout.LayoutParams paramsGenie = getParamsF();
+//
+//                switch (event.getAction()) {
+//
+//                    case MotionEvent.ACTION_DOWN:
+//                        time_start = System.currentTimeMillis();
+//
+//                        x_init_cord = x_cord;
+//                        y_init_cord = y_cord;
+//
+//                        x_init_margin = getParamsF().x;
+//                        y_init_margin = getParamsF().y;
+//                        break;
+//
+//                    case MotionEvent.ACTION_MOVE:
+//                        int x_diff_move = x_cord - x_init_cord;
+//                        int y_diff_move = y_cord - y_init_cord;
+//
+//                        float diff = Math.max(x_diff_move, y_diff_move);
+//
+//                        if (Math.abs(diff) > 10) {
+//                            if (animLayout.getVisibility() == View.VISIBLE) {
+//                                animLayout.setVisibility(View.GONE);
+//                                clearAnims();
+//                                clearAnims2();
+//                                Log.d("anim layout", "cleared");
+//                            }
+//                        }
+//                        x_cord_Destination = x_init_margin + x_diff_move;
+//                        y_cord_Destination = y_init_margin + y_diff_move;
+//
+//                        if (y_cord_Destination < 0) {
+//                            y_cord_Destination = 0;
+//                        } else if (y_cord_Destination + (imageViewJugnoo.getHeight()) > szWindow.y) {
+//                            y_cord_Destination = szWindow.y - (imageViewJugnoo.getHeight());
+//                        }
+//
+//                        paramsGenie.x = x_cord_Destination;
+//                        paramsGenie.y = y_cord_Destination;
+//
+//                        absoluteLayout.updateViewLayout(imageViewJugnoo, paramsGenie);
+//
+//                        break;
+//
+//
+//                    case MotionEvent.ACTION_UP:
+//                        int x_diff = x_cord - x_init_cord;
+//                        int y_diff = y_cord - y_init_cord;
+//
+//                        x_cord_Destination = x_init_margin + x_diff;
+//                        y_cord_Destination = y_init_margin + y_diff;
+//
+//                        int x_start;
+//                        x_start = x_cord_Destination;
+//
+//                        if (Math.abs(x_diff) < 10 && Math.abs(y_diff) < 10) {
+//                            time_end = System.currentTimeMillis();
+//                            chathead_click();
+//                        } else {
+//                            if (((paramsGenie.y + imageViewJugnoo.getHeight()) > (szWindow.y - ASSL.Yscale() * 230))) {
+//                                getToDefaultPosition(paramsGenie.x, paramsGenie.y);
+//                            } else if (paramsGenie.y < (ASSL.Yscale() * 210)) {
+//                                shiftDownwardsFromTaskbar(paramsGenie.x, paramsGenie.y);
+//                            } else {
+//                                resetPosition(x_start);
+//                            }
+//                        }
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
 
-            long time_start = 0, time_end = 0;
 
+        imageViewJugnoo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-
-                int x_cord = (int) event.getRawX();
-                int y_cord = (int) event.getRawY();
-                int x_cord_Destination, y_cord_Destination;
-
-                AbsoluteLayout.LayoutParams paramsGenie = getParamsF();
-
-                switch (event.getAction()) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        time_start = System.currentTimeMillis();
-
-                        x_init_cord = x_cord;
-                        y_init_cord = y_cord;
-
-                        x_init_margin = getParamsF().x;
-                        y_init_margin = getParamsF().y;
-                        break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        int x_diff_move = x_cord - x_init_cord;
-                        int y_diff_move = y_cord - y_init_cord;
-
-                        float diff = Math.max(x_diff_move, y_diff_move);
-
-                        if (Math.abs(diff) > 10) {
-                            if (animLayout.getVisibility() == View.VISIBLE) {
-                                animLayout.setVisibility(View.GONE);
-                                clearAnims();
-                                clearAnims2();
-                                Log.d("anim layout", "cleared");
-                            }
-                        }
-                        x_cord_Destination = x_init_margin + x_diff_move;
-                        y_cord_Destination = y_init_margin + y_diff_move;
-
-                        if (y_cord_Destination < 0) {
-                            y_cord_Destination = 0;
-                        } else if (y_cord_Destination + (imageViewJugnoo.getHeight()) > szWindow.y) {
-                            y_cord_Destination = szWindow.y - (imageViewJugnoo.getHeight());
-                        }
-
-                        paramsGenie.x = x_cord_Destination;
-                        paramsGenie.y = y_cord_Destination;
-
-                        absoluteLayout.updateViewLayout(imageViewJugnoo, paramsGenie);
-
-                        break;
-
-
-                    case MotionEvent.ACTION_UP:
-                        int x_diff = x_cord - x_init_cord;
-                        int y_diff = y_cord - y_init_cord;
-
-                        x_cord_Destination = x_init_margin + x_diff;
-                        y_cord_Destination = y_init_margin + y_diff;
-
-                        int x_start;
-                        x_start = x_cord_Destination;
-
-                        if (Math.abs(x_diff) < 10 && Math.abs(y_diff) < 10) {
-                            time_end = System.currentTimeMillis();
-                            chathead_click();
-                        } else {
-                            if (((paramsGenie.y + imageViewJugnoo.getHeight()) > (szWindow.y - ASSL.Yscale() * 230))) {
-                                getToDefaultPosition(paramsGenie.x, paramsGenie.y);
-                            } else if (paramsGenie.y < (ASSL.Yscale() * 210)) {
-                                shiftDownwardsFromTaskbar(paramsGenie.x, paramsGenie.y);
-                            } else {
-                                resetPosition(x_start);
-                            }
-                        }
-                        break;
-                }
-                return true;
+            public void onClick(View v) {
+                chathead_click();
             }
         });
-
 
         imageViewMeals1.setOnClickListener(new View.OnClickListener() {
 
@@ -308,45 +315,45 @@ public class GenieLayout {
     private void updateAnimLayoutParams() {
         if (getParamsF().y < szWindow.y / 2) {
             final AbsoluteLayout.LayoutParams paramsA = getParamsAnimLayout();
-            paramsA.x = getParamsF().x + (int) ASSL.Xscale() * 20;
-            paramsA.y = getParamsF().y + (int) ASSL.Xscale() * 35;
+            paramsA.x = getParamsF().x + (int) (ASSL.Xscale() * 15);
+            paramsA.y = getParamsF().y + (int) (ASSL.Yscale() * 20);
             absoluteLayout.updateViewLayout(animLayout, paramsA);
             appsAnim = -1;
         } else {
             final AbsoluteLayout.LayoutParams paramsA = getParamsAnimLayout();
-            paramsA.x = getParamsF().x + (int) ASSL.Xscale() * 20;
+            paramsA.x = getParamsF().x + (int) (ASSL.Xscale() * 15);
             paramsA.y = ((imageViewJugnoo.getHeight() + getParamsF().y - animLayout.getHeight()) > 0) ? (imageViewJugnoo.getHeight() + getParamsF().y - animLayout.getHeight()) : 0;
             absoluteLayout.updateViewLayout(animLayout, paramsA);
             appsAnim = 1;
         }
-        saveGenieParams();
+//        saveGenieParams();
     }
 
 
 
 
 
-    public void saveGenieParams() {
-        GeniePositonsSaver.writeGenieParams(getParamsF().x, getParamsF().y);
-    }
-
-    public void setGenieParams() {
-        AbsoluteLayout.LayoutParams params = (AbsoluteLayout.LayoutParams) imageViewJugnoo.getLayoutParams();
-
-        int[] paramsSaved = GeniePositonsSaver.readGenieParams(context);
-
-        if (paramsSaved[1] < (ASSL.Yscale() * 186)) {
-            Log.d("Genie needs to shifted", "");
-            shiftDownwardsFromTaskbar(paramsSaved[0],
-                paramsSaved[1]);
-        } else {
-            params.x = paramsSaved[0];
-            params.y = paramsSaved[1];
-        }
-
-        absoluteLayout.updateViewLayout(imageViewJugnoo, params);
-        updateAnimLayoutParams();
-    }
+//    public void saveGenieParams() {
+//        GeniePositonsSaver.writeGenieParams(getParamsF().x, getParamsF().y);
+//    }
+//
+//    public void setGenieParams() {
+//        AbsoluteLayout.LayoutParams params = (AbsoluteLayout.LayoutParams) imageViewJugnoo.getLayoutParams();
+//
+//        int[] paramsSaved = GeniePositonsSaver.readGenieParams(context);
+//
+//        if (paramsSaved[1] < (ASSL.Yscale() * 186)) {
+//            Log.d("Genie needs to shifted", "");
+//            shiftDownwardsFromTaskbar(paramsSaved[0],
+//                paramsSaved[1]);
+//        } else {
+//            params.x = paramsSaved[0];
+//            params.y = paramsSaved[1];
+//        }
+//
+//        absoluteLayout.updateViewLayout(imageViewJugnoo, params);
+//        updateAnimLayoutParams();
+//    }
 
 
 
@@ -363,7 +370,7 @@ public class GenieLayout {
             translateAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
                     TranslateAnimation.ABSOLUTE, -(x_cord_now - (int) (520 * ASSL.Xscale())),
                     TranslateAnimation.ABSOLUTE, 0,
-                    TranslateAnimation.ABSOLUTE, -(y_cord_now - (int) (837 * ASSL.Yscale())));
+                    TranslateAnimation.ABSOLUTE, -(y_cord_now - (int) (835 * ASSL.Yscale())));
 
         translateAnimation.setDuration(350);
         translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -378,7 +385,7 @@ public class GenieLayout {
             public void onAnimationEnd(Animation animation) {
                 AbsoluteLayout.LayoutParams paramsGenie = getParamsF();
                 paramsGenie.x = (int) (520 * ASSL.Xscale());
-                paramsGenie.y = (int) (837 * ASSL.Yscale());
+                paramsGenie.y = (int) (835 * ASSL.Yscale());
                 imageViewJugnoo.clearAnimation();
                 absoluteLayout.updateViewLayout(imageViewJugnoo, paramsGenie);
                 updateAnimLayoutParams();

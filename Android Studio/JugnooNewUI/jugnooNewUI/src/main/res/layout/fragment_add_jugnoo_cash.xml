@@ -432,6 +432,7 @@
             android:layout_height="fill_parent"
             android:textSize="26px"
             android:padding="10px"
+            android:paddingRight="70px"
             android:gravity="left"
             android:spinnerMode="dialog"
             android:background="@drawable/payment_mode_edit_text_background"

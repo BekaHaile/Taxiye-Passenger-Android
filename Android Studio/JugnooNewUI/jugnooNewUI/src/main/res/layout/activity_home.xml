@@ -1711,7 +1711,7 @@
                     android:layout_height="140px"
                     android:layout_x="520px"
                     android:layout_y="845px"
-                    android:src="@drawable/jugnoo_icon_r_selector"
+                    android:src="@drawable/auto_head_main_selector"
                     android:tag="mwar" />
 
 

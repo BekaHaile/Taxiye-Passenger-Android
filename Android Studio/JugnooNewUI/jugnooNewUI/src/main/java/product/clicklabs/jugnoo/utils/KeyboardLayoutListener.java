@@ -12,10 +12,12 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
 
     ViewGroup activityRootView;
     TextView textViewScroll;
+    KeyBoardStateHandler keyBoardStateHandler;
 
-    public KeyboardLayoutListener(ViewGroup activityRootView, TextView textViewScroll) {
+    public KeyboardLayoutListener(ViewGroup activityRootView, TextView textViewScroll, KeyBoardStateHandler keyBoardStateHandler) {
         this.activityRootView = activityRootView;
         this.textViewScroll = textViewScroll;
+        this.keyBoardStateHandler = keyBoardStateHandler;
     }
 
 
@@ -41,6 +43,8 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
             textViewScroll.setLayoutParams(params_12);
             textViewScroll.requestLayout();
 
+            keyBoardStateHandler.keyboardOpened();
+
         } else {
 
             ViewGroup.LayoutParams params = textViewScroll
@@ -48,6 +52,8 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
             params.height = 0;
             textViewScroll.setLayoutParams(params);
             textViewScroll.requestLayout();
+
+            keyBoardStateHandler.keyBoardClosed();
 
         }
     }

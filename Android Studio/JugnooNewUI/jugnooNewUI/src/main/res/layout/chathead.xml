@@ -14,7 +14,7 @@
             android:layout_width="130px"
             android:layout_height="130px"
             android:tag="mwar"
-            android:src="@drawable/jugnoo_icon_r_selector" />
+            android:src="@drawable/auto_head_main_selector" />
     </AbsoluteLayout>
 
 

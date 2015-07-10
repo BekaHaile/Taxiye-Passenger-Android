@@ -353,6 +353,76 @@ public class GenieService extends Service implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imageViewMeals1:
+                if (!mealsAnimating1) {
+                    try {
+                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.MEALS_PACKAGE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case R.id.imageViewMeals2:
+                if (!mealsAnimating2) {
+                    try {
+                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.MEALS_PACKAGE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case R.id.imageViewFatafat1:
+                if (!fatafatAnimating1) {
+                    try {
+                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.FATAFAT_PACKAGE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case R.id.imageViewFatafat2:
+                if (!fatafatAnimating2) {
+                    try {
+                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.FATAFAT_PACKAGE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case R.id.imageViewAutos1:
+                if (!autosAnimating1) {
+                    try {
+                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.AUTOS_PACKAGE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case R.id.imageViewAutos2:
+                if (!autosAnimating2) {
+                    try {
+                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.AUTOS_PACKAGE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+        }
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                clearAnims();
+                clearAnims2();
+            }
+        }, 500);
+
+    }
+
     private WindowManager.LayoutParams getChatHeadParams() {
         return (WindowManager.LayoutParams) chatheadView.getLayoutParams();
     }
@@ -1448,75 +1518,7 @@ public class GenieService extends Service implements View.OnClickListener {
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.imageViewMeals1:
-                if (!mealsAnimating1) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.MEALS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewMeals2:
-                if (!mealsAnimating2) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.MEALS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewFatafat1:
-                if (!fatafatAnimating1) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.FATAFAT_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewFatafat2:
-                if (!fatafatAnimating2) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.FATAFAT_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewAutos1:
-                if (!autosAnimating1) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.AUTOS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewAutos2:
-                if (!autosAnimating2) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.AUTOS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-        }
 
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                clearAnims();
-                clearAnims2();
-            }
-        }, 500);
-
-    }
 
 
 }

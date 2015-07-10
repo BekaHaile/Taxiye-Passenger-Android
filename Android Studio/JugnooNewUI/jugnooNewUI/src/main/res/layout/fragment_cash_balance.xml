@@ -36,7 +36,13 @@
     </RelativeLayout>
 
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="720px"
+        android:layout_height="fill_parent">
+
     <LinearLayout
+        android:id="@+id/linearLayoutMain"
         android:layout_width="720px"
         android:layout_height="fill_parent"
         android:orientation="vertical">
@@ -244,9 +250,13 @@
             android:text="ADD JUGNOO CASH"
             android:textColor="@drawable/text_color_white_alpha_selector"
             android:textSize="@dimen/button_text_size" />
-        
+
+        <TextView
+            android:id="@+id/textViewScroll"
+            android:layout_width="100px"
+            android:layout_height="10px"/>
 
     </LinearLayout>
-
+    </ScrollView>
 
 </LinearLayout>

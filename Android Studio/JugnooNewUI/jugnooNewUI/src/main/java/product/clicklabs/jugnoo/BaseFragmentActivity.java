@@ -22,7 +22,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onPause() {
 
         if (!newActivityStarted && !activityFinished) {
-            startService(new Intent(BaseActivity.GENIE_SERVICE));
+//            startService(new Intent(BaseActivity.GENIE_SERVICE));
 
             Log.d("Service started", "");
         }
@@ -34,7 +34,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     @Override
     protected void onResume() {
-        stopService(new Intent(BaseActivity.GENIE_SERVICE));
+//        stopService(new Intent(BaseActivity.GENIE_SERVICE));
         Log.d("Service stopped", "");
         super.onResume();
     }

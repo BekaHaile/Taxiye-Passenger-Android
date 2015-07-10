@@ -161,7 +161,7 @@ public class GetResponseTask extends AsyncTask<List<NameValuePair>, String, Stri
                     if(Constants.SET_DEFAULT_NET_BANKING){
                         JSONObject banksObject = new JSONObject();
                         banksObject.put("code", "default");
-                        banksObject.put("title", "Select your bank");
+                        banksObject.put("title", "Select Bank");
                         PayU.availableBanks.put(0, banksObject);
                     }
 

@@ -2417,7 +2417,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         intentFired = false;
         feedbackAutoSkipped = false;
 
-        genieLayout.setGenieParams();
+//        genieLayout.setGenieParams();
 
         LocationInit.showLocationAlertDialog(this);
     }
@@ -2529,7 +2529,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-        genieLayout.saveGenieParams();
+//        genieLayout.saveGenieParams();
         clearAnims();
 
         super.onPause();
@@ -2563,7 +2563,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        startService(new Intent(BaseActivity.GENIE_SERVICE));
+//                        startService(new Intent(BaseActivity.GENIE_SERVICE));
                     }
                 }, 2000);
             }

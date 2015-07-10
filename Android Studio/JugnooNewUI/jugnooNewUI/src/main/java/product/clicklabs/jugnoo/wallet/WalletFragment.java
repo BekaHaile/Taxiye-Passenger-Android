@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -297,6 +298,7 @@ public class WalletFragment extends Fragment {
 	
 	
 	public void updateListData(String message, boolean errorOccurred){
+        Log.e("errorOccurred", "errorOccurred = "+errorOccurred);
 		if(errorOccurred){
 			textViewInfo.setText(message);
 			textViewInfo.setVisibility(View.VISIBLE);
@@ -496,7 +498,12 @@ public class WalletFragment extends Fragment {
 
                                         if (Data.userData != null) {
                                             Data.userData.jugnooBalance = jugnooBalance;
+
                                         }
+
+                                        try {
+                                            textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee) + " " + df.format(jugnooBalance));
+                                        }catch(Exception e){}
 
                                         showPromoBanner();
                                         updateListData("No transactions currently", false);
@@ -544,14 +551,20 @@ public class WalletFragment extends Fragment {
                 String payment = status;
                 if("success".equalsIgnoreCase(payment)){
                     String amount = amountValue;
-                    new DialogPopup().dialogBanner(paymentActivity, "Payment successful, Added Rs. "+amount);
+                    new DialogPopup().dialogBanner(paymentActivity, "Payment successful, Added Rs. " + amount);
                     transactionInfoList.clear();
-                    getTransactionInfoAsync(paymentActivity);
+                    progressBar.setVisibility(View.VISIBLE);
+                    textViewInfo.setVisibility(View.GONE);
 
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            firstTimeFlag = true;
+                            fetchTransactionInfoClient = null;
+                            getTransactionInfoAsync(paymentActivity);
+                        }
+                    }, 5000);
                     scrollView.smoothScrollTo(0, 0);
-
-
-
                 }
         } catch(Exception e){
             e.printStackTrace();

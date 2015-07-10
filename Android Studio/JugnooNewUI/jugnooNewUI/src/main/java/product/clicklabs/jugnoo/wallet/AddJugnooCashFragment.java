@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -528,6 +529,10 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
                 try {
                     ((TextView) adapterView.getChildAt(0)).setTextColor(Color.rgb(69, 79, 79));
+                    float size = ASSL.Xscale() * 31;
+                    ((TextView) adapterView.getChildAt(0)).setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+
+                    ((TextView) adapterView.getChildAt(0)).setSingleLine(true);
                     bankCode = ((JSONObject) adapterView.getAdapter().getItem(i)).getString("code");
 
                     if (bankCode.contentEquals("default")) {

@@ -24,7 +24,7 @@ public class BaseActivity extends Activity {
     protected void onPause() {
 
         if (!newActivityStarted && !activityFinished) {
-            startService(new Intent(GENIE_SERVICE));
+//            startService(new Intent(GENIE_SERVICE));
 
             Log.d("Service started", "");
         }
@@ -36,7 +36,7 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onResume() {
-        stopService(new Intent(GENIE_SERVICE));
+//        stopService(new Intent(GENIE_SERVICE));
         Log.d("Service stopped", "");
         super.onResume();
     }

@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -31,6 +33,8 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import rmn.androidscreenlibrary.ASSL;
 
 public class WalletAddPaymentFragment extends Fragment {
@@ -45,8 +49,13 @@ public class WalletAddPaymentFragment extends Fragment {
 	Button button599, button999, button1999, buttonMakePayment;
 	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
 
+    ScrollView scrollView;
+    LinearLayout linearLayoutMain;
+    TextView textViewScroll;
+
     View rootView;
     public PaymentActivity paymentActivity;
+    boolean scrolled = false;
 	
 	//public static AddPaymentPath addPaymentPath = AddPaymentPath.FROM_WALLET;
 
@@ -81,7 +90,7 @@ public class WalletAddPaymentFragment extends Fragment {
 
         paymentActivity = (PaymentActivity) getActivity();
 
-
+        scrolled = false;
  
 		
 		relative = (LinearLayout) rootView.findViewById(R.id.relative);
@@ -108,7 +117,13 @@ public class WalletAddPaymentFragment extends Fragment {
 		
 		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance); textViewCurrentBalance.setTypeface(Fonts.latoRegular(paymentActivity));
 		textViewCurrentBalanceValue = (TextView) rootView.findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Fonts.latoRegular(paymentActivity));
-		
+
+        scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
+        linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
+        textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
+
+
+
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
@@ -223,7 +238,7 @@ try{
 //						double amount = Double.parseDouble(editTextAmount.getText().toString().trim());
                         int amountNew = Integer.parseInt(editTextAmount.getText().toString().trim());
                         if (AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-                            if(amountNew<1 || amountNew>5000) {
+                            if(amountNew<Data.MIN_AMOUNT || amountNew>Data.MAX_AMOUNT) {
                                 new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.amount_range));
                             } else {
 //                                paymentActivity.enterAmount = Double.toString(amount);
@@ -281,6 +296,31 @@ try{
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+
+
+        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+                if(!scrolled) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.smoothScrollTo(0, buttonMakePayment.getTop());
+                        }
+                    }, 100);
+                    scrolled = true;
+                }
+            }
+
+            @Override
+            public void keyBoardClosed() {
+                scrolled = false;
+            }
+        }));
+
+
+
+
 		
 		return rootView;
 	}

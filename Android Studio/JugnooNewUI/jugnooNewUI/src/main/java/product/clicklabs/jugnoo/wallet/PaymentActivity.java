@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.payu.sdk.ClearFragment;
@@ -19,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 
+import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
@@ -28,7 +28,7 @@ import product.clicklabs.jugnoo.utils.Log;
 /**
  * Created by socomo30 on 7/8/15.
  */
-public class PaymentActivity extends FragmentActivity implements PaymentListener, ClearFragment {
+public class PaymentActivity extends BaseFragmentActivity implements PaymentListener, ClearFragment {
 
     public String txnId = "";
     public String uName = "";
@@ -90,6 +90,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentListener
                 }
                 else if(value == CommonFlags.PAYMENT_SUCCESS.getOrdinal()) {
 
+                    try {
+                        getSupportFragmentManager().popBackStack("WalletAddPaymentFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+                    }catch(Exception e){
+                        getSupportFragmentManager().popBackStack();
+                    }
+
                     WalletFragment frag = (WalletFragment) getSupportFragmentManager().findFragmentByTag("WalletFragment");
                     if (frag != null) {
                         frag.updateStatus("success", enterAmount);
@@ -99,11 +105,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentListener
                         HomeActivity.rechargedOnce = true;
                     }
 
-                    try {
-                        getSupportFragmentManager().popBackStack("WalletAddPaymentFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
-                    }catch(Exception e){
-                        getSupportFragmentManager().popBackStack();
-                    }
+
 
                 }else if(value == CommonFlags.PAYMENT_FAILED.getOrdinal()) {
                     new DialogPopup().dialogBanner(PaymentActivity.this, ""+getResources().getString(R.string.trans_failed));
