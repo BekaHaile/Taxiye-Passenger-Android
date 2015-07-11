@@ -18,7 +18,6 @@ import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
@@ -150,7 +149,6 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.shareToFacebook(ShareActivity.this);
-				FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);
 			}
 		});
 		
@@ -160,7 +158,6 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.shareToWhatsapp(ShareActivity.this);
-				FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);
 			}
 		});
 		
@@ -170,7 +167,6 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.sendSMSIntent(ShareActivity.this);
-				FlurryEventLogger.sharedViaSMS(Data.userData.accessToken);
 			}
 		});
 
@@ -179,7 +175,6 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.openMailIntent(ShareActivity.this);
-				FlurryEventLogger.sharedViaEmail(Data.userData.accessToken);
 			}
 		});
 		

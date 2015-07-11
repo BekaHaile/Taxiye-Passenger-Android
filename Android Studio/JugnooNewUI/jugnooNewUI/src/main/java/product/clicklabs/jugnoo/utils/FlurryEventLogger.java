@@ -124,8 +124,8 @@ public class FlurryEventLogger {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	public static void shareScreenOpenedThroughCoupons(String accessToken){
 		try{
 			Map<String, String> articleParams = new HashMap<String, String>();
@@ -540,6 +540,27 @@ public class FlurryEventLogger {
 		}
 	}
 
+
+
+    public static void rateUsPressed(String accessToken){
+        try{
+            Map<String, String> articleParams = new HashMap<String, String>();
+            articleParams.put("access_token", accessToken);
+            FlurryAgent.logEvent("Rate Us pressed", articleParams);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void rateUsCancelled(String accessToken){
+        try{
+            Map<String, String> articleParams = new HashMap<String, String>();
+            articleParams.put("access_token", accessToken);
+            FlurryAgent.logEvent("Rate Us cancelled", articleParams);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
 }

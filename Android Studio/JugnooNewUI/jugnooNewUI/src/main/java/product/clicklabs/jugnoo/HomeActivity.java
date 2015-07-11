@@ -2385,7 +2385,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onResume() {
         super.onResume();
 
-
         if (!checkIfUserDataNull(HomeActivity.this)) {
             setUserData();
 
@@ -3825,78 +3824,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
+
     /**
      * Displays popup to rate the app
      */
     public void rateAppPopup(final Activity activity) {
         try {
-            final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-            dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-            dialog.setContentView(R.layout.dialog_custom_two_buttons);
-
-            FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-            new ASSL(activity, frameLayout, 1134, 720, false);
-
-            WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-            layoutParams.dimAmount = 0.6f;
-            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            dialog.setCancelable(true);
-            dialog.setCanceledOnTouchOutside(true);
-
-
-            TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-            textHead.setTypeface(Fonts.latoRegular(activity));
-            TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
-            textMessage.setTypeface(Fonts.latoRegular(activity));
-
-            textMessage.setMovementMethod(new ScrollingMovementMethod());
-            textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
-
-            textHead.setVisibility(View.VISIBLE);
-            textHead.setText("Rate Us");
-            textMessage.setText("Liked our services!!! Please rate us on Play Store");
-
-            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-            btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-            btnOk.setText("RATE NOW");
-            Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-            btnCancel.setTypeface(Fonts.latoRegular(activity));
-            btnCancel.setText("LATER");
-
-            btnOk.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                    acceptAppRatingRequestAPI(activity);
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
-                    activity.startActivity(intent);
-                }
-            });
-
-            btnCancel.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-
-            dialog.findViewById(R.id.rl1).setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                }
-            });
-
-            frameLayout.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-
-            dialog.show();
+            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Rate Us", "Liked our services!!! Please rate us on Play Store", "RATE NOW", "LATER",
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        acceptAppRatingRequestAPI(activity);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
+                        activity.startActivity(intent);
+                        try{FlurryEventLogger.rateUsPressed(Data.userData.accessToken);}catch(Exception e){}
+                    }
+                },
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{FlurryEventLogger.rateUsCancelled(Data.userData.accessToken);}catch(Exception e){}
+                    }
+                }, false, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3927,9 +3877,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
             }
-//			else{
-//				buildAlertMessageNoGps();
-//			}
         }
     }
 
@@ -4728,6 +4675,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
     }
+
+
 
 
     @Override
