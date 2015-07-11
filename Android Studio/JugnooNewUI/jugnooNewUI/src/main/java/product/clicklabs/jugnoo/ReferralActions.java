@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -156,6 +157,7 @@ public class ReferralActions {
                 }
             }
         }, false);
+        try{FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
@@ -175,6 +177,7 @@ public class ReferralActions {
         } catch (PackageManager.NameNotFoundException e) {
             Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
         }
+        try{FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
@@ -187,6 +190,7 @@ public class ReferralActions {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try{FlurryEventLogger.sharedViaSMS(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
@@ -201,6 +205,7 @@ public class ReferralActions {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try{FlurryEventLogger.sharedViaEmail(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
