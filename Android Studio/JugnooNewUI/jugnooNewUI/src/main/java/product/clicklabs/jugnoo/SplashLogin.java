@@ -532,7 +532,10 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-                                        if(!isPhoneNumber) {
+                                        if(isPhoneNumber){
+                                            enteredEmail = jObj.getString("email");;
+                                        }
+                                        else{
                                             enteredEmail = emailId;
                                         }
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
