@@ -282,8 +282,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate{
 				Data.longitude = Data.locationFetcher.getLongitude();
 			}
 
-		
-			params.put("email", emailRegisterData.emailId);
+            params.put("email", emailRegisterData.emailId);
 			params.put("password", emailRegisterData.password);
 			params.put("device_token", Data.deviceToken);
 			params.put("device_type", Data.DEVICE_TYPE);
@@ -361,9 +360,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate{
 							
 						}
 					});
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		} else {
+            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
 	}
