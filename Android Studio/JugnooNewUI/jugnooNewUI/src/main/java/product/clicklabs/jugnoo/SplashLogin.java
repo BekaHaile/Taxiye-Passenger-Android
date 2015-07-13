@@ -376,9 +376,6 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 						FacebookLoginHelper.USER_DATA.userEmail);
 				sendFacebookLoginValues(SplashLogin.this);
 				FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
-
-//				new FacebookLoginHelper().getFriendsList();
-
 			}
 			else{
 				Toast.makeText(getApplicationContext(), "Error occured during Facebook authentication", Toast.LENGTH_SHORT).show();
@@ -532,7 +529,10 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 										DialogPopup.alertPopup(activity, "", error);
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-                                        if(!isPhoneNumber) {
+                                        if(isPhoneNumber){
+                                            enteredEmail = jObj.getString("user_email");;
+                                        }
+                                        else{
                                             enteredEmail = emailId;
                                         }
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
