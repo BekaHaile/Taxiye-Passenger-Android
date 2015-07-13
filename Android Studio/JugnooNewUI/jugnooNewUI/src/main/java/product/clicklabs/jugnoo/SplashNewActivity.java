@@ -48,8 +48,6 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
-import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -67,6 +65,7 @@ import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgespotClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -109,32 +108,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     public void onStart() {
         super.onStart();
 
-        try {
-            Branch branch = Branch.getInstance();
-            branch.initSession(new Branch.BranchReferralInitListener() {
-                @Override
-                public void onInitFinished(JSONObject referringParams, BranchError error) {
-                    if (error == null) {
-                        // params are the deep linked params associated with the link that the user clicked before showing up
-                        Log.i("BranchConfigTest", "deep link data: " + referringParams.toString());
-                    }
-                }
-            }, this.getIntent().getData(), this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         FlurryAgent.init(this, Config.getFlurryKey());
         FlurryAgent.onStartSession(this, Config.getFlurryKey());
         FlurryAgent.onEvent("Splash started");
     }
 
-    @Override
-    public void onNewIntent(Intent intent) {
-        this.setIntent(intent);
-    }
-	
-	
+
 	public static void initializeServerURL(Context context){
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
@@ -440,9 +419,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         });
 
 	}
-	
-	
-	
+
+
 	@Override
 	protected void onResume() {
 		if(Data.locationFetcher == null){
@@ -458,8 +436,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             LocationInit.showLocationAlertDialog(this);
 		}
 
-		
-		super.onResume();
+
+        NudgespotClient.getInstance(this);
+
+        super.onResume();
 		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
 		resumed = true;

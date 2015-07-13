@@ -111,6 +111,7 @@ import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.NudgespotClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -1088,6 +1089,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
                         if (Utils.isLocationEnabled(HomeActivity.this)) {
                             if (map != null) {
+
+                                try{
+                                    NudgespotClient.getInstance(HomeActivity.this).track("request_ride");
+                                } catch(Exception e){
+                                    e.printStackTrace();
+                                }
+
                                 promoCouponSelectedForRide = null;
                                 final LatLng requestLatLng = map.getCameraPosition().target;
                                 Data.pickupLatLng = requestLatLng;
@@ -1557,6 +1565,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+
+
+        try{
+            NudgespotClient.getInstance(this).registerWithProperties(Data.userData.userEmail, new JSONObject());
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -2678,6 +2693,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             appInterruptHandler = null;
 
             FacebookLoginHelper.logoutFacebook();
+            NudgespotClient.getInstance(this).clearRegisteration();
+
+            new FacebookLoginHelper().logoutFacebook();
 
             System.gc();
         } catch (Exception e) {
