@@ -36,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.appdynamics.eumagent.runtime.Instrumentation;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
@@ -48,6 +49,8 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -108,9 +111,30 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     public void onStart() {
         super.onStart();
 
+
+        try {
+            Branch branch = Branch.getInstance();
+            branch.initSession(new Branch.BranchReferralInitListener() {
+                @Override
+                public void onInitFinished(JSONObject referringParams, BranchError error) {
+                    if (error == null) {
+                        // params are the deep linked params associated with the link that the user clicked before showing up
+                        Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
+                    }
+                }
+            }, this.getIntent().getData(), this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         FlurryAgent.init(this, Config.getFlurryKey());
         FlurryAgent.onStartSession(this, Config.getFlurryKey());
         FlurryAgent.onEvent("Splash started");
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
     }
 
 
@@ -140,6 +164,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
+        Instrumentation.start("AD-AAB-AAB-BGB", getApplicationContext());
 
         FacebookSdk.sdkInitialize(this);
 
