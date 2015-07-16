@@ -15,8 +15,13 @@ import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 
+import org.json.JSONObject;
+
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -139,14 +144,25 @@ public class ReferralActions implements FlurryEventNames {
             @Override
             public void facebookLoginDone(FacebookUserData facebookUserData) {
                 try {
-                    if(Data.userData != null && facebookLoginHelper != null){
-                        facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
-                            Data.referralMessages.fbShareCaption,
-                            Data.referralMessages.fbShareDescription,
-                            "https://jugnoo.in",
-                            Data.userData.jugnooFbBanner);
-
-//                        facebookLoginHelper.appInviteDialog();
+                    if(Data.userData != null){
+                        DialogPopup.showLoadingDialog(activity, "Loading...");
+                        JSONObject params = new JSONObject();
+                        try {
+                            params.put("referring_user_email", Data.userData.userEmail);
+                            params.put("referring_user_name", Data.userData.userName);
+                        } catch (Exception ex) { }
+                        Branch branch = Branch.getInstance(activity);
+                        branch.getShortUrl("facebook", "app_invite", null, params, new Branch.BranchLinkCreateListener() {
+                            @Override
+                            public void onLinkCreate(String url, BranchError error) {
+                                DialogPopup.dismissLoadingDialog();
+                                facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
+                                        Data.referralMessages.fbShareCaption,
+                                        Data.referralMessages.fbShareDescription,
+                                        url,
+                                        Data.userData.jugnooFbBanner);
+                            }
+                        });
 
                     }
                 } catch (Exception e) {
@@ -164,32 +180,70 @@ public class ReferralActions implements FlurryEventNames {
     }
 
 
-    public static void shareToWhatsapp(Activity activity) {
-        PackageManager pm = activity.getPackageManager();
+    public static void shareToWhatsapp(final Activity activity) {
+
         try {
-            Intent waIntent = new Intent(Intent.ACTION_SEND);
-            waIntent.setType("text/plain");
-            String text = Data.referralMessages.referralSharingMessage;
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+            Branch branch = Branch.getInstance();
+            JSONObject obj = new JSONObject();
+            obj.put("share_type", "whatsapp");
 
-            PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-            Log.d("info", "=" + info);
-            waIntent.setPackage("com.whatsapp");
+            branch.getShortUrl(obj, new Branch.BranchLinkCreateListener() {
 
-            waIntent.putExtra(Intent.EXTRA_TEXT, text);
-            activity.startActivity(Intent.createChooser(waIntent, "Share with"));
-        } catch (PackageManager.NameNotFoundException e) {
-            Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onLinkCreate(String s, BranchError branchError) {
+                    Log.e("branch url==", "=" + s);
+                    DialogPopup.dismissLoadingDialog();
+                    PackageManager pm = activity.getPackageManager();
+                    try {
+                        Intent waIntent = new Intent(Intent.ACTION_SEND);
+                        waIntent.setType("text/plain");
+                        String text = Data.referralMessages.referralSharingMessage;
+
+                        PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+                        Log.d("info", "=" + info);
+                        waIntent.setPackage("com.whatsapp");
+
+                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n" + s);
+                        activity.startActivity(Intent.createChooser(waIntent, "Share with"));
+                    } catch (PackageManager.NameNotFoundException e) {
+                        Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
+
         try{FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
-    public static void sendSMSIntent(Activity activity){
+    public static void sendSMSIntent(final Activity activity){
         try {
-            Uri sms_uri = Uri.parse("smsto:");
-            Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
-            sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage);
-            activity.startActivity(sms_intent);
+
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+            Branch branch = Branch.getInstance();
+            JSONObject obj = new JSONObject();
+            obj.put("share_type", "sms");
+
+            branch.getShortUrl(obj, new Branch.BranchLinkCreateListener() {
+
+                @Override
+                public void onLinkCreate(String s, BranchError branchError) {
+                    Log.e("branch url==", "=" + s);
+                    DialogPopup.dismissLoadingDialog();
+                    Uri sms_uri = Uri.parse("smsto:");
+                    Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
+                    sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n" + s);
+                    activity.startActivity(sms_intent);
+
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,14 +251,32 @@ public class ReferralActions implements FlurryEventNames {
     }
 
 
-    public static void openMailIntent(Activity activity){
+    public static void openMailIntent(final Activity activity){
         try {
-            Intent email = new Intent(Intent.ACTION_SEND);
-            email.putExtra(Intent.EXTRA_EMAIL, new String[] { "" });
-            email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-            email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage);
-            email.setType("message/rfc822");
-            activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
+
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+            Branch branch = Branch.getInstance();
+            JSONObject obj = new JSONObject();
+            obj.put("share_type", "email");
+
+            branch.getShortUrl(obj, new Branch.BranchLinkCreateListener() {
+
+                @Override
+                public void onLinkCreate(String s, BranchError branchError) {
+                    Log.e("branch url==", "=" + s);
+                    DialogPopup.dismissLoadingDialog();
+
+                    Intent email = new Intent(Intent.ACTION_SEND);
+                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+                    email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
+                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + s);
+                    email.setType("message/rfc822");
+                    activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
+
+                }
+            });
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
