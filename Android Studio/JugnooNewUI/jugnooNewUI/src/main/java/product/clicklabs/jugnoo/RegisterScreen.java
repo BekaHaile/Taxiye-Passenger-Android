@@ -307,6 +307,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
         });
 
 
+
         editTextReferralCode.setOnEditorActionListener(new OnEditorActionListener() {
 
             @Override
