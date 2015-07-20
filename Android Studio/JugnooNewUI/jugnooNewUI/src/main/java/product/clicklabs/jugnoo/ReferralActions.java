@@ -13,10 +13,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -29,7 +32,7 @@ import rmn.androidscreenlibrary.ASSL;
 public class ReferralActions {
 
 
-    public static boolean showReferralDialog(final Activity activity){
+    public static boolean showReferralDialog(final Activity activity, final CallbackManager callbackManager){
         try{
             boolean showDialog = false;
             long minus1 = -1l;
@@ -80,7 +83,7 @@ public class ReferralActions {
                 (dialog.findViewById(R.id.imageViewFacebook)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        shareToFacebook(activity);
+                        shareToFacebook(activity, callbackManager);
                     }
                 });
 
@@ -139,24 +142,33 @@ public class ReferralActions {
     }
 
 
-    public static void shareToFacebook(final Activity activity){
-        new FacebookLoginHelper().openFacebookSession(activity, new FacebookLoginCallback() {
+    public static FacebookLoginHelper facebookLoginHelper;
+    public static void shareToFacebook(final Activity activity, CallbackManager callbackManager){
+        facebookLoginHelper = new FacebookLoginHelper(activity, callbackManager, new FacebookLoginCallback() {
             @Override
-            public void facebookLoginDone() {
+            public void facebookLoginDone(FacebookUserData facebookUserData) {
                 try {
-                    if(Data.userData != null){
-                        new FacebookLoginHelper().publishFeedDialog(activity,
-                            "Jugnoo Autos - Autos on demand",
+                    if(Data.userData != null && facebookLoginHelper != null){
+                        facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
                             Data.referralMessages.fbShareCaption,
                             Data.referralMessages.fbShareDescription,
                             "https://jugnoo.in",
                             Data.userData.jugnooFbBanner);
+
+//                        facebookLoginHelper.appInviteDialog();
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }, false);
+
+            @Override
+            public void facebookLoginError(String message) {
+                Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+            }
+        });
+        facebookLoginHelper.openFacebookSession();
         try{FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 

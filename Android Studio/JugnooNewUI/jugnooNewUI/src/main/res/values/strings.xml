@@ -8,8 +8,8 @@
 
 
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
-    <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
+    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
+    <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> <!-- Dev -->
 
 
     <!-- <string name="google_maps_api_key">AIzaSyBxgi_Upqn9MD_Qxr_g1NZrUqePHhEQIR8</string> Dev Harshit-->
@@ -217,8 +217,11 @@
 
     <string name="amount_range">Recharge amount should be between Rs. 100 - Rs. 5000</string>
     <string name="check_internet_connection">Seems there is an issue with your internet connection. Please check and try again.</string>
-	
-	
+
+
+
+    <string name="fbl">Facebook Login Test</string>
+
 	
 	
 	<string-array name="CountryCodes" >

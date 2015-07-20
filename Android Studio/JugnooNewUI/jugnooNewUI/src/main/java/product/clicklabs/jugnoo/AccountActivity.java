@@ -794,7 +794,7 @@ public class AccountActivity extends BaseActivity {
 
 										PicassoTools.clearCache(Picasso.with(activity));
 										
-										new FacebookLoginHelper().logoutFacebook();
+										FacebookLoginHelper.logoutFacebook();
 										
 										GCMIntentService.clearNotifications(activity);
 										

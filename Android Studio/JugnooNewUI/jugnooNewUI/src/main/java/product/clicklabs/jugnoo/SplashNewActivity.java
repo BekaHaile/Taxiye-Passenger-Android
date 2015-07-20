@@ -367,7 +367,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 	    
 	    
 		if(getIntent().hasExtra("no_anim")){
-            new FacebookLoginHelper().logoutFacebook();
+            FacebookLoginHelper.logoutFacebook();
 			imageViewJugnooLogo.clearAnimation();
 			getDeviceToken();
 		}
