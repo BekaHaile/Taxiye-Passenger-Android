@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.facebook.Session;
+import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
@@ -94,6 +94,9 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
     }
 
 
+    CallbackManager callbackManager;
+    FacebookLoginHelper facebookLoginHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +141,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
             @Override
             public void onClick(View v) {
-                new FacebookLoginHelper().openFacebookSession(RegisterScreen.this, facebookLoginCallback, true);
+                facebookLoginHelper.openFacebookSession();
             }
         });
 
@@ -156,8 +159,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
 //                    scrollView.smoothScrollTo(0, editTextUserName.getBottom());
-                }
-                else {
+                } else {
                     editTextUserName.setError(null);
                 }
             }
@@ -169,8 +171,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
 //                    scrollView.smoothScrollTo(0, editTextEmail.getBottom());
-                }
-                else {
+                } else {
                     editTextEmail.setError(null);
                 }
             }
@@ -243,12 +244,10 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
                 if ("".equalsIgnoreCase(name)) {
                     editTextUserName.requestFocus();
                     editTextUserName.setError("Please enter name");
-                }
-                else if(!Utils.hasAlphabets(name)) {
+                } else if (!Utils.hasAlphabets(name)) {
                     editTextUserName.requestFocus();
                     editTextUserName.setError("Please enter at least one alphabet");
-                }
-                else {
+                } else {
                     if ("".equalsIgnoreCase(emailId)) {
                         editTextEmail.requestFocus();
                         editTextEmail.setError("Please enter email id");
@@ -326,6 +325,30 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
                 return true;
             }
         });
+
+        callbackManager = CallbackManager.Factory.create();
+
+        facebookLoginHelper = new FacebookLoginHelper(this, callbackManager, new FacebookLoginCallback() {
+            @Override
+            public void facebookLoginDone(FacebookUserData facebookUserData) {
+                Data.facebookUserData = facebookUserData;
+                facebookLogin = true;
+                editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+                editTextEmail.setText(Data.facebookUserData.userEmail);
+
+                editTextUserName.setEnabled(false);
+                editTextEmail.setEnabled(false);
+                FlurryEventLogger.registerViaFBClicked(Data.facebookUserData.fbId);
+            }
+
+            @Override
+            public void facebookLoginError(String message) {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
 
 
         SpannableString sstr = new SpannableString("Terms and Conditions");
@@ -448,32 +471,13 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
     }
 
-    FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
-        @Override
-        public void facebookLoginDone() {
-            if (FacebookLoginHelper.USER_DATA != null) {
-                Data.facebookUserData = new FacebookUserData(FacebookLoginHelper.USER_DATA.accessToken, FacebookLoginHelper.USER_DATA.fbId,
-                    FacebookLoginHelper.USER_DATA.firstName, FacebookLoginHelper.USER_DATA.lastName, FacebookLoginHelper.USER_DATA.userName,
-                    FacebookLoginHelper.USER_DATA.userEmail);
-                facebookLogin = true;
-                editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
-                editTextEmail.setText(Data.facebookUserData.userEmail);
 
-                editTextUserName.setEnabled(false);
-                editTextEmail.setEnabled(false);
-                FlurryEventLogger.registerViaFBClicked(Data.facebookUserData.fbId);
-            } else {
-                Toast.makeText(getApplicationContext(), "Error occured during Facebook authentication", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             super.onActivityResult(requestCode, resultCode, data);
-            Session.getActiveSession().onActivityResult(this, requestCode,
-                resultCode, data);
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -786,7 +790,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
 
     public void performBackPressed() {
-        new FacebookLoginHelper().logoutFacebook();
+        FacebookLoginHelper.logoutFacebook();
         Intent intent = new Intent(RegisterScreen.this, SplashNewActivity.class);
         intent.putExtra("no_anim", "yes");
         startActivity(intent);

@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.facebook.Session;
+import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -69,11 +69,19 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 	TextView textViewForgotPassword;
 
 	LinearLayout relative;
-	
+
+
+
+
+    CallbackManager callbackManager;
+    FacebookLoginHelper facebookLoginHelper;
+
+
 	
 	boolean loginDataFetched = false, facebookRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
 	int otpFlag = 0; 
 	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "";
+
 
 
 
@@ -208,12 +216,11 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(Utils.checkIfOnlyDigits(s.toString())){
+                if (Utils.checkIfOnlyDigits(s.toString())) {
                     InputFilter[] fArray = new InputFilter[1];
                     fArray[0] = new InputFilter.LengthFilter(10);
                     editTextEmail.setFilters(fArray);
-                }
-                else{
+                } else {
                     InputFilter[] fArray = new InputFilter[1];
                     fArray[0] = new InputFilter.LengthFilter(1000);
                     editTextEmail.setFilters(fArray);
@@ -236,33 +243,33 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		});
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				performBackPressed();
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                performBackPressed();
+            }
+        });
 		
 		
 		editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(!hasFocus){
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
                     editTextEmail.setError(null);
                 }
-			}
-		});
+            }
+        });
 		
 		editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(!hasFocus){
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
                     editTextPassword.setError(null);
                 }
-			}
-		});
+            }
+        });
 
         editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
 
@@ -286,32 +293,49 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 
 		editTextPassword.setOnEditorActionListener(new OnEditorActionListener() {
 
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						buttonEmailLogin.performClick();
-					break;
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                int result = actionId & EditorInfo.IME_MASK_ACTION;
+                switch (result) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        buttonEmailLogin.performClick();
+                        break;
 
-					case EditorInfo.IME_ACTION_NEXT:
-					break;
+                    case EditorInfo.IME_ACTION_NEXT:
+                        break;
 
-					default:
-				}
-				return true;
-			}
-		});
+                    default:
+                }
+                return true;
+            }
+        });
 		
 		
 		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				loginDataFetched = false;
-				new FacebookLoginHelper().openFacebookSession(SplashLogin.this, facebookLoginCallback, true);
-			}
-		});
-		
+            @Override
+            public void onClick(View v) {
+                loginDataFetched = false;
+                facebookLoginHelper.openFacebookSession();
+            }
+        });
+
+
+
+        callbackManager = CallbackManager.Factory.create();
+
+        facebookLoginHelper = new FacebookLoginHelper(this, callbackManager, new FacebookLoginCallback() {
+            @Override
+            public void facebookLoginDone(FacebookUserData facebookUserData) {
+                Data.facebookUserData = facebookUserData;
+                sendFacebookLoginValues(SplashLogin.this);
+                FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
+            }
+
+            @Override
+            public void facebookLoginError(String message) {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
 		
 		
 
@@ -366,23 +390,6 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 	}
 
 
-
-	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
-		@Override
-		public void facebookLoginDone() {
-			if(FacebookLoginHelper.USER_DATA != null){
-				Data.facebookUserData = new FacebookUserData(FacebookLoginHelper.USER_DATA.accessToken, FacebookLoginHelper.USER_DATA.fbId, 
-						FacebookLoginHelper.USER_DATA.firstName, FacebookLoginHelper.USER_DATA.lastName, FacebookLoginHelper.USER_DATA.userName, 
-						FacebookLoginHelper.USER_DATA.userEmail);
-				sendFacebookLoginValues(SplashLogin.this);
-				FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
-			}
-			else{
-				Toast.makeText(getApplicationContext(), "Error occured during Facebook authentication", Toast.LENGTH_SHORT).show();
-			}
-		}
-	};
-	
 	
 	@Override
 	protected void onResume() {
@@ -433,7 +440,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
         }
         else {
-            new FacebookLoginHelper().logoutFacebook();
+            FacebookLoginHelper.logoutFacebook();
             Intent intent = new Intent(SplashLogin.this, SplashNewActivity.class);
             intent.putExtra("no_anim", "yes");
             startActivity(intent);
@@ -756,8 +763,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
-			Session.getActiveSession().onActivityResult(this, requestCode,
-					resultCode, data);
+            callbackManager.onActivityResult(requestCode, resultCode, data);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

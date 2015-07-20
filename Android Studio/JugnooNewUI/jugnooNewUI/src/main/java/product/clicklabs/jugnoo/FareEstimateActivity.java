@@ -272,7 +272,6 @@ public class FareEstimateActivity extends BaseFragmentActivity {
                                                         getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFarePlus));
 
 
-
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }

@@ -41,4 +41,5 @@ public class FareStructure {
         fare = Math.ceil(fare);
         return fare;
     }
+
 }

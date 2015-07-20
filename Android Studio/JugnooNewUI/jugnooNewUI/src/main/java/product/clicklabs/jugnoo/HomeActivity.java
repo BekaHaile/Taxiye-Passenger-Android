@@ -39,7 +39,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.Session;
+import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -97,7 +97,9 @@ import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -323,11 +325,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     GenieLayout genieLayout;
 
 
+    CallbackManager callbackManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
+        callbackManager = CallbackManager.Factory.create();
 
         ReferralActions.incrementAppOpen(this);
 
@@ -1449,7 +1455,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }, 5000);
 
 
-            ReferralActions.showReferralDialog(HomeActivity.this);
+            ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
 
 
         } catch (Exception e) {
@@ -2439,7 +2445,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             super.onActivityResult(requestCode, resultCode, data);
-            Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2473,7 +2479,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static void logoutIntent(Activity cont) {
         try {
-            new FacebookLoginHelper().logoutFacebook();
+            FacebookLoginHelper.logoutFacebook();
             Data.userData = null;
             Intent intent = new Intent(cont, SplashNewActivity.class);
             cont.startActivity(intent);
@@ -2589,7 +2595,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             appInterruptHandler = null;
 
-            new FacebookLoginHelper().logoutFacebook();
+            FacebookLoginHelper.logoutFacebook();
 
             System.gc();
         } catch (Exception e) {
@@ -4232,7 +4238,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void run() {
 
-                    new FacebookLoginHelper().logoutFacebook();
+                    FacebookLoginHelper.logoutFacebook();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(cont);
                     builder.setMessage(cont.getResources().getString(R.string.your_login_session_expired)).setTitle(cont.getResources().getString(R.string.alert));
