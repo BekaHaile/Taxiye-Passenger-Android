@@ -2695,8 +2695,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             FacebookLoginHelper.logoutFacebook();
             NudgespotClient.getInstance(this).clearRegisteration();
 
-            new FacebookLoginHelper().logoutFacebook();
-
             System.gc();
         } catch (Exception e) {
             e.printStackTrace();
