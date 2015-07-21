@@ -142,27 +142,27 @@ public class DateOperations {
 	
 	public static String getTimeAMPM(String dateTime){
 		try{
-		String time = dateTime.split(" ")[1];
-		
-		String hour = time.split(":")[0];
-		String min = time.split(":")[1];
-		
-		String amOrpm = Integer.parseInt(hour)>=12?"PM":"AM";
-		String newHour = "";
-		
-		if(Integer.parseInt(hour)==0){
-			newHour = "12";
-		}
-		else if(Integer.parseInt(hour)<=12){
-			newHour = hour;
-		}
-		else{
-			newHour = ""+(Integer.parseInt(hour) - 12);
-		}
-		
-		String finalTime = ""+ newHour + ":" + min + " " + amOrpm; 
-		
-		return finalTime;
+            String time = dateTime.split(" ")[1];
+
+            String hour = time.split(":")[0];
+            String min = time.split(":")[1];
+
+            String amOrpm = Integer.parseInt(hour)>=12?"PM":"AM";
+            String newHour = "";
+
+            if(Integer.parseInt(hour)==0){
+                newHour = "12";
+            }
+            else if(Integer.parseInt(hour)<=12){
+                newHour = hour;
+            }
+            else{
+                newHour = ""+(Integer.parseInt(hour) - 12);
+            }
+
+            String finalTime = ""+ newHour + ":" + min + " " + amOrpm;
+
+            return finalTime;
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -327,6 +327,23 @@ public class DateOperations {
             String utcDate = formatter.format(date);
             String utcTimeStamp = utcDate + " " + utcTime;
             return utcTimeStamp;
+        }
+    }
+
+    public static String getUTCTimeInLocalTime(String utcTime){
+        try {
+            long foo = System.currentTimeMillis();
+            Date date = new Date(foo);
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String utcDate = formatter.format(date);
+
+            String utcTimeStamp = utcDate + " " + utcTime;
+            String localTimeStamp = utcToLocal(utcTimeStamp);
+            return getTimeAMPM(localTimeStamp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return utcTime;
         }
     }
 
