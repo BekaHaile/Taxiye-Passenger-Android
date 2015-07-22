@@ -764,7 +764,7 @@ public class JSONParser {
                     coData.getString("description"),
                     coData.getString("image"),
                     coData.getString("redeemed_on"),
-                    coData.getString("expiry_date")));
+                    coData.getString("expiry_date"), "", ""));
         }
 
         JSONArray jPromoArr = jObj.getJSONArray("promotions");
@@ -868,6 +868,32 @@ public class JSONParser {
     public static ArrayList<CouponInfo> parseCouponsArray(JSONObject jObj){
         ArrayList<CouponInfo> couponInfoList = new ArrayList<CouponInfo>();
 
+        //                                                {
+//                                                    "coupon_id": 12,
+//                                                    "title": "Drop Capped C",
+//                                                    "subtitle": "upto Rs. 100 ",
+//                                                    "description": "Your 30.771823, 76.769595",
+//                                                    "coupon_type": 3,
+//                                                    "type": 3,
+//                                                    "discount_percentage": 0,
+//                                                    "discount_maximum": 0,
+//                                                    "discount": 0,
+//                                                    "maximum": 0,
+//                                                    "start_time": "00:00:00",
+//                                                    "end_time": "23:00:00",
+//                                                    "pickup_latitude": 30.7188,
+//                                                    "pickup_longitude": 76.8108,
+//                                                    "pickup_radius": 200,
+//                                                    "drop_latitude": 30.7718,
+//                                                    "drop_longitude": 76.7696,
+//                                                    "drop_radius": 200,
+//                                                    "image": "",
+//                                                    "account_id": 2568,
+//                                                    "redeemed_on": "0000-00-00 00:00:00",
+//                                                    "status": 1,
+//                                                    "expiry_date": "2015-08-31 18:29:59"
+//                                                }
+
         try{
             if (jObj.has("coupons")) {
                 JSONArray couponsData = jObj.getJSONArray("coupons");
@@ -883,7 +909,10 @@ public class JSONParser {
                             coData.getString("description"),
                             coData.getString("image"),
                             coData.getString("redeemed_on"),
-                            coData.getString("expiry_date"));
+                            coData.getString("expiry_date"),
+                            coData.getString("start_time"),
+                            coData.getString("end_time")
+                            );
 
                         couponInfoList.add(couponInfo);
                     }

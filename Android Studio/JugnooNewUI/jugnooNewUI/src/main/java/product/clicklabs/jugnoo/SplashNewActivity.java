@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -135,6 +136,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 		Fabric.with(this, new Crashlytics());
 
 
+        FacebookSdk.sdkInitialize(this);
 
 
         Data.userData = null;

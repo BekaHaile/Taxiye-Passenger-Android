@@ -305,7 +305,7 @@ public class PromotionsActivity extends BaseActivity{
 	
 	
 	class ViewHolderCoupon {
-		TextView textViewCouponTitle, textViewExpiryDate;
+		TextView textViewCouponTitle, textViewExpiryDate, textViewValidTime;
 		LinearLayout relative;
 		int id;
 	}
@@ -342,7 +342,9 @@ public class PromotionsActivity extends BaseActivity{
 				
 				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Fonts.latoRegular(context));
 				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Fonts.latoLight(context), Typeface.BOLD);
-				
+				holder.textViewValidTime = (TextView) convertView.findViewById(R.id.textViewValidTime); holder.textViewValidTime.setTypeface(Fonts.latoRegular(context));
+                ((TextView) convertView.findViewById(R.id.textViewTNC)).setTypeface(Fonts.latoRegular(context));
+
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
 				holder.relative.setTag(holder);
@@ -361,6 +363,7 @@ public class PromotionsActivity extends BaseActivity{
 
 			holder.textViewCouponTitle.setText(couponInfo.title);
 			holder.textViewExpiryDate.setText("Valid until "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
+            holder.textViewValidTime.setText(DateOperations.getUTCTimeInLocalTime(couponInfo.startTime)+" - "+DateOperations.getUTCTimeInLocalTime(couponInfo.endTime));
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
 				
@@ -494,32 +497,47 @@ public class PromotionsActivity extends BaseActivity{
                                         int flag = jObj.getInt("flag");
                                         if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
 
+
 //                                            {
 //                                                "flag": 140,
 //                                                "coupons": [
 //                                                {
-//                                                    "title": "Free ride",
-//                                                    "subtitle": "upto Rs. 100",
-//                                                    "description": "Your next ride with Jugnoo upto Rs. 100 will be FREE.Terms of Use:1. The coupon will be applied automatically at the end of your next ride.2. Only one coupon will be applied in one ride.3. The maximum value of this coupon is Rs. 100 and you will have to pay the remaining amount at the end of the ride.4. Jugnoo reserves the right to discontinue the coupon at its discretion.",
-//                                                    "discount": 100,
-//                                                    "maximum": 100,
+//                                                    "coupon_id": 12,
+//                                                    "title": "Drop Capped C",
+//                                                    "subtitle": "upto Rs. 100 ",
+//                                                    "description": "Your 30.771823, 76.769595",
+//                                                    "coupon_type": 3,
+//                                                    "type": 3,
+//                                                    "discount_percentage": 0,
+//                                                    "discount_maximum": 0,
+//                                                    "discount": 0,
+//                                                    "maximum": 0,
+//                                                    "start_time": "00:00:00",
+//                                                    "end_time": "23:00:00",
+//                                                    "pickup_latitude": 30.7188,
+//                                                    "pickup_longitude": 76.8108,
+//                                                    "pickup_radius": 200,
+//                                                    "drop_latitude": 30.7718,
+//                                                    "drop_longitude": 76.7696,
+//                                                    "drop_radius": 200,
 //                                                    "image": "",
-//                                                    "couponType": 0,
-//                                                    "account_id": 546,
+//                                                    "account_id": 2568,
 //                                                    "redeemed_on": "0000-00-00 00:00:00",
 //                                                    "status": 1,
-//                                                    "expiry_date": "2015-10-30 18:29:59"
+//                                                    "expiry_date": "2015-08-31 18:29:59"
 //                                                }
 //                                                ],
 //                                                "promotions": [
 //                                                {
-//                                                    "promo_id": 12,
-//                                                    "title": "CDCL drop 20% cashback",
-//                                                    "max_allowed": 0,
-//                                                    "terms_n_conds": "Terms and conditions for drop to CDCL"
+//                                                    "promo_id": 19,
+//                                                    "title": "Pickup Capped ",
+//                                                    "end_on": "2015-08-31T00:00:00.000Z",
+//                                                    "max_allowed": 100,
+//                                                    "terms_n_conds": "Terms 30.718556, 76.811276\r\n30.771775, 76.769577",
+//                                                    "validity_text": "Valid until 31st August 2015"
 //                                                }
 //                                                ],
-//                                                "head": "Ongoing offers in chandigarh",
+//                                                "head": "Ongoing offers in Chandigarh",
 //                                                "invite_message": "Invite your friends and get more coupons"
 //                                            }
 
