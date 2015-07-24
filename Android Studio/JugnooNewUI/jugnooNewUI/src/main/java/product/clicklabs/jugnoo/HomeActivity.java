@@ -97,9 +97,7 @@ import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
-import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -2820,18 +2818,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (!mapTouchedOnce) {
                         if (farthestLatLng != null) {
 
-                            double distance = MapUtils.distance(userLatLng, farthestLatLng);
-                            if (distance > 1000) {
-                                boundsBuilder.include(new LatLng(userLatLng.latitude, farthestLatLng.longitude));
-                                boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
-                                boundsBuilder.include(new LatLng(userLatLng.latitude, ((2 * userLatLng.longitude) - farthestLatLng.longitude)));
-                                boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
-                            } else {
-                                boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
-                                boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
-                            }
-
-                            boundsBuilder.include(userLatLng);
+//                            double distance = MapUtils.distance(userLatLng, farthestLatLng);
+//                            if (distance > 1000) {
+//                                boundsBuilder.include(new LatLng(userLatLng.latitude, farthestLatLng.longitude));
+//                                boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
+//                                boundsBuilder.include(new LatLng(userLatLng.latitude, ((2 * userLatLng.longitude) - farthestLatLng.longitude)));
+//                                boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
+//                            } else {
+//                                boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
+//                                boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
+//                            }
+//
+//                            boundsBuilder.include(userLatLng);
 
                             try {
 //                                final LatLngBounds bounds = boundsBuilder.build();
