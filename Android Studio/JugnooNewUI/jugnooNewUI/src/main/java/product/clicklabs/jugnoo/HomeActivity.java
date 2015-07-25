@@ -1089,13 +1089,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
                         if (Utils.isLocationEnabled(HomeActivity.this)) {
                             if (map != null) {
-
-                                try{
-                                    NudgespotClient.getInstance(HomeActivity.this).track("request_ride");
-                                } catch(Exception e){
-                                    e.printStackTrace();
-                                }
-
                                 promoCouponSelectedForRide = null;
                                 final LatLng requestLatLng = map.getCameraPosition().target;
                                 Data.pickupLatLng = requestLatLng;
@@ -3924,6 +3917,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.pickupLatLng = pickupLatLng;
             Data.dropLatLng = null;
 
+            //30.7500, 76.7800
             if(Utils.compareDouble(Data.pickupLatLng.latitude, 30.7500) == 0 && Utils.compareDouble(Data.pickupLatLng.longitude, 76.7800) == 0){
                 myLocation = null;
             }
