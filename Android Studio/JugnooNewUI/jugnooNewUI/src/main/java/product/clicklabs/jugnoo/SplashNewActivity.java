@@ -355,7 +355,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
+			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this)+"345";
 			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 
 			Utils.generateKeyHash(this);

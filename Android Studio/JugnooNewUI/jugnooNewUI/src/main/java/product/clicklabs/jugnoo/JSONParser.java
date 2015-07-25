@@ -467,30 +467,6 @@ public class JSONParser {
                 } else {
 
 
-//							response = {
-//									"log": "Assigning driver", 
-//									"flag": constants.responseFlags.ASSIGNING_DRIVERS,
-//									"session_id": 2020
-//							};
-
-
-//							"flag": constants.responseFlags.ENGAGEMENT_DATA, 
-//							"last_engagement_info":[
-//							{
-//								�driver_id�, 
-//								�pickup_latitude�, 
-//								�pickup_longitude�, 
-//								�engagement_id�, 
-//								�status�, 
-//								�session_id�,
-//								�user_name�, 
-//								�phone_no�, 
-//								�user_image�, 
-//								�driver_car_image�, 
-//								�current_location_latitude�, 
-//								�current_location_longitude�, 
-//								�rating�
-//								}
 
 
                     int flag = jObject1.getInt("flag");

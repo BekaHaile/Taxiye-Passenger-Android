@@ -41,6 +41,35 @@
             android:layout_marginTop="20px" >
 
             <TextView
+                android:id="@+id/textViewId"
+                android:layout_width="100px"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40px"
+                android:text="ID: "
+                android:textColor="@color/black_text"
+                android:textSize="24px" />
+
+            <TextView
+                android:id="@+id/textViewIdValue"
+                android:layout_width="380px"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="30px"
+                android:layout_toRightOf="@+id/textViewId"
+                android:text="1234"
+                android:textColor="@color/black_text_alpha"
+                android:textSize="24px" />
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px" >
+
+            <TextView
                 android:id="@+id/textViewFrom"
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
