@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -18,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -46,12 +49,15 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
+    RelativeLayout topBar;
     TextView textViewTitle;
     ImageView imageViewBack;
 
@@ -59,11 +65,13 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
     TextView orText;
 
     EditText editTextUserName, editTextEmail, editTextPhone, editTextPassword, editTextReferralCode;
+    LinearLayout linearLayoutPhoneEditText;
     TextView textViewPolicy;
     Button buttonEmailSignup;
 
-//    TextView textViewScroll;
-//    ScrollView scrollView;
+    TextView textViewScroll;
+    ScrollView scrollView;
+    LinearLayout linearLayoutMain;
 
     LinearLayout relative;
 
@@ -105,6 +113,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
         relative = (LinearLayout) findViewById(R.id.relative);
         new ASSL(RegisterScreen.this, relative, 1134, 720, false);
 
+        topBar = (RelativeLayout) findViewById(R.id.topBar);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
@@ -125,6 +134,9 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
         editTextReferralCode = (EditText) findViewById(R.id.editTextReferralCode);
         editTextReferralCode.setTypeface(Fonts.latoRegular(this));
 
+        linearLayoutPhoneEditText = (LinearLayout) findViewById(R.id.linearLayoutPhoneEditText);
+
+
         ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
 
         textViewPolicy = (TextView) findViewById(R.id.textViewPolicy);
@@ -133,14 +145,30 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
         buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
         buttonEmailSignup.setTypeface(Fonts.latoRegular(this));
 
-//        scrollView = (ScrollView) findViewById(R.id.scrollView);
-//        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+        linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+
+
+        linearLayoutMain.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
+            }
+        });
+        topBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
+            }
+        });
 
 
         buttonFacebookSignup.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
                 facebookLoginHelper.openFacebookSession();
             }
         });
@@ -149,79 +177,95 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
                 performBackPressed();
             }
         });
 
-        editTextUserName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-//                    scrollView.smoothScrollTo(0, editTextUserName.getBottom());
-                } else {
-                    editTextUserName.setError(null);
-                }
-            }
-        });
-
-        editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-//                    scrollView.smoothScrollTo(0, editTextEmail.getBottom());
-                } else {
-                    editTextEmail.setError(null);
-                }
-            }
-        });
-
-
+        editTextUserName.setOnFocusChangeListener(onFocusChangeListener);
+        editTextEmail.setOnFocusChangeListener(onFocusChangeListener);
         editTextPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-//                    scrollView.smoothScrollTo(0, editTextPhone.getBottom());
-                }
-                else {
-                    editTextPhone.setError(null);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.smoothScrollTo(0, linearLayoutPhoneEditText.getTop());
+                        }
+                    }, 200);
+                } else {
+                    try {
+                        ((EditText)v).setError(null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
+        editTextPassword.setOnFocusChangeListener(onFocusChangeListener);
+        editTextReferralCode.setOnFocusChangeListener(onFocusChangeListener);
 
-        editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editTextUserName.setOnClickListener(onClickListener);
+        editTextEmail.setOnClickListener(onClickListener);
+        editTextPhone.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, linearLayoutPhoneEditText.getTop());
+                    }
+                }, 200);
+            }
+        });
+        editTextPassword.setOnClickListener(onClickListener);
+        editTextReferralCode.setOnClickListener(onClickListener);
+
+        editTextUserName.setOnEditorActionListener(new OnEditorActionListener() {
 
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-//                    scrollView.smoothScrollTo(0, editTextPassword.getBottom());
-                }
-                else {
-                    editTextPassword.setError(null);
-                }
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextEmail.requestFocus();
+                return true;
             }
         });
 
-        editTextReferralCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
 
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-//                    scrollView.smoothScrollTo(0, editTextReferralCode.getBottom());
-                }
-                else {
-                    editTextReferralCode.setError(null);
-                }
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextPhone.requestFocus();
+                return true;
             }
         });
+
+        editTextPhone.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextPassword.requestFocus();
+                return true;
+            }
+        });
+
+        editTextPassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextReferralCode.requestFocus();
+                return true;
+            }
+        });
+
+
 
 
         buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
 
                 String name = editTextUserName.getText().toString().trim();
                 if (name.length() > 0) {
@@ -365,6 +409,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://jugnoo.in/terms_of_use"));
                 startActivity(browserIntent);
             }
@@ -408,43 +453,17 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
         }
 
 
-//        final View activityRootView = findViewById(R.id.linearLayoutMain);
-//        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-//            new OnGlobalLayoutListener() {
-//
-//                @Override
-//                public void onGlobalLayout() {
-//                    Rect r = new Rect();
-//                    // r will be populated with the coordinates of your view
-//                    // that area still visible.
-//                    activityRootView.getWindowVisibleDisplayFrame(r);
-//
-//                    int heightDiff = activityRootView.getRootView()
-//                        .getHeight() - (r.bottom - r.top);
-//                    if (heightDiff > 100) { // if more than 100 pixels, its
-//                        // probably a keyboard...
-//
-//                        /************** Adapter for the parent List *************/
-//
-//                        ViewGroup.LayoutParams params_12 = textViewScroll
-//                            .getLayoutParams();
-//
-//                        params_12.height = (int) (heightDiff);
-//
-//                        textViewScroll.setLayoutParams(params_12);
-//                        textViewScroll.requestLayout();
-//
-//                    } else {
-//
-//                        ViewGroup.LayoutParams params = textViewScroll
-//                            .getLayoutParams();
-//                        params.height = 0;
-//                        textViewScroll.setLayoutParams(params);
-//                        textViewScroll.requestLayout();
-//
-//                    }
-//                }
-//            });
+        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        }));
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -472,6 +491,41 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
     }
 
+
+
+
+    private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+
+        @Override
+        public void onFocusChange(final View v, boolean hasFocus) {
+            if (hasFocus) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, v.getTop());
+                    }
+                }, 200);
+            } else {
+                try {
+                    ((EditText)v).setError(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    private OnClickListener onClickListener = new OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.smoothScrollTo(0, v.getTop());
+                }
+            }, 200);
+        }
+    };
 
 
     @Override
