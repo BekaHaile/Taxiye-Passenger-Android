@@ -43,6 +43,30 @@
                 android:animateLayoutChanges="true"
                 >
 
+                <!-- centre pin layout -->
+                <RelativeLayout
+                    android:id="@+id/centreLocationRl"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:splitMotionEvents="false"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/centreLocationPin"
+                        android:layout_width="47px"
+                        android:layout_height="79px"
+                        android:layout_above="@+id/centreLocationPivot"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/pin_ball"
+                        android:tag="mwar"/>
+
+                    <ImageView
+                        android:id="@+id/centreLocationPivot"
+                        android:layout_width="1px"
+                        android:layout_height="1px"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
+
                 <!-- initial layout -->
                 <RelativeLayout
                     android:id="@+id/initialLayout"
@@ -907,29 +931,6 @@
                     </ListView>
                 </LinearLayout>
 
-                <!-- centre pin layout -->
-                <RelativeLayout
-                    android:id="@+id/centreLocationRl"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:splitMotionEvents="false"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/centreLocationPin"
-                        android:layout_width="47px"
-                        android:layout_height="79px"
-                        android:layout_above="@+id/centreLocationPivot"
-                        android:layout_centerHorizontal="true"
-                        android:background="@drawable/pin_ball"
-                        android:tag="mwar"/>
-
-                    <ImageView
-                        android:id="@+id/centreLocationPivot"
-                        android:layout_width="1px"
-                        android:layout_height="1px"
-                        android:layout_centerInParent="true"/>
-                </RelativeLayout>
 
 
             </RelativeLayout>

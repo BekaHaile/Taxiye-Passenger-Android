@@ -97,9 +97,7 @@ import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
-import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
@@ -491,7 +489,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 imageViewMenu.setVisibility(View.GONE);
                 imageViewBack.setVisibility(View.VISIBLE);
                 genieLayout.setVisibility(View.GONE);
-                centreLocationRl.setVisibility(View.GONE);
+                centreLocationRl.setVisibility(View.VISIBLE);
                 linearLayoutPromo.setVisibility(View.VISIBLE);
 
                 if(totalPromoCoupons > 0){
@@ -537,6 +535,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSearchPre() {
                     progressBarAssigningDropLocation.setVisibility(View.VISIBLE);
+                    if(listViewAssigningDropLocationSearch.getVisibility() == View.GONE) {
+                        initDropLocationSearchUI(false);
+                    }
                 }
 
                 @Override
@@ -615,6 +616,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSearchPre() {
                     progressBarFinalDropLocation.setVisibility(View.VISIBLE);
+                    if(listViewFinalDropLocationSearch.getVisibility() == View.GONE) {
+                        initDropLocationSearchUI(true);
+                    }
                 }
 
                 @Override
@@ -1909,22 +1913,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             map.clear();
 
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.title("pickup location");
-                            markerOptions.snippet("");
-                            markerOptions.position(Data.pickupLatLng);
-                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
+                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng));
 
-                            pickupLocationMarker = map.addMarker(markerOptions);
-
-                            MarkerOptions markerOptions1 = new MarkerOptions();
-                            markerOptions1.title("driver position");
-                            markerOptions1.snippet("");
-                            markerOptions1.position(Data.assignedDriverInfo.latLng);
-                            markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
-                            markerOptions1.anchor(0.5f, 0.7f);
-
-                            driverLocationMarker = map.addMarker(markerOptions1);
+                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng));
 
                             Log.i("marker added", "REQUEST_FINAL");
                         }
@@ -1983,24 +1974,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             map.clear();
 
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.title("pickup location");
-                            markerOptions.snippet("");
-                            markerOptions.position(Data.pickupLatLng);
-                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
+                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng));
 
-                            pickupLocationMarker = map.addMarker(markerOptions);
-
-                            MarkerOptions markerOptions1 = new MarkerOptions();
-                            markerOptions1.title("driver position");
-                            markerOptions1.snippet("");
-                            markerOptions1.position(Data.assignedDriverInfo.latLng);
-                            markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
-                            markerOptions1.anchor(0.5f, 0.7f);
-
-                            driverLocationMarker = map.addMarker(markerOptions1);
+                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng));
 
                             Log.i("marker added", "REQUEST_FINAL");
+
+                            if(Data.dropLatLng != null) {
+                                setDropLocationMarker();
+                                setPickupToDropPath();
+                            }
                         }
 
 
@@ -2037,26 +2020,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             map.clear();
 
                             if (Data.pickupLatLng != null) {
-                                MarkerOptions markerOptions = new MarkerOptions();
-                                markerOptions.snippet("");
-                                markerOptions.title("start ride location");
-                                markerOptions.position(Data.pickupLatLng);
-                                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
-                                map.addMarker(markerOptions);
+                                map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng));
                             }
 
                             if(Data.dropLatLng != null) {
-                                if(dropLocationMarker != null){
-                                    dropLocationMarker.remove();
-                                }
-                                dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
-
-                                if(pathToDropLocationPolylineOptions != null) {
-                                    if (pathToDropLocationPolyline != null) {
-                                        pathToDropLocationPolyline.remove();
-                                    }
-                                    pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
-                                }
+                                setDropLocationMarker();
+                                setPickupToDropPath();
                             }
                         }
 
@@ -2201,6 +2170,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             dropLocationMarker.remove();
         }
         dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+    }
+
+    private void setPickupToDropPath(){
+        if(pathToDropLocationPolylineOptions != null) {
+            if (pathToDropLocationPolyline != null) {
+                pathToDropLocationPolyline.remove();
+            }
+            pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
+        }
     }
 
 
@@ -2766,6 +2744,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
+
+    public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng){
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.title("pickup location");
+        markerOptions.snippet("");
+        markerOptions.position(latLng);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
+        return markerOptions;
+    }
+
+
+    public MarkerOptions getAssignedDriverCarMarkerOptions(LatLng latlng){
+        MarkerOptions markerOptions1 = new MarkerOptions();
+        markerOptions1.title("driver position");
+        markerOptions1.snippet("");
+        markerOptions1.position(latlng);
+        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
+        markerOptions1.anchor(0.5f, 0.7f);
+        return markerOptions1;
+    }
+
+
+
+
     public void addDriverMarkerForCustomer(DriverInfo driverInfo) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("driver shown to customer");
@@ -3283,10 +3285,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     Data.dropLatLng = dropLatLng;
 
                                     if(Data.dropLatLng != null){
-                                        if(dropLocationMarker != null){
-                                            dropLocationMarker.remove();
-                                        }
-                                        dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+                                        setDropLocationMarker();
                                     }
 
                                     getDropLocationPathAndDisplay(Data.pickupLatLng);
@@ -3782,6 +3781,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.pickupLatLng = pickupLatLng;
             Data.dropLatLng = null;
 
+            if(Utils.compareDouble(Data.pickupLatLng.latitude, 30.7500) == 0 && Utils.compareDouble(Data.pickupLatLng.longitude, 76.7800) == 0){
+                myLocation = null;
+            }
+
             if (myLocation == null) {
                 //We could not detect your location. Are you sure you want to request an auto to pick you at this location
                 myLocation = new Location(LocationManager.GPS_PROVIDER);
@@ -3811,12 +3814,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
                         dialog.show();
                     } else {
-                        if (totalPromoCoupons == 0) {
-                            textMessage.setText("Do you want an auto to pick you up?");
-                            dialog.show();
-                        } else {
-                            initiateRequestRide(true);
-                        }
+                        initiateRequestRide(true);
+//                        if (totalPromoCoupons == 0) {
+//                            textMessage.setText("Do you want an auto to pick you up?");
+//                            dialog.show();
+//                        } else {
+//                            initiateRequestRide(true);
+//                        }
                     }
                 }
             }
@@ -4629,7 +4633,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                     initialCancelRideBtn.setVisibility(View.GONE);
                 } else {
-                    relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+                    if(Data.dropLatLng == null){
+                        relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+                    }
                     initialCancelRideBtn.setVisibility(View.VISIBLE);
                 }
             }
