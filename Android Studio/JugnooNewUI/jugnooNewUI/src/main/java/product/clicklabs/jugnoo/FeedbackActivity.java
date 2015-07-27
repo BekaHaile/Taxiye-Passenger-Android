@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -25,6 +26,8 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
+import product.clicklabs.jugnoo.adapters.FeedbackReasonsListEventHandler;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
@@ -46,9 +49,12 @@ public class FeedbackActivity extends BaseActivity {
 
     TextView textViewRateYourExp;
     RatingBar ratingBarFeedback;
-    TextView textViewRateText;
+    TextView textViewRateText, textViewWhatImprove;
+    ListView listViewFeedbackReasons;
     EditText editTextFeedback;
     Button buttonSubmitFeedback;
+
+    FeedbackReasonsAdapter feedbackReasonsAdapter;
 
     RelativeLayout relativeLayoutSkip;
     TextView textViewSkip;
@@ -72,6 +78,8 @@ public class FeedbackActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
 
+
+
         feedbackMode = FeedbackMode.SUPPORT;
 
         scrolled = false;
@@ -91,6 +99,23 @@ public class FeedbackActivity extends BaseActivity {
         textViewRateText = (TextView) findViewById(R.id.textViewRateText);
         textViewRateText.setTypeface(Fonts.latoRegular(this));
         textViewRateText.setText("");
+
+        textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.latoRegular(this));
+        listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);
+
+        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsListEventHandler() {
+            @Override
+            public void onLastItemSelected(boolean selected) {
+//                if(selected){
+//                    editTextFeedback.setHint("Please share your valuable feedback, in case of other reasons please mention here");
+//                }
+//                else{
+//                    editTextFeedback.setHint("Please share your valuable feedback");
+//                }
+            }
+        });
+        listViewFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+
         editTextFeedback = (EditText) findViewById(R.id.editTextFeedback);
         editTextFeedback.setTypeface(Fonts.latoRegular(this));
         buttonSubmitFeedback = (Button) findViewById(R.id.buttonSubmitFeedback);
@@ -130,6 +155,36 @@ public class FeedbackActivity extends BaseActivity {
                 } else if (rating > 4 && rating <= 5) {
                     textViewRateText.setText("Loved it");
                 }
+
+                if(FeedbackMode.SUPPORT != feedbackMode && Data.feedbackReasons.size() > 0) {
+                    if (rating <= 3) {
+                        textViewRateYourExp.setVisibility(View.GONE);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewWhatImprove.setVisibility(View.VISIBLE);
+                                listViewFeedbackReasons.setVisibility(View.VISIBLE);
+
+                                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
+                                layoutParams.height = (int) (ASSL.Yscale() * 150);
+                                editTextFeedback.setLayoutParams(layoutParams);
+                            }
+                        }, 205);
+                    } else {
+                        textViewWhatImprove.setVisibility(View.GONE);
+                        listViewFeedbackReasons.setVisibility(View.GONE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
+                        layoutParams.height = (int) (ASSL.Yscale() * 200);
+                        editTextFeedback.setLayoutParams(layoutParams);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewRateYourExp.setVisibility(View.VISIBLE);
+                            }
+                        }, 205);
+                    }
+                }
+
             }
         });
 
@@ -144,21 +199,34 @@ public class FeedbackActivity extends BaseActivity {
                 rating = Math.abs(rating);
                 Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
 
-
-                //We take your feedback seriously. Please give us a rating
+                String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
+                boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
 
                 if (0 == rating) {
                     DialogPopup.alertPopup(FeedbackActivity.this, "", "We take your feedback seriously. Please give us a rating");
                 } else {
+                    if(FeedbackMode.SUPPORT != feedbackMode  && Data.feedbackReasons.size() > 0 && rating <= 3){
+                        if(feedbackReasons.length() > 0){
+                            if(isLastReasonSelected && feedbackStr.length() == 0){
+                                DialogPopup.alertPopup(FeedbackActivity.this, "", "Kindly specify your reason for other");
+                                return;
+                            }
+                        }
+                        else{
+                            DialogPopup.alertPopup(FeedbackActivity.this, "", "Please provide your reason for the rating");
+                            return;
+                        }
+                    }
+
                     if (feedbackStr.length() > 300) {
                         editTextFeedback.requestFocus();
                         editTextFeedback.setError("Review must be in 300 letters.");
                     } else {
                         if (FeedbackMode.AFTER_RIDE == feedbackMode) {
-                            submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr);
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr, feedbackReasons);
                             FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
                         } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
-                            submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr);
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr, feedbackReasons);
                             FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, "" + pastEngagementId);
                         } else {
                             submitFeedbackSupportAsync(FeedbackActivity.this, rating, feedbackStr);
@@ -211,6 +279,14 @@ public class FeedbackActivity extends BaseActivity {
             textViewTitle.setText("FEEDBACK");
             relativeLayoutSkip.setVisibility(View.GONE);
         }
+
+        textViewWhatImprove.setVisibility(View.GONE);
+        listViewFeedbackReasons.setVisibility(View.GONE);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
+        layoutParams.height = (int)(ASSL.Yscale() * 200);
+        editTextFeedback.setLayoutParams(layoutParams);
+        textViewRateYourExp.setVisibility(View.VISIBLE);
+
 
 
         linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -287,7 +363,7 @@ public class FeedbackActivity extends BaseActivity {
     }
 
 
-    public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, final int givenRating, String feedbackText) {
+    public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, final int givenRating, String feedbackText, String feedbackReasons) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -299,6 +375,7 @@ public class FeedbackActivity extends BaseActivity {
             params.put("engagement_id", engagementId);
             params.put("driver_id", ratingReceiverId);
             params.put("feedback", feedbackText);
+            params.put("feedback_reasons", feedbackReasons);
 
             Log.i("params", "=" + params);
 

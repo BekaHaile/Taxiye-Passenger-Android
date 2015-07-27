@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="720px"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:splitMotionEvents="false" >
+
+
+    <ImageView
+        android:id="@+id/imageViewFeedbackReasonCheck"
+        android:layout_width="45px"
+        android:layout_height="45px"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="30px"
+        android:src="@drawable/check_box_checked_new"
+        android:tag="mwar"
+        />
+
+
+    <TextView
+            android:id="@+id/textViewFeedbackReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="20px"
+            android:text="Reason"
+            android:textColor="@color/grey_dark"
+            android:textSize="28px" />
+
+
+</LinearLayout>

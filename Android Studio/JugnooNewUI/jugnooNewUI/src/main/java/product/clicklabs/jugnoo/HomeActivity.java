@@ -307,6 +307,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
 
+    public static final float MAX_ZOOM = 15;
+
     public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
 
 
@@ -1596,13 +1598,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         public void onClick(View v) {
             textViewInitialSearch.setText("");
             if (myLocation != null) {
-                if (map.getCameraPosition().zoom < 12) {
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 12));
-                } else if (map.getCameraPosition().zoom < 15) {
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 15));
-                } else {
-                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
-                }
+//                if (map.getCameraPosition().zoom < 12) {
+//                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 12));
+//                } else if (map.getCameraPosition().zoom < 15) {
+//                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 15));
+//                } else {
+//                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+//                }
+
+                zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+
             } else {
                 Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
                 reconnectLocationFetchers();
@@ -2811,77 +2816,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (map != null) {
                     map.clear();
                     addCurrentLocationAddressMarker(userLatLng);
-                    LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-                    LatLng farthestLatLng = null;
                     for (int i = 0; i < Data.driverInfos.size(); i++) {
                         addDriverMarkerForCustomer(Data.driverInfos.get(i));
-                        if (i < 5) {
-                            farthestLatLng = Data.driverInfos.get(i).latLng;
-                        }
                     }
                     if (!mapTouchedOnce) {
-                        if (farthestLatLng != null) {
-
-                            double distance = MapUtils.distance(userLatLng, farthestLatLng);
-                            if (distance > 1000) {
-                                boundsBuilder.include(new LatLng(userLatLng.latitude, farthestLatLng.longitude));
-                                boundsBuilder.include(new LatLng(farthestLatLng.latitude, userLatLng.longitude));
-                                boundsBuilder.include(new LatLng(userLatLng.latitude, ((2 * userLatLng.longitude) - farthestLatLng.longitude)));
-                                boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - farthestLatLng.latitude), userLatLng.longitude));
-                            } else {
-                                boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
-                                boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
-                            }
-
-                            boundsBuilder.include(userLatLng);
-
-                            try {
-//                                final LatLngBounds bounds = boundsBuilder.build();
-//                                final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-//                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
-
-                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), 15));
-
-                                            mapTouchedOnce = true;
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }, 1000);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
-                            boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
-                            boundsBuilder.include(userLatLng);
-
-                            try {
-                                final LatLngBounds bounds = boundsBuilder.build();
-                                final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
-                                            mapTouchedOnce = true;
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }, 1000);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        zoomToCurrentLocationWithOneDriver(userLatLng);
+                        mapTouchedOnce = true;
                     }
-
                 }
             }
             if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)) {
@@ -2891,6 +2832,79 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
+    public void zoomToCurrentLocationWithOneDriver(final LatLng userLatLng) {
+
+        try {
+            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+            LatLng firstLatLng = null;
+            if (Data.driverInfos.size() > 0) {
+                firstLatLng = Data.driverInfos.get(0).latLng;
+            }
+            if (firstLatLng != null) {
+                double distance = MapUtils.distance(userLatLng, firstLatLng);
+                if (distance > 1000) {
+                    boundsBuilder.include(new LatLng(userLatLng.latitude, firstLatLng.longitude));
+                    boundsBuilder.include(new LatLng(firstLatLng.latitude, userLatLng.longitude));
+                    boundsBuilder.include(new LatLng(userLatLng.latitude, ((2 * userLatLng.longitude) - firstLatLng.longitude)));
+                    boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - firstLatLng.latitude), userLatLng.longitude));
+                } else {
+                    boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
+                    boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
+                }
+
+                boundsBuilder.include(userLatLng);
+
+                try {
+                    final LatLngBounds bounds = boundsBuilder.build();
+                    final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        float zoomLevel = map.getCameraPosition().zoom;
+                                        if (zoomLevel > MAX_ZOOM) {
+                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+                                        }
+                                    }
+                                }, 1100);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 500);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 500);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
     /**
