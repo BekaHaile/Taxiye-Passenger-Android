@@ -105,18 +105,23 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
 
     public String getSelectedReasons(){
         String reasons = "";
-
         for(int i=0; i<feedbackReasons.size(); i++){
             if(feedbackReasons.get(i).checked) {
                 reasons = reasons + feedbackReasons.get(i).name+",";
             }
         }
-
         if(!reasons.equalsIgnoreCase("")){
             reasons = reasons.substring(0, reasons.length()-1);
         }
+        return reasons;
+    }
 
-        return "";
+    public boolean isLastSelected(){
+        if(feedbackReasons.size() > 0){
+            return feedbackReasons.get(feedbackReasons.size()-1).checked;
+        }else{
+            return false;
+        }
     }
 
 

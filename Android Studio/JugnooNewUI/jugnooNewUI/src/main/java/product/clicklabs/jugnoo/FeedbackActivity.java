@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
@@ -55,6 +56,8 @@ public class FeedbackActivity extends BaseActivity {
     EditText editTextFeedback;
     Button buttonSubmitFeedback;
 
+    FeedbackReasonsAdapter feedbackReasonsAdapter;
+
     RelativeLayout relativeLayoutSkip;
     TextView textViewSkip;
 
@@ -79,6 +82,14 @@ public class FeedbackActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
 
+        feedbackReasons.add(new FeedbackReason("Late Arrival"));
+        feedbackReasons.add(new FeedbackReason("Speed"));
+        feedbackReasons.add(new FeedbackReason("Driver Behavior"));
+        feedbackReasons.add(new FeedbackReason("Trip Route"));
+        feedbackReasons.add(new FeedbackReason("Auto Quality"));
+        feedbackReasons.add(new FeedbackReason("Other"));
+
+
         feedbackMode = FeedbackMode.SUPPORT;
 
         scrolled = false;
@@ -101,6 +112,8 @@ public class FeedbackActivity extends BaseActivity {
 
         textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.latoRegular(this));
         listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);
+
+        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, feedbackReasons);
 
         editTextFeedback = (EditText) findViewById(R.id.editTextFeedback);
         editTextFeedback.setTypeface(Fonts.latoRegular(this));
