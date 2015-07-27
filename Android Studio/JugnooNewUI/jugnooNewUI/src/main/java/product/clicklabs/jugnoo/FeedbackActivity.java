@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -25,9 +26,12 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
+import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -46,7 +50,8 @@ public class FeedbackActivity extends BaseActivity {
 
     TextView textViewRateYourExp;
     RatingBar ratingBarFeedback;
-    TextView textViewRateText;
+    TextView textViewRateText, textViewWhatImprove;
+    ListView listViewFeedbackReasons;
     EditText editTextFeedback;
     Button buttonSubmitFeedback;
 
@@ -60,6 +65,8 @@ public class FeedbackActivity extends BaseActivity {
     FeedbackMode feedbackMode = FeedbackMode.SUPPORT;
     int pastDriverId = 0, pastEngagementId = 0, position = 0;
     boolean scrolled = false;
+
+    ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();
 
     @Override
     protected void onResume() {
@@ -91,6 +98,10 @@ public class FeedbackActivity extends BaseActivity {
         textViewRateText = (TextView) findViewById(R.id.textViewRateText);
         textViewRateText.setTypeface(Fonts.latoRegular(this));
         textViewRateText.setText("");
+
+        textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.latoRegular(this));
+        listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);
+
         editTextFeedback = (EditText) findViewById(R.id.editTextFeedback);
         editTextFeedback.setTypeface(Fonts.latoRegular(this));
         buttonSubmitFeedback = (Button) findViewById(R.id.buttonSubmitFeedback);
