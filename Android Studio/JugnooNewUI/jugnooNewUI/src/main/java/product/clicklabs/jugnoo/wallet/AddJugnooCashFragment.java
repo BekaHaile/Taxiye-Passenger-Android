@@ -1557,12 +1557,33 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
             }
 
-            LinearLayout pickerParentLayout = (LinearLayout) dialog.getDatePicker().getChildAt(0);
+//            LinearLayout pickerParentLayout = (LinearLayout) dialog.getDatePicker().getChildAt(0);
+//
+//            LinearLayout pickerSpinnersHolder = (LinearLayout) pickerParentLayout.getChildAt(0);
+//
+//            pickerSpinnersHolder.getChildAt(0).setVisibility(View.GONE);
 
-            LinearLayout pickerSpinnersHolder = (LinearLayout) pickerParentLayout.getChildAt(0);
 
-            pickerSpinnersHolder.getChildAt(0).setVisibility(View.GONE);
-
+//            try{
+//                Field[] datePickerDialogFields = dialog.getClass().getDeclaredFields();
+//                for (Field datePickerDialogField : datePickerDialogFields) {
+//                    if (datePickerDialogField.getName().equals("mDatePicker")) {
+//                        datePickerDialogField.setAccessible(true);
+//                        DatePicker datePicker = (DatePicker) datePickerDialogField.get(dialog);
+//                        Field datePickerFields[] = datePickerDialogField.getType().getDeclaredFields();
+//                        for (Field datePickerField : datePickerFields) {
+//                            if ("mDelegate".equals(datePickerField.getName())) {
+//                                datePickerField.setAccessible(true);
+//                                Object dayPicker = datePickerField.get(datePicker);
+//                                ((View) dayPicker).setVisibility(View.GONE);
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            }catch(Exception ex){
+//                ex.printStackTrace();
+//            }
 
             dialog.setTitle("Pick date");
             return dialog;
