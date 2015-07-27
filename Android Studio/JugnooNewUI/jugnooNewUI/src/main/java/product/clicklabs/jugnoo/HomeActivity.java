@@ -2844,7 +2844,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
             if (firstLatLng != null) {
                 double distance = MapUtils.distance(userLatLng, firstLatLng);
-                if (distance > 1000) {
+                if (distance >= 1000 && distance <= 15000) {
                     boundsBuilder.include(new LatLng(userLatLng.latitude, firstLatLng.longitude));
                     boundsBuilder.include(new LatLng(firstLatLng.latitude, userLatLng.longitude));
                     boundsBuilder.include(new LatLng(userLatLng.latitude, ((2 * userLatLng.longitude) - firstLatLng.longitude)));
@@ -2852,6 +2852,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else {
                     boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
                     boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
+                    mapTouchedOnce = false;
                 }
 
                 boundsBuilder.include(userLatLng);
