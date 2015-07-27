@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/relative"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="720px"
-    android:layout_height="1134px"
-    android:animateLayoutChanges="true"
-    android:background="@color/white_light_grey"
-    android:orientation="vertical">
 
-    <!-- top bar-->
+<LinearLayout android:id="@+id/relative"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="720px"
+              android:layout_height="1134px"
+              android:animateLayoutChanges="true"
+              android:background="@color/white_light_grey"
+              android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/topBar"
         android:layout_width="720px"
@@ -37,23 +35,24 @@
                 android:layout_height="76.9px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
+                android:tag="mwar"
                 android:padding="20px"
                 android:src="@drawable/back_white_selector"/>
         </RelativeLayout>
     </RelativeLayout>
 
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="1038px">
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:splitMotionEvents="false"
             >
 
             <!-- select payment mode-->
@@ -79,7 +78,30 @@
                     android:background="@color/yellow"/>
             </RelativeLayout>
 
+            <LinearLayout
+                android:id="@+id/listLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
+                <ListView
+                    android:id="@+id/saveCardList"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10px"
+                    android:layout_marginTop="10px"
+                    android:dividerHeight="1px"
+                    android:divider="@color/yellow"
+                    ></ListView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/payment_modes_divider_height"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/yellow"/>
+
+            </LinearLayout>
             <!-- debit card top-->
             <RelativeLayout
                 android:id="@+id/relativeLayoutDebitCard"
@@ -91,6 +113,7 @@
                     android:layout_width="@dimen/payment_mode_selector"
                     android:layout_height="@dimen/payment_mode_selector"
                     android:layout_centerVertical="true"
+                    android:tag="mwar"
                     android:layout_marginLeft="@dimen/select_payment_left_margin"
                     android:background="@drawable/ic_payment_mode_unpressed"/>
 
@@ -112,7 +135,7 @@
                 android:layout_width="620px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/card_details_left_padding"
+                android:layout_marginBottom="10px"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -136,18 +159,30 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="19px"
                     android:orientation="horizontal"
-                    android:weightSum="3">
+                    >
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/validTextDebitCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="81px"
+                        android:text="Valid\nTill"
+                        android:gravity="center"
+                        android:textSize="34px"
+                        android:layout_marginLeft="20px"
+                        android:textColor="@color/color_card_details"
+                        android:layout_gravity="center_vertical"
+                        />
+
+
+                    <Button
                         android:id="@+id/editTextMonthDebitCard"
-                        android:layout_width="0px"
+                        android:layout_width="135px"
                         android:layout_height="@dimen/card_details_layout_height"
-                        android:layout_marginRight="10px"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="27px"
                         android:background="@drawable/payment_mode_edit_text_background"
+                        android:gravity="left|center_vertical"
                         android:hint="@string/card_month"
                         android:inputType="number"
-
                         android:maxLength="2"
                         android:paddingLeft="@dimen/card_details_left_padding"
                         android:textColor="@color/color_payment_mode"
@@ -155,16 +190,15 @@
                         android:textCursorDrawable="@drawable/black_cursor"
                         android:textSize="@dimen/card_details_text_size"/>
 
-                    <EditText
+                    <Button
                         android:id="@+id/editTextYearDebitCard"
-                        android:layout_width="0px"
+                        android:layout_width="135px"
                         android:layout_height="@dimen/card_details_layout_height"
-                        android:layout_marginRight="10px"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="12px"
                         android:background="@drawable/payment_mode_edit_text_background"
+                        android:gravity="left|center_vertical"
                         android:hint="@string/card_year"
                         android:inputType="number"
-
                         android:maxLength="4"
                         android:paddingLeft="@dimen/card_details_left_padding"
                         android:textColor="@color/color_payment_mode"
@@ -174,10 +208,9 @@
 
                     <EditText
                         android:id="@+id/editTextCVVDebitCard"
-                        android:layout_width="0px"
+                        android:layout_width="140px"
                         android:layout_height="@dimen/card_details_layout_height"
-                        android:layout_marginRight="10px"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="70px"
                         android:background="@drawable/payment_mode_edit_text_background"
                         android:hint="@string/CVV"
                         android:inputType="numberPassword"
@@ -211,25 +244,30 @@
                     android:id="@+id/relativeLayoutSaveDebitCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/save_card_margin_top"
-                    android:layout_marginTop="@dimen/save_card_margin_top"
-                    android:visibility="gone">
+                    android:paddingBottom="15px"
+                    android:paddingTop="25px"
+                    android:visibility="visible">
 
                     <ImageView
                         android:id="@+id/imageViewSaveDebitCard"
-                        android:layout_width="@dimen/save_card_icon_size"
-                        android:layout_height="@dimen/save_card_icon_size"
-                        android:background="@drawable/ic_save_card_checked"/>
+                        android:layout_width="37px"
+                        android:layout_height="37px"
+                        android:tag="mwar"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/save_card_icon"/>
 
                     <TextView
                         android:id="@+id/textViewDebitCardDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
+                        android:gravity="center"
+                        android:layout_marginLeft="10px"
+                        android:textColor="@color/color_payment_mode"
+                        android:padding="10px"
                         android:layout_toRightOf="@+id/imageViewSaveDebitCard"
                         android:text="@string/save_card_details"
-                        android:textSize="@dimen/save_card_details_text_size"/>
+                        android:textSize="22px"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -251,6 +289,7 @@
                     android:layout_width="@dimen/payment_mode_selector"
                     android:layout_height="@dimen/payment_mode_selector"
                     android:layout_centerVertical="true"
+                    android:tag="mwar"
                     android:layout_marginLeft="@dimen/select_payment_left_margin"
                     android:background="@drawable/ic_payment_mode_unpressed"/>
 
@@ -296,18 +335,29 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="19px"
                     android:orientation="horizontal"
-                    android:weightSum="3">
+                    >
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/validTextCreditCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="81px"
+                        android:text="Valid\nTill"
+                        android:gravity="center"
+                        android:textSize="34px"
+                        android:layout_marginLeft="20px"
+                        android:textColor="@color/color_card_details"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                    <Button
                         android:id="@+id/editTextMonthCreditCard"
-                        android:layout_width="0px"
+                        android:layout_width="135px"
+                        android:layout_marginLeft="27px"
                         android:layout_height="@dimen/card_details_layout_height"
-                        android:layout_marginRight="10px"
-                        android:layout_weight="1"
                         android:background="@drawable/payment_mode_edit_text_background"
+                        android:gravity="left|center_vertical"
                         android:hint="@string/card_month"
                         android:inputType="number"
-
                         android:maxLength="2"
                         android:paddingLeft="@dimen/card_details_left_padding"
                         android:textColor="@color/color_payment_mode"
@@ -315,16 +365,15 @@
                         android:textCursorDrawable="@drawable/black_cursor"
                         android:textSize="@dimen/card_details_text_size"/>
 
-                    <EditText
+                    <Button
                         android:id="@+id/editTextYearCreditCard"
-                        android:layout_width="0px"
+                        android:layout_width="135px"
                         android:layout_height="@dimen/card_details_layout_height"
-                        android:layout_marginRight="10px"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="12px"
                         android:background="@drawable/payment_mode_edit_text_background"
+                        android:gravity="left|center_vertical"
                         android:hint="@string/card_year"
                         android:inputType="number"
-
                         android:maxLength="4"
                         android:paddingLeft="@dimen/card_details_left_padding"
                         android:textColor="@color/color_payment_mode"
@@ -334,14 +383,13 @@
 
                     <EditText
                         android:id="@+id/editTextCVVCreditCard"
-                        android:layout_width="0px"
+                        android:layout_width="140px"
                         android:layout_height="@dimen/card_details_layout_height"
+                        android:layout_marginLeft="70px"
                         android:layout_marginRight="10px"
-                        android:layout_weight="1"
                         android:background="@drawable/payment_mode_edit_text_background"
                         android:hint="@string/CVV"
                         android:inputType="numberPassword"
-
                         android:maxLength="4"
                         android:paddingLeft="@dimen/card_details_left_padding"
                         android:textColor="@color/color_payment_mode"
@@ -371,25 +419,30 @@
                     android:id="@+id/relativeLayoutSaveCreditCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/save_card_margin_top"
-                    android:layout_marginTop="@dimen/save_card_margin_top"
-                    android:visibility="gone">
+                    android:paddingBottom="15px"
+                    android:paddingTop="25px"
+                    android:visibility="visible">
 
                     <ImageView
                         android:id="@+id/imageViewSaveCreditCard"
-                        android:layout_width="@dimen/save_card_icon_size"
-                        android:layout_height="@dimen/save_card_icon_size"
-                        android:background="@drawable/ic_save_card_checked"/>
+                        android:layout_width="37px"
+                        android:layout_height="37px"
+                        android:tag="mwar"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/save_card_icon"/>
 
                     <TextView
                         android:id="@+id/textViewCreditCardDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
+                        android:gravity="center"
+                        android:layout_marginLeft="10px"
+                        android:padding="10px"
+                        android:textColor="@color/color_payment_mode"
                         android:layout_toRightOf="@+id/imageViewSaveCreditCard"
                         android:text="@string/save_card_details"
-                        android:textSize="@dimen/save_card_details_text_size"/>
+                        android:textSize="22px"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -410,6 +463,7 @@
                     android:layout_width="@dimen/payment_mode_selector"
                     android:layout_height="@dimen/payment_mode_selector"
                     android:layout_centerVertical="true"
+                    android:tag="mwar"
                     android:layout_marginLeft="@dimen/select_payment_left_margin"
                     android:background="@drawable/ic_payment_mode_unpressed"/>
 
@@ -448,7 +502,6 @@
                         android:background="@drawable/payment_mode_edit_text_background"
                         android:gravity="left"
                         android:padding="10px"
-                        android:paddingRight="70px"
                         android:spinnerMode="dialog"
                         android:textColor="@color/grey_text"
                         android:textSize="26px"
@@ -539,6 +592,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="24px"
                     android:layout_marginTop="24px"
                     android:text="@string/jugnoo_cash_note"
                     android:textColor="@color/color_jugnoo_cash_note"
@@ -557,13 +611,18 @@
 
             </LinearLayout>
 
+
             <TextView
                 android:id="@+id/textViewScroll"
-                android:layout_width="10px"
-                android:layout_height="10px"/>
+                android:layout_width="20px"
+                android:layout_height="20px"
+                android:text=" "
+                />
 
         </LinearLayout>
+
     </ScrollView>
+
 
 
 </LinearLayout>

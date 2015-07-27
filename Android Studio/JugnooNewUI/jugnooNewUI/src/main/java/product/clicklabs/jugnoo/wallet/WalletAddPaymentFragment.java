@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -49,36 +52,35 @@ public class WalletAddPaymentFragment extends Fragment {
 	Button button599, button999, button1999, buttonMakePayment;
 	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
 
-    ScrollView scrollView;
-    LinearLayout linearLayoutMain;
-    TextView textViewScroll;
-
     View rootView;
-    public PaymentActivity paymentActivity;
+    public PaymentActivity homeActivity;
+
+    ScrollView scrollView;
+    TextView textViewScroll;
+    LinearLayout linearLayoutMain;
     boolean scrolled = false;
 	
 	//public static AddPaymentPath addPaymentPath = AddPaymentPath.FROM_WALLET;
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		FlurryAgent.init(getActivity(), Config.getFlurryKey());
+		FlurryAgent.onStartSession(getActivity(), Config.getFlurryKey());
+	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        FlurryAgent.onEndSession(paymentActivity);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        HomeActivity.checkForAccessTokenChange(paymentActivity);
+	@Override
+	public void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(getActivity());
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+        HomeActivity.checkForAccessTokenChange(getActivity());
         editTextAmount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
-    }
-
+	}
 
 
 
@@ -88,49 +90,48 @@ public class WalletAddPaymentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_cash_balance, container, false);
 
-        paymentActivity = (PaymentActivity) getActivity();
+        homeActivity = (PaymentActivity) getActivity();
 
-        scrolled = false;
+
  
 		
 		relative = (LinearLayout) rootView.findViewById(R.id.relative);
-		new ASSL(paymentActivity, relative, 1134, 720, false);
+		new ASSL(homeActivity, relative, 1134, 720, false);
 
         setupUI(rootView.findViewById(R.id.relative));
 
-		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
+		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack); 
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(homeActivity), Typeface.BOLD);
 		
-		textViewHelp = (TextView) rootView.findViewById(R.id.textViewHelp); textViewHelp.setTypeface(Fonts.latoLight(paymentActivity));
+		textViewHelp = (TextView) rootView.findViewById(R.id.textViewHelp); textViewHelp.setTypeface(Fonts.latoLight(homeActivity));
 		
-		editTextAmount = (EditText) rootView.findViewById(R.id.editTextAmount); editTextAmount.setTypeface(Fonts.latoRegular(paymentActivity));
+		editTextAmount = (EditText) rootView.findViewById(R.id.editTextAmount); editTextAmount.setTypeface(Fonts.latoRegular(homeActivity));
         editTextAmount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
 
+        scrolled = false;
+        scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
+        textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
+        linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
+
 //        rupee = (TextView) rootView.findViewById(R.id.rupee);
-//        rupee.setTypeface(Fonts.latoLight(paymentActivity));
+//        rupee.setTypeface(Fonts.latoLight(homeActivity));
 //        rupee.setVisibility(View.GONE);
 		
-		button599 = (Button) rootView.findViewById(R.id.button100); button599.setTypeface(Fonts.latoRegular(paymentActivity));
-		button999 = (Button) rootView.findViewById(R.id.button200); button999.setTypeface(Fonts.latoRegular(paymentActivity));
-		button1999 = (Button) rootView.findViewById(R.id.button500); button1999.setTypeface(Fonts.latoRegular(paymentActivity));
-		buttonMakePayment = (Button) rootView.findViewById(R.id.buttonMakePayment); buttonMakePayment.setTypeface(Fonts.latoRegular(paymentActivity));
+		button599 = (Button) rootView.findViewById(R.id.button100); button599.setTypeface(Fonts.latoRegular(homeActivity));
+		button999 = (Button) rootView.findViewById(R.id.button200); button999.setTypeface(Fonts.latoRegular(homeActivity));
+		button1999 = (Button) rootView.findViewById(R.id.button500); button1999.setTypeface(Fonts.latoRegular(homeActivity));
+		buttonMakePayment = (Button) rootView.findViewById(R.id.buttonMakePayment); buttonMakePayment.setTypeface(Fonts.latoRegular(homeActivity));
 		
-		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance); textViewCurrentBalance.setTypeface(Fonts.latoRegular(paymentActivity));
-		textViewCurrentBalanceValue = (TextView) rootView.findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Fonts.latoRegular(paymentActivity));
-
-        scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
-        linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
-        textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
-
-
-
+		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance); textViewCurrentBalance.setTypeface(Fonts.latoRegular(homeActivity));
+		textViewCurrentBalanceValue = (TextView) rootView.findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Fonts.latoRegular(homeActivity));
+		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
-		
-			@Override
-			public void onClick(View v) {
-				performBackPressed();
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                performBackPressed();
+            }
+        });
 		
 		
 		button599.setOnClickListener(new View.OnClickListener() {
@@ -178,49 +179,49 @@ public class WalletAddPaymentFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = editTextAmount.getText().toString();
-try{
-    int sdk = android.os.Build.VERSION.SDK_INT;
-    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-        if (text.equalsIgnoreCase("599")) {
-            button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
-            button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
-            button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                try {
+                    int sdk = android.os.Build.VERSION.SDK_INT;
+                    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        if (text.equalsIgnoreCase("599")) {
+                            button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
+                            button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
 
-        } else if (text.equalsIgnoreCase("999")) {
-            button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
-            button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
-            button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
-        } else if (text.equalsIgnoreCase("1999")) {
-            button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
-            button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
-            button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
-        } else {
-            button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
-            button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
-            button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
-        }
-    } else {
-        if (text.equalsIgnoreCase("599")) {
-            button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
-            button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
-            button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                        } else if (text.equalsIgnoreCase("999")) {
+                            button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
+                            button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                        } else if (text.equalsIgnoreCase("1999")) {
+                            button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
+                        } else {
+                            button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                        }
+                    } else {
+                        if (text.equalsIgnoreCase("599")) {
+                            button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
+                            button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
 
-        } else if (text.equalsIgnoreCase("999")) {
-            button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
-            button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
-            button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
-        } else if (text.equalsIgnoreCase("1999")) {
-            button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
-            button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
-            button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
-        } else {
-            button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
-            button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
-            button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
-        }
-    }
-            } catch(Exception e) {
-            }
+                        } else if (text.equalsIgnoreCase("999")) {
+                            button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
+                            button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                        } else if (text.equalsIgnoreCase("1999")) {
+                            button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_yellow_border));
+                        } else {
+                            button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                            button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                        }
+                    }
+                } catch (Exception e) {
+                }
 
             }
         });
@@ -232,29 +233,30 @@ try{
 				try {
 					String amountStr = editTextAmount.getText().toString().trim();
 					if("".equalsIgnoreCase(amountStr)){
-                        new DialogPopup().dialogBanner(paymentActivity, "" + getResources().getString(R.string.amount_range));
+                        new DialogPopup().dialogBanner(homeActivity, "" + getResources().getString(R.string.amount_range));
 					}
 					else{
 //						double amount = Double.parseDouble(editTextAmount.getText().toString().trim());
                         int amountNew = Integer.parseInt(editTextAmount.getText().toString().trim());
-                        if (AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-                            if(amountNew<Data.MIN_AMOUNT || amountNew>Data.MAX_AMOUNT) {
-                                new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.amount_range));
-                            } else {
-//                                paymentActivity.enterAmount = Double.toString(amount);
-                                DecimalFormat decimalFormat = new DecimalFormat("#");
-                                paymentActivity.enterAmount = ""+decimalFormat.format(Double.parseDouble(editTextAmount.getText().toString()));
+                        if (AppStatus.getInstance(homeActivity).isOnline(homeActivity)) {
+                            if(amountNew< Data.MIN_AMOUNT || amountNew>Data.MAX_AMOUNT) {
 
-                                paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                                new DialogPopup().dialogBanner(homeActivity, ""+getResources().getString(R.string.amount_range));
+                            } else {
+//                                homeActivity.enterAmount = Double.toString(amount);
+                                DecimalFormat decimalFormat = new DecimalFormat("#");
+                                homeActivity.enterAmount = ""+decimalFormat.format(Double.parseDouble(editTextAmount.getText().toString()));
+
+                                homeActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                                     .add(R.id.fragLayout, new AddJugnooCashFragment(), "AddJugnooCashFragment").addToBackStack("AddJugnooCashFragment")
-                                    .hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-                                        .getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                                    .hide(homeActivity.getSupportFragmentManager().findFragmentByTag(homeActivity.getSupportFragmentManager()
+                                        .getBackStackEntryAt(homeActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                                     .commit();
 
                             }
 						}
 						else{
-                            new DialogPopup().alertPopup(paymentActivity, "", Data.CHECK_INTERNET_MSG);
+                            new DialogPopup().alertPopup(homeActivity, "", Data.CHECK_INTERNET_MSG);
 						}
 					}
 				} catch (Exception e) {
@@ -268,22 +270,22 @@ try{
 		
 		editTextAmount.setOnEditorActionListener(new OnEditorActionListener() {
 
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						//buttonMakePayment.performClick();
-					break;
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                int result = actionId & EditorInfo.IME_MASK_ACTION;
+                switch (result) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        //buttonMakePayment.performClick();
+                        break;
 
-					case EditorInfo.IME_ACTION_NEXT:
-					break;
+                    case EditorInfo.IME_ACTION_NEXT:
+                        break;
 
-					default:
-				}
-				return true;
-			}
-		});
+                    default:
+                }
+                return true;
+            }
+        });
 		
 		
 		try{
@@ -297,11 +299,10 @@ try{
 			e.printStackTrace();
 		}
 
-
         linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                if(!scrolled) {
+                if (!scrolled) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -319,8 +320,41 @@ try{
         }));
 
 
+        final View activityRootView = rootView.findViewById(R.id.linearLayoutMain);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                // r will be populated with the coordinates of your view
+                // that area still visible.
+                activityRootView.getWindowVisibleDisplayFrame(r);
 
+                int heightDiff = activityRootView.getRootView().getHeight() - (r.bottom - r.top);
+                if (heightDiff > 100) { // if more than 100 pixels, its
+                    // probably a keyboard...
+
+                    /************** Adapter for the parent List *************/
+
+                    ViewGroup.LayoutParams params_12 = textViewScroll.getLayoutParams();
+
+                    params_12.height = (int) (heightDiff);
+
+                    textViewScroll.setLayoutParams(params_12);
+                    textViewScroll.requestLayout();
+
+                } else {
+
+                    ViewGroup.LayoutParams params = textViewScroll.getLayoutParams();
+                    params.height = 0;
+                    textViewScroll.setLayoutParams(params);
+                    textViewScroll.requestLayout();
+
+                }
+            }
+        });
+
+        homeActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		return rootView;
 	}
@@ -339,9 +373,9 @@ try{
                 public boolean onTouch(View v, MotionEvent event) {
 
                     try {
-                        if (paymentActivity.getCurrentFocus() != null) {
-                            InputMethodManager inputMethodManager = (InputMethodManager) paymentActivity.getSystemService(paymentActivity.INPUT_METHOD_SERVICE);
-                            inputMethodManager.hideSoftInputFromWindow(paymentActivity.getCurrentFocus().getWindowToken(), 0);
+                        if (homeActivity.getCurrentFocus() != null) {
+                            InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(homeActivity.INPUT_METHOD_SERVICE);
+                            inputMethodManager.hideSoftInputFromWindow(homeActivity.getCurrentFocus().getWindowToken(), 0);
                         }
                     } catch (Exception e) {
                         //
@@ -361,6 +395,21 @@ try{
         }
     }
 
+    /**
+     * Method used to hide soft keyboard
+     */
+//    public void hideKayboard() {
+//        try {
+//            if (homeActivity.getCurrentFocus() != null) {
+//                InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(homeActivity.INPUT_METHOD_SERVICE);
+//                inputMethodManager.hideSoftInputFromWindow(homeActivity.getCurrentFocus().getWindowToken(), 0);
+//            }
+//        } catch (Exception e) {
+//            //
+//            e.printStackTrace();
+//        }
+//    }
+
     public void updateStatus(String status) {
         try{
             try {
@@ -372,18 +421,18 @@ try{
                         + (int) Data.userData.jugnooBalance);
             }
             if("failure".equalsIgnoreCase(status)){
-                new DialogPopup().dialogBanner(paymentActivity, ""+getResources().getString(R.string.trans_failed));
+                new DialogPopup().dialogBanner(homeActivity, ""+getResources().getString(R.string.trans_failed));
             }
         } catch(Exception e){
             e.printStackTrace();
         }
     }
 
+    /**
+     * Method used to remove fragment from stack
+     */
     public void performBackPressed() {
         getActivity().getSupportFragmentManager().popBackStack ("WalletAddPaymentFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
-//        startActivity(new Intent(paymentActivity, WalletActivity.class));
-//        finish();
-//        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 	
 

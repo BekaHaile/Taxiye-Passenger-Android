@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import com.payu.sdk.ClearFragment;
 import com.payu.sdk.Constants;
@@ -15,6 +14,7 @@ import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -121,6 +121,59 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
         Log.e("value", "finish value = " + value);
     }
 
+//    public static JSONArray availableBanks;
+//
+//    public void getListBanks() {
+//
+//        availableBanks = new JSONArray();
+//
+//        List<NameValuePair> postParams = null;
+//
+//        HashMap varList = new HashMap();
+//
+//        varList.put(Constants.VAR1, Constants.DEFAULT);
+//
+//        try {
+//            postParams = PayU.getInstance(PaymentActivity.this).getParams(Constants.PAYMENT_RELATED_DETAILS, varList);
+//            GetResponseTask getResponse = new GetResponseTask(PaymentActivity.this);
+//            getResponse.execute(postParams);
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+//    @Override
+//    public void onPaymentOptionSelected(PayU.PaymentMode paymentMode) {
+//
+//    }
+//
+//    @Override
+//    public void onGetResponse(String responseMessage) {
+//
+//    }
+//
+//    @Override
+//    public void onBankDetails(JSONArray availableBanksData) {
+//        availableBanks = availableBanksData;
+//        AddJugnooCashFragment frag = (AddJugnooCashFragment) getSupportFragmentManager().findFragmentByTag("AddJugnooCashFragment");
+//        if(PayU.availableBanks!= null) {
+//            if (frag != null) {
+//                frag.setupAdapter();
+//            }
+//        } else {
+//            Toast.makeText(this, "Null array", Toast.LENGTH_SHORT).show();
+//            Log.e("availableBanksData", "availableBanksData");
+//            Log.e("availableBanksData", "availableBanksData = "+ availableBanksData.length());
+//
+//            PayU.availableBanks = availableBanksData;
+//            if (frag != null) {
+//                //frag.setupAdapter();
+//            }
+//        }
+//    }
+
+
     public static JSONArray availableBanks;
 
     public void getListBanks() {
@@ -128,9 +181,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
         availableBanks = new JSONArray();
 
         List<NameValuePair> postParams = null;
-
         HashMap varList = new HashMap();
-
         varList.put(Constants.VAR1, Constants.DEFAULT);
 
         try {
@@ -141,6 +192,65 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
             e.printStackTrace();
         }
 
+
+        fetchStoredCards();
+
+    }
+
+    public void fetchStoredCards() {
+        List<NameValuePair> postParams = null;
+        HashMap varList = new HashMap();
+        Log.e("PayU.userCredentials", "PayU.userCredentials = "+PayU.userCredentials);
+        varList.put(Constants.VAR1, PayU.userCredentials); // this will return the storedCards as well
+
+
+        try {
+            postParams = PayU.getInstance(this).getParams(Constants.GET_USER_CARDS, varList);
+            android.util.Log.e("postParams", "postParams = " + postParams);
+            GetResponseTask getStoredCards = new GetResponseTask(this);
+            getStoredCards.execute(postParams);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteCard(String token) {
+        List<NameValuePair> postParams = null;
+        HashMap varList = new HashMap();
+        varList.put(Constants.VAR1, PayU.userCredentials); // this will return the storedCards as well
+        varList.put(Constants.VAR2, token);
+
+
+        try {
+            postParams = PayU.getInstance(this).getParams(Constants.DELETE_USER_CARD, varList);
+            android.util.Log.e("postParams", "postParams = " + postParams);
+            GetResponseTask getStoredCards = new GetResponseTask(this);
+            getStoredCards.execute(postParams);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    @Override
+    public void onBankDetails(JSONArray availableBanksData) {
+
+        availableBanks = availableBanksData;
+        AddJugnooCashFragment frag = (AddJugnooCashFragment) getSupportFragmentManager().findFragmentByTag("AddJugnooCashFragment");
+        if(PayU.availableBanks!= null) {
+            if (frag != null) {
+                frag.setupAdapter();
+            }
+        } else {
+            Log.e("availableBanksData", "availableBanksData");
+            Log.e("availableBanksData", "availableBanksData = " + availableBanksData.length());
+
+            PayU.availableBanks = availableBanksData;
+            if (frag != null) {
+                //frag.setupAdapter();
+            }
+        }
     }
 
     @Override
@@ -151,25 +261,30 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
     @Override
     public void onGetResponse(String responseMessage) {
 
-    }
-
-    @Override
-    public void onBankDetails(JSONArray availableBanksData) {
-        availableBanks = availableBanksData;
+        Log.e("responseMessage", "responseMessage = "+responseMessage);
         AddJugnooCashFragment frag = (AddJugnooCashFragment) getSupportFragmentManager().findFragmentByTag("AddJugnooCashFragment");
-        if(PayU.availableBanks!= null) {
-            if (frag != null) {
-                frag.setupAdapter();
-            }
-        } else {
-            Toast.makeText(this, "Null array", Toast.LENGTH_SHORT).show();
-            Log.e("availableBanksData", "availableBanksData");
-            Log.e("availableBanksData", "availableBanksData = "+ availableBanksData.length());
+        if(responseMessage != null) {
 
-            PayU.availableBanks = availableBanksData;
-            if (frag != null) {
-                //frag.setupAdapter();
+            if(frag != null) {
+                if(responseMessage.contains("Card not found")) {
+                    PayU.storedCards = new JSONArray(new ArrayList<String>());
+                    frag.notifyStoreCard();
+                } else if (PayU.storedCards != null) {
+                    frag.notifyStoreCard();
+                } else {
+                    frag.stopLoading();
+                }
             }
+
+            if (responseMessage.contains("deleted successfully")) {
+                Log.e("responseMessage", "responseMessage = 1");
+                fetchStoredCards();
+                if(frag != null) {
+                    Log.e("responseMessage", "responseMessage = 2");
+                    frag.removeCard();
+                }
+            }
+
         }
     }
 }
