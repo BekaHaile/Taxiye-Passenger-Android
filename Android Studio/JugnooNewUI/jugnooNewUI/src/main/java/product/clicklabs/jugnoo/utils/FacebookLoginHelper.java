@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -44,10 +43,8 @@ public class FacebookLoginHelper {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(FacebookLoginHelper.this.activity, loginResult.toString(), Toast.LENGTH_SHORT).show();
                 accessToken = loginResult.getAccessToken();
                 if (accessToken != null) {
-                    Toast.makeText(FacebookLoginHelper.this.activity, "Got now AT " + accessToken.getToken(), Toast.LENGTH_SHORT).show();
                     if (accessToken.isExpired()) {
                         callOpenActiveSession();
                     } else {

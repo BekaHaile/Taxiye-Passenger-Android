@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -332,6 +333,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
+        FacebookSdk.sdkInitialize(activity);
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -2843,18 +2846,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 firstLatLng = Data.driverInfos.get(0).latLng;
             }
             if (firstLatLng != null) {
+                boolean fixedZoom = false;
                 double distance = MapUtils.distance(userLatLng, firstLatLng);
-                if (distance >= 1000 && distance <= 15000) {
+                if (distance <= 15000) {
                     boundsBuilder.include(new LatLng(userLatLng.latitude, firstLatLng.longitude));
                     boundsBuilder.include(new LatLng(firstLatLng.latitude, userLatLng.longitude));
                     boundsBuilder.include(new LatLng(userLatLng.latitude, ((2 * userLatLng.longitude) - firstLatLng.longitude)));
                     boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - firstLatLng.latitude), userLatLng.longitude));
                 } else {
-                    boundsBuilder.include(new LatLng((userLatLng.latitude - (0.01)), userLatLng.longitude));
-                    boundsBuilder.include(new LatLng((userLatLng.latitude + (0.01)), userLatLng.longitude));
+                    fixedZoom = true;
                     mapTouchedOnce = false;
                 }
 
+                final boolean finalFixedZoom = fixedZoom;
                 boundsBuilder.include(userLatLng);
 
                 try {
@@ -2864,17 +2868,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void run() {
                             try {
-                                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+                                if(finalFixedZoom){
+                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+                                }
+                                else {
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        float zoomLevel = map.getCameraPosition().zoom;
-                                        if (zoomLevel > MAX_ZOOM) {
-                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            float zoomLevel = map.getCameraPosition().zoom;
+                                            if (zoomLevel > MAX_ZOOM) {
+                                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+                                            }
                                         }
-                                    }
-                                }, 1100);
+                                    }, 1100);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
