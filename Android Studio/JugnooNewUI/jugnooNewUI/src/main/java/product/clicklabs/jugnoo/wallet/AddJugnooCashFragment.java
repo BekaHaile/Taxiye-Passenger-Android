@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -37,6 +39,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+import com.payu.sdk.Cards;
 import com.payu.sdk.Constants;
 import com.payu.sdk.Params;
 import com.payu.sdk.PayU;
@@ -61,7 +64,6 @@ import java.util.List;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.cardformat.CreditCardEditText;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -109,7 +111,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
     TextView validTextDebitCard, validTextCreditCard;
     RelativeLayout relativeLayoutSaveDebitCard, relativeLayoutSaveCreditCard;
 
-    CreditCardEditText editTextDebitCardNumber, editTextCreditCardNumber;
+    EditText editTextDebitCardNumber, editTextCreditCardNumber;
 
     EditText  editTextCVVDebitCard, editTextNameOnDebitCard;
     EditText editTextCVVCreditCard, editTextNameOnCreditCard;
@@ -141,6 +143,15 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
     String cvvValue = "";
     int positionValue = 0;
+
+    Boolean isCardNumberValid = false;
+    Boolean isExpired = true;
+    Boolean isCvvValid = false;
+    Drawable cardNumberDrawable;
+    Drawable issuerDrawable;
+    private String cardNumber = "";
+
+    private String issuer = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -270,6 +281,46 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
     }
 
+
+    private void valid(EditText editText, Drawable drawable) {
+        drawable.setAlpha(255);
+        editText.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+//        if (findViewById(com.payu.sdk.R.id.expiryCvvLinearLayout).getVisibility() == View.GONE) {
+//            isExpired = false;
+//            isCvvValid = true;
+//        }
+//        if (isCardNumberValid && !isExpired && isCvvValid ) {
+//            findViewById(com.payu.sdk.R.id.makePayment).setEnabled(true);
+//        } else {
+//            findViewById(com.payu.sdk.R.id.makePayment).setEnabled(false);
+//        }
+    }
+
+    private void invalid(EditText editText, Drawable drawable) {
+        drawable.setAlpha(100);
+        editText.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+//        findViewById(com.payu.sdk.R.id.makePayment).setEnabled(false);
+//        findViewById(com.payu.sdk.R.id.makePayment).setBackgroundResource(com.payu.sdk.R.drawable.button);
+    }
+
+    private void resetHeader() {
+//        if (findViewById(com.payu.sdk.R.id.offerMessageTextView) != null && findViewById(com.payu.sdk.R.id.offerMessageTextView).getVisibility() == View.VISIBLE) {
+//            findViewById(com.payu.sdk.R.id.offerAmountTextView).setVisibility(View.GONE);
+//            ((TextView) findViewById(com.payu.sdk.R.id.offerMessageTextView)).setText("");
+//            ((TextView) findViewById(com.payu.sdk.R.id.amountTextView)).setGravity(Gravity.CENTER);
+//            ((TextView) findViewById(com.payu.sdk.R.id.amountTextView)).setTextColor(Color.BLACK);
+//            ((TextView) findViewById(com.payu.sdk.R.id.amountTextView)).setPaintFlags(0);
+//            ((TextView) findViewById(com.payu.sdk.R.id.amountTextView)).setText(getString(com.payu.sdk.R.string.amount, getIntent().getExtras().getDouble(PayU.AMOUNT)));
+//        }
+    }
+
+    private void makeInvalid() {
+//        if (!isCardNumberValid && cardNumber.length() > 0 && !findViewById(com.payu.sdk.R.id.cardNumberEditText).isFocused())
+//            ((EditText) findViewById(com.payu.sdk.R.id.cardNumberEditText)).setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(com.payu.sdk.R.drawable.error_icon), null);
+//        if (!isCvvValid && cvv.length() > 0 && !findViewById(com.payu.sdk.R.id.cvvEditText).isFocused())
+//            ((EditText) findViewById(com.payu.sdk.R.id.cvvEditText)).setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(com.payu.sdk.R.drawable.error_icon), null);
+    }
+
     private void initComponents() {
         relative = (LinearLayout) rootView.findViewById(R.id.relative);
         relativeLayoutTopBar = (RelativeLayout) rootView.findViewById(R.id.topBar);
@@ -328,7 +379,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
         validTextCreditCard = (TextView) rootView.findViewById(R.id.validTextCreditCard);
         validTextCreditCard.setTypeface(Fonts.latoLight(homeActivity));
 
-        editTextDebitCardNumber = (CreditCardEditText) rootView.findViewById(R.id.editTextDebitCardNumber);
+        editTextDebitCardNumber = (EditText) rootView.findViewById(R.id.editTextDebitCardNumber);
         editTextDebitCardNumber.setTypeface(Fonts.latoLight(homeActivity));
         editTextMonthDebitCard = (Button) rootView.findViewById(R.id.editTextMonthDebitCard);
         editTextMonthDebitCard.setTypeface(Fonts.latoLight(homeActivity));
@@ -341,7 +392,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
         relativeLayoutSaveDebitCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSaveDebitCard);
 
-        editTextCreditCardNumber = (CreditCardEditText) rootView.findViewById(R.id.editTextCreditCardNumber);
+        editTextCreditCardNumber = (EditText) rootView.findViewById(R.id.editTextCreditCardNumber);
         editTextCreditCardNumber.setTypeface(Fonts.latoLight(homeActivity));
         editTextMonthCreditCard = (Button) rootView.findViewById(R.id.editTextMonthCreditCard);
         editTextMonthCreditCard.setTypeface(Fonts.latoLight(homeActivity));
@@ -417,7 +468,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 int sdk = android.os.Build.VERSION.SDK_INT;
-                if(saveDCCard){
+                if (saveDCCard) {
                     saveDCCard = false;
 
                     if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
@@ -440,7 +491,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 int sdk = android.os.Build.VERSION.SDK_INT;
-                if(saveCCCard){
+                if (saveCCCard) {
                     saveCCCard = false;
                     if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                         imageViewSaveCreditCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.unsave_card_icon));
@@ -475,7 +526,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
             public void afterTextChanged(Editable s) {
                 if (editTextMonthDebitCard.getText().length() > 0)
                     if (Integer.parseInt(editTextMonthDebitCard.getText().toString().trim()) > 12) {
-                        DialogPopup.dialogBanner(homeActivity, ""+getResources().getString(R.string.valid_month));
+                        DialogPopup.dialogBanner(homeActivity, "" + getResources().getString(R.string.valid_month));
                     }
             }
         });
@@ -495,7 +546,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
             public void afterTextChanged(Editable s) {
                 if (editTextMonthCreditCard.getText().length() > 0)
                     if (Integer.parseInt(editTextMonthCreditCard.getText().toString().trim()) > 12) {
-                        DialogPopup.dialogBanner(homeActivity, ""+getResources().getString(R.string.valid_month));
+                        DialogPopup.dialogBanner(homeActivity, "" + getResources().getString(R.string.valid_month));
                     }
             }
         });
@@ -515,7 +566,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
             public void afterTextChanged(Editable s) {
                 if (editTextYearDebitCard.getText().length() == 4) {
                     if (Integer.parseInt(editTextYearDebitCard.getText().toString()) < year) {
-                        DialogPopup.dialogBanner(homeActivity, ""+getResources().getString(R.string.valid_year));
+                        DialogPopup.dialogBanner(homeActivity, "" + getResources().getString(R.string.valid_year));
                     }
                 }
             }
@@ -536,17 +587,216 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
             public void afterTextChanged(Editable s) {
                 if (editTextYearCreditCard.getText().length() == 4) {
                     if (Integer.parseInt(editTextYearCreditCard.getText().toString()) < year) {
-                        DialogPopup.dialogBanner(homeActivity, ""+getResources().getString(R.string.valid_year));
+                        DialogPopup.dialogBanner(homeActivity, "" + getResources().getString(R.string.valid_year));
                     }
                 }
             }
         });
 
+        //*************/
+
+        Cards.initializeIssuers(getResources());
+
+        cardNumberDrawable = getResources().getDrawable(R.drawable.card);
+        cardNumberDrawable.setAlpha(100);
+        editTextDebitCardNumber.setCompoundDrawablesWithIntrinsicBounds(null, null, cardNumberDrawable, null);
+
+        editTextDebitCardNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                editTextCVVDebitCard.getText().clear();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                cardNumber = charSequence.toString();
+
+                issuer = Cards.getIssuer(cardNumber);
+
+                if (issuer.contentEquals("AMEX")) {
+                    editTextCVVDebitCard.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+                } else {
+                    editTextCVVDebitCard.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+                }
+                if (issuer != null) {
+                    issuerDrawable = Cards.ISSUER_DRAWABLE.get(issuer);
+                }
+
+                if (issuer.contentEquals("SMAE")) {
+                    // disable cvv and expiry
+//                    findViewById(com.payu.sdk.R.id.expiryCvvLinearLayout).setVisibility(View.GONE);
+//                    findViewById(com.payu.sdk.R.id.haveCvvExpiryLinearLayout).setVisibility(View.VISIBLE);
+//                    findViewById(com.payu.sdk.R.id.dontHaveCvvExpiryLinearLayout).setVisibility(View.GONE);
+                    if (Cards.validateCardNumber(cardNumber)) {
+                        isCardNumberValid = true;
+                        if (PayU.issuingBankDownBin != null && PayU.issuingBankDownBin.has(cardNumber.substring(0, 6))) {// oops bank is down.
+                            try {
+                                ((TextView) rootView.findViewById(R.id.issuerDownTextView)).setText(PayU.issuingBankDownBin.getString(cardNumber.substring(0, 6)));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            rootView.findViewById(R.id.issuerDownTextView).setVisibility(View.VISIBLE);
+                        } else {
+                            rootView.findViewById(R.id.issuerDownTextView).setVisibility(View.GONE);
+                        }
+//                        if (getIntent().getExtras().getString(PayU.OFFER_KEY) != null)
+//                            checkOffer(cardNumber, getIntent().getExtras().getString(PayU.OFFER_KEY));
+                        valid(editTextDebitCardNumber, issuerDrawable);
+                    } else {
+                        isCardNumberValid = false;
+                        invalid(editTextDebitCardNumber, cardNumberDrawable);
+                        cardNumberDrawable.setAlpha(100);
+                        resetHeader();
+                    }
+                } else {
+                    // enable cvv and expiry
+//                    findViewById(com.payu.sdk.R.id.expiryCvvLinearLayout).setVisibility(View.VISIBLE);
+//                    findViewById(com.payu.sdk.R.id.haveCvvExpiryLinearLayout).setVisibility(View.GONE);
+//                    findViewById(com.payu.sdk.R.id.dontHaveCvvExpiryLinearLayout).setVisibility(View.GONE);
+                    if (Cards.validateCardNumber(cardNumber)) {
+
+                        isCardNumberValid = true;
+
+                        if (PayU.issuingBankDownBin != null && PayU.issuingBankDownBin.has(cardNumber.substring(0, 6))) {// oops bank is down.
+                            try {
+                                ((TextView) rootView.findViewById(R.id.issuerDownTextView)).setText("We are experiencing high failure rate for " + PayU.issuingBankDownBin.getString(cardNumber.substring(0, 6)) + " cards at this time. We recommend you pay using any other means of payment.");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            rootView.findViewById(com.payu.sdk.R.id.issuerDownTextView).setVisibility(View.VISIBLE);
+                        } else {
+                            rootView.findViewById(com.payu.sdk.R.id.issuerDownTextView).setVisibility(View.GONE);
+                        }
+
+//                        if (getIntent().getExtras().getString(PayU.OFFER_KEY) != null)
+//                            checkOffer(cardNumber, getIntent().getExtras().getString(PayU.OFFER_KEY));
+                        valid(editTextDebitCardNumber, issuerDrawable);
+                    } else {
+                        isCardNumberValid = false;
+                        invalid(editTextDebitCardNumber, cardNumberDrawable);
+                        cardNumberDrawable.setAlpha(100);
+                        resetHeader();
+                    }
+                }
+
+                // lets set the issuer drawable.
+
+                if (issuer != null && issuerDrawable != null) {
+                    editTextDebitCardNumber.setCompoundDrawablesWithIntrinsicBounds(null, null, issuerDrawable, null);
+                }
+
+                if (editTextDebitCardNumber.length() < 2) {
+                    editTextDebitCardNumber.setCompoundDrawablesWithIntrinsicBounds(null, null, cardNumberDrawable, null);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        editTextCreditCardNumber.setCompoundDrawablesWithIntrinsicBounds(null, null, cardNumberDrawable, null);
+        editTextCreditCardNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                editTextCreditCardNumber.getText().clear();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                cardNumber = charSequence.toString();
+
+                issuer = Cards.getIssuer(cardNumber);
+
+                if (issuer.contentEquals("AMEX")) {
+                    editTextCreditCardNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+                } else {
+                    editTextCreditCardNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+                }
+                if (issuer != null) {
+                    issuerDrawable = Cards.ISSUER_DRAWABLE.get(issuer);
+                }
+
+                if (issuer.contentEquals("SMAE")) {
+                    if (Cards.validateCardNumber(cardNumber)) {
+                        isCardNumberValid = true;
+                        if (PayU.issuingBankDownBin != null && PayU.issuingBankDownBin.has(cardNumber.substring(0, 6))) {// oops bank is down.
+                            try {
+                                ((TextView) rootView.findViewById(R.id.issuerDownTextView)).setText(PayU.issuingBankDownBin.getString(cardNumber.substring(0, 6)));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            rootView.findViewById(R.id.issuerDownTextView).setVisibility(View.VISIBLE);
+                        } else {
+                            rootView.findViewById(R.id.issuerDownTextView).setVisibility(View.GONE);
+                        }
+                        valid(editTextCreditCardNumber, issuerDrawable);
+                    } else {
+                        isCardNumberValid = false;
+                        invalid(editTextCreditCardNumber, cardNumberDrawable);
+                        cardNumberDrawable.setAlpha(100);
+                        resetHeader();
+                    }
+                } else {
+                    if (Cards.validateCardNumber(cardNumber)) {
+
+                        isCardNumberValid = true;
+
+                        if (PayU.issuingBankDownBin != null && PayU.issuingBankDownBin.has(cardNumber.substring(0, 6))) {// oops bank is down.
+                            try {
+                                ((TextView) rootView.findViewById(R.id.issuerDownTextView)).setText("We are experiencing high failure rate for " + PayU.issuingBankDownBin.getString(cardNumber.substring(0, 6)) + " cards at this time. We recommend you pay using any other means of payment.");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            rootView.findViewById(com.payu.sdk.R.id.issuerDownTextView).setVisibility(View.VISIBLE);
+                        } else {
+                            rootView.findViewById(com.payu.sdk.R.id.issuerDownTextView).setVisibility(View.GONE);
+                        }
+
+                        valid(editTextCreditCardNumber, issuerDrawable);
+                    } else {
+                        isCardNumberValid = false;
+                        invalid(editTextCreditCardNumber, cardNumberDrawable);
+                        cardNumberDrawable.setAlpha(100);
+                        resetHeader();
+                    }
+                }
+
+                // lets set the issuer drawable.
+
+                if (issuer != null && issuerDrawable != null) {
+                    editTextCreditCardNumber.setCompoundDrawablesWithIntrinsicBounds(null, null, issuerDrawable, null);
+                }
+
+                if (editTextCreditCardNumber.length() < 2) {
+                    editTextCreditCardNumber.setCompoundDrawablesWithIntrinsicBounds(null, null, cardNumberDrawable, null);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        /************/
+
+
         buttonPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideKayboard();
-                if(selectedFlag) {
+                if (editTextDebitCardNumber.length() >= 19) {
+                    isExpired = true;
+                } else {
+                    isExpired = false;
+                }
+
+                if (selectedFlag) {
                     if (homeActivity.pgName.equalsIgnoreCase("NB")) {
                         homeActivity.bankCode = bankCode;
                         homeActivity.ccNum = "";
@@ -571,6 +821,8 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                                     } else {
                                         new DialogPopup().dialogBanner(homeActivity, "" + getResources().getString(R.string.no_field_empty));
                                     }
+                                } else if ("MAESTRO".equalsIgnoreCase(storeListCards.get(i).card_brand) && tokenValue.length() > 1) {
+                                    saveCardPayment(tokenValue);
                                 } else {
                                     new DialogPopup().dialogBanner(homeActivity, "" + getResources().getString(R.string.no_field_empty));
                                 }
@@ -598,8 +850,17 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                             homeActivity.ccexpyr = editTextYearCreditCard.getText().toString().trim();
                         }
 
+                        isCvvValid = false;
+                        if (isExpired) {
+                            isCvvValid = true;
+                        } else if (homeActivity.ccvv.length() > 2) {
+                            isCvvValid = true;
+                        } else if (homeActivity.ccvv.length() == 0) {
+                            isCvvValid = false;
+                        }
 
-                        if (homeActivity.ccNum.length() > 10 && homeActivity.ccName.length() > 1 && homeActivity.ccvv.length() > 2 && homeActivity.ccexpmon.length() > 1 && homeActivity.ccexpyr.length() > 3) {
+
+                        if (homeActivity.ccNum.length() > 10 && homeActivity.ccName.length() > 1 && isCvvValid && homeActivity.ccexpmon.length() > 1 && homeActivity.ccexpyr.length() > 3) {
                             if (Integer.parseInt(homeActivity.ccexpyr) < year || Integer.parseInt(homeActivity.ccexpyr) >= year + 50) {
                                 new DialogPopup().dialogBanner(homeActivity, "" + getResources().getString(R.string.invalid_year));
                             } else if (Integer.parseInt(homeActivity.ccexpmon) < month && Integer.parseInt(homeActivity.ccexpyr) == year) {
@@ -607,7 +868,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                             } else {
                                 makePayment();
                             }
-                        } else if (homeActivity.ccNum.length() == 0 || homeActivity.ccName.length() == 0 || homeActivity.ccvv.length() == 0 || homeActivity.ccexpmon.length() == 0 || homeActivity.ccexpyr.length() == 0) {
+                        } else if (homeActivity.ccNum.length() == 0 || homeActivity.ccName.length() == 0 || !isCvvValid || homeActivity.ccexpmon.length() == 0 || homeActivity.ccexpyr.length() == 0) {
                             new DialogPopup().dialogBanner(homeActivity, "" + getResources().getString(R.string.no_field_empty));
                         } else {
                             if (homeActivity.ccexpmon.length() < 2) {

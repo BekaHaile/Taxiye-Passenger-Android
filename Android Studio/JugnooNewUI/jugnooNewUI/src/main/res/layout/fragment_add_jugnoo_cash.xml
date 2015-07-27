@@ -139,7 +139,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <product.clicklabs.jugnoo.cardformat.CreditCardEditText
+                <EditText
                     android:id="@+id/editTextDebitCardNumber"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_details_layout_height"
@@ -315,7 +315,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <product.clicklabs.jugnoo.cardformat.CreditCardEditText
+                <EditText
                     android:id="@+id/editTextCreditCardNumber"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_details_layout_height"
@@ -557,6 +557,18 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/add_amount_top_margin"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/issuerDownTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:layout_marginBottom="10px"
+                    android:textColor="@color/color_payment_mode"
+                    android:textSize="@dimen/add_amount_text_size"/>
+
+
 
                 <TextView
                     android:id="@+id/textViewAddAmount"

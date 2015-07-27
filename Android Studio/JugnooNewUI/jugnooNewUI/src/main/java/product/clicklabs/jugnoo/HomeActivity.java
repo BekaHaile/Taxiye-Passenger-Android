@@ -891,7 +891,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         // menu events
-
         linearLayoutProfile.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -921,6 +920,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
+                PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
                 startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);

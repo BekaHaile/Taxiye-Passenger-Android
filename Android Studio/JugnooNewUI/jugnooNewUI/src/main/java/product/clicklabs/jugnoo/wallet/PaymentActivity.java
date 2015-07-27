@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
@@ -57,12 +58,16 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
         
         ProcessPaymentActivity.clearFrag = this;
 
-
+        if(AddPaymentPath.FROM_WALLET == addPaymentPath) {
             getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragLayout, new WalletFragment(), "WalletFragment").addToBackStack("WalletFragment")
                 .commitAllowingStateLoss();
 
-        
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
+                .commitAllowingStateLoss();
+        }
         
     }
 
@@ -99,6 +104,12 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
                     WalletFragment frag = (WalletFragment) getSupportFragmentManager().findFragmentByTag("WalletFragment");
                     if (frag != null) {
                         frag.updateStatus("success", enterAmount);
+                    } else {
+                        new DialogPopup().dialogBanner(PaymentActivity.this, "Payment successful, Added Rs. " + enterAmount);
+                        Data.userData.jugnooBalance += Double.parseDouble(enterAmount);
+                        getSupportFragmentManager().beginTransaction()
+                            .add(R.id.fragLayout, new WalletFragment(), "WalletFragment").addToBackStack("WalletFragment")
+                            .commitAllowingStateLoss();
                     }
 
                     if(AddPaymentPath.FROM_IN_RIDE == addPaymentPath){
@@ -110,10 +121,22 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
                 }else if(value == CommonFlags.PAYMENT_FAILED.getOrdinal()) {
                     new DialogPopup().dialogBanner(PaymentActivity.this, ""+getResources().getString(R.string.trans_failed));
 
+                    WalletFragment frag = (WalletFragment) getSupportFragmentManager().findFragmentByTag("WalletFragment");
+                    if (frag == null) {
+                        getSupportFragmentManager().beginTransaction()
+                            .add(R.id.fragLayout, new WalletFragment(), "WalletFragment").addToBackStack("WalletFragment")
+                            .commitAllowingStateLoss();
+                    }
+
                 }else if(value == CommonFlags.PAYMENT_ERROR.getOrdinal()) {
                     new DialogPopup().dialogBanner(PaymentActivity.this, ""+getResources().getString(R.string.trans_failed));
 
-
+                    WalletFragment frag = (WalletFragment) getSupportFragmentManager().findFragmentByTag("WalletFragment");
+                    if (frag == null) {
+                        getSupportFragmentManager().beginTransaction()
+                            .add(R.id.fragLayout, new WalletFragment(), "WalletFragment").addToBackStack("WalletFragment")
+                            .commitAllowingStateLoss();
+                    }
                 }
             }
         }, 200);

@@ -60,8 +60,7 @@ public class WalletAddPaymentFragment extends Fragment {
     LinearLayout linearLayoutMain;
     boolean scrolled = false;
 	
-	//public static AddPaymentPath addPaymentPath = AddPaymentPath.FROM_WALLET;
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
