@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/relative"
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="720px"
+     android:layout_height="wrap_content"
+     android:background="@color/white_light_grey"
+     android:orientation="vertical"
+     android:animateLayoutChanges="true"
+     android:splitMotionEvents="false">
+
+
+    <RelativeLayout
+        android:id="@+id/upperLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="70px"
+        android:background="@color/grey_lightest"
+        >
+
+        <ImageView
+            android:id="@+id/imageViewSelectCard"
+            android:layout_width="@dimen/payment_mode_selector"
+            android:layout_height="@dimen/payment_mode_selector"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/select_payment_left_margin"
+            android:background="@drawable/ic_payment_mode_unpressed" />
+
+        <ImageView
+            android:id="@+id/cardImageView"
+            android:layout_width="70px"
+            android:layout_height="70px"
+            android:tag="mwar"
+            android:background="@drawable/mastercard"
+            android:layout_marginLeft="50px" />
+
+        <ImageView
+            android:id="@+id/pipeView"
+            android:layout_width="2px"
+            android:layout_height="50px"
+            android:background="@color/black"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="132px"/>
+
+
+        <TextView
+            android:id="@+id/textViewCard"
+            android:layout_width="wrap_content"
+            android:layout_height="70px"
+            android:layout_marginLeft="@dimen/select_payment_left_margin"
+            android:layout_toRightOf="@+id/pipeView"
+            android:gravity="center_vertical"
+            android:text="512345XXXXXX2346"
+            android:textColor="@color/color_payment_mode"
+            android:textSize="@dimen/payment_modes_text_size" />
+
+
+        <TextView
+            android:id="@+id/deleteText"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/payment_mode_layout_min_height"
+            android:text="@string/delete_text"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/color_payment_mode"
+            android:textSize="@dimen/payment_modes_text_size"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:layout_marginRight="54px"
+            />
+
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/nameLayout"
+        android:layout_width="fill_parent"
+        android:background="@color/white"
+        android:layout_height="74px"
+        android:visibility="visible" >
+        <TextView
+            android:id="@+id/textViewCardDetail"
+            android:layout_width="620px"
+            android:layout_height="70px"
+            android:layout_marginLeft="70px"
+            android:singleLine="true"
+            android:gravity="center_vertical"
+            android:text="MASTER CARD | GURMAIL"
+            android:textColor="@color/color_payment_mode"
+            android:textSize="@dimen/payment_modes_text_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/noLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="116px"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible" >
+
+        <EditText
+            android:id="@+id/editTextCVVDebitCard"
+            android:layout_width="130px"
+            android:layout_height="90px"
+            android:inputType="numberPassword"
+            android:maxLength="4"
+            android:layout_marginLeft="54px"
+            android:textColor="@color/color_payment_mode"
+            android:textCursorDrawable="@drawable/black_cursor"
+            android:background="@drawable/payment_mode_edit_text_background"
+            android:hint="@string/CVV"
+            android:textColorHint="@color/color_card_details"
+            android:paddingLeft="@dimen/card_details_left_padding"
+            android:textSize="@dimen/card_details_text_size" />
+
+        <ImageView
+            android:id="@+id/cvvCardImageView"
+            android:layout_width="108px"
+            android:layout_height="78px"
+            android:tag="mwar"
+            android:background="@drawable/cvvcard"
+            android:layout_marginLeft="37px" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

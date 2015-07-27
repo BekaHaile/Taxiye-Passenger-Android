@@ -159,8 +159,8 @@ public class Data {
 	public static ReferralMessages referralMessages;
 
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
-	
-	
+
+
 	
 	public static void clearDataOnLogout(Context context){
 		try{
