@@ -26,7 +26,7 @@
             android:padding="20px"
             android:text="Reason"
             android:textColor="@color/grey_dark"
-            android:textSize="30px" />
+            android:textSize="28px" />
 
 
 </LinearLayout>

@@ -26,14 +26,11 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsListEventHandler;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
-import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -70,8 +67,6 @@ public class FeedbackActivity extends BaseActivity {
     int pastDriverId = 0, pastEngagementId = 0, position = 0;
     boolean scrolled = false;
 
-    ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -83,12 +78,6 @@ public class FeedbackActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
 
-        feedbackReasons.add(new FeedbackReason("Late Arrival"));
-        feedbackReasons.add(new FeedbackReason("Speed"));
-        feedbackReasons.add(new FeedbackReason("Driver Behavior"));
-        feedbackReasons.add(new FeedbackReason("Trip Route"));
-        feedbackReasons.add(new FeedbackReason("Auto Quality"));
-        feedbackReasons.add(new FeedbackReason("Other"));
 
 
         feedbackMode = FeedbackMode.SUPPORT;
@@ -114,7 +103,7 @@ public class FeedbackActivity extends BaseActivity {
         textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.latoRegular(this));
         listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);
 
-        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, feedbackReasons, new FeedbackReasonsListEventHandler() {
+        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsListEventHandler() {
             @Override
             public void onLastItemSelected(boolean selected) {
 //                if(selected){
@@ -167,34 +156,33 @@ public class FeedbackActivity extends BaseActivity {
                     textViewRateText.setText("Loved it");
                 }
 
-                if(rating <= 3){
-                    textViewRateYourExp.setVisibility(View.GONE);
-                    textViewRateText.setVisibility(View.GONE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            textViewWhatImprove.setVisibility(View.VISIBLE);
-                            listViewFeedbackReasons.setVisibility(View.VISIBLE);
+                if(FeedbackMode.SUPPORT != feedbackMode && Data.feedbackReasons.size() > 0) {
+                    if (rating <= 3) {
+                        textViewRateYourExp.setVisibility(View.GONE);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewWhatImprove.setVisibility(View.VISIBLE);
+                                listViewFeedbackReasons.setVisibility(View.VISIBLE);
 
-                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
-                            layoutParams.height = (int) (ASSL.Yscale() * 200);
-                            editTextFeedback.setLayoutParams(layoutParams);
-                        }
-                    }, 205);
-                }
-                else{
-                    textViewWhatImprove.setVisibility(View.GONE);
-                    listViewFeedbackReasons.setVisibility(View.GONE);
-                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
-                    layoutParams.height = (int)(ASSL.Yscale() * 300);
-                    editTextFeedback.setLayoutParams(layoutParams);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            textViewRateYourExp.setVisibility(View.VISIBLE);
-                            textViewRateText.setVisibility(View.VISIBLE);
-                        }
-                    }, 205);
+                                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
+                                layoutParams.height = (int) (ASSL.Yscale() * 150);
+                                editTextFeedback.setLayoutParams(layoutParams);
+                            }
+                        }, 205);
+                    } else {
+                        textViewWhatImprove.setVisibility(View.GONE);
+                        listViewFeedbackReasons.setVisibility(View.GONE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
+                        layoutParams.height = (int) (ASSL.Yscale() * 200);
+                        editTextFeedback.setLayoutParams(layoutParams);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewRateYourExp.setVisibility(View.VISIBLE);
+                            }
+                        }, 205);
+                    }
                 }
 
             }
@@ -214,29 +202,34 @@ public class FeedbackActivity extends BaseActivity {
                 String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
                 boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
 
-                //We take your feedback seriously. Please give us a rating
-
                 if (0 == rating) {
                     DialogPopup.alertPopup(FeedbackActivity.this, "", "We take your feedback seriously. Please give us a rating");
                 } else {
+                    if(FeedbackMode.SUPPORT != feedbackMode  && Data.feedbackReasons.size() > 0 && rating <= 3){
+                        if(feedbackReasons.length() > 0){
+                            if(isLastReasonSelected && feedbackStr.length() == 0){
+                                DialogPopup.alertPopup(FeedbackActivity.this, "", "Kindly specify your reason for other");
+                                return;
+                            }
+                        }
+                        else{
+                            DialogPopup.alertPopup(FeedbackActivity.this, "", "Please provide your reason for the rating");
+                            return;
+                        }
+                    }
+
                     if (feedbackStr.length() > 300) {
                         editTextFeedback.requestFocus();
                         editTextFeedback.setError("Review must be in 300 letters.");
                     } else {
-                        if(isLastReasonSelected && feedbackStr.length() == 0){
-                            editTextFeedback.requestFocus();
-                            editTextFeedback.setError("In case of other reasons please mention here.");
-                        }
-                        else{
-                            if (FeedbackMode.AFTER_RIDE == feedbackMode) {
-                                submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr, feedbackReasons);
-                                FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
-                            } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
-                                submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr, feedbackReasons);
-                                FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, "" + pastEngagementId);
-                            } else {
-                                submitFeedbackSupportAsync(FeedbackActivity.this, rating, feedbackStr);
-                            }
+                        if (FeedbackMode.AFTER_RIDE == feedbackMode) {
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr, feedbackReasons);
+                            FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
+                        } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr, feedbackReasons);
+                            FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, "" + pastEngagementId);
+                        } else {
+                            submitFeedbackSupportAsync(FeedbackActivity.this, rating, feedbackStr);
                         }
                     }
                 }
@@ -290,10 +283,9 @@ public class FeedbackActivity extends BaseActivity {
         textViewWhatImprove.setVisibility(View.GONE);
         listViewFeedbackReasons.setVisibility(View.GONE);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
-        layoutParams.height = (int)(ASSL.Yscale() * 300);
+        layoutParams.height = (int)(ASSL.Yscale() * 200);
         editTextFeedback.setLayoutParams(layoutParams);
         textViewRateYourExp.setVisibility(View.VISIBLE);
-        textViewRateText.setVisibility(View.VISIBLE);
 
 
 

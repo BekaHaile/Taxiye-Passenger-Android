@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text_alpha"
-                    android:textSize="36px"
+                    android:textSize="30px"
                     android:text="What could we improve?"
                     android:layout_marginTop="20px"
                     android:layout_marginLeft="30px"

@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -276,6 +277,7 @@ public class JSONParser {
         String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
 
         parseCancellationReasons(jObj);
+        parseFeedbackReasonArrayList(jObj);
 
         Data.referralMessages = parseReferralMessages(jObj);
 
@@ -798,6 +800,29 @@ public class JSONParser {
             e.printStackTrace();
         }
 
+    }
+
+
+    public static void parseFeedbackReasonArrayList(JSONObject jObj){
+        Data.feedbackReasons = new ArrayList<>();
+//        Data.feedbackReasons.add(new FeedbackReason("Late Arrival"));
+//        Data.feedbackReasons.add(new FeedbackReason("Speed"));
+//        Data.feedbackReasons.add(new FeedbackReason("Driver Behavior"));
+//        Data.feedbackReasons.add(new FeedbackReason("Trip Route"));
+//        Data.feedbackReasons.add(new FeedbackReason("Auto Quality"));
+//        Data.feedbackReasons.add(new FeedbackReason("Other"));
+
+        try{
+            JSONArray jReasons = jObj.getJSONArray("bad_rating_reasons");
+            if(jReasons.length() > 0){
+                Data.feedbackReasons.clear();
+            }
+            for(int i=0; i<jReasons.length(); i++){
+                Data.feedbackReasons.add(new FeedbackReason(jReasons.getString(i)));
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 
