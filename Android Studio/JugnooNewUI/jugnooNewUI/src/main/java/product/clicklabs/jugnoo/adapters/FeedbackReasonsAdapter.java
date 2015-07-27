@@ -28,11 +28,13 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
     Context context;
 
     ArrayList<FeedbackReason> feedbackReasons;
+    FeedbackReasonsListEventHandler feedbackReasonsListEventHandler;
 
-    public FeedbackReasonsAdapter(Context context, ArrayList<FeedbackReason> feedbackReasons) {
+    public FeedbackReasonsAdapter(Context context, ArrayList<FeedbackReason> feedbackReasons, FeedbackReasonsListEventHandler feedbackReasonsListEventHandler) {
         this.context = context;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.feedbackReasons = feedbackReasons;
+        this.feedbackReasonsListEventHandler = feedbackReasonsListEventHandler;
     }
 
     @Override
@@ -92,8 +94,16 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
             public void onClick(View v) {
                 try {
                     holder = (ViewHolderFeedbackReason) v.getTag();
-                    feedbackReasons.get(holder.id).checked = true;
+                    if(feedbackReasons.get(holder.id).checked){
+                        feedbackReasons.get(holder.id).checked = false;
+                    }
+                    else{
+                        feedbackReasons.get(holder.id).checked = true;
+                    }
                     notifyDataSetChanged();
+
+                    feedbackReasonsListEventHandler.onLastItemSelected(isLastSelected());
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
