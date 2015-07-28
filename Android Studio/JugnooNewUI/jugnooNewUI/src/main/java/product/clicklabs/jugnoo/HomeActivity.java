@@ -348,7 +348,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         setContentView(R.layout.activity_home);
 
 
-        FacebookSdk.sdkInitialize(activity);
+        FacebookSdk.sdkInitialize(this);
 
         callbackManager = CallbackManager.Factory.create();
 

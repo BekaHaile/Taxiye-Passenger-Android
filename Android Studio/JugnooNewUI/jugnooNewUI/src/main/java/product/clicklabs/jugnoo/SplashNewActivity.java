@@ -36,7 +36,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.appdynamics.eumagent.runtime.Instrumentation;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
@@ -44,6 +43,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
@@ -164,7 +164,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
-        Instrumentation.start("AD-AAB-AAB-BGB", getApplicationContext());
+        NewRelic.withApplicationToken(Config.getNewRelicKey()).start(this.getApplication());
+
+
+        FacebookSdk.sdkInitialize(this);
+
+//        Instrumentation.start("AD-AAB-AAB-BGB", getApplicationContext());
 
         FacebookSdk.sdkInitialize(this);
 
