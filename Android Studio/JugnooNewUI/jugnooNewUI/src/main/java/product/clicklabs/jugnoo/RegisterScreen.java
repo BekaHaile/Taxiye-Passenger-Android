@@ -47,6 +47,7 @@ import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
@@ -55,7 +56,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RegisterScreen extends BaseActivity implements LocationUpdate {
+public class RegisterScreen extends BaseActivity implements LocationUpdate, FlurryEventNames {
 
     RelativeLayout topBar;
     TextView textViewTitle;
