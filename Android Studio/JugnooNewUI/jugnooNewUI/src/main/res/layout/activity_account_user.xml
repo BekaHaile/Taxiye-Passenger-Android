@@ -115,6 +115,7 @@
                         android:splitMotionEvents="false" >
 
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutETName"
                             android:layout_width="660px"
                             android:layout_height="wrap_content" >
 
@@ -151,6 +152,7 @@
                             android:src="@color/yellow_alpha" />
 
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutETEmail"
                             android:layout_width="660px"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5px" >
@@ -256,6 +258,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutETPhone"
                             android:layout_width="660px"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5px" >

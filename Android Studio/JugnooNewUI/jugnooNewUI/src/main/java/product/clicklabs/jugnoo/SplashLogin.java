@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -19,6 +20,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -49,12 +52,15 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class SplashLogin extends BaseActivity implements LocationUpdate{
-	
+
+    RelativeLayout topRl;
 	TextView textViewTitle;
 	ImageView imageViewBack;
 	
@@ -69,6 +75,10 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 	TextView textViewForgotPassword;
 
 	LinearLayout relative;
+
+    ScrollView scrollView;
+    LinearLayout linearLayoutMain;
+    TextView textViewScroll;
 
 
 
@@ -126,7 +136,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashLogin.this, relative, 1134, 720, false);
-		
+
+
+        topRl = (RelativeLayout) findViewById(R.id.topRl);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
@@ -139,7 +151,12 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		
 		buttonEmailLogin = (Button) findViewById(R.id.buttonEmailLogin); buttonEmailLogin.setTypeface(Fonts.latoRegular(getApplicationContext()));
 		textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword); textViewForgotPassword.setTypeface(Fonts.latoRegular(getApplicationContext()));
-		
+
+
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
 
 		
 		String[] emails = Database.getInstance(this).getEmails();
@@ -166,6 +183,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
                 String email = editTextEmail.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
                 if ("".equalsIgnoreCase(email)) {
@@ -232,44 +250,32 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		
 		
 		textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
-				startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				finish();
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
+                startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                finish();
+            }
+        });
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
                 performBackPressed();
             }
         });
-		
-		
-		editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    editTextEmail.setError(null);
-                }
-            }
-        });
-		
-		editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    editTextPassword.setError(null);
-                }
-            }
-        });
+        editTextEmail.setOnFocusChangeListener(onFocusChangeListener);
+        editTextPassword.setOnFocusChangeListener(onFocusChangeListener);
+
+        editTextEmail.setOnClickListener(onClickListener);
+        editTextPassword.setOnClickListener(onClickListener);
 
         editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
 
@@ -314,6 +320,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
                 loginDataFetched = false;
                 facebookLoginHelper.openFacebookSession();
             }
@@ -334,6 +341,19 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
             @Override
             public void facebookLoginError(String message) {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        linearLayoutMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+            }
+        });
+        topRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
             }
         });
 		
@@ -386,12 +406,60 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
         } catch(Exception e){
             e.printStackTrace();
         }
+
+
+        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        }));
 		
 	}
 
+    private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
 
-	
-	@Override
+        @Override
+        public void onFocusChange(final View v, boolean hasFocus) {
+            if (hasFocus) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, v.getTop());
+                    }
+                }, 200);
+            } else {
+                try {
+                    ((EditText)v).setError(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ((EditText)v).setError(null);
+            }
+        }
+    };
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.smoothScrollTo(0, v.getTop());
+                }
+            }, 200);
+        }
+    };
+
+
+
+
+    @Override
 	protected void onResume() {
 		super.onResume();
 		

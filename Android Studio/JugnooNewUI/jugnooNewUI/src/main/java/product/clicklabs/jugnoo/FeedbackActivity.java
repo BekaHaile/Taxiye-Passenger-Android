@@ -47,7 +47,6 @@ public class FeedbackActivity extends BaseActivity {
     TextView textViewTitle;
     ImageView imageViewBack;
 
-    TextView textViewRateYourExp;
     RatingBar ratingBarFeedback;
     TextView textViewRateText, textViewWhatImprove;
     ListView listViewFeedbackReasons;
@@ -92,8 +91,6 @@ public class FeedbackActivity extends BaseActivity {
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-        textViewRateYourExp = (TextView) findViewById(R.id.textViewRateYourExp);
-        textViewRateYourExp.setTypeface(Fonts.latoLight(this));
         ratingBarFeedback = (RatingBar) findViewById(R.id.ratingBarFeedback);
         ratingBarFeedback.setRating(0);
         textViewRateText = (TextView) findViewById(R.id.textViewRateText);
@@ -106,12 +103,6 @@ public class FeedbackActivity extends BaseActivity {
         feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsListEventHandler() {
             @Override
             public void onLastItemSelected(boolean selected) {
-//                if(selected){
-//                    editTextFeedback.setHint("Please share your valuable feedback, in case of other reasons please mention here");
-//                }
-//                else{
-//                    editTextFeedback.setHint("Please share your valuable feedback");
-//                }
             }
         });
         listViewFeedbackReasons.setAdapter(feedbackReasonsAdapter);
@@ -158,7 +149,6 @@ public class FeedbackActivity extends BaseActivity {
 
                 if(FeedbackMode.SUPPORT != feedbackMode && Data.feedbackReasons.size() > 0) {
                     if (rating <= 3) {
-                        textViewRateYourExp.setVisibility(View.GONE);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -176,12 +166,6 @@ public class FeedbackActivity extends BaseActivity {
                         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
                         layoutParams.height = (int) (ASSL.Yscale() * 200);
                         editTextFeedback.setLayoutParams(layoutParams);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                textViewRateYourExp.setVisibility(View.VISIBLE);
-                            }
-                        }, 205);
                     }
                 }
 
@@ -285,7 +269,6 @@ public class FeedbackActivity extends BaseActivity {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
         layoutParams.height = (int)(ASSL.Yscale() * 200);
         editTextFeedback.setLayoutParams(layoutParams);
-        textViewRateYourExp.setVisibility(View.VISIBLE);
 
 
 

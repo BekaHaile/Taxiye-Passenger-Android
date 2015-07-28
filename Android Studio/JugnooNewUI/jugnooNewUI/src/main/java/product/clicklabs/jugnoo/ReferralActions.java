@@ -70,8 +70,8 @@ public class ReferralActions {
                 WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
                 layoutParams.dimAmount = 0.6f;
                 dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
 
                 ((TextView) dialog.findViewById(R.id.textViewGiftGet)).setTypeface(Fonts.latoRegular(activity));
                 ((TextView) dialog.findViewById(R.id.textViewInviteFriends)).setTypeface(Fonts.latoRegular(activity));
@@ -109,20 +109,6 @@ public class ReferralActions {
                 });
 
                 (dialog.findViewById(R.id.imageViewCross)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                (dialog.findViewById(R.id.innerRl)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-
-                rv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();

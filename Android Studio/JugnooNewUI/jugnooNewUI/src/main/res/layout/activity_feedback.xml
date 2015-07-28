@@ -50,24 +50,13 @@
                 android:animateLayoutChanges="true"
                 >
 
-                <TextView
-                    android:id="@+id/textViewRateYourExp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text_alpha"
-                    android:textSize="40px"
-                    android:text="Rate your Jugnoo Experience"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="54px"
-                    />
-
                 <RatingBar
                     android:id="@+id/ratingBarFeedback"
                     style="@style/RatingBarAuto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="40px"
+                    android:layout_marginTop="50px"
                     android:numStars="5"
                     android:rating="1"
                     android:stepSize="1.0"
