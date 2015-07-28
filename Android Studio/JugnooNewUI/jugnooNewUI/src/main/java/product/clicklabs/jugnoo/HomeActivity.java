@@ -104,6 +104,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -2837,6 +2838,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
+    //TODO
     public void zoomToCurrentLocationWithOneDriver(final LatLng userLatLng) {
 
         try {
@@ -2853,6 +2855,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     boundsBuilder.include(new LatLng(firstLatLng.latitude, userLatLng.longitude));
                     boundsBuilder.include(new LatLng(userLatLng.latitude, ((2 * userLatLng.longitude) - firstLatLng.longitude)));
                     boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - firstLatLng.latitude), userLatLng.longitude));
+
+
+
                 } else {
                     fixedZoom = true;
                     mapTouchedOnce = false;
@@ -2862,7 +2867,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 boundsBuilder.include(userLatLng);
 
                 try {
-                    final LatLngBounds bounds = boundsBuilder.build();
+                    final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -2874,15 +2879,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 else {
                                     map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
 
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            float zoomLevel = map.getCameraPosition().zoom;
-                                            if (zoomLevel > MAX_ZOOM) {
-                                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
-                                            }
-                                        }
-                                    }, 1100);
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            float zoomLevel = map.getCameraPosition().zoom;
+//                                            if (zoomLevel > MAX_ZOOM) {
+//                                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+//                                            }
+//                                        }
+//                                    }, 1100);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

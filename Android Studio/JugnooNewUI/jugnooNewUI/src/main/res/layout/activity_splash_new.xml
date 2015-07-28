@@ -21,8 +21,8 @@
             >
             <ImageView
                 android:id="@+id/imageViewJugnooLogo"
-                android:layout_width="312px"
-                android:layout_height="266px"
+                android:layout_width="400px"
+                android:layout_height="317px"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/jugnoo_logo_big_white"
                 android:tag="mwar"
@@ -30,19 +30,19 @@
 
             <ImageView
                 android:id="@+id/imageViewDebug1"
-                android:layout_width="80px"
-                android:layout_height="80px"
-                android:layout_marginTop="160px"
-                android:layout_marginLeft="85px"
+                android:layout_width="90px"
+                android:layout_height="90px"
+                android:layout_marginTop="190px"
+                android:layout_marginLeft="125px"
 
             />
 
             <ImageView
                 android:id="@+id/imageViewDebug2"
-                android:layout_width="80px"
-                android:layout_height="80px"
-                android:layout_marginTop="160px"
-                android:layout_marginLeft="260px"
+                android:layout_width="90px"
+                android:layout_height="90px"
+                android:layout_marginTop="190px"
+                android:layout_marginLeft="330px"
 
                 />
 
