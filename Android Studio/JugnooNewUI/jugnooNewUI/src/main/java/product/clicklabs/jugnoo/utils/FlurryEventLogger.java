@@ -14,15 +14,20 @@ import product.clicklabs.jugnoo.config.Config;
 
 public class FlurryEventLogger {
 
+    public static void event(String eventName){
+        try{ FlurryAgent.logEvent(eventName); } catch(Exception e){ e.printStackTrace(); }
+    }
+
+
 	public static void appStarted(String deviceToken){
-		try{
-			Map<String, String> articleParams = new HashMap<String, String>();
-			articleParams.put("device_token", deviceToken);
-			FlurryAgent.logEvent("App started", articleParams);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
+        try{
+            Map<String, String> articleParams = new HashMap<String, String>();
+            articleParams.put("device_token", deviceToken);
+            FlurryAgent.logEvent("App started", articleParams);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 	
 	public static void requestPushReceived(Context context, String engagementId, String startTime, String receivedTime){
 		try{
