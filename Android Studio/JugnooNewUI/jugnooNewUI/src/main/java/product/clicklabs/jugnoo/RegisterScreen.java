@@ -47,6 +47,7 @@ import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
@@ -55,7 +56,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RegisterScreen extends BaseActivity implements LocationUpdate {
+public class RegisterScreen extends BaseActivity implements LocationUpdate, FlurryEventNames {
 
     RelativeLayout topBar;
     TextView textViewTitle;
@@ -168,6 +169,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
 
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.event(SIGNUP_VIA_FACEBOOK);
                 Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
                 facebookLoginHelper.openFacebookSession();
             }
@@ -318,19 +320,10 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate {
                                                     emailId = "";
                                                 }
                                                 sendFacebookSignupValues(RegisterScreen.this, referralCode, phoneNo, password);
-                                                FlurryEventLogger.facebookSignupClicked(Data.facebookUserData.userEmail);
-                                                if (!"".equalsIgnoreCase(referralCode)) {
-                                                    FlurryEventLogger.referralCodeAtFBSignup(Data.facebookUserData.userEmail, referralCode);
-                                                }
                                             } else {
                                                 sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password);
-                                                FlurryEventLogger.emailSignupClicked(emailId);
-                                                if (!"".equalsIgnoreCase(referralCode)) {
-                                                    FlurryEventLogger.referralCodeAtEmailSignup(emailId, referralCode);
-                                                }
                                             }
-
-
+                                            FlurryEventLogger.event(SIGNUP_FINAL);
                                         } else {
                                             editTextPassword.requestFocus();
                                             editTextPassword.setError("Password must be of atleast six characters");

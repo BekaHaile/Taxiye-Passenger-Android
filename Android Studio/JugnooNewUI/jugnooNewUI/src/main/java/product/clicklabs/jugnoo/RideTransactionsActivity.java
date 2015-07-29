@@ -40,10 +40,12 @@ import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideTransactionsActivity extends BaseActivity implements UpdateRideTransaction {
+public class RideTransactionsActivity extends BaseActivity implements UpdateRideTransaction, FlurryEventNames {
 
 	RelativeLayout relative;
 	
@@ -534,6 +536,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        FlurryEventLogger.event(RIDE_RATED_ON_RIDE_HISTORY);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

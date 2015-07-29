@@ -59,6 +59,7 @@ import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
@@ -69,7 +70,7 @@ import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashNewActivity extends BaseActivity implements LocationUpdate{
+public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames{
 
     //adding drop location
 
@@ -203,6 +204,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
+                FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 				startActivity(new Intent(SplashNewActivity.this, SplashLogin.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -213,6 +215,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
+                FlurryEventLogger.event(SIGNUP);
 				RegisterScreen.facebookLogin = false;
 				startActivity(new Intent(SplashNewActivity.this, RegisterScreen.class));
 				finish();

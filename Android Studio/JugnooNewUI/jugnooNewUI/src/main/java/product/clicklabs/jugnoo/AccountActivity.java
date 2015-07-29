@@ -42,12 +42,14 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class AccountActivity extends BaseActivity {
+public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	RelativeLayout relative;
 
@@ -399,6 +401,7 @@ public class AccountActivity extends BaseActivity {
                 startActivity(new Intent(AccountActivity.this, EmergencyContactsActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 dissmissEmailVerify();
+                FlurryEventLogger.event(EMERGENCY_CONTACT_TO_BE_ADDED);
             }
         });
 

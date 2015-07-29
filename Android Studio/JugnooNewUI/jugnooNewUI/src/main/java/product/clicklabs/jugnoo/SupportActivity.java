@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,11 +15,13 @@ import android.widget.Toast;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SupportActivity extends BaseActivity {
+public class SupportActivity extends BaseActivity implements FlurryEventNames {
 
 	RelativeLayout relative;
 	
@@ -70,6 +71,7 @@ public class SupportActivity extends BaseActivity {
 				email.setType("message/rfc822");
 				try {
 					startActivity(Intent.createChooser(email, "Choose an Email client:"));
+                    FlurryEventLogger.event(SEND_EMAIL_SUPPORT);
 					Log.i("Finished sending email...", "");
 				} catch (android.content.ActivityNotFoundException ex) {
 					Toast.makeText(getApplicationContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
@@ -82,6 +84,7 @@ public class SupportActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 		        Utils.openCallIntent(SupportActivity.this, Config.getSupportNumber());
+                FlurryEventLogger.event(CALL_SUPPORT);
 			}
 		});
 		
@@ -92,6 +95,7 @@ public class SupportActivity extends BaseActivity {
 				HelpParticularActivity.helpSection = HelpSection.FAQ;
 				startActivity(new Intent(SupportActivity.this, HelpParticularActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(FAQS_SUPPORT);
 			}
 		});
 
@@ -103,6 +107,7 @@ public class SupportActivity extends BaseActivity {
 				intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.SUPPORT.getOrdinal());
 				startActivity(intent);
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(FEEDBACK_SUPPORT);
 			}
 		});
 		

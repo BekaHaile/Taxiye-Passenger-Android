@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -29,7 +30,7 @@ import rmn.androidscreenlibrary.ASSL;
 /**
  * Created by socomo20 on 6/19/15.
  */
-public class ReferralActions {
+public class ReferralActions implements FlurryEventNames {
 
 
     public static boolean showReferralDialog(final Activity activity, final CallbackManager callbackManager){
@@ -83,6 +84,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         shareToFacebook(activity, callbackManager);
+                        FlurryEventLogger.event(REFERRAL_POPUP_FACEBOOK);
                     }
                 });
 
@@ -90,6 +92,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         shareToWhatsapp(activity);
+                        FlurryEventLogger.event(REFERRAL_POPUP_WHATSAPP);
                     }
                 });
 
@@ -97,6 +100,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         sendSMSIntent(activity);
+                        FlurryEventLogger.event(REFERRAL_POPUP_MESSAGE);
                     }
                 });
 
@@ -104,6 +108,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         openMailIntent(activity);
+                        FlurryEventLogger.event(REFERRAL_POPUP_EMAIL);
                     }
                 });
 
@@ -111,6 +116,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
+                        FlurryEventLogger.event(REFERRAL_POPUP_CLOSE);
                     }
                 });
 

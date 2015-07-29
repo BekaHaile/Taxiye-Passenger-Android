@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -14,11 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity extends BaseActivity implements FlurryEventNames {
 
     RelativeLayout relative;
 
@@ -75,6 +76,7 @@ public class AboutActivity extends BaseActivity {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
                 startActivity(intent);
+                FlurryEventLogger.event(RATING_ON_PLAYSTORE_ABOUT);
             }
         });
 
@@ -104,6 +106,7 @@ public class AboutActivity extends BaseActivity {
                     intent.setData(Uri.parse("https://www.facebook.com/" + facebookPageName));
                     startActivity(intent);
                 }
+                FlurryEventLogger.event(LIKING_ON_FACEBOOK_ABOUT);
             }
         });
 
@@ -114,6 +117,7 @@ public class AboutActivity extends BaseActivity {
                 HelpParticularActivity.helpSection = HelpSection.TERMS;
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(TERMS_AND_CONDITIONS);
             }
         });
 
@@ -124,6 +128,7 @@ public class AboutActivity extends BaseActivity {
                 HelpParticularActivity.helpSection = HelpSection.PRIVACY;
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(PRIVACY_POLICY);
             }
         });
 
@@ -134,6 +139,7 @@ public class AboutActivity extends BaseActivity {
                 HelpParticularActivity.helpSection = HelpSection.ABOUT;
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(ABOUT_JUGOO_AUTOS);
             }
         });
 

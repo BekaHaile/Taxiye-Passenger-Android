@@ -18,11 +18,13 @@ import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ShareActivity extends BaseActivity {
+public class ShareActivity extends BaseActivity implements FlurryEventNames {
 	
 	RelativeLayout relative;
 	
@@ -154,6 +156,7 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.shareToFacebook(ShareActivity.this, callbackManager);
+                FlurryEventLogger.event(INVITE_FACEBOOK);
 			}
 		});
 		
@@ -163,6 +166,7 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.shareToWhatsapp(ShareActivity.this);
+                FlurryEventLogger.event(INVITE_WHATSAPP);
 			}
 		});
 		
@@ -172,6 +176,7 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.sendSMSIntent(ShareActivity.this);
+                FlurryEventLogger.event(INVITE_MESSAGE);
 			}
 		});
 
@@ -180,6 +185,7 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.openMailIntent(ShareActivity.this);
+                FlurryEventLogger.event(INVITE_EMAIL);
 			}
 		});
 		

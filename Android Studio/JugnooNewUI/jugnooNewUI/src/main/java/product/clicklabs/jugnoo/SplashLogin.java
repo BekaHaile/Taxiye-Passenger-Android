@@ -50,6 +50,7 @@ import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
@@ -58,7 +59,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashLogin extends BaseActivity implements LocationUpdate{
+public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryEventNames{
 
     RelativeLayout topRl;
 	TextView textViewTitle;
@@ -203,18 +204,18 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
                             } else {
                                 email = "+91" + email;
                                 sendLoginValues(SplashLogin.this, email, password, true);
-                                FlurryEventLogger.emailLoginClicked(email);
                             }
                         } else {
                             if (isEmailValid(email)) {
                                 enteredEmail = email;
                                 sendLoginValues(SplashLogin.this, email, password, false);
-                                FlurryEventLogger.emailLoginClicked(email);
                             } else {
                                 editTextEmail.requestFocus();
                                 editTextEmail.setError("Please enter valid email");
                             }
                         }
+
+                        FlurryEventLogger.event(LOGIN_VIA_EMAIL);
                     }
                 }
             }
@@ -258,6 +259,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
                 startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 finish();
+                FlurryEventLogger.event(FORGOT_PASSWORD);
             }
         });
 		
@@ -320,6 +322,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
                 Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
                 loginDataFetched = false;
                 facebookLoginHelper.openFacebookSession();

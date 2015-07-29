@@ -36,12 +36,14 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import rmn.androidscreenlibrary.ASSL;
 
-public class WalletAddPaymentFragment extends Fragment {
+public class WalletAddPaymentFragment extends Fragment implements FlurryEventNames {
 	
 	LinearLayout relative;
 	
@@ -147,6 +149,7 @@ public class WalletAddPaymentFragment extends Fragment {
 
                 editTextAmount.setText("599");
                 editTextAmount.setSelection(editTextAmount.getText().length());
+                FlurryEventLogger.event(ADD_JUGNOO_CASH_WITH_GIVEN_AMOUNT);
             }
         });
 		
@@ -156,6 +159,7 @@ public class WalletAddPaymentFragment extends Fragment {
             public void onClick(View v) {
                 editTextAmount.setText("999");
                 editTextAmount.setSelection(editTextAmount.getText().length());
+                FlurryEventLogger.event(ADD_JUGNOO_CASH_WITH_GIVEN_AMOUNT);
             }
         });
 
@@ -165,6 +169,7 @@ public class WalletAddPaymentFragment extends Fragment {
             public void onClick(View v) {
                 editTextAmount.setText("1999");
                 editTextAmount.setSelection(editTextAmount.getText().length());
+                FlurryEventLogger.event(ADD_JUGNOO_CASH_WITH_GIVEN_AMOUNT);
             }
         });
 
@@ -205,6 +210,7 @@ public class WalletAddPaymentFragment extends Fragment {
                             button599.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
                             button999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
                             button1999.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_wallet_border));
+                            FlurryEventLogger.event(ADD_JUGNOO_CASH_MANUALLY);
                         }
                     } else {
                         if (text.equalsIgnoreCase("599")) {
@@ -224,6 +230,7 @@ public class WalletAddPaymentFragment extends Fragment {
                             button599.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
                             button999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
                             button1999.setBackground(getResources().getDrawable(R.drawable.background_wallet_border));
+                            FlurryEventLogger.event(ADD_JUGNOO_CASH_MANUALLY);
                         }
                     }
                 } catch (Exception e) {
@@ -259,6 +266,7 @@ public class WalletAddPaymentFragment extends Fragment {
                                         .getBackStackEntryAt(homeActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                                     .commit();
 
+                                FlurryEventLogger.event(ADDING_JUGNOO_CASH_FOR_FINAL_PAYMENT);
                             }
 						}
 						else{
