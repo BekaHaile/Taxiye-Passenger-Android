@@ -433,7 +433,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scrollView.smoothScrollTo(0, v.getTop());
+                        scrollView.smoothScrollTo(0, buttonEmailLogin.getTop());
                     }
                 }, 200);
             } else {
@@ -453,7 +453,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    scrollView.smoothScrollTo(0, v.getTop());
+                    scrollView.smoothScrollTo(0, buttonEmailLogin.getTop());
                 }
             }, 200);
         }

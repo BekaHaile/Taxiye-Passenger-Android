@@ -103,11 +103,14 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -200,7 +203,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutAssigningDropLocationParent, relativeLayoutAssigningDropLocationBar;
     EditText editTextAssigningDropLocation;
     ProgressBar progressBarAssigningDropLocation;
-    ListView listViewAssigningDropLocationSearch;
+    NonScrollListView listViewAssigningDropLocationSearch;
+    ScrollView scrollViewAssigning;
+    LinearLayout linearLayoutScrollAssigning;
+    TextView textViewScrollAssigning;
+
 
     //Request Final Layout
     RelativeLayout requestFinalLayout;
@@ -213,7 +220,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutFinalDropLocationBar;
     EditText editTextFinalDropLocation;
     ProgressBar progressBarFinalDropLocation;
-    ListView listViewFinalDropLocationSearch;
+    NonScrollListView listViewFinalDropLocationSearch;
+    ScrollView scrollViewFinal;
+    LinearLayout linearLayoutScrollFinal;
+    TextView textViewScrollFinal;
 
 
 
@@ -221,7 +231,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     LinearLayout linearLayoutSearch;
     EditText editTextSearch;
     ProgressBar progressBarSearch;
-    ListView listViewSearch;
+    NonScrollListView listViewSearch;
+    LinearLayout linearLayoutScrollSearch;
+    TextView textViewScrollSearch;
 
 
     //Center Location Layout
@@ -283,7 +295,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean loggedOut = false,
         zoomedToMyLocation = false,
         mapTouchedOnce = false;
-    boolean dontCallRefreshDriver = false;
+    boolean dontCallRefreshDriver = false, zoomedForSearch = false;
 
 
     Dialog noDriversDialog;
@@ -533,15 +545,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         editTextAssigningDropLocation = (EditText) findViewById(R.id.editTextAssigningDropLocation);
         editTextAssigningDropLocation.setTypeface(Fonts.latoRegular(this));
         progressBarAssigningDropLocation = (ProgressBar) findViewById(R.id.progressBarAssigningDropLocation); progressBarAssigningDropLocation.setVisibility(View.GONE);
-        listViewAssigningDropLocationSearch = (ListView) findViewById(R.id.listViewAssigningDropLocationSearch);
-        listViewAssigningDropLocationSearch.setVisibility(View.GONE);
+        listViewAssigningDropLocationSearch = (NonScrollListView) findViewById(R.id.listViewAssigningDropLocationSearch);
+        scrollViewAssigning = (ScrollView) findViewById(R.id.scrollViewAssigning);
+        scrollViewAssigning.setVisibility(View.GONE);
+        linearLayoutScrollAssigning = (LinearLayout) findViewById(R.id.linearLayoutScrollAssigning);
+        textViewScrollAssigning = (TextView) findViewById(R.id.textViewScrollAssigning);
+        linearLayoutScrollAssigning.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollAssigning, textViewScrollAssigning, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        }));
 
         SearchListAdapter dropLocationAssigningSearchListAdapter = new SearchListAdapter(this, editTextAssigningDropLocation, new LatLng(30.75, 76.78),
             new SearchListActionsHandler() {
                 @Override
                 public void onSearchPre() {
                     progressBarAssigningDropLocation.setVisibility(View.VISIBLE);
-                    if(listViewAssigningDropLocationSearch.getVisibility() == View.GONE) {
+                    if(scrollViewAssigning.getVisibility() == View.GONE) {
                         initDropLocationSearchUI(false);
                     }
                 }
@@ -614,8 +640,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         editTextFinalDropLocation = (EditText) findViewById(R.id.editTextFinalDropLocation);
         editTextFinalDropLocation.setTypeface(Fonts.latoRegular(this));
         progressBarFinalDropLocation = (ProgressBar) findViewById(R.id.progressBarFinalDropLocation); progressBarFinalDropLocation.setVisibility(View.GONE);
-        listViewFinalDropLocationSearch = (ListView) findViewById(R.id.listViewFinalDropLocationSearch);
-        listViewFinalDropLocationSearch.setVisibility(View.GONE);
+        listViewFinalDropLocationSearch = (NonScrollListView) findViewById(R.id.listViewFinalDropLocationSearch);
+        scrollViewFinal = (ScrollView) findViewById(R.id.scrollViewFinal);
+        scrollViewFinal.setVisibility(View.GONE);
+        linearLayoutScrollFinal = (LinearLayout) findViewById(R.id.linearLayoutScrollFinal);
+        textViewScrollFinal = (TextView) findViewById(R.id.textViewScrollFinal);
+        linearLayoutScrollFinal.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollFinal, textViewScrollFinal, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        }));
 
 
         SearchListAdapter dropLocationFinalSearchListAdapter = new SearchListAdapter(this, editTextFinalDropLocation, new LatLng(30.75, 76.78),
@@ -623,7 +663,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSearchPre() {
                     progressBarFinalDropLocation.setVisibility(View.VISIBLE);
-                    if(listViewFinalDropLocationSearch.getVisibility() == View.GONE) {
+                    if(scrollViewFinal.getVisibility() == View.GONE) {
                         initDropLocationSearchUI(true);
                     }
                 }
@@ -664,7 +704,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         editTextSearch.setTypeface(Fonts.latoRegular(this));
         progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch);
         progressBarSearch.setVisibility(View.GONE);
-        listViewSearch = (ListView) findViewById(R.id.listViewSearch);
+        listViewSearch = (NonScrollListView) findViewById(R.id.listViewSearch);
+        linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
+        textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
+        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        }));
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78),
             new SearchListActionsHandler() {
@@ -682,6 +735,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
                     FlurryEventLogger.event(PICKUP_LOCATION_SET);
                     textViewInitialSearch.setText(autoCompleteSearchResult.name);
+                    zoomedForSearch = true;
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 }
@@ -1865,7 +1919,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         genieLayout.setVisibility(View.VISIBLE);
 
-                        zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                        if(!zoomedForSearch) {
+                            zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                        }
 
 
                         break;
@@ -2142,7 +2198,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        zoomedForSearch = false;
     }
 
 
@@ -2352,14 +2408,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             editTextAssigningDropLocation.requestFocus();
             relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
             relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-            listViewAssigningDropLocationSearch.setVisibility(View.VISIBLE);
+            scrollViewAssigning.setVisibility(View.VISIBLE);
             Utils.showSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
         }
         else{
             editTextFinalDropLocation.requestFocus();
             relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
             relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-            listViewFinalDropLocationSearch.setVisibility(View.VISIBLE);
+            scrollViewFinal.setVisibility(View.VISIBLE);
             Utils.showSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
         }
     }
@@ -2369,13 +2425,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if(!engaged) {
             relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
             relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
-            listViewAssigningDropLocationSearch.setVisibility(View.GONE);
+            scrollViewAssigning.setVisibility(View.GONE);
             progressBarAssigningDropLocation.setVisibility(View.GONE);
         }
         else{
             relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
             relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
-            listViewFinalDropLocationSearch.setVisibility(View.GONE);
+            scrollViewFinal.setVisibility(View.GONE);
             progressBarFinalDropLocation.setVisibility(View.GONE);
         }
     }
@@ -2573,8 +2629,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+                textViewInitialSearch.setText("");
+                editTextSearch.setText("");
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+                FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
             }
             else if (promoOpened && PassengerScreenMode.P_INITIAL == passengerScreenMode){
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -3339,7 +3398,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         stopDropLocationSearchUI(false);
                                         relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                                     }
-                                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+                                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
                                         stopDropLocationSearchUI(true);
                                         relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
                                     }
@@ -3350,7 +3409,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         setDropLocationMarker();
                                     }
 
-                                    getDropLocationPathAndDisplay(Data.pickupLatLng, true);
+                                    getDropLocationPathAndDisplay(Data.pickupLatLng);
                                 }
                                 else{
                                     DialogPopup.alertPopup(activity, "", message);
@@ -3466,7 +3525,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             };
 
-            getDropLocationPathAndDisplay(Data.pickupLatLng, true);
+            getDropLocationPathAndDisplay(Data.pickupLatLng);
 
             timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 15000);
             Log.i("timerDriverLocationUpdater", "started");
@@ -3610,9 +3669,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 }
                                             }
 
-                                            if (map != null && ridePath != null) {
-                                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude)));
-                                                getDropLocationPathAndDisplay(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude), false);
+//                                            if (map != null && ridePath != null) {
+//                                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude)));
+//                                            }
+                                            if (map != null && myLocation != null) {
+                                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
                                             }
 
                                             try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
@@ -3634,9 +3695,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             };
 
-            if(Data.pickupLatLng != null) {
-                getDropLocationPathAndDisplay(Data.pickupLatLng, true);
-            }
+            getDropLocationPathAndDisplay(Data.pickupLatLng);
             displayOldPath();
 
             timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 15000);
@@ -3673,7 +3732,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     ArrayList<RidePath> ridePathsList = new ArrayList<>();
                     ridePathsList.addAll(Database2.getInstance(HomeActivity.this).getRidePathInfo());
 
-                    RidePath finalRidePath = null;
                     for (int i=0; i<ridePathsList.size(); i++) {
                         RidePath ridePath = ridePathsList.get(i);
                         final PolylineOptions polylineOptions = new PolylineOptions();
@@ -3684,9 +3742,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         polylineOptions.geodesic(false);
                         if (map != null && polylineOptions != null) {
                             map.addPolyline(polylineOptions);
-                        }
-                        if (i == ridePathsList.size() - 1) {
-                            finalRidePath = ridePath;
                         }
                     }
                 } catch (Exception e) {
@@ -3702,7 +3757,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
     }
 
-    public void getDropLocationPathAndDisplay(final LatLng lastLatLng, final boolean zoomToPickDrop) {
+    public void getDropLocationPathAndDisplay(final LatLng lastLatLng) {
         try {
             new Thread(new Runnable() {
                 @Override
@@ -3723,17 +3778,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             if (toShowPathToDrop()) {
                                                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                                                if(zoomToPickDrop && Data.pickupLatLng != null && Data.dropLatLng != null){
-                                                    builder.include(Data.pickupLatLng).include(Data.dropLatLng);
+                                                if(lastLatLng != null && Data.dropLatLng != null){
+                                                    builder.include(lastLatLng).include(Data.dropLatLng);
                                                 }
 
                                                 pathToDropLocationPolylineOptions = new PolylineOptions();
                                                 pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
                                                 for (int z = 0; z < list.size(); z++) {
                                                     pathToDropLocationPolylineOptions.add(list.get(z));
-                                                    if(zoomToPickDrop) {
-                                                        builder.include(list.get(z));
-                                                    }
+                                                    builder.include(list.get(z));
                                                 }
 
                                                 if (pathToDropLocationPolyline != null) {
@@ -3742,11 +3795,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
 
                                                 try {
-                                                    if(zoomToPickDrop) {
-                                                        final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
-                                                        final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
-                                                    }
+                                                    LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
+                                                    float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }

@@ -1821,6 +1821,9 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                 Date d = f.parse(string_date);
                 long maxTime = d.getTime();
 
+
+                c.set(Calendar.MONTH, 0);
+
                 long minTime = c.getTimeInMillis();
 
                 dialog.getDatePicker().setMinDate(minTime);
