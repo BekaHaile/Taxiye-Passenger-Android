@@ -181,7 +181,7 @@ public class WalletFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 paymentActivity.finish();
-
+                paymentActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             }
         });
 

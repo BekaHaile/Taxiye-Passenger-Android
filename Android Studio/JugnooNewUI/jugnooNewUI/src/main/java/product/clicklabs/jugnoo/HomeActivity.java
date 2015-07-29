@@ -249,7 +249,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     Boolean fetchedRidePathsFromDb = false;
-    Boolean appRestart = true;
 
 
     DecimalFormat decimalFormat = new DecimalFormat("#.#");
@@ -862,6 +861,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
+                textViewInitialSearch.setText("");
+                editTextSearch.setText("");
                 Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
@@ -1832,6 +1833,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewSearchCancel.setVisibility(View.GONE);
 
                         genieLayout.setVisibility(View.VISIBLE);
+
+                        zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 
 
                         break;
@@ -2855,9 +2858,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     boundsBuilder.include(new LatLng(firstLatLng.latitude, userLatLng.longitude));
                     boundsBuilder.include(new LatLng(userLatLng.latitude, ((2 * userLatLng.longitude) - firstLatLng.longitude)));
                     boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - firstLatLng.latitude), userLatLng.longitude));
-
-
-
                 } else {
                     fixedZoom = true;
                     mapTouchedOnce = false;
@@ -3317,7 +3317,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         setDropLocationMarker();
                                     }
 
-                                    getDropLocationPathAndDisplay(Data.pickupLatLng);
+                                    getDropLocationPathAndDisplay(Data.pickupLatLng, true);
                                 }
                                 else{
                                     DialogPopup.alertPopup(activity, "", message);
@@ -3433,7 +3433,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             };
 
-            getDropLocationPathAndDisplay(Data.pickupLatLng);
+            getDropLocationPathAndDisplay(Data.pickupLatLng, true);
 
             timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 15000);
             Log.i("timerDriverLocationUpdater", "started");
@@ -3516,7 +3516,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void startMapAnimateAndUpdateRideDataTimer() {
         cancelMapAnimateAndUpdateRideDataTimer();
         try {
-            appRestart = true;
             timerMapAnimateAndUpdateRideData = new Timer();
             timerTaskMapAnimateAndUpdateRideData = new TimerTask() {
 
@@ -3524,11 +3523,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void run() {
                     try {
                         ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
-                        if (appRestart) {
-                            appRestart = false;
-                            displayOldPath();
-                        }
-
                         nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" +
                             Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
                         nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.cEngagementId));
@@ -3585,7 +3579,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                             if (map != null && ridePath != null) {
                                                 map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude)));
-                                                getDropLocationPathAndDisplay(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
+                                                getDropLocationPathAndDisplay(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude), false);
                                             }
 
                                             try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
@@ -3606,6 +3600,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 }
             };
+
+            if(Data.pickupLatLng != null) {
+                getDropLocationPathAndDisplay(Data.pickupLatLng, true);
+            }
+            displayOldPath();
 
             timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 15000);
             Log.i("timerMapAnimateAndUpdateRideData", "started");
@@ -3657,10 +3656,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             finalRidePath = ridePath;
                         }
                     }
-                    if(finalRidePath != null) {
-                        getDropLocationPathAndDisplay(new LatLng(finalRidePath.destinationLatitude, finalRidePath.destinationLongitude));
-                    }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -3674,7 +3669,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
     }
 
-    public void getDropLocationPathAndDisplay(final LatLng lastLatLng) {
+    public void getDropLocationPathAndDisplay(final LatLng lastLatLng, final boolean zoomToPickDrop) {
         try {
             new Thread(new Runnable() {
                 @Override
@@ -3693,10 +3688,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     public void run() {
                                         try {
                                             if (toShowPathToDrop()) {
+                                                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                                                if(zoomToPickDrop && Data.pickupLatLng != null && Data.dropLatLng != null){
+                                                    builder.include(Data.pickupLatLng).include(Data.dropLatLng);
+                                                }
+
                                                 pathToDropLocationPolylineOptions = new PolylineOptions();
                                                 pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
                                                 for (int z = 0; z < list.size(); z++) {
                                                     pathToDropLocationPolylineOptions.add(list.get(z));
+                                                    if(zoomToPickDrop) {
+                                                        builder.include(list.get(z));
+                                                    }
                                                 }
 
                                                 if (pathToDropLocationPolyline != null) {
@@ -3704,6 +3708,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 }
                                                 pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
 
+                                                try {
+                                                    if(zoomToPickDrop) {
+                                                        final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
+                                                        final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                                                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();

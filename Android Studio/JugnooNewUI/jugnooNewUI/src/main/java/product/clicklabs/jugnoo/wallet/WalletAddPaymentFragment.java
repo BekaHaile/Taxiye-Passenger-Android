@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -128,7 +129,13 @@ public class WalletAddPaymentFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                performBackPressed();
+                if(AddPaymentPath.FROM_WALLET == PaymentActivity.addPaymentPath) {
+                    performBackPressed();
+
+                } else {
+                    homeActivity.finish();
+                    homeActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                }
             }
         });
 		

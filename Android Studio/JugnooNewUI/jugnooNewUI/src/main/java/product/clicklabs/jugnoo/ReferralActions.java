@@ -58,7 +58,6 @@ public class ReferralActions {
                 showDialog = false;
             }
 
-
             if(showDialog) {
                 final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
                 dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
