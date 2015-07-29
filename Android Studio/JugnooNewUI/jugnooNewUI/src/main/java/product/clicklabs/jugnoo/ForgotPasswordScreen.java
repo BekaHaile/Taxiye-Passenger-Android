@@ -32,12 +32,13 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ForgotPasswordScreen extends BaseActivity {
+public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNames {
 
     TextView textViewTitle;
     ImageView imageViewBack;
@@ -138,17 +139,17 @@ public class ForgotPasswordScreen extends BaseActivity {
                         } else {
                             email = "+91" + email;
                             forgotPasswordAsync(ForgotPasswordScreen.this, email, true);
-                            FlurryEventLogger.emailLoginClicked(email);
                         }
                     } else {
                         if (isEmailValid(email)) {
                             forgotPasswordAsync(ForgotPasswordScreen.this, email, false);
-                            FlurryEventLogger.forgotPasswordClicked(email);
                         } else {
                             editTextEmail.requestFocus();
                             editTextEmail.setError("Please enter valid email");
                         }
                     }
+
+                    FlurryEventLogger.event(PASSWORD_RETRIEVED);
                 }
 
             }

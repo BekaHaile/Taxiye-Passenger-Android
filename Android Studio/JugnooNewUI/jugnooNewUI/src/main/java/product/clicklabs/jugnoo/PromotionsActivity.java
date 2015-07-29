@@ -40,12 +40,13 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
 
-public class PromotionsActivity extends BaseActivity{
+public class PromotionsActivity extends BaseActivity implements FlurryEventNames {
 	
 	
 	RelativeLayout relative;
@@ -159,7 +160,8 @@ public class PromotionsActivity extends BaseActivity{
 				String promoCode = editTextPromoCode.getText().toString().trim();
 				if(promoCode.length() > 0){
 					applyPromoCodeAPI(PromotionsActivity.this, promoCode);
-					FlurryEventLogger.promoCodeTried(Data.userData.accessToken, promoCode);
+                    FlurryEventLogger.event(PROMO_CODE_ENTERED);
+                    FlurryEventLogger.event(PROMO_CODE_APPLIED);
 				}
 				else{
 					editTextPromoCode.requestFocus();
@@ -202,6 +204,7 @@ public class PromotionsActivity extends BaseActivity{
                 startActivity(new Intent(PromotionsActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
+                FlurryEventLogger.event(INVITE_EARN_PROMOTIONS);
             }
         });
 
@@ -448,6 +451,7 @@ public class PromotionsActivity extends BaseActivity{
                     holder = (ViewHolderPromotion) v.getTag();
                     PromotionInfo promotionInfo = promotionInfoList.get(holder.id);
                     DialogPopup.alertPopupHtml(PromotionsActivity.this, "", promotionInfo.terms);
+                    FlurryEventLogger.event(ONGOING_OFFERS_CHECKED);
                 }
             });
 

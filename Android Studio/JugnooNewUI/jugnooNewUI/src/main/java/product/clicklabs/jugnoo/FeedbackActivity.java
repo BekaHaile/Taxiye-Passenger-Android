@@ -35,11 +35,12 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class FeedbackActivity extends BaseActivity {
+public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
     RelativeLayout relative;
 
@@ -188,6 +189,7 @@ public class FeedbackActivity extends BaseActivity {
 
                 if (0 == rating) {
                     DialogPopup.alertPopup(FeedbackActivity.this, "", "We take your feedback seriously. Please give us a rating");
+                    FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
                 } else {
                     if(FeedbackMode.SUPPORT != feedbackMode  && Data.feedbackReasons.size() > 0 && rating <= 3){
                         if(feedbackReasons.length() > 0){
@@ -208,12 +210,22 @@ public class FeedbackActivity extends BaseActivity {
                     } else {
                         if (FeedbackMode.AFTER_RIDE == feedbackMode) {
                             submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr, feedbackReasons);
-                            FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
+                            FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
+                            if(feedbackStr.length() > 0){
+                                FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                            }
                         } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
                             submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr, feedbackReasons);
                             FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, "" + pastEngagementId);
+                            if(feedbackStr.length() > 0){
+                                FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                            }
                         } else {
                             submitFeedbackSupportAsync(FeedbackActivity.this, rating, feedbackStr);
+                            if(feedbackStr.length() > 0){
+                                FlurryEventLogger.event(FEEDBACK_COMMENTS_PROVIDED);
+                            }
+                            FlurryEventLogger.event(FEEDBACK_SUBMITTED);
                         }
                     }
                 }
@@ -225,6 +237,7 @@ public class FeedbackActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 skipFeedbackForCustomerAsync(FeedbackActivity.this, Data.cEngagementId);
+                FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
             }
         });
 

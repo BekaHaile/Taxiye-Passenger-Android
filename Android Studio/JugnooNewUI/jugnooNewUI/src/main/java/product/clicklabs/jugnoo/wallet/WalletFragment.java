@@ -47,12 +47,13 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class WalletFragment extends Fragment {
+public class WalletFragment extends Fragment implements FlurryEventNames {
 	
 	private boolean firstTimeFlag = false;
 	LinearLayout relative;
@@ -174,6 +175,7 @@ public class WalletFragment extends Fragment {
                 startActivity(new Intent(paymentActivity, ShareActivity.class));
                 paymentActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
+                FlurryEventLogger.event(INVITE_EARN_JUGNOO_CASH);
             }
         });
         imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +205,7 @@ public class WalletFragment extends Fragment {
                     .hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
                         .getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commit();
+                FlurryEventLogger.event(ADDING_JUGNOO_CASH);
 
                 try {
                     listViewTransactions.postDelayed(new Runnable() {
@@ -256,6 +259,7 @@ public class WalletFragment extends Fragment {
                 } else {
                     getTransactionInfoAsync(paymentActivity);
                 }
+                FlurryEventLogger.event(RECENT_TRANSACTION_LOOK_UP);
 			}
 		});
 		

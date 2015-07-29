@@ -69,6 +69,8 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -80,7 +82,7 @@ import rmn.androidscreenlibrary.ASSL;
 /**
  * Created by clicklabs on 6/30/15.
  */
-public class AddJugnooCashFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class AddJugnooCashFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, FlurryEventNames {
 
 
     public boolean saveDCCard = true, saveCCCard = true;
@@ -867,6 +869,13 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                                 new DialogPopup().dialogBanner(homeActivity, "" + getResources().getString(R.string.invalid_card_info));
                             } else {
                                 makePayment();
+                                if (optionSelect == 0) {
+                                    FlurryEventLogger.event(PAYMENT_BY_DEBIT_CARD);
+                                }
+                                else if (optionSelect == 1) {
+                                    FlurryEventLogger.event(PAYMENT_BY_CREDIT_CARD);
+                                }
+                                FlurryEventLogger.event(PAYMENT_MADE_FOR_JUGNOO_CASH);
                             }
                         } else if (homeActivity.ccNum.length() == 0 || homeActivity.ccName.length() == 0 || !isCvvValid || homeActivity.ccexpmon.length() == 0 || homeActivity.ccexpyr.length() == 0) {
                             new DialogPopup().dialogBanner(homeActivity, "" + getResources().getString(R.string.no_field_empty));
@@ -1050,6 +1059,8 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                                 Utils.expandListForVariableHeight(saveCardList);
                             }
                         }, 20);
+
+                        FlurryEventLogger.event(PAYMENT_BY_NET_BANKING);
 
                         break;
 

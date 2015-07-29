@@ -100,6 +100,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.LocationInit;
@@ -114,7 +115,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
 @SuppressLint("DefaultLocale")
-public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate {
+public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames {
 
 
     DrawerLayout drawerLayout;                                                                        // views declaration
@@ -563,6 +564,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onPlaceSearchPost(SearchResult searchResult) {
                     DialogPopup.dismissLoadingDialog();
                     sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
+                    FlurryEventLogger.event(DROP_LOCATION_USED_FINIDING_DRIVER);
                 }
 
                 @Override
@@ -644,6 +646,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onPlaceSearchPost(SearchResult searchResult) {
                     DialogPopup.dismissLoadingDialog();
                     sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
+                    FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);
                 }
 
                 @Override
@@ -677,6 +680,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+                    FlurryEventLogger.event(PICKUP_LOCATION_SET);
                     textViewInitialSearch.setText(autoCompleteSearchResult.name);
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
@@ -813,6 +817,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 drawerLayout.openDrawer(menuLayout);
                 hideAnims();
+                FlurryEventLogger.event(MENU_LOOKUP);
             }
         });
 
@@ -866,12 +871,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+                FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
             }
         });
 
         imageViewGift.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.event(REFERRAL_GIFT_ICON);
                 startActivity(new Intent(HomeActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
@@ -882,6 +889,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 sosDialog(HomeActivity.this);
+                FlurryEventLogger.event(SOS_ALERT_USED);
             }
         });
 
@@ -920,6 +928,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 imageViewGift.performClick();
+                FlurryEventLogger.event(INVITE_EARN_MENU);
             }
         });
 
@@ -931,6 +940,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
+                FlurryEventLogger.event(JUGNOO_CASH_MENU);
             }
         });
 
@@ -944,6 +954,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
+                    FlurryEventLogger.event(PROMOTIONS_CHECKED);
                 } else {
                     Toast.makeText(getApplicationContext(), "Waiting for location...", Toast.LENGTH_SHORT).show();
                 }
@@ -956,6 +967,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Intent intent = new Intent(HomeActivity.this, RideTransactionsActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(RIDE_HISTORY);
             }
         });
 
@@ -964,6 +976,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 sendToFareDetails();
+                FlurryEventLogger.event(FARE_DETAILS);
             }
         });
 
@@ -973,7 +986,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 startActivity(new Intent(HomeActivity.this, SupportActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
+                FlurryEventLogger.event(SUPPORT_OPTIONS);
             }
         });
 
@@ -1029,6 +1042,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 editTextFinalDropLocation.setText("");
 
                                 promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
+                                FlurryEventLogger.event(AUTO_RIDE_ICON);
                             }
                         } else {
                             LocationInit.showLocationAlertDialog(HomeActivity.this);
@@ -1049,6 +1063,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 promoCouponSelectedForRide = promotionsListAdapter.getSelectedCoupon();
                 int totalPromoCoupons = promotionsListAdapter.getCount();
                 callAnAutoPopup(HomeActivity.this, totalPromoCoupons, Data.pickupLatLng);
+                FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
             }
         });
 
@@ -1101,6 +1116,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 activityResumed = false;
                 startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(FARE_ESTIMATE);
             }
         });
 
@@ -1110,6 +1126,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 activityResumed = false;
                 sendToFareDetails();
+                FlurryEventLogger.event(RATE_CARD);
             }
         });
 
@@ -1144,6 +1161,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 } else {
                     cancelCustomerRequestAsync(HomeActivity.this);
+                    FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
                 }
             }
         });
@@ -1223,6 +1241,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
             }
         });
 
@@ -1233,6 +1252,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 PaymentActivity.addPaymentPath = AddPaymentPath.FROM_IN_RIDE;
                 startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+                    FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
+                }
+                else if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                    FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_RIDE_IN_PROGRESS);
+                }
             }
         });
 
@@ -1241,8 +1266,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 Utils.openCallIntent(HomeActivity.this, Data.assignedDriverInfo.phoneNumber);
-                FlurryEventLogger.callDriverPressed(Data.userData.accessToken, Data.assignedDriverInfo.userId,
-                    Data.assignedDriverInfo.phoneNumber);
+                if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+                    FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
+                }
+                else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+                    FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
+                }
             }
         });
 
@@ -1251,6 +1280,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 buttonAddJugnooCash.performClick();
+                FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_ALERT_GENERATED);
             }
         });
 
@@ -1618,6 +1648,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 reconnectLocationFetchers();
             }
             hideAnims();
+            FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
         }
     };
 
@@ -2551,9 +2582,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
             else if(dropLocationSearched && PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
                 stopDropLocationSearchUI(false);
+                FlurryEventLogger.event(DROP_LOCATION_OPENED_NOT_USED_FINDING_DRIVER);
             }
             else if(dropLocationSearched && PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
                 stopDropLocationSearchUI(true);
+                FlurryEventLogger.event(DROP_LOCATION_OPENED_BUT_NOT_USED_RIDE_ACCEPTED);
             }
             else{
                 ActivityCompat.finishAffinity(this);
@@ -3793,6 +3826,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onClick(View view) {
                     dialog.dismiss();
                     initiateRequestRide(true);
+                    FlurryEventLogger.event(FINAL_CALL_RIDE);
                 }
 
             });
@@ -3890,13 +3924,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
                         activity.startActivity(intent);
-                        try{FlurryEventLogger.rateUsPressed(Data.userData.accessToken);}catch(Exception e){}
+                        FlurryEventLogger.event(RATE_US_NOW_POP_RATED);
+
                     }
                 },
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try{FlurryEventLogger.rateUsCancelled(Data.userData.accessToken);}catch(Exception e){}
+                        FlurryEventLogger.event(RATE_US_NOW_POP_NOT_RATED);
                     }
                 }, false, true);
         } catch (Exception e) {
@@ -4882,6 +4917,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onClick(View v) {
                     Utils.openCallIntent(activity, primaryPhone);
                     raiseSOSAlertAPI(activity, CALL);
+                    FlurryEventLogger.event(SOS_CALL_TO_EMERGENCY_CONTACT);
                 }
             },
             new OnClickListener() {
@@ -4910,8 +4946,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     Utils.openSMSIntent(activity, phoneString, message);
                     raiseSOSAlertAPI(activity, SMS);
+                    FlurryEventLogger.event(SOS_SMS_TO_EMERGENCY_CONTACT);
                 }
-            }, true, false);
+            }, true, false, new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
+                }
+            });
     }
 
     private void call100Dialog(final Activity activity) {
@@ -4926,8 +4968,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
                 }
-            }, true, false);
+            }, true, false, new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
+                }
+            });
     }
 
 

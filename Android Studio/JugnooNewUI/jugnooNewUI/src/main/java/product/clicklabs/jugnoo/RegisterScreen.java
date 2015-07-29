@@ -169,6 +169,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.event(SIGNUP_VIA_FACEBOOK);
                 Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
                 facebookLoginHelper.openFacebookSession();
             }
@@ -319,19 +320,10 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                                     emailId = "";
                                                 }
                                                 sendFacebookSignupValues(RegisterScreen.this, referralCode, phoneNo, password);
-                                                FlurryEventLogger.facebookSignupClicked(Data.facebookUserData.userEmail);
-                                                if (!"".equalsIgnoreCase(referralCode)) {
-                                                    FlurryEventLogger.referralCodeAtFBSignup(Data.facebookUserData.userEmail, referralCode);
-                                                }
                                             } else {
                                                 sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password);
-                                                FlurryEventLogger.emailSignupClicked(emailId);
-                                                if (!"".equalsIgnoreCase(referralCode)) {
-                                                    FlurryEventLogger.referralCodeAtEmailSignup(emailId, referralCode);
-                                                }
                                             }
-
-
+                                            FlurryEventLogger.event(SIGNUP_FINAL);
                                         } else {
                                             editTextPassword.requestFocus();
                                             editTextPassword.setError("Password must be of atleast six characters");

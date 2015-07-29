@@ -204,6 +204,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			
 			@Override
 			public void onClick(View v) {
+                FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 				startActivity(new Intent(SplashNewActivity.this, SplashLogin.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);

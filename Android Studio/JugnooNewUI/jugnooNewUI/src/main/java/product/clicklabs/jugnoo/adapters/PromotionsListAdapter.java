@@ -32,6 +32,8 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
@@ -39,7 +41,7 @@ import rmn.androidscreenlibrary.ASSL;
 /**
  * Created by socomo20 on 7/6/15.
  */
-public class PromotionsListAdapter extends BaseAdapter {
+public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNames {
 
     class ViewHolderPromotion {
         TextView textViewCouponTitle, textViewTNC;
@@ -156,6 +158,12 @@ public class PromotionsListAdapter extends BaseAdapter {
                 PromoCoupon promoCoupon = promoCouponList.get(holder.id);
                 if(promoCoupon instanceof CouponInfo){
                     DialogPopup.alertPopupLeftOriented(context, "", ((CouponInfo) promoCoupon).description);
+                    if(((CouponInfo)promoCoupon).id == -1){
+                        FlurryEventLogger.event(COUPON_SELECTION_NOT_MADE);
+                    }
+                    else{
+                        FlurryEventLogger.event(COUPON_SELECTION_MADE);
+                    }
                 }
                 else if(promoCoupon instanceof PromotionInfo){
                     if(((PromotionInfo)promoCoupon).id > 0){
