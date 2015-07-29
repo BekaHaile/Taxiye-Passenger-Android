@@ -15,13 +15,10 @@ import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 
-import org.json.JSONObject;
-
-import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.BranchMetricsEventHandler;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -145,25 +142,21 @@ public class ReferralActions implements FlurryEventNames {
             public void facebookLoginDone(FacebookUserData facebookUserData) {
                 try {
                     if(Data.userData != null){
-                        DialogPopup.showLoadingDialog(activity, "Loading...");
-                        JSONObject params = new JSONObject();
-                        try {
-                            params.put("referring_user_email", Data.userData.userEmail);
-                            params.put("referring_user_name", Data.userData.userName);
-                        } catch (Exception ex) { }
-                        Branch branch = Branch.getInstance(activity);
-                        branch.getShortUrl("facebook", "app_invite", null, params, new Branch.BranchLinkCreateListener() {
+                        new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                             @Override
-                            public void onLinkCreate(String url, BranchError error) {
-                                DialogPopup.dismissLoadingDialog();
+                            public void onBranchLinkCreated(String link) {
                                 facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
-                                        Data.referralMessages.fbShareCaption,
-                                        Data.referralMessages.fbShareDescription,
-                                        url,
-                                        Data.userData.jugnooFbBanner);
+                                    Data.referralMessages.fbShareCaption,
+                                    Data.referralMessages.fbShareDescription,
+                                    link,
+                                    Data.userData.jugnooFbBanner);
                             }
-                        });
 
+                            @Override
+                            public void onBranchError(String error) {
+                                Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                            }
+                        }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK, SPLabels.BRANCH_FACEBOOK_LINK, Data.userData.userIdentifier);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -176,24 +169,15 @@ public class ReferralActions implements FlurryEventNames {
             }
         });
         facebookLoginHelper.openFacebookSession();
-        try{FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
     public static void shareToWhatsapp(final Activity activity) {
 
         try {
-            DialogPopup.showLoadingDialog(activity, "Loading...");
-            Branch branch = Branch.getInstance();
-            JSONObject obj = new JSONObject();
-            obj.put("share_type", "whatsapp");
-
-            branch.getShortUrl(obj, new Branch.BranchLinkCreateListener() {
-
+            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                 @Override
-                public void onLinkCreate(String s, BranchError branchError) {
-                    Log.e("branch url==", "=" + s);
-                    DialogPopup.dismissLoadingDialog();
+                public void onBranchLinkCreated(String link) {
                     PackageManager pm = activity.getPackageManager();
                     try {
                         Intent waIntent = new Intent(Intent.ACTION_SEND);
@@ -204,83 +188,69 @@ public class ReferralActions implements FlurryEventNames {
                         Log.d("info", "=" + info);
                         waIntent.setPackage("com.whatsapp");
 
-                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n" + s);
+                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n" + link);
                         activity.startActivity(Intent.createChooser(waIntent, "Share with"));
                     } catch (PackageManager.NameNotFoundException e) {
                         Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
                     }
-
                 }
-            });
+
+                @Override
+                public void onBranchError(String error) {
+                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                }
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP, SPLabels.BRANCH_WHATSAPP_LINK, Data.userData.userIdentifier);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-
-        try{FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
     public static void sendSMSIntent(final Activity activity){
         try {
-
-            DialogPopup.showLoadingDialog(activity, "Loading...");
-            Branch branch = Branch.getInstance();
-            JSONObject obj = new JSONObject();
-            obj.put("share_type", "sms");
-
-            branch.getShortUrl(obj, new Branch.BranchLinkCreateListener() {
-
+            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                 @Override
-                public void onLinkCreate(String s, BranchError branchError) {
-                    Log.e("branch url==", "=" + s);
-                    DialogPopup.dismissLoadingDialog();
+                public void onBranchLinkCreated(String link) {
                     Uri sms_uri = Uri.parse("smsto:");
                     Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
-                    sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n" + s);
+                    sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n" + link);
                     activity.startActivity(sms_intent);
-
                 }
-            });
 
+                @Override
+                public void onBranchError(String error) {
+                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                }
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS, SPLabels.BRANCH_SMS_LINK, Data.userData.userIdentifier);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try{FlurryEventLogger.sharedViaSMS(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
     public static void openMailIntent(final Activity activity){
         try {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
-            Branch branch = Branch.getInstance();
-            JSONObject obj = new JSONObject();
-            obj.put("share_type", "email");
-
-            branch.getShortUrl(obj, new Branch.BranchLinkCreateListener() {
-
+            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                 @Override
-                public void onLinkCreate(String s, BranchError branchError) {
-                    Log.e("branch url==", "=" + s);
-                    DialogPopup.dismissLoadingDialog();
-
+                public void onBranchLinkCreated(String link) {
                     Intent email = new Intent(Intent.ACTION_SEND);
                     email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
                     email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + s);
+                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + link);
                     email.setType("message/rfc822");
                     activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
-
                 }
-            });
 
-
+                @Override
+                public void onBranchError(String error) {
+                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                }
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL, SPLabels.BRANCH_EMAIL_LINK, Data.userData.userIdentifier);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try{FlurryEventLogger.sharedViaEmail(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
     }
 
 
