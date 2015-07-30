@@ -1,18 +1,19 @@
 package product.clicklabs.jugnoo.datastructure;
 
 public class UserData {
-	public String accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, nukkadIcon, jugnooMealsPackageName, jugnooFbBanner;
+	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, nukkadIcon, jugnooMealsPackageName, jugnooFbBanner;
 	public int canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, enableJugnooMeals,
 		freeRideIconDisable;
 	public int emailVerificationStatus;
 	public double jugnooBalance;
 	public int numCouponsAvaliable;
 	public double fareFactor;
-	public UserData(String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus, 
+	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
 			String jugnooFbBanner, int numCouponsAvaliable){
+        this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
 		this.userName = userName;

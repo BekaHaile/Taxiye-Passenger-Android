@@ -241,7 +241,14 @@ public class JSONParser {
         Data.emergencyContactsList.clear();
         Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(userData));
 
-        return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
+        String userIdentifier = userEmail;
+        try{
+            userIdentifier = userData.optString("user_identifier", userEmail);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,

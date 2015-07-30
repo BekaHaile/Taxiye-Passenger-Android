@@ -111,6 +111,7 @@ import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.NudgespotClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -347,7 +348,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         setContentView(R.layout.activity_home);
 
 
-        FacebookSdk.sdkInitialize(activity);
+        FacebookSdk.sdkInitialize(this);
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -1558,6 +1559,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
+
+        try{
+            NudgespotClient.getInstance(this).registerWithProperties(Data.userData.userEmail, new JSONObject());
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -2678,6 +2686,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             appInterruptHandler = null;
 
             FacebookLoginHelper.logoutFacebook();
+            NudgespotClient.getInstance(this).clearRegisteration();
 
             System.gc();
         } catch (Exception e) {
@@ -3908,6 +3917,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.pickupLatLng = pickupLatLng;
             Data.dropLatLng = null;
 
+            //30.7500, 76.7800
             if(Utils.compareDouble(Data.pickupLatLng.latitude, 30.7500) == 0 && Utils.compareDouble(Data.pickupLatLng.longitude, 76.7800) == 0){
                 myLocation = null;
             }
