@@ -296,7 +296,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean loggedOut = false,
         zoomedToMyLocation = false,
         mapTouchedOnce = false;
-    boolean dontCallRefreshDriver = false, zoomedForSearch = false;
+    boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false;
 
 
     Dialog noDriversDialog;
@@ -372,9 +372,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         zoomedToMyLocation = false;
         dontCallRefreshDriver = false;
         mapTouchedOnce = false;
+        pickupDropZoomed = false;
 
         mealsAnimating1 = false;
         fatafatAnimating1 = false;
+
 
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -1481,6 +1483,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapReleased() {
                     // Map released
+//                    if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+//                        zoomedForSearch = false;
+//                    }
                 }
 
                 @Override
@@ -1701,6 +1706,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 15));
 //                } else {
 //                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+//                }
+
+//                if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+//                    zoomedForSearch = false;
 //                }
 
                 zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
@@ -2206,7 +2215,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
-        zoomedForSearch = false;
     }
 
 
@@ -2948,7 +2956,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
             LatLng firstLatLng = null;
-            if (Data.driverInfos.size() > 0) {
+            if((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)
+                && Data.driverInfos.size() > 0) {
                 firstLatLng = Data.driverInfos.get(0).latLng;
             }
             if (firstLatLng != null) {
@@ -3804,9 +3813,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
 
                                                 try {
-                                                    LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
-                                                    float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+                                                    if(!pickupDropZoomed) {
+                                                        LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
+                                                        float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                                                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+                                                        pickupDropZoomed = true;
+                                                    }
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
@@ -5009,7 +5021,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     raiseSOSAlertAPI(activity, SMS);
                     FlurryEventLogger.event(SOS_SMS_TO_EMERGENCY_CONTACT);
                 }
-            }, true, false, new DialogInterface.OnCancelListener() {
+            }, false, false, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);
@@ -5031,7 +5043,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onClick(View v) {
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);
                 }
-            }, true, false, new DialogInterface.OnCancelListener() {
+            }, false, false, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);

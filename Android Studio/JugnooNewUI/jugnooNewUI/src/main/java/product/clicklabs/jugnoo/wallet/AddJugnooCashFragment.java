@@ -704,7 +704,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
         editTextCreditCardNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                editTextCreditCardNumber.getText().clear();
+                editTextCVVCreditCard.getText().clear();
             }
 
             @Override
@@ -714,9 +714,9 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                 issuer = Cards.getIssuer(cardNumber);
 
                 if (issuer.contentEquals("AMEX")) {
-                    editTextCreditCardNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+                    editTextCVVCreditCard.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
                 } else {
-                    editTextCreditCardNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+                    editTextCVVCreditCard.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
                 }
                 if (issuer != null) {
                     issuerDrawable = Cards.ISSUER_DRAWABLE.get(issuer);

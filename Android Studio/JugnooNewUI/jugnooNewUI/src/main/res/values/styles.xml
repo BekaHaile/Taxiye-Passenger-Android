@@ -27,8 +27,8 @@
 
     <style name="RatingBarAuto" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/rating_auto_icon_selector</item>
-        <item name="android:minHeight">54dp</item>
-        <item name="android:maxHeight">60dp</item>
+        <item name="android:minHeight">41dp</item>
+        <item name="android:maxHeight">41dp</item>
     </style>
     
      

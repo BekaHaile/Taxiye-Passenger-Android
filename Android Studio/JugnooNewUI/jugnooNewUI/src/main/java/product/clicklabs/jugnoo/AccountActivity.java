@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -58,8 +57,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	ImageView imageViewBack;
 	
 	ImageView imageViewUserImageBlur, imageViewProfileImage;
-	ProgressBar progressBarProfileUpdate;
-	
+
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
@@ -87,8 +85,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		
 		imageViewUserImageBlur = (ImageView) findViewById(R.id.imageViewUserImageBlur);
 		imageViewProfileImage = (ImageView) findViewById(R.id.imageViewProfileImage);
-		
-		progressBarProfileUpdate = (ProgressBar) findViewById(R.id.progressBarProfileUpdate);
 		
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -668,7 +664,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if(!HomeActivity.checkIfUserDataNull(activity)) {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
 
-                progressBarProfileUpdate.setVisibility(View.VISIBLE);
 
                 RequestParams params = new RequestParams();
 
@@ -684,7 +679,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                         @Override
                         public void onFailure(Throwable arg3) {
                             Log.e("request fail", arg3.toString());
-                            progressBarProfileUpdate.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -721,7 +715,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             } catch (Exception exception) {
                                 exception.printStackTrace();
                             }
-                            progressBarProfileUpdate.setVisibility(View.GONE);
                         }
                     });
             }

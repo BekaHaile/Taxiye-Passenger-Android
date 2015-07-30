@@ -43,7 +43,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
@@ -164,12 +163,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
-        NewRelic.withApplicationToken(Config.getNewRelicKey()).start(this.getApplication());
 
-
-        FacebookSdk.sdkInitialize(this);
-
-//        Instrumentation.start("AD-AAB-AAB-BGB", getApplicationContext());
 
         FacebookSdk.sdkInitialize(this);
 
