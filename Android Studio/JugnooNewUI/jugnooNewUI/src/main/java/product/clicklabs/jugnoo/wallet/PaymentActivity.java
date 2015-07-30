@@ -37,6 +37,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
     public String uEmail = "";
     public String hash = "";
     public String hashSdk = "";
+    public String payUOffer = "";
 
     // for wallet cash
     public String enterAmount = "";

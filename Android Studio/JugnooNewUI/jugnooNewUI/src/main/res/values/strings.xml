@@ -189,6 +189,7 @@
     <string name="payment_mode_debit_card">Debit Card</string>
     <string name="payment_mode_credit_card">Credit Card</string>
     <string name="payment_mode_net_banking">Netbanking</string>
+    <string name="payment_mode_payu_money">PayUmoney</string>
     <string name="add_amount">ADD AMOUNT</string>
     <string name="add_amount_dummy_value">Rs 100</string>
     <string name="pay_now">Pay Now</string>

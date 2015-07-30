@@ -160,6 +160,8 @@ public class Data {
 
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
+    public static String deepLinkClassName = "";
+
 
 	
 	public static void clearDataOnLogout(Context context){

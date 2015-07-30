@@ -348,7 +348,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    scrollView.smoothScrollTo(0, editTextFeedback.getBottom());
+                                    scrollView.smoothScrollTo(0, editTextFeedback.getTop() - ((int) (ASSL.Yscale() * 15)));
                                 }
                             }, 200);
                             scrolled = true;

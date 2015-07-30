@@ -163,6 +163,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
+//        Class.forName(getPackageName() + "." + Data.deepLinkClassName)
+        try{
+            if(getIntent().hasExtra("deep_link_class")) {
+                Data.deepLinkClassName = getIntent().getStringExtra("deep_link_class");
+            }
+            else{
+                Data.deepLinkClassName = "";
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            Data.deepLinkClassName = "";
+        }
+
 
 
         FacebookSdk.sdkInitialize(this);
@@ -386,7 +399,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this)+"345";
+			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 
 			Utils.generateKeyHash(this);
