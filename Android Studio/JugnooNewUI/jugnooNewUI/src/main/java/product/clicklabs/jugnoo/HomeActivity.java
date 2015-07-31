@@ -84,7 +84,6 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
-import product.clicklabs.jugnoo.datastructure.LatLngPair;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -165,7 +164,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button checkServerBtn;
     ImageView jugnooShopImageView;
     ImageView imageViewGift, imageViewHelp;
-    boolean mealsAnimating1 = false, fatafatAnimating1 = false;
 
 
     //Passenger main layout
@@ -254,21 +252,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button buttonEndRideOk;
 
 
+
+
+
+
+
+
+
     // data variables declaration
-
-
-
-    Location lastLocation;
-
-
-    Boolean fetchedRidePathsFromDb = false;
-
 
     DecimalFormat decimalFormat = new DecimalFormat("#.#");
     DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 
+    LatLng lastSearchLatLng;
+
     static double totalDistance = -1;
-    public static ArrayList<LatLngPair> deltaLatLngPairs = new ArrayList<LatLngPair>();
 
 
     static long previousWaitTime = 0, previousRideTime = 0;
@@ -311,17 +309,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static final int RIDE_ELAPSED_PATH_COLOR = Color.RED;
     public static final int RIDE_LEFT_PATH = Color.BLUE;
 
-
     public static final double MIN_BALANCE_ALERT_VALUE = 100; //in Rupees
-
 
     public static final float LOW_POWER_ACCURACY_CHECK = 2000, HIGH_ACCURACY_ACCURACY_CHECK = 200;  //in meters
     public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 2000, WAIT_FOR_ACCURACY_LOWER_BOUND = 200;  //in meters
 
-
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
 
     public static final float MAX_ZOOM = 15;
+
+
 
     public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
 
@@ -363,7 +360,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         activityResumed = false;
         rechargedOnce = false;
-        fetchedRidePathsFromDb = false;
         dropLocationSearched = false;
         promoOpened = false;
 
@@ -373,8 +369,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         mapTouchedOnce = false;
         pickupDropZoomed = false;
 
-        mealsAnimating1 = false;
-        fatafatAnimating1 = false;
 
 
 
@@ -738,6 +732,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     FlurryEventLogger.event(PICKUP_LOCATION_SET);
                     textViewInitialSearch.setText(autoCompleteSearchResult.name);
                     zoomedForSearch = true;
+                    lastSearchLatLng = null;
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 }
@@ -753,6 +748,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (map != null && searchResult != null) {
                         textViewInitialSearch.setText(searchResult.name);
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
+                        lastSearchLatLng = searchResult.latLng;
                     }
                 }
 
@@ -1394,7 +1390,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 
-        lastLocation = null;
 
         // map object initialized
         if (map != null) {
@@ -1488,9 +1483,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapReleased() {
                     // Map released
-//                    if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-//                        zoomedForSearch = false;
-//                    }
+                    try {
+                        if(PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch){
+                            if(lastSearchLatLng != null){
+                                double distance = MapUtils.distance(lastSearchLatLng, map.getCameraPosition().target);
+                                if(distance > MAP_PAN_DISTANCE_CHECK){
+                                    textViewInitialSearch.setText("");
+                                    zoomedForSearch = false;
+                                    lastSearchLatLng = null;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -1745,6 +1751,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textViewInitialSearch.setText("");
             if (myLocation != null) {
                 try {
+                    zoomedForSearch = false;
+                    lastSearchLatLng = null;
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1840,8 +1848,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (currentLocationMarker != null) {
                     currentLocationMarker.remove();
                 }
-
-                saveDataOnPause();
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
@@ -2614,34 +2620,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    public void saveDataOnPause() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (userMode == UserMode.PASSENGER) {
-
-                        SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-                        Editor editor = pref.edit();
-
-                        if (passengerScreenMode == PassengerScreenMode.P_IN_RIDE) {
-                            editor.putString(Data.SP_TOTAL_DISTANCE, "" + totalDistance);
-
-                            if (HomeActivity.this.lastLocation != null) {
-                                editor.putString(Data.SP_LAST_LATITUDE, "" + HomeActivity.this.lastLocation.getLatitude());
-                                editor.putString(Data.SP_LAST_LONGITUDE, "" + HomeActivity.this.lastLocation.getLongitude());
-                            }
-                        }
-                        editor.commit();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-    }
-
 
     @Override
     protected void onPause() {
@@ -2649,7 +2627,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         destroyFusedLocationFetchers();
 
         GCMIntentService.clearNotifications(getApplicationContext());
-        saveDataOnPause();
 
         try {
             if (userMode == UserMode.PASSENGER) {
@@ -2712,7 +2689,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onDestroy() {
         try {
-            saveDataOnPause();
 
             GCMIntentService.clearNotifications(HomeActivity.this);
 
@@ -3137,16 +3113,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void initializeStartRideVariables() {
 
-        lastLocation = null;
-
         HomeActivity.previousWaitTime = 0;
         HomeActivity.previousRideTime = 0;
         HomeActivity.totalDistance = -1;
-
-        if (HomeActivity.deltaLatLngPairs == null) {
-            HomeActivity.deltaLatLngPairs = new ArrayList<LatLngPair>();
-        }
-        HomeActivity.deltaLatLngPairs.clear();
 
         clearRideSPData();
     }
@@ -3351,7 +3320,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             jObj.getDouble("ride_time"),
                                             baseFare, fareFactor);
 
-                                        lastLocation = null;
                                         clearSPData();
                                         map.clear();
                                         passengerScreenMode = PassengerScreenMode.P_RIDE_END;

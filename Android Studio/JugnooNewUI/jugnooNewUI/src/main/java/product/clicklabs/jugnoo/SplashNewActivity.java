@@ -163,12 +163,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
-//        Class.forName(getPackageName() + "." + Data.deepLinkClassName)
         try{
             if(getIntent().hasExtra("deep_link_class")) {
                 Data.deepLinkClassName = getIntent().getStringExtra("deep_link_class");
-            }
-            else{
+            } else{
                 Data.deepLinkClassName = "";
             }
         } catch(Exception e){
