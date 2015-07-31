@@ -5,6 +5,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -53,6 +55,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
     ListView listViewFeedbackReasons;
     EditText editTextFeedback;
     Button buttonSubmitFeedback;
+    RelativeLayout relativeLayoutOtherError;
 
     FeedbackReasonsAdapter feedbackReasonsAdapter;
 
@@ -104,6 +107,11 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
         feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsListEventHandler() {
             @Override
             public void onLastItemSelected(boolean selected) {
+                if(!selected){
+                    if(relativeLayoutOtherError.getVisibility() == View.VISIBLE){
+                        relativeLayoutOtherError.setVisibility(View.GONE);
+                    }
+                }
             }
         });
         listViewFeedbackReasons.setAdapter(feedbackReasonsAdapter);
@@ -112,6 +120,10 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
         editTextFeedback.setTypeface(Fonts.latoRegular(this));
         buttonSubmitFeedback = (Button) findViewById(R.id.buttonSubmitFeedback);
         buttonSubmitFeedback.setTypeface(Fonts.latoRegular(this));
+
+        relativeLayoutOtherError = (RelativeLayout) findViewById(R.id.relativeLayoutOtherError);
+        ((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.latoRegular(this));
+        relativeLayoutOtherError.setVisibility(View.GONE);
 
         relativeLayoutSkip = (RelativeLayout) findViewById(R.id.relativeLayoutSkip);
         textViewSkip = (TextView) findViewById(R.id.textViewSkip);
@@ -127,6 +139,28 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
             @Override
             public void onClick(View v) {
                 performBackPressed();
+            }
+        });
+
+
+        editTextFeedback.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() > 0){
+                    if(relativeLayoutOtherError.getVisibility() == View.VISIBLE){
+                        relativeLayoutOtherError.setVisibility(View.GONE);
+                    }
+                }
             }
         });
 
@@ -194,7 +228,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                     if(FeedbackMode.SUPPORT != feedbackMode  && Data.feedbackReasons.size() > 0 && rating <= 3){
                         if(feedbackReasons.length() > 0){
                             if(isLastReasonSelected && feedbackStr.length() == 0){
-                                DialogPopup.alertPopup(FeedbackActivity.this, "", "Kindly specify your reason for other");
+                                relativeLayoutOtherError.setVisibility(View.VISIBLE);
                                 return;
                             }
                         }
@@ -314,7 +348,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    scrollView.smoothScrollTo(0, editTextFeedback.getBottom());
+                                    scrollView.smoothScrollTo(0, editTextFeedback.getTop() - ((int) (ASSL.Yscale() * 15)));
                                 }
                             }, 200);
                             scrolled = true;

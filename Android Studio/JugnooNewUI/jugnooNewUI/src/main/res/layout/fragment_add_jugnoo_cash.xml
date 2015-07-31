@@ -549,6 +549,68 @@
                 android:layout_height="@dimen/payment_modes_divider_height"
                 android:background="@color/yellow"/>
 
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/relativeLayoutPayU"
+                android:layout_width="match_parent"
+                android:layout_height="70px">
+
+                <ImageView
+                    android:id="@+id/imageViewSelectPayU"
+                    android:layout_width="@dimen/payment_mode_selector"
+                    android:layout_height="@dimen/payment_mode_selector"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:background="@drawable/ic_payment_mode_unpressed"/>
+
+                <TextView
+                    android:id="@+id/textViewPayU"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/payment_mode_layout_min_height"
+                    android:layout_marginLeft="@dimen/select_payment_left_margin"
+                    android:layout_toRightOf="@+id/imageViewSelectPayU"
+                    android:gravity="center_vertical"
+                    android:text="@string/payment_mode_payu_money"
+                    android:textColor="@color/color_payment_mode"
+                    android:textSize="@dimen/payment_modes_text_size"/>
+
+                <ImageView
+                    android:id="@+id/payUimage"
+                    android:layout_width="1px"
+                    android:layout_height="1px"
+                    android:background="@color/transparent"
+                    android:visibility="gone"
+                    />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutPayUOffer"
+                android:layout_width="580px"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="77px"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:visibility="visible"
+                    android:id="@+id/textViewPayUOffer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10px"
+                    android:text="OFFER: "
+                    android:textColor="@color/color_jugnoo_cash_note"
+                    android:textSize="18px"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/belowPayuLine"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/payment_modes_divider_height"
+                android:background="@color/yellow"/>
+
 
             <LinearLayout
                 android:id="@+id/linearLayoutAddAmount"

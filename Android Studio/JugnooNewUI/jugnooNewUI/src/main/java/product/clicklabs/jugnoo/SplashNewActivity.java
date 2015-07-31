@@ -43,7 +43,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
@@ -164,12 +163,18 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
-        NewRelic.withApplicationToken(Config.getNewRelicKey()).start(this.getApplication());
+        try{
+            if(getIntent().hasExtra("deep_link_class")) {
+                Data.deepLinkClassName = getIntent().getStringExtra("deep_link_class");
+            } else{
+                Data.deepLinkClassName = "";
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            Data.deepLinkClassName = "";
+        }
 
 
-        FacebookSdk.sdkInitialize(this);
-
-//        Instrumentation.start("AD-AAB-AAB-BGB", getApplicationContext());
 
         FacebookSdk.sdkInitialize(this);
 
@@ -392,7 +397,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this)+"345";
+			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 
 			Utils.generateKeyHash(this);

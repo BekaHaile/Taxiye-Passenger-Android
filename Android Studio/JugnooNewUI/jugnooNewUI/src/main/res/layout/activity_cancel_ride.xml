@@ -34,12 +34,14 @@
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white_light_grey">
 
 
         <LinearLayout
+            android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -138,6 +140,12 @@
                 android:text="Cancellation of a ride more than 5 minutes\nafter the driver is allocated will lead to\ncancellation charges of Rs. 20"
                 android:textColor="@color/grey_dark"
                 android:textSize="30px"/>
+
+            <TextView
+                android:id="@+id/textViewScroll"
+                android:layout_width="10px"
+                android:layout_height="10px"/>
+
         </LinearLayout>
 
     </ScrollView>

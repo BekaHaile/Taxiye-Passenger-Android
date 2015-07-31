@@ -15,7 +15,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,14 +104,14 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
     LinearLayout relative;
 
-    RelativeLayout relativeLayoutTopBar, layoutBackButton, relativeLayoutDebitCard, relativeLayoutCreditCard, relativeLayoutNetBanking;
+    RelativeLayout relativeLayoutTopBar, layoutBackButton, relativeLayoutDebitCard, relativeLayoutCreditCard, relativeLayoutNetBanking, relativeLayoutPayU;
 
-    LinearLayout linearLayoutDebitCardDetails, linearLayoutCreditCardDetails, linearLayoutNetbankingDetails, listLayout;
+    LinearLayout linearLayoutDebitCardDetails, linearLayoutCreditCardDetails, linearLayoutNetbankingDetails, listLayout, linearLayoutPayUOffer;
 
-    ImageView imageViewSelectDebitCard, imageViewSelectCreditCard, imageViewSelectNetBanking, imageViewSaveDebitCard, imageViewSaveCreditCard;
+    ImageView imageViewSelectDebitCard, imageViewSelectCreditCard, imageViewSelectNetBanking, imageViewSaveDebitCard, imageViewSaveCreditCard, imageViewSelectPayU, payUimage, belowPayuLine;
 
     TextView textViewTitle, textViewSelectPaymentMode, textViewDebitCard, textViewCreditCard,
-            textViewNetBanking, textViewAddAmount, textViewAddAmountValue, textViewJugnooCashNote, textViewTermsAndConditions;
+            textViewNetBanking, textViewAddAmount, textViewAddAmountValue, textViewJugnooCashNote, textViewTermsAndConditions, textViewPayU, textViewPayUOffer;;
 
     TextView textViewDebitCardDetails, textViewCreditCardDetails;
     TextView validTextDebitCard, validTextCreditCard;
@@ -339,6 +343,8 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
         relativeLayoutCreditCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCreditCard);
         relativeLayoutNetBanking = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNetBanking);
 
+
+
         relativeLayoutDebitCard.setOnClickListener(this);
         relativeLayoutCreditCard.setOnClickListener(this);
         relativeLayoutNetBanking.setOnClickListener(this);
@@ -346,6 +352,19 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
         imageViewSelectDebitCard = (ImageView) rootView.findViewById(R.id.imageViewSelectDebitCard);
         imageViewSelectCreditCard = (ImageView) rootView.findViewById(R.id.imageViewSelectCreditCard);
         imageViewSelectNetBanking = (ImageView) rootView.findViewById(R.id.imageViewSelectNetBanking);
+
+        linearLayoutPayUOffer = (LinearLayout) rootView.findViewById(R.id.linearLayoutPayUOffer);
+        relativeLayoutPayU = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPayU);
+        relativeLayoutPayU.setOnClickListener(this);
+        imageViewSelectPayU = (ImageView) rootView.findViewById(R.id.imageViewSelectPayU);
+        payUimage = (ImageView) rootView.findViewById(R.id.payUimage);
+        belowPayuLine = (ImageView) rootView.findViewById(R.id.belowPayuLine);
+
+        textViewPayU  = (TextView) rootView.findViewById(R.id.textViewPayU);
+        textViewPayU.setTypeface(Fonts.latoRegular(homeActivity));
+
+        textViewPayUOffer = (TextView) rootView.findViewById(R.id.textViewPayUOffer);
+        textViewPayUOffer.setTypeface(Fonts.latoRegular(homeActivity));
 
         imageViewSaveDebitCard = (ImageView) rootView.findViewById(R.id.imageViewSaveDebitCard);
         imageViewSaveCreditCard = (ImageView) rootView.findViewById(R.id.imageViewSaveCreditCard);
@@ -704,7 +723,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
         editTextCreditCardNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                editTextCreditCardNumber.getText().clear();
+                editTextCVVCreditCard.getText().clear();
             }
 
             @Override
@@ -714,9 +733,9 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                 issuer = Cards.getIssuer(cardNumber);
 
                 if (issuer.contentEquals("AMEX")) {
-                    editTextCreditCardNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+                    editTextCVVCreditCard.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
                 } else {
-                    editTextCreditCardNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+                    editTextCVVCreditCard.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
                 }
                 if (issuer != null) {
                     issuerDrawable = Cards.ISSUER_DRAWABLE.get(issuer);
@@ -830,6 +849,14 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                                 }
 //                            Toast.makeText(homeActivity, "List = " + editTextValue[i], Toast.LENGTH_SHORT).show();
                             }
+                        }
+
+                    } else if (homeActivity.pgName.equalsIgnoreCase("PAYU_MONEY")) {
+                        homeActivity.bankCode = "payuw";
+                        if (AppStatus.getInstance(getActivity()).isOnline(getActivity())) {
+                            makePayUPayment();
+                        } else {
+                            new DialogPopup().alertPopup(homeActivity, "", Data.CHECK_INTERNET_MSG);
                         }
 
                     } else {
@@ -956,6 +983,12 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                     imageViewSelectNetBanking.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
                 }
 
+                //if payU money layout is visible, set gone
+                if(payUimage.getVisibility() == View.VISIBLE) {
+                    payUimage.setVisibility(View.GONE);
+                    imageViewSelectPayU.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
+                }
+
 
                 for(int i=0;i<storeListCards.size();i++) {
                     flag[i] = false;
@@ -1002,6 +1035,12 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                     imageViewSelectNetBanking.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
                 }
 
+                //if payU money layout is visible, set gone
+                if(payUimage.getVisibility() == View.VISIBLE) {
+                    payUimage.setVisibility(View.GONE);
+                    imageViewSelectPayU.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
+                }
+
                 for(int i=0;i<storeListCards.size();i++) {
                     flag[i] = false;
                 }
@@ -1014,7 +1053,60 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                 }, 20);
 
                 break;
+            case R.id.relativeLayoutPayU:
+                homeActivity.pgName = "PAYU_MONEY";
+                selectedFlag = true;
+                rootView.findViewById(com.payu.sdk.R.id.nbPayButton).setEnabled(true);
+                optionSelect = 3;
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (payUimage.getVisibility() == View.VISIBLE) {
+                            homeActivity.pgName = "";
+                            selectedFlag = false;
+                            payUimage.setVisibility(View.GONE);
+                            imageViewSelectPayU.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
 
+                        } else {
+                            imageViewSelectPayU.setBackgroundResource(R.drawable.ic_payment_mode_pressed);
+                            payUimage.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                }, 200);
+
+                // if debit card layout is visible, set it invisible
+                if (linearLayoutDebitCardDetails.getVisibility() == View.VISIBLE) {
+                    linearLayoutDebitCardDetails.setVisibility(View.GONE);
+                    imageViewSelectDebitCard.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
+                }
+
+                // if net banking layout is visible, set it invisible
+                if (linearLayoutNetbankingDetails.getVisibility() == View.VISIBLE) {
+                    linearLayoutNetbankingDetails.setVisibility(View.GONE);
+                    imageViewSelectNetBanking.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
+                }
+
+                // if credit card layout is visible, set invisible
+                if (linearLayoutCreditCardDetails.getVisibility() == View.VISIBLE) {
+                    linearLayoutCreditCardDetails.setVisibility(View.GONE);
+                    imageViewSelectCreditCard.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
+                }
+
+
+
+                for (int i = 0; i < storeListCards.size(); i++) {
+                    flag[i] = false;
+                }
+                saveCardList.setAdapter(storeCardAdp);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.expandListForVariableHeight(saveCardList);
+                    }
+                }, 20);
+
+                break;
 
                     case R.id.relativeLayoutNetBanking:
                         homeActivity.pgName = "NB";
@@ -1049,6 +1141,12 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                             imageViewSelectCreditCard.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
                         }
 
+                        //if payU money layout is visible, set gone
+                        if(payUimage.getVisibility() == View.VISIBLE) {
+                            payUimage.setVisibility(View.GONE);
+                            imageViewSelectPayU.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
+                        }
+
                         for(int i=0;i<storeListCards.size();i++) {
                             flag[i] = false;
                         }
@@ -1080,7 +1178,11 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
         linearLayoutNetbankingDetails.setVisibility(View.GONE);
         imageViewSelectNetBanking.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
+
+        payUimage.setVisibility(View.GONE);
+        imageViewSelectPayU.setBackgroundResource(R.drawable.ic_payment_mode_unpressed);
     }
+
 //    /**
 //     * Method used to hide keyboard if outside touched.
 //     *
@@ -1211,6 +1313,31 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                                     homeActivity.hash = res.getString("hash_txn");
                                     homeActivity.hashSdk = res.getString("hash_sdk");
                                     homeActivity.uProdInfo = res.getString("product_info");
+                                    if(res.has("payu_money_offer")) {
+                                        homeActivity.payUOffer = res.getString("payu_money_offer");
+                                        belowPayuLine.setVisibility(View.VISIBLE);
+                                        relativeLayoutPayU.setVisibility(View.VISIBLE);
+                                        linearLayoutPayUOffer.setVisibility(View.VISIBLE);
+                                        if(homeActivity.payUOffer.length()>0) {
+                                            linearLayoutPayUOffer.setVisibility(View.VISIBLE);
+                                            SpannableString offer = new SpannableString("OFFER: ");
+                                            final StyleSpan offerbs = new StyleSpan(Typeface.BOLD);
+                                            final ForegroundColorSpan offerclr = new ForegroundColorSpan(Color.parseColor("#ED4706"));
+                                            offer.setSpan(offerbs, 0, offer.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            offer.setSpan(offerclr, 0, offer.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                            textViewPayUOffer.setText("");
+                                            textViewPayUOffer.append(offer);
+                                            textViewPayUOffer.append(homeActivity.payUOffer);
+                                            textViewPayUOffer.setVisibility(View.VISIBLE);
+                                        } else {
+                                            linearLayoutPayUOffer.setVisibility(View.GONE);
+                                        }
+                                    } else {
+                                        belowPayuLine.setVisibility(View.GONE);
+                                        relativeLayoutPayU.setVisibility(View.GONE);
+                                        linearLayoutPayUOffer.setVisibility(View.GONE);
+                                    }
 
                                     // for store cards
                                     PayU.saveUserCardHash = res.getString("hash_cards_save");
@@ -1218,6 +1345,9 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                                     PayU.getUserCardHash = res.getString("hash_cards_get");
                                     PayU.deleteCardHash = res.getString("hash_cards_delete");
                                     PayU.userCredentials = res.getString("user_credentials");
+
+
+
 
 //
                                     PayU.paymentHash = homeActivity.hash;
@@ -1267,6 +1397,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
         try {
             homeActivity.uEmail = URLEncoder.encode(homeActivity.uEmail, "utf-8");
+            homeActivity.uName = URLEncoder.encode(homeActivity.uName, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -1357,6 +1488,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
         try {
             homeActivity.uEmail = URLEncoder.encode(homeActivity.uEmail, "utf-8");
+            homeActivity.uName = URLEncoder.encode(homeActivity.uName, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -1427,6 +1559,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
             try {
                 homeActivity.uEmail = URLEncoder.encode(homeActivity.uEmail, "utf-8");
+                homeActivity.uName = URLEncoder.encode(homeActivity.uName, "utf-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -1472,6 +1605,66 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 popFrag();
                 startActivity(intent);
+//                startActivityForResult(intent, PayU.RESULT);
+        } catch (MissingParameterException e) {
+            e.printStackTrace();
+        } catch (HashException e) {
+            e.printStackTrace();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void makePayUPayment() {
+        Params requiredParams = new Params();
+
+        builder.set(PayU.MODE, homeActivity.pgName);
+        builder.set(PayU.PRODUCT_INFO, "" + homeActivity.uProdInfo);
+        builder.set(PayU.AMOUNT, enterAmount);//homeActivity.enterAmount
+
+
+        try {
+            homeActivity.uEmail = URLEncoder.encode(homeActivity.uEmail, "utf-8");
+            homeActivity.uName = URLEncoder.encode(homeActivity.uName, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        builder.set(PayU.EMAIL, homeActivity.uEmail);
+        builder.set(PayU.FIRSTNAME, homeActivity.uName);
+
+        builder.set(PayU.TXNID, homeActivity.txnId);
+        builder.set(PayU.SURL, Config.getSURL());
+        builder.set(PayU.FURL, Config.getFURL());
+
+
+
+        requiredParams.put(PayU.EMAIL, homeActivity.uEmail);
+        requiredParams.put(PayU.FIRSTNAME, homeActivity.uName);
+
+        requiredParams.put(PayU.BANKCODE, homeActivity.bankCode);
+        requiredParams.put(PayU.AMOUNT, enterAmount);
+        requiredParams.put(PayU.PRODUCT_INFO, "" + homeActivity.uProdInfo);
+        requiredParams.put(PayU.TXNID, homeActivity.txnId);
+        requiredParams.put(PayU.SURL, Config.getSURL());
+        requiredParams.put(PayU.FURL, Config.getFURL());
+
+
+        try {
+            Bundle bundle = homeActivity.getPackageManager().getApplicationInfo(homeActivity.getPackageName(), PackageManager.GET_META_DATA).metaData;
+
+            requiredParams.put(PayU.MERCHANT_KEY, bundle.getString("payu_merchant_id"));//kayValue
+            payment = builder.create();
+
+            String postData = PayU.getInstance(homeActivity).createPayment(payment, requiredParams);
+            Log.e("postData", "postData = " + postData);
+
+            Intent intent = new Intent(homeActivity, ProcessPaymentActivity.class);
+            intent.putExtra(Constants.POST_DATA, postData);
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            popFrag();
+            startActivity(intent);
 //                startActivityForResult(intent, PayU.RESULT);
         } catch (MissingParameterException e) {
             e.printStackTrace();

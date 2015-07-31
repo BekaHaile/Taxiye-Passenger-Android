@@ -112,6 +112,27 @@
                     android:textSize="28px" />
 
 
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutOtherError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10px">
+
+                    <TextView
+                        android:id="@+id/textViewOtherError"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red_status"
+                        android:textSize="22px"
+                        android:layout_centerVertical="true"
+                        android:text="* Required"
+                        android:layout_marginLeft="60px"
+                        />
+
+
+                </RelativeLayout>
+
+
                 <Button
                     android:id="@+id/buttonSubmitFeedback"
                     android:layout_width="648px"

@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class WalletAddPaymentFragment extends Fragment implements FlurryEventNames {
@@ -244,7 +245,8 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
 			@Override
 			public void onClick(View v) {
 				try {
-					String amountStr = editTextAmount.getText().toString().trim();
+                    Utils.hideSoftKeyboard(homeActivity, editTextAmount);
+                    String amountStr = editTextAmount.getText().toString().trim();
 					if("".equalsIgnoreCase(amountStr)){
                         new DialogPopup().dialogBanner(homeActivity, "" + getResources().getString(R.string.amount_range));
 					}
@@ -289,7 +291,7 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
                 int result = actionId & EditorInfo.IME_MASK_ACTION;
                 switch (result) {
                     case EditorInfo.IME_ACTION_DONE:
-                        //buttonMakePayment.performClick();
+                        buttonMakePayment.performClick();
                         break;
 
                     case EditorInfo.IME_ACTION_NEXT:
