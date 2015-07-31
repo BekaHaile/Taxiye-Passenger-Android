@@ -30,9 +30,6 @@ import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 public class Data {
 
 
-    public static final int MAX_AMOUNT = 5000;
-    public static final int MIN_AMOUNT = 1;
-
 
     public static final String INVALID_ACCESS_TOKEN = "invalid access token";
 

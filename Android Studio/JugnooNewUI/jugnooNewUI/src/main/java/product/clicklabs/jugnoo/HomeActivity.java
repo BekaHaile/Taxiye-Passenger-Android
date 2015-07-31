@@ -3930,48 +3930,50 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             //30.7500, 76.7800
             if(Utils.compareDouble(Data.pickupLatLng.latitude, 30.7500) == 0 && Utils.compareDouble(Data.pickupLatLng.longitude, 76.7800) == 0){
                 myLocation = null;
+                Toast.makeText(activity, "Waiting for location...", Toast.LENGTH_SHORT).show();
+                return;
             }
-
-            if (myLocation == null) {
-                //We could not detect your location. Are you sure you want to request an auto to pick you at this location
-                myLocation = new Location(LocationManager.GPS_PROVIDER);
-                myLocation.setLatitude(Data.pickupLatLng.latitude);
-                myLocation.setLongitude(Data.pickupLatLng.longitude);
-                myLocation.setAccuracy(100);
-                myLocation.setTime(System.currentTimeMillis());
-                textMessage.setText("We could not detect your location. Are you sure you want to request an auto to pick you at this location?");
-                dialog.show();
-            } else {
-                boolean cached = false;
-                try {
-                    if (myLocation != null) {
-                        Bundle bundle = myLocation.getExtras();
-                        cached = bundle.getBoolean("cached");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (cached) {
-                    //Location accuracy is low. Are you sure you want to request an auto to pick you at this location
-                    textMessage.setText("Location accuracy is low. Are you sure you want to request an auto to pick you at this location?");
+            else{
+                if (myLocation == null) {
+                    //We could not detect your location. Are you sure you want to request an auto to pick you at this location
+                    myLocation = new Location(LocationManager.GPS_PROVIDER);
+                    myLocation.setLatitude(Data.pickupLatLng.latitude);
+                    myLocation.setLongitude(Data.pickupLatLng.longitude);
+                    myLocation.setAccuracy(100);
+                    myLocation.setTime(System.currentTimeMillis());
+                    textMessage.setText("We could not detect your location. Are you sure you want to request an auto to pick you at this location?");
                     dialog.show();
                 } else {
-                    double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                    if (distance > MAP_PAN_DISTANCE_CHECK) {
-                        textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
+                    boolean cached = false;
+                    try {
+                        if (myLocation != null) {
+                            Bundle bundle = myLocation.getExtras();
+                            cached = bundle.getBoolean("cached");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (cached) {
+                        //Location accuracy is low. Are you sure you want to request an auto to pick you at this location
+                        textMessage.setText("Location accuracy is low. Are you sure you want to request an auto to pick you at this location?");
                         dialog.show();
                     } else {
-                        initiateRequestRide(true);
+                        double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                        if (distance > MAP_PAN_DISTANCE_CHECK) {
+                            textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
+                            dialog.show();
+                        } else {
+                            initiateRequestRide(true);
 //                        if (totalPromoCoupons == 0) {
 //                            textMessage.setText("Do you want an auto to pick you up?");
 //                            dialog.show();
 //                        } else {
 //                            initiateRequestRide(true);
 //                        }
+                        }
                     }
                 }
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();

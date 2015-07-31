@@ -254,7 +254,7 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
 //						double amount = Double.parseDouble(editTextAmount.getText().toString().trim());
                         int amountNew = Integer.parseInt(editTextAmount.getText().toString().trim());
                         if (AppStatus.getInstance(homeActivity).isOnline(homeActivity)) {
-                            if(amountNew< Data.MIN_AMOUNT || amountNew>Data.MAX_AMOUNT) {
+                            if(amountNew < Config.getMinAmount() || amountNew > Config.getMaxAmount()) {
 
                                 new DialogPopup().dialogBanner(homeActivity, ""+getResources().getString(R.string.amount_range));
                             } else {
