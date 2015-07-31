@@ -34,12 +34,13 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class OTPConfirmScreen extends BaseActivity implements LocationUpdate{
+public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames{
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
@@ -139,12 +140,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate{
 				if(otpCode.length() > 0){
 					if(RegisterScreen.facebookLogin){
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode);
-						FlurryEventLogger.otpConfirmClick(otpCode);
 					}
 					else{
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode);
-						FlurryEventLogger.otpConfirmClick(otpCode);
 					}
+                    FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
 				}
 				else{
 					editTextOTP.requestFocus();
@@ -180,11 +180,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate{
 			public void onClick(View v) {
 				if (RegisterScreen.facebookLogin) {
 					initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
-					FlurryEventLogger.otpThroughCall(facebookRegisterData.phoneNo);
 				} else {
 					initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
-					FlurryEventLogger.otpThroughCall(emailRegisterData.phoneNo);
 				}
+                FlurryEventLogger.event(CALL_ME_OTP);
 			}
 		});
 
@@ -192,6 +191,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate{
 
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
                 startActivity(new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class));
                 finish();
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);

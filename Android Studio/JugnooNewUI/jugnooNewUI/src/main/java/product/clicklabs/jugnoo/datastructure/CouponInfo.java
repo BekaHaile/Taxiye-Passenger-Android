@@ -10,9 +10,11 @@ public class CouponInfo extends PromoCoupon{
 	public String image;
 	public String redeemedOn;
 	public String expiryDate;
+    public String startTime;
+    public String endTime;
 	
 	public CouponInfo(int id, int couponType, int status, String title, String subtitle, String description, String image,
-			String redeemedOn, String expiryDate){
+			String redeemedOn, String expiryDate, String startTime, String endTime){
 		this.id = id;
 		this.couponType = couponType;
 		this.status = status;
@@ -22,6 +24,8 @@ public class CouponInfo extends PromoCoupon{
 		this.image = image;
 		this.redeemedOn = redeemedOn;
 		this.expiryDate = expiryDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
 	}
 	
 	public CouponInfo(int id, String title){
@@ -34,6 +38,8 @@ public class CouponInfo extends PromoCoupon{
 		this.image = "";
 		this.redeemedOn = "";
 		this.expiryDate = "";
+        this.startTime = "";
+        this.endTime = "";
 	}
 	
 	@Override

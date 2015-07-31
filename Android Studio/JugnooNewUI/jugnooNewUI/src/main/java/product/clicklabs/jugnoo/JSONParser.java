@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -240,7 +241,14 @@ public class JSONParser {
         Data.emergencyContactsList.clear();
         Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(userData));
 
-        return new UserData(accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
+        String userIdentifier = userEmail;
+        try{
+            userIdentifier = userData.optString("user_identifier", userEmail);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
@@ -276,6 +284,7 @@ public class JSONParser {
         String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
 
         parseCancellationReasons(jObj);
+        parseFeedbackReasonArrayList(jObj);
 
         Data.referralMessages = parseReferralMessages(jObj);
 
@@ -467,30 +476,6 @@ public class JSONParser {
                 } else {
 
 
-//							response = {
-//									"log": "Assigning driver", 
-//									"flag": constants.responseFlags.ASSIGNING_DRIVERS,
-//									"session_id": 2020
-//							};
-
-
-//							"flag": constants.responseFlags.ENGAGEMENT_DATA, 
-//							"last_engagement_info":[
-//							{
-//								�driver_id�, 
-//								�pickup_latitude�, 
-//								�pickup_longitude�, 
-//								�engagement_id�, 
-//								�status�, 
-//								�session_id�,
-//								�user_name�, 
-//								�phone_no�, 
-//								�user_image�, 
-//								�driver_car_image�, 
-//								�current_location_latitude�, 
-//								�current_location_longitude�, 
-//								�rating�
-//								}
 
 
                     int flag = jObject1.getInt("flag");
@@ -764,7 +749,7 @@ public class JSONParser {
                     coData.getString("description"),
                     coData.getString("image"),
                     coData.getString("redeemed_on"),
-                    coData.getString("expiry_date")));
+                    coData.getString("expiry_date"), "", ""));
         }
 
         JSONArray jPromoArr = jObj.getJSONArray("promotions");
@@ -825,6 +810,29 @@ public class JSONParser {
     }
 
 
+    public static void parseFeedbackReasonArrayList(JSONObject jObj){
+        Data.feedbackReasons = new ArrayList<>();
+//        Data.feedbackReasons.add(new FeedbackReason("Late Arrival"));
+//        Data.feedbackReasons.add(new FeedbackReason("Speed"));
+//        Data.feedbackReasons.add(new FeedbackReason("Driver Behavior"));
+//        Data.feedbackReasons.add(new FeedbackReason("Trip Route"));
+//        Data.feedbackReasons.add(new FeedbackReason("Auto Quality"));
+//        Data.feedbackReasons.add(new FeedbackReason("Other"));
+
+        try{
+            JSONArray jReasons = jObj.getJSONArray("bad_rating_reasons");
+            if(jReasons.length() > 0){
+                Data.feedbackReasons.clear();
+            }
+            for(int i=0; i<jReasons.length(); i++){
+                Data.feedbackReasons.add(new FeedbackReason(jReasons.getString(i)));
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     public static ArrayList<PreviousAccountInfo> parsePreviousAccounts(JSONObject jsonObject) {
         ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
@@ -868,6 +876,32 @@ public class JSONParser {
     public static ArrayList<CouponInfo> parseCouponsArray(JSONObject jObj){
         ArrayList<CouponInfo> couponInfoList = new ArrayList<CouponInfo>();
 
+        //                                                {
+//                                                    "coupon_id": 12,
+//                                                    "title": "Drop Capped C",
+//                                                    "subtitle": "upto Rs. 100 ",
+//                                                    "description": "Your 30.771823, 76.769595",
+//                                                    "coupon_type": 3,
+//                                                    "type": 3,
+//                                                    "discount_percentage": 0,
+//                                                    "discount_maximum": 0,
+//                                                    "discount": 0,
+//                                                    "maximum": 0,
+//                                                    "start_time": "00:00:00",
+//                                                    "end_time": "23:00:00",
+//                                                    "pickup_latitude": 30.7188,
+//                                                    "pickup_longitude": 76.8108,
+//                                                    "pickup_radius": 200,
+//                                                    "drop_latitude": 30.7718,
+//                                                    "drop_longitude": 76.7696,
+//                                                    "drop_radius": 200,
+//                                                    "image": "",
+//                                                    "account_id": 2568,
+//                                                    "redeemed_on": "0000-00-00 00:00:00",
+//                                                    "status": 1,
+//                                                    "expiry_date": "2015-08-31 18:29:59"
+//                                                }
+
         try{
             if (jObj.has("coupons")) {
                 JSONArray couponsData = jObj.getJSONArray("coupons");
@@ -883,7 +917,10 @@ public class JSONParser {
                             coData.getString("description"),
                             coData.getString("image"),
                             coData.getString("redeemed_on"),
-                            coData.getString("expiry_date"));
+                            coData.getString("expiry_date"),
+                            coData.getString("start_time"),
+                            coData.getString("end_time")
+                            );
 
                         couponInfoList.add(couponInfo);
                     }

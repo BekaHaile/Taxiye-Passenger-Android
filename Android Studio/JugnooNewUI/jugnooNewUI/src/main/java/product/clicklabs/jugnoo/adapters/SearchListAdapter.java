@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -97,22 +96,7 @@ public class SearchListAdapter extends BaseAdapter {
 
                 @Override
                 public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                    int result = actionId & EditorInfo.IME_MASK_ACTION;
-                    switch (result) {
-                        case EditorInfo.IME_ACTION_DONE:
-                            Utils.hideSoftKeyboard((Activity) context, SearchListAdapter.this.editTextForSearch);
-                            break;
-
-                        case EditorInfo.IME_ACTION_NEXT:
-                            Utils.hideSoftKeyboard((Activity) context, SearchListAdapter.this.editTextForSearch);
-                            break;
-
-                        case EditorInfo.IME_ACTION_SEARCH:
-                            Utils.hideSoftKeyboard((Activity) context, SearchListAdapter.this.editTextForSearch);
-                            break;
-
-                        default:
-                    }
+                    Utils.hideSoftKeyboard((Activity) context, SearchListAdapter.this.editTextForSearch);
                     return true;
                 }
             });

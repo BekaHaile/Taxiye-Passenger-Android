@@ -14,15 +14,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.Session;
+import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class ShareActivity extends BaseActivity {
+public class ShareActivity extends BaseActivity implements FlurryEventNames {
 	
 	RelativeLayout relative;
 	
@@ -32,6 +34,8 @@ public class ShareActivity extends BaseActivity {
 	ImageView imageViewFacebook, imageViewWhatsapp, imageViewSMS, imageViewEmail;
 	TextView textViewReferralCode, textViewReferralCaption;
     WebView webViewReferralCaption;
+
+    CallbackManager callbackManager;
 
 
 	@Override
@@ -62,6 +66,9 @@ public class ShareActivity extends BaseActivity {
 		
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(ShareActivity.this, relative, 1134, 720, false);
+
+
+        callbackManager = CallbackManager.Factory.create();
 		
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
@@ -148,7 +155,8 @@ public class ShareActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-                ReferralActions.shareToFacebook(ShareActivity.this);
+                ReferralActions.shareToFacebook(ShareActivity.this, callbackManager);
+                FlurryEventLogger.event(INVITE_FACEBOOK);
 			}
 		});
 		
@@ -158,6 +166,7 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.shareToWhatsapp(ShareActivity.this);
+                FlurryEventLogger.event(INVITE_WHATSAPP);
 			}
 		});
 		
@@ -167,6 +176,7 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.sendSMSIntent(ShareActivity.this);
+                FlurryEventLogger.event(INVITE_MESSAGE);
 			}
 		});
 
@@ -175,6 +185,7 @@ public class ShareActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 ReferralActions.openMailIntent(ShareActivity.this);
+                FlurryEventLogger.event(INVITE_EMAIL);
 			}
 		});
 		
@@ -197,7 +208,7 @@ public class ShareActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
-			Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+            callbackManager.onActivityResult(requestCode, resultCode, data);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

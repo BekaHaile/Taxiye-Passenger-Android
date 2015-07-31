@@ -1,14 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
     android:layout_width="720px"
     android:layout_height="1134px"
-    android:background="@color/white" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    android:background="@color/white_light_grey" >
 
         <RelativeLayout
             android:id="@+id/topBar"
@@ -42,37 +36,31 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:splitMotionEvents="false" >
+            android:splitMotionEvents="false"
+            android:layout_above="@+id/relativeLayoutSkip"
+            android:layout_below="@+id/topBar"
+            >
 
             <LinearLayout
                 android:id="@+id/linearLayoutMain"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white_light_grey"
                 android:orientation="vertical"
-                android:splitMotionEvents="false" >
-
-                <TextView
-                    android:id="@+id/textViewRateYourExp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text_alpha"
-                    android:textSize="40px"
-                    android:text="Rate your Jugnoo Experience"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="54px"
-                    />
+                android:splitMotionEvents="false"
+                android:animateLayoutChanges="true"
+                >
 
                 <RatingBar
                     android:id="@+id/ratingBarFeedback"
-                    style="@style/YellowRatingBarNew"
+                    style="@style/RatingBarAuto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="40px"
+                    android:layout_marginTop="50px"
                     android:numStars="5"
                     android:rating="1"
-                    android:stepSize="1.0" />
+                    android:stepSize="1.0"
+                    />
 
                 <TextView
                     android:id="@+id/textViewRateText"
@@ -85,27 +73,73 @@
                     android:layout_marginTop="20px"
                     />
 
+
+
+                <TextView
+                    android:id="@+id/textViewWhatImprove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text_alpha"
+                    android:textSize="30px"
+                    android:text="What could we improve?"
+                    android:layout_marginTop="20px"
+                    android:layout_marginLeft="30px"
+                    />
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewFeedbackReasons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:splitMotionEvents="false">
+                </product.clicklabs.jugnoo.utils.NonScrollListView>
+
+
                 <EditText
                     android:id="@+id/editTextFeedback"
                     android:layout_width="match_parent"
-                    android:layout_height="310px"
+                    android:layout_height="200px"
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
-                    android:layout_marginTop="70px"
+                    android:layout_marginTop="20px"
                     android:background="@drawable/background_white_yellow_bordered"
                     android:gravity="left"
-                    android:hint="How did you like your experience with Jugnoo? Please share your valuable feedback"
+                    android:hint="Please share your valuable feedback"
                     android:padding="20px"
                     android:scrollbars="vertical"
                     android:textSize="28px" />
 
 
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutOtherError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10px">
+
+                    <TextView
+                        android:id="@+id/textViewOtherError"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red_status"
+                        android:textSize="22px"
+                        android:layout_centerVertical="true"
+                        android:text="* Required"
+                        android:layout_marginLeft="60px"
+                        />
+
+
+                </RelativeLayout>
+
+
                 <Button
                     android:id="@+id/buttonSubmitFeedback"
                     android:layout_width="648px"
-                    android:layout_height="100px"
+                    android:layout_height="80px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
+                    android:layout_marginBottom="40px"
                     android:background="@drawable/button_yellow_selector"
                     android:text="SUBMIT"
                     android:textColor="@drawable/text_color_white_alpha_selector"
@@ -118,35 +152,36 @@
                     android:text=" " />
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutSkip"
-        android:layout_width="180px"
-        android:layout_height="100px"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" >
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSkip"
+            android:layout_width="180px"
+            android:layout_height="100px"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" >
 
-        <TextView
-            android:id="@+id/textViewSkip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20px"
-            android:layout_toLeftOf="@+id/imageViewSkipArrow"
-            android:text="Skip"
-            android:textColor="@drawable/text_color_grey_dark_white_selector"
-            android:textSize="32px" />
+            <TextView
+                android:id="@+id/textViewSkip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20px"
+                android:layout_toLeftOf="@+id/imageViewSkipArrow"
+                android:text="Skip"
+                android:textColor="@drawable/text_color_grey_dark_white_selector"
+                android:textSize="32px" />
 
-        <ImageView
-            android:id="@+id/imageViewSkipArrow"
-            android:layout_width="13px"
-            android:layout_height="26px"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="40px"
-            android:src="@drawable/arrow_icon_selector"
-            android:tag="mwar" />
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/imageViewSkipArrow"
+                android:layout_width="13px"
+                android:layout_height="26px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="40px"
+                android:src="@drawable/arrow_icon_selector"
+                android:tag="mwar" />
+        </RelativeLayout>
+
+
 
 </RelativeLayout>

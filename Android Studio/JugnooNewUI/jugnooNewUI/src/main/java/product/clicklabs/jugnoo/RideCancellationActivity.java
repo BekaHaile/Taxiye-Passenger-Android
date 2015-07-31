@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -31,12 +33,16 @@ import product.clicklabs.jugnoo.datastructure.CancelOption;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideCancellationActivity extends BaseActivity implements ActivityCloser{
+public class RideCancellationActivity extends BaseActivity implements ActivityCloser, FlurryEventNames {
 	
 	
 	LinearLayout relative;
@@ -59,6 +65,10 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 	Button buttonCancelRide;
 	
 	TextView textViewCancelInfo;
+
+    ScrollView scrollView;
+    LinearLayout linearLayoutMain;
+    TextView textViewScroll;
 	
 	public static ActivityCloser activityCloser = null;
 	
@@ -113,6 +123,48 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Fonts.latoRegular(this));
 		
 		textViewCancelInfo = (TextView) findViewById(R.id.textViewCancelInfo); textViewCancelInfo.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
+        editTextOtherCancelOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, relativeLayoutOtherCancelOptionInner.getTop());
+                    }
+                }, 200);
+            }
+        });
+
+        editTextOtherCancelOption.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, relativeLayoutOtherCancelOptionInner.getTop());
+                    }
+                }, 200);
+            }
+        });
+
+
+        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        }));
+
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -404,6 +456,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
                                                 performBackPressed();
                                             }
                                         });
+                                        FlurryEventLogger.event(RIDE_CANCELLED_COMPLETE);
                                     } else {
                                         DialogPopup.alertPopup(activity, "", serverMessage);
                                     }

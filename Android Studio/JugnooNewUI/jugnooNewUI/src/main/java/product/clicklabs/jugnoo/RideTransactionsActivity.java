@@ -40,10 +40,12 @@ import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideTransactionsActivity extends BaseActivity implements UpdateRideTransaction {
+public class RideTransactionsActivity extends BaseActivity implements UpdateRideTransaction, FlurryEventNames {
 
 	RelativeLayout relative;
 	
@@ -314,7 +316,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 
 
     class ViewHolderRideTransaction {
-        TextView textViewPickupAt, textViewFrom, textViewFromValue, textViewTo,
+        TextView textViewPickupAt, textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
             textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel, textViewRateRide;
         ImageView imageViewDiv;
         RelativeLayout relativeLayoutCancel, relativeLayoutTo, relativeLayoutRateRide;
@@ -358,6 +360,8 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 convertView = mInflater.inflate(R.layout.list_item_ride_transaction, null);
 
                 holder.textViewPickupAt = (TextView) convertView.findViewById(R.id.textViewPickupAt); holder.textViewPickupAt.setTypeface(Fonts.latoRegular(context));
+                ((TextView)convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.latoRegular(context));
+                holder.textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); holder.textViewIdValue.setTypeface(Fonts.latoRegular(context));
                 holder.textViewFrom = (TextView) convertView.findViewById(R.id.textViewFrom); holder.textViewFrom.setTypeface(Fonts.latoRegular(context));
                 holder.textViewFromValue = (TextView) convertView.findViewById(R.id.textViewFromValue); holder.textViewFromValue.setTypeface(Fonts.latoRegular(context));
                 holder.textViewTo = (TextView) convertView.findViewById(R.id.textViewTo); holder.textViewTo.setTypeface(Fonts.latoRegular(context));
@@ -401,6 +405,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 
                     holder.textViewAmount.setVisibility(View.GONE);
 
+                    holder.textViewIdValue.setText(""+futureSchedule.pickupId);
                     holder.textViewFromValue.setText(futureSchedule.pickupAddress);
                     holder.textViewDetails.setText("Date: ");
                     holder.textViewDetailsValue.setText(futureSchedule.pickupDate + ", " + futureSchedule.pickupTime);
@@ -420,6 +425,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     holder.textViewAmount.setVisibility(View.VISIBLE);
                     holder.relativeLayoutCancel.setVisibility(View.GONE);
 
+                    holder.textViewIdValue.setText(""+rideInfo.engagementId);
                     holder.textViewFromValue.setText(rideInfo.pickupAddress);
                     holder.textViewToValue.setText(rideInfo.dropAddress);
                     holder.textViewDetails.setText("Details: ");
@@ -451,6 +457,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 holder.textViewAmount.setVisibility(View.VISIBLE);
                 holder.relativeLayoutCancel.setVisibility(View.GONE);
 
+                holder.textViewIdValue.setText(""+rideInfo.engagementId);
                 holder.textViewFromValue.setText(rideInfo.pickupAddress);
                 holder.textViewToValue.setText(rideInfo.dropAddress);
                 holder.textViewDetails.setText("Details: ");
@@ -529,6 +536,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        FlurryEventLogger.event(RIDE_RATED_ON_RIDE_HISTORY);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

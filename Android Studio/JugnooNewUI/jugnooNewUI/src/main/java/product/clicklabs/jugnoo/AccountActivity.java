@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -42,25 +41,27 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class AccountActivity extends BaseActivity {
+public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	RelativeLayout relative;
-	
+
+    RelativeLayout topBar;
 	TextView textViewTitle;
 	ImageView imageViewBack;
 	
 	ImageView imageViewUserImageBlur, imageViewProfileImage;
-	ProgressBar progressBarProfileUpdate;
-	
+
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
-	
+
 	EditText editTextUserName, editTextEmail, editTextPhone;
 	ImageView imageViewEditName, imageViewEditEmail, imageViewEditPhoneNo;
 	ImageView imageViewEmailVerifyStatus;
@@ -84,8 +85,6 @@ public class AccountActivity extends BaseActivity {
 		
 		imageViewUserImageBlur = (ImageView) findViewById(R.id.imageViewUserImageBlur);
 		imageViewProfileImage = (ImageView) findViewById(R.id.imageViewProfileImage);
-		
-		progressBarProfileUpdate = (ProgressBar) findViewById(R.id.progressBarProfileUpdate);
 		
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -113,6 +112,8 @@ public class AccountActivity extends BaseActivity {
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
         textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.latoRegular(this));
 
+        topBar = (RelativeLayout) findViewById(R.id.topBar);
+
 
 
 		buttonLogout = (Button) findViewById(R.id.buttonLogout); buttonLogout.setTypeface(Fonts.latoRegular(this));
@@ -120,17 +121,46 @@ public class AccountActivity extends BaseActivity {
 		
 		
 		setUserData(false);
-		
+
+
+        linearLayoutMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dissmissEmailVerify();
+            }
+        });
+
+        topBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayoutMain.performClick();
+            }
+        });
+
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 performBackPressed();
+                dissmissEmailVerify();
             }
         });
-		
-		
+
+
+        editTextUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayoutMain.performClick();
+            }
+        });
+        editTextPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayoutMain.performClick();
+            }
+        });
+
 		editTextUserName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -154,15 +184,15 @@ public class AccountActivity extends BaseActivity {
 		});
 
 		editTextPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(hasFocus){
-					scrollView.smoothScrollTo(0, editTextPhone.getTop());
-				}
-				editTextPhone.setError(null);
-			}
-		});
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    scrollView.smoothScrollTo(0, editTextPhone.getTop());
+                }
+                editTextPhone.setError(null);
+            }
+        });
 		
 		
 		imageViewEditName.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +219,7 @@ public class AccountActivity extends BaseActivity {
                     editTextUserName.setSelection(editTextUserName.getText().length());
                     Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
                 }
+                dissmissEmailVerify();
             }
         });
 		
@@ -240,6 +271,7 @@ public class AccountActivity extends BaseActivity {
                     editTextEmail.setSelection(editTextEmail.getText().length());
                     Utils.showSoftKeyboard(AccountActivity.this, editTextEmail);
                 }
+                dissmissEmailVerify();
             }
         });
 		
@@ -295,6 +327,7 @@ public class AccountActivity extends BaseActivity {
                     editTextPhone.setSelection(editTextPhone.getText().length());
                     Utils.showSoftKeyboard(AccountActivity.this, editTextPhone);
                 }
+                dissmissEmailVerify();
             }
         });
 		
@@ -332,17 +365,7 @@ public class AccountActivity extends BaseActivity {
             }
         });
 		
-		linearLayoutMain.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(relativeLayoutEmailVerify.getVisibility() == View.VISIBLE){
-					relativeLayoutEmailVerify.setVisibility(View.GONE);
-				}
-			}
-		});
 
-		
 		
 		relativeLayoutEmailVerify.setOnClickListener(new View.OnClickListener() {
 			
@@ -363,6 +386,7 @@ public class AccountActivity extends BaseActivity {
 			public void onClick(View v) {
 				startActivity(new Intent(AccountActivity.this, ChangePasswordActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                dissmissEmailVerify();
 			}
 		});
 
@@ -372,6 +396,8 @@ public class AccountActivity extends BaseActivity {
             public void onClick(View v) {
                 startActivity(new Intent(AccountActivity.this, EmergencyContactsActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                dissmissEmailVerify();
+                FlurryEventLogger.event(EMERGENCY_CONTACT_TO_BE_ADDED);
             }
         });
 
@@ -396,6 +422,7 @@ public class AccountActivity extends BaseActivity {
 							}
 						}, 
 						true, false);
+                dissmissEmailVerify();
 			
 			}
 		});
@@ -443,11 +470,16 @@ public class AccountActivity extends BaseActivity {
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 	}
-	
-	
-	
-	
-	public void setUserData(boolean refreshed){
+
+
+    public void dissmissEmailVerify() {
+        if (Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() && relativeLayoutEmailVerify.getVisibility() == View.VISIBLE) {
+            relativeLayoutEmailVerify.setVisibility(View.GONE);
+        }
+    }
+
+
+    public void setUserData(boolean refreshed){
 		try {
 			editTextUserName.setEnabled(false);
 			editTextEmail.setEnabled(false);
@@ -632,7 +664,6 @@ public class AccountActivity extends BaseActivity {
         if(!HomeActivity.checkIfUserDataNull(activity)) {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
 
-                progressBarProfileUpdate.setVisibility(View.VISIBLE);
 
                 RequestParams params = new RequestParams();
 
@@ -648,7 +679,6 @@ public class AccountActivity extends BaseActivity {
                         @Override
                         public void onFailure(Throwable arg3) {
                             Log.e("request fail", arg3.toString());
-                            progressBarProfileUpdate.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -685,7 +715,6 @@ public class AccountActivity extends BaseActivity {
                             } catch (Exception exception) {
                                 exception.printStackTrace();
                             }
-                            progressBarProfileUpdate.setVisibility(View.GONE);
                         }
                     });
             }
@@ -794,7 +823,7 @@ public class AccountActivity extends BaseActivity {
 
 										PicassoTools.clearCache(Picasso.with(activity));
 										
-										new FacebookLoginHelper().logoutFacebook();
+										FacebookLoginHelper.logoutFacebook();
 										
 										GCMIntentService.clearNotifications(activity);
 										

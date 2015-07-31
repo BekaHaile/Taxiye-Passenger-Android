@@ -16,7 +16,15 @@ public class SPLabels {
         REFERRAL_APP_OPEN_COUNT = "referralAppOpenCount",
 
 
-        PENDING_CALLS_RETRY_COUNT = "pendingCallsRetryCount"
+        PENDING_CALLS_RETRY_COUNT = "pendingCallsRetryCount",
+
+    USER_IDENTIFIER = "userIdentifier",
+    //Branch Links keys
+    BRANCH_SMS_LINK = "branchSMSLink",
+    BRANCH_WHATSAPP_LINK = "branchWhatsappLink",
+    BRANCH_FACEBOOK_LINK = "branchFacebookLink",
+    BRANCH_EMAIL_LINK = "branchEmailLink"
+
 
             ;
 

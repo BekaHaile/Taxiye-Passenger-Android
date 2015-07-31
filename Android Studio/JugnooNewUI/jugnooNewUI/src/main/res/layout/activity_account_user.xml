@@ -53,7 +53,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:splitMotionEvents="false" >
+                    android:splitMotionEvents="false"
+                    android:animateLayoutChanges="true" >
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -96,27 +97,14 @@
                                 android:tag="mwar" />
                         </RelativeLayout>
 
-                        <ProgressBar
-                            android:id="@+id/progressBarProfileUpdate"
-                            android:layout_width="100px"
-                            android:layout_height="100px"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:visibility="gone" />
                     </RelativeLayout>
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutEditTexts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="30px"
-                        android:orientation="vertical"
-                        android:splitMotionEvents="false" >
-
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutETName"
                             android:layout_width="660px"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30px"
+                            android:layout_gravity="center_horizontal">
 
                             <EditText
                                 android:id="@+id/editTextUserName"
@@ -148,12 +136,15 @@
                         <ImageView
                             android:layout_width="660px"
                             android:layout_height="2px"
-                            android:src="@color/yellow_alpha" />
+                            android:src="@color/yellow_alpha"
+                            android:layout_gravity="center_horizontal" />
 
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutETEmail"
                             android:layout_width="660px"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5px" >
+                            android:layout_marginTop="5px"
+                            android:layout_gravity="center_horizontal">
 
                             <EditText
                                 android:id="@+id/editTextEmail"
@@ -195,7 +186,8 @@
                         <ImageView
                             android:layout_width="660px"
                             android:layout_height="2px"
-                            android:src="@color/yellow_alpha" />
+                            android:src="@color/yellow_alpha"
+                            android:layout_gravity="center_horizontal" />
 
                         <RelativeLayout
                             android:id="@+id/relativeLayoutEmailVerify"
@@ -203,7 +195,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10px"
-                            android:visibility="gone" >
+                            android:visibility="visible" >
 
                             <ImageView
                                 android:id="@+id/imageViewOraneTriangle"
@@ -256,9 +248,11 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutETPhone"
                             android:layout_width="660px"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5px" >
+                            android:layout_marginTop="5px"
+                            android:layout_gravity="center_horizontal" >
 
                             <TextView
                                 android:id="@+id/textViewPhone91"
@@ -305,8 +299,8 @@
                         <ImageView
                             android:layout_width="660px"
                             android:layout_height="2px"
-                            android:src="@color/yellow_alpha" />
-                    </LinearLayout>
+                            android:src="@color/yellow_alpha"
+                            android:layout_gravity="center_horizontal" />
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutChangePassword"

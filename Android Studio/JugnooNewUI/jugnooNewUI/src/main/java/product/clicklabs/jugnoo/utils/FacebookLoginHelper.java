@@ -2,316 +2,206 @@ package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.Bundle;
+import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookOperationCanceledException;
-import com.facebook.HttpMethod;
-import com.facebook.LoggingBehavior;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionLoginBehavior;
-import com.facebook.SessionState;
-import com.facebook.Settings;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.WebDialog;
-import com.facebook.widget.WebDialog.Builder;
-import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.AppInviteDialog;
+import com.facebook.share.widget.ShareDialog;
+
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
+/**
+ * Created by socomo20 on 7/20/15.
+ */
 public class FacebookLoginHelper {
 
-	public FacebookLoginHelper(){
-		USER_DATA = null;
-	}
-	
-	private Session session;
-	
-	public static FacebookUserData USER_DATA;
-	
-	public void openFacebookSessionForPublish(final Activity activity, final FacebookLoginCallback facebookLoginCallback, final boolean fetchFBData) {
-		session = new Session(activity);
-		Session.setActiveSession(session);
-		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_RAW_RESPONSES);
+    private AccessToken accessToken;
+    private Activity activity;
+    private FacebookLoginCallback facebookLoginCallback;
+    private FacebookUserData facebookUserData;
 
-		Session.OpenRequest openRequest = null;
-		openRequest = new Session.OpenRequest(activity);
-		openRequest.setPermissions(Arrays.asList("publish_actions"));
-		openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
+    public FacebookLoginHelper(Activity activity, CallbackManager callbackManager, FacebookLoginCallback facebookLoginCallback) {
+        facebookUserData = null;
+        this.activity = activity;
+        this.facebookLoginCallback = facebookLoginCallback;
 
-		openRequest.setCallback(new Session.StatusCallback() {
-			@Override
-			public void call(Session session, SessionState state,
-					Exception exception) {
-				Log.i("openRequest session", "=" + session);
-				Log.i("openRequest state", "=" + state);
-				Log.e("openRequest exception", "=" + exception);
-				if (session.isOpened()) {
-					Session.setActiveSession(session);
-					callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
-				}
-			}
-		});
-		session.openForPublish(openRequest);
-	}
-	
-	public void openFacebookSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback, final boolean fetchFBData) {
-		session = Session.getActiveSession();
-		Log.i("session", "=" + session);
-		if (session == null) {
-			callOpenActiveSession(activity, facebookLoginCallback, fetchFBData);
-		} else {
-			if (session.getState() == SessionState.OPENED
-					|| session.getState() == SessionState.OPENED_TOKEN_UPDATED) {
-				callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
-			} else {
-				Session.setActiveSession(session);
-				session.closeAndClearTokenInformation();
-				callOpenActiveSession(activity, facebookLoginCallback, fetchFBData);
-			}
-		}
-	}
-	
-	
-	public void callOpenActiveSession(final Activity activity, final FacebookLoginCallback facebookLoginCallback, 
-			final boolean fetchFBData){
-		
-		session = new Session(activity);
-		Session.setActiveSession(session);
-		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_RAW_RESPONSES);
+        FacebookSdk.sdkInitialize(activity);
 
-		Session.OpenRequest openRequest = null;
-		openRequest = new Session.OpenRequest(activity);
-		openRequest.setPermissions(Arrays.asList("email", "user_friends")); //"user_friends"
-		openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                accessToken = loginResult.getAccessToken();
+                if (accessToken != null) {
+                    if (accessToken.isExpired()) {
+                        callOpenActiveSession();
+                    } else {
+                        AccessToken.setCurrentAccessToken(accessToken);
+                        requestMe(accessToken);
+                    }
+                }
+            }
 
-		openRequest.setCallback(new Session.StatusCallback() {
-			@Override
-			public void call(Session session, SessionState state,
-					Exception exception) {
-				Log.i("openRequest session", "=" + session);
-				Log.i("openRequest state", "=" + state);
-				Log.e("openRequest exception", "=" + exception);
-				if (session.isOpened()) {
-					Session.setActiveSession(session);
-					callRequestMeAsync(session, activity, facebookLoginCallback, fetchFBData);
-				}
-			}
-		});
-		session.openForRead(openRequest);
-		
-	}
-	
-	public void callRequestMeAsync(Session session, final Activity activity, final FacebookLoginCallback facebookLoginCallback, 
-			final boolean fetchFBData){
-		final String accessToken = session.getAccessToken();
-		if(fetchFBData){
-			showLoadingDialog(activity, "Loading...");
-			Request.newMeRequest(session, new Request.GraphUserCallback() {
-					@Override
-					public void onCompleted(GraphUser user, Response response) { // fetching user data from FaceBook
-						dismissLoadingDialog();
-						if (user != null) {
-							Log.i("res", "="+response);
-							Log.i("user", "=" + user);
-							
-							String fbId = user.getId();
-							String firstName = user.getFirstName();
-							String lastName = user.getLastName();
-							String userName = user.getUsername();
-							
-							String userEmail = "";
-							try {
-								userEmail = ((String)user.asMap().get("email"));
-							} catch (Exception e2) {
-								e2.printStackTrace();
-							}
-							finally{
-								if(userEmail == null || "".equalsIgnoreCase(userEmail)){
-									if(userName != null && !"".equalsIgnoreCase(userName)){
-										userEmail = userName + "@facebook.com";
-									}
-									else{
-										userEmail = fbId + "@facebook.com";
-									}
-								}
-							}
-							
-							if(userName == null){
-								userName = "";
-							}
-							
-							USER_DATA = new FacebookUserData(accessToken, fbId, firstName, lastName, userName, userEmail);
-							Log.e("USER_DATA", "="+USER_DATA);
-						}
-						else{
-							Log.e("Facebook Error", "Error in fetching information from Facebook.");
-						}
-						facebookLoginCallback.facebookLoginDone();
-					}
-				}).executeAsync();
-		}
-		else{
-			USER_DATA = new FacebookUserData(accessToken, "", "", "", "", "");
-			facebookLoginCallback.facebookLoginDone();
-		}
-	}
-	
-	
-	
-	public void openAppInviteDialog(final Activity activity){
-		
-		Bundle parameters = new Bundle();
-		parameters.putString("message", "Download app now to get started. Available on Google Play Store and App Store");
-		parameters.putString("data", "Get from one place to another with ease.");
-		parameters.putString("link", "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo");
+            @Override
+            public void onCancel() {
+                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Login cancelled");
+            }
 
-		WebDialog.Builder builder = new Builder(activity, Session.getActiveSession(), "apprequests", parameters);
-
-		builder.setOnCompleteListener(new OnCompleteListener() {
-
-		    @Override
-		    public void onComplete(Bundle values, FacebookException error) {
-		    	Log.e("values","="+values);
-		    	Log.e("error","="+error);
-		        if (error != null){
-		        }
-		        else{
-		            final String requestId = values.getString("request");
-		            if (requestId != null) {
-		            	Toast.makeText(activity, "Friends invited successfully.", Toast.LENGTH_SHORT).show();
-		            } 
-		            else {
-		                Toast.makeText(activity, "Cancelled", Toast.LENGTH_SHORT).show();
-		            }
-		        }                       
-		    }
-		});
-
-		WebDialog webDialog = builder.build();
-		webDialog.show();
-	        
-	}
-	
-	
-	public void shareMessage(final Activity activity, String shareString){
-		showLoadingDialog(activity, "Sharing...");
-		Bundle parameters = new Bundle();
-		parameters.putString("message", shareString);
-//		parameters.putString("name", "Get amazing offers and discounts at your favorite restaurants");
-//		parameters.putString("title", "Get amazing offers and discounts at your favorite restaurants");
-//		parameters.putString("picture", "http://54.81.229.172/Bistro/api/v1/assets/images/1200X627.jpg");
-//		parameters.putString("link", "http://tablabar.s3.amazonaws.com/user_profile/d5ae7fa64f58083b618891b3a0a514da.png");
-//		parameters.putString("caption", "Download app now to get started. Available on Google Play Store and App Store");
+            @Override
+            public void onError(FacebookException exception) {
+                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook\n"+exception.toString());
+            }
+        });
+    }
 
 
-		Request request = new Request(Session.getActiveSession(), "me/feed", parameters, HttpMethod.POST);
-		request.setCallback(new Request.Callback() {
-			@Override
-			public void onCompleted(Response response) {
-				if (response.getError() == null) {
-					Toast.makeText(activity, "Shared successfully", Toast.LENGTH_SHORT).show();
-				}
-				else{
-					Toast.makeText(activity, ""+response.getError().getErrorMessage(), Toast.LENGTH_SHORT).show();
-				}
-				dismissLoadingDialog();
-				Log.e("Tests", "got response: " + response);
-			}
-		});
-		request.executeAsync();
-	        
-	}
-	
-	public void publishFeedDialog(final Activity activity, String name, String caption, String description, String link, String pictureLink) {
-		
-	    Bundle params = new Bundle();
-	    params.putString("name", name);
-	    params.putString("caption", caption);
-	    params.putString("description", description);
-	    params.putString("link", link);
-	    params.putString("picture", pictureLink);
-
-	    WebDialog feedDialog = (new WebDialog.FeedDialogBuilder(activity, Session.getActiveSession(), params))
-	        .setOnCompleteListener(new OnCompleteListener() {
-
-	            @Override
-	            public void onComplete(Bundle values,
-	                FacebookException error) {
-	                if (error == null) {
-	                    final String postId = values.getString("post_id");
-	                    if (postId != null) {
-	                        Toast.makeText(activity, "Posted successfully", Toast.LENGTH_SHORT).show();
-	                    } else {
-	                        Toast.makeText(activity.getApplicationContext(), "Publish cancelled", Toast.LENGTH_SHORT).show();
-	                    }
-	                } else if (error instanceof FacebookOperationCanceledException) {
-	                    Toast.makeText(activity.getApplicationContext(), "Publish cancelled", Toast.LENGTH_SHORT).show();
-	                } else {
-	                    Toast.makeText(activity.getApplicationContext(), "Error posting story", Toast.LENGTH_SHORT).show();
-	                }
-	            }
-
-	        })
-	        .build();
-	    feedDialog.show();
-	}
-
-
-
-
-
-	public void getFriendsList(){
-
-		new Request(
-			Session.getActiveSession(),
-			"/me/friends",
-			null,
-			HttpMethod.GET,
-			new Request.Callback()
-			{
-				public void onCompleted(Response response)
-				{
-                    /* handle the result */
-                    String list = response.toString();
-					Log.e("members","Members: " + list);
-				}
-			}
-		).executeAsync();
-	}
-
-
-	
-	
-	public ProgressDialog progressDialog;
-	public void showLoadingDialog(Activity activity, String message){
-		try {
-			dismissLoadingDialog();
-			progressDialog = ProgressDialog.show(activity, "", message, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void dismissLoadingDialog(){
-		try {
-			if(progressDialog != null && progressDialog.isShowing()){
-				progressDialog.dismiss();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public void logoutFacebook(){
-        if(Session.getActiveSession() != null){
-            Session.getActiveSession().closeAndClearTokenInformation();
+    public void openFacebookSession() {
+        accessToken = AccessToken.getCurrentAccessToken();
+        Log.i("accessToken", "=" + accessToken);
+        if (accessToken == null) {
+            callOpenActiveSession();
+        } else {
+            if (accessToken.isExpired()) {
+                callOpenActiveSession();
+            } else {
+                requestMe(accessToken);
+            }
         }
-	}
-	
+    }
+
+
+    private void callOpenActiveSession() {
+        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile", "user_friends", "email"));
+    }
+
+
+    private void requestMe(final AccessToken accessToken) {
+        showLoadingDialog(activity, "Loading...");
+        GraphRequest request = GraphRequest.newMeRequest(
+            accessToken,
+            new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(
+                    JSONObject object,
+                    GraphResponse response) {
+                    dismissLoadingDialog();
+
+                    Log.e("object", "=" + object);
+//                    {
+//                        "id": "270452659807369",
+//                        "first_name": "Shankar",
+//                        "timezone": 5.5,
+//                        "email": "singhshankar771@gmail.com",
+//                        "verified": true,
+//                        "name": "Shankar Singh",
+//                        "locale": "en_US",
+//                        "link": "https://www.facebook.com/app_scoped_user_id/270452659807369/",
+//                        "last_name": "Singh",
+//                        "gender": "male",
+//                        "updated_time": "2014-04-25T04:25:00+0000"
+//                    }
+
+                    if (object != null) {
+                        String fbId = object.optString("id");
+                        String firstName = object.optString("first_name");
+                        String lastName = object.optString("last_name");
+                        String userName = object.optString("user_name");
+
+                        String userEmail = object.optString("email");
+                        if(userEmail == null || "".equalsIgnoreCase(userEmail)){
+                            if(userName != null && !"".equalsIgnoreCase(userName)){
+                                userEmail = userName + "@facebook.com";
+                            }
+                            else{
+                                userEmail = fbId + "@facebook.com";
+                            }
+                        }
+
+                        facebookUserData = new FacebookUserData(accessToken.getToken(), fbId, firstName, lastName, userName, userEmail);
+                        Log.e("facebookUserData", "=" + facebookUserData);
+                        facebookLoginCallback.facebookLoginDone(facebookUserData);
+                    }
+                    else{
+                        facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook");
+                    }
+                }
+            });
+        request.executeAsync();
+    }
+
+
+    public void publishFeedDialog(String name, String caption, String description, String link, String pictureLink){
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                .setContentTitle(name)
+                .setContentDescription(caption + " " + description)
+                .setContentUrl(Uri.parse(link))
+                .setImageUrl(Uri.parse(pictureLink))
+                .build();
+
+            ShareDialog shareDialog = new ShareDialog(activity);
+            shareDialog.show(linkContent);
+        }
+    }
+
+
+    public void appInviteDialog(){
+        String appLinkUrl, previewImageUrl;
+
+        appLinkUrl = "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo";
+        previewImageUrl = "http://graph.facebook.com/717496164959213/picture?width=160&height=160";
+
+        if (AppInviteDialog.canShow()) {
+            AppInviteContent content = new AppInviteContent.Builder()
+                .setApplinkUrl(appLinkUrl)
+                .setPreviewImageUrl(previewImageUrl)
+                .build();
+            AppInviteDialog.show(activity, content);
+        }
+    }
+
+
+
+
+
+    private ProgressDialog progressDialog;
+    private void showLoadingDialog(Activity activity, String message){
+        try {
+            dismissLoadingDialog();
+            progressDialog = ProgressDialog.show(activity, "", message, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void dismissLoadingDialog(){
+        try {
+            if(progressDialog != null && progressDialog.isShowing()){
+                progressDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            progressDialog = null;
+        }
+    }
+
+
+    public static void logoutFacebook(){
+        LoginManager.getInstance().logOut();
+    }
+
 }

@@ -189,6 +189,7 @@
     <string name="payment_mode_debit_card">Debit Card</string>
     <string name="payment_mode_credit_card">Credit Card</string>
     <string name="payment_mode_net_banking">Netbanking</string>
+    <string name="payment_mode_payu_money">PayUmoney</string>
     <string name="add_amount">ADD AMOUNT</string>
     <string name="add_amount_dummy_value">Rs 100</string>
     <string name="pay_now">Pay Now</string>
@@ -203,6 +204,8 @@
     <string name="redirect_to_bank">You will be redirected to your bank\u0027s website</string>
     <string name="close_payment_screen">Sorry! We could not process this transaction. Please try again</string>
     <string name="trans_failed">Transaction failed, Please try again</string>
+    <string name="select_mode">Please select the payment mode</string>
+    <string name="delete_text"><u>Delete</u></string>
 
     <!-- validation Strings -->
     <string name="valid_month">Please enter a valid month</string>
@@ -217,8 +220,11 @@
 
     <string name="amount_range">Recharge amount should be between Rs. 100 - Rs. 5000</string>
     <string name="check_internet_connection">Seems there is an issue with your internet connection. Please check and try again.</string>
-	
-	
+
+
+
+    <string name="fbl">Facebook Login Test</string>
+
 	
 	
 	<string-array name="CountryCodes" >

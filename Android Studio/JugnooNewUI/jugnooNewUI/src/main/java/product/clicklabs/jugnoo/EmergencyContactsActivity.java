@@ -34,6 +34,8 @@ import product.clicklabs.jugnoo.datastructure.RefreshEmergencyContacts;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -41,7 +43,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class EmergencyContactsActivity extends BaseActivity implements RefreshEmergencyContacts {
+public class EmergencyContactsActivity extends BaseActivity implements RefreshEmergencyContacts, FlurryEventNames {
 
     LinearLayout relative;
 
@@ -868,6 +870,7 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
                                     DialogPopup.dialogBanner(activity, message);
                                 } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     getAllEmergencyContactsAPI(activity);
+                                    FlurryEventLogger.event(EMERGENCY_CONTACT_ADDED);
                                 } else {
                                     DialogPopup.dialogBanner(activity, message);
                                 }

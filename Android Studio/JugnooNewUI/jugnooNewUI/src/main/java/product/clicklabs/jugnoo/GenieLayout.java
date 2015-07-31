@@ -16,11 +16,13 @@ import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 
 /**
  * Created by clicklabs on 6/25/15.
  */
-public class GenieLayout {
+public class GenieLayout implements FlurryEventNames{
 
     public GenieLayout(Context context) {
         this.context = context;
@@ -165,6 +167,7 @@ public class GenieLayout {
             @Override
             public void onClick(View v) {
                 chathead_click();
+                FlurryEventLogger.event(JUGNOO_GENIE);
             }
         });
 
@@ -179,6 +182,7 @@ public class GenieLayout {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    FlurryEventLogger.event(JUGNOO_GENIE_MEALS);
                 }
             }
         });
@@ -193,6 +197,7 @@ public class GenieLayout {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    FlurryEventLogger.event(JUGNOO_GENIE_MEALS);
                 }
             }
         });
@@ -208,6 +213,7 @@ public class GenieLayout {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    FlurryEventLogger.event(JUGNOO_GENIE_FATAFAT);
                 }
             }
         });
@@ -223,6 +229,7 @@ public class GenieLayout {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    FlurryEventLogger.event(JUGNOO_GENIE_FATAFAT);
                 }
             }
         });

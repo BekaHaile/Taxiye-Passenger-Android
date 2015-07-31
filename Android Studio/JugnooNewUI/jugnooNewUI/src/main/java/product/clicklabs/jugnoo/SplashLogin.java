@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -19,11 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.facebook.Session;
+import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -47,14 +50,18 @@ import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashLogin extends BaseActivity implements LocationUpdate{
-	
+public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryEventNames{
+
+    RelativeLayout topRl;
 	TextView textViewTitle;
 	ImageView imageViewBack;
 	
@@ -69,11 +76,23 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 	TextView textViewForgotPassword;
 
 	LinearLayout relative;
-	
+
+    ScrollView scrollView;
+    LinearLayout linearLayoutMain;
+    TextView textViewScroll;
+
+
+
+
+    CallbackManager callbackManager;
+    FacebookLoginHelper facebookLoginHelper;
+
+
 	
 	boolean loginDataFetched = false, facebookRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
 	int otpFlag = 0; 
 	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "";
+
 
 
 
@@ -118,7 +137,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashLogin.this, relative, 1134, 720, false);
-		
+
+
+        topRl = (RelativeLayout) findViewById(R.id.topRl);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
@@ -131,7 +152,12 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		
 		buttonEmailLogin = (Button) findViewById(R.id.buttonEmailLogin); buttonEmailLogin.setTypeface(Fonts.latoRegular(getApplicationContext()));
 		textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword); textViewForgotPassword.setTypeface(Fonts.latoRegular(getApplicationContext()));
-		
+
+
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
 
 		
 		String[] emails = Database.getInstance(this).getEmails();
@@ -158,6 +184,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 
             @Override
             public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
                 String email = editTextEmail.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
                 if ("".equalsIgnoreCase(email)) {
@@ -177,18 +204,18 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
                             } else {
                                 email = "+91" + email;
                                 sendLoginValues(SplashLogin.this, email, password, true);
-                                FlurryEventLogger.emailLoginClicked(email);
                             }
                         } else {
                             if (isEmailValid(email)) {
                                 enteredEmail = email;
                                 sendLoginValues(SplashLogin.this, email, password, false);
-                                FlurryEventLogger.emailLoginClicked(email);
                             } else {
                                 editTextEmail.requestFocus();
                                 editTextEmail.setError("Please enter valid email");
                             }
                         }
+
+                        FlurryEventLogger.event(LOGIN_VIA_EMAIL);
                     }
                 }
             }
@@ -208,12 +235,11 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(Utils.checkIfOnlyDigits(s.toString())){
+                if (Utils.checkIfOnlyDigits(s.toString())) {
                     InputFilter[] fArray = new InputFilter[1];
                     fArray[0] = new InputFilter.LengthFilter(10);
                     editTextEmail.setFilters(fArray);
-                }
-                else{
+                } else {
                     InputFilter[] fArray = new InputFilter[1];
                     fArray[0] = new InputFilter.LengthFilter(1000);
                     editTextEmail.setFilters(fArray);
@@ -225,44 +251,33 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 		
 		
 		textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
-				startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				finish();
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
+                startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                finish();
+                FlurryEventLogger.event(FORGOT_PASSWORD);
+            }
+        });
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				performBackPressed();
-			}
-		});
-		
-		
-		editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(!hasFocus){
-                    editTextEmail.setError(null);
-                }
-			}
-		});
-		
-		editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(!hasFocus){
-                    editTextPassword.setError(null);
-                }
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                performBackPressed();
+            }
+        });
+
+
+        editTextEmail.setOnFocusChangeListener(onFocusChangeListener);
+        editTextPassword.setOnFocusChangeListener(onFocusChangeListener);
+
+        editTextEmail.setOnClickListener(onClickListener);
+        editTextPassword.setOnClickListener(onClickListener);
 
         editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
 
@@ -286,32 +301,64 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 
 		editTextPassword.setOnEditorActionListener(new OnEditorActionListener() {
 
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						buttonEmailLogin.performClick();
-					break;
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                int result = actionId & EditorInfo.IME_MASK_ACTION;
+                switch (result) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        buttonEmailLogin.performClick();
+                        break;
 
-					case EditorInfo.IME_ACTION_NEXT:
-					break;
+                    case EditorInfo.IME_ACTION_NEXT:
+                        break;
 
-					default:
-				}
-				return true;
-			}
-		});
+                    default:
+                }
+                return true;
+            }
+        });
 		
 		
 		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				loginDataFetched = false;
-				new FacebookLoginHelper().openFacebookSession(SplashLogin.this, facebookLoginCallback, true);
-			}
-		});
-		
+            @Override
+            public void onClick(View v) {
+                FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                loginDataFetched = false;
+                facebookLoginHelper.openFacebookSession();
+            }
+        });
+
+
+
+        callbackManager = CallbackManager.Factory.create();
+
+        facebookLoginHelper = new FacebookLoginHelper(this, callbackManager, new FacebookLoginCallback() {
+            @Override
+            public void facebookLoginDone(FacebookUserData facebookUserData) {
+                Data.facebookUserData = facebookUserData;
+                sendFacebookLoginValues(SplashLogin.this);
+                FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
+            }
+
+            @Override
+            public void facebookLoginError(String message) {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        linearLayoutMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+            }
+        });
+        topRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+            }
+        });
 		
 		
 
@@ -362,29 +409,60 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
         } catch(Exception e){
             e.printStackTrace();
         }
+
+
+        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        }));
 		
 	}
 
+    private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+
+        @Override
+        public void onFocusChange(final View v, boolean hasFocus) {
+            if (hasFocus) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, buttonEmailLogin.getTop());
+                    }
+                }, 200);
+            } else {
+                try {
+                    ((EditText)v).setError(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ((EditText)v).setError(null);
+            }
+        }
+    };
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.smoothScrollTo(0, buttonEmailLogin.getTop());
+                }
+            }, 200);
+        }
+    };
 
 
-	FacebookLoginCallback facebookLoginCallback = new FacebookLoginCallback() {
-		@Override
-		public void facebookLoginDone() {
-			if(FacebookLoginHelper.USER_DATA != null){
-				Data.facebookUserData = new FacebookUserData(FacebookLoginHelper.USER_DATA.accessToken, FacebookLoginHelper.USER_DATA.fbId, 
-						FacebookLoginHelper.USER_DATA.firstName, FacebookLoginHelper.USER_DATA.lastName, FacebookLoginHelper.USER_DATA.userName, 
-						FacebookLoginHelper.USER_DATA.userEmail);
-				sendFacebookLoginValues(SplashLogin.this);
-				FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
-			}
-			else{
-				Toast.makeText(getApplicationContext(), "Error occured during Facebook authentication", Toast.LENGTH_SHORT).show();
-			}
-		}
-	};
-	
-	
-	@Override
+
+
+    @Override
 	protected void onResume() {
 		super.onResume();
 		
@@ -433,7 +511,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
         }
         else {
-            new FacebookLoginHelper().logoutFacebook();
+            FacebookLoginHelper.logoutFacebook();
             Intent intent = new Intent(SplashLogin.this, SplashNewActivity.class);
             intent.putExtra("no_anim", "yes");
             startActivity(intent);
@@ -756,8 +834,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
-			Session.getActiveSession().onActivityResult(this, requestCode,
-					resultCode, data);
+            callbackManager.onActivityResult(requestCode, resultCode, data);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

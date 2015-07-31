@@ -38,10 +38,34 @@
                 android:id="@+id/passengerMainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
                 android:splitMotionEvents="false"
                 android:visibility="visible"
-                android:animateLayoutChanges="true"
                 >
+
+                <!-- centre pin layout -->
+                <RelativeLayout
+                    android:id="@+id/centreLocationRl"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:splitMotionEvents="false"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/centreLocationPin"
+                        android:layout_width="47px"
+                        android:layout_height="79px"
+                        android:layout_above="@+id/centreLocationPivot"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/pin_ball"
+                        android:tag="mwar"/>
+
+                    <ImageView
+                        android:id="@+id/centreLocationPivot"
+                        android:layout_width="1px"
+                        android:layout_height="1px"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
 
                 <!-- initial layout -->
                 <RelativeLayout
@@ -50,7 +74,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     >
 
                     <RelativeLayout
@@ -144,7 +168,7 @@
                             android:layout_marginLeft="20px"
                             android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
                             android:background="@color/transparent"
-                            android:hint="Search pickup location"
+                            android:hint="Set pick up location"
                             android:singleLine="true"
                             android:textColor="@color/black_text"
                             android:textSize="30px"/>
@@ -225,17 +249,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:orientation="vertical"
                             android:background="@color/black_translucent_level_2"
+                            android:orientation="vertical"
                             ></LinearLayout>
 
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:background="@color/white"
                             android:gravity="center_horizontal"
+                            android:orientation="vertical"
                             >
 
                             <LinearLayout
@@ -294,9 +318,9 @@
                                     android:id="@+id/linearLayoutFareEstimate"
                                     android:layout_width="360px"
                                     android:layout_height="match_parent"
+                                    android:background="@drawable/background_white_yellow_selector"
                                     android:gravity="center"
                                     android:orientation="vertical"
-                                    android:background="@drawable/background_white_yellow_selector"
                                     >
 
                                     <ImageView
@@ -329,9 +353,9 @@
                                     android:id="@+id/linearLayoutRateCard"
                                     android:layout_width="360px"
                                     android:layout_height="match_parent"
+                                    android:background="@drawable/background_white_yellow_selector"
                                     android:gravity="center"
                                     android:orientation="vertical"
-                                    android:background="@drawable/background_white_yellow_selector"
                                     >
 
                                     <ImageView
@@ -371,7 +395,6 @@
                         </LinearLayout>
 
 
-
                     </LinearLayout>
 
 
@@ -383,9 +406,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
-                    android:splitMotionEvents="false"
-                    android:visibility="gone"
                     android:animateLayoutChanges="true"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible"
                     >
 
                     <!-- finding driver layout-->
@@ -476,9 +499,9 @@
                         android:id="@+id/relativeLayoutAssigningDropLocationParent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/transparent"
                         android:layout_below="@+id/relativeLayoutAssigningInfo"
-                        android:visibility="gone"
+                        android:background="@color/transparent"
+                        android:visibility="visible"
                         >
                         <RelativeLayout
                             android:id="@+id/relativeLayoutAssigningDropLocationBar"
@@ -522,17 +545,35 @@
 
                         </RelativeLayout>
 
-                        <ListView
-                            android:id="@+id/listViewAssigningDropLocationSearch"
+
+                        <ScrollView
+                            android:id="@+id/scrollViewAssigning"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:divider="@color/transparent"
-                            android:dividerHeight="0px"
-                            android:splitMotionEvents="false"
-                            android:layout_below="@+id/relativeLayoutAssigningDropLocationBar"
-                            android:visibility="gone"
-                            >
-                        </ListView>
+                            android:layout_below="@+id/relativeLayoutAssigningDropLocationBar">
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutScrollAssigning"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                >
+                                <product.clicklabs.jugnoo.utils.NonScrollListView
+                                    android:id="@+id/listViewAssigningDropLocationSearch"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:divider="@color/transparent"
+                                    android:dividerHeight="0px"
+                                    android:splitMotionEvents="false"
+                                    >
+                                </product.clicklabs.jugnoo.utils.NonScrollListView>
+                                <TextView
+                                    android:id="@+id/textViewScrollAssigning"
+                                    android:layout_width="10px"
+                                    android:layout_height="10px"
+                                    android:textSize="28px"/>
+                            </LinearLayout>
+                        </ScrollView>
 
                     </RelativeLayout>
 
@@ -544,9 +585,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
-                    android:splitMotionEvents="false"
-                    android:visibility="visible"
                     android:animateLayoutChanges="true"
+                    android:splitMotionEvents="false"
+                    android:visibility="gone"
 
                     >
 
@@ -784,8 +825,8 @@
                         android:id="@+id/relativeLayoutFinalDropLocationParent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/transparent"
                         android:layout_below="@+id/relativeLayoutInRideInfo"
+                        android:background="@color/transparent"
                         >
                         <RelativeLayout
                             android:id="@+id/relativeLayoutFinalDropLocationBar"
@@ -829,17 +870,33 @@
 
                         </RelativeLayout>
 
-                        <ListView
-                            android:id="@+id/listViewFinalDropLocationSearch"
+                        <ScrollView
+                            android:id="@+id/scrollViewFinal"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:divider="@color/transparent"
-                            android:dividerHeight="0px"
-                            android:splitMotionEvents="false"
-                            android:layout_below="@+id/relativeLayoutFinalDropLocationBar"
-                            android:visibility="gone"
-                            >
-                        </ListView>
+                            android:layout_below="@+id/relativeLayoutFinalDropLocationBar">
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutScrollFinal"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+                                <product.clicklabs.jugnoo.utils.NonScrollListView
+                                    android:id="@+id/listViewFinalDropLocationSearch"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:divider="@color/transparent"
+                                    android:dividerHeight="0px"
+                                    android:splitMotionEvents="false"
+                                    >
+                                </product.clicklabs.jugnoo.utils.NonScrollListView>
+                                <TextView
+                                    android:id="@+id/textViewScrollFinal"
+                                    android:layout_width="10px"
+                                    android:layout_height="10px"
+                                    android:textSize="28px"/>
+                            </LinearLayout>
+                        </ScrollView>
 
                     </RelativeLayout>
 
@@ -882,7 +939,7 @@
                             android:layout_marginLeft="20px"
                             android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
                             android:background="@color/transparent"
-                            android:hint="Search pickup location"
+                            android:hint="Set pick up location"
                             android:singleLine="true"
                             android:textColor="@color/black_text"
                             android:textCursorDrawable="@null"
@@ -897,39 +954,32 @@
                             android:layout_marginRight="20px"/>
                     </RelativeLayout>
 
-                    <ListView
-                        android:id="@+id/listViewSearch"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:divider="@color/transparent"
-                        android:dividerHeight="0px"
-                        android:splitMotionEvents="false">
-                    </ListView>
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutScrollSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewSearch"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:splitMotionEvents="false">
+                            </product.clicklabs.jugnoo.utils.NonScrollListView>
+
+                            <TextView
+                                android:id="@+id/textViewScrollSearch"
+                                android:layout_width="10px"
+                                android:layout_height="10px"
+                                android:textSize="28px"/>
+                        </LinearLayout>
+                    </ScrollView>
                 </LinearLayout>
-
-                <!-- centre pin layout -->
-                <RelativeLayout
-                    android:id="@+id/centreLocationRl"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:splitMotionEvents="false"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/centreLocationPin"
-                        android:layout_width="47px"
-                        android:layout_height="79px"
-                        android:layout_above="@+id/centreLocationPivot"
-                        android:layout_centerHorizontal="true"
-                        android:background="@drawable/pin_ball"
-                        android:tag="mwar"/>
-
-                    <ImageView
-                        android:id="@+id/centreLocationPivot"
-                        android:layout_width="1px"
-                        android:layout_height="1px"
-                        android:layout_centerInParent="true"/>
-                </RelativeLayout>
 
 
             </RelativeLayout>

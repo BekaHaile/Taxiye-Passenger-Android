@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.UserData;
@@ -28,9 +29,6 @@ import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
  */
 public class Data {
 
-
-    public static final int MAX_AMOUNT = 5000;
-    public static final int MIN_AMOUNT = 100;
 
 
     public static final String INVALID_ACCESS_TOKEN = "invalid access token";
@@ -153,12 +151,15 @@ public class Data {
 	public static FareStructure fareStructure;
 	
 	public static CancelOptionsList cancelOptionsList;
-	
+    public static ArrayList<FeedbackReason> feedbackReasons;
+
 	public static ReferralMessages referralMessages;
 
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
-	
-	
+
+    public static String deepLinkClassName = "";
+
+
 	
 	public static void clearDataOnLogout(Context context){
 		try{

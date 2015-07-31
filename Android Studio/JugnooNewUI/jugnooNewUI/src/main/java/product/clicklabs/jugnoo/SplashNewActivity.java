@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -47,6 +48,8 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -58,17 +61,19 @@ import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgespotClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashNewActivity extends BaseActivity implements LocationUpdate{
+public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames{
 
     //adding drop location
 
@@ -93,21 +98,45 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 
 	
 	// *****************************Used for flurry work***************//
-	@Override
-	protected void onStart() {
-		super.onStart();
-		FlurryAgent.init(this, Config.getFlurryKey());
-		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-		FlurryAgent.onEvent("Splash started");
-	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
 	}
-	
-	
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+        try {
+            Branch branch = Branch.getInstance();
+            branch.initSession(new Branch.BranchReferralInitListener() {
+                @Override
+                public void onInitFinished(JSONObject referringParams, BranchError error) {
+                    if (error == null) {
+                        // params are the deep linked params associated with the link that the user clicked before showing up
+                        Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
+                    }
+                }
+            }, this.getIntent().getData(), this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FlurryAgent.init(this, Config.getFlurryKey());
+        FlurryAgent.onStartSession(this, Config.getFlurryKey());
+        FlurryAgent.onEvent("Splash started");
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
+    }
+
+
 	public static void initializeServerURL(Context context){
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
@@ -134,7 +163,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
+        try{
+            if(getIntent().hasExtra("deep_link_class")) {
+                Data.deepLinkClassName = getIntent().getStringExtra("deep_link_class");
+            } else{
+                Data.deepLinkClassName = "";
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            Data.deepLinkClassName = "";
+        }
 
+
+
+        FacebookSdk.sdkInitialize(this);
 
 
         Data.userData = null;
@@ -201,6 +243,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
+                FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 				startActivity(new Intent(SplashNewActivity.this, SplashLogin.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -211,6 +254,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 			
 			@Override
 			public void onClick(View v) {
+                FlurryEventLogger.event(SIGNUP);
 				RegisterScreen.facebookLogin = false;
 				startActivity(new Intent(SplashNewActivity.this, RegisterScreen.class));
 				finish();
@@ -367,7 +411,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
 	    
 	    
 		if(getIntent().hasExtra("no_anim")){
-            new FacebookLoginHelper().logoutFacebook();
+            FacebookLoginHelper.logoutFacebook();
 			imageViewJugnooLogo.clearAnimation();
 			getDeviceToken();
 		}
@@ -410,9 +454,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
         });
 
 	}
-	
-	
-	
+
+
 	@Override
 	protected void onResume() {
 		if(Data.locationFetcher == null){
@@ -428,8 +471,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate{
             LocationInit.showLocationAlertDialog(this);
 		}
 
-		
-		super.onResume();
+
+        NudgespotClient.getInstance(this);
+
+        super.onResume();
 		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
 		resumed = true;

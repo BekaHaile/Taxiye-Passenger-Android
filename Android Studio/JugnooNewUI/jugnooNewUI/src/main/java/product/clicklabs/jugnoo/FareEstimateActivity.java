@@ -36,13 +36,15 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class FareEstimateActivity extends BaseFragmentActivity {
+public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames {
 
     LinearLayout relative;
 
@@ -109,6 +111,7 @@ public class FareEstimateActivity extends BaseFragmentActivity {
             @Override
             public void onPlaceSearchPost(SearchResult searchResult) {
                 getDirectionsAndComputeFare(Data.pickupLatLng, searchResult.latLng);
+                FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
             }
 
             @Override
@@ -163,6 +166,7 @@ public class FareEstimateActivity extends BaseFragmentActivity {
             @Override
             public void onClick(View v) {
                 performBackPressed();
+                FlurryEventLogger.event(FARE_RECEIPT_CHECKED);
             }
         });
 
@@ -270,7 +274,6 @@ public class FareEstimateActivity extends BaseFragmentActivity {
                                                     double computedFareMinus = computedFare * 90.0/100.0;
                                                     textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFareMinus) + " - " +
                                                         getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFarePlus));
-
 
 
                                                 } catch (Exception e) {

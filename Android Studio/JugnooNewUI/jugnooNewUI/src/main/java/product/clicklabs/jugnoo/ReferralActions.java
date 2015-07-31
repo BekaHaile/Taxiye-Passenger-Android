@@ -13,11 +13,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.BranchMetricsEventHandler;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -26,10 +32,10 @@ import rmn.androidscreenlibrary.ASSL;
 /**
  * Created by socomo20 on 6/19/15.
  */
-public class ReferralActions {
+public class ReferralActions implements FlurryEventNames {
 
 
-    public static boolean showReferralDialog(final Activity activity){
+    public static boolean showReferralDialog(final Activity activity, final CallbackManager callbackManager){
         try{
             boolean showDialog = false;
             long minus1 = -1l;
@@ -55,7 +61,6 @@ public class ReferralActions {
                 showDialog = false;
             }
 
-
             if(showDialog) {
                 final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
                 dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -67,8 +72,8 @@ public class ReferralActions {
                 WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
                 layoutParams.dimAmount = 0.6f;
                 dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
 
                 ((TextView) dialog.findViewById(R.id.textViewGiftGet)).setTypeface(Fonts.latoRegular(activity));
                 ((TextView) dialog.findViewById(R.id.textViewInviteFriends)).setTypeface(Fonts.latoRegular(activity));
@@ -80,7 +85,8 @@ public class ReferralActions {
                 (dialog.findViewById(R.id.imageViewFacebook)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        shareToFacebook(activity);
+                        shareToFacebook(activity, callbackManager);
+                        FlurryEventLogger.event(REFERRAL_POPUP_FACEBOOK);
                     }
                 });
 
@@ -88,6 +94,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         shareToWhatsapp(activity);
+                        FlurryEventLogger.event(REFERRAL_POPUP_WHATSAPP);
                     }
                 });
 
@@ -95,6 +102,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         sendSMSIntent(activity);
+                        FlurryEventLogger.event(REFERRAL_POPUP_MESSAGE);
                     }
                 });
 
@@ -102,6 +110,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         openMailIntent(activity);
+                        FlurryEventLogger.event(REFERRAL_POPUP_EMAIL);
                     }
                 });
 
@@ -109,20 +118,7 @@ public class ReferralActions {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                    }
-                });
-
-                (dialog.findViewById(R.id.innerRl)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-
-                rv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
+                        FlurryEventLogger.event(REFERRAL_POPUP_CLOSE);
                     }
                 });
 
@@ -139,73 +135,122 @@ public class ReferralActions {
     }
 
 
-    public static void shareToFacebook(final Activity activity){
-        new FacebookLoginHelper().openFacebookSession(activity, new FacebookLoginCallback() {
+    public static FacebookLoginHelper facebookLoginHelper;
+    public static void shareToFacebook(final Activity activity, CallbackManager callbackManager){
+        facebookLoginHelper = new FacebookLoginHelper(activity, callbackManager, new FacebookLoginCallback() {
             @Override
-            public void facebookLoginDone() {
+            public void facebookLoginDone(FacebookUserData facebookUserData) {
                 try {
                     if(Data.userData != null){
-                        new FacebookLoginHelper().publishFeedDialog(activity,
-                            "Jugnoo Autos - Autos on demand",
-                            Data.referralMessages.fbShareCaption,
-                            Data.referralMessages.fbShareDescription,
-                            "https://jugnoo.in",
-                            Data.userData.jugnooFbBanner);
+                        new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+                            @Override
+                            public void onBranchLinkCreated(String link) {
+                                facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
+                                    Data.referralMessages.fbShareCaption,
+                                    Data.referralMessages.fbShareDescription,
+                                    link,
+                                    Data.userData.jugnooFbBanner);
+                            }
+
+                            @Override
+                            public void onBranchError(String error) {
+                                Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                            }
+                        }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK, SPLabels.BRANCH_FACEBOOK_LINK, Data.userData.userIdentifier);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }, false);
-        try{FlurryEventLogger.sharedViaFacebook(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
+
+            @Override
+            public void facebookLoginError(String message) {
+                Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+            }
+        });
+        facebookLoginHelper.openFacebookSession();
     }
 
 
-    public static void shareToWhatsapp(Activity activity) {
-        PackageManager pm = activity.getPackageManager();
+    public static void shareToWhatsapp(final Activity activity) {
+
         try {
-            Intent waIntent = new Intent(Intent.ACTION_SEND);
-            waIntent.setType("text/plain");
-            String text = Data.referralMessages.referralSharingMessage;
+            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+                @Override
+                public void onBranchLinkCreated(String link) {
+                    PackageManager pm = activity.getPackageManager();
+                    try {
+                        Intent waIntent = new Intent(Intent.ACTION_SEND);
+                        waIntent.setType("text/plain");
+                        String text = Data.referralMessages.referralSharingMessage;
 
-            PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-            Log.d("info", "=" + info);
-            waIntent.setPackage("com.whatsapp");
+                        PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+                        Log.d("info", "=" + info);
+                        waIntent.setPackage("com.whatsapp");
 
-            waIntent.putExtra(Intent.EXTRA_TEXT, text);
-            activity.startActivity(Intent.createChooser(waIntent, "Share with"));
-        } catch (PackageManager.NameNotFoundException e) {
-            Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
-        }
-        try{FlurryEventLogger.sharedViaWhatsapp(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
-    }
+                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n" + link);
+                        activity.startActivity(Intent.createChooser(waIntent, "Share with"));
+                    } catch (PackageManager.NameNotFoundException e) {
+                        Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-
-    public static void sendSMSIntent(Activity activity){
-        try {
-            Uri sms_uri = Uri.parse("smsto:");
-            Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
-            sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage);
-            activity.startActivity(sms_intent);
+                @Override
+                public void onBranchError(String error) {
+                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                }
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP, SPLabels.BRANCH_WHATSAPP_LINK, Data.userData.userIdentifier);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try{FlurryEventLogger.sharedViaSMS(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
+
     }
 
 
-    public static void openMailIntent(Activity activity){
+    public static void sendSMSIntent(final Activity activity){
         try {
-            Intent email = new Intent(Intent.ACTION_SEND);
-            email.putExtra(Intent.EXTRA_EMAIL, new String[] { "" });
-            email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-            email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage);
-            email.setType("message/rfc822");
-            activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
+            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+                @Override
+                public void onBranchLinkCreated(String link) {
+                    Uri sms_uri = Uri.parse("smsto:");
+                    Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
+                    sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n" + link);
+                    activity.startActivity(sms_intent);
+                }
+
+                @Override
+                public void onBranchError(String error) {
+                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                }
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS, SPLabels.BRANCH_SMS_LINK, Data.userData.userIdentifier);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try{FlurryEventLogger.sharedViaEmail(Data.userData.accessToken);}catch(Exception e){e.printStackTrace();}
+    }
+
+
+    public static void openMailIntent(final Activity activity){
+        try {
+
+            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+                @Override
+                public void onBranchLinkCreated(String link) {
+                    Intent email = new Intent(Intent.ACTION_SEND);
+                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+                    email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
+                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + link);
+                    email.setType("message/rfc822");
+                    activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
+                }
+
+                @Override
+                public void onBranchError(String error) {
+                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                }
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL, SPLabels.BRANCH_EMAIL_LINK, Data.userData.userIdentifier);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

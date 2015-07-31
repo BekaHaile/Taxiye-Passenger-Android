@@ -5,6 +5,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -25,6 +28,8 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
+import product.clicklabs.jugnoo.adapters.FeedbackReasonsListEventHandler;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
@@ -32,11 +37,12 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
-public class FeedbackActivity extends BaseActivity {
+public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
     RelativeLayout relative;
 
@@ -44,11 +50,14 @@ public class FeedbackActivity extends BaseActivity {
     TextView textViewTitle;
     ImageView imageViewBack;
 
-    TextView textViewRateYourExp;
     RatingBar ratingBarFeedback;
-    TextView textViewRateText;
+    TextView textViewRateText, textViewWhatImprove;
+    ListView listViewFeedbackReasons;
     EditText editTextFeedback;
     Button buttonSubmitFeedback;
+    RelativeLayout relativeLayoutOtherError;
+
+    FeedbackReasonsAdapter feedbackReasonsAdapter;
 
     RelativeLayout relativeLayoutSkip;
     TextView textViewSkip;
@@ -72,6 +81,8 @@ public class FeedbackActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
 
+
+
         feedbackMode = FeedbackMode.SUPPORT;
 
         scrolled = false;
@@ -84,17 +95,35 @@ public class FeedbackActivity extends BaseActivity {
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-        textViewRateYourExp = (TextView) findViewById(R.id.textViewRateYourExp);
-        textViewRateYourExp.setTypeface(Fonts.latoLight(this));
         ratingBarFeedback = (RatingBar) findViewById(R.id.ratingBarFeedback);
         ratingBarFeedback.setRating(0);
         textViewRateText = (TextView) findViewById(R.id.textViewRateText);
         textViewRateText.setTypeface(Fonts.latoRegular(this));
         textViewRateText.setText("");
+
+        textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.latoRegular(this));
+        listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);
+
+        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsListEventHandler() {
+            @Override
+            public void onLastItemSelected(boolean selected) {
+                if(!selected){
+                    if(relativeLayoutOtherError.getVisibility() == View.VISIBLE){
+                        relativeLayoutOtherError.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+        listViewFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+
         editTextFeedback = (EditText) findViewById(R.id.editTextFeedback);
         editTextFeedback.setTypeface(Fonts.latoRegular(this));
         buttonSubmitFeedback = (Button) findViewById(R.id.buttonSubmitFeedback);
         buttonSubmitFeedback.setTypeface(Fonts.latoRegular(this));
+
+        relativeLayoutOtherError = (RelativeLayout) findViewById(R.id.relativeLayoutOtherError);
+        ((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.latoRegular(this));
+        relativeLayoutOtherError.setVisibility(View.GONE);
 
         relativeLayoutSkip = (RelativeLayout) findViewById(R.id.relativeLayoutSkip);
         textViewSkip = (TextView) findViewById(R.id.textViewSkip);
@@ -110,6 +139,28 @@ public class FeedbackActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 performBackPressed();
+            }
+        });
+
+
+        editTextFeedback.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() > 0){
+                    if(relativeLayoutOtherError.getVisibility() == View.VISIBLE){
+                        relativeLayoutOtherError.setVisibility(View.GONE);
+                    }
+                }
             }
         });
 
@@ -130,6 +181,29 @@ public class FeedbackActivity extends BaseActivity {
                 } else if (rating > 4 && rating <= 5) {
                     textViewRateText.setText("Loved it");
                 }
+
+                if(FeedbackMode.SUPPORT != feedbackMode && Data.feedbackReasons.size() > 0) {
+                    if (rating <= 3) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewWhatImprove.setVisibility(View.VISIBLE);
+                                listViewFeedbackReasons.setVisibility(View.VISIBLE);
+
+                                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
+                                layoutParams.height = (int) (ASSL.Yscale() * 150);
+                                editTextFeedback.setLayoutParams(layoutParams);
+                            }
+                        }, 205);
+                    } else {
+                        textViewWhatImprove.setVisibility(View.GONE);
+                        listViewFeedbackReasons.setVisibility(View.GONE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
+                        layoutParams.height = (int) (ASSL.Yscale() * 200);
+                        editTextFeedback.setLayoutParams(layoutParams);
+                    }
+                }
+
             }
         });
 
@@ -144,24 +218,48 @@ public class FeedbackActivity extends BaseActivity {
                 rating = Math.abs(rating);
                 Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
 
-
-                //We take your feedback seriously. Please give us a rating
+                String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
+                boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
 
                 if (0 == rating) {
                     DialogPopup.alertPopup(FeedbackActivity.this, "", "We take your feedback seriously. Please give us a rating");
+                    FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
                 } else {
+                    if(FeedbackMode.SUPPORT != feedbackMode  && Data.feedbackReasons.size() > 0 && rating <= 3){
+                        if(feedbackReasons.length() > 0){
+                            if(isLastReasonSelected && feedbackStr.length() == 0){
+                                relativeLayoutOtherError.setVisibility(View.VISIBLE);
+                                return;
+                            }
+                        }
+                        else{
+                            DialogPopup.alertPopup(FeedbackActivity.this, "", "Please provide your reason for the rating");
+                            return;
+                        }
+                    }
+
                     if (feedbackStr.length() > 300) {
                         editTextFeedback.requestFocus();
                         editTextFeedback.setError("Review must be in 300 letters.");
                     } else {
                         if (FeedbackMode.AFTER_RIDE == feedbackMode) {
-                            submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr);
-                            FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, Data.cEngagementId);
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr, feedbackReasons);
+                            FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
+                            if(feedbackStr.length() > 0){
+                                FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                            }
                         } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
-                            submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr);
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr, feedbackReasons);
                             FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, "" + pastEngagementId);
+                            if(feedbackStr.length() > 0){
+                                FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                            }
                         } else {
                             submitFeedbackSupportAsync(FeedbackActivity.this, rating, feedbackStr);
+                            if(feedbackStr.length() > 0){
+                                FlurryEventLogger.event(FEEDBACK_COMMENTS_PROVIDED);
+                            }
+                            FlurryEventLogger.event(FEEDBACK_SUBMITTED);
                         }
                     }
                 }
@@ -173,6 +271,7 @@ public class FeedbackActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 skipFeedbackForCustomerAsync(FeedbackActivity.this, Data.cEngagementId);
+                FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
             }
         });
 
@@ -212,6 +311,13 @@ public class FeedbackActivity extends BaseActivity {
             relativeLayoutSkip.setVisibility(View.GONE);
         }
 
+        textViewWhatImprove.setVisibility(View.GONE);
+        listViewFeedbackReasons.setVisibility(View.GONE);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextFeedback.getLayoutParams();
+        layoutParams.height = (int)(ASSL.Yscale() * 200);
+        editTextFeedback.setLayoutParams(layoutParams);
+
+
 
         linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(
             new OnGlobalLayoutListener() {
@@ -242,7 +348,7 @@ public class FeedbackActivity extends BaseActivity {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    scrollView.smoothScrollTo(0, editTextFeedback.getBottom());
+                                    scrollView.smoothScrollTo(0, editTextFeedback.getTop() - ((int) (ASSL.Yscale() * 15)));
                                 }
                             }, 200);
                             scrolled = true;
@@ -287,7 +393,7 @@ public class FeedbackActivity extends BaseActivity {
     }
 
 
-    public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, final int givenRating, String feedbackText) {
+    public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, final int givenRating, String feedbackText, String feedbackReasons) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -299,6 +405,7 @@ public class FeedbackActivity extends BaseActivity {
             params.put("engagement_id", engagementId);
             params.put("driver_id", ratingReceiverId);
             params.put("feedback", feedbackText);
+            params.put("feedback_reasons", feedbackReasons);
 
             Log.i("params", "=" + params);
 
