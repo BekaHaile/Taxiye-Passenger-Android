@@ -3964,12 +3964,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             dialog.show();
                         } else {
                             initiateRequestRide(true);
-//                        if (totalPromoCoupons == 0) {
-//                            textMessage.setText("Do you want an auto to pick you up?");
-//                            dialog.show();
-//                        } else {
-//                            initiateRequestRide(true);
-//                        }
                         }
                     }
                 }
