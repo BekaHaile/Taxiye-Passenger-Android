@@ -293,7 +293,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean loggedOut = false,
         zoomedToMyLocation = false,
         mapTouchedOnce = false;
-    boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false;
+    boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false;
 
 
     Dialog noDriversDialog;
@@ -368,6 +368,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         dontCallRefreshDriver = false;
         mapTouchedOnce = false;
         pickupDropZoomed = false;
+		zoomedForSearch = false;
+		firstTimeZoom = false;
 
 
 
@@ -1977,10 +1979,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         genieLayout.setVisibility(View.VISIBLE);
 
-                        if(!zoomedForSearch) {
-                            zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                        }
-
+						if(!firstTimeZoom){
+							zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+						}
+						firstTimeZoom = true;
 
                         break;
 
@@ -4827,6 +4829,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                     }
                 }
+
+				firstTimeZoom = false;
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
