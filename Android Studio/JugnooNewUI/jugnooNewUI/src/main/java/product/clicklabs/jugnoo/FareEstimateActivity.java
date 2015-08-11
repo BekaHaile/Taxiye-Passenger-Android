@@ -56,7 +56,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     ProgressBar progressBarDropLocation;
     ListView listViewDropLocationSearch;
 
-    LinearLayout linearLayoutFareEstimateDetails;
+    RelativeLayout relativeLayoutFareEstimateDetails;
     GoogleMap mapLite;
     TextView textViewPickupLocation, textViewDropLocation, textViewEstimateTime, textViewEstimateDistance, textViewEstimateFare, textViewEstimateFareNote;
     Button buttonOk;
@@ -123,7 +123,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         });
         listViewDropLocationSearch.setAdapter(searchListAdapter);
 
-        linearLayoutFareEstimateDetails = (LinearLayout) findViewById(R.id.linearLayoutFareEstimateDetails);
+        relativeLayoutFareEstimateDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareEstimateDetails);
 
         mapLite = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapLite)).getMap();
         if (mapLite != null) {
@@ -154,7 +154,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
         relativeLayoutDropLocationBar.setVisibility(View.VISIBLE);
         listViewDropLocationSearch.setVisibility(View.VISIBLE);
-        linearLayoutFareEstimateDetails.setVisibility(View.GONE);
+        relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
 
 
         imageViewBack.setOnClickListener(new OnClickListener() {
@@ -210,7 +210,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                                     relativeLayoutDropLocationBar.setVisibility(View.GONE);
                                                     listViewDropLocationSearch.setVisibility(View.GONE);
-                                                    linearLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
+                                                    relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
 
                                                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -246,7 +246,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                         @Override
                                                         public void run() {
                                                             try {
-                                                                mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
+                                                                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                                                                mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(minRatio*25)));
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
                                                             }

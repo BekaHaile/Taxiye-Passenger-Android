@@ -33,14 +33,6 @@
             android:src="@drawable/back_white_selector"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:orientation="vertical"
-        android:splitMotionEvents="false"
-        >
-
         <!-- Drop location layout -->
         <RelativeLayout
             android:id="@+id/relativeLayoutDropLocationBar"
@@ -97,6 +89,7 @@
         </RelativeLayout>
 
 
+    <!-- Drop location listView-->
         <ListView
             android:id="@+id/listViewDropLocationSearch"
             android:layout_width="match_parent"
@@ -108,11 +101,12 @@
             >
         </ListView>
 
-        <LinearLayout
-            android:id="@+id/linearLayoutFareEstimateDetails"
+    <!-- fare estimate layout-->
+        <RelativeLayout
+            android:id="@+id/relativeLayoutFareEstimateDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:gravity="center_horizontal"
             >
 
 
@@ -128,11 +122,12 @@
 
             <!-- start to end locations -->
             <LinearLayout
+                android:id="@+id/linearLayoutPickupDrop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20px"
-                android:gravity="center_vertical"
+                android:layout_marginTop="10px"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/mapLite"
                 >
 
                 <!-- start to end images -->
@@ -228,10 +223,13 @@
 
             <!-- Estimate time and distance -->
             <LinearLayout
+                android:id="@+id/linearLayoutTimeDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="50px"
+                android:layout_marginTop="40px"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/linearLayoutPickupDrop"
                 >
 
                 <LinearLayout
@@ -302,8 +300,9 @@
                 android:textColor="@color/grey_text"
                 android:textSize="82px"
                 android:text="Rs.100 - Rs.200"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="50px"
+                android:layout_marginBottom="40px"
+                android:gravity="center"
+                android:layout_above="@+id/textViewEstimateFareNote"
 
                 />
 
@@ -315,8 +314,9 @@
                 android:textColor="@color/grey_text_alpha"
                 android:textSize="32px"
                 android:text="Note: This is just an estimate.\nActual cost, time and distance may vary."
-                android:gravity="center_horizontal"
-                android:layout_marginTop="20px"
+                android:layout_marginBottom="20px"
+                android:layout_above="@+id/buttonOk"
+                android:gravity="center"
 
                 />
 
@@ -326,17 +326,17 @@
                 android:id="@+id/buttonOk"
                 android:layout_width="648px"
                 android:layout_height="100px"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50px"
+                android:layout_marginBottom="30px"
                 android:background="@drawable/button_yellow_selector"
                 android:text="OK"
                 android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/button_text_size" />
+                android:textSize="@dimen/button_text_size"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                />
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
-
-    </LinearLayout>
 
 </LinearLayout>
