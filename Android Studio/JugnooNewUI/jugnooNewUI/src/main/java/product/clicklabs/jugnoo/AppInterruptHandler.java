@@ -4,28 +4,28 @@ import org.json.JSONObject;
 
 public interface AppInterruptHandler {
 	
-	public void refreshDriverLocations();
+	void refreshDriverLocations();
 	
-	public void onChangeStatePushReceived();
+	void onChangeStatePushReceived();
 	
-	public void onCancelCompleted();
+	void onCancelCompleted();
 	
-	public void rideRequestAcceptedInterrupt(JSONObject jObj);
+	void rideRequestAcceptedInterrupt(JSONObject jObj);
 	
-	public void onNoDriversAvailablePushRecieved(String logMessage);
+	void onNoDriversAvailablePushRecieved(String logMessage);
 	
-	public void startRideForCustomer(final int flag);
+	void startRideForCustomer(final int flag);
 	
-	public void customerEndRideInterrupt(String engagementId);
+	void customerEndRideInterrupt(String engagementId);
 	
-	public void onAfterRideFeedbackSubmitted(int givenRating, boolean skipped);
+	void onAfterRideFeedbackSubmitted(int givenRating, boolean skipped);
 	
-	public void onJugnooCashAddedByDriver(double jugnooBalance, String message);
+	void onJugnooCashAddedByDriver(double jugnooBalance, String message);
 
-    public void onDriverArrived(String logMessage);
+    void onDriverArrived(String logMessage);
 
-    public void refreshOnPendingCallsDone();
+    void refreshOnPendingCallsDone();
 
-    public void onEmergencyContactVerified(int emergencyContactId);
+    void onEmergencyContactVerified(int emergencyContactId);
 
 }
