@@ -4,16 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 /**
  * Created by socomo20 on 8/12/15.
  */
 public class IncomingSmsReceiver extends BroadcastReceiver {
-
-	// Get the object of SmsManager
-	final SmsManager sms = SmsManager.getDefault();
 
 	public void onReceive(Context context, Intent intent) {
 
@@ -36,11 +32,11 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
 
 					Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
 
-					if(senderNum.contains("JUGNOO")) {
+					if(OTPConfirmScreen.OTP_SCREEN_OPEN != null) {
 						Intent otpConfirmScreen = new Intent(context, OTPConfirmScreen.class);
-						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						intent.putExtra("senderNum", senderNum);
-						intent.putExtra("message", message);
+						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						otpConfirmScreen.putExtra("sender_num", senderNum);
+						otpConfirmScreen.putExtra("message", message);
 						context.startActivity(otpConfirmScreen);
 					}
 

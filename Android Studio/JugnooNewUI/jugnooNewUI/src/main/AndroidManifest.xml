@@ -148,7 +148,6 @@
             android:name="product.clicklabs.jugnoo.OTPConfirmScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-                android:launchMode="singleTop"
                 >
         </activity>
         <receiver android:name="product.clicklabs.jugnoo.IncomingSmsReceiver">

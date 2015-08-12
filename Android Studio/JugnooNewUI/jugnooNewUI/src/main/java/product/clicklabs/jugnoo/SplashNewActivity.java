@@ -436,6 +436,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
         startService(new Intent(this, PushPendingCallsService.class));
 
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		if(resp != ConnectionResult.SUCCESS){
+			Log.e("Google Play Service Error ", "=" + resp);
+			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
+		}
+		else{
+			LocationInit.showLocationAlertDialog(this);
+		}
+
     }
 	
 	public void getDeviceToken(){
@@ -471,15 +480,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
 		
-		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-		if(resp != ConnectionResult.SUCCESS){
-			Log.e("Google Play Service Error ","="+resp);
-			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
-		}
-		else{
-            LocationInit.showLocationAlertDialog(this);
-		}
-
 
         NudgespotClient.getInstance(this);
 
@@ -515,7 +515,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         if(LocationInit.LOCATION_REQUEST_CODE == requestCode){
             if(0 == resultCode){
                 loginDataFetched = false;
-                ActivityCompat.finishAffinity(this);
+//                ActivityCompat.finishAffinity(this);
+
             }
         }
     }

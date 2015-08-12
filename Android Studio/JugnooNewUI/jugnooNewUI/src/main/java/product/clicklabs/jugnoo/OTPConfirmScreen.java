@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -39,6 +38,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames{
@@ -64,6 +64,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	public static boolean intentFromRegister = true;
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
+
+	public static String OTP_SCREEN_OPEN = null;
 	
 	String otpHelpStr = "Please enter the One Time Password you just received via SMS at ";
 	
@@ -80,21 +82,26 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		FlurryAgent.onEndSession(this);
 	}
 
-
-    public static void init(Context context){
-        String temp = context.getResources().getString(R.string.email_id);
-    }
-
 	@Override
 	protected void onNewIntent(Intent intent) {
 
-		try{
-			if(intent.hasExtra("senderNum")){
-				String senderNum = intent.getStringExtra("senderNum");
-				String message = intent.getStringExtra("message");
+		try {
+			String message = intent.getStringExtra("message");
+			String otp = "";
+			String[] arr = message.split("\\ ");
+			for(String str : arr){
+				str = str.replaceAll("\\.", "");
+				if(Utils.checkIfOnlyDigits(str)){
+					otp = str;
+					break;
+				}
+			}
 
-				Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
+			if(!"".equalsIgnoreCase(otp)) {
+				Toast.makeText(this, otp, Toast.LENGTH_SHORT).show();
+				editTextOTP.setText(otp);
+				editTextOTP.setSelection(editTextOTP.getText().length());
+				OTP_SCREEN_OPEN = null;
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -111,9 +118,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		
 		loginDataFetched = false;
 
-        init(this);
 
-		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
@@ -240,6 +245,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
 			}
 		});
+
+		OTP_SCREEN_OPEN = "yes";
 
 	}
 	
@@ -600,6 +607,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	
 	@Override
 	protected void onDestroy() {
+		OTP_SCREEN_OPEN = null;
 		try{
 			if(Data.locationFetcher != null){
 				Data.locationFetcher.destroy();
