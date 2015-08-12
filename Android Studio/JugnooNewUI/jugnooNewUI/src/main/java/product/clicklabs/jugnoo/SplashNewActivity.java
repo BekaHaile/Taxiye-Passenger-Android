@@ -43,6 +43,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
@@ -173,6 +174,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             e.printStackTrace();
             Data.deepLinkClassName = "";
         }
+
+		try{
+			NewRelic.withApplicationToken(
+					Config.getNewRelicKey()
+			).start(this.getApplication());
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 
 
 
