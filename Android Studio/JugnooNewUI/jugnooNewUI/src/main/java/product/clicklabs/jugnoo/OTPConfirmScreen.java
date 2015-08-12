@@ -88,19 +88,18 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		try {
 			String message = intent.getStringExtra("message");
 			String otp = "";
-			String[] arr = message.split("\\ ");
-			for(String str : arr){
-				str = str.replaceAll("\\.", "");
-				if(Utils.checkIfOnlyDigits(str)){
-					otp = str;
-					break;
-				}
+			String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
+			String str = arr[1];
+			str = str.replaceAll("\\.", "");
+			if(Utils.checkIfOnlyDigits(str)){
+				otp = str;
 			}
 
 			if(!"".equalsIgnoreCase(otp)) {
 				Toast.makeText(this, otp, Toast.LENGTH_SHORT).show();
 				editTextOTP.setText(otp);
 				editTextOTP.setSelection(editTextOTP.getText().length());
+				buttonVerify.performClick();
 				OTP_SCREEN_OPEN = null;
 			}
 		} catch(Exception e){
@@ -115,7 +114,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_otp_confrim);
-		
+
+		Utils.enableSMSReceiver(this);
+
 		loginDataFetched = false;
 
 
@@ -607,6 +608,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	
 	@Override
 	protected void onDestroy() {
+		Utils.disableSMSReceiver(this);
 		OTP_SCREEN_OPEN = null;
 		try{
 			if(Data.locationFetcher != null){
@@ -627,6 +629,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
 	}
+
+
 	
 }
 

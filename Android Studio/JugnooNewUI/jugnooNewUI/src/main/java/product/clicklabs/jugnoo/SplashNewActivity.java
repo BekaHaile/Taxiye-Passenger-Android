@@ -187,6 +187,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
         FacebookSdk.sdkInitialize(this);
 
+		Utils.disableSMSReceiver(this);
+
 
         Data.userData = null;
 		
@@ -406,7 +408,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Log.i("countryCode", Data.country + "..");
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
-			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this)+"1111";
+			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
 
 			Utils.generateKeyHash(this);
