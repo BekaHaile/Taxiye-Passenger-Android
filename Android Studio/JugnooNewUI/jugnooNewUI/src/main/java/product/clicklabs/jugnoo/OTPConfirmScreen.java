@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
@@ -83,6 +84,25 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
     public static void init(Context context){
         String temp = context.getResources().getString(R.string.email_id);
     }
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+
+		try{
+			if(intent.hasExtra("senderNum")){
+				String senderNum = intent.getStringExtra("senderNum");
+				String message = intent.getStringExtra("message");
+
+				Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+
+		super.onNewIntent(intent);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
