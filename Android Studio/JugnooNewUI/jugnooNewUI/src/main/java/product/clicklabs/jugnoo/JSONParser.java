@@ -760,6 +760,17 @@ public class JSONParser {
                     coData.getString("terms_n_conds")));
         }
 
+//
+//		promoCouponList.clear();
+//		for (int i = 0; i < jPromoArr.length(); i++) {
+//			JSONObject coData = jPromoArr.getJSONObject(i);
+//			promoCouponList.add(new PromotionInfo(coData.getInt("promo_id"),
+//					coData.getString("title") + "\nabcd",
+//					coData.getString("terms_n_conds")));
+//			break;
+//		}
+//
+
         return promoCouponList;
     }
 

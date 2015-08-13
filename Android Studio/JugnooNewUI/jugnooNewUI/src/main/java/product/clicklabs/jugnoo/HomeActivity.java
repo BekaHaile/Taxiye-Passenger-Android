@@ -510,12 +510,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 if(totalPromoCoupons > 0){
                     linearLayoutCouponList.setVisibility(View.VISIBLE);
+					if(totalPromoCoupons <= 2){
+						Utils.expandListForVariableHeight(listViewPromotions);
+
+						LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
+						LinearLayout.LayoutParams layoutParamsLinear = (LinearLayout.LayoutParams) linearLayoutCouponList.getLayoutParams();
+						layoutParamsLinear.height = (int) ((ASSL.Yscale() * 370.0f) - ((ASSL.Yscale() * 270.0f) - layoutParamsList.height));
+						linearLayoutCouponList.setLayoutParams(layoutParamsLinear);
+					}
+					else{
+						LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
+						layoutParamsList.height = (int) (ASSL.Yscale() * 270.0f);
+						listViewPromotions.setLayoutParams(layoutParamsList);
+
+						LinearLayout.LayoutParams layoutParamsLinear = (LinearLayout.LayoutParams) linearLayoutCouponList.getLayoutParams();
+						layoutParamsLinear.height = (int) (ASSL.Yscale() * 370.0f);
+						linearLayoutCouponList.setLayoutParams(layoutParamsLinear);
+					}
                 }
                 else{
                     linearLayoutCouponList.setVisibility(View.GONE);
                 }
             }
-        });
+		});
         listViewPromotions.setAdapter(promotionsListAdapter);
 
         linearLayoutFareEstimate = (LinearLayout) findViewById(R.id.linearLayoutFareEstimate);
@@ -1395,6 +1412,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         // map object initialized
         if (map != null) {
+
+//			map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+//				@Override
+//				public void onMapLoaded() {
+//				}
+//			});
+//			SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+//			mapFragment.getMapAsync(new OnMapReadyCallback() {
+//				@Override
+//				public void onMapReady(GoogleMap googleMap) {
+//					map = googleMap;
+//				}
+//			});
+
             map.getUiSettings().setZoomGesturesEnabled(false);
             map.getUiSettings().setZoomControlsEnabled(false);
             map.setMyLocationEnabled(true);
@@ -1534,7 +1565,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-
             if (userMode == null) {
                 userMode = UserMode.PASSENGER;
             }
@@ -1551,11 +1581,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Config.getServerUrl());
 
-
-
-
             ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2481,12 +2507,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
             scrollViewAssigning.setVisibility(View.GONE);
             progressBarAssigningDropLocation.setVisibility(View.GONE);
+			editTextAssigningDropLocation.setText("");
         }
         else{
             relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
             relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
             scrollViewFinal.setVisibility(View.GONE);
             progressBarFinalDropLocation.setVisibility(View.GONE);
+			editTextFinalDropLocation.setText("");
         }
     }
 
