@@ -159,6 +159,8 @@ public class Data {
 
     public static String deepLinkClassName = "";
 
+	public static boolean supportFeedbackSubmitted = false;
+
 
 	
 	public static void clearDataOnLogout(Context context){

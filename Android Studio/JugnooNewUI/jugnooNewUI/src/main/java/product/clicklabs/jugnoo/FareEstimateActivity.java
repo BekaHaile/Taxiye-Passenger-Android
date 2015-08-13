@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -134,6 +135,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             mapLite.getUiSettings().setTiltGesturesEnabled(false);
             mapLite.getUiSettings().setMyLocationButtonEnabled(false);
             mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+			mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+					return true;
+				}
+			});
+
         }
 
         textViewPickupLocation = (TextView) findViewById(R.id.textViewPickupLocation);
@@ -247,7 +256,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                         public void run() {
                                                             try {
                                                                 float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                                                mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(minRatio*25)));
+                                                                mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(minRatio*40)));
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
                                                             }

@@ -345,17 +345,17 @@ public class DialogPopup {
 	public static void dialogBanner(Activity activity, String message) {
 		try {
 			dismissAlertPopup();
-			
+
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_banner);
 
 			LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, linearLayout, 1134, 720, false);
-			
+
 			dialog.setCancelable(true);
 			dialog.setCanceledOnTouchOutside(true);
-			
+
 			TextView textViewBanner = (TextView) dialog.findViewById(R.id.textViewBanner); textViewBanner.setTypeface(Fonts.latoRegular(activity));
 			textViewBanner.setText(message);
 
@@ -366,7 +366,7 @@ public class DialogPopup {
                     dialog.dismiss();
                 }
             });
-			
+
 			dialog.show();
 			new Handler().postDelayed(new Runnable() {
 
@@ -379,6 +379,7 @@ public class DialogPopup {
 			e.printStackTrace();
 		}
 	}
+
 
 
 

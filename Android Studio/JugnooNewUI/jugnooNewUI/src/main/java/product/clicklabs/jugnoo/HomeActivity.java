@@ -324,7 +324,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     public boolean activityResumed = false;
-    public static boolean rechargedOnce = false, feedbackAutoSkipped = false;
+    public static boolean rechargedOnce = false, feedbackSkipped = false;
 
     public ASSL assl;
 
@@ -2527,8 +2527,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             try {
                 if (activityResumed) {
-                    callAndHandleStateRestoreAPI(false);
-                    if (!feedbackAutoSkipped) {
+                    if (!feedbackSkipped) {
+						callAndHandleStateRestoreAPI(false);
                         initiateTimersForStates(passengerScreenMode);
                     }
 
@@ -2545,6 +2545,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
+			try{
+				if(Data.supportFeedbackSubmitted) {
+					drawerLayout.closeDrawer(menuLayout);
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							DialogPopup.dialogBanner(HomeActivity.this, "Thank you for your valuable feedback");
+						}
+					}, 300);
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			Data.supportFeedbackSubmitted = false;
+
+
             initializeFusedLocationFetchers();
 
         }
@@ -2553,7 +2569,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         activityResumed = true;
         intentFired = false;
-        feedbackAutoSkipped = false;
+        feedbackSkipped = false;
 
 //        genieLayout.setGenieParams();
 

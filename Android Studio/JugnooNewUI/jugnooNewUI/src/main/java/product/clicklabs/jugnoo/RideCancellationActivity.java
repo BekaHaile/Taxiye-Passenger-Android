@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +38,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import rmn.androidscreenlibrary.ASSL;
@@ -59,6 +59,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
     TextView textViewOtherCancelOption;
     ImageView imageViewOtherCancelOptionCheck;
     EditText editTextOtherCancelOption;
+	RelativeLayout relativeLayoutOtherError;
     boolean otherChecked = false;
 
 	
@@ -116,7 +117,10 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
         textViewOtherCancelOption = (TextView) findViewById(R.id.textViewOtherCancelOption); textViewOtherCancelOption.setTypeface(Fonts.latoRegular(this));
         imageViewOtherCancelOptionCheck = (ImageView) findViewById(R.id.imageViewOtherCancelOptionCheck);
         editTextOtherCancelOption = (EditText) findViewById(R.id.editTextOtherCancelOption); editTextOtherCancelOption.setTypeface(Fonts.latoRegular(this));
-        editTextOtherCancelOption.setMinHeight((int) (ASSL.Yscale() * 200));
+        editTextOtherCancelOption.setMinHeight((int) (ASSL.Yscale() * 160));
+		relativeLayoutOtherError = (RelativeLayout) findViewById(R.id.relativeLayoutOtherError);
+		((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.latoRegular(this));
+		relativeLayoutOtherError.setVisibility(View.GONE);
 
 
 
@@ -134,36 +138,46 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scrollView.smoothScrollTo(0, relativeLayoutOtherCancelOptionInner.getTop());
+                        scrollView.smoothScrollTo(0, editTextOtherCancelOption.getTop() - ((int) (ASSL.Yscale() * 15)));
                     }
                 }, 200);
             }
         });
 
         editTextOtherCancelOption.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.smoothScrollTo(0, relativeLayoutOtherCancelOptionInner.getTop());
-                    }
-                }, 200);
-            }
-        });
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						scrollView.smoothScrollTo(0, editTextOtherCancelOption.getTop() - ((int) (ASSL.Yscale() * 15)));
+					}
+				}, 200);
+			}
+		});
+
+		editTextOtherCancelOption.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (s.length() > 0) {
+					if (relativeLayoutOtherError.getVisibility() == View.VISIBLE) {
+						relativeLayoutOtherError.setVisibility(View.GONE);
+					}
+				}
+			}
+		});
 
 
-        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
-
-            }
-
-            @Override
-            public void keyBoardClosed() {
-
-            }
-        }));
 
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +203,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
                     if (otherChecked) {
                         cancelReasonsStr = editTextOtherCancelOption.getText().toString().trim();
                         if ("".equalsIgnoreCase(cancelReasonsStr)) {
-                            DialogPopup.alertPopup(RideCancellationActivity.this, "", "Please give some reason");
+							relativeLayoutOtherError.setVisibility(View.VISIBLE);
                         } else {
                             cancelRideAPI(RideCancellationActivity.this, Data.cancelOptionsList.additionalReason, cancelReasonsStr);
                         }
@@ -374,6 +388,11 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 						}
 					}
                     otherChecked = false;
+
+					if(relativeLayoutOtherError.getVisibility() == View.VISIBLE){
+						relativeLayoutOtherError.setVisibility(View.GONE);
+					}
+
                     updateCheckBoxes();
 				}
 			});
