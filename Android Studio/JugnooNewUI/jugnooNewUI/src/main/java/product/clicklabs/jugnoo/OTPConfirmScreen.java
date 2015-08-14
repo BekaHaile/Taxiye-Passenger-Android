@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
@@ -96,7 +95,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 
 			if(!"".equalsIgnoreCase(otp)) {
-				Toast.makeText(this, otp, Toast.LENGTH_SHORT).show();
 				editTextOTP.setText(otp);
 				editTextOTP.setSelection(editTextOTP.getText().length());
 				buttonVerify.performClick();

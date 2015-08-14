@@ -3814,8 +3814,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             builder.include(lastLatLng).include(Data.dropLatLng);
                                             LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
                                             float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
-                                            pickupDropZoomed = true;
+                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 2000, new GoogleMap.CancelableCallback() {
+												@Override
+												public void onFinish() {
+													pickupDropZoomed = true;
+												}
+
+												@Override
+												public void onCancel() {
+													pickupDropZoomed = false;
+												}
+
+											});
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -4107,6 +4117,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void run() {
                             Log.i("in in herestartRideForCustomer  run class", "=");
                             if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+								firstTimeZoom = false;
                                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
                                 DialogPopup.alertPopup(HomeActivity.this, "", "Your ride has been cancelled due to an unexpected issue");
@@ -4157,6 +4168,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onCancelCompleted() {
+		firstTimeZoom = false;
         customerUIBackToInitialAfterCancel();
         FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
     }
