@@ -324,7 +324,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     public boolean activityResumed = false;
-    public static boolean rechargedOnce = false, feedbackAutoSkipped = false;
+    public static boolean rechargedOnce = false, feedbackSkipped = false;
 
     public ASSL assl;
 
@@ -510,12 +510,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 if(totalPromoCoupons > 0){
                     linearLayoutCouponList.setVisibility(View.VISIBLE);
+					if(totalPromoCoupons <= 2){
+						Utils.expandListForVariableHeight(listViewPromotions);
+
+						LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
+						LinearLayout.LayoutParams layoutParamsLinear = (LinearLayout.LayoutParams) linearLayoutCouponList.getLayoutParams();
+						layoutParamsLinear.height = (int) ((ASSL.Yscale() * 370.0f) - ((ASSL.Yscale() * 270.0f) - layoutParamsList.height));
+						linearLayoutCouponList.setLayoutParams(layoutParamsLinear);
+					}
+					else{
+						LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
+						layoutParamsList.height = (int) (ASSL.Yscale() * 270.0f);
+						listViewPromotions.setLayoutParams(layoutParamsList);
+
+						LinearLayout.LayoutParams layoutParamsLinear = (LinearLayout.LayoutParams) linearLayoutCouponList.getLayoutParams();
+						layoutParamsLinear.height = (int) (ASSL.Yscale() * 370.0f);
+						linearLayoutCouponList.setLayoutParams(layoutParamsLinear);
+					}
                 }
                 else{
                     linearLayoutCouponList.setVisibility(View.GONE);
                 }
             }
-        });
+		});
         listViewPromotions.setAdapter(promotionsListAdapter);
 
         linearLayoutFareEstimate = (LinearLayout) findViewById(R.id.linearLayoutFareEstimate);
@@ -1395,6 +1412,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         // map object initialized
         if (map != null) {
+
+//			map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+//				@Override
+//				public void onMapLoaded() {
+//				}
+//			});
+//			SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+//			mapFragment.getMapAsync(new OnMapReadyCallback() {
+//				@Override
+//				public void onMapReady(GoogleMap googleMap) {
+//					map = googleMap;
+//				}
+//			});
+
             map.getUiSettings().setZoomGesturesEnabled(false);
             map.getUiSettings().setZoomControlsEnabled(false);
             map.setMyLocationEnabled(true);
@@ -1534,7 +1565,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-
             if (userMode == null) {
                 userMode = UserMode.PASSENGER;
             }
@@ -1551,11 +1581,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Config.getServerUrl());
 
-
-
-
             ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2481,12 +2507,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
             scrollViewAssigning.setVisibility(View.GONE);
             progressBarAssigningDropLocation.setVisibility(View.GONE);
+			editTextAssigningDropLocation.setText("");
         }
         else{
             relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
             relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
             scrollViewFinal.setVisibility(View.GONE);
             progressBarFinalDropLocation.setVisibility(View.GONE);
+			editTextFinalDropLocation.setText("");
         }
     }
 
@@ -2527,8 +2555,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             try {
                 if (activityResumed) {
-                    callAndHandleStateRestoreAPI(false);
-                    if (!feedbackAutoSkipped) {
+                    if (!feedbackSkipped) {
+						callAndHandleStateRestoreAPI(false);
                         initiateTimersForStates(passengerScreenMode);
                     }
 
@@ -2545,6 +2573,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
+			try{
+				if(Data.supportFeedbackSubmitted) {
+					drawerLayout.closeDrawer(menuLayout);
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							DialogPopup.dialogBanner(HomeActivity.this, "Thank you for your valuable feedback");
+						}
+					}, 300);
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			Data.supportFeedbackSubmitted = false;
+
+
             initializeFusedLocationFetchers();
 
         }
@@ -2553,7 +2597,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         activityResumed = true;
         intentFired = false;
-        feedbackAutoSkipped = false;
+        feedbackSkipped = false;
 
 //        genieLayout.setGenieParams();
 
@@ -3770,8 +3814,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             builder.include(lastLatLng).include(Data.dropLatLng);
                                             LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
                                             float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
-                                            pickupDropZoomed = true;
+                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 2000, new GoogleMap.CancelableCallback() {
+												@Override
+												public void onFinish() {
+													pickupDropZoomed = true;
+												}
+
+												@Override
+												public void onCancel() {
+													pickupDropZoomed = false;
+												}
+
+											});
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -4063,6 +4117,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void run() {
                             Log.i("in in herestartRideForCustomer  run class", "=");
                             if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+								firstTimeZoom = false;
                                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
                                 DialogPopup.alertPopup(HomeActivity.this, "", "Your ride has been cancelled due to an unexpected issue");
@@ -4113,6 +4168,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onCancelCompleted() {
+		firstTimeZoom = false;
         customerUIBackToInitialAfterCancel();
         FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
     }

@@ -257,8 +257,8 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
                                         selectedCoupon = new CouponInfo(0, "");
                                     }
 
-                                    promotionListEventHandler.onPromoListFetched(promoCouponList.size());
                                     PromotionsListAdapter.this.notifyDataSetChanged();
+									promotionListEventHandler.onPromoListFetched(promoCouponList.size());
                                 }
                                 else{
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

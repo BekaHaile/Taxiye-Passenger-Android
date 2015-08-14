@@ -106,6 +106,7 @@ public class SupportActivity extends BaseActivity implements FlurryEventNames {
 				Intent intent = new Intent(SupportActivity.this, FeedbackActivity.class);
 				intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.SUPPORT.getOrdinal());
 				startActivity(intent);
+				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FEEDBACK_SUPPORT);
 			}

@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -38,6 +37,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames{
@@ -63,6 +63,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	public static boolean intentFromRegister = true;
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
+
+	public static String OTP_SCREEN_OPEN = null;
 	
 	String otpHelpStr = "Please enter the One Time Password you just received via SMS at ";
 	
@@ -79,21 +81,43 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		FlurryAgent.onEndSession(this);
 	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
 
-    public static void init(Context context){
-        String temp = context.getResources().getString(R.string.email_id);
-    }
+		try {
+			String message = intent.getStringExtra("message");
+			String otp = "";
+			String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
+			String str = arr[1];
+			str = str.replaceAll("\\.", "");
+			if(Utils.checkIfOnlyDigits(str)){
+				otp = str;
+			}
+
+			if(!"".equalsIgnoreCase(otp)) {
+				editTextOTP.setText(otp);
+				editTextOTP.setSelection(editTextOTP.getText().length());
+				buttonVerify.performClick();
+				OTP_SCREEN_OPEN = null;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+
+		super.onNewIntent(intent);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_otp_confrim);
-		
+
+		Utils.enableSMSReceiver(this);
+
 		loginDataFetched = false;
 
-        init(this);
 
-		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
@@ -220,6 +244,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
 			}
 		});
+
+		OTP_SCREEN_OPEN = "yes";
 
 	}
 	
@@ -580,6 +606,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	
 	@Override
 	protected void onDestroy() {
+		Utils.disableSMSReceiver(this);
+		OTP_SCREEN_OPEN = null;
 		try{
 			if(Data.locationFetcher != null){
 				Data.locationFetcher.destroy();
@@ -599,6 +627,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
 	}
+
+
 	
 }
 
