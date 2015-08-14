@@ -99,6 +99,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 	
 	
 	String enteredEmail = "";
+
+	public static boolean phoneNoLogin = false;
 	
 	
 	public void resetFlags(){
@@ -204,11 +206,13 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                             } else {
                                 email = "+91" + email;
                                 sendLoginValues(SplashLogin.this, email, password, true);
+								phoneNoLogin = true;
                             }
                         } else {
                             if (isEmailValid(email)) {
                                 enteredEmail = email;
                                 sendLoginValues(SplashLogin.this, email, password, false);
+								phoneNoLogin = false;
                             } else {
                                 editTextEmail.requestFocus();
                                 editTextEmail.setError("Please enter valid email");
@@ -367,7 +371,12 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		
 		try {
 			if(getIntent().hasExtra("back_from_otp") && !RegisterScreen.facebookLogin){
-				editTextEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
+				if(phoneNoLogin) {
+					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
+				}
+				else{
+					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

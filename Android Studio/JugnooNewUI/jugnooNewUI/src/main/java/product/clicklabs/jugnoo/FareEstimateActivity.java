@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -56,7 +57,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     ProgressBar progressBarDropLocation;
     ListView listViewDropLocationSearch;
 
-    LinearLayout linearLayoutFareEstimateDetails;
+    RelativeLayout relativeLayoutFareEstimateDetails;
     GoogleMap mapLite;
     TextView textViewPickupLocation, textViewDropLocation, textViewEstimateTime, textViewEstimateDistance, textViewEstimateFare, textViewEstimateFareNote;
     Button buttonOk;
@@ -83,8 +84,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
 
         relativeLayoutDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutDropLocationBar);
-        editTextDropLocation = (EditText) findViewById(R.id.editTextDropLocation); editTextDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarDropLocation = (ProgressBar) findViewById(R.id.progressBarDropLocation); progressBarDropLocation.setVisibility(View.GONE);
+        editTextDropLocation = (EditText) findViewById(R.id.editTextDropLocation);
+        editTextDropLocation.setTypeface(Fonts.latoRegular(this));
+        progressBarDropLocation = (ProgressBar) findViewById(R.id.progressBarDropLocation);
+        progressBarDropLocation.setVisibility(View.GONE);
         listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), new SearchListActionsHandler() {
@@ -121,10 +124,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         });
         listViewDropLocationSearch.setAdapter(searchListAdapter);
 
-        linearLayoutFareEstimateDetails = (LinearLayout) findViewById(R.id.linearLayoutFareEstimateDetails);
+        relativeLayoutFareEstimateDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareEstimateDetails);
 
         mapLite = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapLite)).getMap();
-        if(mapLite != null) {
+        if (mapLite != null) {
             mapLite.getUiSettings().setAllGesturesEnabled(false);
             mapLite.getUiSettings().setZoomGesturesEnabled(false);
             mapLite.getUiSettings().setZoomControlsEnabled(false);
@@ -132,26 +135,35 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             mapLite.getUiSettings().setTiltGesturesEnabled(false);
             mapLite.getUiSettings().setMyLocationButtonEnabled(false);
             mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+			mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+					return true;
+				}
+			});
+
         }
 
-        textViewPickupLocation = (TextView) findViewById(R.id.textViewPickupLocation); textViewPickupLocation.setTypeface(Fonts.latoRegular(this));
-        textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation); textViewDropLocation.setTypeface(Fonts.latoRegular(this));
-        textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime); textViewEstimateTime.setTypeface(Fonts.latoRegular(this));
-        textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance); textViewEstimateDistance.setTypeface(Fonts.latoRegular(this));
-        textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare); textViewEstimateFare.setTypeface(Fonts.latoRegular(this));
-        textViewEstimateFareNote = (TextView) findViewById(R.id.textViewEstimateFareNote); textViewEstimateFareNote.setTypeface(Fonts.latoRegular(this));
-        buttonOk = (Button) findViewById(R.id.buttonOk); buttonOk.setTypeface(Fonts.latoRegular(this));
-
-
-
-
+        textViewPickupLocation = (TextView) findViewById(R.id.textViewPickupLocation);
+        textViewPickupLocation.setTypeface(Fonts.latoRegular(this));
+        textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation);
+        textViewDropLocation.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime);
+        textViewEstimateTime.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance);
+        textViewEstimateDistance.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare);
+        textViewEstimateFare.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateFareNote = (TextView) findViewById(R.id.textViewEstimateFareNote);
+        textViewEstimateFareNote.setTypeface(Fonts.latoRegular(this));
+        buttonOk = (Button) findViewById(R.id.buttonOk);
+        buttonOk.setTypeface(Fonts.latoRegular(this));
 
 
         relativeLayoutDropLocationBar.setVisibility(View.VISIBLE);
         listViewDropLocationSearch.setVisibility(View.VISIBLE);
-        linearLayoutFareEstimateDetails.setVisibility(View.GONE);
-
-
+        relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
 
 
         imageViewBack.setOnClickListener(new OnClickListener() {
@@ -173,7 +185,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     }
 
 
-
     private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng) {
         try {
             if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
@@ -190,7 +201,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                 if (result != null) {
                                     JSONObject jObj = new JSONObject(result);
                                     final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-                                    if(jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
+                                    if (jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
                                         final String startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address");
                                         final String endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address");
 
@@ -208,7 +219,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                                     relativeLayoutDropLocationBar.setVisibility(View.GONE);
                                                     listViewDropLocationSearch.setVisibility(View.GONE);
-                                                    linearLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
+                                                    relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
 
                                                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -240,28 +251,29 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                     mapLite.addMarker(markerOptionsE);
 
 
-                                                    try {
-                                                        new Handler().postDelayed(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            try {
+                                                                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                                                                mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(minRatio*40)));
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
                                                             }
-                                                        }, 500);
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
+                                                        }
+                                                    }, 500);
 
 
                                                     textViewPickupLocation.setText(startAddress);
                                                     String startAdd = textViewPickupLocation.getText().toString();
-                                                    if(startAdd.charAt(startAdd.length()-1) == ','){
-                                                        textViewPickupLocation.setText(startAdd.substring(0, startAdd.length()-1));
+                                                    if (startAdd.charAt(startAdd.length() - 1) == ',') {
+                                                        textViewPickupLocation.setText(startAdd.substring(0, startAdd.length() - 1));
                                                     }
 
                                                     textViewDropLocation.setText(endAddress);
                                                     String endAdd = textViewDropLocation.getText().toString();
-                                                    if(endAdd.charAt(endAdd.length()-1) == ','){
-                                                        textViewDropLocation.setText(endAdd.substring(0, endAdd.length()-1));
+                                                    if (endAdd.charAt(endAdd.length() - 1) == ',') {
+                                                        textViewDropLocation.setText(endAdd.substring(0, endAdd.length() - 1));
                                                     }
 
                                                     textViewEstimateTime.setText(timeText);
@@ -269,9 +281,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
 
                                                     DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
-                                                    double computedFare = Data.fareStructure.calculateFare(distanceValue/1000, timeValue/60, 0);
-                                                    double computedFarePlus = computedFare * 110.0/100.0;
-                                                    double computedFareMinus = computedFare * 90.0/100.0;
+                                                    double computedFare = Data.fareStructure.calculateFare(distanceValue / 1000, timeValue / 60, 0);
+                                                    double computedFarePlus = computedFare * 110.0 / 100.0;
+                                                    double computedFareMinus = computedFare * 90.0 / 100.0;
                                                     textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFareMinus) + " - " +
                                                         getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFarePlus));
 
@@ -281,8 +293,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                 }
                                             }
                                         });
-                                    }
-                                    else{
+                                    } else {
                                         runOnUiThread(new Runnable() {
 
                                             @Override
@@ -306,8 +317,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                         });
                     }
                 }).start();
-            }
-            else {
+            } else {
                 DialogPopup.dismissLoadingDialog();
                 DialogPopup.alertPopup(FareEstimateActivity.this, "", Data.CHECK_INTERNET_MSG);
             }
@@ -315,7 +325,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             e.printStackTrace();
         }
     }
-
 
 
     public void performBackPressed() {

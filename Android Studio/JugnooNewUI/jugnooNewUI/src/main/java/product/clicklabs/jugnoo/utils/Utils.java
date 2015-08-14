@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
 
 
@@ -353,5 +355,30 @@ public class Utils {
         return false;
     }
 
+
+
+	public static void enableSMSReceiver(Context context){
+		try {
+			ComponentName receiver = new ComponentName(context, IncomingSmsReceiver.class);
+			PackageManager pm = context.getPackageManager();
+			pm.setComponentEnabledSetting(receiver,
+					PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+					PackageManager.DONT_KILL_APP);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void disableSMSReceiver(Context context){
+		try {
+			ComponentName receiver = new ComponentName(context, IncomingSmsReceiver.class);
+			PackageManager pm = context.getPackageManager();
+			pm.setComponentEnabledSetting(receiver,
+					PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+					PackageManager.DONT_KILL_APP);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

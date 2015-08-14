@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -183,7 +184,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                 }
 
                 if(FeedbackMode.SUPPORT != feedbackMode && Data.feedbackReasons.size() > 0) {
-                    if (rating <= 3) {
+                    if (rating > 0 && rating <= 3) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -375,6 +376,9 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
 
     public void performBackPressed() {
+		if (FeedbackMode.SUPPORT == feedbackMode) {
+			startActivity(new Intent(this, SupportActivity.class));
+		}
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
@@ -463,7 +467,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
         final String url = Config.getServerUrl() + "/skip_rating_by_customer";
 
-        HomeActivity.feedbackAutoSkipped = true;
+        HomeActivity.feedbackSkipped = true;
         HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -524,8 +528,9 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                                     String error = jObj.getString("error");
                                     DialogPopup.alertPopup(activity, "", error);
                                 } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
-                                    performBackPressed();
+									Data.supportFeedbackSubmitted = true;
+									finish();
+									overridePendingTransition(R.anim.left_in, R.anim.left_out);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }

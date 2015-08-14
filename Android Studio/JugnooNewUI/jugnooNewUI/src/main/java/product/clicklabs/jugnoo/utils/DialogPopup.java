@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -103,7 +104,7 @@ public class DialogPopup {
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 			
 			textHead.setText(title);
 			textMessage.setText(Html.fromHtml(message));
@@ -344,40 +345,41 @@ public class DialogPopup {
 	public static void dialogBanner(Activity activity, String message) {
 		try {
 			dismissAlertPopup();
-			
+
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_banner);
 
 			LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, linearLayout, 1134, 720, false);
-			
+
 			dialog.setCancelable(true);
 			dialog.setCanceledOnTouchOutside(true);
-			
+
 			TextView textViewBanner = (TextView) dialog.findViewById(R.id.textViewBanner); textViewBanner.setTypeface(Fonts.latoRegular(activity));
 			textViewBanner.setText(message);
 
 			linearLayout.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-			
+
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
 			dialog.show();
 			new Handler().postDelayed(new Runnable() {
-				
-				@Override
-				public void run() {
-					DialogPopup.dismissAlertPopup();
-				}
-			}, 5000);
+
+                @Override
+                public void run() {
+                    DialogPopup.dismissAlertPopup();
+                }
+            }, 5000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 
 
 
@@ -516,7 +518,10 @@ public class DialogPopup {
                         try {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.gms"));
-                            mContext.startActivity(intent);
+                            ComponentName componentName = intent.resolveActivity(mContext.getPackageManager());
+                            if(componentName != null){
+                                mContext.startActivity(intent);
+                            }
                         } catch(Exception e){
                             e.printStackTrace();
                         }

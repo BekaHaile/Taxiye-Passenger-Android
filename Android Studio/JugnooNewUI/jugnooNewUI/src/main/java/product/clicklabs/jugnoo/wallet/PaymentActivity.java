@@ -99,7 +99,11 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
                     try {
                         getSupportFragmentManager().popBackStack("WalletAddPaymentFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                     }catch(Exception e){
-                        getSupportFragmentManager().popBackStack();
+                        try {
+                            getSupportFragmentManager().popBackStack();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
                     }
 
                     WalletFragment frag = (WalletFragment) getSupportFragmentManager().findFragmentByTag("WalletFragment");
@@ -260,20 +264,24 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
     @Override
     public void onBankDetails(JSONArray availableBanksData) {
 
-        availableBanks = availableBanksData;
-        AddJugnooCashFragment frag = (AddJugnooCashFragment) getSupportFragmentManager().findFragmentByTag("AddJugnooCashFragment");
-        if(PayU.availableBanks!= null) {
-            if (frag != null) {
-                frag.setupAdapter();
-            }
-        } else {
-            Log.e("availableBanksData", "availableBanksData");
-            Log.e("availableBanksData", "availableBanksData = " + availableBanksData.length());
+        try {
+            availableBanks = availableBanksData;
+            AddJugnooCashFragment frag = (AddJugnooCashFragment) getSupportFragmentManager().findFragmentByTag("AddJugnooCashFragment");
+            if(PayU.availableBanks!= null) {
+                if (frag != null) {
+                    frag.setupAdapter();
+                }
+            } else {
+                Log.e("availableBanksData", "availableBanksData");
+                Log.e("availableBanksData", "availableBanksData = " + availableBanksData.length());
 
-            PayU.availableBanks = availableBanksData;
-            if (frag != null) {
-                //frag.setupAdapter();
+                PayU.availableBanks = availableBanksData;
+                if (frag != null) {
+                    //frag.setupAdapter();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

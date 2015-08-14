@@ -41,7 +41,6 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
             params_12.height = (int) (heightDiff);
 
             textViewScroll.setLayoutParams(params_12);
-            textViewScroll.requestLayout();
 
             keyBoardStateHandler.keyboardOpened();
 
