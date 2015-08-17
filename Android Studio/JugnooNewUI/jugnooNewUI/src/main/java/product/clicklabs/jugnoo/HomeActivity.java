@@ -2109,7 +2109,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         else{
                             stopDropLocationSearchUI(true);
                         }
-
                         setDropLocationEngagedUI();
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
@@ -2164,7 +2163,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        stopDropLocationSearchUI(true);
+						if(dropLocationSearched){
+							String searchText = "";
+							if(editTextAssigningDropLocation.getText().toString().trim().length() > 0){
+								searchText = editTextAssigningDropLocation.getText().toString().trim();
+							}
+							else if(editTextFinalDropLocation.getText().toString().trim().length() > 0){
+								searchText = editTextFinalDropLocation.getText().toString().trim();
+							}
+							editTextFinalDropLocation.setText(searchText);
+							editTextFinalDropLocation.setSelection(searchText.length());
+							initDropLocationSearchUI(true);
+						}
+						else{
+							stopDropLocationSearchUI(true);
+						}
                         setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
@@ -2206,7 +2219,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+						if(dropLocationSearched){
+							String searchText = "";
+							if(editTextAssigningDropLocation.getText().toString().trim().length() > 0){
+								searchText = editTextAssigningDropLocation.getText().toString().trim();
+							}
+							else if(editTextFinalDropLocation.getText().toString().trim().length() > 0){
+								searchText = editTextFinalDropLocation.getText().toString().trim();
+							}
+							editTextFinalDropLocation.setText(searchText);
+							editTextFinalDropLocation.setSelection(searchText.length());
+							initDropLocationSearchUI(true);
+						}
+						else{
+							stopDropLocationSearchUI(true);
+						}
+						setDropLocationEngagedUI();
 
 
                         setAssignedDriverData(mode);
@@ -2496,13 +2524,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             scrollViewAssigning.setVisibility(View.GONE);
             progressBarAssigningDropLocation.setVisibility(View.GONE);
 			editTextAssigningDropLocation.setText("");
-        }
-        else{
-            relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+			Utils.hideSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
+		} else {
+			relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
             relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
             scrollViewFinal.setVisibility(View.GONE);
             progressBarFinalDropLocation.setVisibility(View.GONE);
 			editTextFinalDropLocation.setText("");
+			Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
         }
     }
 
@@ -2700,7 +2729,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 stopDropLocationSearchUI(false);
                 FlurryEventLogger.event(DROP_LOCATION_OPENED_NOT_USED_FINDING_DRIVER);
             }
-            else if(dropLocationSearched && PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+            else if(dropLocationSearched &&
+					(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode ||
+							PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
+							PassengerScreenMode.P_IN_RIDE == passengerScreenMode)){
                 stopDropLocationSearchUI(true);
                 FlurryEventLogger.event(DROP_LOCATION_OPENED_BUT_NOT_USED_RIDE_ACCEPTED);
             }
@@ -3436,7 +3468,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         stopDropLocationSearchUI(false);
                                         relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                                     }
-                                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+                                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode ||
+											PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
+											PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                                         stopDropLocationSearchUI(true);
                                         relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
                                     }
