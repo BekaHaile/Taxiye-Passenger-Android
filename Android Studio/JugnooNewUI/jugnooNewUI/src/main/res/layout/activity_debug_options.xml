@@ -316,7 +316,17 @@
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/button_text_size" />
                 </RelativeLayout>
-                
+
+
+                <Button
+                    android:id="@+id/buttonRefreshGCM"
+                    android:layout_width="280px"
+                    android:layout_height="70px"
+                    android:layout_marginLeft="45px"
+                    android:background="@drawable/button_yellow_white_border_selector"
+                    android:text="Refresh GCM"
+                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textSize="26px" />
 
 
             </LinearLayout>

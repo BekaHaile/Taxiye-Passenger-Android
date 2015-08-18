@@ -453,7 +453,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	    relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 	    linearLayoutNoNet.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        new DeviceTokenGenerator(SplashNewActivity.this).generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
+        new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
             @Override
             public void deviceTokenReceived(final String regId) {
