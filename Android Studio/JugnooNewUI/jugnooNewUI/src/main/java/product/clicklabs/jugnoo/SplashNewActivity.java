@@ -68,7 +68,6 @@ import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgespotClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -453,7 +452,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	    relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 	    linearLayoutNoNet.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        new DeviceTokenGenerator(SplashNewActivity.this).generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
+        new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
             @Override
             public void deviceTokenReceived(final String regId) {
@@ -482,8 +481,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
 		
-
-        NudgespotClient.getInstance(this);
 
         super.onResume();
 		DialogPopup.dismissAlertPopup();

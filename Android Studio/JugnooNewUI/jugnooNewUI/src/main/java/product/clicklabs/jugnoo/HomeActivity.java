@@ -110,7 +110,6 @@ import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.NudgespotClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -1114,12 +1113,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
                                 FlurryEventLogger.event(AUTO_RIDE_ICON);
-
-                                try{
-                                    NudgespotClient.getInstance(HomeActivity.this).track("request");
-                                } catch(Exception e){
-
-                                }
                             }
                         } else {
                             LocationInit.showLocationAlertDialog(HomeActivity.this);
@@ -1589,11 +1582,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-        try{
-            NudgespotClient.getInstance(this).registerWithProperties(Data.userData.userIdentifier, new JSONObject());
-        } catch(Exception e){
-            e.printStackTrace();
-        }
 
 //        Class.forName(getPackageName() + "." + Data.deepLinkClassName)
         try{
@@ -2746,7 +2734,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             appInterruptHandler = null;
 
             FacebookLoginHelper.logoutFacebook();
-            NudgespotClient.getInstance(this).clearRegisteration();
 
             System.gc();
         } catch (Exception e) {
