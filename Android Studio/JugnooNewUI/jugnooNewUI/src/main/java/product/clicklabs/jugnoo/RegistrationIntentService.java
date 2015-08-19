@@ -117,11 +117,6 @@ public class RegistrationIntentService extends IntentService {
 			e.printStackTrace();
 		}
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-			}
-		}).start();
 	}
 
 	/**
