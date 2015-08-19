@@ -3434,6 +3434,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             params.put("session_id", Data.cSessionId);
             params.put("op_drop_latitude", ""+dropLatLng.latitude);
             params.put("op_drop_longitude", "" + dropLatLng.longitude);
+			if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+				params.put("engagement_id", Data.cEngagementId);
+			}
 
             Log.i("params", "=" + params);
 
