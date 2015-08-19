@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,7 +16,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.gcm.GcmListenerService;
 
 import org.json.JSONObject;
 
@@ -25,13 +24,12 @@ import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.utils.Log;
 
-public class GCMIntentService extends IntentService {
+public class GCMIntentService extends GcmListenerService {
 
     public static final int NOTIFICATION_ID = 1;
     public static final int PROMOTION_NOTIFICATION_ID = 1212;
 
     public GCMIntentService() {
-        super("GcmIntentService");
     }
 
 
@@ -229,170 +227,140 @@ public class GCMIntentService extends IntentService {
     }
 
 
-    @Override
-    public void onHandleIntent(Intent intent) {
-        Bundle extras = intent.getExtras();
-        Log.e("Recieved a gcm message arg1...", "," + intent.getExtras());
+	@Override
+	public void onMessageReceived(String from, Bundle data) {
+        Log.e("Recieved a gcm message arg1...", "," + data);
 
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        // The getMessageType() intent parameter must be the intent you received
-        // in your BroadcastReceiver.
-        String messageType = gcm.getMessageType(intent);
+		try {
+			Log.e("Recieved a gcm message arg1...", "," + data);
 
-        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
-                /*
-	             * Filter messages based on message couponType. Since it is likely that GCM
-	             * will be extended in the future with new message types, just ignore
-	             * any message types you're not interested in, or that you don't
-	             * recognize.
-	             */
-            if (GoogleCloudMessaging.
-                MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-//	                sendNotification("Send error: " + extras.toString());
-            } else if (GoogleCloudMessaging.
-                MESSAGE_TYPE_DELETED.equals(messageType)) {
-//	                sendNotification("Deleted messages on server: " +
-//	                        extras.toString());
-                // If it's a regular GCM message, do some work.
-            } else if (GoogleCloudMessaging.
-                MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // This loop represents the service doing some work.
+			if (!"".equalsIgnoreCase(data.getString("message", ""))) {
 
-                try {
-                    Log.e("Recieved a gcm message arg1...", "," + intent.getExtras());
+				String message = data.getString("message");
 
-                    if (!"".equalsIgnoreCase(intent.getExtras().getString("message", ""))) {
+				try {
+					JSONObject jObj = new JSONObject(message);
 
-                        String message = intent.getExtras().getString("message");
+					int flag = jObj.getInt("flag");
 
-                        try {
-                            JSONObject jObj = new JSONObject(message);
+					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
+						if (HomeActivity.appInterruptHandler != null) {
+							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
+							notificationManagerResume(this, "Your request has been accepted", false);
+						} else {
+							notificationManager(this, "Your request has been accepted", false);
+						}
+					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
 
-                            int flag = jObj.getInt("flag");
+						if (HomeActivity.appInterruptHandler != null) {
+							notificationManagerResume(this, "Your ride has started.", false);
+							HomeActivity.appInterruptHandler.startRideForCustomer(0);
+						} else {
+							String SHARED_PREF_NAME = "myPref",
+									SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
+									P_IN_RIDE = "P_IN_RIDE";
+							SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
+							Editor editor = pref.edit();
+							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
+							editor.commit();
 
-                            if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
-                                    notificationManagerResume(this, "Your request has been accepted", false);
-                                } else {
-                                    notificationManager(this, "Your request has been accepted", false);
-                                }
-                            } else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
+							notificationManager(this, "Your ride has started.", false);
+						}
+					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
 
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    notificationManagerResume(this, "Your ride has started.", false);
-                                    HomeActivity.appInterruptHandler.startRideForCustomer(0);
-                                } else {
-                                    String SHARED_PREF_NAME = "myPref",
-                                        SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
-                                        P_IN_RIDE = "P_IN_RIDE";
-                                    SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
-                                    Editor editor = pref.edit();
-                                    editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
-                                    editor.commit();
+						String driverArrivedMessage = jObj.getString("message");
 
-                                    notificationManager(this, "Your ride has started.", false);
-                                }
-                            } else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
+						if (HomeActivity.appInterruptHandler != null) {
+							notificationManagerResume(this, driverArrivedMessage, false);
+							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
+						} else {
+							notificationManager(this, driverArrivedMessage, false);
+						}
 
-                                String driverArrivedMessage = jObj.getString("message");
+					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
+						String engagementId = jObj.getString("engagement_id");
 
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    notificationManagerResume(this, driverArrivedMessage, false);
-                                    HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
-                                } else {
-                                    notificationManager(this, driverArrivedMessage, false);
-                                }
+						if (HomeActivity.appInterruptHandler != null) {
+							if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
+								notificationManagerResume(this, "Your ride has ended.", false);
+								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
+							}
+						} else {
+							notificationManager(this, "Your ride has ended.", false);
+						}
+					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
+						if (HomeActivity.appInterruptHandler != null) {
+							HomeActivity.appInterruptHandler.startRideForCustomer(1);
+							notificationManagerResume(this, "Your ride has been cancelled due to an unexpected issue", false);
+						} else {
+							notificationManager(this, "Your ride has been cancelled due to an unexpected issue", false);
+						}
+					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
+						String message1 = jObj.getString("message");
+						if (HomeActivity.activity == null) {
+							notificationManager(this, "" + message1, false);
+						} else {
+							notificationManagerResume(this, "" + message1, false);
+						}
+					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
+						String log = jObj.getString("log");
+						if (HomeActivity.appInterruptHandler != null) {
+							HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
+						}
+					} else if (PushFlags.CHANGE_STATE.getOrdinal() == flag) {
+						String logMessage = jObj.getString("message");
+						if (HomeActivity.appInterruptHandler != null) {
+							HomeActivity.appInterruptHandler.onChangeStatePushReceived();
+							notificationManagerResume(this, logMessage, false);
+						} else {
+							notificationManager(this, logMessage, false);
+						}
+					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
+						String message1 = jObj.getString("message");
 
-                            } else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
-                                String engagementId = jObj.getString("engagement_id");
+						if (jObj.has("client_id")) {
+							Log.e("jObj=", "=" + jObj);
+							String clientId = jObj.getString("client_id");
+							if (AccessTokenGenerator.MEALS_CLIENT_ID.equalsIgnoreCase(clientId)) {
+								notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.MEALS_PACKAGE);
+							} else if (AccessTokenGenerator.FATAFAT_CLIENT_ID.equalsIgnoreCase(clientId)) {
+								notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.FATAFAT_PACKAGE);
+							} else {
+								notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.AUTOS_PACKAGE);
+							}
+						} else {
+							notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID);
+						}
+					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
+						String message1 = jObj.getString("message");
+						double balance = jObj.getDouble("balance");
+						if (HomeActivity.appInterruptHandler != null) {
+							HomeActivity.appInterruptHandler.onJugnooCashAddedByDriver(balance, message1);
+							notificationManagerResume(this, message1, false);
+						} else {
+							notificationManager(this, message1, false);
+						}
+					} else if (PushFlags.EMERGENCY_CONTACT_VERIFIED.getOrdinal() == flag) {
+						String message1 = jObj.getString("message");
+						int emergencyContactId = jObj.getInt("id");
+						if (HomeActivity.appInterruptHandler != null) {
+							HomeActivity.appInterruptHandler.onEmergencyContactVerified(emergencyContactId);
+							notificationManagerResume(this, message1, false);
+						} else {
+							notificationManager(this, message1, false);
+						}
+					}
 
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
-                                        notificationManagerResume(this, "Your ride has ended.", false);
-                                        HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
-                                    }
-                                } else {
-                                    notificationManager(this, "Your ride has ended.", false);
-                                }
-                            } else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    HomeActivity.appInterruptHandler.startRideForCustomer(1);
-                                    notificationManagerResume(this, "Your ride has been cancelled due to an unexpected issue", false);
-                                } else {
-                                    notificationManager(this, "Your ride has been cancelled due to an unexpected issue", false);
-                                }
-                            } else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
-                                String message1 = jObj.getString("message");
-                                if (HomeActivity.activity == null) {
-                                    notificationManager(this, "" + message1, false);
-                                } else {
-                                    notificationManagerResume(this, "" + message1, false);
-                                }
-                            } else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
-                                String log = jObj.getString("log");
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
-                                }
-                            } else if (PushFlags.CHANGE_STATE.getOrdinal() == flag) {
-                                String logMessage = jObj.getString("message");
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    HomeActivity.appInterruptHandler.onChangeStatePushReceived();
-                                    notificationManagerResume(this, logMessage, false);
-                                } else {
-                                    notificationManager(this, logMessage, false);
-                                }
-                            } else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
-                                String message1 = jObj.getString("message");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
-                                if (jObj.has("client_id")) {
-                                    Log.e("jObj=", "=" + jObj);
-                                    String clientId = jObj.getString("client_id");
-                                    if (AccessTokenGenerator.MEALS_CLIENT_ID.equalsIgnoreCase(clientId)) {
-                                        notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.MEALS_PACKAGE);
-                                    } else if (AccessTokenGenerator.FATAFAT_CLIENT_ID.equalsIgnoreCase(clientId)) {
-                                        notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.FATAFAT_PACKAGE);
-                                    } else {
-                                        notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.AUTOS_PACKAGE);
-                                    }
-                                } else {
-                                    notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID);
-                                }
-                            } else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
-                                String message1 = jObj.getString("message");
-                                double balance = jObj.getDouble("balance");
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    HomeActivity.appInterruptHandler.onJugnooCashAddedByDriver(balance, message1);
-                                    notificationManagerResume(this, message1, false);
-                                } else {
-                                    notificationManager(this, message1, false);
-                                }
-                            } else if (PushFlags.EMERGENCY_CONTACT_VERIFIED.getOrdinal() == flag) {
-                                String message1 = jObj.getString("message");
-                                int emergencyContactId = jObj.getInt("id");
-                                if (HomeActivity.appInterruptHandler != null) {
-                                    HomeActivity.appInterruptHandler.onEmergencyContactVerified(emergencyContactId);
-                                    notificationManagerResume(this, message1, false);
-                                } else {
-                                    notificationManager(this, message1, false);
-                                }
-                            }
+			}
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                } catch (Exception e) {
-                    Log.e("Recieved exception message arg1...", "," + intent);
-                    Log.e("exception", "," + e);
-                }
-
-            }
-        }
-        // Release the wake lock provided by the WakefulBroadcastReceiver.
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
+		} catch (Exception e) {
+			Log.e("Recieved exception message arg1...", "," + data);
+			Log.e("exception", "," + e);
+		}
     }
 
 

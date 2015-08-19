@@ -217,6 +217,15 @@ public class Data {
 		}
 		return mainClient;
 	}
+
+
+
+
+	public static final String REGISTRATION_COMPLETE = "REGISTRATION_COMPLETE";
+	public static final String REGISTRATION_FAILED = "REGISTRATION_FAILED";
+	public static final String DEVICE_TOKEN = "DEVICE_TOKEN";
+	public static final String ERROR = "ERROR";
+	public static final String INTENT_CLASS_NAME = "intentClassName";
 	
 	
 

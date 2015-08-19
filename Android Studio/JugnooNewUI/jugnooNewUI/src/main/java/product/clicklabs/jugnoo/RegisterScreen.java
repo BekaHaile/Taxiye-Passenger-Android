@@ -461,7 +461,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        new DeviceTokenGenerator(this).generateDeviceToken(this, new IDeviceTokenReceiver() {
+        new DeviceTokenGenerator().generateDeviceToken(this, new IDeviceTokenReceiver() {
 
             @Override
             public void deviceTokenReceived(final String regId) {

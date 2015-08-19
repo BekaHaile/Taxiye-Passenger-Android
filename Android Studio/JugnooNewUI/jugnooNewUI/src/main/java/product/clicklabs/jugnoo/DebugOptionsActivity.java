@@ -1,16 +1,17 @@
 package product.clicklabs.jugnoo;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -32,12 +33,14 @@ public class DebugOptionsActivity extends BaseActivity {
     RelativeLayout relativeLayoutLive4012, relativeLayoutTest8012, relativeLayoutTest8013, relativeLayoutTest8014, relativeLayoutTest8015;
     ImageView imageViewLive4012, imageViewTest8012, imageViewTest8013, imageViewTest8014, imageViewTest8015;
 
-    Button buttonSave, buttonCancel;
+    Button buttonSave, buttonCancel, buttonRefreshGCM;
 
     int showAllDriversValue = 0;
     int showDriverInfoValue = 0;
 
     String selectedServer = Config.getDefaultServerUrl();
+
+	ProgressDialog progressDialog;
 
 	@Override
 	protected void onResume() {
@@ -51,7 +54,7 @@ public class DebugOptionsActivity extends BaseActivity {
 		setContentView(R.layout.activity_debug_options);
 
 		relative = (RelativeLayout) findViewById(R.id.relative);
-		new ASSL(this, (ViewGroup) relative, 1134, 720, false);
+		new ASSL(this, relative, 1134, 720, false);
 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
@@ -93,6 +96,7 @@ public class DebugOptionsActivity extends BaseActivity {
 
         buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.latoRegular(this));
         buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Fonts.latoRegular(this));
+		buttonRefreshGCM = (Button) findViewById(R.id.buttonRefreshGCM); buttonRefreshGCM.setTypeface(Fonts.latoRegular(this));
 
 
 
@@ -121,6 +125,16 @@ public class DebugOptionsActivity extends BaseActivity {
                 performBackPressed();
             }
         });
+
+		buttonRefreshGCM.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(DebugOptionsActivity.this, RegistrationIntentService.class);
+				intent.putExtra(Data.INTENT_CLASS_NAME, DebugOptionsActivity.class.getName());
+				startService(intent);
+//				progressDialog = ProgressDialog.show(DebugOptionsActivity.this, "", "Loading...");
+			}
+		});
 
 
 
@@ -319,7 +333,31 @@ public class DebugOptionsActivity extends BaseActivity {
         System.gc();
 		super.onDestroy();
 	}
-	
+
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if(Data.REGISTRATION_COMPLETE.equalsIgnoreCase(intent.getAction())){
+			if(intent.hasExtra(Data.DEVICE_TOKEN)){
+				Toast.makeText(this, "Registration complete = " + intent.getStringExtra(Data.DEVICE_TOKEN), Toast.LENGTH_LONG).show();
+			}
+			else{
+				Toast.makeText(this, "Registration failed"+"", Toast.LENGTH_LONG).show();
+			}
+		}
+		else if(Data.REGISTRATION_FAILED.equalsIgnoreCase(intent.getAction())){
+			if(intent.hasExtra(Data.ERROR)){
+				Toast.makeText(this, "Registration failed = "+intent.getStringExtra(Data.ERROR), Toast.LENGTH_LONG).show();
+			}
+			else{
+				Toast.makeText(this, "Registration failed"+"", Toast.LENGTH_LONG).show();
+			}
+		}
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+	}
 
 	
 }
