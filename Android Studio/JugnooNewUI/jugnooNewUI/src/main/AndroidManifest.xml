@@ -322,25 +322,6 @@
 
 
 
-        <receiver
-            android:name="com.nudgespot.notification.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action
-                    android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <category
-                    android:name="product.clicklabs.jugnoo"/>
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.nudgespot.notification.GcmIntentService"/>
-        <activity
-            android:name="com.nudgespot.notification.ReceiverActivity"
-            android:theme="@android:style/Theme.NoDisplay">
-        </activity>
-
-
 
 
 
