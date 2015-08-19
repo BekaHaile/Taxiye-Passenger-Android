@@ -55,9 +55,32 @@ public class RegistrationIntentService extends IntentService {
 				// Subscribe to topic channels
 				subscribeTopics(token);
 
+				try {
+					if(intent.hasExtra(Data.INTENT_CLASS_NAME)){
+						Intent registrationComplete = new Intent(this, Class.forName(intent.getStringExtra(Data.INTENT_CLASS_NAME)));
+						registrationComplete.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						registrationComplete.setAction(Data.REGISTRATION_COMPLETE);
+						registrationComplete.putExtra(Data.DEVICE_TOKEN, token);
+						this.startActivity(registrationComplete);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 			}
 		} catch (Exception e) {
 			Log.d(TAG, "Failed to complete token refresh", e);
+			try {
+				if(intent.hasExtra(Data.INTENT_CLASS_NAME)){
+					Intent registrationComplete = new Intent(this, Class.forName(intent.getStringExtra(Data.INTENT_CLASS_NAME)));
+					registrationComplete.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					registrationComplete.setAction(Data.REGISTRATION_FAILED);
+					registrationComplete.putExtra(Data.ERROR, e.toString());
+					this.startActivity(registrationComplete);
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 

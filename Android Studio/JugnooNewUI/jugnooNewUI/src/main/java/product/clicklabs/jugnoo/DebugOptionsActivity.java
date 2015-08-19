@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -37,6 +39,8 @@ public class DebugOptionsActivity extends BaseActivity {
     int showDriverInfoValue = 0;
 
     String selectedServer = Config.getDefaultServerUrl();
+
+	ProgressDialog progressDialog;
 
 	@Override
 	protected void onResume() {
@@ -126,7 +130,9 @@ public class DebugOptionsActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(DebugOptionsActivity.this, RegistrationIntentService.class);
+				intent.putExtra(Data.INTENT_CLASS_NAME, DebugOptionsActivity.class.getName());
 				startService(intent);
+//				progressDialog = ProgressDialog.show(DebugOptionsActivity.this, "", "Loading...");
 			}
 		});
 
@@ -327,7 +333,31 @@ public class DebugOptionsActivity extends BaseActivity {
         System.gc();
 		super.onDestroy();
 	}
-	
+
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if(Data.REGISTRATION_COMPLETE.equalsIgnoreCase(intent.getAction())){
+			if(intent.hasExtra(Data.DEVICE_TOKEN)){
+				Toast.makeText(this, "Registration complete = " + intent.getStringExtra(Data.DEVICE_TOKEN), Toast.LENGTH_LONG).show();
+			}
+			else{
+				Toast.makeText(this, "Registration failed"+"", Toast.LENGTH_LONG).show();
+			}
+		}
+		else if(Data.REGISTRATION_FAILED.equalsIgnoreCase(intent.getAction())){
+			if(intent.hasExtra(Data.ERROR)){
+				Toast.makeText(this, "Registration failed = "+intent.getStringExtra(Data.ERROR), Toast.LENGTH_LONG).show();
+			}
+			else{
+				Toast.makeText(this, "Registration failed"+"", Toast.LENGTH_LONG).show();
+			}
+		}
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+	}
 
 	
 }
