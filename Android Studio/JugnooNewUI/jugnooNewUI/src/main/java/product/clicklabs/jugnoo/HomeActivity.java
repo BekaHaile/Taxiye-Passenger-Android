@@ -951,7 +951,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 FlurryEventLogger.event(REFERRAL_GIFT_ICON);
                 startActivity(new Intent(HomeActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
             }
         });
 
@@ -1009,7 +1008,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
                 startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.walletScreenOpened(Data.userData.accessToken);
                 FlurryEventLogger.event(JUGNOO_CASH_MENU);
             }
         });
@@ -1023,7 +1021,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Data.longitude = map.getCameraPosition().target.longitude;
                     startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.couponsScreenOpened(Data.userData.accessToken);
                     FlurryEventLogger.event(PROMOTIONS_CHECKED);
                 } else {
                     Toast.makeText(getApplicationContext(), "Waiting for location...", Toast.LENGTH_SHORT).show();
@@ -1710,7 +1707,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         HelpParticularActivity.helpSection = HelpSection.FARE_DETAILS;
         startActivity(new Intent(HomeActivity.this, HelpParticularActivity.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
-        FlurryEventLogger.fareDetailsOpened(Data.userData.accessToken);
     }
 
 
@@ -3138,7 +3134,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
                             } else {
                                 customerUIBackToInitialAfterCancel();
-                                FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -4197,7 +4192,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onCancelCompleted() {
 		firstTimeZoom = false;
         customerUIBackToInitialAfterCancel();
-        FlurryEventLogger.cancelRequestPressed(Data.userData.accessToken, Data.cSessionId);
     }
 
 
@@ -4830,7 +4824,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, requestPeriod);
 
-            FlurryEventLogger.requestRidePressed(Data.userData.accessToken, Data.pickupLatLng);
 
         } catch (Exception e) {
             e.printStackTrace();

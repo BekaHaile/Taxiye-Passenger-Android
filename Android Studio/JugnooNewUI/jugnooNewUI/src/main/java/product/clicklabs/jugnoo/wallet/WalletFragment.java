@@ -166,15 +166,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    FlurryEventLogger.screenOpened("Gift Button Pressed");
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
                 startActivity(new Intent(paymentActivity, ShareActivity.class));
                 paymentActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
                 FlurryEventLogger.event(INVITE_EARN_JUGNOO_CASH);
             }
         });

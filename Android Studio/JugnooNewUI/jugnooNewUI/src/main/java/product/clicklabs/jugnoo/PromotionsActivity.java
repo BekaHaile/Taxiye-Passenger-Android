@@ -161,7 +161,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 				if(promoCode.length() > 0){
 					applyPromoCodeAPI(PromotionsActivity.this, promoCode);
                     FlurryEventLogger.event(PROMO_CODE_ENTERED);
-                    FlurryEventLogger.event(PROMO_CODE_APPLIED);
 				}
 				else{
 					editTextPromoCode.requestFocus();
@@ -203,7 +202,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             public void onClick(View v) {
                 startActivity(new Intent(PromotionsActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
                 FlurryEventLogger.event(INVITE_EARN_PROMOTIONS);
             }
         });
@@ -631,7 +629,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                                     String message = jObj.getString("message");
                                     DialogPopup.dialogBanner(activity, message);
                                     getAccountInfoAsync(activity);
-                                    FlurryEventLogger.promoCodeApplied(Data.userData.accessToken, promoCode, message);
+									FlurryEventLogger.event(PROMO_CODE_APPLIED);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }

@@ -251,7 +251,6 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                             }
                         } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
                             submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr, feedbackReasons);
-                            FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, "" + pastEngagementId);
                             if(feedbackStr.length() > 0){
                                 FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
                             }
