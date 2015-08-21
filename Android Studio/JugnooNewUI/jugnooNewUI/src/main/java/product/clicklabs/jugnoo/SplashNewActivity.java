@@ -140,7 +140,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public static void initializeServerURL(Context context){
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
-		if(link.equalsIgnoreCase(Config.getDevServerUrl())){
+		if(link.equalsIgnoreCase(Config.getLiveServerUrl())){
+			Config.setConfigMode(ConfigMode.LIVE);
+		}
+		else if(link.equalsIgnoreCase(Config.getDevServerUrl())){
             Config.setConfigMode(ConfigMode.DEV);
 		}
         else if(link.equalsIgnoreCase(Config.getDev1ServerUrl())){
@@ -153,8 +156,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Config.setConfigMode(ConfigMode.DEV_3);
 		}
 		else{
-            Config.setConfigMode(ConfigMode.LIVE);
+			Config.CUSTOM_SERVER_URL = link;
+			Config.setConfigMode(ConfigMode.CUSTOM);
 		}
+
 		Log.e("link", "="+link);
 	}
 	

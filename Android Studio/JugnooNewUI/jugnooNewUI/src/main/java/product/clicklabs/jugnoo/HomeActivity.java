@@ -3526,11 +3526,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)
                             && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
                             && (Data.userData != null)
-                            && (Data.assignedDriverInfo != null)) {
+                            && (Data.assignedDriverInfo != null)
+								&& (Data.pickupLatLng != null)) {
 
                             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                             nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
                             nameValuePairs.add(new BasicNameValuePair("driver_id", Data.assignedDriverInfo.userId));
+							nameValuePairs.add(new BasicNameValuePair("pickup_latitude", ""+Data.pickupLatLng.latitude));
+							nameValuePairs.add(new BasicNameValuePair("pickup_longitude", ""+Data.pickupLatLng.longitude));
 
 
                             HttpRequester simpleJSONParser = new HttpRequester();
