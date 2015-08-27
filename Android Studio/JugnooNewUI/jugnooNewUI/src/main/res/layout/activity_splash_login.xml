@@ -138,6 +138,7 @@
                     android:textColorHint="@color/black_text_alpha"
                     android:textCursorDrawable="@null"
                     android:textSize="30px"
+                    android:completionThreshold="1"
                     />
 
                 <ImageView

@@ -1540,6 +1540,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapSettled() {
                     // Map settled
                     callMapTouchedRefreshDrivers();
+					if(!zoomedForSearch && map != null){
+						getPickupAddress(map.getCameraPosition().target);
+					}
                 }
             };
 
@@ -1802,13 +1805,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             destroyFusedLocationFetchers();
             reconnectionHandler = new Handler();
             reconnectionHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initializeFusedLocationFetchers();
-                    reconnectionHandler.removeCallbacks(this);
-                    reconnectionHandler = null;
-                }
-            }, 2000);
+				@Override
+				public void run() {
+					initializeFusedLocationFetchers();
+					reconnectionHandler.removeCallbacks(this);
+					reconnectionHandler = null;
+				}
+			}, 2000);
         }
     }
 
@@ -1997,6 +2000,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 						}
 						firstTimeZoom = true;
+
+						if(!zoomedForSearch && map != null) {
+							getPickupAddress(map.getCameraPosition().target);
+						}
 
                         break;
 
@@ -3057,6 +3064,55 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
+	Thread pickupAddressFetcherThread;
+	private void getPickupAddress(final LatLng currentLatLng){
+		stopPickupAddressFetcherThread();
+		try{
+			if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+				textViewInitialSearch.setText("");
+				textViewInitialSearch.setHint("Getting address...");
+				pickupAddressFetcherThread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						String address = MapUtils.getGAPIAddress(currentLatLng);
+						setPickupAddress(address);
+						stopPickupAddressFetcherThread();
+					}
+				});
+				pickupAddressFetcherThread.start();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void stopPickupAddressFetcherThread(){
+		try{
+			if(pickupAddressFetcherThread != null){
+				pickupAddressFetcherThread.interrupt();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		pickupAddressFetcherThread = null;
+	}
+
+	private void setPickupAddress(final String address){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+					textViewInitialSearch.setHint("Set pick up location");
+					textViewInitialSearch.setText(address);
+				}
+			}
+		});
+	}
+
+
+
 
 
 

@@ -40,6 +40,12 @@
                 android:src="@drawable/back_white_selector" />
         </RelativeLayout>
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:background="@drawable/shadow_down"
+            />
+
         <RelativeLayout
             android:id="@+id/mainLinear"
             android:layout_width="match_parent"

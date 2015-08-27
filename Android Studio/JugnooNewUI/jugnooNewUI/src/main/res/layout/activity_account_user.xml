@@ -5,10 +5,10 @@
     android:layout_height="1134px"
     android:background="@color/white_light_grey" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        >
 
         <RelativeLayout
             android:id="@+id/topBar"
@@ -41,7 +41,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:layout_below="@+id/topBar"
+            >
 
             <ScrollView
                 android:id="@+id/scrollView"
@@ -400,6 +402,13 @@
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
-    </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:background="@drawable/shadow_down"
+            android:layout_below="@+id/topBar"
+            />
+
+    </RelativeLayout>
 
 </RelativeLayout>

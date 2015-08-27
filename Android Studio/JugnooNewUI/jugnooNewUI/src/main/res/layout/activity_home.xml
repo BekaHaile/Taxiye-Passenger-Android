@@ -295,6 +295,7 @@
                                     android:dividerHeight="1px"
                                     android:splitMotionEvents="false"
                                     android:visibility="visible"
+                                    android:scrollbarAlwaysDrawVerticalTrack="true"
                                     >
                                 </ListView>
 
@@ -1688,13 +1689,21 @@
                         android:tag="mwar"/>
 
                 </RelativeLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="6px"
+                    android:background="@drawable/shadow_down"
+                    android:layout_below="@+id/topRl"
+                    />
             </RelativeLayout>
 
             <!-- genie layout -->
             <AbsoluteLayout
                 android:id="@+id/rootAbsoluteLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                >
 
                 <RelativeLayout
                     android:id="@+id/animLayout"

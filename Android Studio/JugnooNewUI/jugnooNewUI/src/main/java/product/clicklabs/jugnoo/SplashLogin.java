@@ -460,12 +460,19 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
         @Override
         public void onClick(final View v) {
             new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.smoothScrollTo(0, buttonEmailLogin.getTop());
-                }
-            }, 200);
-        }
+				@Override
+				public void run() {
+					scrollView.smoothScrollTo(0, buttonEmailLogin.getTop());
+				}
+			}, 200);
+			try {
+				if(v.getId() == R.id.editTextEmail) {
+					((AutoCompleteTextView) v).showDropDown();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
     };
 
 

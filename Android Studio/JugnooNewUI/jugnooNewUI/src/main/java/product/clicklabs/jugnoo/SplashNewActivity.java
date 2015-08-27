@@ -188,6 +188,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		Utils.disableSMSReceiver(this);
 
+		Data.locationSettingsNoPressed = false;
 
         Data.userData = null;
 		
@@ -513,9 +514,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         super.onActivityResult(requestCode, resultCode, data);
         if(LocationInit.LOCATION_REQUEST_CODE == requestCode){
             if(0 == resultCode){
-                loginDataFetched = false;
-//                ActivityCompat.finishAffinity(this);
-
+				Data.locationSettingsNoPressed = true;
             }
         }
     }
@@ -595,7 +594,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				AsyncHttpClient client = Data.getClient();
 				client.post(Config.getServerUrl() + "/login_using_access_token", params,
 						new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
 
 							@Override
 							public void onFailure(Throwable arg3) {
