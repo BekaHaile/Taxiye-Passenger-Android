@@ -14,7 +14,8 @@
    
    <color name="white_translucent">#D8FFFFFF</color>
    <color name="white_more_translucent">#66FFFFFF</color>
-   
+
+    <color name="black_translucent_less">#99000000</color>
    <color name="black_translucent">#77000000</color>
     <color name="black_translucent_level_2">#44000000</color>
    

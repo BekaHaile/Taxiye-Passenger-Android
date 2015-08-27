@@ -1,11 +1,11 @@
 <RelativeLayout
     android:id="@+id/container"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_dark"
     >
+
+
     <!-- initial layout -->
     <RelativeLayout
         android:id="@+id/initialLayout"
@@ -172,6 +172,84 @@
             />
 
 
+        <!-- Location error -->
+        <RelativeLayout
+            android:id="@+id/relativeLayoutLocationError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_translucent_less"
+            >
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutLocationErrorSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="90px"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20px"
+                android:background="@drawable/background_white_rounded"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewLocationErrorSearchGPSIcon"
+                    android:layout_width="30px"
+                    android:layout_height="44px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="18px"
+                    android:src="@drawable/search_location_icon"
+                    android:tag="mwar"/>
+
+                <TextView
+                    android:id="@+id/textViewLocationErrorSearch"
+                    android:layout_width="580px"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_toRightOf="@+id/imageViewLocationErrorSearchGPSIcon"
+                    android:background="@color/transparent"
+                    android:hint="Set pick up location"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textSize="30px"/>
+
+            </RelativeLayout>
+
+
+            <ImageView
+                android:id="@+id/imageViewLocationErrorArrow"
+                android:layout_width="39px"
+                android:layout_height="230px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="37px"
+                android:tag="mwar"
+                android:src="@drawable/curly_arrow"
+                android:layout_below="@+id/relativeLayoutLocationErrorSearchBar"
+                />
+
+            <ImageView
+                android:id="@+id/imageViewLocationErrorText"
+                android:layout_width="375px"
+                android:layout_height="146px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="47px"
+                android:tag="mwar"
+                android:src="@drawable/mark_location_text"
+                android:layout_below="@+id/imageViewLocationErrorArrow"
+                />
+
+
+            <ImageView
+                android:id="@+id/imageViewLocationError"
+                android:layout_width="104px"
+                android:layout_height="146px"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="190px"
+                android:tag="mwar"
+                android:src="@drawable/location_error_icon"
+                />
+
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/linearLayoutPromo"
             android:layout_width="match_parent"
@@ -179,7 +257,7 @@
             android:layout_alignParentBottom="true"
             android:gravity="center_horizontal|bottom"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="gone"
             >
 
 
@@ -204,7 +282,7 @@
                 <LinearLayout
                     android:id="@+id/linearLayoutCouponList"
                     android:layout_width="match_parent"
-                    android:layout_height="270px"
+                    android:layout_height="370px"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:visibility="visible"
@@ -234,6 +312,7 @@
                         android:dividerHeight="1px"
                         android:splitMotionEvents="false"
                         android:visibility="visible"
+                        android:scrollbarAlwaysDrawVerticalTrack="true"
                         >
                     </ListView>
 
@@ -337,7 +416,11 @@
         </LinearLayout>
 
 
+
+
     </RelativeLayout>
+
+
 
 
 </RelativeLayout>
