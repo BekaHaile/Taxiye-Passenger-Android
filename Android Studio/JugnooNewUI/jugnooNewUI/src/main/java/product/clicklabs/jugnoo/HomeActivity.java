@@ -83,6 +83,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -340,6 +341,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private boolean intentFired = false, dropLocationSearched = false, promoOpened = false;
 
     GenieLayout genieLayout;
+
+	private GAPIAddress gapiAddressForPin;
 
 
     CallbackManager callbackManager;
@@ -3128,7 +3131,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				pickupAddressFetcherThread = new Thread(new Runnable() {
 					@Override
 					public void run() {
-						String address = MapUtils.getGAPIAddress(currentLatLng);
+						gapiAddressForPin = MapUtils.getGAPIAddressObject(currentLatLng);
+						String address = gapiAddressForPin.getSearchableAddress();
+
+//						address = MapUtils.getGAPIAddress(currentLatLng);
 						setPickupAddress(address);
 						stopPickupAddressFetcherThread();
 					}

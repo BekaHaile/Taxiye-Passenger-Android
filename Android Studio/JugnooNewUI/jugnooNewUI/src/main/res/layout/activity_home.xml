@@ -38,7 +38,6 @@
                 android:id="@+id/passengerMainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
                 android:splitMotionEvents="false"
                 android:visibility="visible"
                 >
@@ -468,7 +467,7 @@
                                 android:layout_marginBottom="40px"
                                 android:layout_marginTop="20px"
                                 android:background="@drawable/button_yellow_selector"
-                                android:text="CHALO JUGNOO SE !"
+                                android:text="CHALO JUGNOO SE"
                                 android:textColor="@drawable/text_color_white_alpha_selector"
                                 android:textSize="@dimen/button_text_size"/>
 
