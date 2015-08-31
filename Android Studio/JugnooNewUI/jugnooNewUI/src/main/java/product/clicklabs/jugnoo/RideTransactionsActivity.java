@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class RideTransactionsActivity extends BaseActivity implements UpdateRideTransaction, FlurryEventNames {
@@ -437,7 +438,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                         holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
                             + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, "+ rideInfo.date);
                     }
-                    holder.textViewAmount.setText(getResources().getString(R.string.rupee)+" "+decimalFormatNoDec.format(rideInfo.amount));
+                    holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
 
                     if(1 != rideInfo.isRatedBefore){
                         holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
@@ -469,7 +470,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
                         + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
                 }
-                holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDec.format(rideInfo.amount));
+                holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
 
                 if(1 != rideInfo.isRatedBefore){
                     holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);

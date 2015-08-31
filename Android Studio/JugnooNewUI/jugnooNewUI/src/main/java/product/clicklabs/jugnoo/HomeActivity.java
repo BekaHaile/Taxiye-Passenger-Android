@@ -1864,7 +1864,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             textViewPromotionsValue.setText("" + Data.userData.numCouponsAvaliable);
 
-            textViewJugnooCashValue.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(Data.userData.jugnooBalance));
+            textViewJugnooCashValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
 
             Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
             try {
@@ -1928,14 +1928,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewEndRideStartTimeValue.setText(Data.endRideData.pickupTime);
                         textViewEndRideEndTimeValue.setText(Data.endRideData.dropTime);
 
-                        textViewEndRideFareValue.setText(decimalFormatNoDecimal.format(Data.endRideData.fare));
-                        textViewEndRidePromotionDiscountValue.setText(decimalFormatNoDecimal.format(Data.endRideData.discount));
-                        textViewEndRideFinalFareValue.setText(decimalFormatNoDecimal.format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
-                        textViewEndRideJugnooCashValue.setText(decimalFormatNoDecimal.format(Data.endRideData.paidUsingWallet));
-                        textViewEndRideToBePaidValue.setText(decimalFormatNoDecimal.format(Data.endRideData.toPay));
+                        textViewEndRideFareValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.fare));
+                        textViewEndRidePromotionDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+                        textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
+                        textViewEndRideJugnooCashValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.paidUsingWallet));
+                        textViewEndRideToBePaidValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay));
                         textViewEndRideFareFactorValue.setText(decimalFormat.format(Data.endRideData.fareFactor) + "x");
 
-                        textViewEndRideBaseFareValue.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(Data.endRideData.baseFare));
+                        textViewEndRideBaseFareValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.endRideData.baseFare));
 
                         if (!"".equalsIgnoreCase(Data.endRideData.banner)) {
                             textViewEndRideAddJugnooCashInfo.setText(Data.endRideData.banner);
