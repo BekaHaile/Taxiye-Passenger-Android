@@ -46,6 +46,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
+
 	//new start
 	TextView textViewOtpNumber;
 	ImageView imageViewSep, imageViewChangePhoneNumber;
@@ -141,6 +142,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
 		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
+		((TextView)findViewById(R.id.textViewEnterOTP)).setTypeface(Fonts.latoRegular(this));
 		//new end
 		
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
@@ -251,14 +253,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 
 
-		imageViewSep.setVisibility(View.GONE);
-		imageViewChangePhoneNumber.setVisibility(View.GONE);
-
-		linearLayoutWaiting.setVisibility(View.VISIBLE);
-		relativeLayoutOTPThroughCall.setVisibility(View.GONE);
-		textViewCounter.setText("0:30");
-		countDownTimer.start();
-
+		try{
+			if(getIntent().getIntExtra("show_timer", 0) == 1){
+				linearLayoutWaiting.setVisibility(View.VISIBLE);
+				relativeLayoutOTPThroughCall.setVisibility(View.GONE);
+				textViewCounter.setText("0:30");
+				countDownTimer.start();
+			}
+			else{
+				throw new Exception();
+			}
+		} catch(Exception e){
+			linearLayoutWaiting.setVisibility(View.GONE);
+			relativeLayoutOTPThroughCall.setVisibility(View.VISIBLE);
+		}
 		//new end
 		
 		new DeviceTokenGenerator().generateDeviceToken(this, new IDeviceTokenReceiver() {
@@ -266,7 +274,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			@Override
 			public void deviceTokenReceived(final String regId) {
 				Data.deviceToken = regId;
-				Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+				Log.e("deviceToken in IDeviceTokenReceiver" +
+						"" +
+						"" +
+						"", Data.deviceToken + "..");
 			}
 		});
 
@@ -662,24 +673,21 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		@Override
 		public void onTick(long millisUntilFinished) {
 			double percent = (((double)millisUntilFinished) * 100.0) / 30000.0;
-			double donePercent = 100.0 - percent;
 
-			double widthToSet = donePercent * ((double) (ASSL.Xscale() * 530)) / 100.0;
+			double widthToSet = percent * ((double) (ASSL.Xscale() * 530)) / 100.0;
 
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewYellowLoadingBar.getLayoutParams();
 			params.width = (int) widthToSet;
 			imageViewYellowLoadingBar.setLayoutParams(params);
 
 
-			long seconds = millisUntilFinished / 1000;
-			textViewCounter.setText("0:"+seconds);
+			long seconds = (long) Math.ceil(((double)millisUntilFinished) / 1000.0d);
+			String text = seconds < 10 ? "0:0"+seconds : "0:"+seconds;
+			textViewCounter.setText(text);
 		}
 
 		@Override
 		public void onFinish() {
-			imageViewSep.setVisibility(View.VISIBLE);
-			imageViewChangePhoneNumber.setVisibility(View.VISIBLE);
-
 			linearLayoutWaiting.setVisibility(View.GONE);
 			relativeLayoutOTPThroughCall.setVisibility(View.VISIBLE);
 		}
