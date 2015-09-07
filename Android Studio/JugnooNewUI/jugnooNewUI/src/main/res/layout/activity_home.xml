@@ -38,7 +38,6 @@
                 android:id="@+id/passengerMainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
                 android:splitMotionEvents="false"
                 android:visibility="visible"
                 >
@@ -74,7 +73,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
 
                     <RelativeLayout
@@ -233,6 +232,85 @@
                         />
 
 
+                    <!-- Location error -->
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutLocationError"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/black_translucent_less"
+                        android:visibility="visible"
+                        >
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutLocationErrorSearchBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="90px"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_margin="20px"
+                            android:background="@drawable/background_white_rounded"
+                            android:splitMotionEvents="false">
+
+                            <ImageView
+                                android:id="@+id/imageViewLocationErrorSearchGPSIcon"
+                                android:layout_width="30px"
+                                android:layout_height="44px"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="18px"
+                                android:src="@drawable/search_location_icon"
+                                android:tag="mwar"/>
+
+                            <TextView
+                                android:id="@+id/textViewLocationErrorSearch"
+                                android:layout_width="580px"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="20px"
+                                android:layout_toRightOf="@+id/imageViewLocationErrorSearchGPSIcon"
+                                android:background="@color/transparent"
+                                android:hint="Set pick up location"
+                                android:singleLine="true"
+                                android:textColor="@color/black_text"
+                                android:textSize="30px"/>
+
+                        </RelativeLayout>
+
+
+                        <ImageView
+                            android:id="@+id/imageViewLocationErrorArrow"
+                            android:layout_width="39px"
+                            android:layout_height="230px"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="37px"
+                            android:tag="mwar"
+                            android:src="@drawable/curly_arrow"
+                            android:layout_below="@+id/relativeLayoutLocationErrorSearchBar"
+                            />
+
+                        <ImageView
+                            android:id="@+id/imageViewLocationErrorText"
+                            android:layout_width="375px"
+                            android:layout_height="146px"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="47px"
+                            android:tag="mwar"
+                            android:src="@drawable/mark_location_text"
+                            android:layout_below="@+id/imageViewLocationErrorArrow"
+                            />
+
+
+                        <ImageView
+                            android:id="@+id/imageViewLocationError"
+                            android:layout_width="104px"
+                            android:layout_height="146px"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="190px"
+                            android:tag="mwar"
+                            android:src="@drawable/location_error_icon"
+                            />
+
+                    </RelativeLayout>
+
                     <LinearLayout
                         android:id="@+id/linearLayoutPromo"
                         android:layout_width="match_parent"
@@ -240,7 +318,7 @@
                         android:layout_alignParentBottom="true"
                         android:gravity="center_horizontal|bottom"
                         android:orientation="vertical"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         >
 
 
@@ -295,6 +373,7 @@
                                     android:dividerHeight="1px"
                                     android:splitMotionEvents="false"
                                     android:visibility="visible"
+                                    android:scrollbarAlwaysDrawVerticalTrack="true"
                                     >
                                 </ListView>
 
@@ -388,7 +467,7 @@
                                 android:layout_marginBottom="40px"
                                 android:layout_marginTop="20px"
                                 android:background="@drawable/button_yellow_selector"
-                                android:text="CHALO JUGNOO SE !"
+                                android:text="CHALO JUGNOO SE"
                                 android:textColor="@drawable/text_color_white_alpha_selector"
                                 android:textSize="@dimen/button_text_size"/>
 
@@ -396,6 +475,8 @@
 
 
                     </LinearLayout>
+
+
 
 
                 </RelativeLayout>
@@ -996,7 +1077,7 @@
                 android:layout_marginTop="96px"
                 android:background="@color/white_light_grey"
                 android:splitMotionEvents="false"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ScrollView
                     android:id="@+id/scrollViewEndRide"
@@ -1692,13 +1773,21 @@
                         android:tag="mwar"/>
 
                 </RelativeLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="6px"
+                    android:background="@drawable/shadow_down"
+                    android:layout_below="@+id/topRl"
+                    />
             </RelativeLayout>
 
             <!-- genie layout -->
             <AbsoluteLayout
                 android:id="@+id/rootAbsoluteLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                >
 
                 <RelativeLayout
                     android:id="@+id/animLayout"

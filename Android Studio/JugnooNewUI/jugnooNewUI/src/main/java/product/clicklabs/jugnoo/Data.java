@@ -159,7 +159,7 @@ public class Data {
 
     public static String deepLinkClassName = "";
 
-	public static boolean supportFeedbackSubmitted = false;
+	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
 
 	

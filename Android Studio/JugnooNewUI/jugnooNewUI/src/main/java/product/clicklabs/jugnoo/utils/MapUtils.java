@@ -114,7 +114,7 @@ public class MapUtils {
 	
 	
 	public static GAPIAddress getGAPIAddressObject(LatLng latLng){
-		GAPIAddress fullAddress = new GAPIAddress(new ArrayList<String>(), "Unnamed", "not_found");
+		GAPIAddress fullAddress = new GAPIAddress(new ArrayList<String>(), "Unnamed", "", "", "", "", "", "not_found");
 		try {
 			JSONObject jsonObj = new JSONObject(
 					new HttpRequester().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?"
@@ -130,6 +130,7 @@ public class MapUtils {
 				JSONObject zero = Results.getJSONObject(0);
 
 				String streetNumber = "", route = "", subLocality2 = "", subLocality1 = "", locality = "", administrativeArea2 = "", administrativeArea1 = "", country = "", postalCode = "";
+				String subLocality = "", administrativeArea = "";
 
 				if (zero.has("address_components")) {
 					try {
@@ -202,7 +203,21 @@ public class MapUtils {
 								}
 							}
 						}
-						fullAddress = new GAPIAddress(selectedAddressComponentsArr, zero.getString("formatted_address"), postalCode);
+
+						subLocality = subLocality1;
+						administrativeArea = administrativeArea2;
+						if(!administrativeArea.contains(administrativeArea1)) {
+							if ("".equalsIgnoreCase(administrativeArea)) {
+								administrativeArea = administrativeArea1;
+							} else {
+								administrativeArea = administrativeArea + " " + administrativeArea1;
+							}
+						}
+
+
+
+						fullAddress = new GAPIAddress(selectedAddressComponentsArr, zero.getString("formatted_address"),
+								streetNumber, subLocality, locality, administrativeArea, country, postalCode);
 						if (fullAddress.addressComponents.size() > 0) {
 							String lessRedundantformattedAddress = "";
 							for (int i = 0; i < fullAddress.addressComponents.size(); i++) {

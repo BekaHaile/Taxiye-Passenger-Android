@@ -85,6 +85,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -106,7 +107,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
-import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
@@ -194,6 +194,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewInitialSearch;
     ProgressBar progressBarInitialSearch;
     RelativeLayout relativeLayoutRequestInfo;
+
+
+	//Location Error layout
+	RelativeLayout relativeLayoutLocationError;
+	RelativeLayout relativeLayoutLocationErrorSearchBar;
+	TextView textViewLocationErrorSearch;
+
+
 
 
     //Assigining layout
@@ -337,6 +345,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private boolean intentFired = false, dropLocationSearched = false, promoOpened = false;
 
     GenieLayout genieLayout;
+
+	private GAPIAddress gapiAddressForPin;
 
 
     CallbackManager callbackManager;
@@ -543,6 +553,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((TextView) findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewRateCard)).setTypeface(Fonts.latoRegular(this));
 
+
+
+
+
+		//Location error layout
+		relativeLayoutLocationError = (RelativeLayout) findViewById(R.id.relativeLayoutLocationError);
+		relativeLayoutLocationErrorSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutLocationErrorSearchBar);
+		((TextView)findViewById(R.id.textViewLocationErrorSearch)).setTypeface(Fonts.latoRegular(this));
+		relativeLayoutLocationError.setVisibility(View.GONE);
 
 
 
@@ -863,26 +882,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
+			@Override
+			public void onDrawerSlide(View drawerView, float slideOffset) {
 
-            }
+			}
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                hideAnims();
-            }
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				hideAnims();
+			}
 
-            @Override
-            public void onDrawerClosed(View drawerView) {
+			@Override
+			public void onDrawerClosed(View drawerView) {
 
-            }
+			}
 
-            @Override
-            public void onDrawerStateChanged(int newState) {
+			@Override
+			public void onDrawerStateChanged(int newState) {
 
-            }
-        });
+			}
+		});
 
 
         //Top bar events
@@ -897,29 +916,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
         imageViewBack.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				passengerScreenMode = PassengerScreenMode.P_INITIAL;
+				switchPassengerScreen(passengerScreenMode);
+			}
+		});
 
         checkServerBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideAnims();
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				hideAnims();
+			}
+		});
 
         checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
 
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(getApplicationContext(), "" + Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
-                FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
-                return false;
-            }
-        });
+			@Override
+			public boolean onLongClick(View v) {
+				Toast.makeText(getApplicationContext(), "" + Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
+				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
+				return false;
+			}
+		});
 
 
         jugnooShopImageView.setOnClickListener(new OnClickListener() {
@@ -1104,22 +1123,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     hideAnims();
                     if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-                        if (Utils.isLocationEnabled(HomeActivity.this)) {
-                            if (map != null) {
-                                promoCouponSelectedForRide = null;
-                                final LatLng requestLatLng = map.getCameraPosition().target;
-                                Data.pickupLatLng = requestLatLng;
+						if (map != null) {
+							promoCouponSelectedForRide = null;
+							final LatLng requestLatLng = map.getCameraPosition().target;
+							Data.pickupLatLng = requestLatLng;
 
-                                editTextAssigningDropLocation.setText("");
-                                editTextFinalDropLocation.setText("");
+							editTextAssigningDropLocation.setText("");
+							editTextFinalDropLocation.setText("");
 
-                                promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
-                                FlurryEventLogger.event(AUTO_RIDE_ICON);
-                            }
-                        } else {
-                            LocationInit.showLocationAlertDialog(HomeActivity.this);
-                        }
-                    } else {
+							promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
+							FlurryEventLogger.event(AUTO_RIDE_ICON);
+						}
+					} else {
                         DialogPopup.alertPopup(HomeActivity.this, "",
                             Data.CHECK_INTERNET_MSG);
                     }
@@ -1208,6 +1223,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
+
+
+		//Location error layout
+		relativeLayoutLocationError.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				textViewInitialSearch.setText("");
+				relativeLayoutLocationError.setVisibility(View.GONE);
+				relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
+				initialMyLocationBtn.setVisibility(View.VISIBLE);
+				imageViewRideNow.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.VISIBLE);
+			}
+		});
+
+		relativeLayoutLocationErrorSearchBar.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				textViewInitialSearch.setText("");
+				relativeLayoutInitialSearchBar.performClick();
+				relativeLayoutLocationError.setVisibility(View.GONE);
+				relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
+				initialMyLocationBtn.setVisibility(View.VISIBLE);
+				imageViewRideNow.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.VISIBLE);
+			}
+		});
 
 
 
@@ -1607,6 +1649,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapSettled() {
                     // Map settled
                     callMapTouchedRefreshDrivers();
+					if(!zoomedForSearch && map != null){
+						getPickupAddress(map.getCameraPosition().target);
+					}
                 }
             };
 
@@ -1868,13 +1913,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             destroyFusedLocationFetchers();
             reconnectionHandler = new Handler();
             reconnectionHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initializeFusedLocationFetchers();
-                    reconnectionHandler.removeCallbacks(this);
-                    reconnectionHandler = null;
-                }
-            }, 2000);
+				@Override
+				public void run() {
+					initializeFusedLocationFetchers();
+					reconnectionHandler.removeCallbacks(this);
+					reconnectionHandler = null;
+				}
+			}, 2000);
         }
     }
 
@@ -1885,7 +1930,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             textViewPromotionsValue.setText("" + Data.userData.numCouponsAvaliable);
 
-            textViewJugnooCashValue.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(Data.userData.jugnooBalance));
+            textViewJugnooCashValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
 
             Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
             try {
@@ -1949,14 +1994,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewEndRideStartTimeValue.setText(Data.endRideData.pickupTime);
                         textViewEndRideEndTimeValue.setText(Data.endRideData.dropTime);
 
-                        textViewEndRideFareValue.setText(decimalFormatNoDecimal.format(Data.endRideData.fare));
-                        textViewEndRidePromotionDiscountValue.setText(decimalFormatNoDecimal.format(Data.endRideData.discount));
-                        textViewEndRideFinalFareValue.setText(decimalFormatNoDecimal.format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
-                        textViewEndRideJugnooCashValue.setText(decimalFormatNoDecimal.format(Data.endRideData.paidUsingWallet));
-                        textViewEndRideToBePaidValue.setText(decimalFormatNoDecimal.format(Data.endRideData.toPay));
+                        textViewEndRideFareValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.fare));
+                        textViewEndRidePromotionDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+                        textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
+                        textViewEndRideJugnooCashValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.paidUsingWallet));
+                        textViewEndRideToBePaidValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay));
                         textViewEndRideFareFactorValue.setText(decimalFormat.format(Data.endRideData.fareFactor) + "x");
 
-                        textViewEndRideBaseFareValue.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(Data.endRideData.baseFare));
+                        textViewEndRideBaseFareValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.endRideData.baseFare));
 
                         if (!"".equalsIgnoreCase(Data.endRideData.banner)) {
                             textViewEndRideAddJugnooCashInfo.setText(Data.endRideData.banner);
@@ -2057,12 +2102,34 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.VISIBLE);
 
-						if(!firstTimeZoom){
+						if(!firstTimeZoom && myLocation != null){
 							zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
 						}
 						firstTimeZoom = true;
+
+						if(!zoomedForSearch && map != null) {
+							getPickupAddress(map.getCameraPosition().target);
+						}
+
+						if(Data.locationSettingsNoPressed){
+							relativeLayoutLocationError.setVisibility(View.VISIBLE);
+							relativeLayoutRequestInfo.setVisibility(View.GONE);
+							initialMyLocationBtn.setVisibility(View.GONE);
+							imageViewRideNow.setVisibility(View.GONE);
+							genieLayout.setVisibility(View.GONE);
+							centreLocationRl.setVisibility(View.GONE);
+
+							Data.locationSettingsNoPressed = false;
+						}
+						else{
+							relativeLayoutLocationError.setVisibility(View.GONE);
+							relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
+							initialMyLocationBtn.setVisibility(View.VISIBLE);
+							imageViewRideNow.setVisibility(View.VISIBLE);
+							genieLayout.setVisibility(View.VISIBLE);
+							centreLocationRl.setVisibility(View.VISIBLE);
+						}
 
                         break;
 
@@ -2684,8 +2751,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         feedbackSkipped = false;
 
 //        genieLayout.setGenieParams();
-
-        LocationInit.showLocationAlertDialog(this);
     }
 
     @Override
@@ -2707,11 +2772,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             callbackManager.onActivityResult(requestCode, resultCode, data);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
-            if (0 == resultCode) {
-                ActivityCompat.finishAffinity(this);
-            }
         }
     }
 
@@ -2964,28 +3024,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 textViewNearestDriverETA.setText("Couldn't find drivers nearby.");
                             }
 
-                            if (!"".equalsIgnoreCase(farAwayCity)) {
-                                textViewNearestDriverETA.setText(farAwayCity);
+							if(relativeLayoutLocationError.getVisibility() == View.GONE) {
+								if (!"".equalsIgnoreCase(farAwayCity)) {
+									textViewNearestDriverETA.setText(farAwayCity);
 
-                                imageViewRideNow.setVisibility(View.GONE);
+									imageViewRideNow.setVisibility(View.GONE);
 
-                                initialMyLocationBtn.setVisibility(View.GONE);
-                                changeLocalityBtn.setVisibility(View.VISIBLE);
-                                initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
+									initialMyLocationBtn.setVisibility(View.GONE);
+									changeLocalityBtn.setVisibility(View.VISIBLE);
+									initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
 
-                                genieLayout.setVisibility(View.GONE);
+									genieLayout.setVisibility(View.GONE);
 
-                            } else {
-                                imageViewRideNow.setVisibility(View.VISIBLE);
+								} else {
+									imageViewRideNow.setVisibility(View.VISIBLE);
 
-                                initialMyLocationBtn.setVisibility(View.VISIBLE);
-                                changeLocalityBtn.setVisibility(View.GONE);
-                                initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
+									initialMyLocationBtn.setVisibility(View.VISIBLE);
+									changeLocalityBtn.setVisibility(View.GONE);
+									initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
-                                if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened){
-                                    genieLayout.setVisibility(View.VISIBLE);
-                                }
-                            }
+									if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
+										genieLayout.setVisibility(View.VISIBLE);
+									}
+								}
+							}
 
                             setFareFactorToInitialState();
 
@@ -3156,6 +3218,58 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
+	Thread pickupAddressFetcherThread;
+	private void getPickupAddress(final LatLng currentLatLng){
+		stopPickupAddressFetcherThread();
+		try{
+			if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+				textViewInitialSearch.setText("");
+				textViewInitialSearch.setHint("Getting address...");
+				pickupAddressFetcherThread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						gapiAddressForPin = MapUtils.getGAPIAddressObject(currentLatLng);
+						String address = gapiAddressForPin.getSearchableAddress();
+
+//						address = MapUtils.getGAPIAddress(currentLatLng);
+						setPickupAddress(address);
+						stopPickupAddressFetcherThread();
+					}
+				});
+				pickupAddressFetcherThread.start();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void stopPickupAddressFetcherThread(){
+		try{
+			if(pickupAddressFetcherThread != null){
+				pickupAddressFetcherThread.interrupt();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		pickupAddressFetcherThread = null;
+	}
+
+	private void setPickupAddress(final String address){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+					textViewInitialSearch.setHint("Set pick up location");
+					textViewInitialSearch.setText(address);
+				}
+			}
+		});
+	}
+
+
+
 
 
 
@@ -4503,17 +4617,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             runOnUiThread(new Runnable() {
 
-                @Override
-                public void run() {
-                    try {
-                        if (RideCancellationActivity.activityCloser != null) {
-                            RideCancellationActivity.activityCloser.close();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+				@Override
+				public void run() {
+					try {
+						if (RideCancellationActivity.activityCloser != null) {
+							RideCancellationActivity.activityCloser.close();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4651,7 +4765,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         Data.latitude = location.getLatitude();
         Data.longitude = location.getLongitude();
-    }
+
+		boolean cached = false;
+		try {
+			if (myLocation != null) {
+				Bundle bundle = myLocation.getExtras();
+				cached = bundle.getBoolean("cached");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
+				&& relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
+			relativeLayoutLocationError.setVisibility(View.GONE);
+			relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
+			initialMyLocationBtn.setVisibility(View.VISIBLE);
+			imageViewRideNow.setVisibility(View.VISIBLE);
+			genieLayout.setVisibility(View.VISIBLE);
+			centreLocationRl.setVisibility(View.VISIBLE);
+		}
+	}
 
 
     public void zoomToCurrentLocationAtFirstLocationFix(Location location) {

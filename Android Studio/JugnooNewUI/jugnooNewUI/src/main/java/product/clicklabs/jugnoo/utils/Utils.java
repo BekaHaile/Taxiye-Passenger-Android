@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
@@ -380,5 +381,15 @@ public class Utils {
 			e.printStackTrace();
 		}
 	}
+
+
+	private static DecimalFormat decimalFormatMoney;
+	public static DecimalFormat getMoneyDecimalFormat(){
+		if(decimalFormatMoney == null){
+			decimalFormatMoney = new DecimalFormat("#.##");
+		}
+		return decimalFormatMoney;
+	}
+
 
 }
