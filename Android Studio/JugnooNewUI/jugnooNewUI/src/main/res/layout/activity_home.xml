@@ -409,6 +409,7 @@
                     android:animateLayoutChanges="true"
                     android:splitMotionEvents="false"
                     android:visibility="visible"
+                    android:background="@color/black_translucent"
                     >
 
                     <!-- finding driver layout-->
@@ -435,7 +436,7 @@
                                 android:singleLine="true"
                                 android:text="Finding a Jugnoo driver..."
                                 android:textColor="@color/grey_dark"
-                                android:textSize="30px"/>
+                                android:textSize="34px"/>
                         </RelativeLayout>
 
                         <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
@@ -472,7 +473,9 @@
                         android:layout_marginBottom="40px"
                         android:layout_marginLeft="50px"
                         android:background="@drawable/mylocation_btn_selector"
-                        android:tag="mwar"/>
+                        android:tag="mwar"
+                        android:visibility="gone"
+                        />
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutAssigningButtons"
@@ -485,13 +488,14 @@
 
                         <Button
                             android:id="@+id/initialCancelRideBtn"
-                            android:layout_width="648px"
+                            android:layout_width="100px"
                             android:layout_height="100px"
                             android:layout_centerHorizontal="true"
-                            android:background="@drawable/button_yellow_selector"
-                            android:text="CANCEL REQUEST"
+                            android:background="@drawable/cancel_request_button"
                             android:textColor="@drawable/text_color_white_alpha_selector"
-                            android:textSize="@dimen/button_text_size"/>
+                            android:textSize="@dimen/button_text_size"
+                            android:tag="mwar"/>
+
                     </RelativeLayout>
 
                     <!-- drop location layout-->

@@ -22,6 +22,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -70,6 +71,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import product.clicklabs.jugnoo.adapters.PromotionListEventHandler;
 import product.clicklabs.jugnoo.adapters.PromotionsListAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
@@ -197,6 +199,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Assigining layout
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
+	SmoothProgressBar progressBarFindingDriver;
     Button assigningMyLocationBtn, initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent, relativeLayoutAssigningDropLocationBar;
     EditText editTextAssigningDropLocation;
@@ -205,6 +208,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ScrollView scrollViewAssigning;
     LinearLayout linearLayoutScrollAssigning;
     TextView textViewScrollAssigning;
+	boolean cancelTouchHold = false;
 
 
     //Request Final Layout
@@ -549,6 +553,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
         textViewFindingDriver.setTypeface(Fonts.latoRegular(this));
+		progressBarFindingDriver = (SmoothProgressBar) findViewById(R.id.progressBarFindingDriver);
         assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
         initialCancelRideBtn.setTypeface(Fonts.latoRegular(this));
@@ -1215,23 +1220,88 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         // Assigning layout events
-        initialCancelRideBtn.setOnClickListener(new OnClickListener() {
+//        initialCancelRideBtn.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                if ("".equalsIgnoreCase(Data.cSessionId)) {
+//                    if (checkForGPSAccuracyTimer != null) {
+//                        if (checkForGPSAccuracyTimer.isRunning) {
+//                            checkForGPSAccuracyTimer.stopTimer();
+//                            customerUIBackToInitialAfterCancel();
+//                        }
+//                    }
+//                } else {
+//                    cancelCustomerRequestAsync(HomeActivity.this);
+//                    FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
+//                }
+//            }
+//        });
 
-            @Override
-            public void onClick(View v) {
-                if ("".equalsIgnoreCase(Data.cSessionId)) {
-                    if (checkForGPSAccuracyTimer != null) {
-                        if (checkForGPSAccuracyTimer.isRunning) {
-                            checkForGPSAccuracyTimer.stopTimer();
-                            customerUIBackToInitialAfterCancel();
-                        }
-                    }
-                } else {
-                    cancelCustomerRequestAsync(HomeActivity.this);
-                    FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
-                }
-            }
-        });
+
+		initialCancelRideBtn.setOnTouchListener(new View.OnTouchListener() {
+
+			Handler handler = new Handler();
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					if(cancelTouchHold) {
+						if ("".equalsIgnoreCase(Data.cSessionId)) {
+							if (checkForGPSAccuracyTimer != null) {
+								if (checkForGPSAccuracyTimer.isRunning) {
+									checkForGPSAccuracyTimer.stopTimer();
+									customerUIBackToInitialAfterCancel();
+								}
+							}
+						} else {
+							textViewFindingDriver.setText("Cancelling");
+							progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
+							progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
+							progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
+							progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
+							cancelCustomerRequestAsync(HomeActivity.this);
+							FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
+						}
+						cancelTouchHold = false;
+					}
+				}
+			};
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				int action = event.getAction();
+				switch (action) {
+					case MotionEvent.ACTION_DOWN:
+						textViewFindingDriver.setText("HOLD TO CANCEL");
+						progressBarFindingDriver.setSmoothProgressDrawableSpeed(0.5f);
+						progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(false);
+						progressBarFindingDriver.setSmoothProgressDrawableReversed(false);
+						progressBarFindingDriver.progressiveStart();
+						progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(0.9f);
+
+						handler.postDelayed(runnable, 2000);
+						cancelTouchHold = true;
+
+						break;
+
+					case MotionEvent.ACTION_UP:
+						if(cancelTouchHold) {
+							cancelTouchHold = false;
+							textViewFindingDriver.setText("Finding a Jugnoo driver...");
+							progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
+							progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
+							progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
+							progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
+
+							handler.removeCallbacks(runnable);
+						}
+						break;
+				}
+				return true;
+			}
+		});
+
+
 
         relativeLayoutAssigningDropLocationBar.setOnClickListener(new OnClickListener() {
             @Override
@@ -2024,6 +2094,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
+						textViewFindingDriver.setText("Finding a Jugnoo driver...");
                         initialCancelRideBtn.setVisibility(View.GONE);
 
                         if (map != null) {
@@ -3094,7 +3165,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void cancelCustomerRequestAsync(final Activity activity) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+//            DialogPopup.showLoadingDialog(activity, "Loading...");
 
             RequestParams params = new RequestParams();
 

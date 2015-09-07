@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -106,13 +107,27 @@ public class CustomDateTimePicker implements OnClickListener {
 		viewSwitcher.setLayoutParams(frame_match_wrap);
 
 		datePicker = new DatePicker(activity);
-		datePicker.setMinDate(Calendar.getInstance().getTimeInMillis()-10000);
+		datePicker.setMinDate(Calendar.getInstance().getTimeInMillis() - 10000);
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, 7);
 		datePicker.setMaxDate(calendar.getTimeInMillis());
 		datePicker.setCalendarViewShown(false);
-		
-		
+
+		datePicker.getCalendarView().setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+			@Override
+			public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+
+				Calendar calendar1 = Calendar.getInstance();
+				calendar1.set(Calendar.YEAR, year);
+				calendar1.set(Calendar.MONTH, month);
+				calendar1.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+				if(calendar1.getTimeInMillis() > datePicker.getCalendarView().getMaxDate()){
+					datePicker.getCalendarView().setDate(view.getMaxDate());
+				}
+			}
+		});
+
 		
 		
 		timePicker = new TimePicker(activity);
