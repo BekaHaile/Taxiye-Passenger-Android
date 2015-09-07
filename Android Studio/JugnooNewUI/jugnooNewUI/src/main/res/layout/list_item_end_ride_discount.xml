@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="560px"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textViewDiscount"
+        android:layout_width="300px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60px"
+        android:gravity="center_vertical"
+        android:paddingBottom="7px"
+        android:paddingTop="7px"
+        android:text="- Discount"
+        android:textColor="@color/grey_dark_more_receipt"
+        android:textSize="26px"/>
+
+    <TextView
+        android:id="@+id/textViewDiscountRupee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10px"
+        android:layout_toLeftOf="@+id/textViewDiscountValue"
+        android:gravity="center_vertical"
+        android:paddingBottom="7px"
+        android:paddingTop="7px"
+        android:text="@string/rupee"
+        android:textColor="@color/grey_dark_less"
+        android:textSize="26px"/>
+
+    <TextView
+        android:id="@+id/textViewDiscountValue"
+        android:layout_width="110px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40px"
+        android:gravity="center_vertical|right"
+        android:paddingBottom="7px"
+        android:paddingTop="7px"
+        android:text="0"
+        android:textColor="@color/grey_dark_more_receipt"
+        android:textSize="26px"/>
+</RelativeLayout>

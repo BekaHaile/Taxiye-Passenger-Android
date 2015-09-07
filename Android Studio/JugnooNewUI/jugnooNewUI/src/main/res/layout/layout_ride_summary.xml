@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    
+    <RelativeLayout
+        android:id="@+id/relativeLayoutReceipt"
+        android:layout_width="671px"
+        android:layout_height="833px"
+        android:layout_marginTop="38px"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/receipt_background"
+        >
+
+
+        <ScrollView
+            android:id="@+id/scrollViewEndRide"
+            android:layout_width="560px"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5px"
+            android:layout_marginBottom="22px"
+            >
+
+            <LinearLayout
+                android:id="@+id/linearLayoutEndRideInner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:splitMotionEvents="false"
+                >
+
+                <!-- driver info -->
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutEndRideDriverInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:layout_width="280px"
+                        android:layout_height="80px">
+
+                        <ImageView
+                            android:id="@+id/imageViewEndRideDriverIcon"
+                            android:layout_width="32px"
+                            android:layout_height="43px"
+                            android:layout_marginLeft="42px"
+                            android:layout_marginRight="10px"
+                            android:src="@drawable/driver_icon_end_ride"
+                            android:tag="mwar"
+                            android:layout_centerVertical="true"
+                            />
+
+                        <TextView
+                            android:id="@+id/textViewEndRideDriverName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10px"
+                            android:layout_toRightOf="@+id/imageViewEndRideDriverIcon"
+                            android:gravity="center_vertical"
+                            android:maxLines="2"
+                            android:text="Driver Name"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="280px"
+                        android:layout_height="80px"
+                        android:layout_alignParentRight="true">
+
+                        <ImageView
+                            android:id="@+id/imageViewEndRideAutoIcon"
+                            android:layout_width="81px"
+                            android:layout_height="62px"
+                            android:src="@drawable/auto_icon_end_ride"
+                            android:tag="mwar"
+                            android:layout_centerVertical="true"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideDriverCarNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5px"
+                            android:layout_marginRight="5px"
+                            android:layout_toRightOf="@+id/imageViewEndRideAutoIcon"
+                            android:gravity="center_vertical"
+                            android:maxLines="2"
+                            android:text="Car Number"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <!-- ride bill -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewEndRideSummary"
+                        android:layout_width="match_parent"
+                        android:layout_height="40px"
+                        android:background="@color/grey_dark_title"
+                        android:gravity="center"
+                        android:text="Ride Summary"
+                        android:textColor="@color/white"
+                        android:textSize="30px"/>
+
+
+                    <!-- fare -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideFare"
+                            android:layout_width="340px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30px"
+                            android:text="Fare"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideFareRupee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10px"
+                            android:layout_toLeftOf="@+id/textViewEndRideFareValue"
+                            android:gravity="center_vertical"
+                            android:text="@string/rupee"
+                            android:textColor="@color/grey_dark_less"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideFareValue"
+                            android:layout_width="110px"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical|right"
+                            android:layout_marginRight="40px"
+                            android:text="0"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
+
+                    <!-- luggage charge -->
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutLuggageCharge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2px">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideLuggageCharge"
+                            android:layout_width="340px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30px"
+                            android:text="Luggage Charge"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideLuggageChargeRupee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10px"
+                            android:layout_toLeftOf="@+id/textViewEndRideLuggageChargeValue"
+                            android:gravity="center_vertical"
+                            android:text="@string/rupee"
+                            android:textColor="@color/grey_dark_less"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideLuggageChargeValue"
+                            android:layout_width="110px"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical|right"
+                            android:layout_marginRight="40px"
+                            android:text="0"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
+                    <!-- convenience charge -->
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutConvenienceCharge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2px">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideConvenienceCharge"
+                            android:layout_width="340px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30px"
+                            android:text="Convenience Charge"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideConvenienceChargeRupee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10px"
+                            android:layout_toLeftOf="@+id/textViewEndRideConvenienceChargeValue"
+                            android:gravity="center_vertical"
+                            android:text="@string/rupee"
+                            android:textColor="@color/grey_dark_less"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideConvenienceChargeValue"
+                            android:layout_width="110px"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical|right"
+                            android:layout_marginRight="40px"
+                            android:text="0"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
+                    <!-- discount -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2px">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideDiscount"
+                            android:layout_width="340px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30px"
+                            android:text="Discount"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideDiscountRupee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10px"
+                            android:layout_toLeftOf="@+id/textViewEndRideDiscountValue"
+                            android:gravity="center_vertical"
+                            android:text="@string/rupee"
+                            android:textColor="@color/grey_dark_less"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideDiscountValue"
+                            android:layout_width="110px"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical|right"
+                            android:layout_marginRight="40px"
+                            android:text="0"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
+                    <product.clicklabs.jugnoo.utils.NonScrollListView
+                        android:id="@+id/listViewEndRideDiscounts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@color/transparent"
+                        android:dividerHeight="1px"
+                        android:splitMotionEvents="false">
+                    </product.clicklabs.jugnoo.utils.NonScrollListView>
+
+
+                    <!-- discounted fare -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2px">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideFinalFare"
+                            android:layout_width="340px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30px"
+                            android:text="Final Fare"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideFinalFareRupee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10px"
+                            android:layout_toLeftOf="@+id/textViewEndRideFinalFareValue"
+                            android:gravity="center_vertical"
+                            android:text="@string/rupee"
+                            android:textColor="@color/grey_dark_less"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideFinalFareValue"
+                            android:layout_width="110px"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical|right"
+                            android:layout_marginRight="40px"
+                            android:text="0"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
+                    <!-- jugnoo cash deducted -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2px">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideJugnooCash"
+                            android:layout_width="340px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30px"
+                            android:text="Jugnoo Cash"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideJugnooCashRupee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10px"
+                            android:layout_toLeftOf="@+id/textViewEndRideJugnooCashValue"
+                            android:gravity="center_vertical"
+                            android:text="@string/rupee"
+                            android:textColor="@color/grey_dark_less"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideJugnooCashValue"
+                            android:layout_width="110px"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical|right"
+                            android:layout_marginRight="40px"
+                            android:text="0"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
+                    <!-- to be paid -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2px">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideToBePaid"
+                            android:layout_width="340px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30px"
+                            android:text="To Be Paid"
+                            android:textColor="@color/black"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideToBePaidRupee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10px"
+                            android:layout_toLeftOf="@+id/textViewEndRideToBePaidValue"
+                            android:gravity="center_vertical"
+                            android:text="@string/rupee"
+                            android:textColor="@color/black"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideToBePaidValue"
+                            android:layout_width="110px"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical|right"
+                            android:layout_marginRight="40px"
+                            android:text="0"
+                            android:textColor="@color/black"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
+                    
+                    <ImageView
+                        android:layout_width="500px"
+                        android:layout_height="2px"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/grey_dark_less"
+                        android:layout_marginTop="10px"/>
+                    
+                </LinearLayout>
+
+                <!-- ride details -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10px">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50px"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideBaseFare"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:text="Base Fare"
+                            android:textColor="@color/grey_dark_more"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideBaseFareValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="Rs. 20"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideDistance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:text="Distance"
+                            android:textColor="@color/grey_dark_more"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideDistanceValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="20 kms"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="50px"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewEndRideTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:text="Time"
+                            android:textColor="@color/grey_dark_more"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideTimeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="20 minutes"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+                <!-- fare factor -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10px"
+                    android:orientation="vertical"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/textViewEndRideFareFactor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="Rate"
+                        android:textColor="@color/grey_dark_more"
+                        android:textSize="26px"/>
+
+                    <TextView
+                        android:id="@+id/textViewEndRideFareFactorValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="1x"
+                        android:textColor="@color/grey_dark_more_receipt"
+                        android:textSize="26px"/>
+                </LinearLayout>
+
+
+
+                <!-- start end locations -->
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutEndRideStartEndInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px">
+
+                    <ImageView
+                        android:id="@+id/imageViewStartEnd"
+                        android:layout_width="287px"
+                        android:layout_height="40px"
+                        android:src="@drawable/start_end_icon"
+                        android:tag="mwar"
+                        android:layout_centerHorizontal="true"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="280px"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/imageViewStartEnd"
+                        android:orientation="vertical"
+                        android:layout_marginTop="10px">
+                        <TextView
+                            android:id="@+id/textViewEndRideStartLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Start"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"
+                            android:layout_gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideStartTimeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="00:00 AM"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="26px"
+                            android:layout_marginTop="4px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideStartLocationValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="5"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal"
+                            android:text="Sector 37, Chandigarh\nIndia"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="26px"
+                            android:layout_marginTop="14px"
+                            android:layout_marginLeft="10px"
+                            android:layout_marginRight="10px"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="280px"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/imageViewStartEnd"
+                        android:orientation="vertical"
+                        android:layout_marginTop="10px">
+                        <TextView
+                            android:id="@+id/textViewEndRideEndLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="End"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"
+                            android:layout_gravity="center_horizontal"/>
+                        <TextView
+                            android:id="@+id/textViewEndRideEndTimeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:maxLines="2"
+                            android:text="00:00 AM"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="26px"
+                            android:layout_marginTop="4px"/>
+                        <TextView
+                            android:id="@+id/textViewEndRideEndLocationValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="5"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal"
+                            android:text="Sector 28, Chandigarh\nIndia"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="26px"
+                            android:layout_marginTop="14px"
+                            android:layout_marginLeft="10px"
+                            android:layout_marginRight="10px"/>
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/buttonEndRideOk"
+        android:layout_width="648px"
+        android:layout_height="100px"
+        android:layout_marginTop="30px"
+        android:layout_marginBottom="30px"
+        android:layout_below="@+id/relativeLayoutReceipt"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_yellow_selector"
+        android:text="OK"
+        android:textColor="@drawable/text_color_white_alpha_selector"
+        android:textSize="@dimen/button_text_size"/>
+
+</RelativeLayout>

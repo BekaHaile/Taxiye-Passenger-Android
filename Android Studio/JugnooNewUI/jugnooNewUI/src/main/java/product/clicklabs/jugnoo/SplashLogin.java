@@ -491,10 +491,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			Log.e("Google Play Service Error ","="+resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashLogin.this);
 		}
-		else{
-			DialogPopup.showLocationSettingsAlert(SplashLogin.this);
-		}
-		
+
 		HomeActivity.checkForAccessTokenChange(this);
 	}
 	

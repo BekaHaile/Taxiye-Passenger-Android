@@ -72,6 +72,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.adapters.PromotionListEventHandler;
 import product.clicklabs.jugnoo.adapters.PromotionsListAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
@@ -83,7 +84,6 @@ import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
-import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
@@ -256,11 +256,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ScrollView scrollViewEndRide;
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
-    TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
-    TextView textViewEndRideFareValue, textViewEndRidePromotionDiscountValue, textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue,
-        textViewEndRideToBePaidValue, textViewEndRideBaseFareValue, textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideAddJugnooCashInfo,
-        textViewEndRideFareFactorValue;
+	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge;
+	NonScrollListView listViewEndRideDiscounts;
+    TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
+			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
+			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
+			textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideFareFactorValue;
+	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
+	EndRideDiscountsAdapter endRideDiscountsAdapter;
 
 
 
@@ -746,16 +750,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
         linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
+			@Override
+			public void keyboardOpened() {
 
-            }
+			}
 
-            @Override
-            public void keyBoardClosed() {
+			@Override
+			public void keyBoardClosed() {
 
-            }
-        }));
+			}
+		}));
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78),
             new SearchListActionsHandler() {
@@ -821,64 +825,60 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
         scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
 
-        textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName);
-        textViewEndRideDriverName.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber);
-        textViewEndRideDriverCarNumber.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.latoLight(this));
+        textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.latoLight(this));
 
-        textViewEndRideStartLocationValue = (TextView) findViewById(R.id.textViewEndRideStartLocationValue);
-        textViewEndRideStartLocationValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideEndLocationValue = (TextView) findViewById(R.id.textViewEndRideEndLocationValue);
-        textViewEndRideEndLocationValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideStartTimeValue = (TextView) findViewById(R.id.textViewEndRideStartTimeValue);
-        textViewEndRideStartTimeValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideEndTimeValue = (TextView) findViewById(R.id.textViewEndRideEndTimeValue);
-        textViewEndRideEndTimeValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideStartLocationValue = (TextView) findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideEndLocationValue = (TextView) findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideStartTimeValue = (TextView) findViewById(R.id.textViewEndRideStartTimeValue); textViewEndRideStartTimeValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideEndTimeValue = (TextView) findViewById(R.id.textViewEndRideEndTimeValue); textViewEndRideEndTimeValue.setTypeface(Fonts.latoLight(this));
 
-        textViewEndRideFareValue = (TextView) findViewById(R.id.textViewEndRideFareValue);
-        textViewEndRideFareValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRidePromotionDiscountValue = (TextView) findViewById(R.id.textViewEndRidePromotionDiscountValue);
-        textViewEndRidePromotionDiscountValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideFinalFareValue = (TextView) findViewById(R.id.textViewEndRideFinalFareValue);
-        textViewEndRideFinalFareValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideJugnooCashValue = (TextView) findViewById(R.id.textViewEndRideJugnooCashValue);
-        textViewEndRideJugnooCashValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideToBePaidValue = (TextView) findViewById(R.id.textViewEndRideToBePaidValue);
-        textViewEndRideToBePaidValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue);
-        textViewEndRideBaseFareValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue);
-        textViewEndRideDistanceValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue);
-        textViewEndRideTimeValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideAddJugnooCashInfo = (TextView) findViewById(R.id.textViewEndRideAddJugnooCashInfo);
-        textViewEndRideAddJugnooCashInfo.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue);
-        textViewEndRideFareFactorValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideFareValue = (TextView) findViewById(R.id.textViewEndRideFareValue); textViewEndRideFareValue.setTypeface(Fonts.latoLight(this));
+		textViewEndRideDiscountValue = (TextView) findViewById(R.id.textViewEndRideDiscountValue); textViewEndRideDiscountValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideFinalFareValue = (TextView) findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideJugnooCashValue = (TextView) findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideToBePaidValue = (TextView) findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.latoLight(this));
 
-        buttonEndRideOk = (Button) findViewById(R.id.buttonEndRideOk);
-        buttonEndRideOk.setTypeface(Fonts.latoRegular(this));
+		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
+		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
+
+		textViewEndRideLuggageChargeValue = (TextView) findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoLight(this));
+		textViewEndRideConvenienceChargeValue = (TextView) findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoLight(this));
+		textViewEndRideDiscount = (TextView) findViewById(R.id.textViewEndRideDiscount); textViewEndRideDiscount.setTypeface(Fonts.latoLight(this));
+		textViewEndRideDiscountRupee = (TextView) findViewById(R.id.textViewEndRideDiscountRupee); textViewEndRideDiscountRupee.setTypeface(Fonts.latoLight(this));
+
+		listViewEndRideDiscounts = (NonScrollListView) findViewById(R.id.listViewEndRideDiscounts);
+		endRideDiscountsAdapter = new EndRideDiscountsAdapter(this);
+		listViewEndRideDiscounts.setAdapter(endRideDiscountsAdapter);
+
+        buttonEndRideOk = (Button) findViewById(R.id.buttonEndRideOk); buttonEndRideOk.setTypeface(Fonts.latoRegular(this));
 
 
-        ((TextView) findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideStartTime)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideEndTime)).setTypeface(Fonts.latoRegular(this));
+
+        ((TextView) findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.latoLight(this));
+        ((TextView) findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.latoLight(this));
         ((TextView) findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideFareRupee)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRidePromotionDiscount)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRidePromotionDiscountRupee)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideFinalFareRupee)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideJugnooCashRupee)).setTypeface(Fonts.latoRegular(this));
+
+        ((TextView) findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.latoLight(this));
+        ((TextView) findViewById(R.id.textViewEndRideFareRupee)).setTypeface(Fonts.latoLight(this));
+		((TextView) findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.latoLight(this));
+		((TextView) findViewById(R.id.textViewEndRideLuggageChargeRupee)).setTypeface(Fonts.latoLight(this));
+		((TextView) findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.latoLight(this));
+		((TextView) findViewById(R.id.textViewEndRideConvenienceChargeRupee)).setTypeface(Fonts.latoLight(this));
+        ((TextView) findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.latoLight(this));
+        ((TextView) findViewById(R.id.textViewEndRideFinalFareRupee)).setTypeface(Fonts.latoLight(this));
+        ((TextView) findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.latoLight(this));
+        ((TextView) findViewById(R.id.textViewEndRideJugnooCashRupee)).setTypeface(Fonts.latoLight(this));
         ((TextView) findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideToBePaidRupee)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -1982,7 +1982,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         scrollViewEndRide.scrollTo(0, 0);
 
-                        mapLayout.setVisibility(View.GONE);
+                        mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
 
                         textViewEndRideDriverName.setText(Data.assignedDriverInfo.name);
@@ -1995,20 +1995,40 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewEndRideEndTimeValue.setText(Data.endRideData.dropTime);
 
                         textViewEndRideFareValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.fare));
-                        textViewEndRidePromotionDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+
+						if(Utils.compareDouble(Data.endRideData.luggageCharge, 0) > 0){
+							relativeLayoutLuggageCharge.setVisibility(View.VISIBLE);
+							textViewEndRideLuggageChargeValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.luggageCharge));
+						} else{
+							relativeLayoutLuggageCharge.setVisibility(View.GONE);
+						}
+
+						if(Utils.compareDouble(Data.endRideData.convenienceCharge, 0) > 0){
+							relativeLayoutConvenienceCharge.setVisibility(View.VISIBLE);
+							textViewEndRideConvenienceChargeValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.convenienceCharge));
+						} else{
+							relativeLayoutConvenienceCharge.setVisibility(View.GONE);
+						}
+
+						if(Data.endRideData.discountTypes.size() > 0){
+							listViewEndRideDiscounts.setVisibility(View.VISIBLE);
+							endRideDiscountsAdapter.setList(Data.endRideData.discountTypes);
+							textViewEndRideDiscountRupee.setVisibility(View.GONE);
+							textViewEndRideDiscountValue.setVisibility(View.GONE);
+						} else{
+							listViewEndRideDiscounts.setVisibility(View.GONE);
+							textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
+							textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
+							textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+						}
+
                         textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
                         textViewEndRideJugnooCashValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.paidUsingWallet));
                         textViewEndRideToBePaidValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay));
+
+
                         textViewEndRideFareFactorValue.setText(decimalFormat.format(Data.endRideData.fareFactor) + "x");
-
                         textViewEndRideBaseFareValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.endRideData.baseFare));
-
-                        if (!"".equalsIgnoreCase(Data.endRideData.banner)) {
-                            textViewEndRideAddJugnooCashInfo.setText(Data.endRideData.banner);
-                        }
-
-                        textViewEndRideAddJugnooCashInfo.setVisibility(View.GONE);
-
                         double totalDistanceInKm = Data.endRideData.distance;
                         String kmsStr = "";
                         if (totalDistanceInKm > 1) {
@@ -2017,7 +2037,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             kmsStr = "km";
                         }
                         textViewEndRideDistanceValue.setText("" + decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
-
                         textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(Data.endRideData.rideTime) + " min");
 
                         // delete the RidePath Table from Phone Database :)
@@ -2738,6 +2757,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				e.printStackTrace();
 			}
 			Data.supportFeedbackSubmitted = false;
+
 
 
             initializeFusedLocationFetchers();
@@ -3536,34 +3556,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             e.printStackTrace();
                                         }
 
-                                        double baseFare = Data.fareStructure.fixedFare;
-                                        if (jObj.has("base_fare")) {
-                                            baseFare = jObj.getDouble("base_fare");
-                                        }
-
-                                        String banner = "";
-                                        if (jObj.has("banner")) {
-                                            banner = jObj.getString("banner");
-                                        }
-
-                                        double fareFactor = 1;
-                                        if (jObj.has("fare_factor")) {
-                                            fareFactor = jObj.getDouble("fare_factor");
-                                        }
-
-                                        Data.endRideData = new EndRideData(engagementId,
-                                            jObj.getString("pickup_address"),
-                                            jObj.getString("drop_address"),
-                                            jObj.getString("pickup_time"),
-                                            jObj.getString("drop_time"),
-                                            banner,
-                                            jObj.getDouble("fare"),
-                                            jObj.getDouble("discount"),
-                                            jObj.getDouble("paid_using_wallet"),
-                                            jObj.getDouble("to_pay"),
-                                            jObj.getDouble("distance"),
-                                            jObj.getDouble("ride_time"),
-                                            baseFare, fareFactor);
+										Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
 
                                         clearSPData();
                                         map.clear();
