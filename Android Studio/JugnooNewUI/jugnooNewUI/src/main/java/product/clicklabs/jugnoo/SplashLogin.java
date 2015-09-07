@@ -807,13 +807,11 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			
 			@Override
 			public void onClick(View v) {
+				DialogPopup.dismissAlertPopup();
 				if(0 == otpFlag){
 					RegisterScreen.facebookLogin = false;
 					OTPConfirmScreen.intentFromRegister = false;
 					OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "", accessToken);
-					startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
-					finish();
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 				else if(1 == otpFlag){
 					RegisterScreen.facebookLogin = true;
@@ -824,10 +822,12 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                         Data.facebookUserData.userEmail,
                         Data.facebookUserData.userName,
                         phoneNoOfUnverifiedAccount, "", "", accessToken);
-					startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
-					finish();
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
+				Intent intent = new Intent(SplashLogin.this, OTPConfirmScreen.class);
+				intent.putExtra("show_timer", 1);
+				startActivity(intent);
+				finish();
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 	}

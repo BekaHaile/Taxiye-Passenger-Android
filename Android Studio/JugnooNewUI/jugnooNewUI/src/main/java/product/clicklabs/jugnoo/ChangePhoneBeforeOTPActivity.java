@@ -76,7 +76,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				performBackPressed();
+				performBackPressed(false);
 			}
 		});
 
@@ -216,7 +216,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
 
                                         @Override
                                         public void onClick(View v) {
-                                            performBackPressed();
+											performBackPressed(true);
                                         }
                                     });
                                 }
@@ -242,13 +242,16 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
 	
 	@Override
 	public void onBackPressed() {
-		performBackPressed();
+		performBackPressed(false);
 		super.onBackPressed();
 	}
 	
 	
-	public void performBackPressed(){
+	public void performBackPressed(boolean showTimer){
         Intent intent = new Intent(ChangePhoneBeforeOTPActivity.this, OTPConfirmScreen.class);
+		if(showTimer){
+			intent.putExtra("show_timer", 1);
+		}
         startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);

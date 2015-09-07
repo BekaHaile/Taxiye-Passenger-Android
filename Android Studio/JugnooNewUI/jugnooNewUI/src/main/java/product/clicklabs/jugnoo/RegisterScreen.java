@@ -778,9 +778,6 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         if (!RegisterScreen.facebookLogin) {
             OTPConfirmScreen.intentFromRegister = true;
             OTPConfirmScreen.emailRegisterData = new EmailRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
-            startActivity(new Intent(RegisterScreen.this, OTPConfirmScreen.class));
-            finish();
-            overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } else {
             OTPConfirmScreen.intentFromRegister = true;
             OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
@@ -789,10 +786,12 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                 Data.facebookUserData.userEmail,
                 Data.facebookUserData.userName,
                 phoneNo, password, referralCode, accessToken);
-            startActivity(new Intent(RegisterScreen.this, OTPConfirmScreen.class));
-            finish();
-            overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
+		Intent intent = new Intent(RegisterScreen.this, OTPConfirmScreen.class);
+		intent.putExtra("show_timer", 1);
+		startActivity(intent);
+		finish();
+		overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
 
