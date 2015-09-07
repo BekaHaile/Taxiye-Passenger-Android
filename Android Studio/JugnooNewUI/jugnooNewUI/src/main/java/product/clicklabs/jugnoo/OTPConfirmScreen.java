@@ -104,7 +104,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			e.printStackTrace();
 		}
 
-
 		super.onNewIntent(intent);
 	}
 
