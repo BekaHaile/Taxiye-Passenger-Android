@@ -4,17 +4,20 @@ import java.util.ArrayList;
 
 public class EndRideData {
 	
-	public String engagementId, 
+	public String engagementId, driverName, driverCarNumber,
 		pickupAddress, dropAddress,
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
 		distance, rideTime, baseFare, fareFactor;
 	public ArrayList<DiscountType> discountTypes;
 	
-	public EndRideData(String engagementId, String pickupAddress, String dropAddress, String pickupTime, String dropTime,
-			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet, double toPay, double distance, double rideTime, double baseFare, double fareFactor,
+	public EndRideData(String engagementId, String driverName, String driverCarNumber, String pickupAddress, String dropAddress, String pickupTime, String dropTime,
+			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
+					   double toPay, double distance, double rideTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes){
 		this.engagementId = engagementId;
+		this.driverName = driverName;
+		this.driverCarNumber = driverCarNumber;
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
 		this.pickupTime = pickupTime;

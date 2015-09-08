@@ -321,6 +321,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
             textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel, textViewRateRide;
         ImageView imageViewDiv;
         RelativeLayout relativeLayoutCancel, relativeLayoutTo, relativeLayoutRateRide;
+		LinearLayout linearLayoutRideReceipt;
         RelativeLayout relative;
         int id;
     }
@@ -380,10 +381,12 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 holder.relativeLayoutCancel = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutCancel);
                 holder.relativeLayoutTo = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutTo);
                 holder.relativeLayoutRateRide = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutRateRide);
+				holder.linearLayoutRideReceipt = (LinearLayout) convertView.findViewById(R.id.linearLayoutRideReceipt);
 
                 holder.relative.setTag(holder);
                 holder.relativeLayoutCancel.setTag(holder);
                 holder.relativeLayoutRateRide.setTag(holder);
+				holder.linearLayoutRideReceipt.setTag(holder);
 
                 holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
                 ASSL.DoMagic(holder.relative);
@@ -402,6 +405,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     holder.textViewPickupAt.setVisibility(View.VISIBLE);
                     holder.relativeLayoutTo.setVisibility(View.GONE);
                     holder.relativeLayoutRateRide.setVisibility(View.GONE);
+					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
                     holder.imageViewDiv.setVisibility(View.VISIBLE);
 
                     holder.textViewAmount.setVisibility(View.GONE);
@@ -443,10 +447,12 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     if(1 != rideInfo.isRatedBefore){
                         holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
                         holder.imageViewDiv.setVisibility(View.GONE);
+						holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
                     }
                     else{
                         holder.relativeLayoutRateRide.setVisibility(View.GONE);
                         holder.imageViewDiv.setVisibility(View.VISIBLE);
+						holder.linearLayoutRideReceipt.setVisibility(View.GONE);
                     }
                 }
             }
@@ -475,10 +481,12 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 if(1 != rideInfo.isRatedBefore){
                     holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
                     holder.imageViewDiv.setVisibility(View.GONE);
+					holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
                 }
                 else{
                     holder.relativeLayoutRateRide.setVisibility(View.GONE);
                     holder.imageViewDiv.setVisibility(View.VISIBLE);
+					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
                 }
             }
 
@@ -543,6 +551,28 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     }
                 }
             });
+
+			holder.linearLayoutRideReceipt.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						holder = (ViewHolderRideTransaction) v.getTag();
+
+						Intent intent = new Intent(RideTransactionsActivity.this, RideSummaryActivity.class);
+						if(futureSchedule != null) {
+							intent.putExtra("engagement_id", rideInfosList.get(holder.id-1).engagementId);
+						}
+						else{
+							intent.putExtra("engagement_id", rideInfosList.get(holder.id).engagementId);
+						}
+						startActivity(intent);
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 
 
             return convertView;

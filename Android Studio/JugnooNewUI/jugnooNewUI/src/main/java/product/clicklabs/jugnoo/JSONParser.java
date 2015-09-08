@@ -466,8 +466,16 @@ public class JSONParser {
 			discountTypes.clear();
 		}
 
+		String driverName = "", driverCarNumber = "";
+		if(jLastRideData.has("driver_name")){
+			driverName = jLastRideData.getString("driver_name");
+		}
+		if(jLastRideData.has("driver_car_number")){
+			driverCarNumber = jLastRideData.getString("driver_car_number");
+		}
 
-		return new EndRideData(engagementId,
+
+		return new EndRideData(engagementId, driverName, driverCarNumber,
 				jLastRideData.getString("pickup_address"),
 				jLastRideData.getString("drop_address"),
 				jLastRideData.getString("pickup_time"),

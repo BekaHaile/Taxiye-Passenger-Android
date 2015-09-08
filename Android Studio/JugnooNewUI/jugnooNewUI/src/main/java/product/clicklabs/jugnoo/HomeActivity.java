@@ -259,7 +259,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
-			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
+			textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideFareFactorValue;
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
@@ -848,7 +848,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		textViewEndRideLuggageChargeValue = (TextView) findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideConvenienceChargeValue = (TextView) findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoRegular(this));
-		textViewEndRideDiscount = (TextView) findViewById(R.id.textViewEndRideDiscount); textViewEndRideDiscount.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideDiscountRupee = (TextView) findViewById(R.id.textViewEndRideDiscountRupee); textViewEndRideDiscountRupee.setTypeface(Fonts.latoRegular(this));
 
 		listViewEndRideDiscounts = (NonScrollListView) findViewById(R.id.listViewEndRideDiscounts);

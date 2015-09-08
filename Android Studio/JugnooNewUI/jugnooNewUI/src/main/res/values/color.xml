@@ -101,8 +101,9 @@
     </color>
     <color name="black_text_alpha">#99242424</color>
     <color name="black_text_grey">#4C4C4C</color>
-    
-    
+
+
+    <color name="grey_light_more_alpha">#88BBBBBB</color>
     <color name="grey_light_more">#BBBBBB</color>
     <color name="grey_dark_title">#6E6E6E</color>
     <color name="grey_light">#DDDDDD</color>
