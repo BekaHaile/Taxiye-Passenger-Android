@@ -824,7 +824,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                         phoneNoOfUnverifiedAccount, "", "", accessToken);
 				}
 				Intent intent = new Intent(SplashLogin.this, OTPConfirmScreen.class);
-				intent.putExtra("show_timer", 1);
+				intent.putExtra("show_timer", 0);
 				startActivity(intent);
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
