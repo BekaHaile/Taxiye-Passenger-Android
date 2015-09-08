@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black_translucent"
     >
 
     
@@ -79,7 +80,8 @@
                             android:layout_height="62px"
                             android:src="@drawable/auto_icon_end_ride"
                             android:tag="mwar"
-                            android:layout_centerVertical="true"/>
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideDriverCarNumber"
@@ -120,7 +122,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px">
+                        android:layout_marginTop="14px">
 
                         <TextView
                             android:id="@+id/textViewEndRideFare"
@@ -161,7 +163,7 @@
                         android:id="@+id/relativeLayoutLuggageCharge"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2px">
+                        android:layout_marginTop="6px">
 
                         <TextView
                             android:id="@+id/textViewEndRideLuggageCharge"
@@ -201,7 +203,7 @@
                         android:id="@+id/relativeLayoutConvenienceCharge"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2px">
+                        android:layout_marginTop="6px">
 
                         <TextView
                             android:id="@+id/textViewEndRideConvenienceCharge"
@@ -240,7 +242,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2px">
+                        android:layout_marginTop="6px">
 
                         <TextView
                             android:id="@+id/textViewEndRideDiscount"
@@ -280,7 +282,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:divider="@color/transparent"
-                        android:dividerHeight="1px"
+                        android:dividerHeight="2dp"
                         android:splitMotionEvents="false">
                     </product.clicklabs.jugnoo.utils.NonScrollListView>
 
@@ -289,7 +291,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2px">
+                        android:layout_marginTop="6px">
 
                         <TextView
                             android:id="@+id/textViewEndRideFinalFare"
@@ -328,7 +330,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2px">
+                        android:layout_marginTop="6px">
 
                         <TextView
                             android:id="@+id/textViewEndRideJugnooCash"
@@ -367,7 +369,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2px">
+                        android:layout_marginTop="6px">
 
                         <TextView
                             android:id="@+id/textViewEndRideToBePaid"
@@ -377,7 +379,7 @@
                             android:layout_marginLeft="30px"
                             android:text="To Be Paid"
                             android:textColor="@color/black"
-                            android:textSize="26px"/>
+                            android:textSize="30px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideToBePaidRupee"
@@ -388,7 +390,7 @@
                             android:gravity="center_vertical"
                             android:text="@string/rupee"
                             android:textColor="@color/black"
-                            android:textSize="26px"/>
+                            android:textSize="30px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideToBePaidValue"
@@ -399,7 +401,7 @@
                             android:layout_marginRight="40px"
                             android:text="0"
                             android:textColor="@color/black"
-                            android:textSize="26px"/>
+                            android:textSize="30px"/>
                     </RelativeLayout>
 
                     
@@ -567,7 +569,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Start"
-                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textColor="@color/grey_dark_more"
                             android:textSize="26px"
                             android:layout_gravity="center_horizontal"/>
 
@@ -592,7 +594,7 @@
                             android:gravity="center_horizontal"
                             android:text="Sector 37, Chandigarh\nIndia"
                             android:textColor="@color/grey_dark"
-                            android:textSize="26px"
+                            android:textSize="24px"
                             android:layout_marginTop="14px"
                             android:layout_marginLeft="10px"
                             android:layout_marginRight="10px"/>
@@ -611,7 +613,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="End"
-                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textColor="@color/grey_dark_more"
                             android:textSize="26px"
                             android:layout_gravity="center_horizontal"/>
                         <TextView
@@ -634,7 +636,7 @@
                             android:gravity="center_horizontal"
                             android:text="Sector 28, Chandigarh\nIndia"
                             android:textColor="@color/grey_dark"
-                            android:textSize="26px"
+                            android:textSize="24px"
                             android:layout_marginTop="14px"
                             android:layout_marginLeft="10px"
                             android:layout_marginRight="10px"/>

@@ -63,7 +63,10 @@ public class GAPIAddress{
 			}
 		}
 
-		return formattedAddress.replace(",", "");
+		address = formattedAddress.replace(",", "");
+		address = address.replace("-", " ");
+
+		return address;
 //		return address;
 	}
 	

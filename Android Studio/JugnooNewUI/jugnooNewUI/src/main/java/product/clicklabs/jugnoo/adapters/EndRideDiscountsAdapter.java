@@ -58,11 +58,11 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             holder = new ViewHolderDiscount();
-            convertView = mInflater.inflate(R.layout.list_item_feedback_reason, null);
+            convertView = mInflater.inflate(R.layout.list_item_end_ride_discount, null);
 
-            holder.textViewDiscount = (TextView) convertView.findViewById(R.id.textViewDiscount); holder.textViewDiscount.setTypeface(Fonts.latoLight(context));
-			holder.textViewDiscountRupee = (TextView) convertView.findViewById(R.id.textViewDiscountRupee); holder.textViewDiscountRupee.setTypeface(Fonts.latoLight(context));
-			holder.textViewDiscountValue = (TextView) convertView.findViewById(R.id.textViewDiscountValue); holder.textViewDiscountValue.setTypeface(Fonts.latoLight(context));
+            holder.textViewDiscount = (TextView) convertView.findViewById(R.id.textViewDiscount); holder.textViewDiscount.setTypeface(Fonts.latoRegular(context));
+			holder.textViewDiscountRupee = (TextView) convertView.findViewById(R.id.textViewDiscountRupee); holder.textViewDiscountRupee.setTypeface(Fonts.latoRegular(context));
+			holder.textViewDiscountValue = (TextView) convertView.findViewById(R.id.textViewDiscountValue); holder.textViewDiscountValue.setTypeface(Fonts.latoRegular(context));
 
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
 

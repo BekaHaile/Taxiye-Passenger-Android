@@ -1075,7 +1075,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="96px"
-                android:background="@color/white_light_grey"
                 android:splitMotionEvents="false"
                 android:visibility="gone">
 

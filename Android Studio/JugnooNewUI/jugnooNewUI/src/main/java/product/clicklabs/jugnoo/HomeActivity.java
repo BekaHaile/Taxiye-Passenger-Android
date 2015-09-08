@@ -859,8 +859,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-        ((TextView) findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.latoRegular(this));
 
         ((TextView) findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.latoRegular(this));
