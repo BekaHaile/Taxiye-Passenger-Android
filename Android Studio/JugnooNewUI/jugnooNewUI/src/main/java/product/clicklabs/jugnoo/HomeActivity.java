@@ -825,31 +825,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
         scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
 
-        textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.latoLight(this));
-        textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.latoLight(this));
+        textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.latoRegular(this));
 
-        textViewEndRideStartLocationValue = (TextView) findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Fonts.latoLight(this));
-        textViewEndRideEndLocationValue = (TextView) findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Fonts.latoLight(this));
-        textViewEndRideStartTimeValue = (TextView) findViewById(R.id.textViewEndRideStartTimeValue); textViewEndRideStartTimeValue.setTypeface(Fonts.latoLight(this));
-        textViewEndRideEndTimeValue = (TextView) findViewById(R.id.textViewEndRideEndTimeValue); textViewEndRideEndTimeValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideStartLocationValue = (TextView) findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideEndLocationValue = (TextView) findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideStartTimeValue = (TextView) findViewById(R.id.textViewEndRideStartTimeValue); textViewEndRideStartTimeValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideEndTimeValue = (TextView) findViewById(R.id.textViewEndRideEndTimeValue); textViewEndRideEndTimeValue.setTypeface(Fonts.latoRegular(this));
 
-        textViewEndRideFareValue = (TextView) findViewById(R.id.textViewEndRideFareValue); textViewEndRideFareValue.setTypeface(Fonts.latoLight(this));
-		textViewEndRideDiscountValue = (TextView) findViewById(R.id.textViewEndRideDiscountValue); textViewEndRideDiscountValue.setTypeface(Fonts.latoLight(this));
-        textViewEndRideFinalFareValue = (TextView) findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Fonts.latoLight(this));
-        textViewEndRideJugnooCashValue = (TextView) findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideFareValue = (TextView) findViewById(R.id.textViewEndRideFareValue); textViewEndRideFareValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideDiscountValue = (TextView) findViewById(R.id.textViewEndRideDiscountValue); textViewEndRideDiscountValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideFinalFareValue = (TextView) findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideJugnooCashValue = (TextView) findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Fonts.latoRegular(this));
         textViewEndRideToBePaidValue = (TextView) findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.latoLight(this));
-        textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.latoLight(this));
-        textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.latoLight(this));
-        textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.latoLight(this));
+        textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.latoRegular(this));
 
 		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
 
-		textViewEndRideLuggageChargeValue = (TextView) findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoLight(this));
-		textViewEndRideConvenienceChargeValue = (TextView) findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoLight(this));
-		textViewEndRideDiscount = (TextView) findViewById(R.id.textViewEndRideDiscount); textViewEndRideDiscount.setTypeface(Fonts.latoLight(this));
-		textViewEndRideDiscountRupee = (TextView) findViewById(R.id.textViewEndRideDiscountRupee); textViewEndRideDiscountRupee.setTypeface(Fonts.latoLight(this));
+		textViewEndRideLuggageChargeValue = (TextView) findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideConvenienceChargeValue = (TextView) findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideDiscount = (TextView) findViewById(R.id.textViewEndRideDiscount); textViewEndRideDiscount.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideDiscountRupee = (TextView) findViewById(R.id.textViewEndRideDiscountRupee); textViewEndRideDiscountRupee.setTypeface(Fonts.latoRegular(this));
 
 		listViewEndRideDiscounts = (NonScrollListView) findViewById(R.id.listViewEndRideDiscounts);
 		endRideDiscountsAdapter = new EndRideDiscountsAdapter(this);
@@ -859,20 +859,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-        ((TextView) findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.latoLight(this));
-        ((TextView) findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.latoLight(this));
+        ((TextView) findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.latoRegular(this));
 
-        ((TextView) findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.latoLight(this));
-        ((TextView) findViewById(R.id.textViewEndRideFareRupee)).setTypeface(Fonts.latoLight(this));
-		((TextView) findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.latoLight(this));
-		((TextView) findViewById(R.id.textViewEndRideLuggageChargeRupee)).setTypeface(Fonts.latoLight(this));
-		((TextView) findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.latoLight(this));
-		((TextView) findViewById(R.id.textViewEndRideConvenienceChargeRupee)).setTypeface(Fonts.latoLight(this));
-        ((TextView) findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.latoLight(this));
-        ((TextView) findViewById(R.id.textViewEndRideFinalFareRupee)).setTypeface(Fonts.latoLight(this));
-        ((TextView) findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.latoLight(this));
-        ((TextView) findViewById(R.id.textViewEndRideJugnooCashRupee)).setTypeface(Fonts.latoLight(this));
+        ((TextView) findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideFareRupee)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewEndRideLuggageChargeRupee)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewEndRideConvenienceChargeRupee)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideFinalFareRupee)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideJugnooCashRupee)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideToBePaidRupee)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
