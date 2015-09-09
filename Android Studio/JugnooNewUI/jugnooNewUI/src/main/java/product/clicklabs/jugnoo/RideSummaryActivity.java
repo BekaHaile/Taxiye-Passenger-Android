@@ -12,6 +12,11 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
@@ -34,9 +39,11 @@ import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideSummaryActivity extends BaseActivity implements FlurryEventNames {
+public class RideSummaryActivity extends BaseFragmentActivity implements FlurryEventNames {
 
     LinearLayout relative;
+
+	GoogleMap mapLite;
 
     TextView textViewTitle;
     ImageView imageViewBack;
@@ -72,6 +79,29 @@ public class RideSummaryActivity extends BaseActivity implements FlurryEventName
 
         relative = (LinearLayout) findViewById(R.id.relative);
         new ASSL(this, relative, 1134, 720, false);
+
+		mapLite = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapLite)).getMap();
+		if (mapLite != null) {
+			mapLite.getUiSettings().setAllGesturesEnabled(false);
+			mapLite.getUiSettings().setZoomControlsEnabled(false);
+			mapLite.setMyLocationEnabled(false);
+			mapLite.getUiSettings().setTiltGesturesEnabled(false);
+			mapLite.getUiSettings().setMyLocationButtonEnabled(false);
+			mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+			mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+					return true;
+				}
+			});
+
+			if (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0) {
+				mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 15));
+			} else {
+				mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), 15));
+			}
+		}
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
