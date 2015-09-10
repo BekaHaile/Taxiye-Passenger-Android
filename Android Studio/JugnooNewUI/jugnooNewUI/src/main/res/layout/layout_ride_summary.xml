@@ -8,23 +8,102 @@
     >
 
     
-    <RelativeLayout
-        android:id="@+id/relativeLayoutReceipt"
+    <LinearLayout
+        android:id="@+id/linearLayoutReceipt"
         android:layout_width="671px"
         android:layout_height="833px"
         android:layout_marginTop="38px"
         android:layout_centerHorizontal="true"
         android:background="@drawable/receipt_background"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         >
 
+
+        <!-- driver info -->
+        <RelativeLayout
+            android:id="@+id/relativeLayoutEndRideDriverInfo"
+            android:layout_width="560px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:layout_centerHorizontal="true">
+
+            <RelativeLayout
+                android:layout_width="280px"
+                android:layout_height="80px">
+
+                <ImageView
+                    android:id="@+id/imageViewEndRideDriverIcon"
+                    android:layout_width="32px"
+                    android:layout_height="43px"
+                    android:layout_marginLeft="42px"
+                    android:layout_marginRight="10px"
+                    android:src="@drawable/driver_icon_end_ride"
+                    android:tag="mwar"
+                    android:layout_centerVertical="true"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewEndRideDriverName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10px"
+                    android:layout_toRightOf="@+id/imageViewEndRideDriverIcon"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:text="Driver Name"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="26px"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="280px"
+                android:layout_height="80px"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:id="@+id/imageViewEndRideAutoIcon"
+                    android:layout_width="81px"
+                    android:layout_height="62px"
+                    android:src="@drawable/auto_icon_end_ride"
+                    android:tag="mwar"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"/>
+
+                <TextView
+                    android:id="@+id/textViewEndRideDriverCarNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:layout_toRightOf="@+id/imageViewEndRideAutoIcon"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:text="Car Number"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="26px"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewEndRideSummary"
+            android:layout_width="560px"
+            android:layout_height="40px"
+            android:background="@color/grey_dark_title"
+            android:gravity="center"
+            android:text="Ride Summary"
+            android:textColor="@color/white"
+            android:textSize="30px"/>
 
         <ScrollView
             android:id="@+id/scrollViewEndRide"
             android:layout_width="560px"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5px"
             android:layout_marginBottom="22px"
+            android:layout_below="@+id/relativeLayoutEndRideDriverInfo"
             >
 
             <LinearLayout
@@ -35,70 +114,6 @@
                 android:splitMotionEvents="false"
                 >
 
-                <!-- driver info -->
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutEndRideDriverInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <RelativeLayout
-                        android:layout_width="280px"
-                        android:layout_height="80px">
-
-                        <ImageView
-                            android:id="@+id/imageViewEndRideDriverIcon"
-                            android:layout_width="32px"
-                            android:layout_height="43px"
-                            android:layout_marginLeft="42px"
-                            android:layout_marginRight="10px"
-                            android:src="@drawable/driver_icon_end_ride"
-                            android:tag="mwar"
-                            android:layout_centerVertical="true"
-                            />
-
-                        <TextView
-                            android:id="@+id/textViewEndRideDriverName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="10px"
-                            android:layout_toRightOf="@+id/imageViewEndRideDriverIcon"
-                            android:gravity="center_vertical"
-                            android:maxLines="2"
-                            android:text="Driver Name"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="26px"/>
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="280px"
-                        android:layout_height="80px"
-                        android:layout_alignParentRight="true">
-
-                        <ImageView
-                            android:id="@+id/imageViewEndRideAutoIcon"
-                            android:layout_width="81px"
-                            android:layout_height="62px"
-                            android:src="@drawable/auto_icon_end_ride"
-                            android:tag="mwar"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"/>
-
-                        <TextView
-                            android:id="@+id/textViewEndRideDriverCarNumber"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="5px"
-                            android:layout_marginRight="5px"
-                            android:layout_toRightOf="@+id/imageViewEndRideAutoIcon"
-                            android:gravity="center_vertical"
-                            android:maxLines="2"
-                            android:text="Car Number"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="26px"/>
-                    </RelativeLayout>
-                </RelativeLayout>
 
                 <!-- ride bill -->
                 <LinearLayout
@@ -107,17 +122,6 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@color/white"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textViewEndRideSummary"
-                        android:layout_width="match_parent"
-                        android:layout_height="40px"
-                        android:background="@color/grey_dark_title"
-                        android:gravity="center"
-                        android:text="Ride Summary"
-                        android:textColor="@color/white"
-                        android:textSize="30px"/>
-
 
                     <!-- fare -->
                     <RelativeLayout
@@ -416,15 +420,17 @@
                 </LinearLayout>
 
                 <!-- ride details -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10px">
+                    android:layout_marginTop="10px"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    >
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="186px"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="50px"
                         android:orientation="vertical">
 
                         <TextView
@@ -450,10 +456,11 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="186px"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        >
 
                         <TextView
                             android:id="@+id/textViewEndRideDistance"
@@ -478,11 +485,13 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/linearLayoutEndRideTime"
+                        android:layout_width="186px"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="50px"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="visible"
+                        >
 
                         <TextView
                             android:id="@+id/textViewEndRideTime"
@@ -505,7 +514,7 @@
                             android:textColor="@color/grey_dark_more_receipt"
                             android:textSize="26px"/>
                     </LinearLayout>
-                </RelativeLayout>
+                </LinearLayout>
 
 
                 <!-- fare factor -->
@@ -648,7 +657,7 @@
 
             </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonEndRideOk"
@@ -656,7 +665,7 @@
         android:layout_height="100px"
         android:layout_marginTop="30px"
         android:layout_marginBottom="30px"
-        android:layout_below="@+id/relativeLayoutReceipt"
+        android:layout_below="@+id/linearLayoutReceipt"
         android:layout_centerHorizontal="true"
         android:background="@drawable/button_yellow_selector"
         android:text="OK"

@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:wheel="http://schemas.android.com/apk/res-auto"
@@ -7,6 +7,13 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+
+    <fragment
+        android:id="@+id/mapLite"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -38,22 +45,15 @@
         android:layout_width="match_parent"
         android:layout_height="6px"
         android:background="@drawable/shadow_down"
+        android:layout_below="@+id/topBar"
         />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white_light_grey"
         android:splitMotionEvents="false"
+        android:layout_marginTop="96px"
         >
-
-        <fragment
-            android:id="@+id/mapLite"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
 
         <include
             layout="@layout/layout_ride_summary"
@@ -74,4 +74,4 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

@@ -199,7 +199,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	//Location Error layout
 	RelativeLayout relativeLayoutLocationError;
 	RelativeLayout relativeLayoutLocationErrorSearchBar;
-	TextView textViewLocationErrorSearch;
 
 
 
@@ -257,9 +256,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge;
+	LinearLayout linearLayoutEndRideTime;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
-			textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
+			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideFareFactorValue;
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
@@ -845,9 +845,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
+		linearLayoutEndRideTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideTime);
 
 		textViewEndRideLuggageChargeValue = (TextView) findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideConvenienceChargeValue = (TextView) findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideDiscount = (TextView) findViewById(R.id.textViewEndRideDiscount); textViewEndRideDiscount.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideDiscountRupee = (TextView) findViewById(R.id.textViewEndRideDiscountRupee); textViewEndRideDiscountRupee.setTypeface(Fonts.latoRegular(this));
 
 		listViewEndRideDiscounts = (NonScrollListView) findViewById(R.id.listViewEndRideDiscounts);
@@ -1147,8 +1149,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 promoCouponSelectedForRide = promotionsListAdapter.getSelectedCoupon();
-                int totalPromoCoupons = promotionsListAdapter.getCount();
-                callAnAutoPopup(HomeActivity.this, totalPromoCoupons, Data.pickupLatLng);
+                callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
                 FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
             }
         });
@@ -1234,6 +1235,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
+				genieLayout.setVisibility(View.VISIBLE);
 			}
 		});
 
@@ -1247,6 +1249,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
+				genieLayout.setVisibility(View.VISIBLE);
 			}
 		});
 
@@ -1969,7 +1972,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             imageViewBack.setVisibility(View.GONE);
 
             if (userMode == UserMode.PASSENGER) {
-                initializeFusedLocationFetchers();
 
                 if (currentLocationMarker != null) {
                     currentLocationMarker.remove();
@@ -2009,13 +2011,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							relativeLayoutConvenienceCharge.setVisibility(View.GONE);
 						}
 
-						if(Data.endRideData.discountTypes.size() > 0){
+						if(Data.endRideData.discountTypes.size() > 1){
 							listViewEndRideDiscounts.setVisibility(View.VISIBLE);
 							endRideDiscountsAdapter.setList(Data.endRideData.discountTypes);
+							textViewEndRideDiscount.setText("Discounts");
 							textViewEndRideDiscountRupee.setVisibility(View.GONE);
 							textViewEndRideDiscountValue.setVisibility(View.GONE);
-						} else{
+						}
+						else if(Data.endRideData.discountTypes.size() > 0){
 							listViewEndRideDiscounts.setVisibility(View.GONE);
+							textViewEndRideDiscount.setText(Data.endRideData.discountTypes.get(0).name);
+							textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
+							textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
+							textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+						}
+						else{
+							listViewEndRideDiscounts.setVisibility(View.GONE);
+							textViewEndRideDiscount.setText("Discounts");
 							textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
@@ -2036,7 +2048,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             kmsStr = "km";
                         }
                         textViewEndRideDistanceValue.setText("" + decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
-                        textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(Data.endRideData.rideTime) + " min");
+						if(Data.endRideData.rideTime > -1){
+							linearLayoutEndRideTime.setVisibility(View.VISIBLE);
+							textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(Data.endRideData.rideTime) + " min");
+						} else{
+							linearLayoutEndRideTime.setVisibility(View.GONE);
+						}
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -2757,10 +2774,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 			Data.supportFeedbackSubmitted = false;
 
-
-
-            initializeFusedLocationFetchers();
-
         }
 
         HomeActivity.checkForAccessTokenChange(this);
@@ -2768,6 +2781,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         activityResumed = true;
         intentFired = false;
         feedbackSkipped = false;
+
+		initializeFusedLocationFetchers();
 
 //        genieLayout.setGenieParams();
     }
@@ -3875,7 +3890,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     try {
                                         if (ApiResponseFlags.RIDE_PATH_INFO_SUCCESS.getOrdinal() == flag) {
 
-                                            RidePath ridePath = null;
                                             ArrayList<RidePath> ridePathsList = new ArrayList<>();
 
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
@@ -3893,9 +3907,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 LatLng start = new LatLng(currentRidePath.sourceLatitude, currentRidePath.sourceLongitude);
                                                 LatLng end = new LatLng(currentRidePath.destinationLatitude, currentRidePath.destinationLongitude);
 
-                                                if (i == jsonArray.length() - 1) {
-                                                    ridePath = currentRidePath;
-                                                }
                                                 final PolylineOptions polylineOptions = new PolylineOptions();
                                                 polylineOptions.add(start, end);
                                                 polylineOptions.width(ASSL.Xscale() * 5);
@@ -4113,7 +4124,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    void callAnAutoPopup(final Activity activity, int totalPromoCoupons, LatLng pickupLatLng) {
+    void callAnAutoPopup(final Activity activity, LatLng pickupLatLng) {
         try {
 
             final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -5343,7 +5354,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             AsyncHttpClient client = Data.getClient();
             client.post(url, params,
                 new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
 
                     @Override
                     public void onFailure(Throwable arg3) {
@@ -5355,8 +5365,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     public void onSuccess(String response) {
                         Log.i("Server response /emergency/alert", "response = " + response);
                         try {
-                            jObj = new JSONObject(response);
-
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }

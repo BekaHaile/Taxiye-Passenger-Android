@@ -79,7 +79,7 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
         DiscountType discountType = discountTypes.get(position);
 
         holder.textViewDiscount.setText("- "+discountType.name);
-		holder.textViewDiscountValue.setText(Utils.getMoneyDecimalFormat().format(discountType.value));
+		holder.textViewDiscountValue.setText("- "+Utils.getMoneyDecimalFormat().format(discountType.value));
 
         return convertView;
     }

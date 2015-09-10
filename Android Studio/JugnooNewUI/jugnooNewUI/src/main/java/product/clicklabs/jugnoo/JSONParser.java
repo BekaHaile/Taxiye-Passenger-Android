@@ -442,8 +442,8 @@ public class JSONParser {
 		}
 
 		double luggageCharge = 0;
-		if(jLastRideData.has("luggage_charge")){
-			luggageCharge = jLastRideData.getDouble("luggage_charge");
+		if(jLastRideData.has("total_luggage_charges")){
+			luggageCharge = jLastRideData.getDouble("total_luggage_charges");
 		}
 
 		double convenienceCharge = 0;
@@ -462,7 +462,11 @@ public class JSONParser {
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			discount = jLastRideData.getDouble("discount");
+			try {
+				discount = jLastRideData.getDouble("discount");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 			discountTypes.clear();
 		}
 
@@ -473,6 +477,12 @@ public class JSONParser {
 		if(jLastRideData.has("driver_car_number")){
 			driverCarNumber = jLastRideData.getString("driver_car_number");
 		}
+
+		double rideTime = -1;
+		if(jLastRideData.has("ride_time")){
+			rideTime = jLastRideData.getDouble("ride_time");
+		}
+
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber,
@@ -485,7 +495,7 @@ public class JSONParser {
 				jLastRideData.getDouble("paid_using_wallet"),
 				jLastRideData.getDouble("to_pay"),
 				jLastRideData.getDouble("distance"),
-				jLastRideData.getDouble("ride_time"),
+				rideTime,
 				baseFare, fareFactor, discountTypes);
 	}
 

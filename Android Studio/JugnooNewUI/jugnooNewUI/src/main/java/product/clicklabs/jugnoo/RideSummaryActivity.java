@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -41,7 +42,7 @@ import rmn.androidscreenlibrary.ASSL;
 
 public class RideSummaryActivity extends BaseFragmentActivity implements FlurryEventNames {
 
-    LinearLayout relative;
+    RelativeLayout relative;
 
 	GoogleMap mapLite;
 
@@ -55,9 +56,10 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge;
+	LinearLayout linearLayoutEndRideTime;
 	NonScrollListView listViewEndRideDiscounts;
 	TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
-			textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
+			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideFareFactorValue;
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
@@ -77,7 +79,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_summary);
 
-        relative = (LinearLayout) findViewById(R.id.relative);
+        relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(this, relative, 1134, 720, false);
 
 		mapLite = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapLite)).getMap();
@@ -132,9 +134,11 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
 		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
+		linearLayoutEndRideTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideTime);
 
 		textViewEndRideLuggageChargeValue = (TextView) findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideConvenienceChargeValue = (TextView) findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideDiscount = (TextView) findViewById(R.id.textViewEndRideDiscount); textViewEndRideDiscount.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideDiscountRupee = (TextView) findViewById(R.id.textViewEndRideDiscountRupee); textViewEndRideDiscountRupee.setTypeface(Fonts.latoRegular(this));
 
 		listViewEndRideDiscounts = (NonScrollListView) findViewById(R.id.listViewEndRideDiscounts);
@@ -184,9 +188,15 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 		});
 
 		try {
-			if(getIntent().hasExtra("engagement_id")){
-				String engagementId = getIntent().getStringExtra("engagement_id");
-				getRideSummaryAPI(this, engagementId);
+			Intent intent = getIntent();
+			if(intent.hasExtra("engagement_id")){
+				int engagementId = intent.getIntExtra("engagement_id", 0);
+				if(0 == engagementId){
+					throw new Exception();
+				}
+				else{
+					getRideSummaryAPI(this, ""+engagementId);
+				}
 			}
 			else{
 				throw new Exception();
@@ -235,13 +245,23 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 					relativeLayoutConvenienceCharge.setVisibility(View.GONE);
 				}
 
-				if(endRideData.discountTypes.size() > 0){
+				if(endRideData.discountTypes.size() > 1){
 					listViewEndRideDiscounts.setVisibility(View.VISIBLE);
 					endRideDiscountsAdapter.setList(endRideData.discountTypes);
+					textViewEndRideDiscount.setText("Discounts");
 					textViewEndRideDiscountRupee.setVisibility(View.GONE);
 					textViewEndRideDiscountValue.setVisibility(View.GONE);
-				} else{
+				}
+				else if(endRideData.discountTypes.size() > 0){
 					listViewEndRideDiscounts.setVisibility(View.GONE);
+					textViewEndRideDiscount.setText(endRideData.discountTypes.get(0).name);
+					textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
+					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
+					textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.discount));
+				}
+				else{
+					listViewEndRideDiscounts.setVisibility(View.GONE);
+					textViewEndRideDiscount.setText("Discounts");
 					textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
 					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
 					textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.discount));
@@ -262,7 +282,12 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 					kmsStr = "km";
 				}
 				textViewEndRideDistanceValue.setText("" + decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
-				textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(endRideData.rideTime) + " min");
+				if(endRideData.rideTime > -1){
+					linearLayoutEndRideTime.setVisibility(View.VISIBLE);
+					textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(endRideData.rideTime) + " min");
+				} else{
+					linearLayoutEndRideTime.setVisibility(View.GONE);
+				}
 			}
 		} catch(Exception e){
 			e.printStackTrace();
