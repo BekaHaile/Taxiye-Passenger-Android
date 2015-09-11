@@ -2944,6 +2944,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (1 == showAllDrivers) {
                         nameValuePairs.add(new BasicNameValuePair("show_all", "1"));
                     }
+					if(1 == showDriverInfo){
+						nameValuePairs.add(new BasicNameValuePair("show_phone_no", "1"));
+					}
 
                     Log.i("nameValuePairs in find_a_driver", "=" + nameValuePairs);
 
