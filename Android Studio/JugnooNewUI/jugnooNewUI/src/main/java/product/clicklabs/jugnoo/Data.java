@@ -109,7 +109,7 @@ public class Data {
 	
 
 
-	public static double latitude, longitude;
+	public static double latitude = 0, longitude = 0;
 	
 	
 	public static ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
