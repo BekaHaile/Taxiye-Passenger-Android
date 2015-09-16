@@ -87,6 +87,7 @@ public class ReferralActions implements FlurryEventNames {
                     public void onClick(View v) {
                         shareToFacebook(activity, callbackManager);
                         FlurryEventLogger.event(REFERRAL_POPUP_FACEBOOK);
+						dialog.dismiss();
                     }
                 });
 
@@ -94,7 +95,8 @@ public class ReferralActions implements FlurryEventNames {
                     @Override
                     public void onClick(View v) {
                         shareToWhatsapp(activity);
-                        FlurryEventLogger.event(REFERRAL_POPUP_WHATSAPP);
+						FlurryEventLogger.event(REFERRAL_POPUP_WHATSAPP);
+						dialog.dismiss();
                     }
                 });
 
@@ -102,7 +104,8 @@ public class ReferralActions implements FlurryEventNames {
                     @Override
                     public void onClick(View v) {
                         sendSMSIntent(activity);
-                        FlurryEventLogger.event(REFERRAL_POPUP_MESSAGE);
+						FlurryEventLogger.event(REFERRAL_POPUP_MESSAGE);
+						dialog.dismiss();
                     }
                 });
 
@@ -110,15 +113,16 @@ public class ReferralActions implements FlurryEventNames {
                     @Override
                     public void onClick(View v) {
                         openMailIntent(activity);
-                        FlurryEventLogger.event(REFERRAL_POPUP_EMAIL);
+						FlurryEventLogger.event(REFERRAL_POPUP_EMAIL);
+						dialog.dismiss();
                     }
                 });
 
                 (dialog.findViewById(R.id.imageViewCross)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
-                        FlurryEventLogger.event(REFERRAL_POPUP_CLOSE);
+						dialog.dismiss();
+						FlurryEventLogger.event(REFERRAL_POPUP_CLOSE);
                     }
                 });
 

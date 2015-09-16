@@ -8,12 +8,18 @@
     android:orientation="vertical">
 
 
-    <fragment
-        android:id="@+id/mapLite"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <RelativeLayout
+        android:id="@+id/relativeLayoutMap"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent">
+        <fragment
+            android:id="@+id/mapLite"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/topBar"

@@ -5311,7 +5311,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void call100Dialog(final Activity activity) {
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL 100", "Cancel",
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL 100", "Add Contact",
             new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -5322,6 +5322,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+					activity.startActivity(new Intent(activity, EmergencyContactsActivity.class));
+					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);
                 }
             }, false, false, new DialogInterface.OnCancelListener() {

@@ -44,6 +44,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
     RelativeLayout relative;
 
+	RelativeLayout relativeLayoutMap;
 	GoogleMap mapLite;
 
     TextView textViewTitle;
@@ -82,6 +83,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(this, relative, 1134, 720, false);
 
+		relativeLayoutMap = (RelativeLayout) findViewById(R.id.relativeLayoutMap); relativeLayoutMap.setVisibility(View.GONE);
 		mapLite = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapLite)).getMap();
 		if (mapLite != null) {
 			mapLite.getUiSettings().setAllGesturesEnabled(false);
@@ -218,6 +220,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 				DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 				scrollViewEndRide.scrollTo(0, 0);
 
+				relativeLayoutMap.setVisibility(View.VISIBLE);
 				relativeLayoutRideSummary.setVisibility(View.VISIBLE);
 
 				textViewEndRideDriverName.setText(endRideData.driverName);

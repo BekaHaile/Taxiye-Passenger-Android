@@ -556,17 +556,21 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 				@Override
 				public void onClick(View v) {
 					try {
-						holder = (ViewHolderRideTransaction) v.getTag();
+						if(AppStatus.getInstance(context).isOnline(context)) {
+							holder = (ViewHolderRideTransaction) v.getTag();
 
-						Intent intent = new Intent(RideTransactionsActivity.this, RideSummaryActivity.class);
-						if(futureSchedule != null) {
-							intent.putExtra("engagement_id", rideInfosList.get(holder.id-1).engagementId);
+							Intent intent = new Intent(RideTransactionsActivity.this, RideSummaryActivity.class);
+							if (futureSchedule != null) {
+								intent.putExtra("engagement_id", rideInfosList.get(holder.id - 1).engagementId);
+							} else {
+								intent.putExtra("engagement_id", rideInfosList.get(holder.id).engagementId);
+							}
+							startActivity(intent);
+							overridePendingTransition(R.anim.right_in, R.anim.right_out);
 						}
 						else{
-							intent.putExtra("engagement_id", rideInfosList.get(holder.id).engagementId);
+							DialogPopup.alertPopup(RideTransactionsActivity.this, "", Data.CHECK_INTERNET_MSG);
 						}
-						startActivity(intent);
-						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
 					} catch (Exception e) {
 						e.printStackTrace();

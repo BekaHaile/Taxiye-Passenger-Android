@@ -719,7 +719,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			Log.i("longitude", ""+Data.longitude);
 			Log.i("client_id", Config.getClientId());
 			
-			
+			String url = Config.getServerUrl() + "/login_using_facebook";
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/login_using_facebook", params,
