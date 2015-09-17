@@ -226,9 +226,9 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
                         }
                         closeEC1Layout();
                     } else if (linearLayoutEmergencyContact2Fields.getVisibility() == View.VISIBLE) {
-//                        if (!(emergencyContact2 != null && emergencyContact2.verificationStatus == 1)) {
-//                            imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
-//                        }
+                        if (emergencyContact2 == null) {
+                            imageViewEmergencyContact2PM.setImageResource(R.drawable.emergency_plus_icon);
+                        }
                         linearLayoutEmergencyContact2Fields.setVisibility(View.GONE);
                         closeEC1Layout();
                         if (emergencyContact2 != null){
