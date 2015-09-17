@@ -4,11 +4,6 @@
     android:layout_width="720px"
     android:layout_height="wrap_content"
     android:splitMotionEvents="false" >
-    
-     <ImageView
-         
-            android:layout_width="match_parent"
-            android:layout_height="15px" />
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
@@ -33,7 +28,9 @@
             android:layout_marginTop="20px"
             android:text="Pickup at"
             android:textColor="@color/black_text"
-            android:textSize="30px" />
+            android:textSize="30px"
+            android:visibility="gone"
+            />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -95,7 +92,9 @@
             android:id="@+id/relativeLayoutTo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10px" >
+            android:layout_marginTop="10px"
+            android:visibility="visible"
+            >
 
             <TextView
                 android:id="@+id/textViewTo"
@@ -195,10 +194,46 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutRideOp"
         android:layout_width="150px"
-        android:layout_height="70px"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="40px" >
+        android:layout_marginRight="40px"
+        android:layout_alignTop="@+id/linearLayoutMain"
+        android:layout_alignBottom="@+id/linearLayoutMain"
+        >
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutRideReceipt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="44px"
+                android:layout_height="44px"
+                android:tag="mwar"
+                android:src="@drawable/ic_ride_receipt"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="10px"
+                android:layout_marginBottom="10px"
+                android:layout_marginLeft="10px"
+                />
+
+            <ImageView
+                android:layout_width="13px"
+                android:layout_height="26px"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="0px"
+                android:src="@drawable/arrow_icon_selector"
+                android:tag="mwar"
+                android:layout_marginLeft="20px"
+                />
+
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/textViewAmount"

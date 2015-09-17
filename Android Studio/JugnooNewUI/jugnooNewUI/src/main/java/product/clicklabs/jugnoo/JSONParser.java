@@ -9,7 +9,6 @@ import com.google.android.gms.maps.model.LatLng;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.DiscountType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
@@ -385,44 +385,120 @@ public class JSONParser {
                 e.printStackTrace();
             }
 
-
-            double baseFare = Data.fareStructure.fixedFare;
-            if (jLastRideData.has("base_fare")) {
-                baseFare = jLastRideData.getDouble("base_fare");
-            }
-
-            String banner = "";
-            if (jLastRideData.has("banner")) {
-                banner = jLastRideData.getString("banner");
-            }
-            double fareFactor = 1;
-            if(jLastRideData.has("fare_factor")){
-                fareFactor = jLastRideData.getDouble("fare_factor");
-            }
-
-
-            Data.endRideData = new EndRideData(jLastRideData.getString("engagement_id"),
-                    jLastRideData.getString("pickup_address"),
-                    jLastRideData.getString("drop_address"),
-                    jLastRideData.getString("pickup_time"),
-                    jLastRideData.getString("drop_time"),
-                    banner,
-                    jLastRideData.getDouble("fare"),
-                    jLastRideData.getDouble("discount"),
-                    jLastRideData.getDouble("paid_using_wallet"),
-                    jLastRideData.getDouble("to_pay"),
-                    jLastRideData.getDouble("distance"),
-                    jLastRideData.getDouble("ride_time"),
-                    baseFare, fareFactor);
+			Data.endRideData = parseEndRideData(jLastRideData, jLastRideData.getString("engagement_id"), Data.fareStructure.fixedFare);
 
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
     }
+
+
+
+	public static EndRideData parseEndRideData(JSONObject jLastRideData, String engagementId, double initialBaseFare) throws Exception{
+
+		/*{
+			"user_id": 207,
+			"pickup_address": "97, Manekshaw Road, Block B, Sainik Farms Colony, New Delhi, Delhi 110062, India",
+			"drop_address": "97, Manekshaw Road, Block B, Sainik Farms Colony, New Delhi, Delhi 110062, India",
+			"pickup_time": "12:47 PM",
+			"drop_time": "12:47 PM",
+			"fare": 30,
+			"paid_using_wallet": 1,
+			"to_pay": 24,
+			"distance": 0,
+			"ride_time": 0,
+			"convenience_charge": 10,
+			"discount": [
+				{
+					"key": "Promotion",
+						"value": 0
+				},
+				{
+					"key": "Convenience",
+						"value": 5
+				}
+			],
+			"base_fare": 20,
+			"fare_factor": 1,
+			"jugnoo_balance": 2,
+			"rate_app": 0,
+			"flag": 115,
+			"banner": "You can now add Jugnoo cash by giving it to our Jugnoo driver"
+		}*/
+
+
+		double baseFare = initialBaseFare;
+		if (jLastRideData.has("base_fare")) {
+			baseFare = jLastRideData.getDouble("base_fare");
+		}
+
+		double fareFactor = 1;
+		if(jLastRideData.has("fare_factor")){
+			fareFactor = jLastRideData.getDouble("fare_factor");
+		}
+
+		double luggageCharge = 0;
+		if(jLastRideData.has("total_luggage_charges")){
+			luggageCharge = jLastRideData.getDouble("total_luggage_charges");
+		}
+
+		double convenienceCharge = 0;
+		if(jLastRideData.has("convenience_charge")){
+			convenienceCharge = jLastRideData.getDouble("convenience_charge");
+		}
+
+		double discount = 0;
+		ArrayList<DiscountType> discountTypes = new ArrayList<>();
+		try{
+			JSONArray jDiscountsArr =  jLastRideData.getJSONArray("discount");
+			for(int i=0; i<jDiscountsArr.length(); i++){
+				discountTypes.add(new DiscountType(jDiscountsArr.getJSONObject(i).getString("key"),
+						jDiscountsArr.getJSONObject(i).getDouble("value")));
+				discount = discount + jDiscountsArr.getJSONObject(i).getDouble("value");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			try {
+				discount = jLastRideData.getDouble("discount");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			discountTypes.clear();
+		}
+
+		String driverName = "", driverCarNumber = "";
+		if(jLastRideData.has("driver_name")){
+			driverName = jLastRideData.getString("driver_name");
+		}
+		if(jLastRideData.has("driver_car_number")){
+			driverCarNumber = jLastRideData.getString("driver_car_number");
+		}
+
+		double rideTime = -1;
+		if(jLastRideData.has("ride_time")){
+			rideTime = jLastRideData.getDouble("ride_time");
+		}
+
+
+
+		return new EndRideData(engagementId, driverName, driverCarNumber,
+				jLastRideData.getString("pickup_address"),
+				jLastRideData.getString("drop_address"),
+				jLastRideData.getString("pickup_time"),
+				jLastRideData.getString("drop_time"),
+				jLastRideData.getDouble("fare"), luggageCharge, convenienceCharge,
+				discount,
+				jLastRideData.getDouble("paid_using_wallet"),
+				jLastRideData.getDouble("to_pay"),
+				jLastRideData.getDouble("distance"),
+				rideTime,
+				baseFare, fareFactor, discountTypes);
+	}
+
 
 
     public String getUserStatus(Context context, String accessToken, int currentUserStatus) {
