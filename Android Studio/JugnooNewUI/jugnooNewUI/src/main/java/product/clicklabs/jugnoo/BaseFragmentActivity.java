@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -14,8 +16,24 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     @Override
     public void startActivity(Intent intent) {
-        newActivityStarted = true;
-        super.startActivity(intent);
+		try {
+			newActivityStarted = true;
+			super.startActivity(intent);
+		} catch(Exception e){
+			e.printStackTrace();
+			try {
+				if(intent.getData().equals(Uri.parse("market://details?id=com.google.android.gms"))) {
+					Intent intent1 = new Intent(Intent.ACTION_VIEW);
+					intent1.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.gms"));
+					ComponentName componentName = intent.resolveActivity(getPackageManager());
+					if (componentName != null) {
+						startActivity(intent1);
+					}
+				}
+			} catch(Exception e1){
+				e1.printStackTrace();
+			}
+		}
     }
 
     @Override

@@ -90,7 +90,7 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         params.addRule(RelativeLayout.BELOW, R.id.imageViewLogo);
-        params.setMargins((int)(ASSL.Xscale()*20.0f), (int)(ASSL.Yscale()*20.0f), (int)(ASSL.Xscale()*20.0f), (int)(ASSL.Yscale()*20.0f));
+        params.setMargins((int) (ASSL.Xscale() * 20.0f), (int) (ASSL.Yscale() * 20.0f), (int) (ASSL.Xscale() * 20.0f), (int) (ASSL.Yscale() * 20.0f));
 
 
 		
@@ -132,6 +132,12 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
                     textViewReferralCaption.append(spanFreeRides);
 
                 }
+			}
+
+			try {
+				Log.e("Data.userData.jugnooFbBanner=", "="+Data.userData.jugnooFbBanner);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -181,15 +187,14 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 		});
 
 		imageViewEmail.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-                ReferralActions.openMailIntent(ShareActivity.this);
-                FlurryEventLogger.event(INVITE_EMAIL);
+				ReferralActions.openMailIntent(ShareActivity.this);
+				FlurryEventLogger.event(INVITE_EMAIL);
 			}
 		});
-		
-		Log.e("Data.userData.jugnooFbBanner=", "="+Data.userData.jugnooFbBanner);
+
 		
 	}
 

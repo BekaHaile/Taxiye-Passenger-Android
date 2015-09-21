@@ -474,10 +474,14 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
     public void dissmissEmailVerify() {
-        if (Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() && relativeLayoutEmailVerify.getVisibility() == View.VISIBLE) {
-            relativeLayoutEmailVerify.setVisibility(View.GONE);
-        }
-    }
+		try {
+			if (Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() && relativeLayoutEmailVerify.getVisibility() == View.VISIBLE) {
+				relativeLayoutEmailVerify.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
     public void setUserData(boolean refreshed){

@@ -1447,14 +1447,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                Utils.openCallIntent(HomeActivity.this, Data.assignedDriverInfo.phoneNumber);
-                if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
-                    FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
-                }
-                else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
-                    FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
-                }
-            }
+				try {
+					Utils.openCallIntent(HomeActivity.this, Data.assignedDriverInfo.phoneNumber);
+					if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+						FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
+					}
+					else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+						FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
         });
 
         textViewInRideLowJugnooCash.setOnClickListener(new OnClickListener() {
@@ -2675,41 +2679,49 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private void initDropLocationSearchUI(boolean engaged){
-        dropLocationSearched = true;
-        if(!engaged) {
-            editTextAssigningDropLocation.requestFocus();
-            relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
-            relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-            scrollViewAssigning.setVisibility(View.VISIBLE);
-            Utils.showSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
-        }
-        else{
-            editTextFinalDropLocation.requestFocus();
-            relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
-            relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-            scrollViewFinal.setVisibility(View.VISIBLE);
-            Utils.showSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
-        }
-    }
+		try {
+			dropLocationSearched = true;
+			if(!engaged) {
+				editTextAssigningDropLocation.requestFocus();
+				relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
+				relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+				scrollViewAssigning.setVisibility(View.VISIBLE);
+				Utils.showSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
+			}
+			else{
+				editTextFinalDropLocation.requestFocus();
+				relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
+				relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+				scrollViewFinal.setVisibility(View.VISIBLE);
+				Utils.showSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     private void stopDropLocationSearchUI(boolean engaged){
-        dropLocationSearched = false;
-        if(!engaged) {
-            relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
-            relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
-            scrollViewAssigning.setVisibility(View.GONE);
-            progressBarAssigningDropLocation.setVisibility(View.GONE);
-			editTextAssigningDropLocation.setText("");
-			Utils.hideSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
-		} else {
-			relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
-            relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
-            scrollViewFinal.setVisibility(View.GONE);
-            progressBarFinalDropLocation.setVisibility(View.GONE);
-			editTextFinalDropLocation.setText("");
-			Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
-        }
-    }
+		try {
+			dropLocationSearched = false;
+			if(!engaged) {
+				relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+				relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
+				scrollViewAssigning.setVisibility(View.GONE);
+				progressBarAssigningDropLocation.setVisibility(View.GONE);
+				editTextAssigningDropLocation.setText("");
+				Utils.hideSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
+			} else {
+				relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+				relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
+				scrollViewFinal.setVisibility(View.GONE);
+				progressBarFinalDropLocation.setVisibility(View.GONE);
+				editTextFinalDropLocation.setText("");
+				Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 

@@ -161,14 +161,18 @@ public class SearchListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View v) {
-                    holder = (ViewHolderSearchItem) v.getTag();
-                    Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
-                    AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
-                    if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
-                        searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                        getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
-                    }
-                }
+					try {
+						holder = (ViewHolderSearchItem) v.getTag();
+						Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
+						AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
+						if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
+							searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+							getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
             });
         } catch (Exception e) {
             e.printStackTrace();
