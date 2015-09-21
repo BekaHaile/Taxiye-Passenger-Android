@@ -112,7 +112,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
         try {
-            Branch branch = Branch.getInstance();
+            Branch branch = Branch.getInstance(this);
             branch.initSession(new Branch.BranchReferralInitListener() {
                 @Override
                 public void onInitFinished(JSONObject referringParams, BranchError error) {

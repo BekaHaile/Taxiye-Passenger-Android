@@ -1710,7 +1710,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 		try{
-			Branch.getInstance().setIdentity(Data.userData.userIdentifier);
+			Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -2846,7 +2846,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             cont.finish();
             cont.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-			Branch.getInstance().logout();
+			Branch.getInstance(cont).logout();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4694,7 +4694,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				}
             });
 
-			Branch.getInstance().logout();
+			Branch.getInstance(cont).logout();
 
         } catch (Exception e) {
             e.printStackTrace();
