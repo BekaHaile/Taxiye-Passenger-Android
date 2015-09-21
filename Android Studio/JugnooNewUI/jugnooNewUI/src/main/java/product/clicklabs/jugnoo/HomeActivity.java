@@ -72,6 +72,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.adapters.PromotionListEventHandler;
 import product.clicklabs.jugnoo.adapters.PromotionsListAdapter;
@@ -1708,6 +1709,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+		try{
+			Branch.getInstance().setIdentity(Data.userData.userIdentifier);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
     }
 
 
@@ -2838,6 +2845,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             cont.startActivity(intent);
             cont.finish();
             cont.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+			Branch.getInstance().logout();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4647,43 +4656,45 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Editor editor = pref.edit();
             editor.clear();
             editor.commit();
-            Data.clearDataOnLogout(cont);
+			Data.clearDataOnLogout(cont);
 
-            PicassoTools.clearCache(Picasso.with(cont));
+			PicassoTools.clearCache(Picasso.with(cont));
 
-            cont.runOnUiThread(new Runnable() {
+			cont.runOnUiThread(new Runnable() {
 
-                @Override
-                public void run() {
+				@Override
+				public void run() {
 
-                    FacebookLoginHelper.logoutFacebook();
+					FacebookLoginHelper.logoutFacebook();
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(cont);
-                    builder.setMessage(cont.getResources().getString(R.string.your_login_session_expired)).setTitle(cont.getResources().getString(R.string.alert));
-                    builder.setCancelable(false);
-                    builder.setPositiveButton(cont.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                dialog.dismiss();
-                                Intent intent = new Intent(cont, SplashNewActivity.class);
-                                intent.putExtra("no_anim", "yes");
-                                cont.startActivity(intent);
-                                cont.finish();
-                                cont.overridePendingTransition(
-                                    R.anim.left_in,
-                                    R.anim.left_out);
-                            } catch (Exception e) {
-                                Log.i("excption logout",
-                                    e.toString());
-                            }
-                        }
-                    });
+					AlertDialog.Builder builder = new AlertDialog.Builder(cont);
+					builder.setMessage(cont.getResources().getString(R.string.your_login_session_expired)).setTitle(cont.getResources().getString(R.string.alert));
+					builder.setCancelable(false);
+					builder.setPositiveButton(cont.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							try {
+								dialog.dismiss();
+								Intent intent = new Intent(cont, SplashNewActivity.class);
+								intent.putExtra("no_anim", "yes");
+								cont.startActivity(intent);
+								cont.finish();
+								cont.overridePendingTransition(
+										R.anim.left_in,
+										R.anim.left_out);
+							} catch (Exception e) {
+								Log.i("excption logout",
+										e.toString());
+							}
+						}
+					});
 
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
+					AlertDialog alertDialog = builder.create();
+					alertDialog.show();
+				}
             });
+
+			Branch.getInstance().logout();
 
         } catch (Exception e) {
             e.printStackTrace();

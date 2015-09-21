@@ -31,6 +31,7 @@ import com.squareup.picasso.PicassoTools;
 
 import org.json.JSONObject;
 
+import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
@@ -836,6 +837,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 										Intent intent = new Intent(activity, SplashNewActivity.class);
 										startActivity(intent);
 										overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
+										Branch.getInstance().logout();
 									}
 									else{
 										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
