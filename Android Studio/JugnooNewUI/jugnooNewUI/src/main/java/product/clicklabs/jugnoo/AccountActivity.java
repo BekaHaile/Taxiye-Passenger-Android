@@ -838,7 +838,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 										startActivity(intent);
 										overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
-										Branch.getInstance().logout();
+										Branch.getInstance(activity).logout();
 									}
 									else{
 										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
