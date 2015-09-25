@@ -2085,6 +2085,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_INITIAL:
 
+						Data.dropLatLng = null;
+
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
 
                         clearAnims();
@@ -2541,10 +2543,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void setDropLocationMarker(){
-        if(dropLocationMarker != null){
-            dropLocationMarker.remove();
-        }
-        dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+		if(Data.dropLatLng != null) {
+			if (dropLocationMarker != null) {
+				dropLocationMarker.remove();
+			}
+			dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+		}
     }
 
     private void setPickupToDropPath(){
@@ -3190,6 +3194,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (map != null) {
                     map.clear();
                     addCurrentLocationAddressMarker(userLatLng);
+					setDropLocationMarker();
                     for (int i = 0; i < Data.driverInfos.size(); i++) {
                         addDriverMarkerForCustomer(Data.driverInfos.get(i));
                     }
@@ -5032,9 +5037,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         e.printStackTrace();
                                     }
                                 }
-
                                 updateCancelButtonUI();
-
                             }
                         }
                     } catch (Exception e) {
