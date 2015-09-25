@@ -3233,7 +3233,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - firstLatLng.latitude), userLatLng.longitude));
                 } else {
                     fixedZoom = true;
-                    mapTouchedOnce = false;
                 }
 
                 final boolean finalFixedZoom = fixedZoom;
@@ -3398,6 +3397,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     public void customerUIBackToInitialAfterCancel() {
+		firstTimeZoom = false;
+		pickupDropZoomed = false;
+
         cancelTimerRequestRide();
 
         passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -4357,7 +4359,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Log.i("in in herestartRideForCustomer  run class", "=");
                             if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
 								firstTimeZoom = false;
-                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+								pickupDropZoomed = false;
+								passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
                                 DialogPopup.alertPopup(HomeActivity.this, "", "Your ride has been cancelled due to an unexpected issue");
                             }
@@ -4407,7 +4410,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onCancelCompleted() {
-		firstTimeZoom = false;
         customerUIBackToInitialAfterCancel();
     }
 
@@ -4783,57 +4785,52 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public synchronized void onLocationChanged(Location location, int priority) {
-        if (priority == 0) {
-            if (location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK) {
-                HomeActivity.myLocation = location;
-                zoomToCurrentLocationAtFirstLocationFix(location);
-                updatePickupLocation(location);
-            }
-        } else if (priority == 2) {
-            destroyLowPowerFusedLocationFetcher();
-            if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
-                HomeActivity.myLocation = location;
-                zoomToCurrentLocationAtFirstLocationFix(location);
-                updatePickupLocation(location);
-            }
-        }
-        Data.latitude = location.getLatitude();
-        Data.longitude = location.getLongitude();
-
-		boolean cached = false;
 		try {
-			if (myLocation != null) {
-				Bundle bundle = myLocation.getExtras();
-				cached = bundle.getBoolean("cached");
+			if (priority == 0) {
+				if (location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK) {
+					HomeActivity.myLocation = location;
+					callMapTouchedRefreshDrivers();
+					updatePickupLocation(location);
+				}
+			} else if (priority == 2) {
+				destroyLowPowerFusedLocationFetcher();
+				if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
+					HomeActivity.myLocation = location;
+					callMapTouchedRefreshDrivers();
+					updatePickupLocation(location);
+				}
+			}
+
+			if(!zoomedToMyLocation){
+				zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
+			}
+			zoomedToMyLocation = true;
+
+			Data.latitude = location.getLatitude();
+			Data.longitude = location.getLongitude();
+
+			boolean cached = false;
+			try {
+				if (myLocation != null) {
+					Bundle bundle = myLocation.getExtras();
+					cached = bundle.getBoolean("cached");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
+					&& relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
+				relativeLayoutLocationError.setVisibility(View.GONE);
+				relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
+				initialMyLocationBtn.setVisibility(View.VISIBLE);
+				imageViewRideNow.setVisibility(View.VISIBLE);
+				genieLayout.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.VISIBLE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
-				&& relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
-			relativeLayoutLocationError.setVisibility(View.GONE);
-			relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
-			initialMyLocationBtn.setVisibility(View.VISIBLE);
-			imageViewRideNow.setVisibility(View.VISIBLE);
-			genieLayout.setVisibility(View.VISIBLE);
-			centreLocationRl.setVisibility(View.VISIBLE);
-		}
 	}
-
-
-    public void zoomToCurrentLocationAtFirstLocationFix(Location location) {
-        try {
-            if (map != null) {
-                if (!zoomedToMyLocation) {
-                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-                    zoomedToMyLocation = true;
-                    callMapTouchedRefreshDrivers();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     /**
@@ -4859,10 +4856,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     editor.putString(Data.SP_LAST_LATITUDE, "" + Data.pickupLatLng.latitude);
                     editor.putString(Data.SP_LAST_LONGITUDE, "" + Data.pickupLatLng.longitude);
                     editor.commit();
-                }
-                if (myLocation != null) {
-                    findDriversETAAsync = new FindDriversETAAsync(Data.pickupLatLng);
-                    findDriversETAAsync.execute();
+
+					if (myLocation != null) {
+						findDriversETAAsync = new FindDriversETAAsync(Data.pickupLatLng);
+						findDriversETAAsync.execute();
+					}
                 }
             } else if (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL) {
 
@@ -5025,7 +5023,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     public void run() {
                                                         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                                             noDriverAvailablePopup(HomeActivity.this, false, log);
-                                                            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+															firstTimeZoom = false;
+															pickupDropZoomed = false;
+															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                                             switchPassengerScreen(passengerScreenMode);
                                                         }
                                                     }
@@ -5108,7 +5108,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onNoDriversAvailablePushRecieved(final String logMessage) {
         cancelTimerRequestRide();
         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			firstTimeZoom = false;
+			pickupDropZoomed = false;
+			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -5141,8 +5143,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                     }
                 }
-
 				firstTimeZoom = false;
+				pickupDropZoomed = false;
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
