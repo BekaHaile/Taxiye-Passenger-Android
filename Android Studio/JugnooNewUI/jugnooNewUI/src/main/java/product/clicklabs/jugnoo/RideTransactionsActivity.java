@@ -259,11 +259,16 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                                                 engagementId = jRide.getInt("engagement_id");
                                             }
 
+											double waitTime = -1;
+											if(jRide.has("wait_time")){
+												waitTime = jRide.getDouble("wait_time");
+											}
+
                                             rideInfosList.add(new RideInfo(jRide.getString("pickup_address"),
                                                 jRide.getString("drop_address"),
                                                 jRide.getDouble("amount"),
                                                 jRide.getDouble("distance"),
-                                                jRide.getDouble("ride_time"),
+                                                jRide.getDouble("ride_time"), waitTime,
                                                 jRide.getString("date"), isRatedBefore, driverId, engagementId));
                                         }
                                     }

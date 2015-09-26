@@ -477,6 +477,9 @@ public class JSONParser {
 		if(jLastRideData.has("driver_car_number")){
 			driverCarNumber = jLastRideData.getString("driver_car_number");
 		}
+		if(jLastRideData.has("driver_car_no")){
+			driverCarNumber = jLastRideData.getString("driver_car_no");
+		}
 
 		double rideTime = -1;
 		if(jLastRideData.has("ride_time")){
