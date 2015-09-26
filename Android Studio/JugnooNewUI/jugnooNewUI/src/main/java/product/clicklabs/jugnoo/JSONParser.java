@@ -483,6 +483,10 @@ public class JSONParser {
 			rideTime = jLastRideData.getDouble("ride_time");
 		}
 
+		double waitTime = -1;
+		if(jLastRideData.has("wait_time")){
+			waitTime = jLastRideData.getDouble("wait_time");
+		}
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber,
@@ -495,7 +499,7 @@ public class JSONParser {
 				jLastRideData.getDouble("paid_using_wallet"),
 				jLastRideData.getDouble("to_pay"),
 				jLastRideData.getDouble("distance"),
-				rideTime,
+				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes);
 	}
 
