@@ -57,12 +57,12 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge;
-	LinearLayout linearLayoutEndRideTime;
+	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
 	TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
-			textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideFareFactorValue;
+			textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
 	Button buttonEndRideOk;
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
@@ -132,11 +132,13 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 		textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideWaitTimeValue = (TextView) findViewById(R.id.textViewEndRideWaitTimeValue); textViewEndRideWaitTimeValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.latoRegular(this));
 
 		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
 		linearLayoutEndRideTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideTime);
+		linearLayoutEndRideWaitTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideWaitTime);
 
 		textViewEndRideLuggageChargeValue = (TextView) findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideConvenienceChargeValue = (TextView) findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoRegular(this));
@@ -170,6 +172,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 		((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		((TextView) findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		((TextView) findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
 
@@ -291,6 +294,14 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 				} else{
 					linearLayoutEndRideTime.setVisibility(View.GONE);
 				}
+				if(endRideData.waitTime > 0){
+					linearLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
+					textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " min");
+				}
+				else{
+					linearLayoutEndRideWaitTime.setVisibility(View.GONE);
+				}
+
 			}
 		} catch(Exception e){
 			e.printStackTrace();

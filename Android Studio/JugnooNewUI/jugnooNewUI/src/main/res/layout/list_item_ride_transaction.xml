@@ -239,9 +239,9 @@
             android:id="@+id/textViewAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="0px"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="140px"
             android:singleLine="true"
             android:text="@string/rupee_0"
             android:textColor="@color/black_text"
@@ -274,6 +274,7 @@
                 android:src="@drawable/arrow_icon_selector"
                 android:tag="mwar" />
         </RelativeLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

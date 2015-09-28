@@ -24,10 +24,8 @@ public class RideInfo {
 		this.driverId = driverId;
 		this.engagementId = engagementId;
 
-		if (this.waitTime > -1) {
+		if(this.waitTime > -1) {
 			this.rideTime = this.rideTime + this.waitTime;
-		} else {
-			this.waitTime = 0;
 		}
 
 	}

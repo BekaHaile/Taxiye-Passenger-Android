@@ -421,7 +421,7 @@
 
                 <!-- ride details -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10px"
                     android:orientation="horizontal"
@@ -429,9 +429,10 @@
                     >
 
                     <LinearLayout
-                        android:layout_width="186px"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <TextView
                             android:id="@+id/textViewEndRideBaseFare"
@@ -456,10 +457,11 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="186px"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:orientation="vertical"
+                        android:layout_weight="1"
                         >
 
                         <TextView
@@ -485,12 +487,45 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/linearLayoutEndRideWaitTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_weight="1"
+                        >
+
+                        <TextView
+                            android:id="@+id/textViewEndRideWaitTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:text="Wait"
+                            android:textColor="@color/grey_dark_more"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRideWaitTimeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="20 min"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/linearLayoutEndRideTime"
-                        android:layout_width="186px"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:orientation="vertical"
                         android:visibility="visible"
+                        android:layout_weight="1"
                         >
 
                         <TextView
@@ -499,7 +534,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:gravity="center"
-                            android:text="Time"
+                            android:text="Total"
                             android:textColor="@color/grey_dark_more"
                             android:textSize="26px"/>
 
@@ -510,16 +545,17 @@
                             android:layout_gravity="center_horizontal"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="20 minutes"
+                            android:text="20 min"
                             android:textColor="@color/grey_dark_more_receipt"
                             android:textSize="26px"/>
                     </LinearLayout>
+
                 </LinearLayout>
 
 
                 <!-- fare factor -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10px"

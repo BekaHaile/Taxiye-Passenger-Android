@@ -452,13 +452,12 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     if(1 != rideInfo.isRatedBefore){
                         holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
                         holder.imageViewDiv.setVisibility(View.GONE);
-						holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
                     }
                     else{
                         holder.relativeLayoutRateRide.setVisibility(View.GONE);
                         holder.imageViewDiv.setVisibility(View.VISIBLE);
-						holder.linearLayoutRideReceipt.setVisibility(View.GONE);
                     }
+					holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
                 }
             }
             else{
@@ -486,13 +485,12 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 if(1 != rideInfo.isRatedBefore){
                     holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
                     holder.imageViewDiv.setVisibility(View.GONE);
-					holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
                 }
                 else{
                     holder.relativeLayoutRateRide.setVisibility(View.GONE);
                     holder.imageViewDiv.setVisibility(View.VISIBLE);
-					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
                 }
+				holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
             }
 
             holder.relativeLayoutCancel.setOnClickListener(new View.OnClickListener() {
