@@ -241,7 +241,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="0px"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="140px"
+            android:layout_centerVertical="true"
             android:singleLine="true"
             android:text="@string/rupee_0"
             android:textColor="@color/black_text"

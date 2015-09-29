@@ -582,7 +582,7 @@
                         android:singleLine="true"
                         android:text="1x"
                         android:textColor="@color/grey_dark_more_receipt"
-                        android:textSize="26px"/>
+                        android:textSize="28px"/>
                 </LinearLayout>
 
 

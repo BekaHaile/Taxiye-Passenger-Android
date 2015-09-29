@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -257,6 +258,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 		else{
 			if(couponInfosList.size() == 0 && promotionInfoList.size() == 0){
 				textViewCouponsAvailable.setVisibility(View.VISIBLE);
+				textViewCouponsAvailable.setGravity(Gravity.CENTER);
                 textViewCouponsAvailable.setText(message);
                 listViewCoupons.setVisibility(View.GONE);
                 textViewCouponInfo.setVisibility(View.GONE);
@@ -267,6 +269,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 			}
             else if(couponInfosList.size() > 0 && promotionInfoList.size() == 0){
                 textViewCouponsAvailable.setVisibility(View.VISIBLE);
+				textViewCouponsAvailable.setGravity(Gravity.CENTER_VERTICAL);
                 textViewCouponsAvailable.setText("Coupons Available");
                 listViewCoupons.setVisibility(View.VISIBLE);
                 textViewCouponInfo.setVisibility(View.GONE);
@@ -286,6 +289,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             }
 			else{
                 textViewCouponsAvailable.setVisibility(View.VISIBLE);
+				textViewCouponsAvailable.setGravity(Gravity.CENTER_VERTICAL);
                 textViewCouponsAvailable.setText("Coupons Available");
                 listViewCoupons.setVisibility(View.VISIBLE);
                 textViewCouponInfo.setVisibility(View.GONE);

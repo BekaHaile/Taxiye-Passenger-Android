@@ -91,7 +91,12 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), new SearchListActionsHandler() {
-            @Override
+			@Override
+			public void onTextChange(String text) {
+
+			}
+
+			@Override
             public void onSearchPre() {
                 progressBarDropLocation.setVisibility(View.VISIBLE);
             }

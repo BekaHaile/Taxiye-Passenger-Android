@@ -43,12 +43,15 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutDropLocationBar"
             android:layout_width="match_parent"
-            android:layout_height="90px"
+            android:layout_height="110px"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="20px"
-            android:background="@drawable/background_white_rounded"
+            android:layout_marginTop="15px"
+            android:layout_marginBottom="15px"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
+            android:background="@drawable/dropshadow_grey"
             android:splitMotionEvents="false"
-            android:visibility="gone"
+            android:visibility="visible"
             >
 
             <ImageView
@@ -81,16 +84,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="20px"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="10px"
-                android:layout_marginRight="10px"
-                android:background="@color/yellow"
-                />
-
 
         </RelativeLayout>
 
