@@ -349,6 +349,14 @@ public class GCMIntentService extends GcmListenerService {
 						} else {
 							notificationManager(this, message1, false);
 						}
+					} else if (PushFlags.OTP_VERIFIED_BY_CALL.getOrdinal() == flag) {
+						String otp = jObj.getString("message");
+						if(OTPConfirmScreen.OTP_SCREEN_OPEN != null) {
+							Intent otpConfirmScreen = new Intent(this, OTPConfirmScreen.class);
+							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							otpConfirmScreen.putExtra("otp", otp);
+							startActivity(otpConfirmScreen);
+						}
 					}
 
 				} catch (Exception e) {

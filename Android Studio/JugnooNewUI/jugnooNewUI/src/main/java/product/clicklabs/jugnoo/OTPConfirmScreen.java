@@ -92,21 +92,25 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	protected void onNewIntent(Intent intent) {
 
 		try {
-			String message = intent.getStringExtra("message");
 			String otp = "";
-			String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
-			String str = arr[1];
-			str = str.replaceAll("\\.", "");
-			if(Utils.checkIfOnlyDigits(str)){
-				otp = str;
+			if(intent.hasExtra("message")){
+				String message = intent.getStringExtra("message");
+				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
+				otp = arr[1];
+				otp = otp.replaceAll("\\.", "");
+			} else if(intent.hasExtra("otp")){
+				otp = intent.getStringExtra("otp");
 			}
 
-			if(!"".equalsIgnoreCase(otp)) {
-				editTextOTP.setText(otp);
-				editTextOTP.setSelection(editTextOTP.getText().length());
-				buttonVerify.performClick();
-				OTP_SCREEN_OPEN = null;
+			if(Utils.checkIfOnlyDigits(otp)){
+				if(!"".equalsIgnoreCase(otp)) {
+					editTextOTP.setText(otp);
+					editTextOTP.setSelection(editTextOTP.getText().length());
+					buttonVerify.performClick();
+					OTP_SCREEN_OPEN = null;
+				}
 			}
+
 		} catch(Exception e){
 			e.printStackTrace();
 		}
