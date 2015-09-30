@@ -175,13 +175,19 @@
                             android:textColor="@color/black_text"
                             android:textSize="30px"/>
 
-                        <ProgressBar
+                        <product.clicklabs.jugnoo.utils.ProgressWheel
                             android:id="@+id/progressBarInitialSearch"
                             android:layout_width="70px"
                             android:layout_height="70px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"/>
+                            android:layout_marginRight="20px"
+                            xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                            wheel:matProg_barColor="@color/yellow"
+                            wheel:matProg_fillRadius="true"
+                            wheel:matProg_progressIndeterminate="true"
+                            wheel:matProg_barWidth="3dp"
+                            />
                     </RelativeLayout>
 
                     <Button
@@ -629,13 +635,19 @@
                                 android:textCursorDrawable="@null"
                                 android:textSize="30px"/>
 
-                            <ProgressBar
+                            <product.clicklabs.jugnoo.utils.ProgressWheel
                                 android:id="@+id/progressBarAssigningDropLocation"
                                 android:layout_width="70px"
                                 android:layout_height="70px"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="20px"/>
+                                android:layout_marginRight="20px"
+                                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                                wheel:matProg_barColor="@color/yellow"
+                                wheel:matProg_fillRadius="true"
+                                wheel:matProg_progressIndeterminate="true"
+                                wheel:matProg_barWidth="3dp"
+                                />
 
                             <ImageView
                                 android:id="@+id/imageViewAssigningDropLocationCross"
@@ -983,13 +995,19 @@
                                 android:textCursorDrawable="@null"
                                 android:textSize="30px"/>
 
-                            <ProgressBar
+                            <product.clicklabs.jugnoo.utils.ProgressWheel
                                 android:id="@+id/progressBarFinalDropLocation"
                                 android:layout_width="70px"
                                 android:layout_height="70px"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="20px"/>
+                                android:layout_marginRight="20px"
+                                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                                wheel:matProg_barColor="@color/yellow"
+                                wheel:matProg_fillRadius="true"
+                                wheel:matProg_progressIndeterminate="true"
+                                wheel:matProg_barWidth="3dp"
+                                />
 
                             <ImageView
                                 android:id="@+id/imageViewFinalDropLocationCross"
@@ -1082,13 +1100,19 @@
                             android:textCursorDrawable="@null"
                             android:textSize="30px"/>
 
-                        <ProgressBar
+                        <product.clicklabs.jugnoo.utils.ProgressWheel
                             android:id="@+id/progressBarSearch"
                             android:layout_width="70px"
                             android:layout_height="70px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="20px"/>
+                            android:layout_marginRight="20px"
+                            xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                            wheel:matProg_barColor="@color/yellow"
+                            wheel:matProg_fillRadius="true"
+                            wheel:matProg_progressIndeterminate="true"
+                            wheel:matProg_barWidth="3dp"
+                            />
 
                         <ImageView
                             android:id="@+id/imageViewSearchCross"

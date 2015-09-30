@@ -77,13 +77,21 @@
                 android:textCursorDrawable="@null"
                 android:textSize="30px"/>
 
-            <ProgressBar
+            <product.clicklabs.jugnoo.utils.ProgressWheel
                 android:id="@+id/progressBarDropLocation"
                 android:layout_width="70px"
                 android:layout_height="70px"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20px"/>
+                android:layout_marginRight="20px"
+                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                wheel:matProg_barColor="@color/yellow"
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="true"
+                wheel:matProg_barWidth="3dp"
+                />
+
+
 
         </RelativeLayout>
 

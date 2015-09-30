@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +42,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import rmn.androidscreenlibrary.ASSL;
 
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames {
@@ -54,7 +54,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     RelativeLayout relativeLayoutDropLocationBar;
     EditText editTextDropLocation;
-    ProgressBar progressBarDropLocation;
+    ProgressWheel progressBarDropLocation;
     ListView listViewDropLocationSearch;
 
     RelativeLayout relativeLayoutFareEstimateDetails;
@@ -86,7 +86,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         relativeLayoutDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutDropLocationBar);
         editTextDropLocation = (EditText) findViewById(R.id.editTextDropLocation);
         editTextDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarDropLocation = (ProgressBar) findViewById(R.id.progressBarDropLocation);
+        progressBarDropLocation = (ProgressWheel) findViewById(R.id.progressBarDropLocation);
         progressBarDropLocation.setVisibility(View.GONE);
         listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
 

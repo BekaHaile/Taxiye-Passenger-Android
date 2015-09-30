@@ -491,6 +491,8 @@ public class JSONParser {
 			waitTime = jLastRideData.getDouble("wait_time");
 		}
 
+		int waitingChargesApplicable = jLastRideData.optInt("waiting_charges_applicable", 0);
+
 
 		return new EndRideData(engagementId, driverName, driverCarNumber,
 				jLastRideData.getString("pickup_address"),
@@ -503,7 +505,7 @@ public class JSONParser {
 				jLastRideData.getDouble("to_pay"),
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
-				baseFare, fareFactor, discountTypes);
+				baseFare, fareFactor, discountTypes, waitingChargesApplicable);
 	}
 
 

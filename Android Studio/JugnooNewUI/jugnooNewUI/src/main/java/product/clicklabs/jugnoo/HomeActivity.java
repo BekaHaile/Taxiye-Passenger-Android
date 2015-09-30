@@ -34,7 +34,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -114,6 +113,7 @@ import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -193,7 +193,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     RelativeLayout relativeLayoutInitialSearchBar;
     TextView textViewInitialSearch;
-    ProgressBar progressBarInitialSearch;
+    ProgressWheel progressBarInitialSearch;
     RelativeLayout relativeLayoutRequestInfo;
 
 
@@ -211,7 +211,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button assigningMyLocationBtn, initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent, relativeLayoutAssigningDropLocationBar;
     EditText editTextAssigningDropLocation;
-    ProgressBar progressBarAssigningDropLocation;
+    ProgressWheel progressBarAssigningDropLocation;
 	ImageView imageViewAssigningDropLocationCross;
     NonScrollListView listViewAssigningDropLocationSearch;
     ScrollView scrollViewAssigning;
@@ -230,7 +230,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button buttonCancelRide, buttonAddJugnooCash, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutFinalDropLocationBar;
     EditText editTextFinalDropLocation;
-    ProgressBar progressBarFinalDropLocation;
+    ProgressWheel progressBarFinalDropLocation;
 	ImageView imageViewFinalDropLocationCross;
     NonScrollListView listViewFinalDropLocationSearch;
     ScrollView scrollViewFinal;
@@ -242,7 +242,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Search Layout
     LinearLayout linearLayoutSearch;
     EditText editTextSearch;
-    ProgressBar progressBarSearch;
+    ProgressWheel progressBarSearch;
 	ImageView imageViewSearchCross;
     NonScrollListView listViewSearch;
     LinearLayout linearLayoutScrollSearch;
@@ -265,7 +265,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
-			textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
+			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
@@ -497,7 +497,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
         textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
-        progressBarInitialSearch = (ProgressBar) findViewById(R.id.progressBarInitialSearch);
+        progressBarInitialSearch = (ProgressWheel) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
 
         buttonChalo = (Button) findViewById(R.id.buttonChalo); buttonChalo.setTypeface(Fonts.latoRegular(this));
@@ -587,7 +587,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAssigningDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationBar);
         editTextAssigningDropLocation = (EditText) findViewById(R.id.editTextAssigningDropLocation);
         editTextAssigningDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarAssigningDropLocation = (ProgressBar) findViewById(R.id.progressBarAssigningDropLocation); progressBarAssigningDropLocation.setVisibility(View.GONE);
+        progressBarAssigningDropLocation = (ProgressWheel) findViewById(R.id.progressBarAssigningDropLocation); progressBarAssigningDropLocation.setVisibility(View.GONE);
 		imageViewAssigningDropLocationCross = (ImageView) findViewById(R.id.imageViewAssigningDropLocationCross); imageViewAssigningDropLocationCross.setVisibility(View.GONE);
         listViewAssigningDropLocationSearch = (NonScrollListView) findViewById(R.id.listViewAssigningDropLocationSearch);
         scrollViewAssigning = (ScrollView) findViewById(R.id.scrollViewAssigning);
@@ -694,7 +694,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationBar);
         editTextFinalDropLocation = (EditText) findViewById(R.id.editTextFinalDropLocation);
         editTextFinalDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarFinalDropLocation = (ProgressBar) findViewById(R.id.progressBarFinalDropLocation); progressBarFinalDropLocation.setVisibility(View.GONE);
+        progressBarFinalDropLocation = (ProgressWheel) findViewById(R.id.progressBarFinalDropLocation); progressBarFinalDropLocation.setVisibility(View.GONE);
 		imageViewFinalDropLocationCross = (ImageView) findViewById(R.id.imageViewFinalDropLocationCross); imageViewFinalDropLocationCross.setVisibility(View.GONE);
         listViewFinalDropLocationSearch = (NonScrollListView) findViewById(R.id.listViewFinalDropLocationSearch);
         scrollViewFinal = (ScrollView) findViewById(R.id.scrollViewFinal);
@@ -769,7 +769,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
         editTextSearch = (EditText) findViewById(R.id.editTextSearch);
         editTextSearch.setTypeface(Fonts.latoRegular(this));
-        progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
+        progressBarSearch = (ProgressWheel) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		imageViewSearchCross = (ImageView) findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
         listViewSearch = (NonScrollListView) findViewById(R.id.listViewSearch);
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
@@ -876,6 +876,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewEndRideToBePaidValue = (TextView) findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Fonts.latoRegular(this));
         textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.latoRegular(this));
         textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideTime = (TextView) findViewById(R.id.textViewEndRideTime); textViewEndRideTime.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideWaitTimeValue = (TextView) findViewById(R.id.textViewEndRideWaitTimeValue); textViewEndRideWaitTimeValue.setTypeface(Fonts.latoRegular(this));
         textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
@@ -916,7 +917,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((TextView) findViewById(R.id.textViewEndRideToBePaidRupee)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		((TextView) findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));
 
@@ -2136,12 +2136,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						} else{
 							linearLayoutEndRideTime.setVisibility(View.GONE);
 						}
-						if(Data.endRideData.waitTime > 0){
+						if(Data.endRideData.waitingChargesApplicable == 1 && Data.endRideData.waitTime > 0){
 							linearLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
 							textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(Data.endRideData.waitTime) + " min");
+							textViewEndRideTime.setText("Total");
 						}
 						else{
 							linearLayoutEndRideWaitTime.setVisibility(View.GONE);
+							textViewEndRideTime.setText("Time");
 						}
 
                         // delete the RidePath Table from Phone Database :)
@@ -2847,7 +2849,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             try {
                 if (activityResumed) {
-                    if (!feedbackSkipped) {
+                    if (!feedbackSkipped && !promoOpened) {
 						callAndHandleStateRestoreAPI(false);
                         initiateTimersForStates(passengerScreenMode);
                     }
@@ -2889,6 +2891,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         feedbackSkipped = false;
 
 		initializeFusedLocationFetchers();
+
+		int sdkInt = android.os.Build.VERSION.SDK_INT;
+		if(sdkInt < 19) {
+			DialogPopup.showLocationSettingsAlert(activity);
+		}
+
 
 //        genieLayout.setGenieParams();
     }
@@ -4885,7 +4893,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				}
 			}
 
-			if(!zoomedToMyLocation){
+			if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation){
 				zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
 			}
 			zoomedToMyLocation = true;

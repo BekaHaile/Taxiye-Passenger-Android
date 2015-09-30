@@ -9,12 +9,13 @@ public class EndRideData {
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
 		distance, rideTime, waitTime, baseFare, fareFactor;
+	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
 	
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String pickupAddress, String dropAddress, String pickupTime, String dropTime,
 			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
-					   ArrayList<DiscountType> discountTypes){
+					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber;
@@ -44,7 +45,7 @@ public class EndRideData {
 				this.rideTime = this.rideTime + this.waitTime;
 			}
 		}
-
+		this.waitingChargesApplicable = waitingChargesApplicable;
 	}
 	
 }

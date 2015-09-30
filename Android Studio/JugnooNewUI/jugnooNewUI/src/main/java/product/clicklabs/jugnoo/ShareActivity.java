@@ -18,6 +18,8 @@ import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -161,8 +163,12 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 			
 			@Override
 			public void onClick(View v) {
-                ReferralActions.shareToFacebook(ShareActivity.this, callbackManager);
-                FlurryEventLogger.event(INVITE_FACEBOOK);
+				if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
+					ReferralActions.shareToFacebook(ShareActivity.this, callbackManager);
+					FlurryEventLogger.event(INVITE_FACEBOOK);
+				} else{
+					DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
+				}
 			}
 		});
 		
@@ -171,8 +177,12 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 			
 			@Override
 			public void onClick(View v) {
-                ReferralActions.shareToWhatsapp(ShareActivity.this);
-                FlurryEventLogger.event(INVITE_WHATSAPP);
+				if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
+					ReferralActions.shareToWhatsapp(ShareActivity.this);
+					FlurryEventLogger.event(INVITE_WHATSAPP);
+				} else{
+					DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
+				}
 			}
 		});
 		
@@ -181,8 +191,12 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 			
 			@Override
 			public void onClick(View v) {
-                ReferralActions.sendSMSIntent(ShareActivity.this);
-                FlurryEventLogger.event(INVITE_MESSAGE);
+				if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
+					ReferralActions.sendSMSIntent(ShareActivity.this);
+					FlurryEventLogger.event(INVITE_MESSAGE);
+				} else{
+					DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
+				}
 			}
 		});
 
@@ -190,8 +204,12 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 
 			@Override
 			public void onClick(View v) {
-				ReferralActions.openMailIntent(ShareActivity.this);
-				FlurryEventLogger.event(INVITE_EMAIL);
+				if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
+					ReferralActions.openMailIntent(ShareActivity.this);
+					FlurryEventLogger.event(INVITE_EMAIL);
+				} else{
+					DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
+				}
 			}
 		});
 

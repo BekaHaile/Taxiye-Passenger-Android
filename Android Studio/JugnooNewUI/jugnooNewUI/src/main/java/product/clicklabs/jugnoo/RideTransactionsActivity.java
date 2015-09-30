@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +42,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -55,7 +55,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 	
 	ListView listViewRideTransactions;
 	TextView textViewInfo;
-	ProgressBar progressBarList;
+	ProgressWheel progressBarList;
 	Button buttonGetRide;
 	
 	RideTransactionAdapter rideTransactionAdapter;
@@ -102,7 +102,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 		
 		listViewRideTransactions = (ListView) findViewById(R.id.listViewRideTransactions);
 		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
-		progressBarList = (ProgressBar) findViewById(R.id.progressBarList);
+		progressBarList = (ProgressWheel) findViewById(R.id.progressBarList);
 		buttonGetRide = (Button) findViewById(R.id.buttonGetRide); buttonGetRide.setTypeface(Fonts.latoRegular(this));
 		textViewInfo.setVisibility(View.GONE);
 		progressBarList.setVisibility(View.GONE);

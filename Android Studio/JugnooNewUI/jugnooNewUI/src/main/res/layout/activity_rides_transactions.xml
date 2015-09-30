@@ -73,12 +73,17 @@
                 android:visibility="gone"
                 />
 
-            <ProgressBar
+            <product.clicklabs.jugnoo.utils.ProgressWheel
                 android:id="@+id/progressBarList"
                 android:layout_width="100px"
                 android:layout_height="100px"
                 android:layout_centerInParent="true"
                 android:visibility="gone"
+                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                wheel:matProg_barColor="@color/yellow"
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="true"
+                wheel:matProg_barWidth="3dp"
                 />
 
 

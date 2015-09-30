@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -81,8 +80,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	
 	ImageView imageViewJugnooLogo;
     ImageView imageViewDebug1, imageViewDebug2;
-	
-	ProgressBar progressBar;
 	
 	RelativeLayout relativeLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
@@ -237,10 +234,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
         imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
 
-		
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		progressBar.setVisibility(View.GONE);
-		
+
 		relativeLayoutLoginSignupButtons = (RelativeLayout) findViewById(R.id.relativeLayoutLoginSignupButtons);
 		buttonLogin = (Button) findViewById(R.id.buttonLogin); buttonLogin.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
 		buttonRegister = (Button) findViewById(R.id.buttonRegister); buttonRegister.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
@@ -457,7 +451,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public void getDeviceToken(){
 	    relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 	    linearLayoutNoNet.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+		DialogPopup.showLoadingDialog(SplashNewActivity.this, "Loading...");
         new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
             @Override
@@ -466,10 +460,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
                     @Override
                     public void run() {
+						DialogPopup.dismissLoadingDialog();
                         Data.deviceToken = regId;
                         Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
                         accessTokenLogin(SplashNewActivity.this);
-                        progressBar.setVisibility(View.GONE);
 
                         FlurryEventLogger.appStarted(regId);
                     }
