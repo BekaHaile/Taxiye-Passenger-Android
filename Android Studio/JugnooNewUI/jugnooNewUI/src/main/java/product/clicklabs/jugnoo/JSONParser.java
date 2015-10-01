@@ -217,10 +217,6 @@ public class JSONParser {
             emailVerificationStatus = userData.getInt("email_verification_status");
         }
 
-//        if (userData.has("fare_factor")) {
-//            fareFactor = userData.getDouble("fare_factor");
-//        }
-
         if (userData.has("jugnoo_fb_banner")) {
             jugnooFbBanner = userData.getString("jugnoo_fb_banner");
         }
@@ -228,6 +224,13 @@ public class JSONParser {
         if (userData.has("num_coupons_available")) {
             numCouponsAvailable = userData.getInt("num_coupons_available");
         }
+
+		String supportContact = Config.getSupportNumber(context);
+		if(userData.has("support_contact")){
+			supportContact = userData.getString("support_contact");
+			Config.saveSupportNumber(context, supportContact);
+		}
+
 
         String authKey = userData.getString("auth_key");
         AccessTokenGenerator.saveAuthKey(context, authKey);

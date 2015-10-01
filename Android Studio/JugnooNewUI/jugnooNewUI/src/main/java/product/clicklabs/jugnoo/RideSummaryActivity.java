@@ -295,7 +295,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 				} else{
 					linearLayoutEndRideTime.setVisibility(View.GONE);
 				}
-				if(endRideData.waitingChargesApplicable == 1 && endRideData.waitTime > 0){
+				if(endRideData.waitingChargesApplicable == 1 || endRideData.waitTime > 0){
 					linearLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
 					textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " min");
 					textViewEndRideTime.setText("Total");

@@ -242,7 +242,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
 		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet); textViewNoNet.setTypeface(Fonts.latoRegular(this));
 		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall); buttonNoNetCall.setTypeface(Fonts.latoRegular(this));
-		
+
+		buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
 		
 		
 		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
@@ -276,7 +277,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			
 			@Override
 			public void onClick(View v) {
-				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber());
+				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
 			}
 		});
 		
@@ -451,7 +452,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public void getDeviceToken(){
 	    relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 	    linearLayoutNoNet.setVisibility(View.GONE);
-		DialogPopup.showLoadingDialog(SplashNewActivity.this, "Loading...");
+		DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
         new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
             @Override

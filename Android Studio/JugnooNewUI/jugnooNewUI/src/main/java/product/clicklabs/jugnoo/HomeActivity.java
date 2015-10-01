@@ -352,7 +352,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private boolean intentFired = false, dropLocationSearched = false, promoOpened = false;
 
-    GenieLayout genieLayout;
+//    GenieLayout genieLayout;
 
 	private GAPIAddress gapiAddressForPin;
 
@@ -522,7 +522,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 promoOpened = true;
                 imageViewMenu.setVisibility(View.GONE);
                 imageViewBack.setVisibility(View.VISIBLE);
-                genieLayout.setVisibility(View.GONE);
+//                genieLayout.setVisibility(View.GONE);
                 centreLocationRl.setVisibility(View.VISIBLE);
                 linearLayoutPromo.setVisibility(View.VISIBLE);
 
@@ -1277,7 +1277,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
-				genieLayout.setVisibility(View.VISIBLE);
+//				genieLayout.setVisibility(View.VISIBLE);
 			}
 		});
 
@@ -1291,7 +1291,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
-				genieLayout.setVisibility(View.VISIBLE);
+//				genieLayout.setVisibility(View.VISIBLE);
 			}
 		});
 
@@ -1739,8 +1739,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-        genieLayout = new GenieLayout(this);
-        genieLayout.addGenieLayout(drawerLayout, relativeLayoutRequestInfo);
+//        genieLayout = new GenieLayout(this);
+//        genieLayout.addGenieLayout(drawerLayout, relativeLayoutRequestInfo);
 
         try {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -1978,15 +1978,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     };
 
     public void hideAnims() {
-        if (genieLayout != null) {
-            genieLayout.hideAnims();
-        }
+//        if (genieLayout != null) {
+//            genieLayout.hideAnims();
+//        }
     }
 
     public void clearAnims() {
-        if (genieLayout != null) {
-            genieLayout.clearAllAnims();
-        }
+//        if (genieLayout != null) {
+//            genieLayout.clearAllAnims();
+//        }
     }
 
 
@@ -2061,7 +2061,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         scrollViewEndRide.scrollTo(0, 0);
 
@@ -2136,7 +2136,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						} else{
 							linearLayoutEndRideTime.setVisibility(View.GONE);
 						}
-						if(Data.endRideData.waitingChargesApplicable == 1 && Data.endRideData.waitTime > 0){
+						if(Data.endRideData.waitingChargesApplicable == 1 || Data.endRideData.waitTime > 0){
 							linearLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
 							textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(Data.endRideData.waitTime) + " min");
 							textViewEndRideTime.setText("Total");
@@ -2250,7 +2250,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							relativeLayoutRequestInfo.setVisibility(View.GONE);
 							initialMyLocationBtn.setVisibility(View.GONE);
 							imageViewRideNow.setVisibility(View.GONE);
-							genieLayout.setVisibility(View.GONE);
+//							genieLayout.setVisibility(View.GONE);
 							centreLocationRl.setVisibility(View.GONE);
 
 							Data.locationSettingsNoPressed = false;
@@ -2260,7 +2260,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
 							initialMyLocationBtn.setVisibility(View.VISIBLE);
 							imageViewRideNow.setVisibility(View.VISIBLE);
-							genieLayout.setVisibility(View.VISIBLE);
+//							genieLayout.setVisibility(View.VISIBLE);
 							centreLocationRl.setVisibility(View.VISIBLE);
 						}
 
@@ -2280,7 +2280,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
 
                         break;
@@ -2328,7 +2328,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -2388,7 +2388,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -2459,7 +2459,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -2516,7 +2516,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -2532,7 +2532,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         stopGiftShake();
                         imageViewHelp.setVisibility(View.VISIBLE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
 						Data.pickupLatLng = null;
 
@@ -2552,7 +2552,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.VISIBLE);
+//                        genieLayout.setVisibility(View.VISIBLE);
 
 
                 }
@@ -2987,9 +2987,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onBackPressed() {
         try {
-            if (genieLayout.areJugnooIconsVisible()) {
-                genieLayout.hideAnims();
-            }
+//            if (genieLayout.areJugnooIconsVisible()) {
+//                genieLayout.hideAnims();
+//            }
 
             if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 textViewInitialSearch.setText("");
@@ -3187,7 +3187,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 									changeLocalityBtn.setVisibility(View.VISIBLE);
 									initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
 
-									genieLayout.setVisibility(View.GONE);
+//									genieLayout.setVisibility(View.GONE);
 
 								} else {
 									imageViewRideNow.setVisibility(View.VISIBLE);
@@ -3197,7 +3197,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 									initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
 									if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
-										genieLayout.setVisibility(View.VISIBLE);
+//										genieLayout.setVisibility(View.VISIBLE);
 									}
 								}
 							}
@@ -4916,7 +4916,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
-				genieLayout.setVisibility(View.VISIBLE);
+//				genieLayout.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
 			}
 		} catch (Exception e) {
@@ -5277,7 +5277,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             @Override
                             public void onClick(View v) {
-                                Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber());
+                                Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber(HomeActivity.this));
                             }
                         }, true, true);
                 } catch (Exception e) {

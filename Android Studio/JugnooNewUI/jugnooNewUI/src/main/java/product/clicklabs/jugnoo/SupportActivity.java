@@ -83,7 +83,7 @@ public class SupportActivity extends BaseActivity implements FlurryEventNames {
 			
 			@Override
 			public void onClick(View v) {
-		        Utils.openCallIntent(SupportActivity.this, Config.getSupportNumber());
+		        Utils.openCallIntent(SupportActivity.this, Config.getSupportNumber(SupportActivity.this));
                 FlurryEventLogger.event(CALL_SUPPORT);
 			}
 		});

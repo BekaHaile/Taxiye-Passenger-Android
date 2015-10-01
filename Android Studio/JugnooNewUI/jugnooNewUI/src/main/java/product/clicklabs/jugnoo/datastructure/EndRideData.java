@@ -46,6 +46,9 @@ public class EndRideData {
 			}
 		}
 		this.waitingChargesApplicable = waitingChargesApplicable;
+		if(this.waitingChargesApplicable == 0 && this.waitTime > 0){
+			this.waitingChargesApplicable = 1;
+		}
 	}
 	
 }

@@ -59,7 +59,7 @@
 
                 <RatingBar
                     android:id="@+id/ratingBarFeedback"
-                    style="@style/RatingBarAuto"
+                    style="@style/YellowRatingBarNew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
