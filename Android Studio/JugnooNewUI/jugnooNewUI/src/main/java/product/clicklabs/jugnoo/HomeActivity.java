@@ -4908,7 +4908,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					cached = bundle.getBoolean("cached");
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 			if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
 					&& relativeLayoutLocationError.getVisibility() == View.VISIBLE) {

@@ -78,7 +78,6 @@
             wheel:matProg_barColor="@color/yellow"
             wheel:matProg_fillRadius="true"
             wheel:matProg_progressIndeterminate="true"
-            wheel:matProg_barWidth="3dp"
             />
     </RelativeLayout>
 

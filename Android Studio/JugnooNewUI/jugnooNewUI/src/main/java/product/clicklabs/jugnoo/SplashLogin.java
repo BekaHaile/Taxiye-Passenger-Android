@@ -629,6 +629,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                                         }
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
+										OTPConfirmScreen.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 										otpErrorMsg = jObj.getString("error");
 										otpFlag = 0;
 										sendToOtpScreen = true;
@@ -755,6 +756,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
+										OTPConfirmScreen.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 										otpErrorMsg = jObj.getString("error");
 										otpFlag = 1;
 										sendToOtpScreen = true;
@@ -821,7 +823,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                         phoneNoOfUnverifiedAccount, "", "", accessToken);
 				}
 				Intent intent = new Intent(SplashLogin.this, OTPConfirmScreen.class);
-				intent.putExtra("show_timer", 0);
+				intent.putExtra("show_timer", 1);
 				startActivity(intent);
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
