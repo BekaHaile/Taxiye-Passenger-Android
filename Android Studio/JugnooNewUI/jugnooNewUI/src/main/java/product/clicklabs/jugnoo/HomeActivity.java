@@ -80,6 +80,7 @@ import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
@@ -2898,8 +2899,47 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		}
 
 
+		openDeepLink();
+
 //        genieLayout.setGenieParams();
     }
+
+
+
+	private void openDeepLink(){
+		try{
+
+			if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutInvite.performClick();
+			}
+			else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutJugnooCash.performClick();
+			}
+			else if(AppLinkIndex.PROMOTIONS.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutPromotions.performClick();
+			}
+			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutTransactions.performClick();
+			}
+			else if(AppLinkIndex.FARE_DETAILS.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutFareDetails.performClick();
+			}
+			else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutSupport.performClick();
+			}
+			else if(AppLinkIndex.ABOUT.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutAbout.performClick();
+			}
+			else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
+				linearLayoutProfile.performClick();
+			}
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		Data.deepLinkIndex = -1;
+	}
+
 
     @Override
     protected void onRestart() {
@@ -4881,14 +4921,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if (priority == 0) {
 				if (location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK) {
 					HomeActivity.myLocation = location;
-					callMapTouchedRefreshDrivers();
 					updatePickupLocation(location);
 				}
 			} else if (priority == 2) {
 				destroyLowPowerFusedLocationFetcher();
 				if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
 					HomeActivity.myLocation = location;
-					callMapTouchedRefreshDrivers();
 					updatePickupLocation(location);
 				}
 			}

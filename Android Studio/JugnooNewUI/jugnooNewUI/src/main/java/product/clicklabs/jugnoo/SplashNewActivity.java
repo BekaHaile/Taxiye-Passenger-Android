@@ -176,6 +176,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             Data.deepLinkClassName = "";
         }
 
+
+		Data.deepLinkIndex = -1;
+		try{
+			Intent intent = getIntent();
+			String action = intent.getAction();
+			Uri data = intent.getData();
+			Log.e("action", "="+action);
+			Log.e("data", "="+data);
+
+			Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
+			Log.e("Deeplink =", "="+Data.deepLinkIndex);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
 		try{
 			NewRelic.withApplicationToken(
 					Config.getNewRelicKey()

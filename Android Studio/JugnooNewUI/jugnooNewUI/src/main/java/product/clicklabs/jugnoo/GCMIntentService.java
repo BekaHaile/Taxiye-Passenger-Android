@@ -140,6 +140,8 @@ public class GCMIntentService extends GcmListenerService {
             Log.v("message", "," + message);
 
             Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+//			notificationIntent.setAction(Intent.ACTION_VIEW); jungooautos://app?deepindex=0
+//			notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + AppLinkIndex.INVITE_AND_EARN.getOrdinal()));
 
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
