@@ -115,7 +115,7 @@
             android:layout_marginTop="5px"
             android:background="#0000"
             android:gravity="center"
-            android:hint="1234"
+            android:hint=""
             android:inputType="number"
             android:maxLength="4"
             android:paddingLeft="20px"

@@ -325,7 +325,8 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
         TextView textViewPickupAt, textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
             textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel, textViewRateRide;
         ImageView imageViewDiv;
-        RelativeLayout relativeLayoutCancel, relativeLayoutTo, relativeLayoutRateRide;
+        RelativeLayout relativeLayoutTo, relativeLayoutRateRide;
+		LinearLayout linearLayoutCancel;
 		LinearLayout linearLayoutRideReceipt;
         RelativeLayout relative;
         int id;
@@ -383,13 +384,13 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 holder.imageViewDiv = (ImageView) convertView.findViewById(R.id.imageViewDiv);
 
                 holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
-                holder.relativeLayoutCancel = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutCancel);
+                holder.linearLayoutCancel = (LinearLayout) convertView.findViewById(R.id.linearLayoutCancel);
                 holder.relativeLayoutTo = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutTo);
                 holder.relativeLayoutRateRide = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutRateRide);
 				holder.linearLayoutRideReceipt = (LinearLayout) convertView.findViewById(R.id.linearLayoutRideReceipt);
 
                 holder.relative.setTag(holder);
-                holder.relativeLayoutCancel.setTag(holder);
+                holder.linearLayoutCancel.setTag(holder);
                 holder.relativeLayoutRateRide.setTag(holder);
 				holder.linearLayoutRideReceipt.setTag(holder);
 
@@ -421,10 +422,10 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     holder.textViewDetailsValue.setText(futureSchedule.pickupDate + ", " + futureSchedule.pickupTime);
 
                     if(futureSchedule.modifiable == 1){
-                        holder.relativeLayoutCancel.setVisibility(View.VISIBLE);
+                        holder.linearLayoutCancel.setVisibility(View.VISIBLE);
                     }
                     else{
-                        holder.relativeLayoutCancel.setVisibility(View.GONE);
+                        holder.linearLayoutCancel.setVisibility(View.GONE);
                     }
                 }
                 else{
@@ -433,7 +434,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     holder.textViewPickupAt.setVisibility(View.GONE);
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
                     holder.textViewAmount.setVisibility(View.VISIBLE);
-                    holder.relativeLayoutCancel.setVisibility(View.GONE);
+                    holder.linearLayoutCancel.setVisibility(View.GONE);
 
                     holder.textViewIdValue.setText(""+rideInfo.engagementId);
                     holder.textViewFromValue.setText(rideInfo.pickupAddress);
@@ -466,7 +467,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 holder.textViewPickupAt.setVisibility(View.GONE);
                 holder.relativeLayoutTo.setVisibility(View.VISIBLE);
                 holder.textViewAmount.setVisibility(View.VISIBLE);
-                holder.relativeLayoutCancel.setVisibility(View.GONE);
+                holder.linearLayoutCancel.setVisibility(View.GONE);
 
                 holder.textViewIdValue.setText(""+rideInfo.engagementId);
                 holder.textViewFromValue.setText(rideInfo.pickupAddress);
@@ -493,7 +494,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 				holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
             }
 
-            holder.relativeLayoutCancel.setOnClickListener(new View.OnClickListener() {
+            holder.linearLayoutCancel.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {

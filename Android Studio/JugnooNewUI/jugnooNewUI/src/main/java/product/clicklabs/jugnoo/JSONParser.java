@@ -225,13 +225,6 @@ public class JSONParser {
             numCouponsAvailable = userData.getInt("num_coupons_available");
         }
 
-		String supportContact = Config.getSupportNumber(context);
-		if(userData.has("support_contact")){
-			supportContact = userData.getString("support_contact");
-			Config.saveSupportNumber(context, supportContact);
-		}
-
-
         String authKey = userData.getString("auth_key");
         AccessTokenGenerator.saveAuthKey(context, authKey);
 
@@ -268,6 +261,12 @@ public class JSONParser {
         Log.i("jLoginObject", "=" + jLoginObject);
 
         Data.userData = parseUserData(context, jLoginObject);
+
+		String supportContact = Config.getSupportNumber(context);
+		if(jLoginObject.has("support_number")){
+			supportContact = jLoginObject.getString("support_number");
+			Config.saveSupportNumber(context, supportContact);
+		}
 
         parseFareDetails(jLoginObject);
 

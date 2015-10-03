@@ -237,7 +237,7 @@
                     android:layout_marginTop="5px"
                     android:background="#0000"
                     android:gravity="center_vertical"
-                    android:hint="Promocode"
+                    android:hint="Promocode (optional)"
                     android:paddingLeft="20px"
                     android:paddingRight="20px"
                     android:singleLine="true"

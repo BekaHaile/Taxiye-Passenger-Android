@@ -126,15 +126,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             
-             <!--<intent-filter>-->
-            	<!--<data android:scheme="jungooautos" />-->
-        		<!--<action android:name="android.intent.action.VIEW" />-->
-       			<!--<category android:name="android.intent.category.BROWSABLE" />-->
-        		<!--<category android:name="android.intent.category.DEFAULT" />-->
-        	<!--</intent-filter>-->
+             <intent-filter>
+            	<data android:scheme="jungooautos" />
+        		<action android:name="android.intent.action.VIEW" />
+       			<category android:name="android.intent.category.BROWSABLE" />
+        		<category android:name="android.intent.category.DEFAULT" />
+        	</intent-filter>
 
             <!-- https://jugnoo.in?deepindex=0 -->
             <!-- jungooautos://app?deepindex=0 -->
+            <!-- http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0 -->
 
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
@@ -145,6 +146,28 @@
                 <data android:scheme="jungooautos"
                         android:host="app"/>
             </intent-filter>
+
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                      android:host="smarturl.it"
+                      android:pathPrefix="/jugnooautos"/>
+                <data android:scheme="jungooautos"
+                      android:host="app"/>
+            </intent-filter>
+
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                      android:host="share.jugnoo.in"/>
+                <data android:scheme="jungooautos"
+                      android:host="app"/>
+            </intent-filter>
+
 
         </activity>
 

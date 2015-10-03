@@ -5463,7 +5463,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     raiseSOSAlertAPI(activity, SMS);
                     FlurryEventLogger.event(SOS_SMS_TO_EMERGENCY_CONTACT);
                 }
-            }, false, false, new DialogInterface.OnCancelListener() {
+            }, true, false, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);
@@ -5487,7 +5487,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);
                 }
-            }, false, false, new DialogInterface.OnCancelListener() {
+            }, true, false, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);

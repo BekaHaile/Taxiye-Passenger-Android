@@ -46,6 +46,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.Locale;
 
 import io.branch.referral.Branch;
@@ -107,17 +108,25 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     public void onStart() {
         super.onStart();
 
-
         try {
             Branch branch = Branch.getInstance(this);
             branch.initSession(new Branch.BranchReferralInitListener() {
                 @Override
                 public void onInitFinished(JSONObject referringParams, BranchError error) {
                     if (error == null) {
-                        // params are the deep linked params associated with the link that the user clicked before showing up
-                        Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
-                    }
-                }
+						// params are the deep linked params associated with the link that the user clicked before showing up
+						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
+						try {
+							Data.deepLinkIndex = referringParams.getInt("deepindex");
+							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
+						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
+						// "+is_first_session":false,"+clicked_branch_link":true}
+					}
+				}
             }, this.getIntent().getData(), this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,7 +140,39 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     @Override
     public void onNewIntent(Intent intent) {
         this.setIntent(intent);
+		getDeepLinkIndexFromIntent(intent);
     }
+
+	private void getDeepLinkIndexFromIntent(Intent newIntent) {
+		Data.deepLinkIndex = -1;
+		try {
+			Intent intent = newIntent;
+			String action = intent.getAction();
+			Uri data = intent.getData();
+			Log.e("action", "=" + action);
+			Log.e("data", "=" + data);
+
+			Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
+			Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
+			try {
+				Intent intent = newIntent;
+				Uri data = intent.getData();
+				Log.e("data", "=" + data);
+
+				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
+				Uri dataTarget = Uri.parse(targetUrl);
+
+				Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
+				Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 
 
 	public static void initializeServerURL(Context context){
@@ -177,19 +218,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         }
 
 
-		Data.deepLinkIndex = -1;
-		try{
-			Intent intent = getIntent();
-			String action = intent.getAction();
-			Uri data = intent.getData();
-			Log.e("action", "="+action);
-			Log.e("data", "="+data);
+		getDeepLinkIndexFromIntent(getIntent());
 
-			Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
-			Log.e("Deeplink =", "="+Data.deepLinkIndex);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+
+
 
 		try{
 			NewRelic.withApplicationToken(
