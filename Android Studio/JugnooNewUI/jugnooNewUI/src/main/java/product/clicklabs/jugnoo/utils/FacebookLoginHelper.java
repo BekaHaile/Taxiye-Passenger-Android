@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;

@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.utils;
 import android.app.Activity;
 import android.content.IntentSender;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;

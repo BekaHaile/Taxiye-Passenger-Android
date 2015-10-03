@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
+
+import product.clicklabs.jugnoo.utils.Log;
+
 /**
  * Created by socomo20 on 8/12/15.
  */

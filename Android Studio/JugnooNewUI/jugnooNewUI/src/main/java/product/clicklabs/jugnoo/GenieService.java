@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,6 +28,7 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.GeniePositonsSaver;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SimpleAnimator;
 
 

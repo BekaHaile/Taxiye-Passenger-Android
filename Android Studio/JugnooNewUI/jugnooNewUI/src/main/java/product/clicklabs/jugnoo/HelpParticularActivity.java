@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
@@ -15,7 +14,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -28,6 +26,7 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -116,7 +115,7 @@ public class HelpParticularActivity extends BaseActivity {
             }
             loadingFinished = false;
             view.loadUrl(urlNewString);
-            Log.e("shouldOverrideUrlLoading", "urlNewString="+urlNewString);
+            Log.e("shouldOverrideUrlLoading", "urlNewString=" + urlNewString);
             return true;
         }
 

@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 /**
  * Created by clicklabs on 7/3/15.
@@ -41,8 +40,6 @@ public class BaseFragmentActivity extends FragmentActivity {
 
         if (!newActivityStarted && !activityFinished) {
 //            startService(new Intent(BaseActivity.GENIE_SERVICE));
-
-            Log.d("Service started", "");
         }
         newActivityStarted = false;
 
@@ -53,7 +50,6 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onResume() {
 //        stopService(new Intent(BaseActivity.GENIE_SERVICE));
-        Log.d("Service stopped", "");
         super.onResume();
     }
 
