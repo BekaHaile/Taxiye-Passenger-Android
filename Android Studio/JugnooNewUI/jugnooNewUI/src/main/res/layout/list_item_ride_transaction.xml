@@ -3,13 +3,13 @@
     android:id="@+id/relative"
     android:layout_width="720px"
     android:layout_height="wrap_content"
+                android:background="@color/white"
     android:splitMotionEvents="false" >
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical"
         android:splitMotionEvents="false"
         android:layout_marginTop="15px"
@@ -113,7 +113,7 @@
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="30px"
                 android:layout_toRightOf="@+id/textViewTo"
-                android:text="Plot No 5, Sector 28 B, Chandigarh"
+                android:text="Plot No 5, Sector 28 B, Chandigarh\nabc"
                 android:textColor="@color/black_text_alpha"
                 android:textSize="24px" />
         </RelativeLayout>
@@ -145,6 +145,8 @@
                 android:textSize="24px" />
         </RelativeLayout>
 
+    </LinearLayout>
+
 
         <RelativeLayout
             android:id="@+id/relativeLayoutRateRide"
@@ -152,6 +154,7 @@
             android:layout_height="80px"
             android:layout_marginTop="10px"
             android:background="@drawable/background_white_white_light_grey_selector"
+            android:layout_below="@+id/linearLayoutMain"
             >
 
             <TextView
@@ -181,99 +184,94 @@
             android:id="@+id/imageViewDiv"
             android:layout_width="match_parent"
             android:layout_height="20px"
+            android:layout_below="@+id/relativeLayoutRateRide"
             />
 
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/yellow_alpha" />
+            android:background="@color/yellow_alpha"
+            android:layout_below="@+id/imageViewDiv"
+            />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutRideReceipt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40px"
+        android:layout_marginTop="20px"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="44px"
+            android:layout_height="44px"
+            android:tag="mwar"
+            android:src="@drawable/ic_ride_receipt"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10px"
+            android:layout_marginBottom="10px"
+            android:layout_marginLeft="10px"
+            />
+
+        <ImageView
+            android:layout_width="13px"
+            android:layout_height="26px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="0px"
+            android:src="@drawable/arrow_icon_selector"
+            android:tag="mwar"
+            android:layout_marginLeft="20px"
+            />
+
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutRideOp"
-        android:layout_width="150px"
+
+    <TextView
+        android:id="@+id/textViewAmount"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="40px"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:singleLine="true"
+        android:text="@string/rupee_0"
+        android:textColor="@color/black_text"
+        android:textSize="28px" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="40px"
-        android:layout_alignTop="@+id/linearLayoutMain"
-        android:layout_alignBottom="@+id/linearLayoutMain"
+        android:layout_centerVertical="true"
         >
 
-
-        <LinearLayout
-            android:id="@+id/linearLayoutRideReceipt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal"
-            >
-            <ImageView
-                android:layout_width="44px"
-                android:layout_height="44px"
-                android:tag="mwar"
-                android:src="@drawable/ic_ride_receipt"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="10px"
-                android:layout_marginBottom="10px"
-                android:layout_marginLeft="10px"
-                />
-
-            <ImageView
-                android:layout_width="13px"
-                android:layout_height="26px"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="0px"
-                android:src="@drawable/arrow_icon_selector"
-                android:tag="mwar"
-                android:layout_marginLeft="20px"
-                />
-
-
-        </LinearLayout>
-
-
         <TextView
-            android:id="@+id/textViewAmount"
+            android:id="@+id/textViewCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="0px"
-            android:singleLine="true"
-            android:text="@string/rupee_0"
-            android:textColor="@color/black_text"
-            android:textSize="28px" />
+            android:layout_marginRight="10px"
+            android:layout_marginTop="10px"
+            android:layout_marginBottom="10px"
+            android:text="CANCEL"
+            android:textColor="@drawable/text_color_black_alpha_selector"
+            android:textSize="26px"
+            android:layout_gravity="center_vertical"
+            />
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutCancel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" >
-
-            <TextView
-                android:id="@+id/textViewCancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10px"
-                android:layout_toLeftOf="@+id/imageViewArrow"
-                android:text="CANCEL"
-                android:textColor="@drawable/text_color_black_alpha_selector"
-                android:textSize="26px" />
-
-            <ImageView
-                android:id="@+id/imageViewArrow"
-                android:layout_width="13px"
-                android:layout_height="26px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="0px"
-                android:src="@drawable/arrow_icon_selector"
-                android:tag="mwar" />
-        </RelativeLayout>
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/imageViewArrow"
+            android:layout_width="13px"
+            android:layout_height="26px"
+            android:src="@drawable/arrow_icon_selector"
+            android:tag="mwar"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
 
 </RelativeLayout>

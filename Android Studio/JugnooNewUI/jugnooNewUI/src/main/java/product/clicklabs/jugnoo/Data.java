@@ -158,6 +158,7 @@ public class Data {
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
     public static String deepLinkClassName = "";
+	public static int deepLinkIndex = -1;
 
 	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 

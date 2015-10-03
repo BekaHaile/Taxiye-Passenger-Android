@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -49,6 +48,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -64,7 +64,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	Button buttonAddPayment;
 	
 	TextView textViewInfo;
-	ProgressBar progressBar;
+	ProgressWheel progressBar;
 
     ScrollView scrollView;
 	
@@ -148,7 +148,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		listViewTransactions.setAdapter(transactionListAdapter);
 		
 		textViewInfo = (TextView) rootView.findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(paymentActivity));
-		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+		progressBar = (ProgressWheel) rootView.findViewById(R.id.progressBar);
 		
 		textViewInfo.setVisibility(View.GONE);
 		progressBar.setVisibility(View.GONE);

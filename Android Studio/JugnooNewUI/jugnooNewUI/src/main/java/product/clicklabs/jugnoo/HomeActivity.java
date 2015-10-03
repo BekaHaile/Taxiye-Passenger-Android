@@ -34,7 +34,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -81,6 +80,7 @@ import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
@@ -114,6 +114,7 @@ import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -193,7 +194,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     RelativeLayout relativeLayoutInitialSearchBar;
     TextView textViewInitialSearch;
-    ProgressBar progressBarInitialSearch;
+    ProgressWheel progressBarInitialSearch;
     RelativeLayout relativeLayoutRequestInfo;
 
 
@@ -211,7 +212,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button assigningMyLocationBtn, initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent, relativeLayoutAssigningDropLocationBar;
     EditText editTextAssigningDropLocation;
-    ProgressBar progressBarAssigningDropLocation;
+    ProgressWheel progressBarAssigningDropLocation;
+	ImageView imageViewAssigningDropLocationCross;
     NonScrollListView listViewAssigningDropLocationSearch;
     ScrollView scrollViewAssigning;
     LinearLayout linearLayoutScrollAssigning;
@@ -229,7 +231,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button buttonCancelRide, buttonAddJugnooCash, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutFinalDropLocationBar;
     EditText editTextFinalDropLocation;
-    ProgressBar progressBarFinalDropLocation;
+    ProgressWheel progressBarFinalDropLocation;
+	ImageView imageViewFinalDropLocationCross;
     NonScrollListView listViewFinalDropLocationSearch;
     ScrollView scrollViewFinal;
     LinearLayout linearLayoutScrollFinal;
@@ -240,7 +243,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Search Layout
     LinearLayout linearLayoutSearch;
     EditText editTextSearch;
-    ProgressBar progressBarSearch;
+    ProgressWheel progressBarSearch;
+	ImageView imageViewSearchCross;
     NonScrollListView listViewSearch;
     LinearLayout linearLayoutScrollSearch;
     TextView textViewScrollSearch;
@@ -257,12 +261,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge;
-	LinearLayout linearLayoutEndRideTime;
+	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
-			textViewEndRideDistanceValue, textViewEndRideTimeValue, textViewEndRideFareFactorValue;
+			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
@@ -349,7 +353,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private boolean intentFired = false, dropLocationSearched = false, promoOpened = false;
 
-    GenieLayout genieLayout;
+//    GenieLayout genieLayout;
 
 	private GAPIAddress gapiAddressForPin;
 
@@ -365,8 +369,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         FacebookSdk.sdkInitialize(this);
 
         callbackManager = CallbackManager.Factory.create();
-
-        ReferralActions.incrementAppOpen(this);
 
         HomeActivity.appInterruptHandler = HomeActivity.this;
 
@@ -495,9 +497,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
-        textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch);
-        textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
-        progressBarInitialSearch = (ProgressBar) findViewById(R.id.progressBarInitialSearch);
+        textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
+        progressBarInitialSearch = (ProgressWheel) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
 
         buttonChalo = (Button) findViewById(R.id.buttonChalo); buttonChalo.setTypeface(Fonts.latoRegular(this));
@@ -522,7 +523,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 promoOpened = true;
                 imageViewMenu.setVisibility(View.GONE);
                 imageViewBack.setVisibility(View.VISIBLE);
-                genieLayout.setVisibility(View.GONE);
+//                genieLayout.setVisibility(View.GONE);
                 centreLocationRl.setVisibility(View.VISIBLE);
                 linearLayoutPromo.setVisibility(View.VISIBLE);
 
@@ -587,7 +588,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAssigningDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationBar);
         editTextAssigningDropLocation = (EditText) findViewById(R.id.editTextAssigningDropLocation);
         editTextAssigningDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarAssigningDropLocation = (ProgressBar) findViewById(R.id.progressBarAssigningDropLocation); progressBarAssigningDropLocation.setVisibility(View.GONE);
+        progressBarAssigningDropLocation = (ProgressWheel) findViewById(R.id.progressBarAssigningDropLocation); progressBarAssigningDropLocation.setVisibility(View.GONE);
+		imageViewAssigningDropLocationCross = (ImageView) findViewById(R.id.imageViewAssigningDropLocationCross); imageViewAssigningDropLocationCross.setVisibility(View.GONE);
         listViewAssigningDropLocationSearch = (NonScrollListView) findViewById(R.id.listViewAssigningDropLocationSearch);
         scrollViewAssigning = (ScrollView) findViewById(R.id.scrollViewAssigning);
         scrollViewAssigning.setVisibility(View.GONE);
@@ -607,9 +609,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         SearchListAdapter dropLocationAssigningSearchListAdapter = new SearchListAdapter(this, editTextAssigningDropLocation, new LatLng(30.75, 76.78),
             new SearchListActionsHandler() {
-                @Override
+
+				@Override
+				public void onTextChange(String text) {
+					if(text.length() > 0){
+						imageViewAssigningDropLocationCross.setVisibility(View.VISIBLE);
+					}
+					else{
+						imageViewAssigningDropLocationCross.setVisibility(View.GONE);
+					}
+				}
+
+				@Override
                 public void onSearchPre() {
-                    progressBarAssigningDropLocation.setVisibility(View.VISIBLE);
+                    progressBarAssigningDropLocation.setVisibility(View.GONE);
                     if(scrollViewAssigning.getVisibility() == View.GONE) {
                         initDropLocationSearchUI(false);
                     }
@@ -682,7 +695,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationBar);
         editTextFinalDropLocation = (EditText) findViewById(R.id.editTextFinalDropLocation);
         editTextFinalDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarFinalDropLocation = (ProgressBar) findViewById(R.id.progressBarFinalDropLocation); progressBarFinalDropLocation.setVisibility(View.GONE);
+        progressBarFinalDropLocation = (ProgressWheel) findViewById(R.id.progressBarFinalDropLocation); progressBarFinalDropLocation.setVisibility(View.GONE);
+		imageViewFinalDropLocationCross = (ImageView) findViewById(R.id.imageViewFinalDropLocationCross); imageViewFinalDropLocationCross.setVisibility(View.GONE);
         listViewFinalDropLocationSearch = (NonScrollListView) findViewById(R.id.listViewFinalDropLocationSearch);
         scrollViewFinal = (ScrollView) findViewById(R.id.scrollViewFinal);
         scrollViewFinal.setVisibility(View.GONE);
@@ -703,9 +717,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         SearchListAdapter dropLocationFinalSearchListAdapter = new SearchListAdapter(this, editTextFinalDropLocation, new LatLng(30.75, 76.78),
             new SearchListActionsHandler() {
-                @Override
+
+				@Override
+				public void onTextChange(String text) {
+					if(text.length() > 0){
+						imageViewFinalDropLocationCross.setVisibility(View.VISIBLE);
+					}
+					else{
+						imageViewFinalDropLocationCross.setVisibility(View.GONE);
+					}
+				}
+
+				@Override
                 public void onSearchPre() {
-                    progressBarFinalDropLocation.setVisibility(View.VISIBLE);
+                    progressBarFinalDropLocation.setVisibility(View.GONE);
                     if(scrollViewFinal.getVisibility() == View.GONE) {
                         initDropLocationSearchUI(true);
                     }
@@ -745,8 +770,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
         editTextSearch = (EditText) findViewById(R.id.editTextSearch);
         editTextSearch.setTypeface(Fonts.latoRegular(this));
-        progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch);
-        progressBarSearch.setVisibility(View.GONE);
+        progressBarSearch = (ProgressWheel) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
+		imageViewSearchCross = (ImageView) findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
         listViewSearch = (NonScrollListView) findViewById(R.id.listViewSearch);
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
@@ -764,9 +789,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78),
             new SearchListActionsHandler() {
-                @Override
+
+				@Override
+				public void onTextChange(String text) {
+					if(text.length() > 0){
+						imageViewSearchCross.setVisibility(View.VISIBLE);
+					}
+					else{
+						imageViewSearchCross.setVisibility(View.GONE);
+					}
+				}
+
+				@Override
                 public void onSearchPre() {
-                    progressBarSearch.setVisibility(View.VISIBLE);
+                    progressBarSearch.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -841,12 +877,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewEndRideToBePaidValue = (TextView) findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Fonts.latoRegular(this));
         textViewEndRideBaseFareValue = (TextView) findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.latoRegular(this));
         textViewEndRideDistanceValue = (TextView) findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideTime = (TextView) findViewById(R.id.textViewEndRideTime); textViewEndRideTime.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         textViewEndRideTimeValue = (TextView) findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.latoRegular(this));
-        textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.latoRegular(this));
+		textViewEndRideWaitTimeValue = (TextView) findViewById(R.id.textViewEndRideWaitTimeValue); textViewEndRideWaitTimeValue.setTypeface(Fonts.latoRegular(this));
+        textViewEndRideFareFactorValue = (TextView) findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
 		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
 		linearLayoutEndRideTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideTime);
+		linearLayoutEndRideWaitTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideWaitTime);
 
 		textViewEndRideLuggageChargeValue = (TextView) findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoRegular(this));
 		textViewEndRideConvenienceChargeValue = (TextView) findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoRegular(this));
@@ -879,8 +918,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((TextView) findViewById(R.id.textViewEndRideToBePaidRupee)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		((TextView) findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -904,6 +943,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			}
 		});
+
+
+
 
 
         //Top bar events
@@ -1236,7 +1278,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
-				genieLayout.setVisibility(View.VISIBLE);
+//				genieLayout.setVisibility(View.VISIBLE);
 			}
 		});
 
@@ -1250,7 +1292,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
-				genieLayout.setVisibility(View.VISIBLE);
+//				genieLayout.setVisibility(View.VISIBLE);
 			}
 		});
 
@@ -1265,6 +1307,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         // Assigning layout events
+
 //        initialCancelRideBtn.setOnClickListener(new OnClickListener() {
 //
 //            @Override
@@ -1283,6 +1326,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //            }
 //        });
 
+		assigningLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
 
 		initialCancelRideBtn.setOnTouchListener(new View.OnTouchListener() {
 
@@ -1290,7 +1339,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			Runnable runnable = new Runnable() {
 				@Override
 				public void run() {
-					if(cancelTouchHold) {
+					if (cancelTouchHold) {
 						if ("".equalsIgnoreCase(Data.cSessionId)) {
 							if (checkForGPSAccuracyTimer != null) {
 								if (checkForGPSAccuracyTimer.isRunning) {
@@ -1330,7 +1379,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						break;
 
 					case MotionEvent.ACTION_UP:
-						if(cancelTouchHold) {
+						if (cancelTouchHold) {
 							cancelTouchHold = false;
 							textViewFindingDriver.setText("Finding a Jugnoo driver...");
 							progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
@@ -1349,11 +1398,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         relativeLayoutAssigningDropLocationBar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initDropLocationSearchUI(false);
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				initDropLocationSearchUI(false);
+			}
+		});
 
         editTextAssigningDropLocation.setOnClickListener(new OnClickListener() {
             @Override
@@ -1361,6 +1410,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 initDropLocationSearchUI(false);
             }
         });
+
+		imageViewAssigningDropLocationCross.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextAssigningDropLocation.setText("");
+			}
+		});
 
 
 
@@ -1406,6 +1462,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+		imageViewSearchCross.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextSearch.setText("");
+			}
+		});
+
 
 
 
@@ -1447,15 +1510,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                Utils.openCallIntent(HomeActivity.this, Data.assignedDriverInfo.phoneNumber);
-                if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
-                    FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
-                }
-                else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
-                    FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
-                }
-            }
-        });
+				try {
+					Utils.openCallIntent(HomeActivity.this, Data.assignedDriverInfo.phoneNumber);
+					if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+						FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
+					}
+					else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+						FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+   	     });
 
         textViewInRideLowJugnooCash.setOnClickListener(new OnClickListener() {
 
@@ -1480,6 +1547,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+		imageViewFinalDropLocationCross.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextFinalDropLocation.setText("");
+			}
+		});
 
 
 
@@ -1667,8 +1740,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-        genieLayout = new GenieLayout(this);
-        genieLayout.addGenieLayout(drawerLayout, relativeLayoutRequestInfo);
+//        genieLayout = new GenieLayout(this);
+//        genieLayout.addGenieLayout(drawerLayout, relativeLayoutRequestInfo);
 
         try {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -1682,14 +1755,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
 
-            switchUserScreen();
+			if(!Data.locationSettingsNoPressed) {
+				ReferralActions.incrementAppOpen(this);
+				ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
+			}
+
+			switchUserScreen();
 
             startUIAfterGettingUserStatus();
 
 
             Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.deviceToken, Config.getServerUrl());
-
-            ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1903,15 +1979,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     };
 
     public void hideAnims() {
-        if (genieLayout != null) {
-            genieLayout.hideAnims();
-        }
+//        if (genieLayout != null) {
+//            genieLayout.hideAnims();
+//        }
     }
 
     public void clearAnims() {
-        if (genieLayout != null) {
-            genieLayout.clearAllAnims();
-        }
+//        if (genieLayout != null) {
+//            genieLayout.clearAllAnims();
+//        }
     }
 
 
@@ -1986,7 +2062,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         scrollViewEndRide.scrollTo(0, 0);
 
@@ -2061,6 +2137,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						} else{
 							linearLayoutEndRideTime.setVisibility(View.GONE);
 						}
+						if(Data.endRideData.waitingChargesApplicable == 1 || Data.endRideData.waitTime > 0){
+							linearLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
+							textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(Data.endRideData.waitTime) + " min");
+							textViewEndRideTime.setText("Total");
+						}
+						else{
+							linearLayoutEndRideWaitTime.setVisibility(View.GONE);
+							textViewEndRideTime.setText("Time");
+						}
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -2080,6 +2165,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 switch (mode) {
 
                     case P_INITIAL:
+
+						Data.dropLatLng = null;
 
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
 
@@ -2145,8 +2232,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewSearchCancel.setVisibility(View.GONE);
 
 
-						if(!firstTimeZoom && myLocation != null){
-							zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+						if(!firstTimeZoom){
+							if(Data.pickupLatLng != null){
+								zoomToCurrentLocationWithOneDriver(Data.pickupLatLng);
+							}
+							else if(myLocation != null){
+								zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+							}
 						}
 						firstTimeZoom = true;
 
@@ -2159,7 +2251,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							relativeLayoutRequestInfo.setVisibility(View.GONE);
 							initialMyLocationBtn.setVisibility(View.GONE);
 							imageViewRideNow.setVisibility(View.GONE);
-							genieLayout.setVisibility(View.GONE);
+//							genieLayout.setVisibility(View.GONE);
 							centreLocationRl.setVisibility(View.GONE);
 
 							Data.locationSettingsNoPressed = false;
@@ -2169,7 +2261,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
 							initialMyLocationBtn.setVisibility(View.VISIBLE);
 							imageViewRideNow.setVisibility(View.VISIBLE);
-							genieLayout.setVisibility(View.VISIBLE);
+//							genieLayout.setVisibility(View.VISIBLE);
 							centreLocationRl.setVisibility(View.VISIBLE);
 						}
 
@@ -2187,9 +2279,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         jugnooShopImageView.setVisibility(View.GONE);
                         stopGiftShake();
                         imageViewHelp.setVisibility(View.GONE);
-                        imageViewSearchCancel.setVisibility(View.VISIBLE);
+                        imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
 
                         break;
@@ -2227,7 +2319,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         }
                         else{
-                            setDropLocationMarker();
+//                            setDropLocationMarker();
                             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                         }
 
@@ -2237,7 +2329,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -2297,7 +2389,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -2368,7 +2460,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -2425,7 +2517,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
 
                         break;
 
@@ -2441,7 +2533,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         stopGiftShake();
                         imageViewHelp.setVisibility(View.VISIBLE);
 
-                        genieLayout.setVisibility(View.GONE);
+//                        genieLayout.setVisibility(View.GONE);
+
+						Data.pickupLatLng = null;
 
                         break;
 
@@ -2459,7 +2553,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
-                        genieLayout.setVisibility(View.VISIBLE);
+//                        genieLayout.setVisibility(View.VISIBLE);
 
 
                 }
@@ -2537,10 +2631,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void setDropLocationMarker(){
-        if(dropLocationMarker != null){
-            dropLocationMarker.remove();
-        }
-        dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+		if(Data.dropLatLng != null) {
+			if (dropLocationMarker != null) {
+				dropLocationMarker.remove();
+			}
+			dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.dropLatLng));
+		}
     }
 
     private void setPickupToDropPath(){
@@ -2675,41 +2771,47 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private void initDropLocationSearchUI(boolean engaged){
-        dropLocationSearched = true;
-        if(!engaged) {
-            editTextAssigningDropLocation.requestFocus();
-            relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
-            relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-            scrollViewAssigning.setVisibility(View.VISIBLE);
-            Utils.showSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
-        }
-        else{
-            editTextFinalDropLocation.requestFocus();
-            relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
-            relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-            scrollViewFinal.setVisibility(View.VISIBLE);
-            Utils.showSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
-        }
-    }
+		try {
+			dropLocationSearched = true;
+			if(!engaged) {
+				editTextAssigningDropLocation.requestFocus();
+				relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
+				relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.dropshadow_grey);
+				scrollViewAssigning.setVisibility(View.VISIBLE);
+				Utils.showSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
+			}
+			else{
+				editTextFinalDropLocation.requestFocus();
+				relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.white_translucent));
+				scrollViewFinal.setVisibility(View.VISIBLE);
+				Utils.showSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     private void stopDropLocationSearchUI(boolean engaged){
-        dropLocationSearched = false;
-        if(!engaged) {
-            relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
-            relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
-            scrollViewAssigning.setVisibility(View.GONE);
-            progressBarAssigningDropLocation.setVisibility(View.GONE);
-			editTextAssigningDropLocation.setText("");
-			Utils.hideSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
-		} else {
-			relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
-            relativeLayoutFinalDropLocationBar.setBackgroundResource(R.drawable.background_white_rounded);
-            scrollViewFinal.setVisibility(View.GONE);
-            progressBarFinalDropLocation.setVisibility(View.GONE);
-			editTextFinalDropLocation.setText("");
-			Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
-        }
-    }
+		try {
+			dropLocationSearched = false;
+			if(!engaged) {
+				relativeLayoutAssigningDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+				relativeLayoutAssigningDropLocationBar.setBackgroundResource(R.drawable.dropshadow_black);
+				scrollViewAssigning.setVisibility(View.GONE);
+				progressBarAssigningDropLocation.setVisibility(View.GONE);
+				editTextAssigningDropLocation.setText("");
+				Utils.hideSoftKeyboard(HomeActivity.this, editTextAssigningDropLocation);
+			} else {
+				relativeLayoutFinalDropLocationParent.setBackgroundColor(getResources().getColor(R.color.transparent));
+				scrollViewFinal.setVisibility(View.GONE);
+				progressBarFinalDropLocation.setVisibility(View.GONE);
+				editTextFinalDropLocation.setText("");
+				Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 
@@ -2748,7 +2850,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             try {
                 if (activityResumed) {
-                    if (!feedbackSkipped) {
+                    if (!feedbackSkipped && !promoOpened) {
 						callAndHandleStateRestoreAPI(false);
                         initiateTimersForStates(passengerScreenMode);
                     }
@@ -2791,8 +2893,53 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		initializeFusedLocationFetchers();
 
+		int sdkInt = android.os.Build.VERSION.SDK_INT;
+		if(sdkInt < 19) {
+			DialogPopup.showLocationSettingsAlert(activity);
+		}
+
+
+		openDeepLink();
+
 //        genieLayout.setGenieParams();
     }
+
+
+
+	private void openDeepLink(){
+		try{
+
+			if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutInvite.performClick();
+			}
+			else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutJugnooCash.performClick();
+			}
+			else if(AppLinkIndex.PROMOTIONS.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutPromotions.performClick();
+			}
+			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutTransactions.performClick();
+			}
+			else if(AppLinkIndex.FARE_DETAILS.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutFareDetails.performClick();
+			}
+			else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutSupport.performClick();
+			}
+			else if(AppLinkIndex.ABOUT.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutAbout.performClick();
+			}
+			else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
+				linearLayoutProfile.performClick();
+			}
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		Data.deepLinkIndex = -1;
+	}
+
 
     @Override
     protected void onRestart() {
@@ -2880,9 +3027,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onBackPressed() {
         try {
-            if (genieLayout.areJugnooIconsVisible()) {
-                genieLayout.hideAnims();
-            }
+//            if (genieLayout.areJugnooIconsVisible()) {
+//                genieLayout.hideAnims();
+//            }
 
             if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 textViewInitialSearch.setText("");
@@ -3080,7 +3227,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 									changeLocalityBtn.setVisibility(View.VISIBLE);
 									initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
 
-									genieLayout.setVisibility(View.GONE);
+//									genieLayout.setVisibility(View.GONE);
 
 								} else {
 									imageViewRideNow.setVisibility(View.VISIBLE);
@@ -3090,7 +3237,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 									initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
 									if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
-										genieLayout.setVisibility(View.VISIBLE);
+//										genieLayout.setVisibility(View.VISIBLE);
 									}
 								}
 							}
@@ -3178,6 +3325,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (map != null) {
                     map.clear();
                     addCurrentLocationAddressMarker(userLatLng);
+					setDropLocationMarker();
                     for (int i = 0; i < Data.driverInfos.size(); i++) {
                         addDriverMarkerForCustomer(Data.driverInfos.get(i));
                     }
@@ -3216,7 +3364,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     boundsBuilder.include(new LatLng(((2 * userLatLng.latitude) - firstLatLng.latitude), userLatLng.longitude));
                 } else {
                     fixedZoom = true;
-                    mapTouchedOnce = false;
                 }
 
                 final boolean finalFixedZoom = fixedZoom;
@@ -3381,6 +3528,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     public void customerUIBackToInitialAfterCancel() {
+		firstTimeZoom = false;
+		pickupDropZoomed = false;
+
         cancelTimerRequestRide();
 
         passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -3666,6 +3816,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
                                 else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 
+									Data.dropLatLng = dropLatLng;
+
                                     if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
                                         stopDropLocationSearchUI(false);
                                         relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
@@ -3675,15 +3827,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 											PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                                         stopDropLocationSearchUI(true);
                                         relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+
+										if(Data.dropLatLng != null){
+											setDropLocationMarker();
+										}
+
+										getDropLocationPathAndDisplay(Data.pickupLatLng);
                                     }
 
-                                    Data.dropLatLng = dropLatLng;
-
-                                    if(Data.dropLatLng != null){
-                                        setDropLocationMarker();
-                                    }
-
-                                    getDropLocationPathAndDisplay(Data.pickupLatLng);
                                 }
                                 else{
                                     DialogPopup.alertPopup(activity, "", message);
@@ -4340,7 +4491,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Log.i("in in herestartRideForCustomer  run class", "=");
                             if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
 								firstTimeZoom = false;
-                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+								pickupDropZoomed = false;
+								passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
                                 DialogPopup.alertPopup(HomeActivity.this, "", "Your ride has been cancelled due to an unexpected issue");
                             }
@@ -4390,7 +4542,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onCancelCompleted() {
-		firstTimeZoom = false;
         customerUIBackToInitialAfterCancel();
     }
 
@@ -4766,57 +4917,50 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public synchronized void onLocationChanged(Location location, int priority) {
-        if (priority == 0) {
-            if (location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK) {
-                HomeActivity.myLocation = location;
-                zoomToCurrentLocationAtFirstLocationFix(location);
-                updatePickupLocation(location);
-            }
-        } else if (priority == 2) {
-            destroyLowPowerFusedLocationFetcher();
-            if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
-                HomeActivity.myLocation = location;
-                zoomToCurrentLocationAtFirstLocationFix(location);
-                updatePickupLocation(location);
-            }
-        }
-        Data.latitude = location.getLatitude();
-        Data.longitude = location.getLongitude();
-
-		boolean cached = false;
 		try {
-			if (myLocation != null) {
-				Bundle bundle = myLocation.getExtras();
-				cached = bundle.getBoolean("cached");
+			if (priority == 0) {
+				if (location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK) {
+					HomeActivity.myLocation = location;
+					updatePickupLocation(location);
+				}
+			} else if (priority == 2) {
+				destroyLowPowerFusedLocationFetcher();
+				if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
+					HomeActivity.myLocation = location;
+					updatePickupLocation(location);
+				}
+			}
+
+			if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation){
+				zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
+			}
+			zoomedToMyLocation = true;
+
+			Data.latitude = location.getLatitude();
+			Data.longitude = location.getLongitude();
+
+			boolean cached = false;
+			try {
+				if (myLocation != null) {
+					Bundle bundle = myLocation.getExtras();
+					cached = bundle.getBoolean("cached");
+				}
+			} catch (Exception e) {
+//				e.printStackTrace();
+			}
+			if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
+					&& relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
+				relativeLayoutLocationError.setVisibility(View.GONE);
+				relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
+				initialMyLocationBtn.setVisibility(View.VISIBLE);
+				imageViewRideNow.setVisibility(View.VISIBLE);
+//				genieLayout.setVisibility(View.VISIBLE);
+				centreLocationRl.setVisibility(View.VISIBLE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
-				&& relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
-			relativeLayoutLocationError.setVisibility(View.GONE);
-			relativeLayoutRequestInfo.setVisibility(View.VISIBLE);
-			initialMyLocationBtn.setVisibility(View.VISIBLE);
-			imageViewRideNow.setVisibility(View.VISIBLE);
-			genieLayout.setVisibility(View.VISIBLE);
-			centreLocationRl.setVisibility(View.VISIBLE);
-		}
 	}
-
-
-    public void zoomToCurrentLocationAtFirstLocationFix(Location location) {
-        try {
-            if (map != null) {
-                if (!zoomedToMyLocation) {
-                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-                    zoomedToMyLocation = true;
-                    callMapTouchedRefreshDrivers();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     /**
@@ -4842,10 +4986,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     editor.putString(Data.SP_LAST_LATITUDE, "" + Data.pickupLatLng.latitude);
                     editor.putString(Data.SP_LAST_LONGITUDE, "" + Data.pickupLatLng.longitude);
                     editor.commit();
-                }
-                if (myLocation != null) {
-                    findDriversETAAsync = new FindDriversETAAsync(Data.pickupLatLng);
-                    findDriversETAAsync.execute();
+
+					if (myLocation != null) {
+						findDriversETAAsync = new FindDriversETAAsync(Data.pickupLatLng);
+						findDriversETAAsync.execute();
+					}
                 }
             } else if (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL) {
 
@@ -5008,7 +5153,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     public void run() {
                                                         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                                             noDriverAvailablePopup(HomeActivity.this, false, log);
-                                                            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+															firstTimeZoom = false;
+															pickupDropZoomed = false;
+															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                                             switchPassengerScreen(passengerScreenMode);
                                                         }
                                                     }
@@ -5020,9 +5167,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         e.printStackTrace();
                                     }
                                 }
-
                                 updateCancelButtonUI();
-
                             }
                         }
                     } catch (Exception e) {
@@ -5093,7 +5238,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onNoDriversAvailablePushRecieved(final String logMessage) {
         cancelTimerRequestRide();
         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+			firstTimeZoom = false;
+			pickupDropZoomed = false;
+			HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -5126,8 +5273,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                     }
                 }
-
 				firstTimeZoom = false;
+				pickupDropZoomed = false;
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
@@ -5168,7 +5315,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             @Override
                             public void onClick(View v) {
-                                Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber());
+                                Utils.openCallIntent(HomeActivity.this, Config.getSupportNumber(HomeActivity.this));
                             }
                         }, true, true);
                 } catch (Exception e) {
@@ -5316,7 +5463,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     raiseSOSAlertAPI(activity, SMS);
                     FlurryEventLogger.event(SOS_SMS_TO_EMERGENCY_CONTACT);
                 }
-            }, false, false, new DialogInterface.OnCancelListener() {
+            }, true, false, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);
@@ -5340,7 +5487,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);
                 }
-            }, false, false, new DialogInterface.OnCancelListener() {
+            }, true, false, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     FlurryEventLogger.event(SOS_ALERT_CANCELLED);

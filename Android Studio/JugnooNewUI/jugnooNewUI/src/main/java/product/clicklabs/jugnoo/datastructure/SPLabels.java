@@ -23,7 +23,10 @@ public class SPLabels {
     BRANCH_SMS_LINK = "branchSMSLink",
     BRANCH_WHATSAPP_LINK = "branchWhatsappLink",
     BRANCH_FACEBOOK_LINK = "branchFacebookLink",
-    BRANCH_EMAIL_LINK = "branchEmailLink"
+    BRANCH_EMAIL_LINK = "branchEmailLink",
+
+
+	SUPPORT_CONTACT = "supportContact"
 
 
             ;

@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import rmn.androidscreenlibrary.ASSL;
 
 public class ItemInfosListActivity extends BaseActivity{
@@ -48,7 +48,7 @@ public class ItemInfosListActivity extends BaseActivity{
 	TextView title;
 	
 	TextView textViewInfo;
-	ProgressBar progressBar;
+	ProgressWheel progressBar;
 	
 	ListView listView;
 	ItemInfoListAdapter itemInfoListAdapter;
@@ -96,7 +96,7 @@ public class ItemInfosListActivity extends BaseActivity{
 		title = (TextView) findViewById(R.id.title); title.setTypeface(Fonts.latoRegular(getApplicationContext()));
 		
 		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(getApplicationContext()));
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		progressBar = (ProgressWheel) findViewById(R.id.progressBar);
 		
 		itemInfosList.clear();
 		

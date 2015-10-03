@@ -217,10 +217,6 @@ public class JSONParser {
             emailVerificationStatus = userData.getInt("email_verification_status");
         }
 
-//        if (userData.has("fare_factor")) {
-//            fareFactor = userData.getDouble("fare_factor");
-//        }
-
         if (userData.has("jugnoo_fb_banner")) {
             jugnooFbBanner = userData.getString("jugnoo_fb_banner");
         }
@@ -265,6 +261,12 @@ public class JSONParser {
         Log.i("jLoginObject", "=" + jLoginObject);
 
         Data.userData = parseUserData(context, jLoginObject);
+
+		String supportContact = Config.getSupportNumber(context);
+		if(jLoginObject.has("support_number")){
+			supportContact = jLoginObject.getString("support_number");
+			Config.saveSupportNumber(context, supportContact);
+		}
 
         parseFareDetails(jLoginObject);
 
@@ -477,12 +479,21 @@ public class JSONParser {
 		if(jLastRideData.has("driver_car_number")){
 			driverCarNumber = jLastRideData.getString("driver_car_number");
 		}
+		if(jLastRideData.has("driver_car_no")){
+			driverCarNumber = jLastRideData.getString("driver_car_no");
+		}
 
 		double rideTime = -1;
 		if(jLastRideData.has("ride_time")){
 			rideTime = jLastRideData.getDouble("ride_time");
 		}
 
+		double waitTime = -1;
+		if(jLastRideData.has("wait_time")){
+			waitTime = jLastRideData.getDouble("wait_time");
+		}
+
+		int waitingChargesApplicable = jLastRideData.optInt("waiting_charges_applicable", 0);
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber,
@@ -495,8 +506,8 @@ public class JSONParser {
 				jLastRideData.getDouble("paid_using_wallet"),
 				jLastRideData.getDouble("to_pay"),
 				jLastRideData.getDouble("distance"),
-				rideTime,
-				baseFare, fareFactor, discountTypes);
+				rideTime, waitTime,
+				baseFare, fareFactor, discountTypes, waitingChargesApplicable);
 	}
 
 

@@ -130,7 +130,7 @@ public class GCMIntentService extends GcmListenerService {
 
 
     @SuppressWarnings("deprecation")
-    private void notificationManagerCustomID(Context context, String message, int notificationId) {
+    private void notificationManagerCustomID(Context context, String message, int notificationId, int deepindex) {
 
         try {
             long when = System.currentTimeMillis();
@@ -140,6 +140,8 @@ public class GCMIntentService extends GcmListenerService {
             Log.v("message", "," + message);
 
             Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
+			notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
 
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -329,7 +331,8 @@ public class GCMIntentService extends GcmListenerService {
 								notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.AUTOS_PACKAGE);
 							}
 						} else {
-							notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID);
+							int deepindex = jObj.optInt("deepindex", -1);
+							notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
 						}
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
@@ -348,6 +351,14 @@ public class GCMIntentService extends GcmListenerService {
 							notificationManagerResume(this, message1, false);
 						} else {
 							notificationManager(this, message1, false);
+						}
+					} else if (PushFlags.OTP_VERIFIED_BY_CALL.getOrdinal() == flag) {
+						String otp = jObj.getString("message");
+						if(OTPConfirmScreen.OTP_SCREEN_OPEN != null) {
+							Intent otpConfirmScreen = new Intent(this, OTPConfirmScreen.class);
+							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							otpConfirmScreen.putExtra("otp", otp);
+							startActivity(otpConfirmScreen);
 						}
 					}
 

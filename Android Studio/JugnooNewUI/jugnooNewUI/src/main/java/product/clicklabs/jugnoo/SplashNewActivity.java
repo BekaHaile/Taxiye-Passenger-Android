@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -47,6 +46,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.Locale;
 
 import io.branch.referral.Branch;
@@ -82,8 +82,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	ImageView imageViewJugnooLogo;
     ImageView imageViewDebug1, imageViewDebug2;
 	
-	ProgressBar progressBar;
-	
 	RelativeLayout relativeLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
 	
@@ -110,17 +108,25 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     public void onStart() {
         super.onStart();
 
-
         try {
             Branch branch = Branch.getInstance(this);
             branch.initSession(new Branch.BranchReferralInitListener() {
                 @Override
                 public void onInitFinished(JSONObject referringParams, BranchError error) {
                     if (error == null) {
-                        // params are the deep linked params associated with the link that the user clicked before showing up
-                        Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
-                    }
-                }
+						// params are the deep linked params associated with the link that the user clicked before showing up
+						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
+						try {
+							Data.deepLinkIndex = referringParams.getInt("deepindex");
+							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
+						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
+						// "+is_first_session":false,"+clicked_branch_link":true}
+					}
+				}
             }, this.getIntent().getData(), this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,7 +140,39 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     @Override
     public void onNewIntent(Intent intent) {
         this.setIntent(intent);
+		getDeepLinkIndexFromIntent(intent);
     }
+
+	private void getDeepLinkIndexFromIntent(Intent newIntent) {
+		Data.deepLinkIndex = -1;
+		try {
+			Intent intent = newIntent;
+			String action = intent.getAction();
+			Uri data = intent.getData();
+			Log.e("action", "=" + action);
+			Log.e("data", "=" + data);
+
+			Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
+			Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
+			try {
+				Intent intent = newIntent;
+				Uri data = intent.getData();
+				Log.e("data", "=" + data);
+
+				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
+				Uri dataTarget = Uri.parse(targetUrl);
+
+				Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
+				Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 
 
 	public static void initializeServerURL(Context context){
@@ -178,6 +216,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             e.printStackTrace();
             Data.deepLinkClassName = "";
         }
+
+
+		getDeepLinkIndexFromIntent(getIntent());
+
+
+
 
 		try{
 			NewRelic.withApplicationToken(
@@ -237,10 +281,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
         imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
 
-		
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		progressBar.setVisibility(View.GONE);
-		
+
 		relativeLayoutLoginSignupButtons = (RelativeLayout) findViewById(R.id.relativeLayoutLoginSignupButtons);
 		buttonLogin = (Button) findViewById(R.id.buttonLogin); buttonLogin.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
 		buttonRegister = (Button) findViewById(R.id.buttonRegister); buttonRegister.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
@@ -248,7 +289,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
 		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet); textViewNoNet.setTypeface(Fonts.latoRegular(this));
 		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall); buttonNoNetCall.setTypeface(Fonts.latoRegular(this));
-		
+
+		buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
 		
 		
 		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
@@ -282,7 +324,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			
 			@Override
 			public void onClick(View v) {
-				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber());
+				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
 			}
 		});
 		
@@ -457,7 +499,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public void getDeviceToken(){
 	    relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 	    linearLayoutNoNet.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+		DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
         new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
             @Override
@@ -466,10 +508,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
                     @Override
                     public void run() {
+						DialogPopup.dismissLoadingDialog();
                         Data.deviceToken = regId;
                         Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
                         accessTokenLogin(SplashNewActivity.this);
-                        progressBar.setVisibility(View.GONE);
 
                         FlurryEventLogger.appStarted(regId);
                     }

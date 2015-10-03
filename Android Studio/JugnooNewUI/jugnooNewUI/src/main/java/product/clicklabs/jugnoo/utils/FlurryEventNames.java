@@ -12,6 +12,7 @@ public interface FlurryEventNames {
         OTP_VERIFIED_WITH_SMS = "OTP verified with SMS",
         CHANGE_PHONE_OTP_NOT_RECEIVED = "Changed phone number_OTP Not received",
         CALL_ME_OTP = "OTP not received so call received",
+		GIVE_MISSED_CALL = "Give missed call",
         LOGIN_OPTION_MAIN = "Login option main",
         LOGIN_VIA_FACEBOOK = "Login via Facebook",
         LOGIN_VIA_EMAIL = "Login via E-mail",

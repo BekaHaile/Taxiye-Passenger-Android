@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- genie layout -->
+    <AbsoluteLayout
+        android:id="@+id/rootAbsoluteLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        >
+
+        <RelativeLayout
+            android:id="@+id/animLayout"
+            android:layout_width="112px"
+            android:layout_height="415px"
+            android:layout_x="535px"
+            android:layout_y="570px"
+            android:layout_centerHorizontal="true">
+
+            <RelativeLayout
+                android:id="@+id/relativeUpward"
+                android:layout_width="112px"
+                android:layout_height="415px"
+                android:layout_centerHorizontal="true">
+
+                <ImageView
+                    android:id="@+id/imageViewMeals1"
+                    android:layout_width="112px"
+                    android:layout_height="112px"
+                    android:layout_marginTop="280px"
+                    android:src="@drawable/meals_icon_r_selector"
+                    android:tag="mwar"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/imageViewFatafat1"
+                    android:layout_width="112px"
+                    android:layout_height="112px"
+                    android:layout_marginTop="280px"
+                    android:src="@drawable/fatafat_icon_r_selector"
+                    android:tag="mwar"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeDownward"
+                android:layout_width="112px"
+                android:layout_height="415px"
+
+                android:layout_centerHorizontal="true">
+
+                <ImageView
+                    android:id="@+id/imageViewMeals2"
+                    android:layout_width="112px"
+                    android:layout_height="112px"
+                    android:src="@drawable/meals_icon_r_selector"
+                    android:tag="mwar"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/imageViewFatafat2"
+                    android:layout_width="112px"
+                    android:layout_height="112px"
+                    android:src="@drawable/fatafat_icon_r_selector"
+                    android:tag="mwar"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imageViewJugnoo"
+            android:layout_width="140px"
+            android:layout_height="140px"
+            android:layout_x="520px"
+            android:layout_y="840px"
+            android:src="@drawable/auto_head_main_selector"
+            android:tag="mwar" />
+
+
+
+    </AbsoluteLayout>
+
+</LinearLayout>

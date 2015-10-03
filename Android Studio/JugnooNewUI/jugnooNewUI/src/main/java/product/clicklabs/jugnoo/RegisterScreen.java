@@ -638,6 +638,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                         RegisterScreen.this.password = password;
                                         RegisterScreen.this.referralCode = referralCode;
                                         RegisterScreen.this.accessToken = jObj.getString("access_token");
+										OTPConfirmScreen.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
                                         sendToOtpScreen = true;
                                     } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                         RegisterScreen.this.name = name;
@@ -742,6 +743,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                         RegisterScreen.this.password = password;
                                         RegisterScreen.this.referralCode = referralCode;
                                         RegisterScreen.this.accessToken = jObj.getString("access_token");
+										OTPConfirmScreen.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
                                         sendToOtpScreen = true;
                                     } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                         RegisterScreen.this.phoneNo = phoneNo;

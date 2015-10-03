@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import rmn.androidscreenlibrary.ASSL;
 
 public class HelpParticularActivity extends BaseActivity {
@@ -38,7 +39,7 @@ public class HelpParticularActivity extends BaseActivity {
     ImageView imageViewBack;
     TextView textViewTitle;
 
-    ProgressBar progressBar;
+    ProgressWheel progressBar;
     TextView textViewInfo;
     WebView webview;
 
@@ -59,7 +60,7 @@ public class HelpParticularActivity extends BaseActivity {
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressWheel) findViewById(R.id.progressBar);
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
         textViewInfo.setTypeface(Fonts.latoRegular(this));
         webview = (WebView) findViewById(R.id.webview);
