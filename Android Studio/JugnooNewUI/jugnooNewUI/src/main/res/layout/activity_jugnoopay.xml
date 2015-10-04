@@ -1,0 +1,191 @@
+<LinearLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="720px"
+        android:layout_height="96px"
+        android:background="@color/yellow">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="JUGNOO PAY"
+            android:textColor="@color/white"
+            android:textSize="32px"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="60.7px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/back_white_selector"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_light_grey"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+
+        >
+
+
+        <TextView
+            android:id="@+id/textViewAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40px"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:text="Amount"
+            android:layout_marginTop="80px"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64px"
+            android:orientation="horizontal"
+            android:layout_marginTop="54px">
+
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="176px"
+                android:layout_height="64px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="50px"
+                android:background="@drawable/edittext_background_white_yellow_border"
+                android:textSize="36px"
+                android:gravity="center"
+                android:textColor="@color/wallet_text_amount"
+                android:text="\u20B9 10" />
+
+
+
+            <Button
+                android:id="@+id/button15"
+                android:layout_width="176px"
+                android:layout_height="64px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="50px"
+                android:background="@drawable/edittext_background_white_yellow_border"
+                android:textSize="36px"
+                android:gravity="center"
+                android:textColor="@color/wallet_text_amount"
+                android:text="\u20B9 15" />
+
+
+            <Button
+                android:id="@+id/button20"
+                android:layout_width="176px"
+                android:layout_height="64px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="45px"
+                android:background="@drawable/edittext_background_white_yellow_border"
+                android:textSize="36px"
+                android:gravity="center"
+                android:textColor="@color/wallet_text_amount"
+                android:text="\u20B9 20" />
+
+
+
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/editTextPayAmount"
+            android:layout_width="620px"
+            android:layout_height="80px"
+            android:layout_marginTop="40px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:hint="Enter Amount"
+            android:textColor="@color/bg_grey_opaque"
+            android:textColorHint="@color/black_text_alpha"
+            android:textSize="34px"
+            android:inputType="number|textNoSuggestions"
+            android:maxLength="6"
+            android:textCursorDrawable="@drawable/black_cursor"
+            android:digits="0123456789"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:singleLine="true"
+            />
+
+
+
+
+        <TextView
+            android:id="@+id/textViewAutoId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40px"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:text="Auto ID"
+            android:layout_marginTop="80px"
+            />
+
+        <EditText
+            android:id="@+id/editTextAutoId"
+            android:layout_width="620px"
+            android:layout_height="80px"
+            android:layout_marginTop="20px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:hint="Enter Auto ID"
+            android:textColor="@color/bg_grey_opaque"
+            android:textColorHint="@color/black_text_alpha"
+            android:textSize="34px"
+            android:inputType="number|textNoSuggestions"
+            android:maxLength="10"
+            android:textCursorDrawable="@drawable/black_cursor"
+            android:digits="0123456789"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:singleLine="true"
+            />
+
+
+
+
+
+        <Button
+            android:id="@+id/buttonMakePayment"
+            android:layout_width="620px"
+            android:layout_height="84px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="100px"
+            android:background="@drawable/button_yellow_selector"
+            android:text="PAY"
+            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textSize="@dimen/button_text_size" />
+
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

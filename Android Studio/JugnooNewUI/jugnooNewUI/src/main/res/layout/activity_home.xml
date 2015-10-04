@@ -1405,6 +1405,51 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutJugnooShare"
+                    android:layout_width="match_parent"
+                    android:layout_height="100px"
+                    android:background="@drawable/background_white_yellow_selector"
+                    android:splitMotionEvents="false">
+
+                    <ImageView
+                        android:id="@+id/imageViewJugnooShare"
+                        android:layout_width="41px"
+                        android:layout_height="41px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="50px"
+                        android:src="@drawable/share_icon_selector"
+                        android:tag="mwar"/>
+
+                    <TextView
+                        android:id="@+id/textViewJugnooShare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="35px"
+                        android:layout_toRightOf="@+id/imageViewJugnooShare"
+                        android:text="Jugnoo Share"
+                        android:textColor="@drawable/text_color_grey_dark_white_selector"
+                        android:textSize="30px"/>
+
+                    <ImageView
+                        android:id="@+id/imageViewJugnooShareArrow"
+                        android:layout_width="13px"
+                        android:layout_height="26px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="40px"
+                        android:src="@drawable/arrow_icon_selector"
+                        android:tag="mwar"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="60px"
+                        android:background="@color/grey_light"/>
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/relativeLayoutInvite"
                     android:layout_width="match_parent"
                     android:layout_height="100px"

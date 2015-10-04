@@ -138,6 +138,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutGetRide;
     TextView textViewGetRide;
 
+	RelativeLayout relativeLayoutJugnooShare;
+
     RelativeLayout relativeLayoutInvite;
     TextView textViewInvite;
 
@@ -415,6 +417,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
         textViewGetRide.setTypeface(Fonts.latoRegular(this));
+
+		relativeLayoutJugnooShare = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooShare);
+		((TextView) findViewById(R.id.textViewJugnooShare)).setTypeface(Fonts.latoRegular(this));
 
         relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
         textViewInvite = (TextView) findViewById(R.id.textViewInvite);
