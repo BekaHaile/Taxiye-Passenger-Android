@@ -5,356 +5,104 @@
     android:layout_height="match_parent"
     >
 
-    <!-- request final layout -->
-    <RelativeLayout
-        android:id="@+id/requestFinalLayout"
+    <!-- search layout -->
+    <LinearLayout
+        android:id="@+id/linearLayoutSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="96px"
-        android:animateLayoutChanges="true"
+        android:background="@color/white_translucent"
+        android:orientation="vertical"
         android:splitMotionEvents="false"
-        android:visibility="visible"
-        >
+        android:visibility="visible">
 
-        <!-- promo name fare factor layout-->
         <RelativeLayout
-            android:id="@+id/relativeLayoutInRideInfo"
+            android:id="@+id/relativeLayoutSearchBar"
             android:layout_width="match_parent"
             android:layout_height="100px"
-            android:background="@color/white">
-
-            <TextView
-                android:id="@+id/textViewInRidePromoName"
-                android:layout_width="470px"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:text="No Promo Code applied"
-                android:textColor="@color/grey_dark_less"
-                android:textSize="30px"/>
-
-            <TextView
-                android:id="@+id/textViewInRideFareFactor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30px"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="Price: 1.0x"
-                android:textColor="@color/grey_dark"
-                android:textSize="30px"/>
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/customerInRideMyLocationBtn"
-            android:layout_width="80px"
-            android:layout_height="80px"
-            android:layout_above="@+id/linearLayoutInRideDriverInfo"
-            android:layout_marginBottom="40px"
-            android:layout_marginLeft="50px"
-            android:background="@drawable/mylocation_btn_selector"
-            android:tag="mwar"/>
-
-        <!-- drive info layout-->
-        <LinearLayout
-            android:id="@+id/linearLayoutInRideDriverInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/relativeLayoutInRideLowJugnooCash"
-            android:layout_marginBottom="40px"
-            android:layout_marginLeft="40px"
-            android:layout_marginRight="40px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15px"
+            android:layout_marginBottom="15px"
+            android:layout_marginLeft="10px"
+            android:layout_marginRight="10px"
             android:background="@drawable/dropshadow_grey"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10px"
-                android:layout_marginTop="30px">
-
-                <LinearLayout
-                    android:layout_width="310px"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="125px"
-                        android:layout_height="125px"
-                        android:layout_gravity="center_horizontal"
-                        android:tag="mwar">
-
-                        <ImageView
-                            android:layout_width="125px"
-                            android:layout_height="125px"
-                            android:background="@drawable/circle_grey"
-                            android:tag="mwar"/>
-
-                        <ImageView
-                            android:id="@+id/imageViewInRideDriver"
-                            android:layout_width="118px"
-                            android:layout_height="118px"
-                            android:layout_centerInParent="true"
-                            android:tag="mwar"/>
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/textViewInRideDriverName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10px"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:padding="10px"
-                        android:text="Driver Name"
-                        android:textColor="@color/black_text"
-                        android:textSize="26px"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="310px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="125px"
-                        android:layout_height="125px"
-                        android:layout_gravity="center_horizontal"
-                        android:tag="mwar">
-
-                        <ImageView
-                            android:layout_width="125px"
-                            android:layout_height="125px"
-                            android:background="@drawable/circle_grey"
-                            android:tag="mwar"/>
-
-                        <ImageView
-                            android:id="@+id/imageViewInRideDriverCar"
-                            android:layout_width="118px"
-                            android:layout_height="118px"
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/auto_icon_normal"
-                            android:tag="mwar"/>
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/textViewInRideDriverCarNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10px"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:padding="10px"
-                        android:text="Car Number"
-                        android:textColor="@color/black_text"
-                        android:textSize="26px"/>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/textViewInRideState"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10px"
-                android:layout_marginLeft="20px"
-                android:layout_marginRight="20px"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="Ride in progress"
-                android:textColor="@color/grey_dark_less"
-                android:textSize="26px"/>
+            android:splitMotionEvents="false">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/grey_light"/>
+                android:id="@+id/imageViewSearchGPSIcon"
+                android:layout_width="30px"
+                android:layout_height="44px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18px"
+                android:src="@drawable/search_location_icon"
+                android:tag="mwar"/>
+
+            <EditText
+                android:id="@+id/editTextSearch"
+                android:layout_width="510px"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
+                android:background="@color/transparent"
+                android:hint="Set pick up location"
+                android:singleLine="true"
+                android:textColor="@color/black_text"
+                android:textCursorDrawable="@null"
+                android:textSize="30px"/>
+
+            <product.clicklabs.jugnoo.utils.ProgressWheel
+                android:id="@+id/progressBarSearch"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/imageViewSearchCross"
+                android:layout_marginRight="0px"
+                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                wheel:matProg_barColor="@color/yellow"
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="true"
+                wheel:matProg_barWidth="3dp"
+                />
+
+            <ImageView
+                android:id="@+id/imageViewSearchCross"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:padding="20px"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5px"
+                android:src="@drawable/ic_cross_et"
+                android:layout_alignParentRight="true"
+                android:tag="mwar"/>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="90px"
-                android:orientation="horizontal"
-                android:splitMotionEvents="false"
-                android:layout_marginLeft="-5px"
-                android:layout_marginRight="-5px"
-                android:layout_marginBottom="-5px"
-                >
-
-                <Button
-                    android:id="@+id/buttonCancelRide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="90px"
-                    android:background="@drawable/button_white_yellow_blr_selector"
-                    android:singleLine="true"
-                    android:text="Cancel Ride"
-                    android:textColor="@drawable/text_color_yellow_white_selector"
-                    android:textSize="30px"
-                    android:visibility="visible"
-                    android:layout_weight="1"/>
-
-                <Button
-                    android:id="@+id/buttonAddJugnooCash"
-                    android:layout_width="320px"
-                    android:layout_height="90px"
-                    android:background="@drawable/button_white_yellow_blr_selector"
-                    android:singleLine="true"
-                    android:text="Add Jugnoo Cash"
-                    android:textColor="@drawable/text_color_yellow_white_selector"
-                    android:textSize="30px"
-                    android:visibility="gone"/>
-
-                <ImageView
-                    android:layout_width="2px"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/grey_light"/>
-
-                <Button
-                    android:id="@+id/buttonCallDriver"
-                    android:layout_width="wrap_content"
-                    android:layout_height="90px"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/button_white_yellow_brr_selector"
-                    android:singleLine="true"
-                    android:text="Call Driver"
-                    android:textColor="@drawable/text_color_yellow_white_selector"
-                    android:textSize="30px"
-                    android:layout_weight="1"/>
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- low jugnoo cash layout-->
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:background="@drawable/shadow_up"
-            android:layout_above="@+id/relativeLayoutInRideLowJugnooCash"
-
-            />
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutInRideLowJugnooCash"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white">
-
-            <TextView
-                android:id="@+id/textViewInRideLowJugnooCash"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:maxLines="2"
-                android:padding="25px"
-                android:text="Jugnoo Cash is running low. Recharge now"
-                android:textColor="@color/grey_dark_more"
-                android:textSize="26px"
-                android:visibility="visible"/>
-        </RelativeLayout>
-
-        <!-- drop location layout-->
-        <RelativeLayout
-            android:id="@+id/relativeLayoutFinalDropLocationParent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/relativeLayoutInRideInfo"
-            android:background="@color/transparent"
-            android:visibility="gone"
-            >
-            <RelativeLayout
-                android:id="@+id/relativeLayoutFinalDropLocationBar"
-                android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15px"
-                android:layout_marginBottom="15px"
-                android:layout_marginLeft="10px"
-                android:layout_marginRight="10px"
-                android:background="@drawable/dropshadow_grey"
-                android:splitMotionEvents="false">
-
-                <ImageView
-                    android:id="@+id/imageViewFinalDropLocationGPSIcon"
-                    android:layout_width="30px"
-                    android:layout_height="44px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="18px"
-                    android:src="@drawable/search_location_icon"
-                    android:tag="mwar"/>
-
-                <EditText
-                    android:id="@+id/editTextFinalDropLocation"
-                    android:layout_width="580px"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
-                    android:layout_toRightOf="@+id/imageViewFinalDropLocationGPSIcon"
-                    android:background="@color/transparent"
-                    android:hint="Enter your destination"
-                    android:singleLine="true"
-                    android:textColor="@color/black_text"
-                    android:textCursorDrawable="@null"
-                    android:textSize="30px"/>
-
-                <ProgressBar
-                    android:id="@+id/progressBarFinalDropLocation"
-                    android:layout_width="70px"
-                    android:layout_height="70px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20px"/>
-
-                <ImageView
-                    android:id="@+id/imageViewFinalDropLocationCross"
-                    android:layout_width="70px"
-                    android:layout_height="70px"
-                    android:padding="20px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="5px"
-                    android:src="@drawable/ic_cross_et"
-                    android:layout_alignParentRight="true"
-                    android:tag="mwar"/>
-
-            </RelativeLayout>
-
-            <ScrollView
-                android:id="@+id/scrollViewFinal"
+                android:id="@+id/linearLayoutScrollSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/relativeLayoutFinalDropLocationBar">
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutScrollFinal"
+                android:orientation="vertical">
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewSearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <product.clicklabs.jugnoo.utils.NonScrollListView
-                        android:id="@+id/listViewFinalDropLocationSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:divider="@color/transparent"
-                        android:dividerHeight="0px"
-                        android:splitMotionEvents="false"
-                        >
-                    </product.clicklabs.jugnoo.utils.NonScrollListView>
-                    <TextView
-                        android:id="@+id/textViewScrollFinal"
-                        android:layout_width="10px"
-                        android:layout_height="10px"
-                        android:textSize="28px"/>
-                </LinearLayout>
-            </ScrollView>
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:splitMotionEvents="false">
+                </product.clicklabs.jugnoo.utils.NonScrollListView>
 
-        </RelativeLayout>
-
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/textViewScrollSearch"
+                    android:layout_width="10px"
+                    android:layout_height="10px"
+                    android:textSize="28px"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
 </RelativeLayout>

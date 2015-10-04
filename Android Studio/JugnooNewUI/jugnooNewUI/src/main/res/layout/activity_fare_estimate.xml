@@ -43,7 +43,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutDropLocationBar"
             android:layout_width="match_parent"
-            android:layout_height="110px"
+            android:layout_height="100px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15px"
             android:layout_marginBottom="15px"

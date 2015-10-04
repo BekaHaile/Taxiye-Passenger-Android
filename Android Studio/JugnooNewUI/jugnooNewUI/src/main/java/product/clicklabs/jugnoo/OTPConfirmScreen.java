@@ -48,7 +48,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 
 	//new start
-	TextView textViewOtpNumber;
+	TextView textViewOtpNumber, textViewEnterOTP;
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
@@ -147,7 +147,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
 		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
-		((TextView)findViewById(R.id.textViewEnterOTP)).setTypeface(Fonts.latoRegular(this));
+		textViewEnterOTP = (TextView)findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(this));
 		//new end
 		
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
@@ -199,7 +199,15 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			}
 		});
-		
+
+		textViewEnterOTP.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Utils.showSoftKeyboard(OTPConfirmScreen.this, editTextOTP);
+				editTextOTP.requestFocus();
+			}
+		});
+
 		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override

@@ -622,7 +622,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 				@Override
                 public void onSearchPre() {
-                    progressBarAssigningDropLocation.setVisibility(View.GONE);
+                    progressBarAssigningDropLocation.setVisibility(View.VISIBLE);
                     if(scrollViewAssigning.getVisibility() == View.GONE) {
                         initDropLocationSearchUI(false);
                     }
@@ -730,7 +730,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 				@Override
                 public void onSearchPre() {
-                    progressBarFinalDropLocation.setVisibility(View.GONE);
+                    progressBarFinalDropLocation.setVisibility(View.VISIBLE);
                     if(scrollViewFinal.getVisibility() == View.GONE) {
                         initDropLocationSearchUI(true);
                     }
@@ -802,7 +802,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 				@Override
                 public void onSearchPre() {
-                    progressBarSearch.setVisibility(View.GONE);
+                    progressBarSearch.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -3418,6 +3418,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		stopPickupAddressFetcherThread();
 		try{
 			if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+				progressBarInitialSearch.setVisibility(View.VISIBLE);
 				textViewInitialSearch.setText("");
 				textViewInitialSearch.setHint("Getting address...");
 				pickupAddressFetcherThread = new Thread(new Runnable() {
@@ -3457,6 +3458,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					textViewInitialSearch.setHint("Set pick up location");
 					textViewInitialSearch.setText(address);
 				}
+				progressBarInitialSearch.setVisibility(View.GONE);
 			}
 		});
 	}

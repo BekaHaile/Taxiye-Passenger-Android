@@ -360,6 +360,7 @@ public class GCMIntentService extends GcmListenerService {
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}
+						notificationManagerCustomID(this, "Your account has been verified", NOTIFICATION_ID, -1);
 					}
 
 				} catch (Exception e) {

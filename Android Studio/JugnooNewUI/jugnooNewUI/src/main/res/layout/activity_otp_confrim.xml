@@ -97,9 +97,10 @@
 
         <TextView
             android:id="@+id/textViewEnterOTP"
-            android:layout_width="wrap_content"
+            android:layout_width="400px"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:layout_marginTop="60px"
             android:text="Enter One Time Password"
             android:textColor="@color/black_text_alpha"
