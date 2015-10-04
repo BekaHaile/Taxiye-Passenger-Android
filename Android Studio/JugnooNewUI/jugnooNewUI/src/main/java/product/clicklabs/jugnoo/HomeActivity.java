@@ -1065,6 +1065,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+		relativeLayoutJugnooShare.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(HomeActivity.this, JugnooShareActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.event(JUGNOO_SHARE_CLICK);
+			}
+		});
+
         relativeLayoutInvite.setOnClickListener(new OnClickListener() {
 
             @Override

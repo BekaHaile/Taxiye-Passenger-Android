@@ -1,0 +1,273 @@
+<LinearLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="720px"
+        android:layout_height="96px"
+        android:background="@color/yellow">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="JUGNOO SHARE"
+            android:textColor="@color/white"
+            android:textSize="32px"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="60.7px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/back_white_selector"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="222px"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="360px"
+                android:layout_height="match_parent">
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutDriverImage"
+                    android:layout_width="123px"
+                    android:layout_height="123px"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="40px"
+                    android:background="@drawable/ic_sharing_driver_default"
+                    android:tag="mwar"
+                    >
+
+                    <ImageView
+                        android:id="@+id/imageViewDriverImage"
+                        android:layout_width="105px"
+                        android:layout_height="105px"
+                        android:layout_centerInParent="true"
+                        android:tag="mwar"
+
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/textViewDriverName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutDriverImage"
+                    android:gravity="center"
+                    android:text="Auto Driver"
+                    android:textColor="@color/grey_jugnoo_share"
+                    android:textSize="26px"
+                    android:layout_marginLeft="10px"
+                    android:layout_marginRight="10px"
+                    android:layout_marginTop="5px"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="360px"
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutDriverAutoImage"
+                    android:layout_width="123px"
+                    android:layout_height="123px"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="40px"
+                    android:background="@drawable/ic_jugnoo_auto_sharing"
+                    android:tag="mwar"
+                    >
+
+                    <ImageView
+                        android:id="@+id/imageViewDriverAutoImage"
+                        android:layout_width="105px"
+                        android:layout_height="105px"
+                        android:layout_centerInParent="true"
+                        android:tag="mwar"
+
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/textViewDriverCarNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="CH 04 F 1234"
+                    android:textColor="@color/white"
+                    android:background="@color/grey_jugnoo_share"
+                    android:textSize="18px"
+                    android:padding="2px"
+                    android:layout_below="@+id/relativeLayoutDriverAutoImage"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-30px"
+                    />
+
+
+                <TextView
+                    android:id="@+id/textViewDriverCar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutDriverAutoImage"
+                    android:gravity="center"
+                    android:text="JUGNOOSHARE"
+                    android:textColor="@color/grey_jugnoo_share"
+                    android:textSize="26px"
+                    android:layout_marginLeft="10px"
+                    android:layout_marginRight="10px"
+                    android:layout_marginTop="5px"
+                    />
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutFixedFare"
+            android:layout_width="match_parent"
+            android:layout_height="60px"
+            android:background="@color/white_less_dark"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/textViewFixedFare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50px"
+                android:text="Fixed Fare"
+                android:textColor="@color/grey_dark_title"
+                android:textSize="28px"
+                />
+
+            <TextView
+                android:id="@+id/textViewFixedFareValue"
+                android:layout_width="200px"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50px"
+                android:gravity="right"
+                android:text="@string/rupee_0"
+                android:textColor="@color/grey_dark_title"
+                android:textSize="28px"
+                />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40px">
+
+            <ImageView
+                android:layout_width="180px"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="55px"
+                android:background="@color/grey_dark_less"/>
+
+            <TextView
+                android:id="@+id/textViewAutoId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Select Auto ID"
+                android:textColor="@color/grey_jugnoo_share"
+                android:textSize="34px"
+                />
+
+            <ImageView
+                android:layout_width="180px"
+                android:layout_height="2px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="55px"
+                android:background="@color/grey_dark_less"
+                />
+
+
+        </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/editTextAutoId"
+            android:layout_width="620px"
+            android:layout_height="80px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="35px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:gravity="center_vertical"
+            android:hint="Enter Auto ID"
+            android:maxLength="20"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:singleLine="true"
+            android:textColor="@color/bg_grey_opaque"
+            android:textColorHint="@color/black_text_alpha"
+            android:textCursorDrawable="@drawable/black_cursor"
+            android:textSize="28px"
+            />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewDrivers"
+            android:scrollbars="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_marginTop="20px"
+            />
+
+
+        <Button
+            android:id="@+id/buttonMakePayment"
+            android:layout_width="620px"
+            android:layout_height="88px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20px"
+            android:background="@drawable/button_yellow_selector"
+            android:text="PAY VIA JUGNOO CASH"
+            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textSize="@dimen/button_text_size"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
