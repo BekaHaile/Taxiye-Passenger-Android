@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="JUGNOO SHARE"
+            android:text="JUGNOO LINE"
             android:textColor="@color/white"
             android:textSize="32px"/>
 
@@ -64,7 +64,7 @@
                     android:layout_height="123px"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="40px"
-                    android:background="@drawable/ic_sharing_driver_default"
+                    android:background="@drawable/ic_driver_line_default"
                     android:tag="mwar"
                     >
 
@@ -83,13 +83,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/relativeLayoutDriverImage"
-                    android:gravity="center"
-                    android:text="Auto Driver"
-                    android:textColor="@color/grey_jugnoo_share"
-                    android:textSize="26px"
                     android:layout_marginLeft="10px"
                     android:layout_marginRight="10px"
                     android:layout_marginTop="5px"
+                    android:gravity="center"
+                    android:text="Auto Driver"
+                    android:textColor="@color/grey_jugnoo_line"
+                    android:textSize="26px"
                     />
 
             </RelativeLayout>
@@ -103,7 +103,7 @@
                     android:layout_height="123px"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="40px"
-                    android:background="@drawable/ic_jugnoo_auto_sharing"
+                    android:background="@drawable/ic_jugnoo_auto_line"
                     android:tag="mwar"
                     >
 
@@ -121,15 +121,15 @@
                     android:id="@+id/textViewDriverCarNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="CH 04 F 1234"
-                    android:textColor="@color/white"
-                    android:background="@color/grey_jugnoo_share"
-                    android:textSize="18px"
-                    android:padding="2px"
                     android:layout_below="@+id/relativeLayoutDriverAutoImage"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="-30px"
+                    android:background="@color/grey_jugnoo_line"
+                    android:gravity="center"
+                    android:padding="2px"
+                    android:text="CH 04 F 1234"
+                    android:textColor="@color/white"
+                    android:textSize="18px"
                     />
 
 
@@ -138,13 +138,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/relativeLayoutDriverAutoImage"
-                    android:gravity="center"
-                    android:text="JUGNOOSHARE"
-                    android:textColor="@color/grey_jugnoo_share"
-                    android:textSize="26px"
                     android:layout_marginLeft="10px"
                     android:layout_marginRight="10px"
                     android:layout_marginTop="5px"
+                    android:gravity="center"
+                    android:text="JUGNOOLINE"
+                    android:textColor="@color/grey_jugnoo_line"
+                    android:textSize="26px"
                     />
 
 
@@ -208,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="Select Auto ID"
-                android:textColor="@color/grey_jugnoo_share"
+                android:textColor="@color/grey_jugnoo_line"
                 android:textSize="34px"
                 />
 
@@ -233,9 +233,9 @@
             android:layout_marginTop="35px"
             android:background="@drawable/background_white_rounded_bordered"
             android:digits="0123456789"
-            android:inputType="number"
             android:gravity="center_vertical"
             android:hint="Enter Auto ID"
+            android:inputType="number"
             android:maxLength="20"
             android:paddingLeft="20px"
             android:paddingRight="20px"
@@ -247,13 +247,32 @@
             />
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewDrivers"
-            android:scrollbars="horizontal"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100px"
             android:layout_marginTop="20px"
-            />
+            android:animateLayoutChanges="true">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewDrivers"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:scrollbars="horizontal"
+                />
+
+            <product.clicklabs.jugnoo.utils.ProgressWheel
+                android:id="@+id/progressBarNearbyDrivers"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:layout_centerInParent="true"
+                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                wheel:matProg_barColor="@color/yellow"
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="true"
+                wheel:matProg_barWidth="3dp"
+                />
+
+        </RelativeLayout>
 
 
         <Button

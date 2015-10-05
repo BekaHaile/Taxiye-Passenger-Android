@@ -138,7 +138,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutGetRide;
     TextView textViewGetRide;
 
-	RelativeLayout relativeLayoutJugnooShare;
+	RelativeLayout relativeLayoutJugnooLine;
 
     RelativeLayout relativeLayoutInvite;
     TextView textViewInvite;
@@ -418,8 +418,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
         textViewGetRide.setTypeface(Fonts.latoRegular(this));
 
-		relativeLayoutJugnooShare = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooShare);
-		((TextView) findViewById(R.id.textViewJugnooShare)).setTypeface(Fonts.latoRegular(this));
+		relativeLayoutJugnooLine = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooLine);
+		((TextView) findViewById(R.id.textViewJugnooLine)).setTypeface(Fonts.latoRegular(this));
 
         relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
         textViewInvite = (TextView) findViewById(R.id.textViewInvite);
@@ -1065,13 +1065,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-		relativeLayoutJugnooShare.setOnClickListener(new OnClickListener() {
+		relativeLayoutJugnooLine.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, JugnooShareActivity.class));
+				startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(JUGNOO_SHARE_CLICK);
+				FlurryEventLogger.event(JUGNOO_LINE_CLICK);
 			}
 		});
 

@@ -31,9 +31,10 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import rmn.androidscreenlibrary.ASSL;
 
-public class JugnooShareActivity extends BaseActivity implements FlurryEventNames {
+public class JugnooLineActivity extends BaseActivity implements FlurryEventNames {
 
     LinearLayout relative;
 
@@ -49,6 +50,7 @@ public class JugnooShareActivity extends BaseActivity implements FlurryEventName
 	EditText editTextAutoId;
 
 	RecyclerView recyclerViewDrivers;
+	ProgressWheel progressBarNearbyDrivers;
 
 	Button buttonMakePayment;
 
@@ -64,7 +66,7 @@ public class JugnooShareActivity extends BaseActivity implements FlurryEventName
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_jugnoo_share);
+        setContentView(R.layout.activity_jugnoo_line);
 
         relative = (LinearLayout) findViewById(R.id.relative);
         new ASSL(this, relative, 1134, 720, false);
@@ -94,21 +96,22 @@ public class JugnooShareActivity extends BaseActivity implements FlurryEventName
 		LinearLayoutManager llm = new LinearLayoutManager(this);
 		llm.setOrientation(LinearLayoutManager.HORIZONTAL);
 		recyclerViewDrivers.setLayoutManager(llm);
+		recyclerViewDrivers.setVisibility(View.GONE);
 
+		progressBarNearbyDrivers = (ProgressWheel) findViewById(R.id.progressBarNearbyDrivers);
+		progressBarNearbyDrivers.setVisibility(View.GONE);
 
 		nearbyDrivers = new ArrayList<>();
-
-
 		nearbyDriversAdapter = new NearbyDriversAdapter(this, nearbyDrivers, adapterHandler);
 		recyclerViewDrivers.setAdapter(nearbyDriversAdapter);
 
 
-		nearbyDrivers.add(new NearbyDriver("1234"));
-		nearbyDrivers.add(new NearbyDriver("2345"));
-		nearbyDrivers.add(new NearbyDriver("3456"));
-		nearbyDrivers.add(new NearbyDriver("4567"));
-
-		nearbyDriversAdapter.notifyDataSetChanged();
+//		nearbyDrivers.add(new NearbyDriver("1234"));
+//		nearbyDrivers.add(new NearbyDriver("2345"));
+//		nearbyDrivers.add(new NearbyDriver("3456"));
+//		nearbyDrivers.add(new NearbyDriver("4567"));
+//
+//		nearbyDriversAdapter.notifyDataSetChanged();
 
 
 
@@ -124,13 +127,12 @@ public class JugnooShareActivity extends BaseActivity implements FlurryEventName
 			@Override
 			public void onClick(View v) {
 				String autoId = editTextAutoId.getText().toString().trim();
-				if("".equalsIgnoreCase(autoId)){
+				if ("".equalsIgnoreCase(autoId)) {
 					editTextAutoId.requestFocus();
 					editTextAutoId.setError("Please fill the Auto ID.");
-				}
-				else{
+				} else {
 					editTextAutoId.setError(null);
-					makeSharingPaymentAPI(JugnooShareActivity.this, autoId);
+					makeSharingPaymentAPI(JugnooLineActivity.this, autoId);
 				}
 			}
 		});
@@ -143,6 +145,8 @@ public class JugnooShareActivity extends BaseActivity implements FlurryEventName
 		});
 
 
+		fetchNearbyDriversAPI(JugnooLineActivity.this);
+
     }
 
 	NearbyDriversAdapterHandler adapterHandler = new NearbyDriversAdapterHandler() {
@@ -154,8 +158,51 @@ public class JugnooShareActivity extends BaseActivity implements FlurryEventName
 	};
 
 
+
 	/**
-	 * ASync for sending sharing payment information for supplied section
+	 * ASync for fetching nearby drivers
+	 */
+	public void fetchNearbyDriversAPI(final Activity activity) {
+		if (AppStatus.getInstance(activity).isOnline(activity)) {
+			progressBarNearbyDrivers.setVisibility(View.VISIBLE);
+			recyclerViewDrivers.setVisibility(View.GONE);
+
+			RequestParams params = new RequestParams();
+			params.put("access_token", Data.userData.accessToken);
+			params.put("latitude", ""+Data.latitude);
+			params.put("longitude", ""+Data.longitude);
+
+			AsyncHttpClient client = Data.getClient();
+			client.post(Config.getServerUrl() + "/find_sharing_autos_nearby", params,
+					new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							progressBarNearbyDrivers.setVisibility(View.GONE);
+							recyclerViewDrivers.setVisibility(View.GONE);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response faq ", "response = " + response);
+							try {
+								jObj = new JSONObject(response);
+								DialogPopup.alertPopup(activity, "", jObj.toString());
+							} catch (Exception exception) {
+								exception.printStackTrace();
+							}
+							progressBarNearbyDrivers.setVisibility(View.GONE);
+							recyclerViewDrivers.setVisibility(View.VISIBLE);
+						}
+					});
+		}
+	}
+
+
+	/**
+	 * ASync for sending sharing payment
 	 */
 	public void makeSharingPaymentAPI(final Activity activity, String autoId) {
 		if (AppStatus.getInstance(activity).isOnline(activity)) {

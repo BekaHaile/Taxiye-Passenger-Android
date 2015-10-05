@@ -68,7 +68,7 @@ public interface FlurryEventNames {
         RATE_US_NOW_POP_NOT_RATED = "Rate us now pop not rated",
         MENU_LOOKUP = "Menu lookup",
         INVITE_EARN_MENU = "Invite&Earn_Menu",
-			JUGNOO_SHARE_CLICK = "Jugnoo share click",
+			JUGNOO_LINE_CLICK = "Jugnoo Line click",
         JUGNOO_CASH_MENU = "Jugnoo Cash_Menu",
         RECENT_TRANSACTION_LOOK_UP = "Recent transaction look up",
         INVITE_EARN_JUGNOO_CASH = "Invite&Earn_Jugnoo Cash",
