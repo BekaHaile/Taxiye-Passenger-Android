@@ -629,7 +629,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                                         }
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
-										OTPConfirmScreen.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 										otpErrorMsg = jObj.getString("error");
 										otpFlag = 0;
 										sendToOtpScreen = true;
@@ -756,7 +756,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
-										OTPConfirmScreen.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 										otpErrorMsg = jObj.getString("error");
 										otpFlag = 1;
 										sendToOtpScreen = true;

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -28,25 +29,34 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
 	ImageView imageViewBack;
 	TextView textViewTitle;
-	
-	TextView otpHelpText;
+
+	TextView textViewOtpNumber, textViewEnterOTP;
+	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
+
+	LinearLayout linearLayoutWaiting;
+	TextView textViewCounter;
+	ImageView imageViewYellowLoadingBar;
+
 	Button buttonVerify;
-	
-	RelativeLayout relativeLayoutOTPThroughCall;
-	TextView textViewOTPNotReceived, textViewCallMe;
+
+	LinearLayout linearLayoutOTPOptions;
+	RelativeLayout relativeLayoutOTPThroughCall, relativeLayoutMissCall, relativeLayoutOr;
+	TextView textViewOTPNotReceived, textViewMissCall;
 	
 	
 	LinearLayout relative;
 	
-	String otpHelpStr = "Please enter the One Time Password you just received via SMS at ";
 	String phoneNoToVerify = "";
+
+	public static String OTP_SCREEN_OPEN = null;
 	
 	@Override
 	protected void onStart() {
@@ -60,31 +70,77 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		super.onStop();
 		FlurryAgent.onEndSession(this);
 	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+
+		try {
+			String otp = "";
+			if(intent.hasExtra("message")){
+				String message = intent.getStringExtra("message");
+				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
+				otp = arr[1];
+				otp = otp.replaceAll("\\.", "");
+			} else if(intent.hasExtra("otp")){
+				otp = intent.getStringExtra("otp");
+			}
+
+			if(Utils.checkIfOnlyDigits(otp)){
+				if(!"".equalsIgnoreCase(otp)) {
+					editTextOTP.setText(otp);
+					editTextOTP.setSelection(editTextOTP.getText().length());
+					buttonVerify.performClick();
+				}
+			}
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		super.onNewIntent(intent);
+	}
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_phone_no_otp);
+
+		Utils.enableSMSReceiver(this);
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-		
-		otpHelpText = (TextView) findViewById(R.id.otpHelpText); otpHelpText.setTypeface(Fonts.latoRegular(this));
-		
+
+		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.latoRegular(this));
+		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+
+		imageViewSep = (ImageView) findViewById(R.id.imageViewSep); imageViewSep.setVisibility(View.GONE);
+		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber); imageViewChangePhoneNumber.setVisibility(View.GONE);
+
+		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
+		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
+		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
+		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
+		textViewEnterOTP = (TextView)findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(this));
+
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
-		
+
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.latoRegular(this));
-		
+
+
+		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
 		relativeLayoutOTPThroughCall = (RelativeLayout) findViewById(R.id.relativeLayoutOTPThroughCall);
 		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Fonts.latoLight(this));
-		textViewCallMe = (TextView) findViewById(R.id.textViewCallMe); textViewCallMe.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
+		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
+		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
 		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				performBackPressed();
@@ -92,7 +148,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		});
 		
 		editTextOTP.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
+
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				editTextOTP.setError(null);
@@ -101,17 +157,24 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		
 		
 		buttonVerify.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				String otpCode = editTextOTP.getText().toString().trim();
-				if(otpCode.length() > 0){
+				if (otpCode.length() > 0) {
 					verifyOtpPhoneNoChange(PhoneNoOTPConfirmScreen.this, phoneNoToVerify, otpCode);
-				}
-				else{
+				} else {
 					editTextOTP.requestFocus();
 					editTextOTP.setError("Code can't be empty");
 				}
+			}
+		});
+
+		textViewEnterOTP.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Utils.showSoftKeyboard(PhoneNoOTPConfirmScreen.this, editTextOTP);
+				editTextOTP.requestFocus();
 			}
 		});
 		
@@ -123,10 +186,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				switch (result) {
 					case EditorInfo.IME_ACTION_DONE:
 						buttonVerify.performClick();
-					break;
+						break;
 
 					case EditorInfo.IME_ACTION_NEXT:
-					break;
+						break;
 
 					default:
 				}
@@ -136,20 +199,29 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		
 		
 		relativeLayoutOTPThroughCall.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				initiateOTPCallAsync(PhoneNoOTPConfirmScreen.this, phoneNoToVerify);
 			}
 		});
-		
+
+		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+					Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+				}
+			}
+		});
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		try {
 			if(getIntent().hasExtra("phone_no_verify")){
 				phoneNoToVerify = getIntent().getStringExtra("phone_no_verify");
-				otpHelpText.setText(otpHelpStr + " " + phoneNoToVerify);
+				textViewOtpNumber.setText(phoneNoToVerify);
 			}
 			else{
 				performBackPressed();
@@ -158,6 +230,27 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			e.printStackTrace();
 			performBackPressed();
 		}
+
+		linearLayoutWaiting.setVisibility(View.GONE);
+		linearLayoutOTPOptions.setVisibility(View.VISIBLE);
+
+		try{
+			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+				relativeLayoutOr.setVisibility(View.VISIBLE);
+				relativeLayoutMissCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				relativeLayoutOr.setVisibility(View.GONE);
+				relativeLayoutMissCall.setVisibility(View.GONE);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			relativeLayoutOr.setVisibility(View.GONE);
+			relativeLayoutMissCall.setVisibility(View.GONE);
+		}
+
+
+		OTP_SCREEN_OPEN = "yes";
 		
 	}
 	
@@ -317,9 +410,11 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
-        ASSL.closeActivity(relative);
+		Utils.disableSMSReceiver(this);
+		OTP_SCREEN_OPEN = null;
+		ASSL.closeActivity(relative);
         System.gc();
+		super.onDestroy();
 	}
 	
 }
