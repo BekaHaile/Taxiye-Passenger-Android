@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
+import product.clicklabs.jugnoo.datastructure.NearbyDriver;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -1140,6 +1141,43 @@ public class JSONParser {
             e.printStackTrace();
         }
     }
+
+
+
+	public static ArrayList<NearbyDriver> parseNearbySharingDrivers(JSONObject jObj){
+//		{
+//			"flag": 175,
+//				"drivers": [
+//			{
+//				"user_id": 1148,
+//					"user_name": "Ds2",
+//					"latitude": 30.719001,
+//					"longitude": 76.809997,
+//					"auto_id": 0,
+//					"user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//					"driver_car_no": "",
+//					"driver_car_image": "",
+//					"distance": 0.64
+//			}
+//			]
+//		}
+		ArrayList<NearbyDriver> nearbyDrivers = new ArrayList<>();
+		try{
+			JSONArray drivers = jObj.getJSONArray("drivers");
+			for(int i=0; i<drivers.length(); i++){
+				JSONObject jd = drivers.getJSONObject(i);
+				nearbyDrivers.add(new NearbyDriver(jd.getString("user_id"),
+						jd.getString("user_name"),
+						jd.getString("auto_id"),
+						jd.getString("user_image"),
+						jd.getString("driver_car_no"),
+						jd.getString("driver_car_image")));
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return nearbyDrivers;
+	}
 
 
 }

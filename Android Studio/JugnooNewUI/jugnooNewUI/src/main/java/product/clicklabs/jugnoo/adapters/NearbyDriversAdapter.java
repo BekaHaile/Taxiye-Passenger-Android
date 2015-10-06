@@ -45,7 +45,7 @@ public class NearbyDriversAdapter extends RecyclerView.Adapter<NearbyDriversAdap
 			nearbyDriverViewHolder.linearLayoutNearbyInner.setBackgroundResource(R.drawable.background_white_rounded_bordered);
 			nearbyDriverViewHolder.textViewDriverId.setTextColor(context.getResources().getColor(R.color.black));
 		}
-		nearbyDriverViewHolder.textViewDriverId.setText(nd.driverId);
+		nearbyDriverViewHolder.textViewDriverId.setText(nd.autoId);
 		nearbyDriverViewHolder.linearLayoutNearby.setTag(i);
 		nearbyDriverViewHolder.linearLayoutNearby.setOnClickListener(new View.OnClickListener() {
 			@Override

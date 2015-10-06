@@ -72,8 +72,9 @@
                         android:id="@+id/imageViewDriverImage"
                         android:layout_width="105px"
                         android:layout_height="105px"
-                        android:layout_centerInParent="true"
                         android:tag="mwar"
+                        android:layout_marginTop="10px"
+                        android:layout_marginLeft="10px"
 
                         />
                 </RelativeLayout>
@@ -111,8 +112,10 @@
                         android:id="@+id/imageViewDriverAutoImage"
                         android:layout_width="105px"
                         android:layout_height="105px"
-                        android:layout_centerInParent="true"
                         android:tag="mwar"
+                        android:layout_marginTop="10px"
+                        android:layout_marginLeft="10px"
+
 
                         />
                 </RelativeLayout>
@@ -127,9 +130,10 @@
                     android:background="@color/grey_jugnoo_line"
                     android:gravity="center"
                     android:padding="2px"
-                    android:text="CH 04 F 1234"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="18px"
+                    android:visibility="gone"
                     />
 
 

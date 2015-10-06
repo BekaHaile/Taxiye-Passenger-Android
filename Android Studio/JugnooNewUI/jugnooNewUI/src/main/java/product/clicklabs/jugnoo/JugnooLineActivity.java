@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.adapters.NearbyDriversAdapter;
 import product.clicklabs.jugnoo.adapters.NearbyDriversAdapterHandler;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.NearbyDriver;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -106,15 +109,6 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 		recyclerViewDrivers.setAdapter(nearbyDriversAdapter);
 
 
-//		nearbyDrivers.add(new NearbyDriver("1234"));
-//		nearbyDrivers.add(new NearbyDriver("2345"));
-//		nearbyDrivers.add(new NearbyDriver("3456"));
-//		nearbyDrivers.add(new NearbyDriver("4567"));
-//
-//		nearbyDriversAdapter.notifyDataSetChanged();
-
-
-
         imageViewBack.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -152,8 +146,37 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 	NearbyDriversAdapterHandler adapterHandler = new NearbyDriversAdapterHandler() {
 		@Override
 		public void itemClicked(NearbyDriver nearbyDriver) {
-			editTextAutoId.setText(nearbyDriver.driverId);
-			editTextAutoId.setSelection(editTextAutoId.getText().length());
+			try {
+				editTextAutoId.setText(nearbyDriver.autoId);
+				editTextAutoId.setSelection(editTextAutoId.getText().length());
+
+				if("".equalsIgnoreCase(nearbyDriver.userImage)){
+					imageViewDriverImage.setVisibility(View.GONE);
+				}
+				else {
+					imageViewDriverImage.setVisibility(View.VISIBLE);
+					try{Picasso.with(JugnooLineActivity.this).load(nearbyDriver.userImage).transform(new CircleTransform()).into(imageViewDriverImage);} catch (Exception e) {}
+				}
+
+				if("".equalsIgnoreCase(nearbyDriver.driverCarImage)){
+					imageViewDriverAutoImage.setVisibility(View.GONE);
+				}
+				else {
+					imageViewDriverAutoImage.setVisibility(View.VISIBLE);
+					try {Picasso.with(JugnooLineActivity.this).load(nearbyDriver.driverCarImage).transform(new CircleTransform()).into(imageViewDriverAutoImage);} catch (Exception e) {}
+				}
+
+				textViewDriverName.setText(nearbyDriver.userName);
+				if("".equalsIgnoreCase(nearbyDriver.driverCarNo)){
+					textViewDriverCarNumber.setVisibility(View.GONE);
+				}
+				else{
+					textViewDriverCarNumber.setVisibility(View.VISIBLE);
+					textViewDriverCarNumber.setText(nearbyDriver.driverCarNo);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	};
 
@@ -189,7 +212,20 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 							Log.i("Server response faq ", "response = " + response);
 							try {
 								jObj = new JSONObject(response);
-								DialogPopup.alertPopup(activity, "", jObj.toString());
+								String message = JSONParser.getServerMessage(jObj);
+								int flag = jObj.getInt("flag");
+								if(ApiResponseFlags.ALL_DRIVERS.getOrdinal() == flag){
+									nearbyDrivers.clear();
+									nearbyDrivers.addAll(JSONParser.parseNearbySharingDrivers(jObj));
+									if(nearbyDrivers.size() > 0) {
+										adapterHandler.itemClicked(nearbyDrivers.get(0));
+										nearbyDrivers.get(0).ticked = true;
+									}
+									nearbyDriversAdapter.notifyDataSetChanged();
+								}
+								else{
+									DialogPopup.alertPopup(activity, "", message);
+								}
 							} catch (Exception exception) {
 								exception.printStackTrace();
 							}
@@ -211,10 +247,9 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 			RequestParams params = new RequestParams();
 			params.put("access_token", Data.userData.accessToken);
 			params.put("auto_id", autoId);
-			params.put("amount", "10");
+			params.put("money_transacted", "10");
 			params.put("transaction_latitude", ""+Data.latitude);
 			params.put("transaction_longitude", ""+Data.longitude);
-
 
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/make_sharing_payment", params,
