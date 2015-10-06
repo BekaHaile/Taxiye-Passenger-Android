@@ -8,11 +8,12 @@ public class UserData {
 	public double jugnooBalance;
 	public int numCouponsAvaliable;
 	public double fareFactor;
+	public double sharingFareFixed;
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
-			String jugnooFbBanner, int numCouponsAvaliable){
+			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -40,5 +41,6 @@ public class UserData {
 		
 		this.jugnooFbBanner = jugnooFbBanner;
 		this.numCouponsAvaliable = numCouponsAvaliable;
+		this.sharingFareFixed = sharingFareFixed;
 	}
 }

@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class JugnooLineActivity extends BaseActivity implements FlurryEventNames {
@@ -120,13 +121,26 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 		buttonMakePayment.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String autoId = editTextAutoId.getText().toString().trim();
+				final String autoId = editTextAutoId.getText().toString().trim();
 				if ("".equalsIgnoreCase(autoId)) {
 					editTextAutoId.requestFocus();
 					editTextAutoId.setError("Please fill the Auto ID.");
 				} else {
-					editTextAutoId.setError(null);
-					makeSharingPaymentAPI(JugnooLineActivity.this, autoId);
+					DialogPopup.alertPopupTwoButtonsWithListeners(JugnooLineActivity.this, "", "Are you sure you want to pay "
+									+ getResources().getString(R.string.rupee) + " 10 to the Driver with auto id: " + autoId + "?", "OK", "Cancel",
+							new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									editTextAutoId.setError(null);
+									makeSharingPaymentAPI(JugnooLineActivity.this, autoId);
+								}
+							},
+							new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+
+								}
+							}, true, false);
 				}
 			}
 		});
@@ -139,9 +153,14 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 		});
 
 
-		fetchNearbyDriversAPI(JugnooLineActivity.this);
+		try {
+			fetchNearbyDriversAPI(JugnooLineActivity.this);
+			textViewFixedFareValue.setText(getResources().getString(R.string.rupee)+" "+ Utils.getMoneyDecimalFormat().format(Data.userData.sharingFareFixed));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-    }
+	}
 
 	NearbyDriversAdapterHandler adapterHandler = new NearbyDriversAdapterHandler() {
 		@Override
@@ -247,12 +266,13 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 			RequestParams params = new RequestParams();
 			params.put("access_token", Data.userData.accessToken);
 			params.put("auto_id", autoId);
-			params.put("money_transacted", "10");
+			params.put("money_transacted", ""+Data.userData.sharingFareFixed);
 			params.put("transaction_latitude", ""+Data.latitude);
 			params.put("transaction_longitude", ""+Data.longitude);
+			params.put("wallet_balance_before", ""+Data.userData.jugnooBalance);
 
 			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/make_sharing_payment", params,
+			client.post(Config.getServerUrl() + "/end_sharing_ride", params,
 					new CustomAsyncHttpResponseHandler() {
 						private JSONObject jObj;
 
@@ -266,9 +286,22 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 						@Override
 						public void onSuccess(String response) {
 							Log.i("Server response faq ", "response = " + response);
+							DialogPopup.dismissLoadingDialog();
 							try {
 								jObj = new JSONObject(response);
-								DialogPopup.alertPopup(activity, "", jObj.toString());
+								String message = JSONParser.getServerMessage(jObj);
+								int flag = jObj.getInt("flag");
+								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+									DialogPopup.alertPopupWithListener(activity, "", message, new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											performBackPressed();
+										}
+									});
+								}
+								else{
+									DialogPopup.alertPopup(activity, "", message);
+								}
 							} catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

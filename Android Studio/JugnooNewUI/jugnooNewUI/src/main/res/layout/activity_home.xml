@@ -76,6 +76,14 @@
                     android:visibility="visible"
                     >
 
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="4px"
+                        android:background="@drawable/shadow_down"
+                        android:rotation="180"
+                        android:layout_above="@+id/relativeLayoutRequestInfo"
+                        />
+
                     <RelativeLayout
                         android:id="@+id/relativeLayoutRequestInfo"
                         android:layout_width="match_parent"
