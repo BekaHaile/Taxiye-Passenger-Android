@@ -41,6 +41,13 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
 						otpConfirmScreen.putExtra("message", message);
 						context.startActivity(otpConfirmScreen);
 					}
+					else if(PhoneNoOTPConfirmScreen.OTP_SCREEN_OPEN != null) {
+						Intent otpConfirmScreen = new Intent(context, PhoneNoOTPConfirmScreen.class);
+						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						otpConfirmScreen.putExtra("sender_num", senderNum);
+						otpConfirmScreen.putExtra("message", message);
+						context.startActivity(otpConfirmScreen);
+					}
 
 				} // end for loop
 			} // bundle is null

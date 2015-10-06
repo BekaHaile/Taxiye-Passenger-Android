@@ -160,6 +160,8 @@ public class Data {
     public static String deepLinkClassName = "";
 	public static int deepLinkIndex = -1;
 
+	public static String knowlarityMissedCallNumber = "";
+
 	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
 

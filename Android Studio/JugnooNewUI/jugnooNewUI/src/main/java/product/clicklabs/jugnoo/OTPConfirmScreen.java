@@ -69,14 +69,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	boolean loginDataFetched = false;
 	
 	public static boolean intentFromRegister = true;
-	public static String knowlarityMissedCallNumber = "";
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
 
 	public static String OTP_SCREEN_OPEN = null;
-	
-	String otpHelpStr = "Please enter the One Time Password you just received via SMS at ";
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -109,7 +106,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					editTextOTP.setText(otp);
 					editTextOTP.setSelection(editTextOTP.getText().length());
 					buttonVerify.performClick();
-					OTP_SCREEN_OPEN = null;
 				}
 			}
 
@@ -245,8 +241,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			@Override
 			public void onClick(View v) {
-				if(!"".equalsIgnoreCase(knowlarityMissedCallNumber)) {
-					Utils.openCallIntent(OTPConfirmScreen.this, knowlarityMissedCallNumber);
+				if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+					Utils.openCallIntent(OTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
 					FlurryEventLogger.event(GIVE_MISSED_CALL);
 				}
 			}
@@ -296,7 +292,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 
 		try{
-			if(!"".equalsIgnoreCase(knowlarityMissedCallNumber)) {
+			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
 				relativeLayoutOr.setVisibility(View.VISIBLE);
 				relativeLayoutMissCall.setVisibility(View.VISIBLE);
 			}

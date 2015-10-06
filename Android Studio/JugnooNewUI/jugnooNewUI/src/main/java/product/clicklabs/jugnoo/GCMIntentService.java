@@ -360,6 +360,12 @@ public class GCMIntentService extends GcmListenerService {
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}
+						else if(PhoneNoOTPConfirmScreen.OTP_SCREEN_OPEN != null){
+							Intent otpConfirmScreen = new Intent(this, PhoneNoOTPConfirmScreen.class);
+							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							otpConfirmScreen.putExtra("otp", otp);
+							startActivity(otpConfirmScreen);
+						}
 						notificationManagerCustomID(this, "Your account has been verified", NOTIFICATION_ID, -1);
 					}
 
