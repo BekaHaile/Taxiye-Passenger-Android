@@ -9,7 +9,7 @@
     <dimen name="button_corner_radius">5dp</dimen>
     <dimen name="image_bg_corner_radius">5dp</dimen>
     <dimen name="image_bg_stroke">1dp</dimen>
-    <dimen name="button_text_size">38px</dimen>
+    <dimen name="button_text_size">36px</dimen>
     <dimen name="menu_width">495px</dimen>
 
     <!--dimens used in activity_add_jugnoo_cash-->

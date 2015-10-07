@@ -203,7 +203,7 @@ public class HelpParticularActivity extends BaseActivity {
 
 
     /**
-     * ASync for get rides from server
+     * ASync for fetching information for supplied section
      */
     public void getFareDetailsAsync(final Activity activity) {
         if (fetchHelpDataClient == null) {

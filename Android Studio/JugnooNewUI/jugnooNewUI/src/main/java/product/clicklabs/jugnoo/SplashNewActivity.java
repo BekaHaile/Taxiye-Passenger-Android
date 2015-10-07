@@ -73,28 +73,28 @@ import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames{
+public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames {
 
-    //adding drop location
+	//adding drop location
 
 	LinearLayout relative;
-	
+
 	ImageView imageViewJugnooLogo;
-    ImageView imageViewDebug1, imageViewDebug2;
-	
+	ImageView imageViewDebug1, imageViewDebug2;
+
 	RelativeLayout relativeLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
-	
+
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
 	Button buttonNoNetCall;
-	
+
 	boolean loginDataFetched = false, resumed = false;
 
-    boolean touchedDown1 = false, touchedDown2 = false;
-    int debugState = 0;
+	boolean touchedDown1 = false, touchedDown2 = false;
+	int debugState = 0;
 
-	
+
 	// *****************************Used for flurry work***************//
 
 	@Override
@@ -104,16 +104,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
+	@Override
+	public void onStart() {
+		super.onStart();
 
-        try {
-            Branch branch = Branch.getInstance(this);
-            branch.initSession(new Branch.BranchReferralInitListener() {
-                @Override
-                public void onInitFinished(JSONObject referringParams, BranchError error) {
-                    if (error == null) {
+		try {
+			Branch branch = Branch.getInstance(this);
+			branch.initSession(new Branch.BranchReferralInitListener() {
+				@Override
+				public void onInitFinished(JSONObject referringParams, BranchError error) {
+					if (error == null) {
 						// params are the deep linked params associated with the link that the user clicked before showing up
 						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
 						try {
@@ -127,21 +127,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						// "+is_first_session":false,"+clicked_branch_link":true}
 					}
 				}
-            }, this.getIntent().getData(), this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+			}, this.getIntent().getData(), this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        FlurryAgent.init(this, Config.getFlurryKey());
-        FlurryAgent.onStartSession(this, Config.getFlurryKey());
-        FlurryAgent.onEvent("Splash started");
-    }
+		FlurryAgent.init(this, Config.getFlurryKey());
+		FlurryAgent.onStartSession(this, Config.getFlurryKey());
+		FlurryAgent.onEvent("Splash started");
+	}
 
-    @Override
-    public void onNewIntent(Intent intent) {
-        this.setIntent(intent);
+	@Override
+	public void onNewIntent(Intent intent) {
+		this.setIntent(intent);
 		getDeepLinkIndexFromIntent(intent);
-    }
+	}
 
 	private void getDeepLinkIndexFromIntent(Intent newIntent) {
 		Data.deepLinkIndex = -1;
@@ -175,169 +175,160 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	public static void initializeServerURL(Context context){
+	public static void initializeServerURL(Context context) {
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
-		if(link.equalsIgnoreCase(Config.getLiveServerUrl())){
+		if (link.equalsIgnoreCase(Config.getLiveServerUrl())) {
 			Config.setConfigMode(ConfigMode.LIVE);
-		}
-		else if(link.equalsIgnoreCase(Config.getDevServerUrl())){
-            Config.setConfigMode(ConfigMode.DEV);
-		}
-        else if(link.equalsIgnoreCase(Config.getDev1ServerUrl())){
-            Config.setConfigMode(ConfigMode.DEV_1);
-        }
-        else if(link.equalsIgnoreCase(Config.getDev2ServerUrl())){
-            Config.setConfigMode(ConfigMode.DEV_2);
-        }
-		else if(link.equalsIgnoreCase(Config.getDev3ServerUrl())){
+		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
+			Config.setConfigMode(ConfigMode.DEV);
+		} else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
+			Config.setConfigMode(ConfigMode.DEV_1);
+		} else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
+			Config.setConfigMode(ConfigMode.DEV_2);
+		} else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
 			Config.setConfigMode(ConfigMode.DEV_3);
-		}
-		else{
+		} else {
 			Config.CUSTOM_SERVER_URL = link;
 			Config.setConfigMode(ConfigMode.CUSTOM);
 		}
 
-		Log.e("link", "="+link);
+		Log.e("link", "=" + link);
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
-        try{
-            if(getIntent().hasExtra("deep_link_class")) {
-                Data.deepLinkClassName = getIntent().getStringExtra("deep_link_class");
-            } else{
-                Data.deepLinkClassName = "";
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-            Data.deepLinkClassName = "";
-        }
+		try {
+			if (getIntent().hasExtra("deep_link_class")) {
+				Data.deepLinkClassName = getIntent().getStringExtra("deep_link_class");
+			} else {
+				Data.deepLinkClassName = "";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Data.deepLinkClassName = "";
+		}
 
 
 		getDeepLinkIndexFromIntent(getIntent());
 
 
-
-
-		try{
+		try {
 			NewRelic.withApplicationToken(
 					Config.getNewRelicKey()
 			).start(this.getApplication());
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 
-
-        FacebookSdk.sdkInitialize(this);
+		FacebookSdk.sdkInitialize(this);
 
 		Utils.disableSMSReceiver(this);
 
 		Data.locationSettingsNoPressed = false;
 
-        Data.userData = null;
-		
+		Data.userData = null;
+
 		initializeServerURL(this);
-		
+
 		FlurryAgent.init(this, Config.getFlurryKey());
-		
-		
-		Locale locale = new Locale("en"); 
-	    Locale.setDefault(locale);
-	    Configuration config = new Configuration();
-	    config.locale = locale;
-	    getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
 
+		Locale locale = new Locale("en");
+		Locale.setDefault(locale);
+		Configuration config = new Configuration();
+		config.locale = locale;
+		getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
 
-
-
-		
 		setContentView(R.layout.activity_splash_new);
-		
-		if(Data.locationFetcher == null){
+
+		if (Data.locationFetcher == null) {
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
-		
-		
+
+
 		loginDataFetched = false;
 		resumed = false;
 
-        touchedDown1 = false;
-        touchedDown2 = false;
-        debugState = 0;
+		touchedDown1 = false;
+		touchedDown2 = false;
+		debugState = 0;
 
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashNewActivity.this, relative, 1134, 720, false);
-		
-		
+
+
 		imageViewJugnooLogo = (ImageView) findViewById(R.id.imageViewJugnooLogo);
 
-        imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
-        imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
+		imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
+		imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
 
 
 		relativeLayoutLoginSignupButtons = (RelativeLayout) findViewById(R.id.relativeLayoutLoginSignupButtons);
-		buttonLogin = (Button) findViewById(R.id.buttonLogin); buttonLogin.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
-		buttonRegister = (Button) findViewById(R.id.buttonRegister); buttonRegister.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
-		
+		buttonLogin = (Button) findViewById(R.id.buttonLogin);
+		buttonLogin.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
+		buttonRegister = (Button) findViewById(R.id.buttonRegister);
+		buttonRegister.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
+
 		linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
-		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet); textViewNoNet.setTypeface(Fonts.latoRegular(this));
-		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall); buttonNoNetCall.setTypeface(Fonts.latoRegular(this));
+		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
+		textViewNoNet.setTypeface(Fonts.latoRegular(this));
+		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall);
+		buttonNoNetCall.setTypeface(Fonts.latoRegular(this));
 
 		buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
-		
-		
+
+
 		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 		linearLayoutNoNet.setVisibility(View.GONE);
-		
-		
+
+
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-                FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 				startActivity(new Intent(SplashNewActivity.this, SplashLogin.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
-		
+
 		buttonRegister.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-                FlurryEventLogger.event(SIGNUP);
+				FlurryEventLogger.event(SIGNUP);
 				RegisterScreen.facebookLogin = false;
 				startActivity(new Intent(SplashNewActivity.this, RegisterScreen.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
-		
+
 		buttonNoNetCall.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
 			}
 		});
-		
+
 		relative.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(!loginDataFetched){
+				if (!loginDataFetched) {
 					getDeviceToken();
 				}
 			}
 		});
-		
+
 //		imageViewJugnooLogo.setOnLongClickListener(new View.OnLongClickListener() {
 //
 //			@Override
@@ -356,96 +347,95 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 //        });
 
 
-        imageViewDebug1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                touchedDown1 = false;
-            }
-        });
+		imageViewDebug1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				touchedDown1 = false;
+			}
+		});
 
-        imageViewDebug1.setOnTouchListener(new View.OnTouchListener() {
-            Handler handler = new Handler();
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    if(touchedDown1){
-                        debugState = 1;
-                        relative.setBackgroundColor(getResources().getColor(R.color.yellow_alpha));
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                relative.setBackgroundColor(getResources().getColor(R.color.yellow));
-                            }
-                        }, 200);
-                    }
-                }
-            };
+		imageViewDebug1.setOnTouchListener(new View.OnTouchListener() {
+			Handler handler = new Handler();
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					if (touchedDown1) {
+						debugState = 1;
+						relative.setBackgroundColor(getResources().getColor(R.color.yellow_alpha));
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								relative.setBackgroundColor(getResources().getColor(R.color.yellow));
+							}
+						}, 200);
+					}
+				}
+			};
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        debugState = 0;
-                        touchedDown1 = true;
-                        handler.removeCallbacks(runnable);
-                        handler.postDelayed(runnable, 4000);
-                        break;
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				int action = event.getAction();
+				switch (action) {
+					case MotionEvent.ACTION_DOWN:
+						debugState = 0;
+						touchedDown1 = true;
+						handler.removeCallbacks(runnable);
+						handler.postDelayed(runnable, 4000);
+						break;
 
-                    case MotionEvent.ACTION_UP:
-                        touchedDown1 = false;
-                        break;
-                }
+					case MotionEvent.ACTION_UP:
+						touchedDown1 = false;
+						break;
+				}
 
-                return false;
-            }
-        });
+				return false;
+			}
+		});
 
 
-        imageViewDebug2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                touchedDown2 = false;
-            }
-        });
+		imageViewDebug2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				touchedDown2 = false;
+			}
+		});
 
-        imageViewDebug2.setOnTouchListener(new View.OnTouchListener() {
-            Handler handler = new Handler();
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    if(touchedDown2 && debugState == 1){
-                        debugState = 0;
-                        confirmDebugPasswordPopup(SplashNewActivity.this);
-                    }
-                }
-            };
+		imageViewDebug2.setOnTouchListener(new View.OnTouchListener() {
+			Handler handler = new Handler();
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					if (touchedDown2 && debugState == 1) {
+						debugState = 0;
+						confirmDebugPasswordPopup(SplashNewActivity.this);
+					}
+				}
+			};
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                if(debugState == 1) {
-                    switch (action) {
-                        case MotionEvent.ACTION_DOWN:
-                            touchedDown2 = true;
-                            handler.removeCallbacks(runnable);
-                            handler.postDelayed(runnable, 4000);
-                            break;
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				int action = event.getAction();
+				if (debugState == 1) {
+					switch (action) {
+						case MotionEvent.ACTION_DOWN:
+							touchedDown2 = true;
+							handler.removeCallbacks(runnable);
+							handler.postDelayed(runnable, 4000);
+							break;
 
-                        case MotionEvent.ACTION_UP:
-                            touchedDown2 = false;
-                            debugState = 0;
-                            break;
-                    }
-                }
+						case MotionEvent.ACTION_UP:
+							touchedDown2 = false;
+							debugState = 0;
+							break;
+					}
+				}
 
-                return false;
-            }
-        });
-		
+				return false;
+			}
+		});
 
-		
-		try {																						// to get AppVersion, OS version, country code and device name
+
+		try {                                                                                        // to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			Data.appVersion = pInfo.versionCode;
 			Log.i("appVersion", Data.appVersion + "..");
@@ -456,24 +446,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
 			Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
-			Log.e("Data.uniqueDeviceId = ", "="+Data.uniqueDeviceId);
+			Log.e("Data.uniqueDeviceId = ", "=" + Data.uniqueDeviceId);
 
 			Utils.generateKeyHash(this);
-			
+
 		} catch (Exception e) {
 			Log.e("error in fetching appVersion and gcm key", ".." + e.toString());
 		}
-		
 
-		
-	    
-	    
-		if(getIntent().hasExtra("no_anim")){
-            FacebookLoginHelper.logoutFacebook();
+
+		if (getIntent().hasExtra("no_anim")) {
+			FacebookLoginHelper.logoutFacebook();
 			imageViewJugnooLogo.clearAnimation();
 			getDeviceToken();
-		}
-		else{
+		} else {
 			Animation animation = new AlphaAnimation(0, 1);
 			animation.setFillAfter(true);
 			animation.setDuration(1000);
@@ -483,98 +469,93 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 
 
-        startService(new Intent(this, PushPendingCallsService.class));
+		startService(new Intent(this, PushPendingCallsService.class));
 
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-		if(resp != ConnectionResult.SUCCESS){
+		if (resp != ConnectionResult.SUCCESS) {
 			Log.e("Google Play Service Error ", "=" + resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
-		}
-		else{
+		} else {
 			LocationInit.showLocationAlertDialog(this);
 		}
 
-    }
-	
-	public void getDeviceToken(){
-	    relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
-	    linearLayoutNoNet.setVisibility(View.GONE);
+	}
+
+	public void getDeviceToken() {
+		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
+		linearLayoutNoNet.setVisibility(View.GONE);
 		DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-        new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
+		new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
-            @Override
-            public void deviceTokenReceived(final String regId) {
-                runOnUiThread(new Runnable() {
+			@Override
+			public void deviceTokenReceived(final String regId) {
+				runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+					@Override
+					public void run() {
 						DialogPopup.dismissLoadingDialog();
-                        Data.deviceToken = regId;
-                        Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
-                        accessTokenLogin(SplashNewActivity.this);
+						Data.deviceToken = regId;
+						Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+						accessTokenLogin(SplashNewActivity.this);
 
-                        FlurryEventLogger.appStarted(regId);
-                    }
-                });
+						FlurryEventLogger.appStarted(regId);
+					}
+				});
 
-            }
-        });
+			}
+		});
 
 	}
 
 
 	@Override
 	protected void onResume() {
-		if(Data.locationFetcher == null){
+		if (Data.locationFetcher == null) {
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
-		
 
-        super.onResume();
+
+		super.onResume();
 		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
 		resumed = true;
 	}
-	
-	
-	public void retryAccessTokenLogin(){
-		if(resumed){
+
+
+	public void retryAccessTokenLogin() {
+		if (resumed) {
 			relative.performClick();
 		}
 	}
-	
-	
-	
+
+
 	@Override
 	protected void onPause() {
-		try{
+		try {
 			Data.locationFetcher.destroy();
 			Data.locationFetcher = null;
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		super.onPause();
 	}
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(LocationInit.LOCATION_REQUEST_CODE == requestCode){
-            if(0 == resultCode){
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
+			if (0 == resultCode) {
 				Data.locationSettingsNoPressed = true;
-            }
-        }
-    }
-
-
-	
-	
-	
-	class ShowAnimListener implements AnimationListener{
-		
-		public ShowAnimListener(){
+			}
 		}
-		
+	}
+
+
+	class ShowAnimListener implements AnimationListener {
+
+		public ShowAnimListener() {
+		}
+
 		@Override
 		public void onAnimationStart(Animation animation) {
 			Log.i("onAnimationStart", "onAnimationStart");
@@ -590,54 +571,51 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		@Override
 		public void onAnimationRepeat(Animation animation) {
 		}
-		
+
 	}
-	
-	
-	
-	
-	
+
+
 	/**
 	 * ASync for access token login from server
 	 */
 	public void accessTokenLogin(final Activity activity) {
-		
+
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
-		
+
 		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 		linearLayoutNoNet.setVisibility(View.GONE);
-		
-		if(!"".equalsIgnoreCase(pair.first)){
+
+		if (!"".equalsIgnoreCase(pair.first)) {
 			String accessToken = pair.first;
-			
+
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				
+
 				DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
-				
-				if(Data.locationFetcher != null){
+
+				if (Data.locationFetcher != null) {
 					Data.latitude = Data.locationFetcher.getLatitude();
 					Data.longitude = Data.locationFetcher.getLongitude();
 				}
-				
+
 				RequestParams params = new RequestParams();
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.deviceToken);
-				
-				
-				params.put("latitude", ""+Data.latitude);
-				params.put("longitude", ""+Data.longitude);
-				
-				
-				params.put("app_version", ""+Data.appVersion);
+
+
+				params.put("latitude", "" + Data.latitude);
+				params.put("longitude", "" + Data.longitude);
+
+
+				params.put("app_version", "" + Data.appVersion);
 				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("unique_device_id", Data.uniqueDeviceId);
 				params.put("client_id", Config.getClientId());
-				params.put("is_access_token_new", ""+pair.second);
+				params.put("is_access_token_new", "" + pair.second);
 
 				Log.e("params login_using_access_token", "=" + params);
 
-                Log.e("Config.getServerUrl() + \"/login_using_access_token\"", "="+Config.getServerUrl() + "/login_using_access_token");
-				
+				Log.e("Config.getServerUrl() + \"/login_using_access_token\"", "=" + Config.getServerUrl() + "/login_using_access_token");
+
 				AsyncHttpClient client = Data.getClient();
 				client.post(Config.getServerUrl() + "/login_using_access_token", params,
 						new CustomAsyncHttpResponseHandler() {
@@ -645,161 +623,147 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							@Override
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
-                                performLoginFailure(activity);
+								performLoginFailure(activity);
 							}
 
 							@Override
 							public void onSuccess(String response) {
 								Log.e("Server response of access_token", "response = " + response);
-                                performLoginSuccess(activity, response);
+								performLoginSuccess(activity, response);
 							}
 						});
-			}
-			else {
+			} else {
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 			}
-		}
-		else{
+		} else {
 			relativeLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
-            if(!AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-                linearLayoutNoNet.setVisibility(View.VISIBLE);
-            }
+			if (!AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				linearLayoutNoNet.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
 
+	public void performLoginSuccess(Activity activity, String response) {
+		try {
+			JSONObject jObj = new JSONObject(response);
 
-    public void performLoginSuccess(Activity activity, String response){
-        try {
-            JSONObject jObj = new JSONObject(response);
+			int flag = jObj.getInt("flag");
 
-            int flag = jObj.getInt("flag");
+			if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+				if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+					String error = jObj.getString("error");
+					DialogPopup.alertPopup(activity, "", error);
+					DialogPopup.dismissLoadingDialog();
+				} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+					String error = jObj.getString("error");
+					DialogPopup.alertPopup(activity, "", error);
+					DialogPopup.dismissLoadingDialog();
+				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
+						new AccessTokenDataParseAsync(activity, response).execute();
 
-            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-                    String error = jObj.getString("error");
-                    DialogPopup.alertPopup(activity, "", error);
-                    DialogPopup.dismissLoadingDialog();
-                }
-                else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
-                    String error = jObj.getString("error");
-                    DialogPopup.alertPopup(activity, "", error);
-                    DialogPopup.dismissLoadingDialog();
-                }
-                else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-                    if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
-                        new AccessTokenDataParseAsync(activity, response).execute();
+						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
+						Editor editor = pref1.edit();
+						editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
+						editor.commit();
+					} else {
+						DialogPopup.dismissLoadingDialog();
+					}
+				} else {
+					DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					DialogPopup.dismissLoadingDialog();
+				}
+			} else {
+				DialogPopup.dismissLoadingDialog();
+			}
 
-                        SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-                        Editor editor = pref1.edit();
-                        editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
-                        editor.commit();
-                    }
-                    else{
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                }
-                else{
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                    DialogPopup.dismissLoadingDialog();
-                }
-            }
-            else{
-                DialogPopup.dismissLoadingDialog();
-            }
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+			DialogPopup.dismissLoadingDialog();
+		}
+	}
 
-        }  catch (Exception exception) {
-            exception.printStackTrace();
-            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-            DialogPopup.dismissLoadingDialog();
-        }
-    }
+	public void performLoginFailure(Activity activity) {
+		DialogPopup.dismissLoadingDialog();
+		DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+		DialogPopup.dismissLoadingDialog();
+		linearLayoutNoNet.setVisibility(View.VISIBLE);
+	}
 
-    public void performLoginFailure(Activity activity){
-        DialogPopup.dismissLoadingDialog();
-        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-        DialogPopup.dismissLoadingDialog();
-        linearLayoutNoNet.setVisibility(View.VISIBLE);
-    }
 
-	
-	
-	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String>{
-		
+	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String> {
+
 		Activity activity;
 		String response;
-		
-		public AccessTokenDataParseAsync(Activity activity, String response){
+
+		public AccessTokenDataParseAsync(Activity activity, String response) {
 			this.activity = activity;
 			this.response = response;
 		}
-		
+
 		@Override
 		protected String doInBackground(String... params) {
 			try {
 				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
-				Log.e("AccessTokenDataParseAsync resp", "="+resp);
+				Log.e("AccessTokenDataParseAsync resp", "=" + resp);
 				return resp;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return HttpRequester.SERVER_TIMEOUT;
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			Log.e("AccessTokenDataParseAsync result", "="+result);
-			if(result.contains(HttpRequester.SERVER_TIMEOUT)){
+			Log.e("AccessTokenDataParseAsync result", "=" + result);
+			if (result.contains(HttpRequester.SERVER_TIMEOUT)) {
 				loginDataFetched = false;
 				DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-			}
-			else{
+			} else {
 				loginDataFetched = true;
 			}
 			DialogPopup.dismissLoadingDialog();
 		}
 	}
-	
-	
-	public static boolean checkIfUpdate(JSONObject jObj, Activity activity) throws Exception{
+
+
+	public static boolean checkIfUpdate(JSONObject jObj, Activity activity) throws Exception {
 //		"popup": {
 //	        "title": "Update Version",
 //	        "text": "Update app with new version!",
 //	        "cur_version": 116,			// could be used for local check
 //	        "is_force": 1				// 1 for forced, 0 for not forced
 //	}
-		if(!jObj.isNull("popup")){
-			try{
-				JSONObject jupdatePopupInfo = jObj.getJSONObject("popup"); 
+		if (!jObj.isNull("popup")) {
+			try {
+				JSONObject jupdatePopupInfo = jObj.getJSONObject("popup");
 				String title = jupdatePopupInfo.getString("title");
 				String text = jupdatePopupInfo.getString("text");
 				int currentVersion = jupdatePopupInfo.getInt("cur_version");
 				int isForce = jupdatePopupInfo.getInt("is_force");
-				
-				if(Data.appVersion >= currentVersion){
+
+				if (Data.appVersion >= currentVersion) {
 					return false;
-				}
-				else{
+				} else {
 					SplashNewActivity.appUpdatePopup(title, text, isForce, activity);
-					if(isForce == 1){
+					if (isForce == 1) {
 						return true;
-					}
-					else{
+					} else {
 						return false;
 					}
 				}
-			} catch(Exception e){
+			} catch (Exception e) {
 				return false;
 			}
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
-	
-	
-	
+
+
 	/**
 	 * Displays appUpdatePopup dialog
 	 */
@@ -812,38 +776,42 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, false);
-			
+
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 			dialog.setCancelable(false);
 			dialog.setCanceledOnTouchOutside(false);
-			
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity));
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
+
+
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
+			textHead.setTypeface(Fonts.latoRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
+			textMessage.setTypeface(Fonts.latoRegular(activity));
 			textHead.setVisibility(View.VISIBLE);
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
-            textHead.setText(title);
+			textHead.setText(title);
 			textMessage.setText(message);
 
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-			
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Fonts.latoRegular(activity));
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+			btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+			btnCancel.setTypeface(Fonts.latoRegular(activity));
 			btnCancel.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					if(isForced == 1){
+					if (isForced == 1) {
 						activity.finish();
 					}
 				}
 			});
-			
-			
+
+
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -853,175 +821,168 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					activity.startActivity(intent);
 					activity.finish();
 				}
-				
+
 			});
-			
+
 
 			dialog.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static boolean checkIfTrivialAPIErrors(Activity activity, JSONObject jObj){
+
+	public static boolean checkIfTrivialAPIErrors(Activity activity, JSONObject jObj) {
 		try {
 			int flag = jObj.getInt("flag");
-			if(ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag){
+			if (ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
 				HomeActivity.logoutUser(activity);
 				return true;
-			}
-			else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+			} else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
 				String errorMessage = jObj.getString("error");
 				DialogPopup.alertPopup(activity, "", errorMessage);
 				return true;
-			}
-			else if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+			} else if (ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
 				String message = jObj.getString("message");
 				DialogPopup.alertPopup(activity, "", message);
 				return true;
-			}
-			else{
+			} else {
 				return false;
 			}
 		} catch (Exception e) {
-			Log.e("e", "="+e);
+			Log.e("e", "=" + e);
 		}
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
-                    loginDataFetched = false;
-                    startActivity(new Intent(SplashNewActivity.this, HomeActivity.class));
-                    ActivityCompat.finishAffinity(SplashNewActivity.this);
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                }
-            }
-        }, 500);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
+					loginDataFetched = false;
+					startActivity(new Intent(SplashNewActivity.this, HomeActivity.class));
+					ActivityCompat.finishAffinity(SplashNewActivity.this);
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				}
+			}
+		}, 500);
 
 	}
-	
-	
+
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(relative);
-        System.gc();
+		ASSL.closeActivity(relative);
+		System.gc();
 	}
-	
-	
-	
 
-	
-	
-	
-	
-		public void confirmDebugPasswordPopup(final Activity activity){
 
-			try {
-				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.dialog_edittext_confirm);
+	public void confirmDebugPasswordPopup(final Activity activity) {
 
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-				new ASSL(activity, frameLayout, 1134, 720, true);
-				
-				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-				layoutParams.dimAmount = 0.6f;
-				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
-				
-				
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
-				final EditText etCode = (EditText) dialog.findViewById(R.id.etCode); etCode.setTypeface(Fonts.latoRegular(activity));
-				
-				textHead.setText("Confirm Debug Password");
-				textMessage.setText("Please enter password to continue.");
-				
-				textHead.setVisibility(View.GONE);
-				textMessage.setVisibility(View.GONE);
-				
-				
-				final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm); btnConfirm.setTypeface(Fonts.latoRegular(activity));
-				
-				btnConfirm.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						String code = etCode.getText().toString().trim();
-						if("".equalsIgnoreCase(code)){
+		try {
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.dialog_edittext_confirm);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
+
+
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
+			textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
+			textMessage.setTypeface(Fonts.latoRegular(activity));
+			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode);
+			etCode.setTypeface(Fonts.latoRegular(activity));
+
+			textHead.setText("Confirm Debug Password");
+			textMessage.setText("Please enter password to continue.");
+
+			textHead.setVisibility(View.GONE);
+			textMessage.setVisibility(View.GONE);
+
+
+			final Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
+			btnConfirm.setTypeface(Fonts.latoRegular(activity));
+
+			btnConfirm.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					String code = etCode.getText().toString().trim();
+					if ("".equalsIgnoreCase(code)) {
+						etCode.requestFocus();
+						etCode.setError("Code can't be empty.");
+					} else {
+						if (Config.getDebugPassword().equalsIgnoreCase(code)) {
+							dialog.dismiss();
+							activity.startActivity(new Intent(activity, DebugOptionsActivity.class));
+							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+							activity.finish();
+						} else {
 							etCode.requestFocus();
-							etCode.setError("Code can't be empty.");
-						}
-						else{
-							if(Config.getDebugPassword().equalsIgnoreCase(code)){
-								dialog.dismiss();
-                                activity.startActivity(new Intent(activity, DebugOptionsActivity.class));
-                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                activity.finish();
-							}
-							else{
-								etCode.requestFocus();
-								etCode.setError("Code not matched.");
-							}
+							etCode.setError("Code not matched.");
 						}
 					}
-					
-				});
-				
-				
-				etCode.setOnEditorActionListener(new OnEditorActionListener() {
+				}
 
-					@Override
-					public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-						int result = actionId & EditorInfo.IME_MASK_ACTION;
-						switch (result) {
-							case EditorInfo.IME_ACTION_DONE:
-								btnConfirm.performClick();
+			});
+
+
+			etCode.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					int result = actionId & EditorInfo.IME_MASK_ACTION;
+					switch (result) {
+						case EditorInfo.IME_ACTION_DONE:
+							btnConfirm.performClick();
 							break;
 
-							case EditorInfo.IME_ACTION_NEXT:
+						case EditorInfo.IME_ACTION_NEXT:
 							break;
 
-							default:
-						}
-						return true;
+						default:
 					}
-				});
-				
-				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-					}
-				});
+					return true;
+				}
+			});
 
-				frameLayout.setOnClickListener(new View.OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-				});
-				
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
 
-				dialog.show();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		
+				@Override
+				public void onClick(View v) {
+				}
+			});
+
+			frameLayout.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
+	}
 
 
 	@Override
@@ -1029,5 +990,5 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
 	}
-	
+
 }

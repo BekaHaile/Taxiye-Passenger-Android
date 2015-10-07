@@ -138,6 +138,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutGetRide;
     TextView textViewGetRide;
 
+	RelativeLayout relativeLayoutJugnooLine;
+
     RelativeLayout relativeLayoutInvite;
     TextView textViewInvite;
 
@@ -415,6 +417,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
         textViewGetRide.setTypeface(Fonts.latoRegular(this));
+
+		relativeLayoutJugnooLine = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooLine);
+		((TextView) findViewById(R.id.textViewJugnooLine)).setTypeface(Fonts.latoRegular(this));
 
         relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
         textViewInvite = (TextView) findViewById(R.id.textViewInvite);
@@ -1059,6 +1064,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 drawerLayout.closeDrawer(menuLayout);
             }
         });
+
+		relativeLayoutJugnooLine.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if(Data.userData.showJugnooSharing == 1) {
+					startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					FlurryEventLogger.event(JUGNOO_LINE_CLICK);
+				}
+			}
+		});
 
         relativeLayoutInvite.setOnClickListener(new OnClickListener() {
 
@@ -1771,6 +1788,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+
+		try{
+			if(Data.userData.showJugnooSharing == 1) {
+				relativeLayoutJugnooLine.setVisibility(View.VISIBLE);
+			}
+			else{
+				relativeLayoutJugnooLine.setVisibility(View.GONE);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			relativeLayoutJugnooLine.setVisibility(View.GONE);
+		}
 
 
 
@@ -3344,7 +3373,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    //TODO
     public void zoomToCurrentLocationWithOneDriver(final LatLng userLatLng) {
 
         try {

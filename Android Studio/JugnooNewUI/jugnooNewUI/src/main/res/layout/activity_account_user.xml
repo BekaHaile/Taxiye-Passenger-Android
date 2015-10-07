@@ -389,7 +389,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="70px"
                         android:layout_marginTop="70px"
-                        android:background="@drawable/button_yellow_selector"
+                        android:background="@drawable/button_yellow"
                         android:text="LOGOUT"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/button_text_size" />

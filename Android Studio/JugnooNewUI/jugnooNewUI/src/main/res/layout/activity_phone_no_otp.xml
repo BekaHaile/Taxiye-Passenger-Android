@@ -42,6 +42,7 @@
         android:background="@drawable/shadow_down"
         />
 
+
     <include
         layout="@layout/layout_otp_screen"
         ></include>
