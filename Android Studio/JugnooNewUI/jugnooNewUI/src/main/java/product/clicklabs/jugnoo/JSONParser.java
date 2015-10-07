@@ -248,6 +248,8 @@ public class JSONParser {
 		double sharingFareFixed = userData.optDouble("sharing_customer_fare_fixed", 10);
 		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
 
+		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
+
         return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
