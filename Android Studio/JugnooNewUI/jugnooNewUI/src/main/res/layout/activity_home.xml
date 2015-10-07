@@ -1421,11 +1421,11 @@
 
                     <ImageView
                         android:id="@+id/imageViewJugnooLine"
-                        android:layout_width="41px"
-                        android:layout_height="41px"
+                        android:layout_width="46px"
+                        android:layout_height="51px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:src="@drawable/share_icon_selector"
+                        android:src="@drawable/ic_jugnoo_line_selector"
                         android:tag="mwar"/>
 
                     <TextView

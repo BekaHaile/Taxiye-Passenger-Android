@@ -146,7 +146,7 @@
                     android:layout_marginRight="10px"
                     android:layout_marginTop="5px"
                     android:gravity="center"
-                    android:text="JUGNOOLINE"
+                    android:text="JUGNOO LINE"
                     android:textColor="@color/grey_jugnoo_line"
                     android:textSize="26px"
                     />

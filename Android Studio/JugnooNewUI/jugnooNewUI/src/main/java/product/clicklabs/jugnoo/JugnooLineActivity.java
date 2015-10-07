@@ -201,6 +201,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 
 
 
+
 	/**
 	 * ASync for fetching nearby drivers
 	 */
@@ -236,10 +237,6 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 								if(ApiResponseFlags.ALL_DRIVERS.getOrdinal() == flag){
 									nearbyDrivers.clear();
 									nearbyDrivers.addAll(JSONParser.parseNearbySharingDrivers(jObj));
-									if(nearbyDrivers.size() > 0) {
-										adapterHandler.itemClicked(nearbyDrivers.get(0));
-										nearbyDrivers.get(0).ticked = true;
-									}
 									nearbyDriversAdapter.notifyDataSetChanged();
 								}
 								else{

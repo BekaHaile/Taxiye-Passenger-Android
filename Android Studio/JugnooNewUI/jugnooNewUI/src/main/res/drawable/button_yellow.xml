@@ -5,6 +5,6 @@
     <item android:drawable="@drawable/button_shadow"/>
     <item
         android:drawable="@drawable/button_yellow_selector"
-        android:bottom="4px"/>
+        android:bottom="1dp"/>
 
 </layer-list>
