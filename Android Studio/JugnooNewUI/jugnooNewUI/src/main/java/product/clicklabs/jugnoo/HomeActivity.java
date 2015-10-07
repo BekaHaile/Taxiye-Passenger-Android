@@ -1069,9 +1069,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(JUGNOO_LINE_CLICK);
+				if(Data.userData.showJugnooSharing == 1) {
+					startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					FlurryEventLogger.event(JUGNOO_LINE_CLICK);
+				}
 			}
 		});
 
@@ -1786,6 +1788,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+
+		try{
+			if(Data.userData.showJugnooSharing == 1) {
+				relativeLayoutJugnooLine.setVisibility(View.VISIBLE);
+			}
+			else{
+				relativeLayoutJugnooLine.setVisibility(View.GONE);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			relativeLayoutJugnooLine.setVisibility(View.GONE);
+		}
 
 
 
@@ -3359,7 +3373,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    //TODO
     public void zoomToCurrentLocationWithOneDriver(final LatLng userLatLng) {
 
         try {

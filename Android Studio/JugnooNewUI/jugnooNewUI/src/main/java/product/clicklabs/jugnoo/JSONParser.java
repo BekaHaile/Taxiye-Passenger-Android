@@ -245,13 +245,14 @@ public class JSONParser {
             e.printStackTrace();
         }
 
-		double sharingFareFixed = userData.optDouble("sharing_fare_fixed", 10);
+		double sharingFareFixed = userData.optDouble("sharing_customer_fare_fixed", 10);
+		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
 
         return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
-                jugnooFbBanner, numCouponsAvailable, sharingFareFixed);
+                jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing);
     }
 
 

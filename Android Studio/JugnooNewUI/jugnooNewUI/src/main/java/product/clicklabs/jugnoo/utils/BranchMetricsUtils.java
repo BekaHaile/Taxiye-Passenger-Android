@@ -37,6 +37,7 @@ public class BranchMetricsUtils {
             JSONObject params = new JSONObject();
             try {
                 params.put("referring_user_identifier", userIdentifier);
+				params.put("deepindex", "0");
             } catch (Exception ex) { }
 
             Branch branch = Branch.getInstance(context);

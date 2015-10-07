@@ -662,7 +662,7 @@
                     android:layout_width="648px"
                     android:layout_height="100px"
                     android:layout_marginTop="30px"
-                    android:background="@drawable/button_yellow_selector"
+                    android:background="@drawable/button_yellow"
                     android:text="@string/pay_now"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="@dimen/button_text_size"/>

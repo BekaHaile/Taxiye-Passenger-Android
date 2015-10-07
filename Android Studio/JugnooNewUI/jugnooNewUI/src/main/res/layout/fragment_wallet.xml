@@ -101,7 +101,7 @@
                     android:layout_height="84px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="22px"
-                    android:background="@drawable/button_yellow_selector"
+                    android:background="@drawable/button_yellow"
                     android:text="ADD JUGNOO CASH"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="@dimen/button_text_size" />

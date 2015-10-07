@@ -285,7 +285,7 @@
             android:layout_height="88px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20px"
-            android:background="@drawable/button_yellow_selector"
+            android:background="@drawable/button_yellow"
             android:text="PAY VIA JUGNOO CASH"
             android:textColor="@drawable/text_color_white_alpha_selector"
             android:textSize="@dimen/button_text_size"/>
