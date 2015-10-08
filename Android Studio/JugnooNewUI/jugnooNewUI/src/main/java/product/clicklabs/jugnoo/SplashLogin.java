@@ -473,7 +473,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 				e.printStackTrace();
 			}
 		}
-    };
+	    };
 
 
 
@@ -572,7 +572,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
 			params.put("client_id", Config.getClientId());
-			
+
 
 			Log.i("email", emailId);
 			Log.i("password", password);
@@ -701,7 +701,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
 			params.put("client_id", Config.getClientId());
-			
+
+
 
 			Log.i("user_fb_id", Data.facebookUserData.fbId);
 			Log.i("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);

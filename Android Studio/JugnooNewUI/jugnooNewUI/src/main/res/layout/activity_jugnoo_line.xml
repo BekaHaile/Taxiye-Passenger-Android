@@ -39,7 +39,16 @@
         android:background="@drawable/shadow_down"
         />
 
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
     <LinearLayout
+        android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -158,6 +167,11 @@
         </LinearLayout>
 
 
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/yellow"/>
         <RelativeLayout
             android:id="@+id/relativeLayoutFixedFare"
             android:layout_width="match_parent"
@@ -192,6 +206,10 @@
 
 
         </RelativeLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/yellow"/>
 
 
         <RelativeLayout
@@ -291,6 +309,15 @@
             android:textSize="@dimen/button_text_size"/>
 
 
+
+        <TextView
+            android:id="@+id/textViewScroll"
+            android:layout_width="10px"
+            android:layout_height="10px"/>
+
     </LinearLayout>
+
+
+    </ScrollView>
 
 </LinearLayout>

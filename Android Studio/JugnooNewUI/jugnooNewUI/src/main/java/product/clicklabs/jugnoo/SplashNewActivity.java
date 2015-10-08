@@ -115,6 +115,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onInitFinished(JSONObject referringParams, BranchError error) {
 					if (error == null) {
 						// params are the deep linked params associated with the link that the user clicked before showing up
+
 						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
 						try {
 							Data.deepLinkIndex = referringParams.getInt("deepindex");
@@ -478,6 +479,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		} else {
 			LocationInit.showLocationAlertDialog(this);
 		}
+
 
 	}
 
@@ -990,5 +992,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Data.latitude = location.getLatitude();
 		Data.longitude = location.getLongitude();
 	}
+
+
+
 
 }
