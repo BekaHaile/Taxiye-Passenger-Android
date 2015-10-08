@@ -3,15 +3,19 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -57,6 +61,11 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 	ProgressWheel progressBarNearbyDrivers;
 
 	Button buttonMakePayment;
+
+	ScrollView scrollView;
+	LinearLayout linearLayoutMain;
+	TextView textViewScroll;
+
 
 	ArrayList<NearbyDriver> nearbyDrivers;
 	NearbyDriversAdapter nearbyDriversAdapter;
@@ -109,6 +118,10 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 		nearbyDriversAdapter = new NearbyDriversAdapter(this, nearbyDrivers, adapterHandler);
 		recyclerViewDrivers.setAdapter(nearbyDriversAdapter);
 
+		scrollView = (ScrollView) findViewById(R.id.scrollView);
+		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
 
         imageViewBack.setOnClickListener(new OnClickListener() {
 
@@ -127,7 +140,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 					editTextAutoId.setError("Please fill the Auto ID.");
 				} else {
 					DialogPopup.alertPopupTwoButtonsWithListeners(JugnooLineActivity.this, "", "Are you sure you want to pay "
-									+ getResources().getString(R.string.rupee) + " 10 to the Driver with auto id: " + autoId + "?", "OK", "Cancel",
+									+ getResources().getString(R.string.rupee) + " "+Utils.getMoneyDecimalFormat().format(Data.userData.sharingFareFixed)+" to the Driver with auto id: " + autoId + "?", "OK", "Cancel",
 							new OnClickListener() {
 								@Override
 								public void onClick(View v) {
@@ -145,22 +158,71 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 			}
 		});
 
-		editTextAutoId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				editTextAutoId.setError(null);
-			}
-		});
+
+		editTextAutoId.setOnFocusChangeListener(onFocusChangeListener);
+		editTextAutoId.setOnClickListener(onClickListener);
 
 
 		try {
 			fetchNearbyDriversAPI(JugnooLineActivity.this);
 			textViewFixedFareValue.setText(getResources().getString(R.string.rupee)+" "+ Utils.getMoneyDecimalFormat().format(Data.userData.sharingFareFixed));
+
+			if(Data.userData.jugnooBalance > 0){
+				buttonMakePayment.setText("PAY VIA JUGNOO CASH");
+			}
+			else{
+				buttonMakePayment.setText("PAY VIA CASH");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
 	}
+
+	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+
+		@Override
+		public void onFocusChange(final View v, boolean hasFocus) {
+			if (hasFocus) {
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						scrollView.smoothScrollTo(0, buttonMakePayment.getTop());
+					}
+				}, 200);
+			} else {
+				try {
+					((EditText)v).setError(null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				((EditText)v).setError(null);
+			}
+		}
+	};
+
+	private View.OnClickListener onClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(final View v) {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					scrollView.smoothScrollTo(0, buttonMakePayment.getTop());
+				}
+			}, 200);
+			try {
+				if(v.getId() == R.id.editTextEmail) {
+					((AutoCompleteTextView) v).showDropDown();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
 
 	NearbyDriversAdapterHandler adapterHandler = new NearbyDriversAdapterHandler() {
 		@Override
@@ -212,8 +274,8 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 
 			RequestParams params = new RequestParams();
 			params.put("access_token", Data.userData.accessToken);
-			params.put("latitude", ""+Data.latitude);
-			params.put("longitude", ""+Data.longitude);
+			params.put("latitude", ""+Data.currentPinLatLng.latitude);
+			params.put("longitude", ""+Data.currentPinLatLng.longitude);
 
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/find_sharing_autos_nearby", params,

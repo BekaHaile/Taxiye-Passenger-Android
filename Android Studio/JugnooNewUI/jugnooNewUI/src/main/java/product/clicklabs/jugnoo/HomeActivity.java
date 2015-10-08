@@ -1741,7 +1741,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapSettled() {
                     // Map settled
-                    callMapTouchedRefreshDrivers();
+					try {
+						if(map != null){
+							Data.currentPinLatLng = map.getCameraPosition().target;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					callMapTouchedRefreshDrivers();
 					if(!zoomedForSearch && map != null){
 						getPickupAddress(map.getCameraPosition().target);
 					}

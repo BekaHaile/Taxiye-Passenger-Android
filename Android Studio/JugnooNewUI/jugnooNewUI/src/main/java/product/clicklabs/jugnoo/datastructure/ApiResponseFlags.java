@@ -76,7 +76,7 @@ public enum ApiResponseFlags {
 
 	private int ordinal;
 
-	private ApiResponseFlags(int ordinal) {
+	ApiResponseFlags(int ordinal) {
 		this.ordinal = ordinal;
 	}
 
