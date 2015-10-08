@@ -4,15 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -28,6 +31,8 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -53,6 +58,11 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
 	
 	LinearLayout relative;
+
+	ScrollView scrollView;
+	LinearLayout linearLayoutMain;
+	TextView textViewScroll;
+
 	
 	String phoneNoToVerify = "";
 
@@ -137,8 +147,13 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
 		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
 		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
-		
-		
+
+
+		scrollView = (ScrollView) findViewById(R.id.scrollView);
+		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
+
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -146,15 +161,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				performBackPressed();
 			}
 		});
-		
-		editTextOTP.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				editTextOTP.setError(null);
-			}
-		});
-		
+
+		editTextOTP.setOnFocusChangeListener(onFocusChangeListener);
+		editTextOTP.setOnClickListener(onClickListener);
 		
 		buttonVerify.setOnClickListener(new View.OnClickListener() {
 
@@ -251,9 +261,63 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 
 		OTP_SCREEN_OPEN = "yes";
+
+		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+			@Override
+			public void keyboardOpened() {
+
+			}
+
+			@Override
+			public void keyBoardClosed() {
+
+			}
+		}));
 		
 	}
-	
+
+
+	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+
+		@Override
+		public void onFocusChange(final View v, boolean hasFocus) {
+			if (hasFocus) {
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						scrollView.smoothScrollTo(0, buttonVerify.getTop());
+					}
+				}, 200);
+			} else {
+				try {
+					((EditText)v).setError(null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				((EditText)v).setError(null);
+			}
+		}
+	};
+
+	private View.OnClickListener onClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(final View v) {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					scrollView.smoothScrollTo(0, buttonVerify.getTop());
+				}
+			}, 200);
+			try {
+				if(v.getId() == R.id.editTextEmail) {
+					((AutoCompleteTextView) v).showDropDown();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
 	
 	@Override
 	protected void onResume() {

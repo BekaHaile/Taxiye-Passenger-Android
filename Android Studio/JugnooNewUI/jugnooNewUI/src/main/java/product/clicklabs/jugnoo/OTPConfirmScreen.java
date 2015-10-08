@@ -6,16 +6,19 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -37,6 +40,8 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -65,6 +70,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 
 	LinearLayout relative;
+
+	ScrollView scrollView;
+	LinearLayout linearLayoutMain;
+	TextView textViewScroll;
 	
 	boolean loginDataFetched = false;
 	
@@ -159,6 +168,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
 
 
+		scrollView = (ScrollView) findViewById(R.id.scrollView);
+		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
+
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -167,14 +181,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		});
 		
-		editTextOTP.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				editTextOTP.setError(null);
-			}
-		});
-		
 		
 		buttonVerify.setOnClickListener(new View.OnClickListener() {
 
@@ -222,8 +229,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				return true;
 			}
 		});
-		
-		
+
+
+		editTextOTP.setOnFocusChangeListener(onFocusChangeListener);
+		editTextOTP.setOnClickListener(onClickListener);
+
+
 		relativeLayoutOTPThroughCall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -321,8 +332,63 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		OTP_SCREEN_OPEN = "yes";
 
+
+		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+			@Override
+			public void keyboardOpened() {
+
+			}
+
+			@Override
+			public void keyBoardClosed() {
+
+			}
+		}));
+
 	}
-	
+
+
+	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+
+		@Override
+		public void onFocusChange(final View v, boolean hasFocus) {
+			if (hasFocus) {
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						scrollView.smoothScrollTo(0, buttonVerify.getTop());
+					}
+				}, 200);
+			} else {
+				try {
+					((EditText)v).setError(null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				((EditText)v).setError(null);
+			}
+		}
+	};
+
+	private View.OnClickListener onClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(final View v) {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					scrollView.smoothScrollTo(0, buttonVerify.getTop());
+				}
+			}, 200);
+			try {
+				if(v.getId() == R.id.editTextEmail) {
+					((AutoCompleteTextView) v).showDropDown();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
 	
 	@Override
 	protected void onResume() {
