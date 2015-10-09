@@ -162,6 +162,8 @@ public class Data {
 
     public static String deepLinkClassName = "";
 	public static int deepLinkIndex = -1;
+	public static int deepLinkPickup = -1;
+	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
 
 	public static String knowlarityMissedCallNumber = "";
 

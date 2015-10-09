@@ -119,7 +119,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
 						try {
-							Data.deepLinkIndex = referringParams.getInt("deepindex");
+
+							if(referringParams.has("pickup_lat") && referringParams.has("pickup_lng")){
+								Data.deepLinkPickup = 1;
+								Data.deepLinkPickupLatitude = Double.parseDouble(referringParams.optString("pickup_lat"));
+								Data.deepLinkPickupLongitude = Double.parseDouble(referringParams.optString("pickup_lng"));
+							}
+							else{
+								Data.deepLinkIndex = referringParams.optInt("deepindex", -1);
+							}
+
 							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -147,6 +156,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void getDeepLinkIndexFromIntent(Intent newIntent) {
 		Data.deepLinkIndex = -1;
+		Data.deepLinkPickup = -1;
 		try {
 			Intent intent = newIntent;
 			String action = intent.getAction();
@@ -154,8 +164,24 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
 
-			Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
-			Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+			if(data.getQueryParameter("deepindex") != null){
+				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
+
+				Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+			}
+			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
+				Data.deepLinkPickup = 1;
+				Data.deepLinkPickupLatitude = Double.parseDouble(data.getQueryParameter("pickup_lat"));
+				Data.deepLinkPickupLongitude = Double.parseDouble(data.getQueryParameter("pickup_lng"));
+
+				Log.e("deepLinkPickup =", "=" + Data.deepLinkPickup);
+				Log.e("deepLinkPickupLatitude =", "=" + Data.deepLinkPickupLatitude);
+				Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
+			}
+			else{
+				throw new Exception();
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -168,8 +194,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
 				Uri dataTarget = Uri.parse(targetUrl);
 
-				Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
-				Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+				if(dataTarget.getQueryParameter("deepindex") != null){
+					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
+
+					Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+				}
+				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
+					Data.deepLinkPickup = 1;
+					Data.deepLinkPickupLatitude = Double.parseDouble(dataTarget.getQueryParameter("pickup_lat"));
+					Data.deepLinkPickupLongitude = Double.parseDouble(dataTarget.getQueryParameter("pickup_lng"));
+
+					Log.e("deepLinkPickup =", "=" + Data.deepLinkPickup);
+					Log.e("deepLinkPickupLatitude =", "=" + Data.deepLinkPickupLatitude);
+					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -490,16 +528,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							Intent i = new Intent();
-							i.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-							i.addCategory(Intent.CATEGORY_DEFAULT);
-							i.setData(Uri.parse("package:" + Data.DRIVER_APP_PACKAGE));
-							i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
 							try {
-								startActivity(i);
-							} catch (Exception ex) {
-								ex.printStackTrace();
+								Intent i = new Intent();
+								i.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+								i.addCategory(Intent.CATEGORY_DEFAULT);
+								i.setData(Uri.parse("package:" + Data.DRIVER_APP_PACKAGE));
+								i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+								try {
+									startActivity(i);
+								} catch (Exception ex) {
+									ex.printStackTrace();
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
 						}
 					},

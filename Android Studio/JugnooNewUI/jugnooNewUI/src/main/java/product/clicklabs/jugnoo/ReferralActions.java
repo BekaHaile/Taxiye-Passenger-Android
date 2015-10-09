@@ -155,6 +155,8 @@ public class ReferralActions implements FlurryEventNames {
                                     link+"?deepindex=0",
                                     Data.userData.jugnooFbBanner);
 
+								//30.707810, 76.761957
+								// ?pickup_lat=30.707810&pickup_lng=76.761957
 								//http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0
                             }
 

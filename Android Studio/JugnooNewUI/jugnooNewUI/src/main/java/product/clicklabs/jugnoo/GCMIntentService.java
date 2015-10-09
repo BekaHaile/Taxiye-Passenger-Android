@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -19,6 +21,8 @@ import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.gcm.GcmListenerService;
 
 import org.json.JSONObject;
+
+import java.net.URL;
 
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
@@ -222,6 +226,52 @@ public class GCMIntentService extends GcmListenerService {
 
     }
 
+	@SuppressWarnings("deprecation")
+	private void notificationManagerCustomIDWithBitmap(Context context, String message, int notificationId, int deepindex, Bitmap bitmap) {
+
+		try {
+			long when = System.currentTimeMillis();
+
+			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+			Log.v("message", "," + message);
+
+			Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
+			notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
+
+			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+
+
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+			builder.setAutoCancel(true);
+			builder.setContentTitle("Autos");
+			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+			builder.setDefaults(Notification.DEFAULT_ALL);
+			builder.setWhen(when);
+			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+			builder.setSmallIcon(R.drawable.notification_icon);
+			builder.setContentIntent(intent);
+			builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setBigContentTitle("Autos").setSummaryText(message));
+			builder.setContentText(message);
+			builder.setTicker(message);
+
+			Notification notification = builder.build();
+			notificationManager.notify(notificationId, notification);
+
+			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+			wl.acquire(15000);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+
 
     public static void clearNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -330,9 +380,18 @@ public class GCMIntentService extends GcmListenerService {
 							} else {
 								notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.AUTOS_PACKAGE);
 							}
-						} else {
+						}
+						else {
 							int deepindex = jObj.optInt("deepindex", -1);
-							notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
+							String picture = jObj.optString("picture", "");
+
+							if(!"".equalsIgnoreCase(picture)){
+								new BigImageNotifAsync(message1, deepindex, picture).execute();
+							}
+							else{
+								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
+							}
+
 						}
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
@@ -380,6 +439,50 @@ public class GCMIntentService extends GcmListenerService {
 			Log.e("exception", "," + e);
 		}
     }
+
+
+	private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
+
+		private Bitmap bitmap = null;
+		private String message, picture;
+		private int deepindex;
+
+		public BigImageNotifAsync(String message, int deepindex, String picture){
+			this.deepindex = deepindex;
+			this.picture = picture;
+			this.message = message;
+		}
+
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			try {
+				URL url = new URL(picture);
+				bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
+			return bitmap;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			// execution of result of Long time consuming operation
+			try {
+				notificationManagerCustomIDWithBitmap(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
+			}catch (Exception e){
+				e.printStackTrace();
+				notificationManagerCustomID(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex);
+			}
+
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// Things to be done before execution of long running operation. For
+			// example showing ProgessDialog
+		}
+	}
 
 
 }

@@ -238,6 +238,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 			try {
 				editTextAutoId.setText(nearbyDriver.autoId);
 				editTextAutoId.setSelection(editTextAutoId.getText().length());
+				editTextAutoId.setError(null);
 
 				if("".equalsIgnoreCase(nearbyDriver.userImage)){
 					imageViewDriverImage.setVisibility(View.GONE);

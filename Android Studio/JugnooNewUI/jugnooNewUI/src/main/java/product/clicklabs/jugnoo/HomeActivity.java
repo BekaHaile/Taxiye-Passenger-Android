@@ -315,7 +315,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean loggedOut = false,
         zoomedToMyLocation = false,
         mapTouchedOnce = false;
-    boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false;
+    boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
     Dialog noDriversDialog;
@@ -392,6 +392,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         pickupDropZoomed = false;
 		zoomedForSearch = false;
 		firstTimeZoom = false;
+		zoomingForDeepLink = false;
 
 
 
@@ -1181,28 +1182,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                try {
-                    hideAnims();
-                    if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-						if (map != null) {
-							promoCouponSelectedForRide = null;
-							final LatLng requestLatLng = map.getCameraPosition().target;
-							Data.pickupLatLng = requestLatLng;
-
-							editTextAssigningDropLocation.setText("");
-							editTextFinalDropLocation.setText("");
-
-							promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
-							FlurryEventLogger.event(AUTO_RIDE_ICON);
-						}
-					} else {
-                        DialogPopup.alertPopup(HomeActivity.this, "",
-                            Data.CHECK_INTERNET_MSG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+				try {
+					if(map != null){
+						callAnAutoClicked(map.getCameraPosition().target);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
         });
 
         buttonChalo.setOnClickListener(new OnClickListener() {
@@ -1862,6 +1849,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         shakeHandler.postDelayed(shakeRunnable, 10000);
     }
+
+
+	public void callAnAutoClicked(LatLng requestLatLng){
+		try {
+			hideAnims();
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				promoCouponSelectedForRide = null;
+				Data.pickupLatLng = requestLatLng;
+
+				editTextAssigningDropLocation.setText("");
+				editTextFinalDropLocation.setText("");
+
+				promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
+				FlurryEventLogger.event(AUTO_RIDE_ICON);
+			} else {
+				DialogPopup.alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     private void stopGiftShake(){
         try{
@@ -2639,7 +2647,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     cancelTimerUpdateDrivers();
                     cancelDriverLocationUpdateTimer();
                     startMapAnimateAndUpdateRideDataTimer();
-                    break;
+					try {
+						getDropLocationPathAndDisplay(Data.pickupLatLng);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
 
                 case P_RIDE_END:
                     cancelTimerUpdateDrivers();
@@ -2937,6 +2950,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 		openDeepLink();
+		performDeepLinkRequest();
 
 //        genieLayout.setGenieParams();
     }
@@ -2975,6 +2989,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 		Data.deepLinkIndex = -1;
+	}
+
+	private void performDeepLinkRequest(){
+		try{
+			if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+				if(Data.deepLinkPickup == 1) {
+					callAnAutoClicked(new LatLng(Data.deepLinkPickupLatitude, Data.deepLinkPickupLongitude));
+					zoomingForDeepLink = true;
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							if (map != null) {
+								zoomToCurrentLocationWithOneDriver(new LatLng(Data.deepLinkPickupLatitude, Data.deepLinkPickupLongitude));
+							}
+							zoomingForDeepLink = false;
+						}
+					}, 500);
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		Data.deepLinkPickup = -1;
 	}
 
 
@@ -4245,58 +4282,62 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, 500);
                         }
                     });
-                    if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()) && Data.dropLatLng != null && lastLatLng != null && toShowPathToDrop()) {
-                        String url = MapUtils.makeDirectionsURL(lastLatLng, Data.dropLatLng);
-                        Log.i("url", "=" + url);
-                        String result = new HttpRequester().getJSONFromUrl(url);
-                        Log.i("result", "=" + result);
-                        if (result != null) {
-                            final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-                            if (list.size() > 0) {
-                                runOnUiThread(new Runnable() {
+					try {
+						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()) && Data.dropLatLng != null && lastLatLng != null && toShowPathToDrop()) {
+							String url = MapUtils.makeDirectionsURL(lastLatLng, Data.dropLatLng);
+							Log.i("url", "=" + url);
+							String result = new HttpRequester().getJSONFromUrl(url);
+							Log.i("result", "=" + result);
+							if (result != null) {
+								final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+								if (list.size() > 0) {
+									runOnUiThread(new Runnable() {
 
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            if (toShowPathToDrop()) {
-                                                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+										@Override
+										public void run() {
+											try {
+												if (toShowPathToDrop()) {
+													LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                                                if(lastLatLng != null && Data.dropLatLng != null){
-                                                    builder.include(lastLatLng).include(Data.dropLatLng);
-                                                }
+													if(lastLatLng != null && Data.dropLatLng != null){
+														builder.include(lastLatLng).include(Data.dropLatLng);
+													}
 
-                                                pathToDropLocationPolylineOptions = new PolylineOptions();
-                                                pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
-                                                for (int z = 0; z < list.size(); z++) {
-                                                    pathToDropLocationPolylineOptions.add(list.get(z));
-                                                    builder.include(list.get(z));
-                                                }
+													pathToDropLocationPolylineOptions = new PolylineOptions();
+													pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
+													for (int z = 0; z < list.size(); z++) {
+														pathToDropLocationPolylineOptions.add(list.get(z));
+														builder.include(list.get(z));
+													}
 
-                                                if (pathToDropLocationPolyline != null) {
-                                                    pathToDropLocationPolyline.remove();
-                                                }
-                                                pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
+													if (pathToDropLocationPolyline != null) {
+														pathToDropLocationPolyline.remove();
+													}
+													pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
 
-                                                try {
-                                                    if(!pickupDropZoomed) {
-                                                        LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
-                                                        float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
-                                                        pickupDropZoomed = true;
-                                                    }
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                }
+													try {
+														if(!pickupDropZoomed) {
+															LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
+															float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+															map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+															pickupDropZoomed = true;
+														}
+													} catch (Exception e) {
+														e.printStackTrace();
+													}
+												}
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+										}
+									});
+								}
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
             }).start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -4969,7 +5010,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				}
 			}
 
-			if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation){
+			if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
 				zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
 			}
 			zoomedToMyLocation = true;
