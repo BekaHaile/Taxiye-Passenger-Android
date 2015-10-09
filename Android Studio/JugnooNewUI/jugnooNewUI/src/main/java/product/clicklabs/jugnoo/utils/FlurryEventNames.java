@@ -68,8 +68,10 @@ public interface FlurryEventNames {
         RATE_US_NOW_POP_NOT_RATED = "Rate us now pop not rated",
         MENU_LOOKUP = "Menu lookup",
         INVITE_EARN_MENU = "Invite&Earn_Menu",
-			JUGNOO_LINE_CLICK = "Jugnoo Line click",
-		JUGNOO_LINE_PAYMENT = "Jugnoo line payment",
+		JUGNOO_LINE_CLICK = "Jugnoo line opened",
+		AUTO_ID_ENTERED_LINE = "Auto ID entered_Line",
+		LINE_PAYED_VIA_CASH = "Line_payed via cash",
+		JUGNOO_LINE_PAYMENT = "Line_payed via JC",
         JUGNOO_CASH_MENU = "Jugnoo Cash_Menu",
         RECENT_TRANSACTION_LOOK_UP = "Recent transaction look up",
         INVITE_EARN_JUGNOO_CASH = "Invite&Earn_Jugnoo Cash",
@@ -100,6 +102,8 @@ public interface FlurryEventNames {
         LIKING_ON_FACEBOOK_ABOUT = "Liking on facebook_about",
         TERMS_AND_CONDITIONS = "terms and conditions",
         PRIVACY_POLICY = "Privacy policy",
-        ABOUT_JUGOO_AUTOS = "About Jugoo Autos";
+        ABOUT_JUGOO_AUTOS = "About Jugoo Autos"
+
+				;
 
 }

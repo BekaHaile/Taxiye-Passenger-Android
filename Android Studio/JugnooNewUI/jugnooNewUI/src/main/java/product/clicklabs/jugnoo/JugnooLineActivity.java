@@ -147,7 +147,12 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 								public void onClick(View v) {
 									editTextAutoId.setError(null);
 									makeSharingPaymentAPI(JugnooLineActivity.this, autoId);
-									FlurryEventLogger.event(JUGNOO_LINE_PAYMENT);
+									if(Data.userData.jugnooBalance > 0){
+										FlurryEventLogger.event(JUGNOO_LINE_PAYMENT);
+									}
+									else{
+										FlurryEventLogger.event(LINE_PAYED_VIA_CASH);
+									}
 								}
 							},
 							new OnClickListener() {
@@ -222,6 +227,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			FlurryEventLogger.event(AUTO_ID_ENTERED_LINE);
 		}
 	};
 

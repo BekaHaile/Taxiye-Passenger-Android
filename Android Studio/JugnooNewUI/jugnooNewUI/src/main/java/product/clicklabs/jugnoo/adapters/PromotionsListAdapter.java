@@ -168,6 +168,7 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
                 else if(promoCoupon instanceof PromotionInfo){
                     if(((PromotionInfo)promoCoupon).id > 0){
                         DialogPopup.alertPopupHtml(context, "", ((PromotionInfo)promoCoupon).terms);
+						FlurryEventLogger.event(COUPON_SELECTION_MADE);
                     }
                 }
             }
