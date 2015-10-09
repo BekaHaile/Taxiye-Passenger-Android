@@ -172,8 +172,9 @@
 
                         <TextView
                             android:id="@+id/textViewInitialSearch"
-                            android:layout_width="580px"
-                            android:layout_height="wrap_content"
+                            android:layout_width="520px"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
                             android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
@@ -509,7 +510,7 @@
                     android:layout_marginTop="96px"
                     android:animateLayoutChanges="true"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:background="@color/black_translucent"
                     >
 
@@ -601,7 +602,7 @@
                         android:layout_height="match_parent"
                         android:layout_below="@+id/relativeLayoutAssigningInfo"
                         android:background="@color/transparent"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         >
                         <RelativeLayout
                             android:id="@+id/relativeLayoutAssigningDropLocationBar"
@@ -626,8 +627,9 @@
 
                             <EditText
                                 android:id="@+id/editTextAssigningDropLocation"
-                                android:layout_width="580px"
-                                android:layout_height="wrap_content"
+                                android:layout_width="520px"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="20px"
                                 android:layout_toRightOf="@+id/imageViewAssigningDropLocationGPSIcon"
@@ -643,8 +645,8 @@
                                 android:layout_width="70px"
                                 android:layout_height="70px"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/imageViewAssigningDropLocationCross"
-                                android:layout_marginRight="0px"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="75px"
                                 xmlns:wheel="http://schemas.android.com/apk/res-auto"
                                 wheel:matProg_barColor="@color/yellow"
                                 wheel:matProg_fillRadius="true"
@@ -708,7 +710,7 @@
                     android:layout_marginTop="96px"
                     android:animateLayoutChanges="true"
                     android:splitMotionEvents="false"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
 
                     <!-- promo name fare factor layout-->
@@ -953,7 +955,7 @@
                         android:layout_height="match_parent"
                         android:layout_below="@+id/relativeLayoutInRideInfo"
                         android:background="@color/transparent"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         >
                         <RelativeLayout
                             android:id="@+id/relativeLayoutFinalDropLocationBar"
@@ -978,8 +980,9 @@
 
                             <EditText
                                 android:id="@+id/editTextFinalDropLocation"
-                                android:layout_width="580px"
-                                android:layout_height="wrap_content"
+                                android:layout_width="520px"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="20px"
                                 android:layout_toRightOf="@+id/imageViewFinalDropLocationGPSIcon"
@@ -995,8 +998,8 @@
                                 android:layout_width="70px"
                                 android:layout_height="70px"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/imageViewFinalDropLocationCross"
-                                android:layout_marginRight="0px"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="75px"
                                 xmlns:wheel="http://schemas.android.com/apk/res-auto"
                                 wheel:matProg_barColor="@color/yellow"
                                 wheel:matProg_fillRadius="true"
@@ -1052,7 +1055,9 @@
 
 
 
-            </RelativeLayout><!-- search layout -->
+            </RelativeLayout>
+
+            <!-- search layout -->
             <LinearLayout
                 android:id="@+id/linearLayoutSearch"
                 android:layout_width="match_parent"
@@ -1086,8 +1091,9 @@
 
                     <EditText
                         android:id="@+id/editTextSearch"
-                        android:layout_width="510px"
-                        android:layout_height="wrap_content"
+                        android:layout_width="520px"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20px"
                         android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
@@ -1103,8 +1109,8 @@
                         android:layout_width="70px"
                         android:layout_height="70px"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/imageViewSearchCross"
-                        android:layout_marginRight="0px"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="75px"
                         xmlns:wheel="http://schemas.android.com/apk/res-auto"
                         wheel:matProg_barColor="@color/yellow"
                         wheel:matProg_fillRadius="true"

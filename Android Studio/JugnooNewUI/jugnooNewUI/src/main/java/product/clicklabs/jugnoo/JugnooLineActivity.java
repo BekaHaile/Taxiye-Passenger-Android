@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.datastructure.NearbyDriver;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -146,6 +147,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 								public void onClick(View v) {
 									editTextAutoId.setError(null);
 									makeSharingPaymentAPI(JugnooLineActivity.this, autoId);
+									FlurryEventLogger.event(JUGNOO_LINE_PAYMENT);
 								}
 							},
 							new OnClickListener() {

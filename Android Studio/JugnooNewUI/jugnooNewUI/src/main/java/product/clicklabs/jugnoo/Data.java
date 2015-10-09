@@ -29,6 +29,8 @@ import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
  */
 public class Data {
 
+	public static final String DRIVER_APP_PACKAGE = "product.clicklabs.jugnoo.driver";
+
 
 
     public static final String INVALID_ACCESS_TOKEN = "invalid access token";

@@ -37,6 +37,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -484,29 +485,55 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 	public void getDeviceToken() {
-		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
-		linearLayoutNoNet.setVisibility(View.GONE);
-		DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-		new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
+		if(Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){
+			DialogPopup.alertPopupTwoButtonsWithListeners(SplashNewActivity.this, "", "You need to uninstall Jugnoo Drivers App first to use this app", "Uninstall", "Cancel",
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent i = new Intent();
+							i.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+							i.addCategory(Intent.CATEGORY_DEFAULT);
+							i.setData(Uri.parse("package:" + Data.DRIVER_APP_PACKAGE));
+							i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-			@Override
-			public void deviceTokenReceived(final String regId) {
-				runOnUiThread(new Runnable() {
+							try {
+								startActivity(i);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+					},
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							finish();
+						}
+					}, false, false);
+		}
+		else{
+			relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
+			linearLayoutNoNet.setVisibility(View.GONE);
+			DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
+			new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
-					@Override
-					public void run() {
-						DialogPopup.dismissLoadingDialog();
-						Data.deviceToken = regId;
-						Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
-						accessTokenLogin(SplashNewActivity.this);
+				@Override
+				public void deviceTokenReceived(final String regId) {
+					runOnUiThread(new Runnable() {
 
-						FlurryEventLogger.appStarted(regId);
-					}
-				});
+						@Override
+						public void run() {
+							DialogPopup.dismissLoadingDialog();
+							Data.deviceToken = regId;
+							Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+							accessTokenLogin(SplashNewActivity.this);
 
-			}
-		});
+							FlurryEventLogger.appStarted(regId);
+						}
+					});
 
+				}
+			});
+		}
 	}
 
 
@@ -521,6 +548,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
 		resumed = true;
+
+		AppEventsLogger.activateApp(this);
 	}
 
 
@@ -540,6 +569,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 		super.onPause();
+
+		AppEventsLogger.deactivateApp(this);
 	}
 
 	@Override

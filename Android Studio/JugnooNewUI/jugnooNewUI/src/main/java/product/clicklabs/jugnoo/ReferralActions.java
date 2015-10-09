@@ -244,7 +244,7 @@ public class ReferralActions implements FlurryEventNames {
                     Intent email = new Intent(Intent.ACTION_SEND);
                     email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
                     email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + link+"?deepindex=0");
+                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + link+"?deepindex=0"); //
                     email.setType("message/rfc822");
                     activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
                 }

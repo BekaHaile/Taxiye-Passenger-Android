@@ -392,4 +392,18 @@ public class Utils {
 	}
 
 
+
+	public static boolean isAppInstalled(Context context, String packageName) {
+		PackageManager pm = context.getPackageManager();
+		boolean installed = false;
+		try {
+			pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+			installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			installed = false;
+		}
+		return installed;
+	}
+
+
 }
