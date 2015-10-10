@@ -627,7 +627,7 @@
 
                             <EditText
                                 android:id="@+id/editTextAssigningDropLocation"
-                                android:layout_width="480px"
+                                android:layout_width="470px"
                                 android:layout_height="match_parent"
                                 android:gravity="center_vertical"
                                 android:layout_centerVertical="true"
@@ -980,7 +980,7 @@
 
                             <EditText
                                 android:id="@+id/editTextFinalDropLocation"
-                                android:layout_width="480px"
+                                android:layout_width="470px"
                                 android:layout_height="match_parent"
                                 android:gravity="center_vertical"
                                 android:layout_centerVertical="true"
@@ -1091,7 +1091,7 @@
 
                     <EditText
                         android:id="@+id/editTextSearch"
-                        android:layout_width="480px"
+                        android:layout_width="470px"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
