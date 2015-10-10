@@ -82,6 +82,7 @@ public class SearchListAdapter extends BaseAdapter {
 
                 @Override
                 public void afterTextChanged(Editable s) {
+					SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
                     if (s.length() > 0) {
                         getSearchResults(s.toString().trim(), SearchListAdapter.this.searchPivotLatLng);
                     }
@@ -161,14 +162,18 @@ public class SearchListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View v) {
-                    holder = (ViewHolderSearchItem) v.getTag();
-                    Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
-                    AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
-                    if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
-                        searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                        getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
-                    }
-                }
+					try {
+						holder = (ViewHolderSearchItem) v.getTag();
+						Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
+						AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
+						if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
+							searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+							getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,6 +215,10 @@ public class SearchListAdapter extends BaseAdapter {
                         setSearchResultsToList();
                         refreshingAutoComplete = false;
                         autoCompleteThread = null;
+
+						if(!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)){
+							recallSearch(editTextForSearch.getText().toString().trim());
+						}
                     }
                 });
                 autoCompleteThread.start();
@@ -219,12 +228,20 @@ public class SearchListAdapter extends BaseAdapter {
         }
     }
 
+	private synchronized void recallSearch(final String searchText){
+		((Activity)context).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				getSearchResults(searchText, SearchListAdapter.this.searchPivotLatLng);
+			}
+		});
+	}
 
-    private synchronized void setSearchResultsToList() {
-        ((Activity)context).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (autoCompleteSearchResultsForSearch.size() == 0) {
+	private synchronized void setSearchResultsToList() {
+		((Activity) context).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (autoCompleteSearchResultsForSearch.size() == 0) {
                     autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult("No results found", "", ""));
                 }
                 SearchListAdapter.this.setResults(autoCompleteSearchResultsForSearch);

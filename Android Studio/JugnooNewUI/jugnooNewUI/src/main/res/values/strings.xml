@@ -5,14 +5,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-
+    <string name="filter_title">Jugnoo</string>
 
 
     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
 
-
-    <!-- <string name="google_maps_api_key">AIzaSyBxgi_Upqn9MD_Qxr_g1NZrUqePHhEQIR8</string> Dev Harshit-->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 

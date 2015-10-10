@@ -40,6 +40,7 @@ public enum ApiResponseFlags {
 	
 	RECENT_RIDES(173),
 	AVAILABLE_PROMOTIONS(174),
+	ALL_DRIVERS(175),
 	
 	
 	COMPLETE_INVENTORY(200),
@@ -75,7 +76,7 @@ public enum ApiResponseFlags {
 
 	private int ordinal;
 
-	private ApiResponseFlags(int ordinal) {
+	ApiResponseFlags(int ordinal) {
 		this.ordinal = ordinal;
 	}
 

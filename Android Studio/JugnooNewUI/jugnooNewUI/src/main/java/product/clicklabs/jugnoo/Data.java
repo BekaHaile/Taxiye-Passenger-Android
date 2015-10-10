@@ -29,6 +29,8 @@ import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
  */
 public class Data {
 
+	public static final String DRIVER_APP_PACKAGE = "product.clicklabs.jugnoo.driver";
+
 
 
     public static final String INVALID_ACCESS_TOKEN = "invalid access token";
@@ -109,7 +111,8 @@ public class Data {
 	
 
 
-	public static double latitude, longitude;
+	public static double latitude = 0, longitude = 0;
+	public static LatLng currentPinLatLng;
 	
 	
 	public static ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
@@ -158,8 +161,13 @@ public class Data {
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
     public static String deepLinkClassName = "";
+	public static int deepLinkIndex = -1;
+	public static int deepLinkPickup = -1;
+	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
 
-	public static boolean supportFeedbackSubmitted = false;
+	public static String knowlarityMissedCallNumber = "";
+
+	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
 
 	

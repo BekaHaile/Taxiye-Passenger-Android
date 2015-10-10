@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,7 +162,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 				if(promoCode.length() > 0){
 					applyPromoCodeAPI(PromotionsActivity.this, promoCode);
                     FlurryEventLogger.event(PROMO_CODE_ENTERED);
-                    FlurryEventLogger.event(PROMO_CODE_APPLIED);
 				}
 				else{
 					editTextPromoCode.requestFocus();
@@ -203,7 +203,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             public void onClick(View v) {
                 startActivity(new Intent(PromotionsActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
                 FlurryEventLogger.event(INVITE_EARN_PROMOTIONS);
             }
         });
@@ -259,6 +258,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 		else{
 			if(couponInfosList.size() == 0 && promotionInfoList.size() == 0){
 				textViewCouponsAvailable.setVisibility(View.VISIBLE);
+				textViewCouponsAvailable.setGravity(Gravity.CENTER);
                 textViewCouponsAvailable.setText(message);
                 listViewCoupons.setVisibility(View.GONE);
                 textViewCouponInfo.setVisibility(View.GONE);
@@ -269,6 +269,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 			}
             else if(couponInfosList.size() > 0 && promotionInfoList.size() == 0){
                 textViewCouponsAvailable.setVisibility(View.VISIBLE);
+				textViewCouponsAvailable.setGravity(Gravity.CENTER_VERTICAL);
                 textViewCouponsAvailable.setText("Coupons Available");
                 listViewCoupons.setVisibility(View.VISIBLE);
                 textViewCouponInfo.setVisibility(View.GONE);
@@ -288,6 +289,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             }
 			else{
                 textViewCouponsAvailable.setVisibility(View.VISIBLE);
+				textViewCouponsAvailable.setGravity(Gravity.CENTER_VERTICAL);
                 textViewCouponsAvailable.setText("Coupons Available");
                 listViewCoupons.setVisibility(View.VISIBLE);
                 textViewCouponInfo.setVisibility(View.GONE);
@@ -631,7 +633,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                                     String message = jObj.getString("message");
                                     DialogPopup.dialogBanner(activity, message);
                                     getAccountInfoAsync(activity);
-                                    FlurryEventLogger.promoCodeApplied(Data.userData.accessToken, promoCode, message);
+									FlurryEventLogger.event(PROMO_CODE_APPLIED);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }

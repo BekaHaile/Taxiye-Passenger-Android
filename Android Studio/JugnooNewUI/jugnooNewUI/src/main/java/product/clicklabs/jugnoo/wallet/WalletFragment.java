@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -29,7 +28,6 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -50,6 +48,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -65,7 +64,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	Button buttonAddPayment;
 	
 	TextView textViewInfo;
-	ProgressBar progressBar;
+	ProgressWheel progressBar;
 
     ScrollView scrollView;
 	
@@ -83,8 +82,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	public int totalTransactions = 0, pageSize = 0;
 	public String promoBanner = "";
 	ArrayList<TransactionInfo> transactionInfoList = new ArrayList<TransactionInfo>();
-
-	DecimalFormat df = new DecimalFormat("#");
 
     View rootView;
     public PaymentActivity paymentActivity;
@@ -151,7 +148,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		listViewTransactions.setAdapter(transactionListAdapter);
 		
 		textViewInfo = (TextView) rootView.findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(paymentActivity));
-		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+		progressBar = (ProgressWheel) rootView.findViewById(R.id.progressBar);
 		
 		textViewInfo.setVisibility(View.GONE);
 		progressBar.setVisibility(View.GONE);
@@ -166,15 +163,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    FlurryEventLogger.screenOpened("Gift Button Pressed");
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
                 startActivity(new Intent(paymentActivity, ShareActivity.class));
                 paymentActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.shareScreenOpened(Data.userData.accessToken);
                 FlurryEventLogger.event(INVITE_EARN_JUGNOO_CASH);
             }
         });
@@ -279,7 +269,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		
 		try{
 			if(Data.userData != null){
-				textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+df.format(Data.userData.jugnooBalance));
+				textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -325,7 +315,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				textViewInfo.setVisibility(View.GONE);
 			}
 			transactionListAdapter.notifyDataSetChanged();
-			textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+df.format(jugnooBalance));
+			textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(jugnooBalance));
 		}
 
 		Utils.expandListForVariableHeight(listViewTransactions);
@@ -394,7 +384,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			
 			holder.textViewTransactionDate.setText(transactionInfo.date);
 
-			holder.textViewTransactionAmount.setText(getResources().getString(R.string.rupee)+" "+df.format(transactionInfo.amount));
+			holder.textViewTransactionAmount.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(transactionInfo.amount));
 			holder.textViewTransactionTime.setText(transactionInfo.time);
 			holder.textViewTransactionType.setText(transactionInfo.transactionText);
 			
@@ -528,7 +518,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
                                 }
 
                                 try {
-                                    textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee) + " " + df.format(jugnooBalance));
+                                    textViewAccountBalanceValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(jugnooBalance));
                                 }catch(Exception e){}
 
                                 showPromoBanner();

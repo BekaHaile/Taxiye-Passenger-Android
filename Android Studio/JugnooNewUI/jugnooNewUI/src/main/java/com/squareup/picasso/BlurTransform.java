@@ -5,8 +5,7 @@ package com.squareup.picasso;
  */
 
 import android.graphics.Bitmap;
-import android.util.Log;
- 
+
 public class BlurTransform implements Transformation {
 	@Override
 	public Bitmap transform(Bitmap source) {
@@ -33,7 +32,6 @@ public class BlurTransform implements Transformation {
         int height = bitmap.getHeight();
 
         int[] pix = new int[width * height];
-        Log.e("pix", width + " " + height + " " + pix.length);
         bitmap.getPixels(pix, 0, width, 0, 0, width, height);
 
         int widthM = width - 1;
@@ -219,7 +217,6 @@ public class BlurTransform implements Transformation {
             }
         }
 
-        Log.e("pix", width + " " + height + " " + pix.length);
         bitmap.setPixels(pix, 0, width, 0, 0, width, height);
 
         return (bitmap);

@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
@@ -380,5 +381,29 @@ public class Utils {
 			e.printStackTrace();
 		}
 	}
+
+
+	private static DecimalFormat decimalFormatMoney;
+	public static DecimalFormat getMoneyDecimalFormat(){
+		if(decimalFormatMoney == null){
+			decimalFormatMoney = new DecimalFormat("#.##");
+		}
+		return decimalFormatMoney;
+	}
+
+
+
+	public static boolean isAppInstalled(Context context, String packageName) {
+		PackageManager pm = context.getPackageManager();
+		boolean installed = false;
+		try {
+			pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+			installed = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			installed = false;
+		}
+		return installed;
+	}
+
 
 }

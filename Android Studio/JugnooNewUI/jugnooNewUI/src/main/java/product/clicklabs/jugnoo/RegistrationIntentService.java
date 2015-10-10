@@ -7,7 +7,6 @@ package product.clicklabs.jugnoo;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.util.Pair;
 
 import com.google.android.gms.gcm.GcmPubSub;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.Log;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -69,7 +69,7 @@ public class RegistrationIntentService extends IntentService {
 
 			}
 		} catch (Exception e) {
-			Log.d(TAG, "Failed to complete token refresh", e);
+			Log.d(TAG, "Failed to complete token refresh");
 			try {
 				if(intent.hasExtra(Data.INTENT_CLASS_NAME)){
 					Intent registrationComplete = new Intent(this, Class.forName(intent.getStringExtra(Data.INTENT_CLASS_NAME)));

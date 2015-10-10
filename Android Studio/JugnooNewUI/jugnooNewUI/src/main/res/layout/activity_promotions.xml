@@ -33,6 +33,13 @@
             android:src="@drawable/back_white_selector"/>
     </RelativeLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:layout_below="@+id/topBar"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -70,7 +77,7 @@
             android:layout_height="76px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="23px"
-            android:background="@drawable/button_yellow_selector"
+            android:background="@drawable/button_yellow"
             android:text="APPLY"
             android:textColor="@drawable/text_color_white_alpha_selector"
             android:textSize="@dimen/button_text_size"/>

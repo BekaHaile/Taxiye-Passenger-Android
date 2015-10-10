@@ -237,7 +237,7 @@
                     android:layout_marginTop="5px"
                     android:background="#0000"
                     android:gravity="center_vertical"
-                    android:hint="Promocode"
+                    android:hint="Promocode (optional)"
                     android:paddingLeft="20px"
                     android:paddingRight="20px"
                     android:singleLine="true"
@@ -269,7 +269,7 @@
                 android:layout_height="100px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20px"
-                android:background="@drawable/button_yellow_selector"
+                android:background="@drawable/button_yellow"
                 android:text="SIGN UP"
                 android:textColor="@drawable/text_color_white_alpha_selector"
                 android:textSize="@dimen/button_text_size" />

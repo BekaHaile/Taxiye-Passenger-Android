@@ -251,7 +251,6 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                             }
                         } else if (FeedbackMode.PAST_RIDE == feedbackMode) {
                             submitFeedbackToDriverAsync(FeedbackActivity.this, "" + pastEngagementId, "" + pastDriverId, rating, feedbackStr, feedbackReasons);
-                            FlurryEventLogger.reviewSubmitted(Data.userData.accessToken, "" + pastEngagementId);
                             if(feedbackStr.length() > 0){
                                 FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
                             }
@@ -461,35 +460,39 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
     public void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
 
-        final RequestParams params = new RequestParams();
-        params.put("access_token", Data.userData.accessToken);
-        params.put("engagement_id", engagementId);
+		try {
+			final RequestParams params = new RequestParams();
+			params.put("access_token", Data.userData.accessToken);
+			params.put("engagement_id", engagementId);
 
-        final String url = Config.getServerUrl() + "/skip_rating_by_customer";
+			final String url = Config.getServerUrl() + "/skip_rating_by_customer";
 
-        HomeActivity.feedbackSkipped = true;
-        HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
-        finish();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+			HomeActivity.feedbackSkipped = true;
+			HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
+			finish();
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        AsyncHttpClient client = Data.getClient();
-        client.post(url, params,
-            new CustomAsyncHttpResponseHandler() {
+			AsyncHttpClient client = Data.getClient();
+			client.post(url, params,
+				new CustomAsyncHttpResponseHandler() {
 
-                @Override
-                public void onFailure(Throwable arg3) {
-                    Log.e("request fail", arg3.toString());
-                }
+					@Override
+					public void onFailure(Throwable arg3) {
+						Log.e("request fail", arg3.toString());
+					}
 
-                @Override
-                public void onSuccess(String response) {
-                    Log.i("Server response", "response = " + response);
+					@Override
+					public void onSuccess(String response) {
+						Log.i("Server response", "response = " + response);
 
-                }
-            });
+					}
+				});
 
-        Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
-    }
+			Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
     public void submitFeedbackSupportAsync(final Activity activity, int givenRating, String feedbackText) {

@@ -31,6 +31,7 @@ import com.squareup.picasso.PicassoTools;
 
 import org.json.JSONObject;
 
+import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
@@ -473,10 +474,14 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
     public void dissmissEmailVerify() {
-        if (Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() && relativeLayoutEmailVerify.getVisibility() == View.VISIBLE) {
-            relativeLayoutEmailVerify.setVisibility(View.GONE);
-        }
-    }
+		try {
+			if (Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() && relativeLayoutEmailVerify.getVisibility() == View.VISIBLE) {
+				relativeLayoutEmailVerify.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
     public void setUserData(boolean refreshed){
@@ -836,6 +841,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 										Intent intent = new Intent(activity, SplashNewActivity.class);
 										startActivity(intent);
 										overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
+										Branch.getInstance(activity).logout();
 									}
 									else{
 										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

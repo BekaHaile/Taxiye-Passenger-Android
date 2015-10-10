@@ -1,9 +1,7 @@
 package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.net.Uri;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -41,29 +39,29 @@ public class FacebookLoginHelper {
         FacebookSdk.sdkInitialize(activity);
 
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                accessToken = loginResult.getAccessToken();
-                if (accessToken != null) {
-                    if (accessToken.isExpired()) {
-                        callOpenActiveSession();
-                    } else {
-                        AccessToken.setCurrentAccessToken(accessToken);
-                        requestMe(accessToken);
-                    }
-                }
-            }
+			@Override
+			public void onSuccess(LoginResult loginResult) {
+				accessToken = loginResult.getAccessToken();
+				if (accessToken != null) {
+					if (accessToken.isExpired()) {
+						callOpenActiveSession();
+					} else {
+						AccessToken.setCurrentAccessToken(accessToken);
+						requestMe(accessToken);
+					}
+				}
+			}
 
-            @Override
-            public void onCancel() {
-                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Login cancelled");
-            }
+			@Override
+			public void onCancel() {
+				FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Login cancelled");
+			}
 
-            @Override
-            public void onError(FacebookException exception) {
-                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook\n"+exception.toString());
-            }
-        });
+			@Override
+			public void onError(FacebookException exception) {
+				FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook\n" + exception.toString());
+			}
+		});
     }
 
 
@@ -88,7 +86,7 @@ public class FacebookLoginHelper {
 
 
     private void requestMe(final AccessToken accessToken) {
-        showLoadingDialog(activity, "Loading...");
+		DialogPopup.showLoadingDialog(activity, "Loading...");
         GraphRequest request = GraphRequest.newMeRequest(
             accessToken,
             new GraphRequest.GraphJSONObjectCallback() {
@@ -96,7 +94,7 @@ public class FacebookLoginHelper {
                 public void onCompleted(
                     JSONObject object,
                     GraphResponse response) {
-                    dismissLoadingDialog();
+					DialogPopup.dismissLoadingDialog();
 
                     Log.e("object", "=" + object);
 //                    {
@@ -174,30 +172,6 @@ public class FacebookLoginHelper {
 
 
 
-
-
-    private ProgressDialog progressDialog;
-    private void showLoadingDialog(Activity activity, String message){
-        try {
-            dismissLoadingDialog();
-            progressDialog = ProgressDialog.show(activity, "", message, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void dismissLoadingDialog(){
-        try {
-            if(progressDialog != null && progressDialog.isShowing()){
-                progressDialog.dismiss();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            progressDialog = null;
-        }
-    }
 
 
     public static void logoutFacebook(){

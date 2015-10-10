@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
+
+import product.clicklabs.jugnoo.utils.Log;
+
 /**
  * Created by socomo20 on 8/12/15.
  */
@@ -34,6 +36,13 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
 
 					if(OTPConfirmScreen.OTP_SCREEN_OPEN != null) {
 						Intent otpConfirmScreen = new Intent(context, OTPConfirmScreen.class);
+						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						otpConfirmScreen.putExtra("sender_num", senderNum);
+						otpConfirmScreen.putExtra("message", message);
+						context.startActivity(otpConfirmScreen);
+					}
+					else if(PhoneNoOTPConfirmScreen.OTP_SCREEN_OPEN != null) {
+						Intent otpConfirmScreen = new Intent(context, PhoneNoOTPConfirmScreen.class);
 						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						otpConfirmScreen.putExtra("sender_num", senderNum);
 						otpConfirmScreen.putExtra("message", message);

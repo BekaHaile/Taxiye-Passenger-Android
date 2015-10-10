@@ -460,13 +460,20 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
         @Override
         public void onClick(final View v) {
             new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.smoothScrollTo(0, buttonEmailLogin.getTop());
-                }
-            }, 200);
-        }
-    };
+				@Override
+				public void run() {
+					scrollView.smoothScrollTo(0, buttonEmailLogin.getTop());
+				}
+			}, 200);
+			try {
+				if(v.getId() == R.id.editTextEmail) {
+					((AutoCompleteTextView) v).showDropDown();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	    };
 
 
 
@@ -484,10 +491,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			Log.e("Google Play Service Error ","="+resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashLogin.this);
 		}
-		else{
-			DialogPopup.showLocationSettingsAlert(SplashLogin.this);
-		}
-		
+
 		HomeActivity.checkForAccessTokenChange(this);
 	}
 	
@@ -568,7 +572,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
 			params.put("client_id", Config.getClientId());
-			
+
 
 			Log.i("email", emailId);
 			Log.i("password", password);
@@ -583,7 +587,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			Log.i("longitude", ""+Data.longitude);
 			Log.i("client_id", Config.getClientId());
 			
-		
+			String url = Config.getServerUrl() + "/login_using_email_or_phone_no";
+
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/login_using_email_or_phone_no", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -624,6 +629,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                                         }
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
+										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 										otpErrorMsg = jObj.getString("error");
 										otpFlag = 0;
 										sendToOtpScreen = true;
@@ -695,7 +701,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("latitude", ""+Data.latitude);
 			params.put("longitude", ""+Data.longitude);
 			params.put("client_id", Config.getClientId());
-			
+
+
 
 			Log.i("user_fb_id", Data.facebookUserData.fbId);
 			Log.i("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
@@ -714,7 +721,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			Log.i("longitude", ""+Data.longitude);
 			Log.i("client_id", Config.getClientId());
 			
-			
+			String url = Config.getServerUrl() + "/login_using_facebook";
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/login_using_facebook", params,
@@ -750,6 +757,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
+										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 										otpErrorMsg = jObj.getString("error");
 										otpFlag = 1;
 										sendToOtpScreen = true;
@@ -799,13 +807,11 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			
 			@Override
 			public void onClick(View v) {
+				DialogPopup.dismissAlertPopup();
 				if(0 == otpFlag){
 					RegisterScreen.facebookLogin = false;
 					OTPConfirmScreen.intentFromRegister = false;
 					OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "", accessToken);
-					startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
-					finish();
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 				else if(1 == otpFlag){
 					RegisterScreen.facebookLogin = true;
@@ -816,10 +822,12 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                         Data.facebookUserData.userEmail,
                         Data.facebookUserData.userName,
                         phoneNoOfUnverifiedAccount, "", "", accessToken);
-					startActivity(new Intent(SplashLogin.this, OTPConfirmScreen.class));
-					finish();
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
+				Intent intent = new Intent(SplashLogin.this, OTPConfirmScreen.class);
+				intent.putExtra("show_timer", 0);
+				startActivity(intent);
+				finish();
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 	}

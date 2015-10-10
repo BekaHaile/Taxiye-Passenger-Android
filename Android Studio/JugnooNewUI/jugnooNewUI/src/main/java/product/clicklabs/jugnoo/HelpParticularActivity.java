@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
@@ -15,7 +14,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -28,6 +26,8 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import rmn.androidscreenlibrary.ASSL;
 
 public class HelpParticularActivity extends BaseActivity {
@@ -38,7 +38,7 @@ public class HelpParticularActivity extends BaseActivity {
     ImageView imageViewBack;
     TextView textViewTitle;
 
-    ProgressBar progressBar;
+    ProgressWheel progressBar;
     TextView textViewInfo;
     WebView webview;
 
@@ -59,7 +59,7 @@ public class HelpParticularActivity extends BaseActivity {
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressWheel) findViewById(R.id.progressBar);
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
         textViewInfo.setTypeface(Fonts.latoRegular(this));
         webview = (WebView) findViewById(R.id.webview);
@@ -115,7 +115,7 @@ public class HelpParticularActivity extends BaseActivity {
             }
             loadingFinished = false;
             view.loadUrl(urlNewString);
-            Log.e("shouldOverrideUrlLoading", "urlNewString="+urlNewString);
+            Log.e("shouldOverrideUrlLoading", "urlNewString=" + urlNewString);
             return true;
         }
 
@@ -203,7 +203,7 @@ public class HelpParticularActivity extends BaseActivity {
 
 
     /**
-     * ASync for get rides from server
+     * ASync for fetching information for supplied section
      */
     public void getFareDetailsAsync(final Activity activity) {
         if (fetchHelpDataClient == null) {

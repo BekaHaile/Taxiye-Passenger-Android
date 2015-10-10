@@ -32,6 +32,13 @@
                 android:src="@drawable/back_white_selector" />
         </RelativeLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:layout_below="@+id/topBar"
+        />
+
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
@@ -52,7 +59,7 @@
 
                 <RatingBar
                     android:id="@+id/ratingBarFeedback"
-                    style="@style/RatingBarAuto"
+                    style="@style/YellowRatingBarNew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -140,7 +147,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
                     android:layout_marginBottom="40px"
-                    android:background="@drawable/button_yellow_selector"
+                    android:background="@drawable/button_yellow"
                     android:text="SUBMIT"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="@dimen/button_text_size" />

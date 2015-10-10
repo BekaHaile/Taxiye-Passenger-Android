@@ -38,6 +38,12 @@
                 android:src="@drawable/back_white_selector" />
         </RelativeLayout>
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:background="@drawable/shadow_down"
+            />
+
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
@@ -160,13 +166,14 @@
                     android:id="@+id/editTextMessage"
                     android:layout_width="match_parent"
                     android:layout_height="310px"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
-                    android:layout_marginTop="50px"
-                    android:background="@drawable/background_white_rounded"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="40px"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/dropshadow_grey"
                     android:gravity="left"
                     android:hint="You have already created 2 accounts from this device. Please explain the reason for creating a new account."
-                    android:padding="20px"
+                    android:padding="25px"
                     android:scrollbars="vertical"
                     android:textSize="24px"
                     android:textColor="@color/black_text"
@@ -194,7 +201,7 @@
                     android:layout_height="100px"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
-                    android:background="@drawable/button_yellow_selector"
+                    android:background="@drawable/button_yellow"
                     android:text="SUBMIT REQUEST"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="@dimen/button_text_size" />

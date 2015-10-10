@@ -8,7 +8,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -16,6 +15,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -177,8 +179,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			if(loc != null){
 				return loc.getLatitude();
 			}
-		} catch(Exception e){
-            Log.e("e", "=" + e.toString());}
+		} catch(Exception e){Log.e("e", "=" + e.toString());}
 		return getSavedLatFromSP(context);
 	}
 	
@@ -191,21 +192,24 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			if(loc != null){
 				return loc.getLongitude();
 			}
-		} catch(Exception e){
-            Log.e("e", "=" + e.toString());}
+		} catch(Exception e){Log.e("e", "=" + e.toString());}
 		return getSavedLngFromSP(context);
 	}
 	
 	public Location getLocation(){
 		try{
 			if(location != null){
-				return location;
+				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
+					return location;
+				}
 			}
 			else{
 				if(googleApiClient != null && googleApiClient.isConnected()){
 					location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 					Log.e("last fused location", "=" + location);
-					return location;
+					if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
+						return location;
+					}
 				}
 			}
 		} catch(Exception e){e.printStackTrace();}
@@ -281,9 +285,11 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		try{
 			if(location!=null){
 				Log.i("loc chanfged ----******", "=" + location);
-				this.location = location;
-				locationUpdate.onLocationChanged(location, priority);
-				saveLatLngToSP(location.getLatitude(), location.getLongitude());
+				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
+					this.location = location;
+					locationUpdate.onLocationChanged(location, priority);
+					saveLatLngToSP(location.getLatitude(), location.getLongitude());
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
