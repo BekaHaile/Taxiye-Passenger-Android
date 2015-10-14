@@ -103,6 +103,7 @@
             android:layout_gravity="center_horizontal"
             android:src="@color/black_translucent"/>
 
+
         <LinearLayout
             android:id="@+id/linearLayoutWaiting"
             android:layout_width="match_parent"

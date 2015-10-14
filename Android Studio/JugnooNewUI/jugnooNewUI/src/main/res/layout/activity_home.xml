@@ -79,6 +79,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="4px"
+
                         android:background="@drawable/shadow_down"
                         android:rotation="180"
                         android:layout_above="@+id/relativeLayoutRequestInfo"
@@ -503,6 +504,7 @@
                 </RelativeLayout>
 
                 <!-- assigning layout -->
+
                 <RelativeLayout
                     android:id="@+id/assigningLayout"
                     android:layout_width="match_parent"
@@ -515,6 +517,7 @@
                     >
 
                     <!-- finding driver layout-->
+
                     <RelativeLayout
                         android:id="@+id/relativeLayoutAssigningInfo"
                         android:layout_width="match_parent"
@@ -1066,7 +1069,7 @@
                 android:background="@color/white_translucent"
                 android:orientation="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutSearchBar"
@@ -1130,6 +1133,23 @@
                         android:tag="mwar"/>
 
                 </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/textViewAddFav"
+                    android:layout_width="match_parent"
+                    android:layout_height="100px"
+                    android:text="Add to Favrouite"
+                    android:layout_marginRight="20px"
+                    android:layout_marginLeft="20px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:tag="mwar"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/background_wallet_border"
+                    android:drawableRight="@drawable/edit_icon_small"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textSize="30px"/>
 
                 <ScrollView
                     android:layout_width="match_parent"

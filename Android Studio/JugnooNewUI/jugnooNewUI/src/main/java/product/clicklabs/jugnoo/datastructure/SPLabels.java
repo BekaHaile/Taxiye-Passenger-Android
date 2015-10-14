@@ -26,8 +26,11 @@ public class SPLabels {
     BRANCH_EMAIL_LINK = "branchEmailLink",
 
 
-	SUPPORT_CONTACT = "supportContact"
-
+	SUPPORT_CONTACT = "supportContact",
+    ADD_HOME = "Home",
+    ADD_WORK = "Work",
+    ADD_GYM = "Gym",
+    ADD_FRIEND = "Friend"
 
             ;
 
