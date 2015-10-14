@@ -60,6 +60,7 @@ public class GCMIntentService extends GcmListenerService {
             builder.setContentText(message);
             builder.setTicker(message);
 
+
             if (ring) {
                 builder.setLights(Color.GREEN, 500, 500);
             } else {
@@ -131,6 +132,8 @@ public class GCMIntentService extends GcmListenerService {
         }
 
     }
+
+
 
 
     @SuppressWarnings("deprecation")
@@ -273,6 +276,8 @@ public class GCMIntentService extends GcmListenerService {
 
 
 
+
+
     public static void clearNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
@@ -392,6 +397,7 @@ public class GCMIntentService extends GcmListenerService {
 								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
 							}
 
+
 						}
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
@@ -440,49 +446,49 @@ public class GCMIntentService extends GcmListenerService {
 		}
     }
 
+    private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
 
-	private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
+        private Bitmap bitmap = null;
+        private String message, picture;
+        private int deepindex;
 
-		private Bitmap bitmap = null;
-		private String message, picture;
-		private int deepindex;
+        public BigImageNotifAsync(String message, int deepindex, String picture){
+            this.deepindex = deepindex;
+            this.picture = picture;
+            this.message = message;
+        }
 
-		public BigImageNotifAsync(String message, int deepindex, String picture){
-			this.deepindex = deepindex;
-			this.picture = picture;
-			this.message = message;
-		}
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            try {
+                URL url = new URL(picture);
+                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
-		@Override
-		protected Bitmap doInBackground(String... params) {
-			try {
-				URL url = new URL(picture);
-				bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-			}catch (Exception e){
-				e.printStackTrace();
-			}
+            return bitmap;
+        }
 
-			return bitmap;
-		}
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            // execution of result of Long time consuming operation
+            try {
+                notificationManagerCustomIDWithBitmap(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
+            }catch (Exception e){
+                e.printStackTrace();
+                notificationManagerCustomID(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex);
+            }
 
-		@Override
-		protected void onPostExecute(Bitmap result) {
-			// execution of result of Long time consuming operation
-			try {
-				notificationManagerCustomIDWithBitmap(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
-			}catch (Exception e){
-				e.printStackTrace();
-				notificationManagerCustomID(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex);
-			}
+        }
 
-		}
+        @Override
+        protected void onPreExecute() {
+            // Things to be done before execution of long running operation. For
+            // example showing ProgessDialog
+        }
+    }
 
-		@Override
-		protected void onPreExecute() {
-			// Things to be done before execution of long running operation. For
-			// example showing ProgessDialog
-		}
-	}
 
 
 }
