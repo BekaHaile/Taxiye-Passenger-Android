@@ -523,7 +523,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 	public void getDeviceToken() {
-		if(Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){
+		if(ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){
 			DialogPopup.alertPopupTwoButtonsWithListeners(SplashNewActivity.this, "", "You need to uninstall Jugnoo Drivers App first to use this app", "Uninstall", "Cancel",
 					new View.OnClickListener() {
 						@Override

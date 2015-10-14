@@ -143,12 +143,12 @@ public class HelpParticularActivity extends BaseActivity {
 
         }
 
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler,
-                                       SslError error) {
-            Log.e("onReceivedSslError", "error=" + error);
-            handler.proceed();
-        }
+//        @Override
+//        public void onReceivedSslError(WebView view, SslErrorHandler handler,
+//                                       SslError error) {
+//            Log.e("onReceivedSslError", "error=" + error);
+//            handler.proceed();
+//        }
 
         @Override
         public void onLoadResource(WebView view, String url) {
