@@ -267,7 +267,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
-	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
+	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue, textViewAddFav;
     Button buttonEndRideOk;
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
 
@@ -284,7 +284,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     DecimalFormat decimalFormat = new DecimalFormat("#.#");
     DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 
-    LatLng lastSearchLatLng;
+    LatLng lastSearchLatLng, lastRefreshLatLng;
 
     static double totalDistance = -1;
 
@@ -335,6 +335,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 2000, WAIT_FOR_ACCURACY_LOWER_BOUND = 200;  //in meters
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
+    public static final double MIN_DISTANCE_FOR_REFRESH = 400; // in meters
 
     public static final float MAX_ZOOM = 15;
 
@@ -775,17 +776,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         listViewSearch = (NonScrollListView) findViewById(R.id.listViewSearch);
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
+        textViewAddFav = (TextView)findViewById(R.id.textViewAddFav);
         linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
+            @Override
+            public void keyboardOpened() {
 
-			}
+            }
 
-			@Override
-			public void keyBoardClosed() {
+            @Override
+            public void keyBoardClosed() {
 
-			}
-		}));
+            }
+        }));
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78),
             new SearchListActionsHandler() {
@@ -794,6 +796,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				public void onTextChange(String text) {
 					if(text.length() > 0){
 						imageViewSearchCross.setVisibility(View.VISIBLE);
+                        if((Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) ||
+                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) ||
+                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) ||
+                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase(""))){
+                            textViewAddFav.setVisibility(View.VISIBLE);
+                        }else{
+                            textViewAddFav.setVisibility(View.GONE);
+                        }
 					}
 					else{
 						imageViewSearchCross.setVisibility(View.GONE);
@@ -843,7 +853,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         listViewSearch.setAdapter(searchListAdapter);
 
-
+        textViewAddFav.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(HomeActivity.this,AddFavouritePlaces.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
 
 
 
@@ -1030,18 +1047,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
         // menu events
         linearLayoutProfile.setOnClickListener(new OnClickListener() {
 
@@ -1143,21 +1148,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // Customer initial layout events
         imageViewRideNow.setOnClickListener(new OnClickListener() {
@@ -1418,33 +1408,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         //Search Layout Events
         linearLayoutSearch.setOnClickListener(new OnClickListener() {
 
@@ -1468,15 +1431,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				editTextSearch.setText("");
 			}
 		});
-
-
-
-
-
-
-
-
-
 
 
         // customer request final layout events
@@ -1553,13 +1507,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				editTextFinalDropLocation.setText("");
 			}
 		});
-
-
-
-
-
-
-
 
 
         // End ride review layout events
@@ -1724,10 +1671,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapSettled() {
                     // Map settled
-                    callMapTouchedRefreshDrivers();
-					if(!zoomedForSearch && map != null){
-						getPickupAddress(map.getCameraPosition().target);
-					}
+                    boolean refresh = false;
+                    if(lastRefreshLatLng == null){
+                        lastRefreshLatLng = map.getCameraPosition().target;
+                        refresh = true;
+                    }
+                    else{
+                        Log.v("Min Difference is = ","---> "+MapUtils.distance(lastRefreshLatLng, map.getCameraPosition().target));
+//                        textViewNearestDriverETA
+                        if(MapUtils.distance(lastRefreshLatLng, map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
+                            lastRefreshLatLng = map.getCameraPosition().target;
+                            refresh = true;
+                        }
+                    }
+                    if(refresh) {
+                        callMapTouchedRefreshDrivers();
+
+                    }
+                    if (!zoomedForSearch && map != null) {
+                        getPickupAddress(map.getCameraPosition().target);
+                    }
                 }
             };
 
@@ -1855,6 +1818,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     jugnooShopImageView.setImageResource(R.drawable.gift_button_selector);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
             jugnooShopImageView.setVisibility(View.GONE);
@@ -2021,6 +1985,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             try {
                 Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewProfile);
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
             updateLowJugnooCashBanner(passengerScreenMode);
@@ -2175,10 +2140,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         try {
                             pickupLocationMarker.remove();
                         } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         try {
                             driverLocationMarker.remove();
                         } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
 
@@ -2736,6 +2703,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(imageViewInRideDriver);
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
@@ -2743,6 +2711,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new CircleTransform()).into(imageViewInRideDriverCar);
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -2812,20 +2781,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public static boolean checkIfUserDataNull(Activity activity) {
@@ -4276,19 +4231,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return markerOptions;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     void callAnAutoPopup(final Activity activity, LatLng pickupLatLng) {
         try {
 
@@ -4404,10 +4346,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
-
-
-
 
     /**
      * Displays popup to rate the app

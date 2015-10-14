@@ -703,7 +703,7 @@
         android:layout_marginBottom="30px"
         android:layout_below="@+id/linearLayoutReceipt"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_yellow_selector"
+        android:background="@drawable/button_yellow"
         android:text="OK"
         android:textColor="@drawable/text_color_white_alpha_selector"
         android:textSize="@dimen/button_text_size"/>

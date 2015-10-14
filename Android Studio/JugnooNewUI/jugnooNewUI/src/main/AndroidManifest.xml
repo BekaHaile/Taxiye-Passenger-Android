@@ -227,9 +227,19 @@
             android:name="product.clicklabs.jugnoo.HelpParticularActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
+                </activity>
+
+        <activity
+            android:name="product.clicklabs.jugnoo.AddPlaceActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
-        
-        
+
+        <activity
+            android:name="product.clicklabs.jugnoo.AddFavouritePlaces"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
             
             
             

@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Address"
+            android:singleLine="true"
             android:textColor="@color/grey_dark"
             android:textSize="26px"
             android:layout_marginTop="10px"
