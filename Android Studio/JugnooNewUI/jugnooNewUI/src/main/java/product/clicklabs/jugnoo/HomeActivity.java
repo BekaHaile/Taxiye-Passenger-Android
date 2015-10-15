@@ -2054,6 +2054,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void switchPassengerScreen(PassengerScreenMode mode) {
         try {
+			promoOpened = false;
+
             imageViewMenu.setVisibility(View.VISIBLE);
             imageViewBack.setVisibility(View.GONE);
 
@@ -2197,7 +2199,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
                         linearLayoutSearch.setVisibility(View.GONE);
-                        requestFinalLayout.setVisibility(View.GONE);
+						requestFinalLayout.setVisibility(View.GONE);
                         if (Data.userData != null && Data.userData.canChangeLocation == 1) {
                             centreLocationRl.setVisibility(View.VISIBLE);
                             relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
@@ -2206,7 +2208,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             relativeLayoutInitialSearchBar.setVisibility(View.GONE);
                         }
 
-                        textViewNearestDriverETA.setText("Finding nearby drivers...");
+						textViewNearestDriverETA.setText("Finding nearby drivers...");
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
 
@@ -2215,7 +2217,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
                         linearLayoutPromo.setVisibility(View.GONE);
-                        promoOpened = false;
 
                         setFareFactorToInitialState();
 
@@ -2850,8 +2851,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (activityResumed) {
                     if (!feedbackSkipped && !promoOpened) {
 						callAndHandleStateRestoreAPI(false);
-                        initiateTimersForStates(passengerScreenMode);
                     }
+					initiateTimersForStates(passengerScreenMode);
 
                     if (!intentFired) {
                         if (userMode == UserMode.PASSENGER &&

@@ -360,6 +360,13 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 								String message = JSONParser.getServerMessage(jObj);
 								int flag = jObj.getInt("flag");
 								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+									try {
+										if(Data.userData != null){
+											Data.userData.jugnooBalance = jObj.optDouble("wallet_balance", Data.userData.jugnooBalance);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
 									DialogPopup.alertPopupWithListener(activity, "", message, new OnClickListener() {
 										@Override
 										public void onClick(View v) {
