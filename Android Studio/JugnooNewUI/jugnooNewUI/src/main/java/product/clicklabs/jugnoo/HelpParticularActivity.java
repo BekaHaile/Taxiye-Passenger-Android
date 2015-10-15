@@ -3,12 +3,10 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -143,12 +141,12 @@ public class HelpParticularActivity extends BaseActivity {
 
         }
 
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler,
-                                       SslError error) {
-            Log.e("onReceivedSslError", "error=" + error);
-            handler.proceed();
-        }
+//        @Override
+//        public void onReceivedSslError(WebView view, SslErrorHandler handler,
+//                                       SslError error) {
+//            Log.e("onReceivedSslError", "error=" + error);
+//            handler.proceed();
+//        }
 
         @Override
         public void onLoadResource(WebView view, String url) {
