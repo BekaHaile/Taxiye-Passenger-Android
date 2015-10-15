@@ -77,8 +77,8 @@ public class ReferralActions implements FlurryEventNames {
 
                 ((TextView) dialog.findViewById(R.id.textViewGiftGet)).setTypeface(Fonts.latoRegular(activity));
                 ((TextView) dialog.findViewById(R.id.textViewInviteFriends)).setTypeface(Fonts.latoRegular(activity));
-                TextView textViewAmount = (TextView) dialog.findViewById(R.id.textViewAmount);
-                textViewAmount.setTypeface(Fonts.latoRegular(activity));
+                TextView textViewAmount = (TextView) dialog.findViewById(R.id.textViewAmount); textViewAmount.setTypeface(Fonts.latoRegular(activity));
+				textViewAmount.setText(Data.referralMessages.referralPopupText);
                 ((TextView) dialog.findViewById(R.id.textViewShareCodeToday)).setTypeface(Fonts.latoRegular(activity));
 
 
