@@ -375,7 +375,13 @@
 
 
         <activity
-            android:name=".JugnooLineActivity"
+            android:name="product.clicklabs.jugnoo.JugnooLineActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".wallet.PaymentWebViewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>

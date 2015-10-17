@@ -189,23 +189,59 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
             @Override
             public void onClick(View v) {
-                paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+//                paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+//
+//                    .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
+//                    .hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+//                        .getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+//                    .commit();
+//                FlurryEventLogger.event(ADDING_JUGNOO_CASH);
+//
+//                try {
+//                    listViewTransactions.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            scrollView.smoothScrollTo(0, 0);
+//                        }
+//                    }, 100);
+//
+//            }catch(Exception e) {}
 
-                    .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
-                    .hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-                        .getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                    .commit();
-                FlurryEventLogger.event(ADDING_JUGNOO_CASH);
 
-                try {
-                    listViewTransactions.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            scrollView.smoothScrollTo(0, 0);
-                        }
-                    }, 100);
+				//WalletAddPaymentFragment
+//                homeActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+//                    .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
+//                    .hide(homeActivity.getSupportFragmentManager().findFragmentByTag(homeActivity.getSupportFragmentManager()
+//                        .getBackStackEntryAt(homeActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+//                    .commit();
+//
+//                try {
+//                    listViewTransactions.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            scrollView.smoothScrollTo(0, 0);
+//                        }
+//                    }, 100);
+//
+//            }catch(Exception e) {}
+//
 
-            }catch(Exception e) {}
+				paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+						.add(R.id.fragLayout, new DemoFragment(), "DemoFragment").addToBackStack("DemoFragment")
+						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+						.commit();
+
+				try {
+					listViewTransactions.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							scrollView.smoothScrollTo(0, 0);
+						}
+					}, 100);
+
+				}catch(Exception e) {}
+
 
 
 
