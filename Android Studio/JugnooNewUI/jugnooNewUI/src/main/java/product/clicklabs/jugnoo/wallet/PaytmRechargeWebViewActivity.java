@@ -26,7 +26,7 @@ import java.net.URLEncoder;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 
-public class PaymentWebViewActivity extends FragmentActivity {
+public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
     private WebView webView;
     boolean cancelTransaction = false;
@@ -43,7 +43,7 @@ public class PaymentWebViewActivity extends FragmentActivity {
         }
 
 
-        setContentView(R.layout.activity_payment_webview);
+        setContentView(R.layout.activity_paytm_recharge_webview);
 
         webView = (WebView) findViewById(com.payu.sdk.R.id.webview);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -183,10 +183,10 @@ public class PaymentWebViewActivity extends FragmentActivity {
 			//https://jugnoo.in/paytm/wallet/success.php
 			//https://jugnoo.in/paytm/wallet/failure.php
 			if("https://jugnoo.in/paytm/wallet/success.php".equalsIgnoreCase(url)){
-				Toast.makeText(PaymentWebViewActivity.this, "Transaction complete", Toast.LENGTH_SHORT).show();
+				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction complete", Toast.LENGTH_SHORT).show();
 				finish();
 			} else if("https://jugnoo.in/paytm/wallet/failure.php".equalsIgnoreCase(url)){
-				Toast.makeText(PaymentWebViewActivity.this, "Transaction failed", Toast.LENGTH_SHORT).show();
+				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction failed", Toast.LENGTH_SHORT).show();
 				finish();
 			}
 		} catch (Exception e) {

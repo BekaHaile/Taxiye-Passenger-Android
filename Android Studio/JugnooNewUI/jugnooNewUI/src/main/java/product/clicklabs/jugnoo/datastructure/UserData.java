@@ -5,7 +5,7 @@ public class UserData {
 	public int canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, enableJugnooMeals,
 		freeRideIconDisable;
 	public int emailVerificationStatus;
-	public double jugnooBalance;
+	public double jugnooBalance, paytmBalance;
 	public int numCouponsAvaliable;
 	public double fareFactor;
 	public double sharingFareFixed;

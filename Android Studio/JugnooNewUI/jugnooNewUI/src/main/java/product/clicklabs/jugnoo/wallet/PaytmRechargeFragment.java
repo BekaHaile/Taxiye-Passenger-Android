@@ -41,7 +41,7 @@ import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class DemoFragment extends Fragment {
+public class PaytmRechargeFragment extends Fragment {
 
     LinearLayout relative;
 
@@ -64,7 +64,6 @@ public class DemoFragment extends Fragment {
     LinearLayout linearLayoutMain;
     boolean scrolled = false;
 
-    //public static AddPaymentPath addPaymentPath = AddPaymentPath.FROM_WALLET;
 
     @Override
     public void onStart() {
@@ -83,25 +82,20 @@ public class DemoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         HomeActivity.checkForAccessTokenChange(getActivity());
-        //editTextAmount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
-
 		startBalanceUpdater();
     }
 
 	@Override
 	public void onPause() {
 		super.onPause();
-
 		stopBalanceUpdater();
 	}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_spare, container, false);
+        rootView = inflater.inflate(R.layout.fragment_paytm_recharge, container, false);
 
 		paymentActivity = (PaymentActivity) getActivity();
-
-
 
 
         relative = (LinearLayout) rootView.findViewById(R.id.relative);
@@ -253,7 +247,7 @@ public class DemoFragment extends Fragment {
      * Method used to remove fragment from stack
      */
     public void performBackPressed() {
-        getActivity().getSupportFragmentManager().popBackStack ("WalletAddPaymentFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+        getActivity().getSupportFragmentManager().popBackStack ("PaytmRechargeFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
     }
 
 
@@ -282,19 +276,8 @@ public class DemoFragment extends Fragment {
 				Log.i("request succesfull", "response = " + response);
 				try {
 					Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
-
 					JSONObject res = new JSONObject(response.toString());
-//                    int flag = res.getInt("flag");
-//
-//
-//                    if (!SplashScreen.checkIfTrivialAPIErrors(paymentActivity, res)) {
-//                        Log.d("res", "result res = " + res.toString());
-//
-//
-//                        Log.d("Data.storedataList", "Data.storedataList = " + Data.storedataList.size());
-//                        LoadingBox.dismissLoadingDialog();
-//
-//                    }
+
 				} catch (Exception e) {
 					DialogPopup.dismissLoadingDialog();
 					e.printStackTrace();
@@ -335,19 +318,7 @@ public class DemoFragment extends Fragment {
                     Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
 
                     JSONObject res = new JSONObject(response.toString());
-//                    int flag = res.getInt("flag");
-//
-//
-//                    if (!SplashScreen.checkIfTrivialAPIErrors(paymentActivity, res)) {
-//                        Log.d("res", "result res = " + res.toString());
-//
-//
-//                        Log.d("Data.storedataList", "Data.storedataList = " + Data.storedataList.size());
-//                        LoadingBox.dismissLoadingDialog();
-//
-//
-//
-//                    }
+
                 } catch (Exception e) {
 					DialogPopup.dismissLoadingDialog();
                     e.printStackTrace();
@@ -389,9 +360,7 @@ public class DemoFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
 				progress.setVisibility(View.GONE);
-
             }
 
             @Override
@@ -425,12 +394,9 @@ public class DemoFragment extends Fragment {
 
                     JSONObject res1 = new JSONObject(response.toString());
                     JSONObject res = res1.getJSONObject("data");
-//                    JSONObject res = new JSONObject("data");
 
                     Log.e("datavalue", "dataVal1 = "+res.toString());
-
                     String jData = res.toString();
-
 
                     Params requiredParams = new Params();
                     requiredParams.put("MID", ""+res.getString("MID"));
@@ -444,38 +410,15 @@ public class DemoFragment extends Fragment {
                     requiredParams.put("CHECKSUMHASH", ""+res.getString("CHECKSUMHASH"));
                     requiredParams.put("CUST_ID", ""+res.getString("CUST_ID"));
 
-
                     String postData = "";
 
                     for (String key : requiredParams.keySet()) {
-//                        if(key.contentEquals(PayU.SURL) || key.contentEquals(PayU.FURL)){ // encode only ulrs
-//                            postData += key + "=" + URLEncoder.encode(requiredParams.get(key), "UTF-8") + "&";
-//                        }else{
                             postData += key + "=" + requiredParams.get(key) + "&";
-//                        }
                     }
-
-
-                    Log.e("datavalue", "dataVal1 = "+postData);
-
-//
-//
-//                    String dataValue = requiredParams.toString();
-
-
-//                    HashMap<String, Integer> companyDetails = new HashMap<String, Integer>();
-//
-//                    // create hashmap with keys and values (CompanyName, #Employees)
-//                    companyDetails.put("eBay", 4444);
-//                    companyDetails.put("Paypal", 5555);
-//                    companyDetails.put("IBM", 6666);
-//                    companyDetails.put("Google", 7777);
-//                    companyDetails.put("Yahoo", 8888);
-
-                    Log.e("datavalue", "dataVal1 = "+jData);
+                    Log.e("datavalue", "postData = "+postData);
+                    Log.e("datavalue", "jData = "+jData);
 
                     openWebView(postData);
-
 
                 } catch (Exception e) {
 					DialogPopup.dismissLoadingDialog();
@@ -517,68 +460,11 @@ public class DemoFragment extends Fragment {
 				try {
 					Toast.makeText(paymentActivity, "res = "+response, Toast.LENGTH_SHORT).show();
 
-					JSONObject res1 = new JSONObject(response.toString());
-					JSONObject res = res1.getJSONObject("data");
-//                    JSONObject res = new JSONObject("data");
-
-					Log.e("datavalue", "dataVal1 = "+res.toString());
-
-					String jData = res.toString();
-
-
-					Params requiredParams = new Params();
-					requiredParams.put("MID", ""+res.getString("MID"));
-					requiredParams.put("REQUEST_TYPE", ""+res.getString("REQUEST_TYPE"));
-					requiredParams.put("ORDER_ID", ""+res.getString("ORDER_ID"));
-					requiredParams.put("TXN_AMOUNT", ""+res.getString("TXN_AMOUNT"));
-					requiredParams.put("CHANNEL_ID", ""+res.getString("CHANNEL_ID"));
-					requiredParams.put("INDUSTRY_TYPE_ID", ""+res.getString("INDUSTRY_TYPE_ID"));
-					requiredParams.put("WEBSITE", ""+res.getString("WEBSITE"));
-					requiredParams.put("SSO_TOKEN", ""+res.getString("SSO_TOKEN"));
-					requiredParams.put("CHECKSUMHASH", ""+res.getString("CHECKSUMHASH"));
-					requiredParams.put("CUST_ID", ""+res.getString("CUST_ID"));
-
-
-					String postData = "";
-
-					for (String key : requiredParams.keySet()) {
-//                        if(key.contentEquals(PayU.SURL) || key.contentEquals(PayU.FURL)){ // encode only ulrs
-//                            postData += key + "=" + URLEncoder.encode(requiredParams.get(key), "UTF-8") + "&";
-//                        }else{
-						postData += key + "=" + requiredParams.get(key) + "&";
-//                        }
-					}
-
-
-					Log.e("datavalue", "dataVal1 = "+postData);
-
-//
-//
-//                    String dataValue = requiredParams.toString();
-
-
-//                    HashMap<String, Integer> companyDetails = new HashMap<String, Integer>();
-//
-//                    // create hashmap with keys and values (CompanyName, #Employees)
-//                    companyDetails.put("eBay", 4444);
-//                    companyDetails.put("Paypal", 5555);
-//                    companyDetails.put("IBM", 6666);
-//                    companyDetails.put("Google", 7777);
-//                    companyDetails.put("Yahoo", 8888);
-
-					Log.e("datavalue", "dataVal1 = "+jData);
-
-					openWebView(postData);
-
-
 				} catch (Exception e) {
-					DialogPopup.dismissLoadingDialog();
 					e.printStackTrace();
 					DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 				}
-
 				DialogPopup.dismissLoadingDialog();
-
 			}
 
 			@Override
@@ -591,35 +477,11 @@ public class DemoFragment extends Fragment {
 	}
 
     private void openWebView(String jsonData) {
-//        String url = Config.getTXN_URL() + "paytm/wallet/add_money?JsonData="+jsonData+"&access_token="+ Data.userData.accessToken +"&client_id="+ Data.CLIENT_ID+"&is_access_token_new=1";
-//        String postData = "<iframe src="+url+" ></iframe>";
-//
-//
-//        Params requiredParams = new Params();
-//        requiredParams.put("MID", "Socomo56207867201243");
-//        requiredParams.put("REQUEST_TYPE", "ADD_MONEY");
-//        requiredParams.put("ORDER_ID", "73911552");
-//        requiredParams.put("TXN_AMOUNT", "dhgajs");
-//        requiredParams.put("CHANNEL_ID", "dhgajs");
-//        requiredParams.put("INDUSTRY_TYPE_ID", "dhgajs");
-//        requiredParams.put("WEBSITE", "dhgajs");
-//        requiredParams.put("SSO_TOKEN", "dhgajs");
-//        requiredParams.put("CHECKSUMHASH", "dhgajs");
-
-
-//        String postData = jsonData.replaceAll("\"", "\\\\\"");
-
-//        Log.e("datavalue", "dataVal1 = "+postData);
-
         String jData = "JsonData=\""+jsonData.toString()+"\"";
-
         Log.e("jData", "jData = "+jData);
 
-
-        Intent intent = new Intent(paymentActivity, PaymentWebViewActivity.class);
+        Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
         intent.putExtra(Constants.POST_DATA, jsonData);
-
-
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
@@ -658,10 +520,6 @@ public class DemoFragment extends Fragment {
 			e.printStackTrace();
 		}
 	}
-
-
-
-
 
 
 }

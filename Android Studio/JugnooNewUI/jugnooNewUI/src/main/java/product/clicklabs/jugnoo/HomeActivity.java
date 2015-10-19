@@ -148,8 +148,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutInvite;
     TextView textViewInvite;
 
-    RelativeLayout relativeLayoutJugnooCash;
-    TextView textViewJugnooCash, textViewJugnooCashValue;
+    RelativeLayout relativeLayoutWallet;
+    TextView textViewWallet, textViewWalletValue;
 
     RelativeLayout relativeLayoutPromotions;
     TextView textViewPromotions, textViewPromotionsValue;
@@ -459,11 +459,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInvite = (TextView) findViewById(R.id.textViewInvite);
         textViewInvite.setTypeface(Fonts.latoRegular(this));
 
-        relativeLayoutJugnooCash = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooCash);
-        textViewJugnooCash = (TextView) findViewById(R.id.textViewJugnooCash);
-        textViewJugnooCash.setTypeface(Fonts.latoRegular(this));
-        textViewJugnooCashValue = (TextView) findViewById(R.id.textViewJugnooCashValue);
-        textViewJugnooCashValue.setTypeface(Fonts.latoRegular(this));
+        relativeLayoutWallet = (RelativeLayout) findViewById(R.id.relativeLayoutWallet);
+        textViewWallet = (TextView) findViewById(R.id.textViewWallet);
+        textViewWallet.setTypeface(Fonts.latoRegular(this));
+        textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
+        textViewWalletValue.setTypeface(Fonts.latoRegular(this));
 
         relativeLayoutPromotions = (RelativeLayout) findViewById(R.id.relativeLayoutPromotions);
         textViewPromotions = (TextView) findViewById(R.id.textViewPromotions);
@@ -1154,7 +1154,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        relativeLayoutJugnooCash.setOnClickListener(new OnClickListener() {
+        relativeLayoutWallet.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -2125,7 +2125,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				textViewNotificationValueMenu.setVisibility(View.GONE);
 			}
 
-            textViewJugnooCashValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
+            textViewWalletValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
 
             Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
             try {
@@ -3100,7 +3100,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				relativeLayoutInvite.performClick();
 			}
 			else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutJugnooCash.performClick();
+				relativeLayoutWallet.performClick();
 			}
 			else if(AppLinkIndex.PROMOTIONS.getOrdinal() == Data.deepLinkIndex){
 				relativeLayoutPromotions.performClick();

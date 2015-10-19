@@ -335,41 +335,6 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
             }
         }));
 
-
-        final View activityRootView = rootView.findViewById(R.id.linearLayoutMain);
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                // r will be populated with the coordinates of your view
-                // that area still visible.
-                activityRootView.getWindowVisibleDisplayFrame(r);
-
-                int heightDiff = activityRootView.getRootView().getHeight() - (r.bottom - r.top);
-                if (heightDiff > 100) { // if more than 100 pixels, its
-                    // probably a keyboard...
-
-                    /************** Adapter for the parent List *************/
-
-                    ViewGroup.LayoutParams params_12 = textViewScroll.getLayoutParams();
-
-                    params_12.height = (int) (heightDiff);
-
-                    textViewScroll.setLayoutParams(params_12);
-                    textViewScroll.requestLayout();
-
-                } else {
-
-                    ViewGroup.LayoutParams params = textViewScroll.getLayoutParams();
-                    params.height = 0;
-                    textViewScroll.setLayoutParams(params);
-                    textViewScroll.requestLayout();
-
-                }
-            }
-        });
-
         homeActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		return rootView;
