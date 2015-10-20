@@ -257,6 +257,15 @@ public class PaytmRechargeFragment extends Fragment {
 
 		paymentActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+
+		try{
+			if(Data.userData != null){
+				textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
 		return rootView;
 	}
 
@@ -413,12 +422,19 @@ public class PaytmRechargeFragment extends Fragment {
 						JSONObject res = new JSONObject(response.toString());
 						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
 
-						String balance = res.optString("WALLETBALANCE", "0");
-						if (Data.userData != null) {
-							Data.userData.paytmBalance = Double.parseDouble(balance);
+						if(res.optString("STATUS", "INACTIVE").equalsIgnoreCase("ACTIVE")){
+							String balance = res.optString("WALLETBALANCE", "0");
+							if (Data.userData != null) {
+								Data.userData.paytmBalance = Double.parseDouble(balance);
+								Data.userData.paytmActiveStatus = 1;
+							}
+							textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee) + " " + balance);
 						}
-						textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee) + " " + balance);
-
+						else{
+							Data.userData.paytmActiveStatus = 0;
+							Data.userData.paytmBalance = 0;
+							textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee) + " " + Data.userData.paytmBalance);
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -561,7 +577,7 @@ public class PaytmRechargeFragment extends Fragment {
 			try {
 				if (balanceUpdaterRunning == 1) {
 					getBalance();
-					handlerBalanceUpdater.postDelayed(runnableBalanceUpdater, 20000);
+//					handlerBalanceUpdater.postDelayed(runnableBalanceUpdater, 20000);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

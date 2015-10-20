@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ViewGroup;
 
 import com.payu.sdk.ClearFragment;
 import com.payu.sdk.Constants;
@@ -25,6 +26,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
+import rmn.androidscreenlibrary.ASSL;
 
 /**
  * Created by socomo30 on 7/8/15.
@@ -56,6 +58,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
+		new ASSL(this, (ViewGroup) findViewById(R.id.mainHomelayout), 1134, 720, false);
         
         ProcessPaymentActivity.clearFrag = this;
 

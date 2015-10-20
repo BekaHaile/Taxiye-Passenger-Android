@@ -10,6 +10,7 @@ public class UserData {
 	public double fareFactor;
 	public double sharingFareFixed;
 	public int showJugnooSharing;
+	public int paytmActiveStatus;
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 

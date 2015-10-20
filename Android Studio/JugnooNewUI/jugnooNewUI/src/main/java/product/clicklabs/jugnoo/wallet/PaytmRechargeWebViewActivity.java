@@ -183,10 +183,10 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 			//https://jugnoo.in/paytm/wallet/success.php
 			//https://jugnoo.in/paytm/wallet/failure.php
 			if("https://jugnoo.in/paytm/wallet/success.php".equalsIgnoreCase(url)){
-				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction complete", Toast.LENGTH_SHORT).show();
+				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction complete", Toast.LENGTH_LONG).show();
 				finish();
 			} else if("https://jugnoo.in/paytm/wallet/failure.php".equalsIgnoreCase(url)){
-				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction failed", Toast.LENGTH_SHORT).show();
+				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction failed", Toast.LENGTH_LONG).show();
 				finish();
 			}
 		} catch (Exception e) {

@@ -76,10 +76,12 @@
 
                     <ImageView
                         android:id="@+id/imageViewJugnooCashIcon"
-                        android:layout_width="50px"
-                        android:layout_height="50px"
+                        android:layout_width="52px"
+                        android:layout_height="52px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
+                        android:tag="mwar"
+                        android:src="@drawable/ic_current_balance"
                         />
 
                     <TextView
@@ -112,7 +114,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/yellow"
+                        android:background="@color/yellow_alpha"
                         />
 
 
@@ -142,7 +144,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="Paytm Wallet"
-                        android:textColor="@color/bg_grey_opaque"
+                        android:textColor="@drawable/text_color_bg_grey_alpha_selector"
                         android:textSize="30px"
                         android:layout_toRightOf="@+id/imageViewPaytmIcon"
                         android:layout_marginLeft="20px"
@@ -178,7 +180,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/yellow"
+                        android:background="@color/yellow_alpha"
                         />
 
                 </RelativeLayout>
@@ -218,7 +220,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/yellow"
+                        android:background="@color/yellow_alpha"
                         />
 
                 </RelativeLayout>
@@ -246,8 +248,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="Paytm Wallet"
-                        android:textColor="@color/bg_grey_opaque"
+                        android:text="Add Paytm Wallet"
+                        android:textColor="@drawable/text_color_bg_grey_alpha_selector"
                         android:textSize="30px"
                         android:layout_toRightOf="@+id/imageViewAddPaytmIcon"
                         android:layout_marginLeft="20px"
@@ -258,7 +260,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/yellow"
+                        android:background="@color/yellow_alpha"
                         />
 
                 </RelativeLayout>
@@ -308,7 +310,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:background="@color/yellow"
+                    android:background="@color/yellow_alpha"
                     />
 
 
