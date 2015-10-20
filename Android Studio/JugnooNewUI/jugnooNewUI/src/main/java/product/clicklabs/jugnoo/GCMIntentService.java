@@ -26,6 +26,7 @@ import java.net.URL;
 
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
 
 public class GCMIntentService extends GcmListenerService {
@@ -396,9 +397,21 @@ public class GCMIntentService extends GcmListenerService {
 							else{
 								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
 							}
-
-
 						}
+
+                        // store push in database for notificaion center screen...
+                        String pushArrived = DateOperations.getCurrentTimeInUTC();
+                        if(jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
+                            Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"),
+                                    jObj.getString("timeTillDisplay"), jObj.getString("image"));
+                            Log.v("Notification count is = ", "--> " + Database2.getInstance(this).getAllNotificationCount());
+                            Log.v("current Time in UTC", "---> " + DateOperations.getCurrentTimeInUTC());
+                        }else if(jObj.has("timeToDisplay")){
+                            Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", jObj.getString("image"));
+                        }else if(jObj.has("timeTillDisplay")){
+                            Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), jObj.getString("image"));
+                        }
+
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
 						double balance = jObj.getDouble("balance");

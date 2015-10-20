@@ -161,6 +161,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutAbout;
     TextView textViewAbout;
 
+    RelativeLayout relativeLayoutNotification;
+    TextView textViewNotification;
+
 
     //Top RL
     RelativeLayout topRl;
@@ -454,6 +457,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
         textViewAbout.setTypeface(Fonts.latoRegular(this));
+
+        relativeLayoutNotification = (RelativeLayout) findViewById(R.id.relativeLayoutNotification);
+        textViewNotification = (TextView) findViewById(R.id.textViewNotification);
+        textViewNotification.setTypeface(Fonts.latoRegular(this));
 
 
         //Top RL
@@ -1153,6 +1160,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HomeActivity.this, AboutActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
+            }
+        });
+
+        relativeLayoutNotification.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
             }

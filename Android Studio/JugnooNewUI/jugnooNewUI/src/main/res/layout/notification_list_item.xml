@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_light_grey"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="659px"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    
+    <ImageView
+        android:id="@+id/notification_image"
+        android:layout_width="match_parent"
+        android:layout_height="533px"
+        android:layout_marginTop="40px"
+        android:src="@drawable/jugnoo_icon"
+        android:tag="mwar"/>
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="94px"-->
+        <!--android:background="#f4f3f3"-->
+        <!--android:gravity="center_vertical">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/code_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="17px"-->
+            <!--android:textSize="30px"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:textColor="@color/notification_text_color"-->
+            <!--android:text="CODE : PAYU20"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/date_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingRight="17px"-->
+            <!--android:textSize="30px"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:textColor="@color/notification_text_color"-->
+            <!--android:text="DATE : 13 AUG, 2015"/>-->
+
+    <!--</RelativeLayout>-->
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="asdfasfdas"
+            android:textSize="32px"
+            android:paddingTop="32px"
+            android:paddingBottom="32px"
+            android:paddingLeft="17px"
+            android:paddingRight="17px"
+            android:background="@color/white"
+            android:textColor="@color/notification_text_color"/>
+    </LinearLayout>
+</LinearLayout>
