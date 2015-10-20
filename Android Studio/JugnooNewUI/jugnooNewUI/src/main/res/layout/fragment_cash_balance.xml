@@ -53,7 +53,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/rupeeLogoView"
+            android:id="@+id/imageViewRupeeLogo"
             android:layout_width="83px"
             android:layout_height="83px"
             android:layout_marginTop="36px"
@@ -63,7 +63,7 @@
 
 
         <TextView
-            android:id="@+id/dropTextView"
+            android:id="@+id/textViewAddCashHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -86,7 +86,7 @@
                 />
 
             <ImageView
-                android:id="@+id/rupeeIconView"
+                android:id="@+id/imageViewRupeeIcon"
                 android:layout_width="36px"
                 android:layout_height="40px"
                 android:layout_marginLeft="43px"
@@ -152,7 +152,7 @@
                 />
 
         <TextView
-            android:id="@+id/textViewHelp"
+            android:id="@+id/textViewAddCash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -181,7 +181,7 @@
             android:layout_marginTop="54px">
 
             <Button
-                android:id="@+id/button100"
+                android:id="@+id/buttonAmount1"
                 android:layout_width="176px"
                 android:layout_height="64px"
                 android:layout_gravity="center_horizontal"
@@ -195,7 +195,7 @@
 
 
             <Button
-                android:id="@+id/button200"
+                android:id="@+id/buttonAmount2"
                 android:layout_width="176px"
                 android:layout_height="64px"
                 android:layout_gravity="center_horizontal"
@@ -208,7 +208,7 @@
 
 
             <Button
-                android:id="@+id/button500"
+                android:id="@+id/buttonAmount3"
                 android:layout_width="176px"
                 android:layout_height="64px"
                 android:layout_gravity="center_horizontal"

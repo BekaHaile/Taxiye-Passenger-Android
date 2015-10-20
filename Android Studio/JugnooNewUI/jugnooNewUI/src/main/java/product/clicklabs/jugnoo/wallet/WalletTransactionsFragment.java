@@ -51,6 +51,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	TextView textViewTitle;
 
 	//Transactions List vars
+	TextView textViewRecentTransactions;
 	ProgressWheel progressBar;
 	ListView listViewTransactions;
 	TransactionListAdapter transactionListAdapter;
@@ -96,6 +97,9 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
+
+		textViewRecentTransactions = (TextView) rootView.findViewById(R.id.textViewRecentTransactions);
+		textViewRecentTransactions.setTypeface(Fonts.latoRegular(paymentActivity));
 		
 		listViewTransactions = (ListView) rootView.findViewById(R.id.listViewTransactions);
 
@@ -181,10 +185,11 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		else{
 			if(transactionInfoList.size() == 0){
 				relativeLayoutShowMore.setVisibility(View.GONE);
-				//TODO zero transactions case
+				textViewRecentTransactions.setText("No transactions currently");
 			}
 			else{
 				relativeLayoutShowMore.setVisibility(View.VISIBLE);
+				textViewRecentTransactions.setText("Recent Transactions");
 			}
 			transactionListAdapter.notifyDataSetChanged();
 		}

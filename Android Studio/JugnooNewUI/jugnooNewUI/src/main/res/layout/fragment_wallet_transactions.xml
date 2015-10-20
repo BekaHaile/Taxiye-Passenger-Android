@@ -43,6 +43,18 @@
         android:layout_below="@+id/topBar"
         android:splitMotionEvents="false">
 
+        <TextView
+            android:id="@+id/textViewRecentTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:textSize="34px"
+            android:textColor="@color/grey_black_light"
+            android:gravity="center_vertical"
+            android:text="Recent Transactions"
+            android:paddingLeft="30px"
+            />
+
+
         <ListView
             android:id="@+id/listViewTransactions"
             android:layout_width="match_parent"
@@ -51,6 +63,7 @@
             android:dividerHeight="0px"
             android:listSelector="@drawable/background_transparent"
             android:splitMotionEvents="false"
+            android:layout_below="@+id/textViewRecentTransactions"
             >
         </ListView>
 
