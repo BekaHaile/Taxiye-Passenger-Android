@@ -255,6 +255,8 @@ public class AddPaytmFragment extends Fragment {
 
 						JSONObject res = new JSONObject(response.toString());
 
+						paymentActivity.getBalance(AddPaytmFragment.class.getName());
+
 					} catch (Exception e) {
 						DialogPopup.dismissLoadingDialog();
 						e.printStackTrace();

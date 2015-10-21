@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.wallet;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-
-import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
@@ -24,12 +19,9 @@ import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
@@ -72,18 +64,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
         FlurryAgent.onEndSession(paymentActivity);
     }
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-        HomeActivity.checkForAccessTokenChange(paymentActivity);
-		startBalanceUpdater();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		stopBalanceUpdater();
-	}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -201,6 +181,12 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			if(Data.userData != null){
 				textViewJugnooCashBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
 				textViewPaytmBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
+				if(Data.userData.paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+					showPaytmActiveUI();
+				}
+				else{
+					showPaytmInactiveUI();
+				}
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -209,6 +195,42 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
         return rootView;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		try{
+			if(Data.userData != null){
+				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
+				if(Data.userData.paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+					showPaytmActiveUI();
+				}
+				else{
+					showPaytmInactiveUI();
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		HomeActivity.checkForAccessTokenChange(paymentActivity);
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			paymentActivity.getBalance(WalletFragment.class.getName());
+		}
+	}
+
+	private void showPaytmActiveUI(){
+		relativeLayoutPaytm.setVisibility(View.VISIBLE);
+		relativeLayoutAddPaytm.setVisibility(View.GONE);
+	}
+
+	private void showPaytmInactiveUI(){
+		relativeLayoutPaytm.setVisibility(View.GONE);
+		relativeLayoutAddPaytm.setVisibility(View.VISIBLE);
+	}
 
 
     @Override
@@ -220,99 +242,15 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 
     public void updateStatus(String status, String amountValue) {
-        try{
-                String payment = status;
-                if("success".equalsIgnoreCase(payment)){
-                    String amount = amountValue;
-					new DialogPopup().dialogBanner(paymentActivity, "Payment successful, Added Rs. " + amount);
-                }
-        } catch(Exception e){
+        try {
+			String payment = status;
+			if ("success".equalsIgnoreCase(payment)) {
+				String amount = amountValue;
+				new DialogPopup().dialogBanner(paymentActivity, "Payment successful, Added Rs. " + amount);
+			}
+		} catch(Exception e){
             e.printStackTrace();
         }
     }
 
-	private void getBalance() {
-		if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-			progressBarWallet.setVisibility(View.VISIBLE);
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("client_id", Config.getClientId());
-			params.put("is_access_token_new", "1");
-
-			AsyncHttpClient client = Data.getClient();
-
-			client.post(Config.getTXN_URL() + "paytm/wallet/check_balance", params, new CustomAsyncHttpResponseHandler() {
-
-				@Override
-				public void onSuccess(String response) {
-					Log.i("request succesfull", "response = " + response);
-					try {
-						JSONObject res = new JSONObject(response.toString());
-						if(res.optString("STATUS", "INACTIVE").equalsIgnoreCase("ACTIVE")){
-							String balance = res.optString("WALLETBALANCE", "0");
-							if (Data.userData != null) {
-								Data.userData.paytmBalance = Double.parseDouble(balance);
-								Data.userData.paytmActiveStatus = 1;
-							}
-							textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee) + " " + balance);
-						}
-						else{
-							Data.userData.paytmActiveStatus = 0;
-							Data.userData.paytmBalance = 0;
-							textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee) + " " + Data.userData.paytmBalance);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					progressBarWallet.setVisibility(View.GONE);
-				}
-
-				@Override
-				public void onFailure(Throwable arg0) {
-					Log.e("request fail", arg0.toString());
-					progressBarWallet.setVisibility(View.GONE);
-				}
-			});
-		}
-	}
-
-
-	private int balanceUpdaterRunning = 0;
-	private Handler handlerBalanceUpdater = new Handler();
-	private Runnable runnableBalanceUpdater = new Runnable() {
-		@Override
-		public void run() {
-			try {
-				if(balanceUpdaterRunning == 1){
-					getBalance();
-//					handlerBalanceUpdater.postDelayed(runnableBalanceUpdater, 20000);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	};
-
-	private void startBalanceUpdater(){
-		try {
-			balanceUpdaterRunning = 1;
-			handlerBalanceUpdater.postDelayed(runnableBalanceUpdater, 1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	private void stopBalanceUpdater(){
-		try {
-			balanceUpdaterRunning = 0;
-			handlerBalanceUpdater.removeCallbacks(runnableBalanceUpdater);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	
-	
 }

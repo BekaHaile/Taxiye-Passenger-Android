@@ -1855,6 +1855,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 
+
+		getPaytmBalance();
     }
 
 	private void hideMenuDrawer(){
@@ -5254,8 +5256,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                                 nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-                                nameValuePairs.add(new BasicNameValuePair("latitude", "" + Data.pickupLatLng.latitude));
-                                nameValuePairs.add(new BasicNameValuePair("longitude", "" + Data.pickupLatLng.longitude));
+//                                nameValuePairs.add(new BasicNameValuePair("latitude", "" + Data.pickupLatLng.latitude));
+//                                nameValuePairs.add(new BasicNameValuePair("longitude", "" + Data.pickupLatLng.longitude));
+
+								//30.7500, 76.7800
+								nameValuePairs.add(new BasicNameValuePair("latitude", "30.7500"));
+								nameValuePairs.add(new BasicNameValuePair("longitude", "76.7800"));
+
                                 if (myLocation != null) {
                                     nameValuePairs.add(new BasicNameValuePair("current_latitude", "" + myLocation.getLatitude()));
                                     nameValuePairs.add(new BasicNameValuePair("current_longitude", "" + myLocation.getLongitude()));
@@ -5973,6 +5980,53 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				setUserData();
 			}
 		});
+	}
+
+
+	private void getPaytmBalance() {
+		try {
+			if(AppStatus.getInstance(this).isOnline(this)) {
+				DialogPopup.showLoadingDialog(this, "Loading paytm...");
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("client_id", Config.getClientId());
+				params.put("is_access_token_new", "1");
+
+				AsyncHttpClient client = Data.getClient();
+				client.post(Config.getTXN_URL() + "paytm/wallet/check_balance", params, new CustomAsyncHttpResponseHandler() {
+					@Override
+					public void onSuccess(String response) {
+						Log.i("request succesfull", "response = " + response);
+						try {
+							JSONObject res = new JSONObject(response.toString());
+							if (Data.userData != null) {
+								String paytmStatus = res.optString("STATUS", "INACTIVE");
+								if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+									String balance = res.optString("WALLETBALANCE", "0");
+									Data.userData.paytmBalance = Double.parseDouble(balance);
+									Data.userData.paytmStatus = paytmStatus;
+								} else {
+									Data.userData.paytmStatus = paytmStatus;
+									Data.userData.paytmBalance = 0;
+								}
+							}
+							Toast.makeText(HomeActivity.this, ""+res.toString(), Toast.LENGTH_LONG).show();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void onFailure(Throwable arg0) {
+						Log.e("request fail", arg0.toString());
+						DialogPopup.dismissLoadingDialog();
+					}
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 

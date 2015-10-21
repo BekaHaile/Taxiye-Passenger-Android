@@ -83,19 +83,6 @@ public class PaytmRechargeFragment extends Fragment {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		HomeActivity.checkForAccessTokenChange(getActivity());
-		startBalanceUpdater();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		stopBalanceUpdater();
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_paytm_recharge, container, false);
 
@@ -227,13 +214,11 @@ public class PaytmRechargeFragment extends Fragment {
 			}
 		});
 
-		imageViewRupeeLogo.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				getBalance();
-			}
-		});
+//		imageViewRupeeLogo.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//			}
+//		});
 
 		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
 			@Override
@@ -260,7 +245,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 		try{
 			if(Data.userData != null){
-				textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
+				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -269,6 +254,19 @@ public class PaytmRechargeFragment extends Fragment {
 		return rootView;
 	}
 
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		try{
+			if(Data.userData != null){
+				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		HomeActivity.checkForAccessTokenChange(getActivity());
+	}
 
 	/**
 	 * Method used to hide keyboard if outside touched.
@@ -402,53 +400,7 @@ public class PaytmRechargeFragment extends Fragment {
 		}
 	}
 
-	private void getBalance() {
-		if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-			progressWheel.setVisibility(View.VISIBLE);
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("client_id", Config.getClientId());
-			params.put("is_access_token_new", "1");
 
-
-			AsyncHttpClient client = Data.getClient();
-
-			client.post(Config.getTXN_URL() + "paytm/wallet/check_balance", params, new CustomAsyncHttpResponseHandler() {
-
-				@Override
-				public void onSuccess(String response) {
-					Log.i("request succesfull", "response = " + response);
-					try {
-						JSONObject res = new JSONObject(response.toString());
-						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
-
-						if(res.optString("STATUS", "INACTIVE").equalsIgnoreCase("ACTIVE")){
-							String balance = res.optString("WALLETBALANCE", "0");
-							if (Data.userData != null) {
-								Data.userData.paytmBalance = Double.parseDouble(balance);
-								Data.userData.paytmActiveStatus = 1;
-							}
-							textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee) + " " + balance);
-						}
-						else{
-							Data.userData.paytmActiveStatus = 0;
-							Data.userData.paytmBalance = 0;
-							textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee) + " " + Data.userData.paytmBalance);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					progressWheel.setVisibility(View.GONE);
-				}
-
-				@Override
-				public void onFailure(Throwable arg0) {
-					Log.e("request fail", arg0.toString());
-					progressWheel.setVisibility(View.GONE);
-				}
-			});
-		}
-	}
 
 	private void addBalance(String amount) {
 		if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
@@ -568,40 +520,6 @@ public class PaytmRechargeFragment extends Fragment {
 		startActivity(intent);
 	}
 
-
-	private int balanceUpdaterRunning = 0;
-	private Handler handlerBalanceUpdater = new Handler();
-	private Runnable runnableBalanceUpdater = new Runnable() {
-		@Override
-		public void run() {
-			try {
-				if (balanceUpdaterRunning == 1) {
-					getBalance();
-//					handlerBalanceUpdater.postDelayed(runnableBalanceUpdater, 20000);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	};
-
-	private void startBalanceUpdater() {
-		try {
-			balanceUpdaterRunning = 1;
-			handlerBalanceUpdater.postDelayed(runnableBalanceUpdater, 1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void stopBalanceUpdater() {
-		try {
-			balanceUpdaterRunning = 0;
-			handlerBalanceUpdater.removeCallbacks(runnableBalanceUpdater);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 }

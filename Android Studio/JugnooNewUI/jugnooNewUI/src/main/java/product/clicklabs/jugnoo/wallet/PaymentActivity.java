@@ -2,8 +2,12 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.view.View;
 import android.view.ViewGroup;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
 import com.payu.sdk.ClearFragment;
 import com.payu.sdk.Constants;
 import com.payu.sdk.GetResponseTask;
@@ -13,6 +17,7 @@ import com.payu.sdk.ProcessPaymentActivity;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -23,7 +28,10 @@ import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
@@ -72,7 +80,6 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
                 .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
                 .commitAllowingStateLoss();
         }
-        
     }
 
 
@@ -231,7 +238,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
     public void fetchStoredCards() {
         List<NameValuePair> postParams = null;
         HashMap varList = new HashMap();
-        Log.e("PayU.userCredentials", "PayU.userCredentials = "+PayU.userCredentials);
+        Log.e("PayU.userCredentials", "PayU.userCredentials = " + PayU.userCredentials);
         varList.put(Constants.VAR1, PayU.userCredentials); // this will return the storedCards as well
 
 
@@ -296,7 +303,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
     @Override
     public void onGetResponse(String responseMessage) {
 
-        Log.e("responseMessage", "responseMessage = "+responseMessage);
+        Log.e("responseMessage", "responseMessage = " + responseMessage);
         AddJugnooCashFragment frag = (AddJugnooCashFragment) getSupportFragmentManager().findFragmentByTag("AddJugnooCashFragment");
         if(responseMessage != null) {
 
@@ -322,4 +329,106 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 
         }
     }
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		HomeActivity.checkForAccessTokenChange(this);
+		try {
+			if (Data.userData.paytmStatus.equalsIgnoreCase("")) {
+				getBalance("");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+
+	public void getBalance(final String fragName) {
+		try {
+			if(AppStatus.getInstance(this).isOnline(this)) {
+				DialogPopup.showLoadingDialog(this, "Loading...");
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("client_id", Config.getClientId());
+				params.put("is_access_token_new", "1");
+
+				AsyncHttpClient client = Data.getClient();
+				client.post(Config.getTXN_URL() + "paytm/wallet/check_balance", params, new CustomAsyncHttpResponseHandler() {
+					@Override
+					public void onSuccess(String response) {
+						Log.i("request succesfull", "response = " + response);
+						try {
+							JSONObject res = new JSONObject(response.toString());
+							if (Data.userData != null) {
+								String paytmStatus = res.optString("STATUS", "INACTIVE");
+								if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+									String balance = res.optString("WALLETBALANCE", "0");
+									Data.userData.paytmBalance = Double.parseDouble(balance);
+									Data.userData.paytmStatus = paytmStatus;
+								} else {
+									Data.userData.paytmStatus = paytmStatus;
+									Data.userData.paytmBalance = 0;
+								}
+							}
+
+							try {
+								Fragment currFrag = getSupportFragmentManager().findFragmentByTag("WalletFragment");
+								if(currFrag != null){
+									currFrag.onResume();
+								}
+								currFrag = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
+								if(currFrag != null){
+									currFrag.onResume();
+								}
+								currFrag = getSupportFragmentManager().findFragmentByTag("AddPaytmFragment");
+								if(currFrag != null){
+									if(fragName.equalsIgnoreCase(AddPaytmFragment.class.getName())) {
+										((AddPaytmFragment) currFrag).performBackPressed();
+									}
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+						} catch (Exception e) {
+							e.printStackTrace();
+							retryDialog(Data.SERVER_ERROR_MSG, fragName);
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void onFailure(Throwable arg0) {
+						Log.e("request fail", arg0.toString());
+						DialogPopup.dismissLoadingDialog();
+						retryDialog(Data.SERVER_NOT_RESOPNDING_MSG, fragName);
+					}
+				});
+			} else{
+				retryDialog(Data.CHECK_INTERNET_MSG, fragName);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void retryDialog(String message, final String fragName){
+		DialogPopup.alertPopupTwoButtonsWithListeners(PaymentActivity.this, "", message, "Retry", "Cancel",
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						getBalance(fragName);
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						finish();
+						overridePendingTransition(R.anim.left_in, R.anim.left_out);
+					}
+				}, false, false);
+	}
+
 }
