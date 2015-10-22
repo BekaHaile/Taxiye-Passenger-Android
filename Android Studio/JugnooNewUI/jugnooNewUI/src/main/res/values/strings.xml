@@ -173,6 +173,7 @@
 	
 	<string name="check_all">Check All</string>
 	<string name="uncheck_all">Uncheck All</string>
+	<string name="ride_request_text">GET A RIDE</string>
 
 
     <!-- wallet screen-->

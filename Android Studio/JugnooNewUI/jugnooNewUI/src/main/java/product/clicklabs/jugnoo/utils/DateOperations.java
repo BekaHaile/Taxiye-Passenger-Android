@@ -282,6 +282,18 @@ public class DateOperations {
 		return 60000;
 	}
 
+	/*public static long getTimeInMillis(String time){
+		long millis;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date date = format.parse(time);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return millis;
+	}*/
+
     public static long getTimeDifference(long time1, long time2){
         try {
             Date date1 = new Date(time1);
@@ -294,7 +306,7 @@ public class DateOperations {
         return 60000;
     }
 	
-	public long getMilliseconds(String time1){
+	public static long getMilliseconds(String time1){
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(time1);
