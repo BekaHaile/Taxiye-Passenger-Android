@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +16,8 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
-import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
 /**
@@ -50,34 +50,56 @@ public class NotificationCenterActivity extends BaseActivity {
 //        Log.v("Date in timemillis first", "--> " + DateOperations.getCurrentTimeInUTC());
 //        Log.v("Date in timemillis ", "--> " + DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC()));
 
-        getAllNotification();
 
+		notificationList = new ArrayList<>();
+		myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this, R.layout.notification_list_item);
+		recyclerViewNotification.setAdapter(myNotificationAdapter);
 
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performBackPressed();
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				performBackPressed();
+			}
+		});
 
-        textViewTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Database2.getInstance(NotificationCenterActivity.this).deleteNotificationTable();
+//        textViewTitle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Database2.getInstance(NotificationCenterActivity.this).deleteNotificationTable();
+//            }
+//        });
 
-            }
-        });
+		new GetNotificationsAsync().execute();
+
     }
 
-    public void getAllNotification(){
+	class GetNotificationsAsync extends AsyncTask<String, String, String>{
 
-        notificationList = new ArrayList<>();
-        notificationList.addAll(Database2.getInstance(NotificationCenterActivity.this).getAllNotification());
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			DialogPopup.showLoadingDialog(NotificationCenterActivity.this, "Loading...");
+		}
 
-        myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this, R.layout.notification_list_item);
-        recyclerViewNotification.setAdapter(myNotificationAdapter);
-    }
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				notificationList.clear();
+				notificationList.addAll(Database2.getInstance(NotificationCenterActivity.this).getAllNotification());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return "";
+		}
+
+		@Override
+		protected void onPostExecute(String s) {
+			super.onPostExecute(s);
+			DialogPopup.dismissLoadingDialog();
+			myNotificationAdapter.notifyDataSetChanged();
+		}
+	}
 
     public void performBackPressed(){
         Intent intent=new Intent();
@@ -85,4 +107,17 @@ public class NotificationCenterActivity extends BaseActivity {
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
+
+
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
+	}
+
+	@Override
+	protected void onDestroy() {
+		ASSL.closeActivity(root);
+		super.onDestroy();
+		System.gc();
+	}
 }
