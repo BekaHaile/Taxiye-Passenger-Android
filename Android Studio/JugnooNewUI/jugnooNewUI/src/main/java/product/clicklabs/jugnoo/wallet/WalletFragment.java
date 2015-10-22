@@ -215,13 +215,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		HomeActivity.checkForAccessTokenChange(paymentActivity);
 	}
 
-	@Override
-	public void onHiddenChanged(boolean hidden) {
-		super.onHiddenChanged(hidden);
-		if(!hidden){
-			paymentActivity.getBalance(WalletFragment.class.getName());
-		}
-	}
+
 
 	private void showPaytmActiveUI(){
 		relativeLayoutPaytm.setVisibility(View.VISIBLE);

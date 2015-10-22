@@ -100,7 +100,7 @@ public class PaytmRechargeFragment extends Fragment {
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
 
 		imageViewRupeeLogo = (ImageView) rootView.findViewById(R.id.imageViewRupeeLogo);
-		progressWheel = (ProgressWheel) rootView.findViewById(R.id.progressWheel);
+		progressWheel = (ProgressWheel) rootView.findViewById(R.id.progressWheel); progressWheel.setVisibility(View.GONE);
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.latoRegular(paymentActivity));
 
 		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.latoRegular(paymentActivity));
@@ -223,7 +223,7 @@ public class PaytmRechargeFragment extends Fragment {
 					new Handler().postDelayed(new Runnable() {
 						@Override
 						public void run() {
-							scrollView.smoothScrollTo(0, buttonMakePayment.getTop());
+							scrollView.smoothScrollTo(0, buttonAddMoney.getTop());
 						}
 					}, 100);
 					scrolled = true;
