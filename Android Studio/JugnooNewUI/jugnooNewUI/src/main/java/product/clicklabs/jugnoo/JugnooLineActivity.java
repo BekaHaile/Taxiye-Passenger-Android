@@ -147,7 +147,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 								public void onClick(View v) {
 									editTextAutoId.setError(null);
 									makeSharingPaymentAPI(JugnooLineActivity.this, autoId);
-									if(Data.userData.jugnooBalance > 0){
+									if(Data.userData.getTotalWalletBalance() > 0){
 										FlurryEventLogger.event(JUGNOO_LINE_PAYMENT);
 									}
 									else{
@@ -174,7 +174,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 			fetchNearbyDriversAPI(JugnooLineActivity.this);
 			textViewFixedFareValue.setText(getResources().getString(R.string.rupee)+" "+ Utils.getMoneyDecimalFormat().format(Data.userData.sharingFareFixed));
 
-			if(Data.userData.jugnooBalance > 0){
+			if(Data.userData.getTotalWalletBalance() > 0){
 				buttonMakePayment.setText("PAY VIA JUGNOO CASH");
 			}
 			else{
@@ -343,7 +343,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 			params.put("money_transacted", ""+Data.userData.sharingFareFixed);
 			params.put("transaction_latitude", ""+Data.latitude);
 			params.put("transaction_longitude", ""+Data.longitude);
-			params.put("wallet_balance_before", ""+Data.userData.jugnooBalance);
+			params.put("wallet_balance_before", ""+Data.userData.getTotalWalletBalance());
 
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/end_sharing_ride", params,
@@ -368,7 +368,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 									try {
 										if(Data.userData != null){
-											Data.userData.jugnooBalance = jObj.optDouble("wallet_balance", Data.userData.jugnooBalance);
+											Data.userData.setJugnooBalance(jObj.optDouble("wallet_balance", Data.userData.getJugnooBalance()));
 										}
 									} catch (Exception e) {
 										e.printStackTrace();

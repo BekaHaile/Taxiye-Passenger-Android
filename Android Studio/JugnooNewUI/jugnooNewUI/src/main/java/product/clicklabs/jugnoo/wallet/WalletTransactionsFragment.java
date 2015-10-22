@@ -342,7 +342,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 									}
 
 									if (Data.userData != null) {
-										Data.userData.jugnooBalance = jugnooBalance;
+										Data.userData.setJugnooBalance(jugnooBalance);
 									}
 
 									updateListData("No transactions currently", false);

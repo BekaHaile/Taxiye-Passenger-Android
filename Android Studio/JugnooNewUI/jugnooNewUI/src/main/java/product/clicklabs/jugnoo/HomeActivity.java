@@ -2127,7 +2127,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				textViewNotificationValueMenu.setVisibility(View.GONE);
 			}
 
-            textViewWalletValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
+            textViewWalletValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
 
             Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
             try {
@@ -2793,7 +2793,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (Data.userData != null) {
                 if (HomeActivity.rechargedOnce) {
                     textViewInRideLowJugnooCash.setVisibility(View.GONE);
-                } else if (Data.userData.jugnooBalance < MIN_BALANCE_ALERT_VALUE) {
+                } else if (Data.userData.getTotalWalletBalance() < MIN_BALANCE_ALERT_VALUE) {
                     textViewInRideLowJugnooCash.setVisibility(View.VISIBLE);
                 } else {
                     textViewInRideLowJugnooCash.setVisibility(View.GONE);
@@ -3943,7 +3943,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                         try {
                                             if (jObj.has("jugnoo_balance")) {
-                                                Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
+                                                Data.userData.setJugnooBalance(jObj.getDouble("jugnoo_balance"));
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -5506,7 +5506,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void run() {
                 try {
                     if (Data.userData != null) {
-                        Data.userData.jugnooBalance = jugnooBalance;
+                        Data.userData.setJugnooBalance(jugnooBalance);
                         setUserData();
                     }
                     DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
@@ -6003,11 +6003,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								String paytmStatus = res.optString("STATUS", "INACTIVE");
 								if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 									String balance = res.optString("WALLETBALANCE", "0");
-									Data.userData.paytmBalance = Double.parseDouble(balance);
-									Data.userData.paytmStatus = paytmStatus;
+									Data.userData.setPaytmBalance(Double.parseDouble(balance));
+									Data.userData.setPaytmStatus(paytmStatus);
 								} else {
-									Data.userData.paytmStatus = paytmStatus;
-									Data.userData.paytmBalance = 0;
+									Data.userData.setPaytmStatus(paytmStatus);
+									Data.userData.setPaytmBalance(0);
 								}
 							}
 							Toast.makeText(HomeActivity.this, ""+res.toString(), Toast.LENGTH_LONG).show();

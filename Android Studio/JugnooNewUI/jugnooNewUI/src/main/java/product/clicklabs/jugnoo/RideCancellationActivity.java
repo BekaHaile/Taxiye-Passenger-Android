@@ -461,7 +461,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
                                     } else if (ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag) {
 
                                         if (jObj.has("jugnoo_balance")) {
-                                            Data.userData.jugnooBalance = jObj.getDouble("jugnoo_balance");
+                                            Data.userData.setJugnooBalance(jObj.getDouble("jugnoo_balance"));
                                         }
 
                                         if (HomeActivity.appInterruptHandler != null) {

@@ -23,6 +23,7 @@ import org.apache.http.util.EncodingUtils;
 
 import java.net.URLEncoder;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 
@@ -184,9 +185,11 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 			//https://jugnoo.in/paytm/wallet/failure.php
 			if("https://jugnoo.in/paytm/wallet/success.php".equalsIgnoreCase(url)){
 				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction complete", Toast.LENGTH_LONG).show();
+				Data.paytmPaymentState = 1;
 				finish();
 			} else if("https://jugnoo.in/paytm/wallet/failure.php".equalsIgnoreCase(url)){
 				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction failed", Toast.LENGTH_LONG).show();
+				Data.paytmPaymentState = 0;
 				finish();
 			}
 		} catch (Exception e) {

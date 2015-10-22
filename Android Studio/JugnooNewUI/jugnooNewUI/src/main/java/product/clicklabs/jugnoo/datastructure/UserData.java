@@ -5,12 +5,13 @@ public class UserData {
 	public int canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, enableJugnooMeals,
 		freeRideIconDisable;
 	public int emailVerificationStatus;
-	public double jugnooBalance, paytmBalance;
+	private double jugnooBalance, paytmBalance, totalWalletBalance;
 	public int numCouponsAvaliable;
 	public double fareFactor;
 	public double sharingFareFixed;
 	public int showJugnooSharing;
-	public String paytmStatus;
+	private String paytmStatus;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
@@ -47,5 +48,40 @@ public class UserData {
 		this.showJugnooSharing = showJugnooSharing;
 		this.paytmBalance = 0;
 		this.paytmStatus = "";
+		setTotalWalletBalance();
+	}
+
+	public double getJugnooBalance() {
+		return jugnooBalance;
+	}
+
+	public void setJugnooBalance(double jugnooBalance) {
+		this.jugnooBalance = jugnooBalance;
+		setTotalWalletBalance();
+	}
+
+	public double getPaytmBalance() {
+		return paytmBalance;
+	}
+
+	public void setPaytmBalance(double paytmBalance) {
+		this.paytmBalance = paytmBalance;
+		setTotalWalletBalance();
+	}
+
+	public double getTotalWalletBalance() {
+		return totalWalletBalance;
+	}
+
+	public void setTotalWalletBalance() {
+		this.totalWalletBalance = this.jugnooBalance + this.paytmBalance;
+	}
+
+	public String getPaytmStatus() {
+		return paytmStatus;
+	}
+
+	public void setPaytmStatus(String paytmStatus) {
+		this.paytmStatus = paytmStatus;
 	}
 }

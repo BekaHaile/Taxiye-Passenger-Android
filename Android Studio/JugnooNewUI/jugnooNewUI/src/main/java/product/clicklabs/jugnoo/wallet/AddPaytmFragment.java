@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.wallet;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.payu.sdk.Constants;
 
 import org.json.JSONObject;
 
@@ -276,18 +274,5 @@ public class AddPaytmFragment extends Fragment {
 			});
 		}
 	}
-
-
-
-	private void openWebView(String jsonData) {
-		String jData = "JsonData=\"" + jsonData.toString() + "\"";
-		Log.e("jData", "jData = " + jData);
-
-		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
-		intent.putExtra(Constants.POST_DATA, jsonData);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-	}
-
 
 }

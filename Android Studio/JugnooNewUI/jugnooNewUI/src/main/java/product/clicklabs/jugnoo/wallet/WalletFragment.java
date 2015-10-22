@@ -131,12 +131,13 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 			@Override
 			public void onClick(View v) {
-
-				paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-						.add(R.id.fragLayout, new PaytmRechargeFragment(), "PaytmRechargeFragment").addToBackStack("PaytmRechargeFragment")
-						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-						.commit();
+				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+					paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+							.add(R.id.fragLayout, new PaytmRechargeFragment(), "PaytmRechargeFragment").addToBackStack("PaytmRechargeFragment")
+							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+							.commit();
+				}
 
 			}
 		});
@@ -144,11 +145,13 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		relativeLayoutAddPaytm.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-						.add(R.id.fragLayout, new AddPaytmFragment(), "AddPaytmFragment").addToBackStack("AddPaytmFragment")
-						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-						.commit();
+				if(!Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+					paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+							.add(R.id.fragLayout, new AddPaytmFragment(), "AddPaytmFragment").addToBackStack("AddPaytmFragment")
+							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+							.commit();
+				}
 			}
 		});
 
@@ -166,22 +169,20 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		relativeLayoutWalletTransactions.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
 						.add(R.id.fragLayout, new WalletTransactionsFragment(), "WalletTransactionsFragment").addToBackStack("WalletTransactionsFragment")
 						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();
-
 			}
 		});
 
 
 		try{
 			if(Data.userData != null){
-				textViewJugnooCashBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
-				textViewPaytmBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
-				if(Data.userData.paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+				textViewJugnooCashBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
+				textViewPaytmBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
 				}
 				else{
@@ -200,8 +201,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		super.onResume();
 		try{
 			if(Data.userData != null){
-				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
-				if(Data.userData.paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
 				}
 				else{

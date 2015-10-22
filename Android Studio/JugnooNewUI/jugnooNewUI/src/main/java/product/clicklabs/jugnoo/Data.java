@@ -130,6 +130,8 @@ public class Data {
     public static ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	
 	public static LocationFetcher locationFetcher;
+
+	public static int paytmPaymentState = -1;
 	
 
 	public static final String DEVICE_TYPE = "0";

@@ -70,16 +70,15 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
         
         ProcessPaymentActivity.clearFrag = this;
 
-        if(AddPaymentPath.FROM_WALLET == addPaymentPath) {
+//        if(AddPaymentPath.FROM_WALLET == addPaymentPath) {
             getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragLayout, new WalletFragment(), "WalletFragment").addToBackStack("WalletFragment")
                 .commitAllowingStateLoss();
-
-        } else {
-            getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
-                .commitAllowingStateLoss();
-        }
+//        } else {
+//            getSupportFragmentManager().beginTransaction()
+//                .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
+//                .commitAllowingStateLoss();
+//        }
     }
 
 
@@ -121,7 +120,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
                         frag.updateStatus("success", enterAmount);
                     } else {
                         new DialogPopup().dialogBanner(PaymentActivity.this, "Payment successful, Added Rs. " + enterAmount);
-                        Data.userData.jugnooBalance += Double.parseDouble(enterAmount);
+                        Data.userData.setJugnooBalance(Data.userData.getJugnooBalance() + Double.parseDouble(enterAmount));
                         getSupportFragmentManager().beginTransaction()
                             .add(R.id.fragLayout, new WalletFragment(), "WalletFragment").addToBackStack("WalletFragment")
                             .commitAllowingStateLoss();
@@ -335,7 +334,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
 		try {
-			if (Data.userData.paytmStatus.equalsIgnoreCase("")) {
+			if (Data.userData.getPaytmStatus().equalsIgnoreCase("")) {
 				getBalance("");
 			}
 		} catch(Exception e){
@@ -365,11 +364,11 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 								String paytmStatus = res.optString("STATUS", "INACTIVE");
 								if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 									String balance = res.optString("WALLETBALANCE", "0");
-									Data.userData.paytmBalance = Double.parseDouble(balance);
-									Data.userData.paytmStatus = paytmStatus;
+									Data.userData.setPaytmBalance(Double.parseDouble(balance));
+									Data.userData.setPaytmStatus(paytmStatus);
 								} else {
-									Data.userData.paytmStatus = paytmStatus;
-									Data.userData.paytmBalance = 0;
+									Data.userData.setPaytmStatus(paytmStatus);
+									Data.userData.setPaytmBalance(0);
 								}
 							}
 
@@ -381,6 +380,9 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 								currFrag = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
 								if(currFrag != null){
 									currFrag.onResume();
+									if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
+										((PaytmRechargeFragment) currFrag).performBackPressed();
+									}
 								}
 								currFrag = getSupportFragmentManager().findFragmentByTag("AddPaytmFragment");
 								if(currFrag != null){

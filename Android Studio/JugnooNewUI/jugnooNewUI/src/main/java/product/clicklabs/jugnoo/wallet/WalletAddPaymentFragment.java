@@ -304,10 +304,10 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
 		
 		try{
 			try {
-			    textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+(int)Data.userData.jugnooBalance);
+			    textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+(int)Data.userData.getJugnooBalance());
             }catch(Exception e) {
                 textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee) + " "
-                        + (int) Data.userData.jugnooBalance);
+                        + (int) Data.userData.getJugnooBalance());
             }
 		} catch(Exception e){
 			e.printStackTrace();
@@ -394,10 +394,10 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
             try {
                 editTextAmount.setText("");
 
-                textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.jugnooBalance);
+                textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.getJugnooBalance());
             }catch(Exception e) {
                 textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee) + " "
-                        + (int) Data.userData.jugnooBalance);
+                        + (int) Data.userData.getJugnooBalance());
             }
             if("failure".equalsIgnoreCase(status)){
                 new DialogPopup().dialogBanner(homeActivity, ""+getResources().getString(R.string.trans_failed));

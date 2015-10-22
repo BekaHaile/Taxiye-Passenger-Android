@@ -86,6 +86,8 @@ public class PaytmRechargeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_paytm_recharge, container, false);
 
+		Data.paytmPaymentState = -1;
+
 		paymentActivity = (PaymentActivity) getActivity();
 
 
@@ -214,12 +216,6 @@ public class PaytmRechargeFragment extends Fragment {
 			}
 		});
 
-//		imageViewRupeeLogo.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//			}
-//		});
-
 		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
 			@Override
 			public void keyboardOpened() {
@@ -245,7 +241,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 		try{
 			if(Data.userData != null){
-				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
+				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -260,11 +256,25 @@ public class PaytmRechargeFragment extends Fragment {
 		super.onResume();
 		try{
 			if(Data.userData != null){
-				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.paytmBalance));
+				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+
+		try{
+			if(Data.paytmPaymentState == 1) {
+				DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
+				paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
+			}
+			else if(Data.paytmPaymentState == 0){
+				DialogPopup.dialogBanner(paymentActivity, "Transaction failed");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		Data.paytmPaymentState = -1;
+
 		HomeActivity.checkForAccessTokenChange(getActivity());
 	}
 
@@ -514,12 +524,11 @@ public class PaytmRechargeFragment extends Fragment {
 		String jData = "JsonData=\"" + jsonData.toString() + "\"";
 		Log.e("jData", "jData = " + jData);
 
+		Data.paytmPaymentState = -1;
 		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
 		intent.putExtra(Constants.POST_DATA, jsonData);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
-
-
 
 }
