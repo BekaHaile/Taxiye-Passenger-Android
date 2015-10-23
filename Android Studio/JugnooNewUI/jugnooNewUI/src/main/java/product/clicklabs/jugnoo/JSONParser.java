@@ -335,6 +335,7 @@ public class JSONParser {
             if(jObj.has("referral_email_subject")){
                 referralEmailSubject = jObj.getString("referral_email_subject");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
