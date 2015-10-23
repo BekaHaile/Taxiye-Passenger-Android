@@ -1741,8 +1741,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewNotification"
-                        android:layout_width="36px"
-                        android:layout_height="45px"
+                        android:layout_width="39px"
+                        android:layout_height="44px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
                         android:src="@drawable/fare_details_icon_selector"
