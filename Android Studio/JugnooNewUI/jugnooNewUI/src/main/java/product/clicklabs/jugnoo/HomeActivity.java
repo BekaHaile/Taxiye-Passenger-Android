@@ -813,7 +813,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) ||
                                 (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) ||
                                 (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase(""))){
-                            textViewAddFav.setVisibility(View.VISIBLE);
+                            textViewAddFav.setVisibility(View.GONE);
                         }else{
                             textViewAddFav.setVisibility(View.GONE);
                         }
@@ -2197,12 +2197,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         try {
                             pickupLocationMarker.remove();
                         } catch (Exception e) {
-                            e.printStackTrace();
                         }
                         try {
                             driverLocationMarker.remove();
                         } catch (Exception e) {
-                            e.printStackTrace();
                         }
 
 

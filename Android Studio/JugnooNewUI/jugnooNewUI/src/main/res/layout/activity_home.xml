@@ -1149,7 +1149,9 @@
                     android:drawableRight="@drawable/edit_icon_small"
                     android:singleLine="true"
                     android:textColor="@color/black_text"
-                    android:textSize="30px"/>
+                    android:textSize="30px"
+                    android:visibility="gone"
+                    />
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -1741,11 +1743,11 @@
 
                     <ImageView
                         android:id="@+id/imageViewNotification"
-                        android:layout_width="36px"
-                        android:layout_height="45px"
+                        android:layout_width="39px"
+                        android:layout_height="43px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:src="@drawable/fare_details_icon_selector"
+                        android:src="@drawable/ic_notification_center"
                         android:tag="mwar"/>
 
                     <TextView

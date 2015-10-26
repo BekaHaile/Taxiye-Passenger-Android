@@ -16,7 +16,10 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
+<<<<<<< HEAD
 import product.clicklabs.jugnoo.utils.DialogPopup;
+=======
+>>>>>>> feature_notification_center
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -108,7 +111,6 @@ public class NotificationCenterActivity extends BaseActivity {
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
-
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
@@ -120,4 +122,5 @@ public class NotificationCenterActivity extends BaseActivity {
 		super.onDestroy();
 		System.gc();
 	}
+
 }

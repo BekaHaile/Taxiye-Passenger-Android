@@ -51,6 +51,7 @@ public interface FlurryEventNames {
         SOS_ALERT_USED = "sos alert used",
         SOS_ALERT_CANCELLED = "SOS alert cancelled",
         EMERGENCY_CONTACT_TO_BE_ADDED = "Emergency contact to be added",
+			FAVORITE_LOCATION_TO_BE_ADDED = "Favorite location to be added",
         EMERGENCY_CONTACT_ADDED = "Emergency contact added",
         SOS_SMS_TO_EMERGENCY_CONTACT = "SOS SMS to Emergency contact",
         SOS_CALL_TO_EMERGENCY_CONTACT = "SOS call to Emergency Contact",
