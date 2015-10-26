@@ -309,6 +309,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     FindDriversETAAsync findDriversETAAsync;
+	String etaMinutes = "5", farAwayCity = "";
 
 
     Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker;
@@ -344,7 +345,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 2000, WAIT_FOR_ACCURACY_LOWER_BOUND = 200;  //in meters
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_REFRESH = 400; // in meters
+    public static final double MIN_DISTANCE_FOR_REFRESH = -1; // in meters
 
     public static final float MAX_ZOOM = 15;
 
@@ -1306,6 +1307,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
+				setServiceAvailablityUI(farAwayCity);
+				callMapTouchedRefreshDrivers();
 //				genieLayout.setVisibility(View.VISIBLE);
 			}
 		});
@@ -1597,11 +1600,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
             //30.7500, 76.7800
+			//22.971723, 78.754263
 
             if (0 == Data.latitude && 0 == Data.longitude) {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 14));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
+				farAwayCity = "Our service is not available in this area";
+				setServiceAvailablityUI(farAwayCity);
             } else {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), 14));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
             }
 
 
@@ -1725,7 +1731,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                     if(refresh) {
                         callMapTouchedRefreshDrivers();
-
                     }
                     if (!zoomedForSearch && map != null) {
                         getPickupAddress(map.getCameraPosition().target);
@@ -3153,8 +3158,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         LatLng destination;
 
-        String etaMinutes = "5", farAwayCity = "";
-
         public FindDriversETAAsync(LatLng destination) {
             this.destination = destination;
         }
@@ -3227,6 +3230,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (jObj.has("far_away_city")) {
                                 farAwayCity = jObj.getString("far_away_city");
                             }
+							else{
+								farAwayCity = "";
+							}
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -3249,52 +3255,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void run() {
                         try {
-                            showDriverMarkersAndPanMap(destination);
-                            dontCallRefreshDriver = true;
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dontCallRefreshDriver = false;
-                                }
-                            }, 300);
-
-                            if (!"error".equalsIgnoreCase(result)) {
-                                if (Data.driverInfos.size() == 0) {
-                                    textViewNearestDriverETA.setText("No drivers nearby");
-                                } else {
-                                    if ("1".equalsIgnoreCase(etaMinutes)) {
-                                        textViewNearestDriverETA.setText("Nearest driver is " + etaMinutes + " minute away");
-                                    } else {
-                                        textViewNearestDriverETA.setText("Nearest driver is " + etaMinutes + " minutes away");
-                                    }
-                                }
-                            } else {
-                                textViewNearestDriverETA.setText("Couldn't find drivers nearby.");
-                            }
-
 							if(relativeLayoutLocationError.getVisibility() == View.GONE) {
-								if (!"".equalsIgnoreCase(farAwayCity)) {
-									textViewNearestDriverETA.setText(farAwayCity);
-
-									imageViewRideNow.setVisibility(View.GONE);
-
-									initialMyLocationBtn.setVisibility(View.GONE);
-									changeLocalityBtn.setVisibility(View.VISIBLE);
-									initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
-
-//									genieLayout.setVisibility(View.GONE);
-
-								} else {
-									imageViewRideNow.setVisibility(View.VISIBLE);
-
-									initialMyLocationBtn.setVisibility(View.VISIBLE);
-									changeLocalityBtn.setVisibility(View.GONE);
-									initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
-
-									if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
-//										genieLayout.setVisibility(View.VISIBLE);
+								showDriverMarkersAndPanMap(destination);
+								dontCallRefreshDriver = true;
+								new Handler().postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										dontCallRefreshDriver = false;
 									}
+								}, 300);
+
+								if (!"error".equalsIgnoreCase(result)) {
+									if (Data.driverInfos.size() == 0) {
+										textViewNearestDriverETA.setText("No drivers nearby");
+									} else {
+										if ("1".equalsIgnoreCase(etaMinutes)) {
+											textViewNearestDriverETA.setText("Nearest driver is " + etaMinutes + " minute away");
+										} else {
+											textViewNearestDriverETA.setText("Nearest driver is " + etaMinutes + " minutes away");
+										}
+									}
+								} else {
+									textViewNearestDriverETA.setText("Couldn't find drivers nearby.");
 								}
+
+								setServiceAvailablityUI(farAwayCity);
 							}
 
                             setFareFactorToInitialState();
@@ -3311,6 +3296,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     }
+
+	//Our service is not available in this area
+	private void setServiceAvailablityUI(String farAwayCity){
+		if (!"".equalsIgnoreCase(farAwayCity)) {
+			textViewNearestDriverETA.setText(farAwayCity);
+
+			imageViewRideNow.setVisibility(View.GONE);
+
+			initialMyLocationBtn.setVisibility(View.GONE);
+			changeLocalityBtn.setVisibility(View.VISIBLE);
+			initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
+//									genieLayout.setVisibility(View.GONE);
+		} else {
+			imageViewRideNow.setVisibility(View.VISIBLE);
+
+			initialMyLocationBtn.setVisibility(View.VISIBLE);
+			changeLocalityBtn.setVisibility(View.GONE);
+			initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
+
+			if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
+//										genieLayout.setVisibility(View.VISIBLE);
+			}
+		}
+	}
 
 
 
@@ -3374,25 +3383,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void showDriverMarkersAndPanMap(final LatLng userLatLng) {
         try {
-            if (userMode == UserMode.PASSENGER &&
-                ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
-                    || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
-                if (map != null) {
-                    map.clear();
-                    addCurrentLocationAddressMarker(userLatLng);
-					setDropLocationMarker();
-                    for (int i = 0; i < Data.driverInfos.size(); i++) {
-                        addDriverMarkerForCustomer(Data.driverInfos.get(i));
-                    }
-                    if (!mapTouchedOnce) {
-                        zoomToCurrentLocationWithOneDriver(userLatLng);
-                        mapTouchedOnce = true;
-                    }
-                }
-            }
-            if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)) {
-                addUserCurrentLocationAddressMarker(userLatLng);
-            }
+			if("".equalsIgnoreCase(farAwayCity)) {
+				if (userMode == UserMode.PASSENGER &&
+						((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
+								|| PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
+					if (map != null) {
+						map.clear();
+						addCurrentLocationAddressMarker(userLatLng);
+						setDropLocationMarker();
+						for (int i = 0; i < Data.driverInfos.size(); i++) {
+							addDriverMarkerForCustomer(Data.driverInfos.get(i));
+						}
+						if (!mapTouchedOnce) {
+							zoomToCurrentLocationWithOneDriver(userLatLng);
+							mapTouchedOnce = true;
+						}
+					}
+				}
+			}
+			if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)) {
+				addUserCurrentLocationAddressMarker(userLatLng);
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3450,7 +3461,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void run() {
                             try {
-                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+								//TODO
+								if("".equalsIgnoreCase(farAwayCity)) {
+									map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+								}
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -3597,13 +3611,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
         callMapTouchedRefreshDrivers();
-
-//        if (userMode == UserMode.PASSENGER &&
-//            (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
-//            if (map != null && myLocation != null) {
-//                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
-//            }
-//        }
 
     }
 
@@ -4138,13 +4145,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 }
                                             }
 
-//                                            if (map != null && ridePath != null) {
-//                                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude)));
-//                                            }
-//                                            if (map != null && myLocation != null) {
-//                                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
-//                                            }
-
                                             try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
                                         }
                                     } catch (Exception e) {
@@ -4404,7 +4404,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.dropLatLng = null;
 
             //30.7500, 76.7800
-            if(Utils.compareDouble(Data.pickupLatLng.latitude, 30.7500) == 0 && Utils.compareDouble(Data.pickupLatLng.longitude, 76.7800) == 0){
+			//22.971723, 78.754263
+            if((Utils.compareDouble(Data.pickupLatLng.latitude, 30.7500) == 0 && Utils.compareDouble(Data.pickupLatLng.longitude, 76.7800) == 0)
+					||
+					(Utils.compareDouble(Data.pickupLatLng.latitude, 22.971723) == 0 && Utils.compareDouble(Data.pickupLatLng.longitude, 78.754263) == 0)){
                 myLocation = null;
                 Toast.makeText(activity, "Waiting for location...", Toast.LENGTH_SHORT).show();
                 return;
