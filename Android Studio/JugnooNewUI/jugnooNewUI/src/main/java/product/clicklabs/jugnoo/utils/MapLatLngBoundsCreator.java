@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
  */
 public class MapLatLngBoundsCreator {
 
-    public static LatLngBounds createBoundsWithMinDiagonal(LatLngBounds.Builder builder) {
+    public static LatLngBounds createBoundsWithMinDiagonal(LatLngBounds.Builder builder, double distance) {
         LatLngBounds tmpBounds = builder.build();
         /** Add 2 points 1000m northEast and southWest of the center.
          * They increase the bounds only, if they are not already larger

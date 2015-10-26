@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -30,7 +33,7 @@ import rmn.androidscreenlibrary.ASSL;
 /**
  * Created by Ankit on 10/7/15.
  */
-public class AddPlaceActivity extends BaseActivity {
+public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView imageViewBack, imageViewSearchCross;
     private LinearLayout root;
@@ -42,6 +45,8 @@ public class AddPlaceActivity extends BaseActivity {
     private Button buttonRemove;
     private String placeName;
 
+	private GoogleApiClient mGoogleApiClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,14 @@ public class AddPlaceActivity extends BaseActivity {
         setContentView(R.layout.activity_add_places);
         root = (LinearLayout) findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
+
+		mGoogleApiClient = new GoogleApiClient
+				.Builder(this)
+				.addApi(Places.GEO_DATA_API)
+				.addApi(Places.PLACE_DETECTION_API)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.build();
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         buttonRemove = (Button)findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.latoRegular(this));
@@ -105,7 +118,7 @@ public class AddPlaceActivity extends BaseActivity {
             }
         });
 
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78),
+        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
                 new SearchListActionsHandler() {
 
                     @Override
@@ -190,6 +203,18 @@ public class AddPlaceActivity extends BaseActivity {
         }
     }
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		mGoogleApiClient.connect();
+	}
+
+	@Override
+	public void onStop() {
+		mGoogleApiClient.disconnect();
+		super.onStop();
+	}
+
     public void performBackPressed(){
         Intent intent=new Intent();
         setResult(RESULT_CANCELED, intent);
@@ -208,4 +233,15 @@ public class AddPlaceActivity extends BaseActivity {
 		ASSL.closeActivity(root);
 		System.gc();
 	}
+	public void onConnected(Bundle bundle) {
+	}
+
+	@Override
+	public void onConnectionSuspended(int i) {
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+	}
+
 }

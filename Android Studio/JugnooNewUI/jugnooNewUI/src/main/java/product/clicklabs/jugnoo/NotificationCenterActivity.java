@@ -16,10 +16,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
-<<<<<<< HEAD
 import product.clicklabs.jugnoo.utils.DialogPopup;
-=======
->>>>>>> feature_notification_center
 import product.clicklabs.jugnoo.utils.Fonts;
 import rmn.androidscreenlibrary.ASSL;
 

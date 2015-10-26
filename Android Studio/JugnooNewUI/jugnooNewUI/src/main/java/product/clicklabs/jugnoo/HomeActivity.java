@@ -42,6 +42,9 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -121,7 +124,8 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
 @SuppressLint("DefaultLocale")
-public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames {
+public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
+		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     DrawerLayout drawerLayout;                                                                        // views declaration
@@ -344,6 +348,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static final float MAX_ZOOM = 15;
 
+	public static final double FIX_ZOOM_DIAGONAL = 408;
+
 
 
     public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
@@ -363,6 +369,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private GAPIAddress gapiAddressForPin;
 
+	private GoogleApiClient mGoogleApiClient;
+
 
     CallbackManager callbackManager;
 
@@ -370,6 +378,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+		mGoogleApiClient = new GoogleApiClient
+				.Builder(this)
+				.addApi(Places.GEO_DATA_API)
+				.addApi(Places.PLACE_DETECTION_API)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.build();
 
 
         FacebookSdk.sdkInitialize(this);
@@ -621,7 +638,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         }));
 
-        SearchListAdapter dropLocationAssigningSearchListAdapter = new SearchListAdapter(this, editTextAssigningDropLocation, new LatLng(30.75, 76.78),
+        SearchListAdapter dropLocationAssigningSearchListAdapter = new SearchListAdapter(this, editTextAssigningDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
             new SearchListActionsHandler() {
 
 				@Override
@@ -729,7 +746,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }));
 
 
-        SearchListAdapter dropLocationFinalSearchListAdapter = new SearchListAdapter(this, editTextFinalDropLocation, new LatLng(30.75, 76.78),
+        SearchListAdapter dropLocationFinalSearchListAdapter = new SearchListAdapter(this, editTextFinalDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
             new SearchListActionsHandler() {
 
 				@Override
@@ -802,7 +819,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         }));
 
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78),
+        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
             new SearchListActionsHandler() {
 
 				@Override
@@ -3407,7 +3424,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 boundsBuilder.include(userLatLng);
 
                 try {
-                    final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder);
+                    final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -4224,7 +4241,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         if(lastLatLng != null && Data.dropLatLng != null && !pickupDropZoomed){
                                             LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                             builder.include(lastLatLng).include(Data.dropLatLng);
-                                            LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
+                                            LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, FIX_ZOOM_DIAGONAL);
                                             float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                                             map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 2000, new GoogleMap.CancelableCallback() {
 												@Override
@@ -4281,7 +4298,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 													try {
 														if(!pickupDropZoomed) {
-															LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder);
+															LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, FIX_ZOOM_DIAGONAL);
 															float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 															map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
 															pickupDropZoomed = true;
@@ -4887,12 +4904,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         FlurryAgent.init(this, Config.getFlurryKey());
         FlurryAgent.onStartSession(this, Config.getFlurryKey());
         FlurryAgent.onEvent("HomeActivity started");
+		mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         FlurryAgent.onEndSession(this);
+		mGoogleApiClient.disconnect();
     }
 
 
@@ -5773,6 +5792,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     }
+
+	@Override
+	public void onConnected(Bundle bundle) {
+	}
+
+	@Override
+	public void onConnectionSuspended(int i) {
+
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+	}
 
 
 }
