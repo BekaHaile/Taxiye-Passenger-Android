@@ -59,6 +59,18 @@ public class AddFavouritePlaces extends BaseActivity{
 
     }
 
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ASSL.closeActivity(root);
+		System.gc();
+	}
+
     public void onClick(View v){
         Intent intent=new Intent(AddFavouritePlaces.this,AddPlaceActivity.class);
         switch (v.getId()){

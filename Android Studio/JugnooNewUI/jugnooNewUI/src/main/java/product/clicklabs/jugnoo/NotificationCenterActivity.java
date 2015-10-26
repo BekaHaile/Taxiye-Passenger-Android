@@ -15,9 +15,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
-import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import rmn.androidscreenlibrary.ASSL;
 
 /**
@@ -85,4 +83,17 @@ public class NotificationCenterActivity extends BaseActivity {
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
+
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ASSL.closeActivity(root);
+		System.gc();
+	}
+
 }

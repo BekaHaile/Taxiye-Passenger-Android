@@ -390,6 +390,9 @@ public class GCMIntentService extends GcmListenerService {
 						else {
 							int deepindex = jObj.optInt("deepindex", -1);
 							String picture = jObj.optString("picture", "");
+							if("".equalsIgnoreCase(picture)){
+								picture = jObj.optString("image", "");
+							}
 
 							if(!"".equalsIgnoreCase(picture)){
 								new BigImageNotifAsync(message1, deepindex, picture).execute();
@@ -399,18 +402,23 @@ public class GCMIntentService extends GcmListenerService {
 							}
 						}
 
-                        // store push in database for notificaion center screen...
-                        String pushArrived = DateOperations.getCurrentTimeInUTC();
-                        if(jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
-                            Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"),
-                                    jObj.getString("timeTillDisplay"), jObj.getString("image"));
-                            Log.v("Notification count is = ", "--> " + Database2.getInstance(this).getAllNotificationCount());
-                            Log.v("current Time in UTC", "---> " + DateOperations.getCurrentTimeInUTC());
-                        }else if(jObj.has("timeToDisplay")){
-                            Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", jObj.getString("image"));
-                        }else if(jObj.has("timeTillDisplay")){
-                            Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), jObj.getString("image"));
-                        }
+						try {
+							String picture = jObj.optString("image", "");
+							if("".equalsIgnoreCase(picture)){
+								picture = jObj.optString("picture", "");
+							}
+							// store push in database for notificaion center screen...
+							String pushArrived = DateOperations.getCurrentTimeInUTC();
+							if(jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
+								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
+							} else if(jObj.has("timeToDisplay")){
+								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", picture);
+							} else if(jObj.has("timeTillDisplay")){
+								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");

@@ -8,20 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -55,7 +51,7 @@ public class AddPlaceActivity extends BaseActivity {
         new ASSL(this, root, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        buttonRemove = (Button)findViewById(R.id.buttonRemove);
+        buttonRemove = (Button)findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.latoRegular(this));
         editTextSearch = (EditText) findViewById(R.id.editTextSearch);editTextSearch.setTypeface(Fonts.latoRegular(this));
 
 
@@ -186,6 +182,7 @@ public class AddPlaceActivity extends BaseActivity {
                         AutoCompleteSearchResult.class);
                 //String searchText =  searchResult.name.replaceAll("[-+.^:&]","");
                 editTextSearch.setText(searchResult.name);
+				editTextSearch.setSelection(editTextSearch.getText().length());
                 buttonRemove.setVisibility(View.VISIBLE);
             }else {
                 buttonRemove.setVisibility(View.GONE);
@@ -199,4 +196,16 @@ public class AddPlaceActivity extends BaseActivity {
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
+
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ASSL.closeActivity(root);
+		System.gc();
+	}
 }
