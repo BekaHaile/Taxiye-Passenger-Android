@@ -3461,7 +3461,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void run() {
                             try {
-								//TODO
 								if("".equalsIgnoreCase(farAwayCity)) {
 									map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
 								}
@@ -4980,6 +4979,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 
 			if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
+				farAwayCity = "";
 				zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
 			}
 			zoomedToMyLocation = true;
