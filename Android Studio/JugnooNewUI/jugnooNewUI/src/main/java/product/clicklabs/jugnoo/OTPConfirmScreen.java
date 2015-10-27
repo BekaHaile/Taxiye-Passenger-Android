@@ -468,6 +468,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
 
+				if(Utils.isDeviceRooted()){
+					params.put("device_rooted", "1");
+				}
+				else{
+					params.put("device_rooted", "0");
+				}
 
                 Log.i("params", "" + params.toString());
 
@@ -570,6 +576,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
 
+				if(Utils.isDeviceRooted()){
+					params.put("device_rooted", "1");
+				}
+				else{
+					params.put("device_rooted", "0");
+				}
 
                 Log.i("params", "" + params);
 
