@@ -2155,7 +2155,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
 						}
 
-                        textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(Math.abs(Data.endRideData.fare - Data.endRideData.discount)));
+                        textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare));
                         textViewEndRideJugnooCashValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.paidUsingWallet));
                         textViewEndRideToBePaidValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay));
 
