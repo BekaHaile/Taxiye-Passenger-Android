@@ -687,6 +687,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "" + pair.second);
 
+				if(Utils.isDeviceRooted()){
+					params.put("device_rooted", "1");
+				}
+				else{
+					params.put("device_rooted", "0");
+				}
+
 				Log.e("params login_using_access_token", "=" + params);
 
 				Log.e("Config.getServerUrl() + \"/login_using_access_token\"", "=" + Config.getServerUrl() + "/login_using_access_token");

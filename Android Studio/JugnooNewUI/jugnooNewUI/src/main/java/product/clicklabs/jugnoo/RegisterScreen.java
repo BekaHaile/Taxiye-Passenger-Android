@@ -598,6 +598,12 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             params.put("unique_device_id", Data.uniqueDeviceId);
 
 
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
 
 
             Log.i("register_using_email params", params.toString());
@@ -705,6 +711,14 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             params.put("country", Data.country);
             params.put("unique_device_id", Data.uniqueDeviceId);
             params.put("client_id", Config.getClientId());
+
+
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
 
 
             Log.e("register_using_facebook params", params.toString());

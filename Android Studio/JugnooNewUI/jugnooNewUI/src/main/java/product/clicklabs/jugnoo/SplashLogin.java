@@ -573,6 +573,13 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("longitude", ""+Data.longitude);
 			params.put("client_id", Config.getClientId());
 
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
+
 
 			Log.i("email", emailId);
 			Log.i("password", password);
@@ -702,6 +709,12 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("longitude", ""+Data.longitude);
 			params.put("client_id", Config.getClientId());
 
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
 
 
 			Log.i("user_fb_id", Data.facebookUserData.fbId);
