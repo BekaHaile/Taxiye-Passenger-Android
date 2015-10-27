@@ -26,7 +26,7 @@ import rmn.androidscreenlibrary.ASSL;
 public class NotificationCenterActivity extends BaseActivity {
 
     private LinearLayout root;
-    private TextView textViewTitle;
+    private TextView textViewTitle, textViewInfo;
     private ImageView imageViewBack;
     private RecyclerView recyclerViewNotification;
     private NotificationAdapter myNotificationAdapter;
@@ -42,6 +42,9 @@ public class NotificationCenterActivity extends BaseActivity {
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView)findViewById(R.id.imageViewBack);
+
+		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
+		textViewInfo.setVisibility(View.GONE);
 
         recyclerViewNotification = (RecyclerView) findViewById(R.id.my_request_recycler);
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(NotificationCenterActivity.this));
@@ -97,6 +100,11 @@ public class NotificationCenterActivity extends BaseActivity {
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			DialogPopup.dismissLoadingDialog();
+			if(notificationList.size() > 0){
+				textViewInfo.setVisibility(View.GONE);
+			} else{
+				textViewInfo.setVisibility(View.VISIBLE);
+			}
 			myNotificationAdapter.notifyDataSetChanged();
 		}
 	}
