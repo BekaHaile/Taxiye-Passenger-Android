@@ -293,7 +293,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     DecimalFormat decimalFormat = new DecimalFormat("#.#");
     DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 
-    LatLng lastSearchLatLng, lastRefreshLatLng;
+    LatLng lastSearchLatLng;
 
     static double totalDistance = -1;
 
@@ -1717,15 +1717,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     // Map settled
 
                     boolean refresh = false;
-                    if(lastRefreshLatLng == null){
-                        lastRefreshLatLng = map.getCameraPosition().target;
+                    if(Data.lastRefreshLatLng == null){
+                        Data.lastRefreshLatLng = map.getCameraPosition().target;
                         refresh = true;
                     }
                     else{
-                        Log.v("Min Difference is = ","---> "+MapUtils.distance(lastRefreshLatLng, map.getCameraPosition().target));
+                        Log.v("Min Difference is = ","---> "+MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target));
 //                        textViewNearestDriverETA
-                        if(MapUtils.distance(lastRefreshLatLng, map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
-                            lastRefreshLatLng = map.getCameraPosition().target;
+                        if(MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
+							Data.lastRefreshLatLng = map.getCameraPosition().target;
                             refresh = true;
                         }
                     }

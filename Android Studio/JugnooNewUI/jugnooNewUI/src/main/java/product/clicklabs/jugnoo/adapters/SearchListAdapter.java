@@ -57,7 +57,7 @@ public class SearchListAdapter extends BaseAdapter{
     ViewHolderSearchItem holder;
     EditText editTextForSearch;
     SearchListActionsHandler searchListActionsHandler;
-    LatLng searchPivotLatLng;
+    LatLng defaultSearchPivotLatLng;
 
     ArrayList<AutoCompleteSearchResult> autoCompleteSearchResultsForSearch;
     ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults;
@@ -82,7 +82,7 @@ public class SearchListAdapter extends BaseAdapter{
             this.autoCompleteSearchResultsForSearch = new ArrayList<>();
             this.autoCompleteSearchResults = new ArrayList<>();
             this.editTextForSearch = editTextForSearch;
-            this.searchPivotLatLng = searchPivotLatLng;
+            this.defaultSearchPivotLatLng = searchPivotLatLng;
             this.searchListActionsHandler = searchListActionsHandler;
 			this.mGoogleApiClient = mGoogleApiClient;
             this.editTextForSearch.addTextChangedListener(new TextWatcher() {
@@ -100,7 +100,7 @@ public class SearchListAdapter extends BaseAdapter{
                 public void afterTextChanged(Editable s) {
 					SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
                     if (s.length() > 0) {
-                        getSearchResults(s.toString().trim(), SearchListAdapter.this.searchPivotLatLng);
+                        getSearchResults(s.toString().trim(), SearchListAdapter.this.getPivotLatLng());
                     }
                     else{
                         autoCompleteSearchResultsForSearch.clear();
@@ -208,6 +208,14 @@ public class SearchListAdapter extends BaseAdapter{
         super.notifyDataSetChanged();
     }
 
+	private LatLng getPivotLatLng(){
+		if(Data.lastRefreshLatLng != null){
+			return Data.lastRefreshLatLng;
+		} else{
+			return defaultSearchPivotLatLng;
+		}
+	}
+
 
     private boolean refreshingAutoComplete = false;
 
@@ -250,7 +258,7 @@ public class SearchListAdapter extends BaseAdapter{
 		((Activity)context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				getSearchResults(searchText, SearchListAdapter.this.searchPivotLatLng);
+				getSearchResults(searchText, SearchListAdapter.this.getPivotLatLng());
 			}
 		});
 	}

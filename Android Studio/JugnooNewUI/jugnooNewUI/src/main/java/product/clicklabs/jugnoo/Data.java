@@ -169,6 +169,8 @@ public class Data {
 
 	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
+	public static LatLng lastRefreshLatLng;
+
 
 	
 	public static void clearDataOnLogout(Context context){
