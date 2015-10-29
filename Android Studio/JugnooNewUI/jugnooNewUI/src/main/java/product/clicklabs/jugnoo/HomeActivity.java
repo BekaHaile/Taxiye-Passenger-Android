@@ -86,6 +86,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
@@ -120,12 +121,13 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.EventsHolder;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
 @SuppressLint("DefaultLocale")
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler {
 
 
     DrawerLayout drawerLayout;                                                                        // views declaration
@@ -166,7 +168,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewAbout;
 
     RelativeLayout relativeLayoutNotification;
-    TextView textViewNotification;
+    TextView textViewNotification, textViewNotificationValue;
 
 
     //Top RL
@@ -380,6 +382,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+		Data.getDeepLinkIndexFromIntent(getIntent());
+
+		EventsHolder.displayPushHandler = this;
+
 
 		mGoogleApiClient = new GoogleApiClient
 				.Builder(this)
@@ -459,12 +465,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewPromotions.setTypeface(Fonts.latoRegular(this));
         textViewPromotionsValue = (TextView) findViewById(R.id.textViewPromotionsValue);
         textViewPromotionsValue.setTypeface(Fonts.latoRegular(this));
+		textViewPromotionsValue.setVisibility(View.GONE);
 
         relativeLayoutTransactions = (RelativeLayout) findViewById(R.id.relativeLayoutTransactions);
         textViewTransactions = (TextView) findViewById(R.id.textViewTransactions);
         textViewTransactions.setTypeface(Fonts.latoRegular(this));
 
-        relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails);
+        relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails); relativeLayoutFareDetails.setVisibility(View.GONE);
         textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails);
         textViewFareDetails.setTypeface(Fonts.latoRegular(this));
 
@@ -479,6 +486,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutNotification = (RelativeLayout) findViewById(R.id.relativeLayoutNotification);
         textViewNotification = (TextView) findViewById(R.id.textViewNotification);
         textViewNotification.setTypeface(Fonts.latoRegular(this));
+		textViewNotificationValue = (TextView) findViewById(R.id.textViewNotificationValue);
+		textViewNotificationValue.setTypeface(Fonts.latoRegular(this));
+		textViewNotificationValue.setVisibility(View.GONE);
 
 
         //Top RL
@@ -2054,7 +2064,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             textViewUserName.setText(Data.userData.userName);
 
-            textViewPromotionsValue.setText("" + Data.userData.numCouponsAvaliable);
+			if(Data.userData.numCouponsAvaliable > 0) {
+				textViewPromotionsValue.setVisibility(View.VISIBLE);
+				textViewPromotionsValue.setText("" + Data.userData.numCouponsAvaliable);
+			}
+			else{
+				textViewPromotionsValue.setVisibility(View.GONE);
+			}
+
+			int unreadNotificationsCount = Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+			if(unreadNotificationsCount > 0){
+				textViewNotificationValue.setVisibility(View.VISIBLE);
+				textViewNotificationValue.setText(""+unreadNotificationsCount);
+			}
+			else{
+				textViewNotificationValue.setVisibility(View.GONE);
+			}
 
             textViewJugnooCashValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));
 
@@ -2938,6 +2963,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		openDeepLink();
 		performDeepLinkRequest();
 
+		EventsHolder.displayPushHandler = this;
+
 //        genieLayout.setGenieParams();
     }
 
@@ -2969,6 +2996,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 			else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
 				linearLayoutProfile.performClick();
+			}
+			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutNotification.performClick();
 			}
 
 		} catch(Exception e){
@@ -3154,7 +3184,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    class FindDriversETAAsync extends AsyncTask<Void, Void, String> {
+	class FindDriversETAAsync extends AsyncTask<Void, Void, String> {
 
         LatLng destination;
 
@@ -5808,6 +5838,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
+	}
+
+	@Override
+	public void onDisplayMessagePushReceived(JSONObject jsonObject) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				setUserData();
+			}
+		});
 	}
 
 

@@ -24,10 +24,14 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.wallet.EventsHolder;
 
 public class GCMIntentService extends GcmListenerService {
 
@@ -395,7 +399,7 @@ public class GCMIntentService extends GcmListenerService {
 							}
 
 							if(!"".equalsIgnoreCase(picture)){
-								new BigImageNotifAsync(message1, deepindex, picture).execute();
+								new BigImageNotifAsync(message1, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal(), picture).execute();
 							}
 							else{
 								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
@@ -410,15 +414,22 @@ public class GCMIntentService extends GcmListenerService {
 							// store push in database for notificaion center screen...
 							String pushArrived = DateOperations.getCurrentTimeInUTC();
 							if(jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
-								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
+								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 							} else if(jObj.has("timeToDisplay")){
-								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", picture);
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", picture);
+								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 							} else if(jObj.has("timeTillDisplay")){
-								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
+								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0)+1));
+							}
+							if(EventsHolder.displayPushHandler != null){
+								EventsHolder.displayPushHandler.onDisplayMessagePushReceived(jObj);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+
 
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
