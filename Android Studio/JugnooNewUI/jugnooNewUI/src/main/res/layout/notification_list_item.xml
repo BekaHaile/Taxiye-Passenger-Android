@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white_light_grey"
@@ -26,15 +27,15 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="530px">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/notification_image"
                     android:layout_width="match_parent"
-                    android:layout_height="530px"
+                    android:layout_height="450px"
                     android:src="@drawable/jugnoo_icon"
                     android:tag="mwar"
-
+                    android:scaleType="centerCrop"
                     />
 
                 <ImageView
@@ -43,7 +44,6 @@
                     android:background="@color/white"
                     android:layout_alignBottom="@+id/notification_image"
                     />
-
 
             </RelativeLayout>
 

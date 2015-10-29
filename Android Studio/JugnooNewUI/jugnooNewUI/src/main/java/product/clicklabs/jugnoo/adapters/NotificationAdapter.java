@@ -55,7 +55,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 
         Picasso.with(activity).load(notification.getNotificationImage())
-                .fit().transform(new RoundBorderTransform((int)(minRatio * 5f))).into(holder.notificationImage);
+				.transform(new RoundBorderTransform((int)(minRatio * 5f))).into(holder.notificationImage);
 
     }
 

@@ -57,6 +57,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         recyclerViewNotification = (RecyclerView) findViewById(R.id.my_request_recycler);
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(NotificationCenterActivity.this));
         recyclerViewNotification.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewNotification.setHasFixedSize(false);
 
 		notificationList = new ArrayList<>();
 		myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this, R.layout.notification_list_item);
