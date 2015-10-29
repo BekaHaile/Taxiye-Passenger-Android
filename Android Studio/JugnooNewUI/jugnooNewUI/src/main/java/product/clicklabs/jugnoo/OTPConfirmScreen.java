@@ -724,7 +724,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			loginDataFetched = false;
 			Database2.getInstance(OTPConfirmScreen.this).updateDriverLastLocationTime();
 			Database2.getInstance(OTPConfirmScreen.this).close();
-			startActivity(new Intent(OTPConfirmScreen.this, HomeActivity.class));
+			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
+			intent.setData(Data.splashIntentUri);
+			startActivity(intent);
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			ActivityCompat.finishAffinity(this);
 		}

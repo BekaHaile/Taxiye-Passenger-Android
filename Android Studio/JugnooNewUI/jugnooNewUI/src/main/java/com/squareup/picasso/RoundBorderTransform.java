@@ -10,39 +10,39 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-
-import com.squareup.picasso.Transformation;
  
 public class RoundBorderTransform implements Transformation {
+
+	private int radius;
+
+	public RoundBorderTransform(int radius){
+		this.radius = radius;
+	}
+
 	@Override
 	public Bitmap transform(Bitmap source) {
 		Bitmap source1 = source;
 		try{
-			int size = Math.min(source.getWidth(), source.getHeight());
+			int sizeX = source.getWidth();
+			int sizeY = source.getHeight();
+
 	 
-			int x = (source.getWidth() - size) / 2;
-			int y = (source.getHeight() - size) / 2;
-	 
-			Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
-			if (squaredBitmap != source) {
-				source.recycle();
-			}
-	 
-			Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
+			Bitmap bitmap = Bitmap.createBitmap(sizeX, sizeY, source.getConfig());
 	 
 			Canvas canvas = new Canvas(bitmap);
 			Paint paint = new Paint();
-			BitmapShader shader = new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
+			BitmapShader shader = new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
 			paint.setShader(shader);
 			paint.setAntiAlias(true);
 	 
-			final Rect rect = new Rect(0, 0, size, size);
+			final Rect rect = new Rect(0, 0, sizeX, sizeY);
 		    final RectF rectF = new RectF(rect);
-		    final float roundPx = 10;
+		    final float roundPx = radius;
 			
 		    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+			source.recycle();
 	 
-			squaredBitmap.recycle();
 			return bitmap;
 		} catch(Exception e){
 			e.printStackTrace();

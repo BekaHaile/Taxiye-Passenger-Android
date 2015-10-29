@@ -380,6 +380,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+		Data.getDeepLinkIndexFromIntent(getIntent());
+
 
 		mGoogleApiClient = new GoogleApiClient
 				.Builder(this)
@@ -464,7 +466,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewTransactions = (TextView) findViewById(R.id.textViewTransactions);
         textViewTransactions.setTypeface(Fonts.latoRegular(this));
 
-        relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails);
+        relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails); relativeLayoutFareDetails.setVisibility(View.GONE);
         textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails);
         textViewFareDetails.setTypeface(Fonts.latoRegular(this));
 
@@ -2969,6 +2971,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 			else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
 				linearLayoutProfile.performClick();
+			}
+			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
+				relativeLayoutNotification.performClick();
 			}
 
 		} catch(Exception e){

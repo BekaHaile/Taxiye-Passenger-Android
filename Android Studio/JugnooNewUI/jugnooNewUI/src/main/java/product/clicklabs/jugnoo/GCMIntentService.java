@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -395,7 +396,7 @@ public class GCMIntentService extends GcmListenerService {
 							}
 
 							if(!"".equalsIgnoreCase(picture)){
-								new BigImageNotifAsync(message1, deepindex, picture).execute();
+								new BigImageNotifAsync(message1, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal(), picture).execute();
 							}
 							else{
 								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
@@ -410,11 +411,11 @@ public class GCMIntentService extends GcmListenerService {
 							// store push in database for notificaion center screen...
 							String pushArrived = DateOperations.getCurrentTimeInUTC();
 							if(jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
-								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
 							} else if(jObj.has("timeToDisplay")){
-								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", picture);
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", picture);
 							} else if(jObj.has("timeTillDisplay")){
-								Database2.getInstance(this).insertNotification(this, pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();

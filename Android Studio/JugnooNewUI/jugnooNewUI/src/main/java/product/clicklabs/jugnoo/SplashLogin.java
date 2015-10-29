@@ -885,7 +885,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			FlurryAgent.logEvent("App Login", articleParams);
 			
 			loginDataFetched = false;
-			startActivity(new Intent(SplashLogin.this, HomeActivity.class));
+			Intent intent = new Intent(SplashLogin.this, HomeActivity.class);
+			intent.setData(Data.splashIntentUri);
+			startActivity(intent);
 			ActivityCompat.finishAffinity(this);
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}

@@ -929,7 +929,9 @@ public class Database2 {                                                        
                 int in5 = cursor.getColumnIndex(TIME_TILL_DISPLAY);
                 int in6 = cursor.getColumnIndex(NOTIFICATION_IMAGE);
 
-                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+				Log.e("cursor.getCount ", "---> " + cursor.getCount());
+
+                for(cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()){
                     try {
                         //Log.v("timeToDisplay value", "--> " + cursor.getString(in4));
                         //Log.v("Current time is", "--> " + DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC()));
@@ -937,24 +939,31 @@ public class Database2 {                                                        
                         //Log.v("timeTillDisplay value", "--> " + DateOperations.getMilliseconds(cursor.getString(in5).toString()));
                         long pushArrAndTimeToDisVal = (Long.parseLong(cursor.getString(in4)) + DateOperations.getMilliseconds(cursor.getString(in1)));
                         long currentTimeLong = DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC());
-                                Log.v("Add value ", "---> " + pushArrAndTimeToDisVal);
+						Log.e("Add value ", "---> " + pushArrAndTimeToDisVal);
 
+						boolean added = false;
                         if((!"0".equalsIgnoreCase(cursor.getString(in4))) && (!"".equalsIgnoreCase(cursor.getString(in5)))) { //if both values
                             if ((currentTimeLong < pushArrAndTimeToDisVal) && (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5).toString()))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+								added = true;
                             }
                         }else if((!"".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
                             if ((currentTimeLong < pushArrAndTimeToDisVal)) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+								added = true;
                             }
                         }else if((!"".equalsIgnoreCase(cursor.getString(in5))) && ("0".equalsIgnoreCase(cursor.getString(in4)))){ //only timeTillDisplay
                             if ((currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5).toString()))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+								added = true;
                             }
                         }
+						if(!added){
+							deleteNotification(cursor.getInt(in0));
+						}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -977,7 +986,7 @@ public class Database2 {                                                        
         return 0;
     }
 
-    public void insertNotification(Context context, String timePushArrived, String message, String deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
+    public void insertNotification(String timePushArrived, String message, String deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
         try{
             ContentValues contentValues = new ContentValues();
             contentValues.put(TIME_PUSH_ARRIVED, timePushArrived);

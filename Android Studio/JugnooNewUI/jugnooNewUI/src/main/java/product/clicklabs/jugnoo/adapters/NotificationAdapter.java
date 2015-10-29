@@ -9,13 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RoundBorderTransform;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -54,8 +52,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.descriptionTxt.setText(notification.getMessage());
 
+		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+
         Picasso.with(activity).load(notification.getNotificationImage())
-                .fit().into(holder.notificationImage);
+                .fit().transform(new RoundBorderTransform((int)(minRatio * 5f))).into(holder.notificationImage);
 
     }
 

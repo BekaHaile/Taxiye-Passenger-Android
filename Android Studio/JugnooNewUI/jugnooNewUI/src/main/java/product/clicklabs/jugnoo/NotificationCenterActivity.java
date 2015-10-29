@@ -50,10 +50,6 @@ public class NotificationCenterActivity extends BaseActivity {
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(NotificationCenterActivity.this));
         recyclerViewNotification.setItemAnimator(new DefaultItemAnimator());
 
-//        Log.v("Date in timemillis first", "--> " + DateOperations.getCurrentTimeInUTC());
-//        Log.v("Date in timemillis ", "--> " + DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC()));
-
-
 		notificationList = new ArrayList<>();
 		myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this, R.layout.notification_list_item);
 		recyclerViewNotification.setAdapter(myNotificationAdapter);
@@ -65,13 +61,6 @@ public class NotificationCenterActivity extends BaseActivity {
 				performBackPressed();
 			}
 		});
-
-//        textViewTitle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Database2.getInstance(NotificationCenterActivity.this).deleteNotificationTable();
-//            }
-//        });
 
 		new GetNotificationsAsync().execute();
 

@@ -16,7 +16,9 @@ public enum AppLinkIndex {
 
 	ABOUT(6), // opens About Screen
 
-	ACCOUNT(7) // opens Account Screen
+	ACCOUNT(7), // opens Account Screen
+
+	NOTIFICATION_CENTER(8) // opens Notification center Screen
 
 	;
 
