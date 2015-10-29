@@ -12,18 +12,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
+import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.wallet.EventsHolder;
 import rmn.androidscreenlibrary.ASSL;
 
 /**
  * Created by socomo on 10/15/15.
  */
-public class NotificationCenterActivity extends BaseActivity {
+public class NotificationCenterActivity extends BaseActivity implements DisplayPushHandler {
 
     private LinearLayout root;
     private TextView textViewTitle, textViewInfo;
@@ -36,6 +42,8 @@ public class NotificationCenterActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_center);
+
+		EventsHolder.displayPushHandler = this;
 
         root = (LinearLayout)findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
@@ -66,6 +74,8 @@ public class NotificationCenterActivity extends BaseActivity {
 
     }
 
+
+
 	class GetNotificationsAsync extends AsyncTask<String, String, String>{
 
 		@Override
@@ -79,6 +89,7 @@ public class NotificationCenterActivity extends BaseActivity {
 			try {
 				notificationList.clear();
 				notificationList.addAll(Database2.getInstance(NotificationCenterActivity.this).getAllNotification());
+				Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -115,6 +126,16 @@ public class NotificationCenterActivity extends BaseActivity {
 		ASSL.closeActivity(root);
 		super.onDestroy();
 		System.gc();
+	}
+
+	@Override
+	public void onDisplayMessagePushReceived(JSONObject jsonObject) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				new GetNotificationsAsync().execute();
+			}
+		});
 	}
 
 }
