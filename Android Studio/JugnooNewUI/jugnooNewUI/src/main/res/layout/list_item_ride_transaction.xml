@@ -134,15 +134,26 @@
 
             <TextView
                 android:id="@+id/textViewDetailsValue"
-                android:layout_width="380px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
-                android:layout_marginRight="30px"
                 android:layout_toRightOf="@+id/textViewDetails"
                 android:text="8.5 Km, 20 minutes, February 30th"
                 android:textColor="@color/black_text_alpha"
                 android:textSize="24px" />
+
+            <TextView
+                android:id="@+id/textViewRideCancelled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5px"
+                android:text="Cancelled"
+                android:textColor="@color/black_text"
+                android:layout_toRightOf="@+id/textViewDetailsValue"
+                android:textSize="24px"
+                android:visibility="gone"
+                />
         </RelativeLayout>
 
     </LinearLayout>

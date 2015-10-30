@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class EndRideData {
 	
@@ -18,7 +19,7 @@ public class EndRideData {
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
-		this.driverCarNumber = driverCarNumber;
+		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
 		this.pickupTime = pickupTime;

@@ -2,6 +2,8 @@ package product.clicklabs.jugnoo.datastructure;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Locale;
+
 public class DriverInfo {
 	
 	public String userId, name, image, carImage, phoneNumber, rating, carNumber;
@@ -24,7 +26,7 @@ public class DriverInfo {
 		this.carImage = carImage;
 		this.phoneNumber = phoneNumber;
 		this.rating = rating;
-		this.carNumber = carNumber;
+		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = freeRide;
 	}
 	
@@ -38,7 +40,7 @@ public class DriverInfo {
 		this.carImage = carImage;
 		this.phoneNumber = phoneNumber;
 		this.rating = rating;
-		this.carNumber = carNumber;
+		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = freeRide;
 		if(!"".equalsIgnoreCase(promoName)){
 			this.promoName = promoName;
@@ -56,7 +58,7 @@ public class DriverInfo {
 		this.carImage = carImage;
 		this.phoneNumber = "";
 		this.rating = "4";
-		this.carNumber = carNumber;
+		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = 0;
 	}
 	

@@ -464,6 +464,9 @@ public class GCMIntentService extends GcmListenerService {
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, "Your account has been verified", NOTIFICATION_ID, -1);
+
+					} else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
+						Database2.getInstance(this).deleteNotificationTable();
 					}
 
 				} catch (Exception e) {

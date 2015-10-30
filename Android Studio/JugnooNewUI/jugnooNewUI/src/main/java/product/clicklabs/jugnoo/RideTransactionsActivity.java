@@ -264,14 +264,19 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 												waitTime = jRide.getDouble("wait_time");
 											}
 
+											int isCancelledRide = 0;
+											if(jRide.has("is_cancelled_ride")){
+												isCancelledRide = jRide.getInt("is_cancelled_ride");
+											}
+
                                             rideInfosList.add(new RideInfo(jRide.getString("pickup_address"),
                                                 jRide.getString("drop_address"),
                                                 jRide.getDouble("amount"),
                                                 jRide.getDouble("distance"),
                                                 jRide.getDouble("ride_time"), waitTime,
-                                                jRide.getString("date"), isRatedBefore, driverId, engagementId));
+                                                jRide.getString("date"), isRatedBefore, driverId, engagementId, isCancelledRide));
                                         }
-                                    }
+									}
 
                                     updateListData("You haven't tried Jugnoo yet.", false);
 
@@ -323,7 +328,8 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 
     class ViewHolderRideTransaction {
         TextView textViewPickupAt, textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
-            textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel, textViewRateRide;
+            textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel,
+				textViewRateRide, textViewRideCancelled;
         ImageView imageViewDiv;
         RelativeLayout relativeLayoutTo, relativeLayoutRateRide;
 		LinearLayout linearLayoutCancel;
@@ -379,6 +385,8 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
                 holder.textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); holder.textViewCancel.setTypeface(Fonts.latoRegular(context));
                 holder.textViewRateRide = (TextView) convertView.findViewById(R.id.textViewRateRide); holder.textViewRateRide.setTypeface(Fonts.latoRegular(context));
+				holder.textViewRideCancelled = (TextView) convertView.findViewById(R.id.textViewRideCancelled);
+				holder.textViewRideCancelled.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
 
 
                 holder.imageViewDiv = (ImageView) convertView.findViewById(R.id.imageViewDiv);
@@ -413,6 +421,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     holder.relativeLayoutRateRide.setVisibility(View.GONE);
 					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
                     holder.imageViewDiv.setVisibility(View.VISIBLE);
+					holder.textViewRideCancelled.setVisibility(View.GONE);
 
                     holder.textViewAmount.setVisibility(View.GONE);
 
@@ -440,25 +449,37 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     holder.textViewFromValue.setText(rideInfo.pickupAddress);
                     holder.textViewToValue.setText(rideInfo.dropAddress);
                     holder.textViewDetails.setText("Details: ");
-                    if(rideInfo.rideTime == 1){
-                        holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
-                            + decimalFormatNoDec.format(rideInfo.rideTime) + " minute, "+ rideInfo.date);
-                    }
-                    else{
-                        holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
-                            + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, "+ rideInfo.date);
-                    }
-                    holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
 
-                    if(1 != rideInfo.isRatedBefore){
-                        holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
-                        holder.imageViewDiv.setVisibility(View.GONE);
-                    }
-                    else{
-                        holder.relativeLayoutRateRide.setVisibility(View.GONE);
-                        holder.imageViewDiv.setVisibility(View.VISIBLE);
-                    }
-					holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
+
+					if(0 == rideInfo.isCancelledRide) {
+						if (rideInfo.rideTime == 1) {
+							holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
+									+ decimalFormatNoDec.format(rideInfo.rideTime) + " minute, " + rideInfo.date);
+						} else {
+							holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
+									+ decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
+						}
+						holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
+
+						if (1 != rideInfo.isRatedBefore) {
+							holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
+							holder.imageViewDiv.setVisibility(View.GONE);
+						} else {
+							holder.relativeLayoutRateRide.setVisibility(View.GONE);
+							holder.imageViewDiv.setVisibility(View.VISIBLE);
+						}
+						holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
+						holder.textViewRideCancelled.setVisibility(View.GONE);
+					}
+					else{
+						holder.textViewDetailsValue.setText(rideInfo.date+",");
+						holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
+						holder.relativeLayoutRateRide.setVisibility(View.GONE);
+						holder.imageViewDiv.setVisibility(View.VISIBLE);
+						holder.linearLayoutRideReceipt.setVisibility(View.GONE);
+						holder.textViewRideCancelled.setVisibility(View.VISIBLE);
+					}
+
                 }
             }
             else{
@@ -473,25 +494,35 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 holder.textViewFromValue.setText(rideInfo.pickupAddress);
                 holder.textViewToValue.setText(rideInfo.dropAddress);
                 holder.textViewDetails.setText("Details: ");
-                if(rideInfo.rideTime == 1){
-                    holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
-                        + decimalFormatNoDec.format(rideInfo.rideTime) + " minute, " + rideInfo.date);
-                }
-                else{
-                    holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
-                        + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
-                }
-                holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
 
-                if(1 != rideInfo.isRatedBefore){
-                    holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
-                    holder.imageViewDiv.setVisibility(View.GONE);
-                }
-                else{
-                    holder.relativeLayoutRateRide.setVisibility(View.GONE);
-                    holder.imageViewDiv.setVisibility(View.VISIBLE);
-                }
-				holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
+				if(0 == rideInfo.isCancelledRide) {
+					if (rideInfo.rideTime == 1) {
+						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
+								+ decimalFormatNoDec.format(rideInfo.rideTime) + " minute, " + rideInfo.date);
+					} else {
+						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
+								+ decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
+					}
+					holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
+
+					if (1 != rideInfo.isRatedBefore) {
+						holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
+						holder.imageViewDiv.setVisibility(View.GONE);
+					} else {
+						holder.relativeLayoutRateRide.setVisibility(View.GONE);
+						holder.imageViewDiv.setVisibility(View.VISIBLE);
+					}
+					holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
+					holder.textViewRideCancelled.setVisibility(View.GONE);
+				}
+				else{
+					holder.textViewDetailsValue.setText(rideInfo.date+",");
+					holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
+					holder.relativeLayoutRateRide.setVisibility(View.GONE);
+					holder.imageViewDiv.setVisibility(View.VISIBLE);
+					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
+					holder.textViewRideCancelled.setVisibility(View.VISIBLE);
+				}
             }
 
             holder.linearLayoutCancel.setOnClickListener(new View.OnClickListener() {

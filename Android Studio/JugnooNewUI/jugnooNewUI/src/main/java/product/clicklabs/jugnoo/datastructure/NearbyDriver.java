@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import java.util.Locale;
+
 public class NearbyDriver {
 
 	public String userId, userName, autoId, userImage, driverCarNo, driverCarImage;
@@ -10,7 +12,7 @@ public class NearbyDriver {
 		this.userName = userName;
 		this.autoId = autoId;
 		this.userImage = userImage;
-		this.driverCarNo = driverCarNo;
+		this.driverCarNo = driverCarNo.toUpperCase(Locale.ENGLISH);
 		this.driverCarImage = driverCarImage;
 		this.ticked = false;
 	}
