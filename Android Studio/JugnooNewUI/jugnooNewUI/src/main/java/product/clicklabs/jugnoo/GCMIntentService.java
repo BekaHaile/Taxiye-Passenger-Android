@@ -392,14 +392,14 @@ public class GCMIntentService extends GcmListenerService {
 							}
 						}
 						else {
-							int deepindex = jObj.optInt("deepindex", -1);
+							int deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
 							String picture = jObj.optString("picture", "");
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString("image", "");
 							}
 
 							if(!"".equalsIgnoreCase(picture)){
-								new BigImageNotifAsync(message1, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal(), picture).execute();
+								new BigImageNotifAsync(message1, deepindex, picture).execute();
 							}
 							else{
 								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
