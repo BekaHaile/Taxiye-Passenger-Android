@@ -19,13 +19,10 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.apache.http.util.EncodingUtils;
-
-import java.net.URLEncoder;
+import com.payu.sdk.Constants;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 
 public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
@@ -59,18 +56,20 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
         webView.setWebChromeClient(new WebChromeClient() {});
         webView.setWebViewClient(new MyAppWebViewClient());
 
-        String postDataQuery = getIntent().getExtras().getString("postData");
-        String postData;
+        String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
         try {
-            postData = URLEncoder.encode(postDataQuery, "UTF-8");
-            Log.e("postData", "postData = "+postData);
-            webView.postUrl(Config.getTXN_URL() + "paytm/wallet/add_money", postData.getBytes());
-
+			loadHTMLContent(postDataQuery);
         } catch(Exception e) {
             Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
-            webView.postUrl(Config.getTXN_URL() + "paytm/wallet/add_money", EncodingUtils.getBytes(postDataQuery, "utf-8"));
+			loadHTMLContent(postDataQuery);
         }
     }
+
+	public void loadHTMLContent(String data) {
+		final String mimeType = "text/html";
+		final String encoding = "UTF-8";
+		webView.loadDataWithBaseURL("", data, mimeType, encoding, "");
+	}
 
 
 
@@ -141,7 +140,7 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
 
-            Log.e("paymentWebview.onPageFinished", "url = " + url);
+            Log.e("onPageFinished", "url = " + url);
             if (webView.getProgress() > 50) {
                 progressBar.setVisibility(View.GONE);
             }

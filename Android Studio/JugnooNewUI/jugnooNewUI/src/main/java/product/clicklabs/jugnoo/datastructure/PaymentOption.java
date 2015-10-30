@@ -1,8 +1,8 @@
 package product.clicklabs.jugnoo.datastructure;
 
 public enum PaymentOption {
-	CASH(2),
-	PAYTM(1)
+	CASH(1),
+	PAYTM(2)
 	;
 
 	private int ordinal;

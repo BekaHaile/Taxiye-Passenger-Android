@@ -354,7 +354,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 				params.put("is_access_token_new", "1");
 
 				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getTXN_URL() + "paytm/wallet/check_balance", params, new CustomAsyncHttpResponseHandler() {
+				client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
 					@Override
 					public void onSuccess(String response) {
 						Log.i("request succesfull", "response = " + response);
@@ -372,27 +372,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 								}
 							}
 
-							try {
-								Fragment currFrag = getSupportFragmentManager().findFragmentByTag("WalletFragment");
-								if(currFrag != null){
-									currFrag.onResume();
-								}
-								currFrag = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
-								if(currFrag != null){
-									currFrag.onResume();
-									if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
-										((PaytmRechargeFragment) currFrag).performBackPressed();
-									}
-								}
-								currFrag = getSupportFragmentManager().findFragmentByTag("AddPaytmFragment");
-								if(currFrag != null){
-									if(fragName.equalsIgnoreCase(AddPaytmFragment.class.getName())) {
-										((AddPaytmFragment) currFrag).performBackPressed();
-									}
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+							performGetBalanceSuccess(fragName);
 
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -410,6 +390,30 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 				});
 			} else{
 				retryDialog(Data.CHECK_INTERNET_MSG, fragName);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void performGetBalanceSuccess(String fragName){
+		try {
+			Fragment currFrag = getSupportFragmentManager().findFragmentByTag("WalletFragment");
+			if(currFrag != null){
+				currFrag.onResume();
+			}
+			currFrag = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
+			if(currFrag != null){
+				currFrag.onResume();
+				if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
+					((PaytmRechargeFragment) currFrag).performBackPressed();
+				}
+			}
+			currFrag = getSupportFragmentManager().findFragmentByTag("AddPaytmFragment");
+			if(currFrag != null){
+				if(fragName.equalsIgnoreCase(AddPaytmFragment.class.getName())) {
+					((AddPaytmFragment) currFrag).performBackPressed();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

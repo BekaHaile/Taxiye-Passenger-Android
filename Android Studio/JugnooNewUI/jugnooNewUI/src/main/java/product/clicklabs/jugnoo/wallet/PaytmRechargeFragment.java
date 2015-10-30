@@ -23,7 +23,6 @@ import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.payu.sdk.Constants;
-import com.payu.sdk.Params;
 
 import org.json.JSONObject;
 
@@ -421,53 +420,21 @@ public class PaytmRechargeFragment extends Fragment {
 			params.put("is_access_token_new", "1");
 
 			params.put("amount", "" + amount);
-			AsyncHttpClient client = Data.getClient();
 
-			client.post(Config.getTXN_URL() + "paytm/wallet/add_money_request", params, new CustomAsyncHttpResponseHandler() {
+			AsyncHttpClient client = Data.getClient();
+			client.post(Config.getTXN_URL() + "/paytm/add_money", params, new CustomAsyncHttpResponseHandler() {
 
 				@Override
 				public void onSuccess(String response) {
 					Log.i("request succesfull", "response = " + response);
 					DialogPopup.dismissLoadingDialog();
 					try {
-						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
-
-						JSONObject res1 = new JSONObject(response.toString());
-						JSONObject res = res1.getJSONObject("data");
-
-						Log.e("datavalue", "dataVal1 = " + res.toString());
-						String jData = res.toString();
-
-						Params requiredParams = new Params();
-						requiredParams.put("MID", "" + res.getString("MID"));
-						requiredParams.put("REQUEST_TYPE", "" + res.getString("REQUEST_TYPE"));
-						requiredParams.put("ORDER_ID", "" + res.getString("ORDER_ID"));
-						requiredParams.put("TXN_AMOUNT", "" + res.getString("TXN_AMOUNT"));
-						requiredParams.put("CHANNEL_ID", "" + res.getString("CHANNEL_ID"));
-						requiredParams.put("INDUSTRY_TYPE_ID", "" + res.getString("INDUSTRY_TYPE_ID"));
-						requiredParams.put("WEBSITE", "" + res.getString("WEBSITE"));
-						requiredParams.put("SSO_TOKEN", "" + res.getString("SSO_TOKEN"));
-						requiredParams.put("CHECKSUMHASH", "" + res.getString("CHECKSUMHASH"));
-						requiredParams.put("CUST_ID", "" + res.getString("CUST_ID"));
-
-						String postData = "";
-
-						for (String key : requiredParams.keySet()) {
-							postData += key + "=" + requiredParams.get(key) + "&";
-						}
-						Log.e("datavalue", "postData = " + postData);
-						Log.e("datavalue", "jData = " + jData);
-
-						openWebView(postData);
-
+						openWebView(response);
 					} catch (Exception e) {
 						DialogPopup.dismissLoadingDialog();
 						e.printStackTrace();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
-
-					DialogPopup.dismissLoadingDialog();
-
 				}
 
 				@Override
@@ -521,9 +488,6 @@ public class PaytmRechargeFragment extends Fragment {
 	}
 
 	private void openWebView(String jsonData) {
-		String jData = "JsonData=\"" + jsonData.toString() + "\"";
-		Log.e("jData", "jData = " + jData);
-
 		Data.paytmPaymentState = -1;
 		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
 		intent.putExtra(Constants.POST_DATA, jsonData);

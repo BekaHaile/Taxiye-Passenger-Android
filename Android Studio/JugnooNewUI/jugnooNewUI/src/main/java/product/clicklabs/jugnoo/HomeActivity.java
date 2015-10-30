@@ -211,7 +211,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	ListView listViewPromotions;
 	PromotionsListAdapter promotionsListAdapter;
 	Button buttonRRPaymentOptionChange, buttonFareEstimate, buttonGetARide;
-	TextView textViewRRPaymentOption, textViewRRPaymentOptionMoneyValue, textViewRRETA, textViewRRETAValue, textViewRRMinFare, textViewRRMinFareValue;
+	TextView textViewRRPaymentOption, textViewRRPaymentOptionMoneyValue, textViewRRETAValue, textViewRRMinFareValue;
 	ImageView imageViewRRWalletIcon;
 
 
@@ -5329,7 +5329,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "1"));
                                 }
 
-								nameValuePairs.add(new BasicNameValuePair("payment_option", "" + Data.pickupPaymentOption));
+								nameValuePairs.add(new BasicNameValuePair("preferred_payment_mode", "" + Data.pickupPaymentOption));
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
                                 String response = new HttpRequester().getJSONFromUrlParams(Config.getServerUrl() + "/request_ride", nameValuePairs);
@@ -6032,7 +6032,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				params.put("is_access_token_new", "1");
 
 				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getTXN_URL() + "paytm/wallet/check_balance", params, new CustomAsyncHttpResponseHandler() {
+				client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
 					@Override
 					public void onSuccess(String response) {
 						Log.i("request succesfull", "response = " + response);

@@ -202,7 +202,7 @@ public class AddPaytmFragment extends Fragment {
 
 			AsyncHttpClient client = Data.getClient();
 
-			client.post(Config.getTXN_URL() + "paytm/login/request_otp", params, new CustomAsyncHttpResponseHandler() {
+			client.post(Config.getTXN_URL() + "/paytm/request_otp", params, new CustomAsyncHttpResponseHandler() {
 
 				@Override
 				public void onSuccess(String response) {
@@ -243,7 +243,7 @@ public class AddPaytmFragment extends Fragment {
 
 			AsyncHttpClient client = Data.getClient();
 
-			client.post(Config.getTXN_URL() + "paytm/wallet/login_with_otp", params, new CustomAsyncHttpResponseHandler() {
+			client.post(Config.getTXN_URL() + "/paytm/login_with_otp", params, new CustomAsyncHttpResponseHandler() {
 
 				@Override
 				public void onSuccess(String response) {
