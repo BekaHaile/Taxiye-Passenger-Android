@@ -929,33 +929,31 @@ public class Database2 {                                                        
                 int in5 = cursor.getColumnIndex(TIME_TILL_DISPLAY);
                 int in6 = cursor.getColumnIndex(NOTIFICATION_IMAGE);
 
-				Log.e("cursor.getCount ", "---> " + cursor.getCount());
+				long currentTimeLong = DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC());
 
                 for(cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()){
                     try {
-                        //Log.v("timeToDisplay value", "--> " + cursor.getString(in4));
-                        //Log.v("Current time is", "--> " + DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC()));
-                        //Log.v("Push Arrived Time", "--> " + DateOperations.getMilliseconds(cursor.getString(in1).toString()));
-                        //Log.v("timeTillDisplay value", "--> " + DateOperations.getMilliseconds(cursor.getString(in5).toString()));
                         long pushArrAndTimeToDisVal = (Long.parseLong(cursor.getString(in4)) + DateOperations.getMilliseconds(cursor.getString(in1)));
-                        long currentTimeLong = DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC());
-						Log.e("Add value ", "---> " + pushArrAndTimeToDisVal);
+
+						Log.e("cursor.getString(in4)", "---->"+cursor.getString(in4));
+						Log.e("cursor.getString(in5)", "---->"+cursor.getString(in5));
 
 						boolean added = false;
                         if((!"0".equalsIgnoreCase(cursor.getString(in4))) && (!"".equalsIgnoreCase(cursor.getString(in5)))) { //if both values
-                            if ((currentTimeLong < pushArrAndTimeToDisVal) && (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5).toString()))) {
+                            if ((currentTimeLong < pushArrAndTimeToDisVal) &&
+									(currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
-                        }else if((!"".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
+                        }else if((!"0".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
                             if ((currentTimeLong < pushArrAndTimeToDisVal)) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }else if((!"".equalsIgnoreCase(cursor.getString(in5))) && ("0".equalsIgnoreCase(cursor.getString(in4)))){ //only timeTillDisplay
-                            if ((currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5).toString()))) {
+                            if (   (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
