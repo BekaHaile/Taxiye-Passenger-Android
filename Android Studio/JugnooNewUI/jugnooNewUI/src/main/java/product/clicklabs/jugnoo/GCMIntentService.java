@@ -392,16 +392,17 @@ public class GCMIntentService extends GcmListenerService {
 							}
 						}
 						else {
-							int deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
 							String picture = jObj.optString("picture", "");
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString("image", "");
 							}
 
 							if(!"".equalsIgnoreCase(picture)){
+								int deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
 								new BigImageNotifAsync(message1, deepindex, picture).execute();
 							}
 							else{
+								int deepindex = jObj.optInt("deepindex", -1);
 								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
 							}
 						}
@@ -422,9 +423,6 @@ public class GCMIntentService extends GcmListenerService {
 							} else if(jObj.has("timeTillDisplay")){
 								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
 								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0)+1));
-							}
-							if(EventsHolder.displayPushHandler != null){
-								EventsHolder.displayPushHandler.onDisplayMessagePushReceived(jObj);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -510,6 +508,9 @@ public class GCMIntentService extends GcmListenerService {
             // execution of result of Long time consuming operation
             try {
                 notificationManagerCustomIDWithBitmap(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
+				if(EventsHolder.displayPushHandler != null){
+					EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
+				}
             }catch (Exception e){
                 e.printStackTrace();
                 notificationManagerCustomID(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex);

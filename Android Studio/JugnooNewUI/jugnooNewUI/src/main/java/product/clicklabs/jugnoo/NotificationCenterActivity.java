@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
@@ -130,7 +128,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 	}
 
 	@Override
-	public void onDisplayMessagePushReceived(JSONObject jsonObject) {
+	public void onDisplayMessagePushReceived() {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

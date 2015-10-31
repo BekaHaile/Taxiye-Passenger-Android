@@ -5841,7 +5841,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	}
 
 	@Override
-	public void onDisplayMessagePushReceived(JSONObject jsonObject) {
+	public void onDisplayMessagePushReceived() {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
