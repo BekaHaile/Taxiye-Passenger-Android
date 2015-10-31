@@ -3434,7 +3434,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)) {
 				addUserCurrentLocationAddressMarker(userLatLng);
 			}
-			Data.lastRefreshLatLng = map.getCameraPosition().target;
         } catch (Exception e) {
             e.printStackTrace();
         }
