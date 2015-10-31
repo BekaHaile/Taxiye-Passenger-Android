@@ -34,6 +34,13 @@ public class NearbyDriversAdapter extends RecyclerView.Adapter<NearbyDriversAdap
 		return nearbyDrivers.size();
 	}
 
+	public void resetALl(){
+		for(int i=0; i<nearbyDrivers.size(); i++){
+			nearbyDrivers.get(i).ticked = false;
+		}
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public void onBindViewHolder(NearbyDriverViewHolder nearbyDriverViewHolder, int i) {
 		NearbyDriver nd = nearbyDrivers.get(i);

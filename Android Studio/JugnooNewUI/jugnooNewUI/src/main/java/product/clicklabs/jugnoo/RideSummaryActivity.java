@@ -220,7 +220,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 	public void setRideData(){
 		try{
 			if(endRideData != null){
-				DecimalFormat decimalFormat = new DecimalFormat("#.#");
+				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 				scrollViewEndRide.scrollTo(0, 0);
 

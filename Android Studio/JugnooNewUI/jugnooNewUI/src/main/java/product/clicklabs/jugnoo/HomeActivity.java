@@ -292,7 +292,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     // data variables declaration
 
-    DecimalFormat decimalFormat = new DecimalFormat("#.#");
+    DecimalFormat decimalFormat = new DecimalFormat("#.##");
     DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 
     LatLng lastSearchLatLng;
@@ -1088,15 +1088,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        // menu events
+
+        // menu events ,. LM
         linearLayoutProfile.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, AccountActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }
-        });
+				hideMenuDrawer();
+				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
 
         relativeLayoutGetRide.setOnClickListener(new OnClickListener() {
 
@@ -1111,6 +1113,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
 				if(Data.userData.showJugnooSharing == 1) {
+					hideMenuDrawer();
 					startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					FlurryEventLogger.event(JUGNOO_LINE_CLICK);
@@ -1122,6 +1125,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
+				hideMenuDrawer();
                 imageViewGift.performClick();
                 FlurryEventLogger.event(INVITE_EARN_MENU);
             }
@@ -1131,8 +1135,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
+				hideMenuDrawer();
                 PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
-                startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+				startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(JUGNOO_CASH_MENU);
             }
@@ -1143,11 +1148,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 if (map != null) {
+					hideMenuDrawer();
                     Data.latitude = map.getCameraPosition().target.latitude;
                     Data.longitude = map.getCameraPosition().target.longitude;
-                    startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
+					startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(PROMOTIONS_CHECKED);
+					FlurryEventLogger.event(PROMOTIONS_CHECKED);
                 } else {
                     Toast.makeText(getApplicationContext(), "Waiting for location...", Toast.LENGTH_SHORT).show();
                 }
@@ -1157,8 +1163,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutTransactions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+				hideMenuDrawer();
                 Intent intent = new Intent(HomeActivity.this, RideTransactionsActivity.class);
-                startActivity(intent);
+				startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(RIDE_HISTORY);
             }
@@ -1168,7 +1175,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                sendToFareDetails();
+				hideMenuDrawer();
+				sendToFareDetails();
                 FlurryEventLogger.event(FARE_DETAILS);
             }
         });
@@ -1177,7 +1185,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, SupportActivity.class));
+				hideMenuDrawer();
+				startActivity(new Intent(HomeActivity.this, SupportActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(SUPPORT_OPTIONS);
             }
@@ -1187,7 +1196,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, AboutActivity.class));
+				hideMenuDrawer();
+				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
             }
@@ -1197,6 +1207,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
+				hideMenuDrawer();
                 startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
@@ -1821,6 +1832,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		}
 
     }
+
+	private void hideMenuDrawer(){
+		drawerLayout.closeDrawer(menuLayout);
+	}
 
 
     Handler shakeHandler;

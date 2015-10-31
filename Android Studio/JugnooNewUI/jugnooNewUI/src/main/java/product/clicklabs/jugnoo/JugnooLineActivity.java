@@ -277,49 +277,55 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 	 * ASync for fetching nearby drivers
 	 */
 	public void fetchNearbyDriversAPI(final Activity activity) {
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
-			progressBarNearbyDrivers.setVisibility(View.VISIBLE);
-			recyclerViewDrivers.setVisibility(View.GONE);
+		try {
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				progressBarNearbyDrivers.setVisibility(View.VISIBLE);
+				recyclerViewDrivers.setVisibility(View.GONE);
 
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("latitude", ""+Data.currentPinLatLng.latitude);
-			params.put("longitude", ""+Data.currentPinLatLng.longitude);
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("latitude", ""+Data.lastRefreshLatLng.latitude);
+				params.put("longitude", ""+Data.lastRefreshLatLng.longitude);
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/find_sharing_autos_nearby", params,
-					new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
+				AsyncHttpClient client = Data.getClient();
+				client.post(Config.getServerUrl() + "/find_sharing_autos_nearby", params,
+						new CustomAsyncHttpResponseHandler() {
+							private JSONObject jObj;
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							progressBarNearbyDrivers.setVisibility(View.GONE);
-							recyclerViewDrivers.setVisibility(View.GONE);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response faq ", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								String message = JSONParser.getServerMessage(jObj);
-								int flag = jObj.getInt("flag");
-								if(ApiResponseFlags.ALL_DRIVERS.getOrdinal() == flag){
-									nearbyDrivers.clear();
-									nearbyDrivers.addAll(JSONParser.parseNearbySharingDrivers(jObj));
-									nearbyDriversAdapter.notifyDataSetChanged();
-								}
-								else{
-									DialogPopup.alertPopup(activity, "", message);
-								}
-							} catch (Exception exception) {
-								exception.printStackTrace();
+							@Override
+							public void onFailure(Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								progressBarNearbyDrivers.setVisibility(View.GONE);
+								recyclerViewDrivers.setVisibility(View.GONE);
 							}
-							progressBarNearbyDrivers.setVisibility(View.GONE);
-							recyclerViewDrivers.setVisibility(View.VISIBLE);
-						}
-					});
+
+							@Override
+							public void onSuccess(String response) {
+								Log.i("Server response faq ", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									String message = JSONParser.getServerMessage(jObj);
+									int flag = jObj.getInt("flag");
+									if(ApiResponseFlags.ALL_DRIVERS.getOrdinal() == flag){
+										nearbyDrivers.clear();
+										nearbyDrivers.addAll(JSONParser.parseNearbySharingDrivers(jObj));
+										nearbyDriversAdapter.notifyDataSetChanged();
+									}
+									else{
+										DialogPopup.alertPopup(activity, "", message);
+									}
+								} catch (Exception exception) {
+									exception.printStackTrace();
+								}
+								progressBarNearbyDrivers.setVisibility(View.GONE);
+								recyclerViewDrivers.setVisibility(View.VISIBLE);
+							}
+						});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			progressBarNearbyDrivers.setVisibility(View.GONE);
+			recyclerViewDrivers.setVisibility(View.GONE);
 		}
 	}
 
