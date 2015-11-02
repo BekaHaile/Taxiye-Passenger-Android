@@ -353,7 +353,7 @@
                         android:layout_height="43px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:src="@drawable/ic_notification_center"
+                        android:src="@drawable/ic_notification_center_grey"
                         android:tag="mwar"/>
 
                     <TextView

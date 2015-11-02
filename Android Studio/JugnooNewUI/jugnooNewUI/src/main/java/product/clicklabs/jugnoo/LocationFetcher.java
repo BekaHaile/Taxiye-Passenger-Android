@@ -1,13 +1,10 @@
 package product.clicklabs.jugnoo;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -58,7 +55,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		destroy();
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 		if(resp == ConnectionResult.SUCCESS){														// google play services working
-			if(isLocationEnabled(context)){															// location fetching enabled
+			if(Utils.isLocationEnabled(context)){															// location fetching enabled
                 buildGoogleApiClient(context);
 			}
 			else{																					// location disabled
@@ -105,23 +102,6 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	
 	
 	
-	/**
-	 * Checks if location fetching is enabled in device or not
-	 * @param context application context
-	 * @return true if any location provider is enabled else false
-	 */
-	private synchronized boolean isLocationEnabled(Context context) {
-		try{
-			ContentResolver contentResolver = context.getContentResolver();
-			boolean gpsStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
-			boolean netStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.NETWORK_PROVIDER);
-			return gpsStatus || netStatus;
-		} catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-
 
 
 
@@ -251,13 +231,14 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected");
-		Location loc = getLocation();
-		if(loc != null){
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("cached", true);
-            loc.setExtras(bundle);
-			locationUpdate.onLocationChanged(loc, priority);
-		}
+		// sending one cached location at connection establisment
+//		Location loc = getLocation();
+//		if(loc != null){
+//            Bundle bundle = new Bundle();
+//            bundle.putBoolean("cached", true);
+//            loc.setExtras(bundle);
+//			locationUpdate.onLocationChanged(loc, priority);
+//		}
 		startRequest();
 	}
 

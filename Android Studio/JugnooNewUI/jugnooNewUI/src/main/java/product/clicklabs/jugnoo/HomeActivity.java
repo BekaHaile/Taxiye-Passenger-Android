@@ -1834,7 +1834,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	}
 
 
-    Handler shakeHandler;
+	public void callAnAutoClicked(LatLng requestLatLng){
+		try {
+			hideAnims();
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				promoCouponSelectedForRide = null;
+				Data.pickupLatLng = requestLatLng;
+
+				editTextAssigningDropLocation.setText("");
+				editTextFinalDropLocation.setText("");
+
+				promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
+				FlurryEventLogger.event(AUTO_RIDE_ICON);
+			} else {
+				DialogPopup.alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+	Handler shakeHandler;
     Runnable shakeRunnable;
     int shakeCount = 0;
     private void startGiftShake(){
@@ -1866,26 +1888,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         shakeHandler.postDelayed(shakeRunnable, 10000);
     }
 
-
-	public void callAnAutoClicked(LatLng requestLatLng){
-		try {
-			hideAnims();
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				promoCouponSelectedForRide = null;
-				Data.pickupLatLng = requestLatLng;
-
-				editTextAssigningDropLocation.setText("");
-				editTextFinalDropLocation.setText("");
-
-				promotionsListAdapter.fetchPromotionsAPI(HomeActivity.this, requestLatLng);
-				FlurryEventLogger.event(AUTO_RIDE_ICON);
-			} else {
-				DialogPopup.alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
     private void stopGiftShake(){
         try{
@@ -2307,6 +2309,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         startGiftShake();
+						relativeLayoutNotification.setVisibility(View.VISIBLE);
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
@@ -2357,6 +2360,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         jugnooShopImageView.setVisibility(View.GONE);
                         stopGiftShake();
+						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
@@ -2405,6 +2409,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         startGiftShake();
+						relativeLayoutNotification.setVisibility(View.VISIBLE);
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
@@ -2465,6 +2470,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         stopGiftShake();
+						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
@@ -2536,6 +2542,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         stopGiftShake();
+						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
@@ -2593,6 +2600,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         stopGiftShake();
+						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
@@ -2610,6 +2618,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         imageViewSearchCancel.setVisibility(View.GONE);
                         stopGiftShake();
+						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
 
 //                        genieLayout.setVisibility(View.GONE);
@@ -2629,6 +2638,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.GONE);
 
                         stopGiftShake();
+						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
 
@@ -3173,6 +3183,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onDestroy() {
         try {
+
+			if(!Utils.isLocationEnabled(this)){
+				Data.latitude = 0;
+				Data.longitude = 0;
+				myLocation = null;
+				Data.pickupLatLng = null;
+			}
 
             GCMIntentService.clearNotifications(HomeActivity.this);
 
@@ -5006,6 +5023,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public synchronized void onLocationChanged(Location location, int priority) {
 		try {
+			Data.latitude = location.getLatitude();
+			Data.longitude = location.getLongitude();
 			if (priority == 0) {
 				if (location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK) {
 					HomeActivity.myLocation = location;
@@ -5025,8 +5044,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 			zoomedToMyLocation = true;
 
-			Data.latitude = location.getLatitude();
-			Data.longitude = location.getLongitude();
 
 			boolean cached = false;
 			try {

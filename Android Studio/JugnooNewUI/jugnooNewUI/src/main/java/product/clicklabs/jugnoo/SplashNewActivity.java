@@ -612,8 +612,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 
 				if (Data.locationFetcher != null) {
-					Data.latitude = Data.locationFetcher.getLatitude();
-					Data.longitude = Data.locationFetcher.getLongitude();
+					Data.loginLatitude = Data.locationFetcher.getLatitude();
+					Data.loginLongitude = Data.locationFetcher.getLongitude();
 				}
 
 				RequestParams params = new RequestParams();
@@ -621,8 +621,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_token", Data.deviceToken);
 
 
-				params.put("latitude", "" + Data.latitude);
-				params.put("longitude", "" + Data.longitude);
+				params.put("latitude", "" + Data.loginLatitude);
+				params.put("longitude", "" + Data.loginLongitude);
 
 
 				params.put("app_version", "" + Data.appVersion);
@@ -1015,8 +1015,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		Data.latitude = location.getLatitude();
-		Data.longitude = location.getLongitude();
+		Data.loginLatitude = location.getLatitude();
+		Data.loginLongitude = location.getLongitude();
 	}
 
 

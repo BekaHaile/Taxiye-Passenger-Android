@@ -574,16 +574,16 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             RequestParams params = new RequestParams();
 
             if (Data.locationFetcher != null) {
-                Data.latitude = Data.locationFetcher.getLatitude();
-                Data.longitude = Data.locationFetcher.getLongitude();
+                Data.loginLatitude = Data.locationFetcher.getLatitude();
+                Data.loginLongitude = Data.locationFetcher.getLongitude();
             }
 
             params.put("user_name", name);
             params.put("phone_no", phoneNo);
             params.put("email", emailId);
             params.put("password", password);
-            params.put("latitude", "" + Data.latitude);
-            params.put("longitude", "" + Data.longitude);
+            params.put("latitude", "" + Data.loginLatitude);
+            params.put("longitude", "" + Data.loginLongitude);
 
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
@@ -687,8 +687,8 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             RequestParams params = new RequestParams();
 
             if (Data.locationFetcher != null) {
-                Data.latitude = Data.locationFetcher.getLatitude();
-                Data.longitude = Data.locationFetcher.getLongitude();
+                Data.loginLatitude = Data.locationFetcher.getLatitude();
+                Data.loginLongitude = Data.locationFetcher.getLongitude();
             }
 
             params.put("user_fb_id", Data.facebookUserData.fbId);
@@ -701,8 +701,8 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             params.put("password", password);
             params.put("referral_code", referralCode);
 
-            params.put("latitude", "" + Data.latitude);
-            params.put("longitude", "" + Data.longitude);
+            params.put("latitude", "" + Data.loginLatitude);
+            params.put("longitude", "" + Data.loginLongitude);
             params.put("device_token", Data.deviceToken);
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
@@ -872,8 +872,8 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
     @Override
     public void onLocationChanged(Location location, int priority) {
-        Data.latitude = location.getLatitude();
-        Data.longitude = location.getLongitude();
+        Data.loginLatitude = location.getLatitude();
+        Data.loginLongitude = location.getLongitude();
     }
 
 }

@@ -450,8 +450,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 RequestParams params = new RequestParams();
 
                 if (Data.locationFetcher != null) {
-                    Data.latitude = Data.locationFetcher.getLatitude();
-                    Data.longitude = Data.locationFetcher.getLongitude();
+                    Data.loginLatitude = Data.locationFetcher.getLatitude();
+                    Data.loginLongitude = Data.locationFetcher.getLongitude();
                 }
 
                 params.put("email", emailRegisterData.emailId);
@@ -463,8 +463,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("os_version", Data.osVersion);
                 params.put("country", Data.country);
                 params.put("unique_device_id", Data.uniqueDeviceId);
-                params.put("latitude", "" + Data.latitude);
-                params.put("longitude", "" + Data.longitude);
+                params.put("latitude", "" + Data.loginLatitude);
+                params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
 
@@ -553,8 +553,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 RequestParams params = new RequestParams();
 
                 if (Data.locationFetcher != null) {
-                    Data.latitude = Data.locationFetcher.getLatitude();
-                    Data.longitude = Data.locationFetcher.getLongitude();
+                    Data.loginLatitude = Data.locationFetcher.getLatitude();
+                    Data.loginLongitude = Data.locationFetcher.getLongitude();
                 }
 
 
@@ -571,8 +571,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("os_version", Data.osVersion);
                 params.put("country", Data.country);
                 params.put("unique_device_id", Data.uniqueDeviceId);
-                params.put("latitude", "" + Data.latitude);
-                params.put("longitude", "" + Data.longitude);
+                params.put("latitude", "" + Data.loginLatitude);
+                params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
 
@@ -778,8 +778,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		Data.latitude = location.getLatitude();
-		Data.longitude = location.getLongitude();
+		Data.loginLatitude = location.getLatitude();
+		Data.loginLongitude = location.getLongitude();
 	}
 
 

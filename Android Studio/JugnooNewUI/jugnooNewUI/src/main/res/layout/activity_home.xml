@@ -1269,9 +1269,9 @@
                             <ImageView
                                 android:id="@+id/imageViewNotification"
                                 android:layout_width="65px"
-                                android:layout_height="68px"
+                                android:layout_height="70px"
                                 android:padding="10px"
-                                android:src="@drawable/ic_gift_jugnoo"
+                                android:src="@drawable/ic_notification_center_selector"
                                 android:tag="mwar"
                                 />
 
@@ -1684,7 +1684,7 @@
                         android:layout_height="43px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:src="@drawable/ic_notification_center"
+                        android:src="@drawable/ic_notification_center_grey"
                         android:tag="mwar"/>
 
                     <TextView
