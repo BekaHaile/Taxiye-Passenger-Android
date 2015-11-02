@@ -323,7 +323,11 @@ public class Utils {
         return name.matches(".*[a-zA-Z]+.*");
     }
 
-
+	/**
+	 * Checks if location fetching is enabled in device or not
+	 * @param context application context
+	 * @return true if any location provider is enabled else false
+	 */
     public static boolean isLocationEnabled(Context context) {
         try{
             ContentResolver contentResolver = context.getContentResolver();
@@ -440,6 +444,8 @@ public class Utils {
 			if (process != null) process.destroy();
 		}
 	}
+
+
 
 
 }

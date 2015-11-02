@@ -439,6 +439,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                                     else if(FeedbackMode.PAST_RIDE == feedbackMode && RideTransactionsActivity.updateRideTransaction != null){
                                         RideTransactionsActivity.updateRideTransaction.updateRideTransaction(position);
                                     }
+									try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
                                     finish();
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 } else {
@@ -466,6 +467,8 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 			params.put("engagement_id", engagementId);
 
 			final String url = Config.getServerUrl() + "/skip_rating_by_customer";
+
+			try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
 
 			HomeActivity.feedbackSkipped = true;
 			HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
