@@ -27,9 +27,11 @@ import java.util.List;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -359,20 +361,27 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 					public void onSuccess(String response) {
 						Log.i("request succesfull", "response = " + response);
 						try {
-							JSONObject res = new JSONObject(response.toString());
-							if (Data.userData != null) {
-								String paytmStatus = res.optString("STATUS", "INACTIVE");
-								if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-									String balance = res.optString("WALLETBALANCE", "0");
-									Data.userData.setPaytmBalance(Double.parseDouble(balance));
-									Data.userData.setPaytmStatus(paytmStatus);
-								} else {
-									Data.userData.setPaytmStatus(paytmStatus);
-									Data.userData.setPaytmBalance(0);
-								}
-							}
+							JSONObject jObj = new JSONObject(response.toString());
+							String message = JSONParser.getServerMessage(jObj);
+							int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 
-							performGetBalanceSuccess(fragName);
+							if(11 == flag){
+								DialogPopup.alertPopup(PaymentActivity.this, "", message);
+							}
+							else{
+								if (Data.userData != null) {
+									String paytmStatus = jObj.optString("STATUS", "INACTIVE");
+									if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+										String balance = jObj.optString("WALLETBALANCE", "0");
+										Data.userData.setPaytmBalance(Double.parseDouble(balance));
+										Data.userData.setPaytmStatus(paytmStatus);
+									} else {
+										Data.userData.setPaytmStatus(paytmStatus);
+										Data.userData.setPaytmBalance(0);
+									}
+								}
+								performGetBalanceSuccess(fragName);
+							}
 
 						} catch (Exception e) {
 							e.printStackTrace();
