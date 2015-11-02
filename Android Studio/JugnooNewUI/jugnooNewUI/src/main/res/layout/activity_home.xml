@@ -1291,7 +1291,7 @@
 
                         </RelativeLayout>
 
-
+zz
                         <ImageView
                             android:id="@+id/jugnooShopImageView"
                             android:layout_width="80px"
@@ -1527,7 +1527,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="35px"
                         android:layout_toRightOf="@+id/imageViewInvite"
-                        android:text="Invite and Earn"
+                        android:text="Free Rides"
                         android:textColor="@drawable/text_color_grey_dark_white_selector"
                         android:textSize="30px"/>
 

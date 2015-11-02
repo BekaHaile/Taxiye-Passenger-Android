@@ -232,13 +232,13 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected");
 		// sending one cached location at connection establisment
-//		Location loc = getLocation();
-//		if(loc != null){
-//            Bundle bundle = new Bundle();
-//            bundle.putBoolean("cached", true);
-//            loc.setExtras(bundle);
-//			locationUpdate.onLocationChanged(loc, priority);
-//		}
+		Location loc = getLocation();
+		if(loc != null){
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("cached", true);
+            loc.setExtras(bundle);
+			locationUpdate.onLocationChanged(loc, priority);
+		}
 		startRequest();
 	}
 

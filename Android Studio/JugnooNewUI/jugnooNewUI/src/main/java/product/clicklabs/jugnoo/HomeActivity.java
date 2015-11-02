@@ -389,6 +389,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		EventsHolder.displayPushHandler = this;
 
+		Data.latitude = Data.loginLatitude;
+		Data.longitude = Data.loginLongitude;
+
 
 		mGoogleApiClient = new GoogleApiClient
 				.Builder(this)
@@ -3201,13 +3204,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onDestroy() {
         try {
-
-			if(!Utils.isLocationEnabled(this)){
-				Data.latitude = 0;
-				Data.longitude = 0;
-				myLocation = null;
-				Data.pickupLatLng = null;
-			}
 
             GCMIntentService.clearNotifications(HomeActivity.this);
 
