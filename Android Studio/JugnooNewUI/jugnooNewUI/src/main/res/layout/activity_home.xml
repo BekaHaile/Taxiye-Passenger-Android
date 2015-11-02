@@ -1259,14 +1259,39 @@
                         android:layout_marginRight="10px"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:id="@+id/imageViewGift"
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutNotification"
                             android:layout_width="65px"
                             android:layout_height="68px"
-                            android:padding="10px"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_gift_jugnoo"
-                            android:layout_alignParentRight="true"/>
+                            android:layout_gravity="center_vertical"
+                            >
+                            <ImageView
+                                android:id="@+id/imageViewNotification"
+                                android:layout_width="65px"
+                                android:layout_height="68px"
+                                android:padding="10px"
+                                android:src="@drawable/ic_gift_jugnoo"
+                                android:tag="mwar"
+                                />
+
+                            <TextView
+                                android:id="@+id/textViewNotificationValue"
+                                android:layout_width="35px"
+                                android:layout_height="35px"
+                                android:layout_toLeftOf="@+id/imageViewNotificationArrow"
+                                android:background="@drawable/circle_white"
+                                android:gravity="center"
+                                android:paddingTop="3px"
+                                android:tag="mwar"
+                                android:text="0"
+                                android:textColor="@color/black"
+                                android:textSize="20px"
+                                android:layout_alignParentRight="true"
+                                />
+
+                        </RelativeLayout>
+
 
                         <ImageView
                             android:id="@+id/jugnooShopImageView"
@@ -1649,7 +1674,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="100px"
                     android:background="@drawable/background_white_yellow_selector"
-                    android:splitMotionEvents="false">
+                    android:splitMotionEvents="false"
+                    android:visibility="gone"
+                    >
 
                     <ImageView
                         android:id="@+id/imageViewNotification"

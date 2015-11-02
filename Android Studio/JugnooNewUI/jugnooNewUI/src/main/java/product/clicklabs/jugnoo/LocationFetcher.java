@@ -43,9 +43,9 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	
 	private Handler checkLocationUpdateStartedHandler;
 	private Runnable checkLocationUpdateStartedRunnable;
-	
+
 	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
-	
+
 	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval, int priority){
 			this.locationUpdate = locationUpdate;
 			this.context = (Context) locationUpdate;
@@ -98,7 +98,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	
 	public static double getSavedLngFromSP(Context context){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
-		String longitude = preferences.getString(LOCATION_LNG, ""+0);
+		String longitude = preferences.getString(LOCATION_LNG, "" + 0);
 		return Double.parseDouble(longitude);
 	}
 	
@@ -296,7 +296,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		}
 	}
 
-	
+
 
 
 
@@ -331,8 +331,8 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		};
 		checkLocationUpdateStartedHandler.postDelayed(checkLocationUpdateStartedRunnable, CHECK_LOCATION_INTERVAL);
 	}
-	
-	public synchronized void stopCheckingLocationUpdates(){
+
+	private synchronized void stopCheckingLocationUpdates(){
 		try{
 			if(checkLocationUpdateStartedHandler != null && checkLocationUpdateStartedRunnable != null){
 				checkLocationUpdateStartedHandler.removeCallbacks(checkLocationUpdateStartedRunnable);
@@ -344,7 +344,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			checkLocationUpdateStartedRunnable = null;
 		}
 	}
-	
-	
+
+
 
 }

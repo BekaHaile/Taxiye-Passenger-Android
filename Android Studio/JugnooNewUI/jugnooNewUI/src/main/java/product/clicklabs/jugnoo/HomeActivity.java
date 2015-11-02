@@ -167,8 +167,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutAbout;
     TextView textViewAbout;
 
-    RelativeLayout relativeLayoutNotification;
-    TextView textViewNotification, textViewNotificationValue;
 
 
     //Top RL
@@ -177,7 +175,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView title;
     Button checkServerBtn;
     ImageView jugnooShopImageView;
-    ImageView imageViewGift, imageViewHelp;
+    ImageView imageViewHelp;
+	RelativeLayout relativeLayoutNotification;
+	TextView textViewNotificationValue;
 
 
     //Passenger main layout
@@ -483,12 +483,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
         textViewAbout.setTypeface(Fonts.latoRegular(this));
 
-        relativeLayoutNotification = (RelativeLayout) findViewById(R.id.relativeLayoutNotification);
-        textViewNotification = (TextView) findViewById(R.id.textViewNotification);
-        textViewNotification.setTypeface(Fonts.latoRegular(this));
-		textViewNotificationValue = (TextView) findViewById(R.id.textViewNotificationValue);
-		textViewNotificationValue.setTypeface(Fonts.latoRegular(this));
-		textViewNotificationValue.setVisibility(View.GONE);
 
 
         //Top RL
@@ -499,9 +493,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         title = (TextView) findViewById(R.id.title);
         title.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
-        imageViewGift = (ImageView) findViewById(R.id.imageViewGift);
         imageViewHelp = (ImageView) findViewById(R.id.imageViewHelp);
         jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
+		relativeLayoutNotification = (RelativeLayout) findViewById(R.id.relativeLayoutNotification);
+		textViewNotificationValue = (TextView) findViewById(R.id.textViewNotificationValue);
+		textViewNotificationValue.setTypeface(Fonts.latoRegular(this));
+		textViewNotificationValue.setVisibility(View.GONE);
 
 
         //Map Layout
@@ -1071,14 +1068,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        imageViewGift.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FlurryEventLogger.event(REFERRAL_GIFT_ICON);
-                startActivity(new Intent(HomeActivity.this, ShareActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }
-        });
+//        imageViewGift.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FlurryEventLogger.event(REFERRAL_GIFT_ICON);
+//                startActivity(new Intent(HomeActivity.this, ShareActivity.class));
+//                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//            }
+//        });
 
         imageViewHelp.setOnClickListener(new OnClickListener() {
             @Override
@@ -1126,7 +1123,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
 				hideMenuDrawer();
-                imageViewGift.performClick();
+                FlurryEventLogger.event(REFERRAL_GIFT_ICON);
+                startActivity(new Intent(HomeActivity.this, ShareActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(INVITE_EARN_MENU);
             }
         });
@@ -1842,20 +1841,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Runnable shakeRunnable;
     int shakeCount = 0;
     private void startGiftShake(){
-        imageViewGift.setVisibility(View.VISIBLE);
+//        imageViewGift.setVisibility(View.VISIBLE);
         shakeCount = 0;
         shakeHandler = new Handler();
         shakeRunnable = new Runnable() {
             @Override
             public void run() {
                 if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-                    imageViewGift.clearAnimation();
-                    imageViewGift.setVisibility(View.GONE);
+//                    imageViewGift.clearAnimation();
+//                    imageViewGift.setVisibility(View.GONE);
                 } else {
-                    if (View.VISIBLE != imageViewGift.getVisibility()) {
-                        imageViewGift.setVisibility(View.VISIBLE);
-                    }
-                    shakeView(imageViewGift);
+//                    if (View.VISIBLE != imageViewGift.getVisibility()) {
+//                        imageViewGift.setVisibility(View.VISIBLE);
+//                    }
+//                    shakeView(imageViewGift);
                 }
                 if(shakeCount <= 2){
                     shakeCount++;
@@ -1893,8 +1892,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void stopGiftShake(){
         try{
-            imageViewGift.clearAnimation();
-            imageViewGift.setVisibility(View.GONE);
+//            imageViewGift.clearAnimation();
+//            imageViewGift.setVisibility(View.GONE);
             shakeCount = 0;
             shakeHandler.removeCallbacks(shakeRunnable);
         } catch(Exception e){
