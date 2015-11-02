@@ -1042,18 +1042,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         jugnooShopImageView.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (Data.userData != null) {
-                    if (Data.userData.nukkadEnable == 1) {
-                        startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
-                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
-                    }
-                }
-                hideAnims();
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				if (Data.userData != null) {
+					if (Data.userData.nukkadEnable == 1) {
+						startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
+					}
+				}
+				hideAnims();
+			}
+		});
 
         imageViewSearchCancel.setOnClickListener(new OnClickListener() {
 
@@ -1068,14 +1068,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-//        imageViewGift.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FlurryEventLogger.event(REFERRAL_GIFT_ICON);
-//                startActivity(new Intent(HomeActivity.this, ShareActivity.class));
-//                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//            }
-//        });
 
         imageViewHelp.setOnClickListener(new OnClickListener() {
             @Override
@@ -1085,8 +1077,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+		relativeLayoutNotification.setOnClickListener(new OnClickListener() {
 
-        // menu events ,. LM
+			@Override
+			public void onClick(View v) {
+				hideMenuDrawer();
+				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
+			}
+		});
+
+
+
+
+
+
+
+        // menu events
         linearLayoutProfile.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -1123,7 +1131,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
 				hideMenuDrawer();
-                FlurryEventLogger.event(REFERRAL_GIFT_ICON);
                 startActivity(new Intent(HomeActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(INVITE_EARN_MENU);
@@ -1202,16 +1209,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        relativeLayoutNotification.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-				hideMenuDrawer();
-                startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
-            }
-        });
 
 
         menuLayout.setOnClickListener(new OnClickListener() {

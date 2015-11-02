@@ -87,15 +87,15 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		editor.putString(LOCATION_LNG, ""+longitude);
 		editor.commit();
 	}
-	
-	
+
+
 	public static double getSavedLatFromSP(Context context){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String latitude = preferences.getString(LOCATION_LAT, ""+ 0);
 		Log.d("saved last lat", "==" + latitude);
 		return Double.parseDouble(latitude);
 	}
-	
+
 	public static double getSavedLngFromSP(Context context){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String longitude = preferences.getString(LOCATION_LNG, "" + 0);
@@ -132,7 +132,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 
 
 
-    protected void createLocationRequest(long interval, int priority) {
+	private void createLocationRequest(long interval, int priority) {
         locationrequest = new LocationRequest();
         locationrequest.setInterval(interval);
         locationrequest.setFastestInterval(interval / 2);
@@ -148,7 +148,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
     }
 
 
-    protected synchronized void buildGoogleApiClient(Context context) {
+	private synchronized void buildGoogleApiClient(Context context) {
         googleApiClient = new GoogleApiClient.Builder(context)
             .addConnectionCallbacks(this)
             .addOnConnectionFailedListener(this)
@@ -156,7 +156,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
         googleApiClient.connect();
     }
 
-    protected void startLocationUpdates(long interval, int priority) {
+	private void startLocationUpdates(long interval, int priority) {
         createLocationRequest(interval, priority);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, this);
     }
@@ -195,8 +195,8 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		} catch(Exception e){Log.e("e", "=" + e.toString());}
 		return getSavedLngFromSP(context);
 	}
-	
-	public Location getLocation(){
+
+	private Location getLocation(){
 		try{
 			if(location != null){
 				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
