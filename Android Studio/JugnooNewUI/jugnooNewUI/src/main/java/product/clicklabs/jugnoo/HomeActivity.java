@@ -689,19 +689,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onPlaceSearchPre() {
-                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+//                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+					progressBarAssigningDropLocation.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onPlaceSearchPost(SearchResult searchResult) {
-                    DialogPopup.dismissLoadingDialog();
-                    sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
+//                    DialogPopup.dismissLoadingDialog();
+					progressBarAssigningDropLocation.setVisibility(View.GONE);
+                    sendDropLocationAPI(HomeActivity.this, searchResult.latLng, progressBarAssigningDropLocation);
                     FlurryEventLogger.event(DROP_LOCATION_USED_FINIDING_DRIVER);
                 }
 
                 @Override
                 public void onPlaceSearchError() {
-                    DialogPopup.dismissLoadingDialog();
+//                    DialogPopup.dismissLoadingDialog();
+					progressBarAssigningDropLocation.setVisibility(View.GONE);
                 }
             });
 
@@ -797,19 +800,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onPlaceSearchPre() {
-                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+//                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+					progressBarFinalDropLocation.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onPlaceSearchPost(SearchResult searchResult) {
-                    DialogPopup.dismissLoadingDialog();
-                    sendDropLocationAPI(HomeActivity.this, searchResult.latLng);
+//                    DialogPopup.dismissLoadingDialog();
+					progressBarFinalDropLocation.setVisibility(View.GONE);
+                    sendDropLocationAPI(HomeActivity.this, searchResult.latLng, progressBarFinalDropLocation);
                     FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);
                 }
 
                 @Override
                 public void onPlaceSearchError() {
-                    DialogPopup.dismissLoadingDialog();
+//                    DialogPopup.dismissLoadingDialog();
+					progressBarFinalDropLocation.setVisibility(View.GONE);
                 }
             });
         listViewFinalDropLocationSearch.setAdapter(dropLocationFinalSearchListAdapter);
@@ -2274,6 +2280,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
 
                         clearAnims();
+
+						try{ map.clear(); } catch(Exception e){ e.printStackTrace(); }
 
                         try {
                             pickupLocationMarker.remove();
@@ -3906,10 +3914,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng) {
+    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+//            DialogPopup.showLoadingDialog(activity, "Loading...");
+			progressWheel.setVisibility(View.VISIBLE);
 
             RequestParams params = new RequestParams();
 
@@ -3931,7 +3940,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void onFailure(Throwable arg3) {
                         Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
+//                        DialogPopup.dismissLoadingDialog();
+						progressWheel.setVisibility(View.GONE);
                         DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                     }
 
@@ -3978,7 +3988,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             exception.printStackTrace();
                             DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
-                        DialogPopup.dismissLoadingDialog();
+//                        DialogPopup.dismissLoadingDialog();
+						progressWheel.setVisibility(View.GONE);
                     }
                 });
         } else {
