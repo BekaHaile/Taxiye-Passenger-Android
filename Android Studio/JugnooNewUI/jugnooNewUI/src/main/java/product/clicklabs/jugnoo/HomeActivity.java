@@ -158,6 +158,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutTransactions;
     TextView textViewTransactions;
 
+	RelativeLayout relativeLayoutNotificationMenu;
+	TextView textViewNotificationValueMenu;
+
     RelativeLayout relativeLayoutFareDetails;
     TextView textViewFareDetails;
 
@@ -471,7 +474,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewTransactions = (TextView) findViewById(R.id.textViewTransactions);
         textViewTransactions.setTypeface(Fonts.latoRegular(this));
 
-        relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails); relativeLayoutFareDetails.setVisibility(View.GONE);
+		relativeLayoutNotificationMenu = (RelativeLayout) findViewById(R.id.relativeLayoutNotificationMenu);
+		textViewNotificationValueMenu = (TextView) findViewById(R.id.textViewNotificationValueMenu);
+		textViewNotificationValueMenu.setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewNotificationMenu)).setTypeface(Fonts.latoRegular(this));
+
+		relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails); relativeLayoutFareDetails.setVisibility(View.GONE);
         textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails);
         textViewFareDetails.setTypeface(Fonts.latoRegular(this));
 
@@ -1176,6 +1184,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 FlurryEventLogger.event(RIDE_HISTORY);
             }
         });
+
+		relativeLayoutNotificationMenu.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				relativeLayoutNotification.performClick();
+			}
+		});
 
         relativeLayoutFareDetails.setOnClickListener(new OnClickListener() {
 
@@ -2088,10 +2103,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			int unreadNotificationsCount = Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
 			if(unreadNotificationsCount > 0){
 				textViewNotificationValue.setVisibility(View.VISIBLE);
-				textViewNotificationValue.setText(""+unreadNotificationsCount);
+				textViewNotificationValue.setText("" + unreadNotificationsCount);
+				textViewNotificationValueMenu.setVisibility(View.VISIBLE);
+				textViewNotificationValueMenu.setText(""+unreadNotificationsCount);
 			}
 			else{
 				textViewNotificationValue.setVisibility(View.GONE);
+				textViewNotificationValueMenu.setVisibility(View.GONE);
 			}
 
             textViewJugnooCashValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.jugnooBalance));

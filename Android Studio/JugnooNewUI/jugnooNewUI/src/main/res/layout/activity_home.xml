@@ -1246,7 +1246,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:gravity="center"
-                        android:text="AUTOS"
+                        android:text="JUGNOO"
                         android:textColor="@color/white"
                         android:textSize="40px"/>
 
@@ -1268,8 +1268,8 @@
                             >
                             <ImageView
                                 android:id="@+id/imageViewNotification"
-                                android:layout_width="65px"
-                                android:layout_height="70px"
+                                android:layout_width="60px"
+                                android:layout_height="65px"
                                 android:padding="10px"
                                 android:src="@drawable/ic_notification_center_selector"
                                 android:tag="mwar"
@@ -1279,10 +1279,9 @@
                                 android:id="@+id/textViewNotificationValue"
                                 android:layout_width="35px"
                                 android:layout_height="35px"
-                                android:layout_toLeftOf="@+id/imageViewNotificationArrow"
                                 android:background="@drawable/circle_white"
                                 android:gravity="center"
-                                android:paddingTop="3px"
+                                android:paddingTop="0px"
                                 android:tag="mwar"
                                 android:text="0"
                                 android:textColor="@color/black"
@@ -1670,41 +1669,41 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutNotification"
+                    android:id="@+id/relativeLayoutNotificationMenu"
                     android:layout_width="match_parent"
                     android:layout_height="100px"
                     android:background="@drawable/background_white_yellow_selector"
                     android:splitMotionEvents="false"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
 
                     <ImageView
-                        android:id="@+id/imageViewNotification"
-                        android:layout_width="39px"
-                        android:layout_height="43px"
+                        android:id="@+id/imageViewNotificationMenu"
+                        android:layout_width="40px"
+                        android:layout_height="45px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:src="@drawable/ic_notification_center_grey"
+                        android:src="@drawable/ic_notification_center_grey_white_selector"
                         android:tag="mwar"/>
 
                     <TextView
-                        android:id="@+id/textViewNotification"
+                        android:id="@+id/textViewNotificationMenu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="35px"
-                        android:layout_toRightOf="@+id/imageViewNotification"
+                        android:layout_toRightOf="@+id/imageViewNotificationMenu"
                         android:text="Notification Center"
                         android:textColor="@drawable/text_color_grey_dark_white_selector"
                         android:textSize="30px"/>
 
                     <TextView
-                        android:id="@+id/textViewNotificationValue"
+                        android:id="@+id/textViewNotificationValueMenu"
                         android:layout_width="55px"
                         android:layout_height="55px"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="20px"
-                        android:layout_toLeftOf="@+id/imageViewNotificationArrow"
+                        android:layout_toLeftOf="@+id/imageViewNotificationArrowMenu"
                         android:background="@drawable/circle_yellow"
                         android:gravity="center"
                         android:padding="10px"
@@ -1714,7 +1713,7 @@
                         android:textSize="30px"/>
 
                     <ImageView
-                        android:id="@+id/imageViewNotificationArrow"
+                        android:id="@+id/imageViewNotificationArrowMenu"
                         android:layout_width="13px"
                         android:layout_height="26px"
                         android:layout_alignParentRight="true"
