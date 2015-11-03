@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -92,6 +91,7 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -125,7 +125,6 @@ import product.clicklabs.jugnoo.wallet.EventsHolder;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
-@SuppressLint("DefaultLocale")
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
 		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler {
 
@@ -1102,6 +1101,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
+				FlurryEventLogger.event(NOTIFICATION_ICON);
 			}
 		});
 
@@ -1197,7 +1197,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutNotificationMenu.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				relativeLayoutNotification.performClick();
+				hideMenuDrawer();
+				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
+				FlurryEventLogger.event(NOTIFICATION_CENTER_DRAWER);
 			}
 		});
 
@@ -3015,8 +3019,77 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		EventsHolder.displayPushHandler = this;
 
+		startNotifsUpdater();
+
 //        genieLayout.setGenieParams();
     }
+
+	private void startNotifsUpdater(){
+		try {
+			updateNotifsHandler.post(updateNotifsRunnable);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void stopNotifsUpdater(){
+		try {
+			updateNotifsHandler.removeCallbacks(updateNotifsRunnable);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private Handler updateNotifsHandler = new Handler();
+	private Runnable updateNotifsRunnable = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				new UpdateNotificationsAsync(updateNotifsHandler, this).execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
+	private class UpdateNotificationsAsync extends AsyncTask<String, String, String>{
+
+		private Handler updateNotifsHandler;
+		private Runnable updateNotifsRunnable;
+
+		public UpdateNotificationsAsync(Handler updateNotifsHandler, Runnable updateNotifsRunnable){
+			this.updateNotifsHandler = updateNotifsHandler;
+			this.updateNotifsRunnable = updateNotifsRunnable;
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				ArrayList<NotificationData> notificationDatas = Database2.getInstance(HomeActivity.this).getAllNotification();
+				if(notificationDatas.size() == 0) {
+					Prefs.with(HomeActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+				}
+				else if(notificationDatas.size() > 0
+						&& Prefs.with(HomeActivity.this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) > notificationDatas.size()){
+					Prefs.with(HomeActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, notificationDatas.size());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String s) {
+			super.onPostExecute(s);
+			setUserData();
+			try {
+				updateNotifsHandler.postDelayed(updateNotifsRunnable, 10000);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
 
 
 
@@ -3143,7 +3216,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     protected void onPause() {
-
+		stopNotifsUpdater();
         destroyFusedLocationFetchers();
 
         GCMIntentService.clearNotifications(getApplicationContext());

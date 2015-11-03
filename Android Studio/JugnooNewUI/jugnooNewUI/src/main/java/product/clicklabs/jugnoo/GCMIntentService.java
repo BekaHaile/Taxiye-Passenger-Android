@@ -424,6 +424,9 @@ public class GCMIntentService extends GcmListenerService {
 								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
 								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 							}
+							if("".equalsIgnoreCase(picture)){
+								if(EventsHolder.displayPushHandler != null){ EventsHolder.displayPushHandler.onDisplayMessagePushReceived(); }
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

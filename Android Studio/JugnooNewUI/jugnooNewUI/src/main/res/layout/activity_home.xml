@@ -1684,7 +1684,7 @@
                         android:layout_height="45px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:src="@drawable/ic_notification_center_grey_white_selector"
+                        android:src="@drawable/ic_notification_center_thin_selector"
                         android:tag="mwar"/>
 
                     <TextView

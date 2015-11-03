@@ -103,7 +103,9 @@ public interface FlurryEventNames {
         LIKING_ON_FACEBOOK_ABOUT = "Liking on facebook_about",
         TERMS_AND_CONDITIONS = "terms and conditions",
         PRIVACY_POLICY = "Privacy policy",
-        ABOUT_JUGOO_AUTOS = "About Jugoo Autos"
+        ABOUT_JUGOO_AUTOS = "About Jugoo Autos",
+	NOTIFICATION_ICON = "Notification Icon",
+	NOTIFICATION_CENTER_DRAWER = "Notification center drawer"
 
 				;
 
