@@ -3082,7 +3082,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			super.onPostExecute(s);
 			setUserData();
 			try {
-				updateNotifsHandler.postDelayed(updateNotifsRunnable, 10000);
+				updateNotifsHandler.postDelayed(updateNotifsRunnable, 30000);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
