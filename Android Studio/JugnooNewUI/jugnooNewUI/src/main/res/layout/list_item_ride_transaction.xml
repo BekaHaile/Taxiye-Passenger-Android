@@ -151,7 +151,7 @@
                 android:text="Cancelled"
                 android:textColor="@color/black_text"
                 android:layout_toRightOf="@+id/textViewDetailsValue"
-                android:textSize="24px"
+                android:textSize="26px"
                 android:visibility="gone"
                 />
         </RelativeLayout>

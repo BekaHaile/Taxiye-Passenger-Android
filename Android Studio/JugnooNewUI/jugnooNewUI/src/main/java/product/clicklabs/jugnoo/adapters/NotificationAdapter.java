@@ -54,10 +54,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 
-        Picasso.with(activity).load(notification.getNotificationImage())
-				.transform(new RoundBorderTransform((int)(minRatio * 5f))).into(holder.notificationImage);
+		try {
+			if(notification.getNotificationImage().equalsIgnoreCase("")){
+				holder.notificationImage.setVisibility(View.GONE);
+			}
+			else{
+				holder.notificationImage.setVisibility(View.VISIBLE);
+				Picasso.with(activity).load(notification.getNotificationImage())
+						.transform(new RoundBorderTransform((int) (minRatio * 5f))).into(holder.notificationImage);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-    }
+	}
 
     @Override
     public int getItemCount() {

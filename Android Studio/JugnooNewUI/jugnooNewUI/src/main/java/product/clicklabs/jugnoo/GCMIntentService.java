@@ -422,7 +422,7 @@ public class GCMIntentService extends GcmListenerService {
 								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 							} else if(jObj.has("timeTillDisplay")){
 								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
-								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0)+1));
+								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -491,6 +491,12 @@ public class GCMIntentService extends GcmListenerService {
             this.message = message;
         }
 
+		@Override
+		protected void onPreExecute() {
+			// Things to be done before execution of long running operation. For
+			// example showing ProgessDialog
+		}
+
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
@@ -508,21 +514,13 @@ public class GCMIntentService extends GcmListenerService {
             // execution of result of Long time consuming operation
             try {
                 notificationManagerCustomIDWithBitmap(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
-				if(EventsHolder.displayPushHandler != null){
-					EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
-				}
+				if(EventsHolder.displayPushHandler != null){ EventsHolder.displayPushHandler.onDisplayMessagePushReceived(); }
             }catch (Exception e){
                 e.printStackTrace();
                 notificationManagerCustomID(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex);
             }
-
         }
 
-        @Override
-        protected void onPreExecute() {
-            // Things to be done before execution of long running operation. For
-            // example showing ProgessDialog
-        }
     }
 
 

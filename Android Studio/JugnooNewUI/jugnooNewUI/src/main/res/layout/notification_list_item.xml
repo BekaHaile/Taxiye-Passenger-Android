@@ -36,6 +36,7 @@
                     android:src="@drawable/jugnoo_icon"
                     android:tag="mwar"
                     android:scaleType="centerCrop"
+                    android:visibility="visible"
                     />
 
                 <ImageView
