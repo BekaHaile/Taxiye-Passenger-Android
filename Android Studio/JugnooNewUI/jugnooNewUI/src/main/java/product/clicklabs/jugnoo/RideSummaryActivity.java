@@ -220,7 +220,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 	public void setRideData(){
 		try{
 			if(endRideData != null){
-				DecimalFormat decimalFormat = new DecimalFormat("#.#");
+				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
 				scrollViewEndRide.scrollTo(0, 0);
 
@@ -274,7 +274,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 					textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.discount));
 				}
 
-				textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(Math.abs(endRideData.fare - endRideData.discount)));
+				textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.finalFare));
 				textViewEndRideJugnooCashValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.paidUsingWallet));
 				textViewEndRideToBePaidValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.toPay));
 

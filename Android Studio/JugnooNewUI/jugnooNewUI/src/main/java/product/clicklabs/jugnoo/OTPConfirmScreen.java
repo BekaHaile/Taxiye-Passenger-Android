@@ -450,8 +450,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 RequestParams params = new RequestParams();
 
                 if (Data.locationFetcher != null) {
-                    Data.latitude = Data.locationFetcher.getLatitude();
-                    Data.longitude = Data.locationFetcher.getLongitude();
+                    Data.loginLatitude = Data.locationFetcher.getLatitude();
+                    Data.loginLongitude = Data.locationFetcher.getLongitude();
                 }
 
                 params.put("email", emailRegisterData.emailId);
@@ -463,11 +463,17 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("os_version", Data.osVersion);
                 params.put("country", Data.country);
                 params.put("unique_device_id", Data.uniqueDeviceId);
-                params.put("latitude", "" + Data.latitude);
-                params.put("longitude", "" + Data.longitude);
+                params.put("latitude", "" + Data.loginLatitude);
+                params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
 
+				if(Utils.isDeviceRooted()){
+					params.put("device_rooted", "1");
+				}
+				else{
+					params.put("device_rooted", "0");
+				}
 
                 Log.i("params", "" + params.toString());
 
@@ -547,8 +553,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 RequestParams params = new RequestParams();
 
                 if (Data.locationFetcher != null) {
-                    Data.latitude = Data.locationFetcher.getLatitude();
-                    Data.longitude = Data.locationFetcher.getLongitude();
+                    Data.loginLatitude = Data.locationFetcher.getLatitude();
+                    Data.loginLongitude = Data.locationFetcher.getLongitude();
                 }
 
 
@@ -565,11 +571,17 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("os_version", Data.osVersion);
                 params.put("country", Data.country);
                 params.put("unique_device_id", Data.uniqueDeviceId);
-                params.put("latitude", "" + Data.latitude);
-                params.put("longitude", "" + Data.longitude);
+                params.put("latitude", "" + Data.loginLatitude);
+                params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
 
+				if(Utils.isDeviceRooted()){
+					params.put("device_rooted", "1");
+				}
+				else{
+					params.put("device_rooted", "0");
+				}
 
                 Log.i("params", "" + params);
 
@@ -712,7 +724,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			loginDataFetched = false;
 			Database2.getInstance(OTPConfirmScreen.this).updateDriverLastLocationTime();
 			Database2.getInstance(OTPConfirmScreen.this).close();
-			startActivity(new Intent(OTPConfirmScreen.this, HomeActivity.class));
+			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
+			intent.setData(Data.splashIntentUri);
+			startActivity(intent);
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			ActivityCompat.finishAffinity(this);
 		}
@@ -764,8 +778,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		Data.latitude = location.getLatitude();
-		Data.longitude = location.getLongitude();
+		Data.loginLatitude = location.getLatitude();
+		Data.loginLongitude = location.getLongitude();
 	}
 
 

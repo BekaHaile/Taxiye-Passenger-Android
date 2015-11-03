@@ -11,8 +11,10 @@ public class RideInfo {
 	public int isRatedBefore;
 	public int driverId;
 	public int engagementId;
+	public int isCancelledRide;
 
-	public RideInfo(String pickupAddress, String dropAddress, double amount, double distance, double rideTime, double waitTime, String date, int isRatedBefore, int driverId, int engagementId) {
+	public RideInfo(String pickupAddress, String dropAddress, double amount, double distance, double rideTime, double waitTime, String date,
+					int isRatedBefore, int driverId, int engagementId, int isCancelledRide) {
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
 		this.amount = amount;
@@ -27,7 +29,7 @@ public class RideInfo {
 		if(this.waitTime > -1) {
 			this.rideTime = this.rideTime + this.waitTime;
 		}
-
+		this.isCancelledRide = isCancelledRide;
 	}
 
 	@Override

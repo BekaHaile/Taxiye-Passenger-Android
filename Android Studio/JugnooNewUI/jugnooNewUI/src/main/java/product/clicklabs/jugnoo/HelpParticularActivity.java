@@ -204,67 +204,75 @@ public class HelpParticularActivity extends BaseActivity {
      * ASync for fetching information for supplied section
      */
     public void getFareDetailsAsync(final Activity activity) {
-        if (fetchHelpDataClient == null) {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
-                if (helpSection != null) {
-                    apiCalling = true;
-//                    DialogPopup.showLoadingDialog(activity, "Loading...");
-                    progressBar.setVisibility(View.VISIBLE);
-                    textViewInfo.setVisibility(View.GONE);
-                    webview.setVisibility(View.GONE);
-                    loadHTMLContent("");
+		try {
+			if (fetchHelpDataClient == null) {
+				if (AppStatus.getInstance(activity).isOnline(activity)) {
+					if (helpSection != null) {
+						apiCalling = true;
+	//                    DialogPopup.showLoadingDialog(activity, "Loading...");
+						progressBar.setVisibility(View.VISIBLE);
+						textViewInfo.setVisibility(View.GONE);
+						webview.setVisibility(View.GONE);
+						loadHTMLContent("");
 
-                    Log.e("helpSection", "=" + helpSection.getOrdinal() + " " + helpSection.getName());
+						Log.e("helpSection", "=" + helpSection.getOrdinal() + " " + helpSection.getName());
 
-                    RequestParams params = new RequestParams();
-                    params.put("access_token", Data.userData.accessToken);
-                    params.put("section", "" + helpSection.getOrdinal());
+						RequestParams params = new RequestParams();
+						params.put("access_token", Data.userData.accessToken);
+						params.put("section", "" + helpSection.getOrdinal());
 
-                    fetchHelpDataClient = Data.getClient();
-                    fetchHelpDataClient.post(Config.getServerUrl() + "/get_information", params,
-                        new CustomAsyncHttpResponseHandler() {
-                            private JSONObject jObj;
+						fetchHelpDataClient = Data.getClient();
+						fetchHelpDataClient.post(Config.getServerUrl() + "/get_information", params,
+							new CustomAsyncHttpResponseHandler() {
+								private JSONObject jObj;
 
-                            @Override
-                            public void onFailure(Throwable arg3) {
-                                Log.e("request fail", arg3.toString());
-                                apiCalling = false;
-                                progressBar.setVisibility(View.GONE);
-                                openHelpData("Some error occured. Tap to retry.", true);
-//                                DialogPopup.dismissLoadingDialog();
-                            }
+								@Override
+								public void onFailure(Throwable arg3) {
+									try {
+										Log.e("request fail", arg3.toString());
+										apiCalling = false;
+										progressBar.setVisibility(View.GONE);
+										openHelpData("Some error occured. Tap to retry.", true);
+	//                                DialogPopup.dismissLoadingDialog();
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}
 
-                            @Override
-                            public void onSuccess(String response) {
-                                apiCalling = false;
-                                Log.i("Server response faq ", "response = " + response);
-                                try {
-                                    jObj = new JSONObject(response);
-                                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                        String data = jObj.getString("data");
-                                        openHelpData(data, false);
-                                    } else {
-                                        openHelpData("Some error occured. Tap to retry.", true);
-                                    }
-                                } catch (Exception exception) {
-                                    exception.printStackTrace();
-                                    openHelpData("Some error occured. Tap to retry.", true);
-                                }
+								@Override
+								public void onSuccess(String response) {
+									apiCalling = false;
+									Log.i("Server response faq ", "response = " + response);
+									try {
+										jObj = new JSONObject(response);
+										if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+											String data = jObj.getString("data");
+											openHelpData(data, false);
+										} else {
+											openHelpData("Some error occured. Tap to retry.", true);
+										}
+									} catch (Exception exception) {
+										exception.printStackTrace();
+										openHelpData("Some error occured. Tap to retry.", true);
+									}
 
-                            }
+								}
 
-                            @Override
-                            public void onFinish() {
-                                super.onFinish();
-                                fetchHelpDataClient = null;
-                            }
-                        });
-                }
-            } else {
-                openHelpData("No internet connection. Tap to retry.", true);
-            }
-        }
-    }
+								@Override
+								public void onFinish() {
+									super.onFinish();
+									fetchHelpDataClient = null;
+								}
+							});
+					}
+				} else {
+					openHelpData("No internet connection. Tap to retry.", true);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
     public void performBackPressed() {

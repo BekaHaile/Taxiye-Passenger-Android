@@ -24,9 +24,14 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.wallet.EventsHolder;
 
 public class GCMIntentService extends GcmListenerService {
 
@@ -59,6 +64,7 @@ public class GCMIntentService extends GcmListenerService {
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
+
 
             if (ring) {
                 builder.setLights(Color.GREEN, 500, 500);
@@ -131,6 +137,8 @@ public class GCMIntentService extends GcmListenerService {
         }
 
     }
+
+
 
 
     @SuppressWarnings("deprecation")
@@ -273,6 +281,8 @@ public class GCMIntentService extends GcmListenerService {
 
 
 
+
+
     public static void clearNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
@@ -382,17 +392,46 @@ public class GCMIntentService extends GcmListenerService {
 							}
 						}
 						else {
-							int deepindex = jObj.optInt("deepindex", -1);
 							String picture = jObj.optString("picture", "");
+							if("".equalsIgnoreCase(picture)){
+								picture = jObj.optString("image", "");
+							}
 
 							if(!"".equalsIgnoreCase(picture)){
+								int deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
 								new BigImageNotifAsync(message1, deepindex, picture).execute();
 							}
 							else{
+								int deepindex = jObj.optInt("deepindex", -1);
 								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
 							}
-
 						}
+
+						try {
+							String picture = jObj.optString("image", "");
+							if("".equalsIgnoreCase(picture)){
+								picture = jObj.optString("picture", "");
+							}
+							// store push in database for notificaion center screen...
+							String pushArrived = DateOperations.getCurrentTimeInUTC();
+							if(jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
+								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
+							} else if(jObj.has("timeToDisplay")){
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", picture);
+								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
+							} else if(jObj.has("timeTillDisplay")){
+								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
+								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
+							}
+							if("".equalsIgnoreCase(picture)){
+								if(EventsHolder.displayPushHandler != null){ EventsHolder.displayPushHandler.onDisplayMessagePushReceived(); }
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
 						double balance = jObj.getDouble("balance");
@@ -426,6 +465,9 @@ public class GCMIntentService extends GcmListenerService {
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, "Your account has been verified", NOTIFICATION_ID, -1);
+
+					} else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
+						Database2.getInstance(this).deleteNotificationTable();
 					}
 
 				} catch (Exception e) {
@@ -440,49 +482,50 @@ public class GCMIntentService extends GcmListenerService {
 		}
     }
 
+    private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
 
-	private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
+        private Bitmap bitmap = null;
+        private String message, picture;
+        private int deepindex;
 
-		private Bitmap bitmap = null;
-		private String message, picture;
-		private int deepindex;
-
-		public BigImageNotifAsync(String message, int deepindex, String picture){
-			this.deepindex = deepindex;
-			this.picture = picture;
-			this.message = message;
-		}
-
-		@Override
-		protected Bitmap doInBackground(String... params) {
-			try {
-				URL url = new URL(picture);
-				bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-
-			return bitmap;
-		}
-
-		@Override
-		protected void onPostExecute(Bitmap result) {
-			// execution of result of Long time consuming operation
-			try {
-				notificationManagerCustomIDWithBitmap(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
-			}catch (Exception e){
-				e.printStackTrace();
-				notificationManagerCustomID(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex);
-			}
-
-		}
+        public BigImageNotifAsync(String message, int deepindex, String picture){
+            this.deepindex = deepindex;
+            this.picture = picture;
+            this.message = message;
+        }
 
 		@Override
 		protected void onPreExecute() {
 			// Things to be done before execution of long running operation. For
 			// example showing ProgessDialog
 		}
-	}
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            try {
+                URL url = new URL(picture);
+                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            // execution of result of Long time consuming operation
+            try {
+                notificationManagerCustomIDWithBitmap(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
+				if(EventsHolder.displayPushHandler != null){ EventsHolder.displayPushHandler.onDisplayMessagePushReceived(); }
+            }catch (Exception e){
+                e.printStackTrace();
+                notificationManagerCustomID(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex);
+            }
+        }
+
+    }
+
 
 
 }

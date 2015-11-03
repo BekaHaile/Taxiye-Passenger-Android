@@ -42,6 +42,23 @@ public class DateOperations {
 		}
 	}
 
+	//2015-05-08T10:29:52.000Z
+	public static String utcToLocalTZ(String utcTime) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		try {
+			utcTime = utcTime.replace("T", " ");
+			utcTime = utcTime.split("\\.")[0];
+			Date myDate = simpleDateFormat.parse(utcTime);
+			String localDate = sdf.format(myDate);
+			return localDate;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return utcTime;
+		}
+	}
+
 	
 	public static Calendar getCalendarFromTimeStamp(String timeStamp){
 		try {
@@ -282,6 +299,18 @@ public class DateOperations {
 		return 60000;
 	}
 
+	/*public static long getTimeInMillis(String time){
+		long millis;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date date = format.parse(time);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return millis;
+	}*/
+
     public static long getTimeDifference(long time1, long time2){
         try {
             Date date1 = new Date(time1);
@@ -294,14 +323,23 @@ public class DateOperations {
         return 60000;
     }
 	
-	public long getMilliseconds(String time1){
+	public static long getMilliseconds(String time1){
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date1 = format.parse(time1);
 			long millis = date1.getTime();
 			return millis;
 		} catch (ParseException e) {
-			e.printStackTrace();
+			try {
+				time1 = time1.replace("T", " ");
+				time1 = time1.split("\\.")[0];
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date1 = format.parse(time1);
+				long millis = date1.getTime();
+				return millis;
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
 		}
 		return 60000;
 	}

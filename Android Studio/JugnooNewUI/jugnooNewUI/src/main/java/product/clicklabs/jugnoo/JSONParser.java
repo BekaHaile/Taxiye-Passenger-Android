@@ -468,9 +468,12 @@ public class JSONParser {
 		try{
 			JSONArray jDiscountsArr =  jLastRideData.getJSONArray("discount");
 			for(int i=0; i<jDiscountsArr.length(); i++){
-				discountTypes.add(new DiscountType(jDiscountsArr.getJSONObject(i).getString("key"),
-						jDiscountsArr.getJSONObject(i).getDouble("value")));
-				discount = discount + jDiscountsArr.getJSONObject(i).getDouble("value");
+				DiscountType discountType = new DiscountType(jDiscountsArr.getJSONObject(i).getString("key"),
+						jDiscountsArr.getJSONObject(i).getDouble("value"));
+				if(discountType.value > 0) {
+					discountTypes.add(discountType);
+					discount = discount + discountType.value;
+				}
 			}
 		} catch(Exception e){
 			e.printStackTrace();

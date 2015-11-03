@@ -14,6 +14,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -45,7 +48,7 @@ import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import rmn.androidscreenlibrary.ASSL;
 
-public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames {
+public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     LinearLayout relative;
 
@@ -64,6 +67,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     public ASSL assl;
 
+	private GoogleApiClient mGoogleApiClient;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -74,6 +79,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fare_estimate);
+
+		mGoogleApiClient = new GoogleApiClient
+				.Builder(this)
+				.addApi(Places.GEO_DATA_API)
+				.addApi(Places.PLACE_DETECTION_API)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.build();
 
         relative = (LinearLayout) findViewById(R.id.relative);
         assl = new ASSL(this, relative, 1134, 720, false);
@@ -90,7 +103,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         progressBarDropLocation.setVisibility(View.GONE);
         listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
 
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), new SearchListActionsHandler() {
+        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
+				new SearchListActionsHandler() {
 			@Override
 			public void onTextChange(String text) {
 
@@ -350,4 +364,27 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         super.onDestroy();
     }
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		mGoogleApiClient.connect();
+	}
+
+	@Override
+	public void onStop() {
+		mGoogleApiClient.disconnect();
+		super.onStop();
+	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+	}
+
+	@Override
+	public void onConnectionSuspended(int i) {
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+	}
 }

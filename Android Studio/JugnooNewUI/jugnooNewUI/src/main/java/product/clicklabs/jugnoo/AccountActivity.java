@@ -68,8 +68,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	ImageView imageViewEmailVerifyStatus;
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
-	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
-	TextView textViewChangePassword, textViewEmergencyContact;
+	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddFav;
+	TextView textViewChangePassword, textViewEmergencyContact, textViewAddFav;
+
 
 	Button buttonLogout;
 
@@ -113,6 +114,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
         textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.latoRegular(this));
 
+		relativeLayoutAddFav = (RelativeLayout) findViewById(R.id.relativeLayoutAddFav);
+		textViewAddFav = (TextView) findViewById(R.id.textViewAddFav); textViewAddFav.setTypeface(Fonts.latoRegular(this));
+		relativeLayoutAddFav.setVisibility(View.GONE);
+
+
         topBar = (RelativeLayout) findViewById(R.id.topBar);
 
 
@@ -122,6 +128,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		
 		
 		setUserData(false);
+
+        //setSavePlaces();
 
 
         linearLayoutMain.setOnClickListener(new View.OnClickListener() {
@@ -402,6 +410,19 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             }
         });
 
+        relativeLayoutAddFav.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, AddFavouritePlaces.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                dissmissEmailVerify();
+                FlurryEventLogger.event(FAVORITE_LOCATION_TO_BE_ADDED);
+            }
+        });
+
+
+
 		
 		buttonLogout.setOnClickListener(new View.OnClickListener() {
 			
@@ -483,6 +504,30 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		}
 	}
 
+    /*private void setSavePlaces(){
+        if(!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
+            String abc =Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
+            Gson gson = new Gson();
+            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            String s = "Home \n" + searchResult.name+", "+searchResult.address;
+            SpannableString ss1 = new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
+            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+            textViewHome.setText(ss1);
+        }
+
+        if(!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
+            String abc =Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
+            Gson gson = new Gson();
+            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            String s = "Work \n" + searchResult.name+", "+searchResult.address;
+            SpannableString ss1 = new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
+            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+            textViewWork.setText(ss1);
+        }
+    }*/
+
 
     public void setUserData(boolean refreshed){
 		try {
@@ -549,10 +594,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
 	
-	@Override
-	public void onBackPressed() {
-		performBackPressed();
-	}
+
 	
 	@Override
 	protected void onResume() {
@@ -568,7 +610,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
+
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
+	}
 	
 	@Override
 	protected void onDestroy() {
@@ -797,7 +844,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			params.put("is_access_token_new", "1");
 			params.put("client_id", Config.getClientId());
 
-			Log.i("access_token", "="+Data.userData.accessToken);
+			Log.i("access_token", "=" + Data.userData.accessToken);
 		
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl()+"/logout_user", params,
@@ -861,7 +908,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
-	
+
 
 
 

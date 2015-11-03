@@ -47,7 +47,6 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
-import java.net.URLDecoder;
 import java.util.Locale;
 
 import io.branch.referral.Branch;
@@ -94,6 +93,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	boolean touchedDown1 = false, touchedDown2 = false;
 	int debugState = 0;
+
 
 
 	// *****************************Used for flurry work***************//
@@ -151,68 +151,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	public void onNewIntent(Intent intent) {
 		this.setIntent(intent);
-		getDeepLinkIndexFromIntent(intent);
+//		Data.getDeepLinkIndexFromIntent(intent);
 	}
 
-	private void getDeepLinkIndexFromIntent(Intent newIntent) {
-		Data.deepLinkIndex = -1;
-		Data.deepLinkPickup = -1;
-		try {
-			Intent intent = newIntent;
-			String action = intent.getAction();
-			Uri data = intent.getData();
-			Log.e("action", "=" + action);
-			Log.e("data", "=" + data);
-
-			if(data.getQueryParameter("deepindex") != null){
-				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
-
-				Log.e("Deeplink =", "=" + Data.deepLinkIndex);
-			}
-			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
-				Data.deepLinkPickup = 1;
-				Data.deepLinkPickupLatitude = Double.parseDouble(data.getQueryParameter("pickup_lat"));
-				Data.deepLinkPickupLongitude = Double.parseDouble(data.getQueryParameter("pickup_lng"));
-
-				Log.e("deepLinkPickup =", "=" + Data.deepLinkPickup);
-				Log.e("deepLinkPickupLatitude =", "=" + Data.deepLinkPickupLatitude);
-				Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
-			}
-			else{
-				throw new Exception();
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
-			try {
-				Intent intent = newIntent;
-				Uri data = intent.getData();
-				Log.e("data", "=" + data);
-
-				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
-				Uri dataTarget = Uri.parse(targetUrl);
-
-				if(dataTarget.getQueryParameter("deepindex") != null){
-					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
-
-					Log.e("Deeplink =", "=" + Data.deepLinkIndex);
-				}
-				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
-					Data.deepLinkPickup = 1;
-					Data.deepLinkPickupLatitude = Double.parseDouble(dataTarget.getQueryParameter("pickup_lat"));
-					Data.deepLinkPickupLongitude = Double.parseDouble(dataTarget.getQueryParameter("pickup_lng"));
-
-					Log.e("deepLinkPickup =", "=" + Data.deepLinkPickup);
-					Log.e("deepLinkPickupLatitude =", "=" + Data.deepLinkPickupLatitude);
-					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
-				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		}
-	}
 
 
 	public static void initializeServerURL(Context context) {
@@ -252,8 +193,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.deepLinkClassName = "";
 		}
 
+		Data.splashIntentUri = getIntent().getData();
 
-		getDeepLinkIndexFromIntent(getIntent());
+//		Data.getDeepLinkIndexFromIntent(getIntent());
 
 
 		try {
@@ -333,7 +275,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
-				startActivity(new Intent(SplashNewActivity.this, SplashLogin.class));
+				Intent intent = new Intent(SplashNewActivity.this, SplashLogin.class);
+				startActivity(intent);
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
@@ -345,7 +288,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			public void onClick(View v) {
 				FlurryEventLogger.event(SIGNUP);
 				RegisterScreen.facebookLogin = false;
-				startActivity(new Intent(SplashNewActivity.this, RegisterScreen.class));
+				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
+				startActivity(intent);
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
@@ -523,7 +467,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 	public void getDeviceToken() {
-		if(Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){
+		if(ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){
 			DialogPopup.alertPopupTwoButtonsWithListeners(SplashNewActivity.this, "", "You need to uninstall Jugnoo Drivers App first to use this app", "Uninstall", "Cancel",
 					new View.OnClickListener() {
 						@Override
@@ -668,8 +612,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 
 				if (Data.locationFetcher != null) {
-					Data.latitude = Data.locationFetcher.getLatitude();
-					Data.longitude = Data.locationFetcher.getLongitude();
+					Data.loginLatitude = Data.locationFetcher.getLatitude();
+					Data.loginLongitude = Data.locationFetcher.getLongitude();
 				}
 
 				RequestParams params = new RequestParams();
@@ -677,8 +621,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_token", Data.deviceToken);
 
 
-				params.put("latitude", "" + Data.latitude);
-				params.put("longitude", "" + Data.longitude);
+				params.put("latitude", "" + Data.loginLatitude);
+				params.put("longitude", "" + Data.loginLongitude);
 
 
 				params.put("app_version", "" + Data.appVersion);
@@ -686,6 +630,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("unique_device_id", Data.uniqueDeviceId);
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "" + pair.second);
+
+				if(Utils.isDeviceRooted()){
+					params.put("device_rooted", "1");
+				}
+				else{
+					params.put("device_rooted", "0");
+				}
 
 				Log.e("params login_using_access_token", "=" + params);
 
@@ -942,7 +893,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			public void run() {
 				if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
 					loginDataFetched = false;
-					startActivity(new Intent(SplashNewActivity.this, HomeActivity.class));
+					Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
+					intent.setData(getIntent().getData());
+					startActivity(intent);
 					ActivityCompat.finishAffinity(SplashNewActivity.this);
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
@@ -1062,8 +1015,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		Data.latitude = location.getLatitude();
-		Data.longitude = location.getLongitude();
+		Data.loginLatitude = location.getLatitude();
+		Data.loginLongitude = location.getLongitude();
 	}
 
 

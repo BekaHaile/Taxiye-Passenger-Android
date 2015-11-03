@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class EndRideData {
 	
@@ -8,7 +9,7 @@ public class EndRideData {
 		pickupAddress, dropAddress,
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
-		distance, rideTime, waitTime, baseFare, fareFactor;
+		distance, rideTime, waitTime, baseFare, fareFactor, finalFare;
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
 	
@@ -18,7 +19,7 @@ public class EndRideData {
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
-		this.driverCarNumber = driverCarNumber;
+		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
 		this.pickupTime = pickupTime;
@@ -49,6 +50,8 @@ public class EndRideData {
 		if(this.waitingChargesApplicable == 0 && this.waitTime > 0){
 			this.waitingChargesApplicable = 1;
 		}
+
+		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount;
 	}
 	
 }

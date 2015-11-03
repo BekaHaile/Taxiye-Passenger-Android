@@ -551,8 +551,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			RequestParams params = new RequestParams();
 		
 			if(Data.locationFetcher != null){
-				Data.latitude = Data.locationFetcher.getLatitude();
-				Data.longitude = Data.locationFetcher.getLongitude();
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
 
             if(isPhoneNumber){
@@ -569,23 +569,18 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("os_version", Data.osVersion);
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", ""+Data.latitude);
-			params.put("longitude", ""+Data.longitude);
+			params.put("latitude", ""+Data.loginLatitude);
+			params.put("longitude", ""+Data.loginLongitude);
 			params.put("client_id", Config.getClientId());
 
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
 
-			Log.i("email", emailId);
-			Log.i("password", password);
-			Log.i("device_token", Data.deviceToken);
-			Log.i("device_type", Data.DEVICE_TYPE);
-			Log.i("device_name", Data.deviceName);
-			Log.i("app_version", ""+Data.appVersion);
-			Log.i("os_version", Data.osVersion);
-			Log.i("country", Data.country);
-			Log.i("unique_device_id", Data.uniqueDeviceId);
-			Log.i("latitude", ""+Data.latitude);
-			Log.i("longitude", ""+Data.longitude);
-			Log.i("client_id", Config.getClientId());
+			Log.i("params", "="+params);
 			
 			String url = Config.getServerUrl() + "/login_using_email_or_phone_no";
 
@@ -680,8 +675,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			RequestParams params = new RequestParams();
 		
 			if(Data.locationFetcher != null){
-				Data.latitude = Data.locationFetcher.getLatitude(); 
-				Data.longitude = Data.locationFetcher.getLongitude();
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
 
 		
@@ -698,28 +693,19 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("os_version", Data.osVersion);
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", ""+Data.latitude);
-			params.put("longitude", ""+Data.longitude);
+			params.put("latitude", ""+Data.loginLatitude);
+			params.put("longitude", ""+Data.loginLongitude);
 			params.put("client_id", Config.getClientId());
 
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
 
 
-			Log.i("user_fb_id", Data.facebookUserData.fbId);
-			Log.i("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
-			Log.i("fb_access_token", Data.facebookUserData.accessToken);
-			Log.i("fb_mail", Data.facebookUserData.userEmail);
-			Log.i("username", Data.facebookUserData.userName);
-			
-			Log.i("device_token", Data.deviceToken);
-			Log.i("device_type", Data.DEVICE_TYPE);
-			Log.i("device_name", Data.deviceName);
-			Log.i("app_version", ""+Data.appVersion);
-			Log.i("os_version", Data.osVersion);
-			Log.i("country", Data.country);
-			Log.i("unique_device_id", Data.uniqueDeviceId);
-			Log.i("latitude", ""+Data.latitude);
-			Log.i("longitude", ""+Data.longitude);
-			Log.i("client_id", Config.getClientId());
+			Log.i("params", ""+params);
 			
 			String url = Config.getServerUrl() + "/login_using_facebook";
 		
@@ -872,7 +858,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			FlurryAgent.logEvent("App Login", articleParams);
 			
 			loginDataFetched = false;
-			startActivity(new Intent(SplashLogin.this, HomeActivity.class));
+			Intent intent = new Intent(SplashLogin.this, HomeActivity.class);
+			intent.setData(Data.splashIntentUri);
+			startActivity(intent);
 			ActivityCompat.finishAffinity(this);
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
@@ -905,8 +893,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 
 	@Override
 	public void onLocationChanged(Location location, int priority) {
-		Data.latitude = location.getLatitude();
-		Data.longitude = location.getLongitude();
+		Data.loginLatitude = location.getLatitude();
+		Data.loginLongitude = location.getLongitude();
 	}
 	
 }

@@ -1,10 +1,13 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 
+import java.net.URLDecoder;
 import java.security.KeyStore;
 import java.util.ArrayList;
 
@@ -112,8 +115,8 @@ public class Data {
 
 
 	public static double latitude = 0, longitude = 0;
-	public static LatLng currentPinLatLng;
-	
+	public static double loginLatitude = 0, loginLongitude = 0;
+
 	
 	public static ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
 	
@@ -161,13 +164,15 @@ public class Data {
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
     public static String deepLinkClassName = "";
-	public static int deepLinkIndex = -1;
+	public static int deepLinkIndex;
 	public static int deepLinkPickup = -1;
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
 
 	public static String knowlarityMissedCallNumber = "";
 
 	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
+
+	public static LatLng lastRefreshLatLng;
 
 
 	
@@ -234,8 +239,70 @@ public class Data {
 	public static final String DEVICE_TOKEN = "DEVICE_TOKEN";
 	public static final String ERROR = "ERROR";
 	public static final String INTENT_CLASS_NAME = "intentClassName";
-	
-	
+
+	public static Uri splashIntentUri;
+
+
+	public static void getDeepLinkIndexFromIntent(Intent newIntent) {
+		Data.deepLinkIndex = -1;
+		Data.deepLinkPickup = -1;
+		try {
+			Intent intent = newIntent;
+			String action = intent.getAction();
+			Uri data = intent.getData();
+			Log.e("action", "=" + action);
+			Log.e("data", "=" + data);
+
+			if(data.getQueryParameter("deepindex") != null){
+				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
+
+			}
+			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
+				Data.deepLinkPickup = 1;
+				Data.deepLinkPickupLatitude = Double.parseDouble(data.getQueryParameter("pickup_lat"));
+				Data.deepLinkPickupLongitude = Double.parseDouble(data.getQueryParameter("pickup_lng"));
+
+				Log.e("deepLinkPickup =", "=" + Data.deepLinkPickup);
+				Log.e("deepLinkPickupLatitude =", "=" + Data.deepLinkPickupLatitude);
+				Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
+			}
+			else{
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
+			try {
+				Intent intent = newIntent;
+				Uri data = intent.getData();
+				Log.e("data", "=" + data);
+
+				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
+				Uri dataTarget = Uri.parse(targetUrl);
+
+				if(dataTarget.getQueryParameter("deepindex") != null){
+					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
+
+					Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+				}
+				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
+					Data.deepLinkPickup = 1;
+					Data.deepLinkPickupLatitude = Double.parseDouble(dataTarget.getQueryParameter("pickup_lat"));
+					Data.deepLinkPickupLongitude = Double.parseDouble(dataTarget.getQueryParameter("pickup_lng"));
+
+					Log.e("deepLinkPickup =", "=" + Data.deepLinkPickup);
+					Log.e("deepLinkPickupLatitude =", "=" + Data.deepLinkPickupLatitude);
+					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+	}
 
 	
 }

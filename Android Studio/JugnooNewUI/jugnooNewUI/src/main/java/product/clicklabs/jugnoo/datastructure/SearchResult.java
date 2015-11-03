@@ -2,7 +2,9 @@ package product.clicklabs.jugnoo.datastructure;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class SearchResult{
+import java.io.Serializable;
+
+public class SearchResult implements Serializable{
 	
 	public String name, address;
 	public LatLng latLng;

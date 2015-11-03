@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_light_grey"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="680px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20px"
+        card_view:cardCornerRadius="4px"
+        >
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/notification_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="450px"
+                    android:src="@drawable/jugnoo_icon"
+                    android:tag="mwar"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible"
+                    />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5px"
+                    android:background="@color/white"
+                    android:layout_alignBottom="@+id/notification_image"
+                    />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20px"
+                android:text="Hello\nHello\nhello"
+                android:textColor="@color/notification_text_color"
+                android:textSize="32px"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
