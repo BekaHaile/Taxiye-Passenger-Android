@@ -23,6 +23,7 @@ import com.payu.sdk.Constants;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
 
 public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
@@ -184,11 +185,11 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 			//https://jugnoo.in/paytm/wallet/failure.php
 			if("https://jugnoo.in/paytm/wallet/success.php".equalsIgnoreCase(url)){
 				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction complete", Toast.LENGTH_LONG).show();
-				Data.paytmPaymentState = 1;
+				Data.paytmPaymentState = PayTMPaymentState.SUCCESS;
 				finish();
 			} else if("https://jugnoo.in/paytm/wallet/failure.php".equalsIgnoreCase(url)){
 				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction failed", Toast.LENGTH_LONG).show();
-				Data.paytmPaymentState = 0;
+				Data.paytmPaymentState = PayTMPaymentState.FAILURE;
 				finish();
 			}
 		} catch (Exception e) {

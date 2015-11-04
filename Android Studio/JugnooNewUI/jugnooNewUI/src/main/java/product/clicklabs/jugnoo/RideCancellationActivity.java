@@ -463,6 +463,9 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
                                         if (jObj.has("jugnoo_balance")) {
                                             Data.userData.setJugnooBalance(jObj.getDouble("jugnoo_balance"));
                                         }
+										if (jObj.has("paytm_balance")) {
+											Data.userData.setPaytmBalance(jObj.getDouble("paytm_balance"));
+										}
 
                                         if (HomeActivity.appInterruptHandler != null) {
                                             HomeActivity.appInterruptHandler.onCancelCompleted();

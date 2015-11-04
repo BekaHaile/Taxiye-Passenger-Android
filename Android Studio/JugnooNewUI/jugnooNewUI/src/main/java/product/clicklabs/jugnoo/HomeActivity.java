@@ -3991,6 +3991,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
+										try {
+											if (jObj.has("paytm_balance")) {
+												Data.userData.setPaytmBalance(jObj.getDouble("paytm_balance"));
+											}
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
 
 										Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
 

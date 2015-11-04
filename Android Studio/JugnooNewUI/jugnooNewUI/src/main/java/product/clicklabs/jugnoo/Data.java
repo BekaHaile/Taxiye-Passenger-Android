@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
+import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
@@ -132,7 +133,7 @@ public class Data {
 	
 	public static LocationFetcher locationFetcher;
 
-	public static int paytmPaymentState = -1;
+	public static PayTMPaymentState paytmPaymentState = PayTMPaymentState.INIT;
 	
 
 	public static final String DEVICE_TYPE = "0";

@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class AddPaytmFragment extends Fragment {
@@ -129,6 +130,14 @@ public class AddPaytmFragment extends Fragment {
 				} else {
 					sendOTP(editTextOTP.getText().toString().trim());
 				}
+			}
+		});
+
+		linearLayoutOTP.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextOTP.requestFocus();
+				Utils.showSoftKeyboard(paymentActivity, editTextOTP);
 			}
 		});
 
@@ -252,7 +261,7 @@ public class AddPaytmFragment extends Fragment {
 					try {
 						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
 
-						JSONObject res = new JSONObject(response.toString());
+						JSONObject res = new JSONObject(response);
 
 						paymentActivity.getBalance(AddPaytmFragment.class.getName());
 

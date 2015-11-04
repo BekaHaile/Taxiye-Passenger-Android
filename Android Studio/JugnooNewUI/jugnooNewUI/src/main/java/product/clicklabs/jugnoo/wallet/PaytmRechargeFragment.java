@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -85,7 +86,7 @@ public class PaytmRechargeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_paytm_recharge, container, false);
 
-		Data.paytmPaymentState = -1;
+		Data.paytmPaymentState = PayTMPaymentState.INIT;
 
 		paymentActivity = (PaymentActivity) getActivity();
 
@@ -262,17 +263,17 @@ public class PaytmRechargeFragment extends Fragment {
 		}
 
 		try{
-			if(Data.paytmPaymentState == 1) {
+			if(Data.paytmPaymentState == PayTMPaymentState.SUCCESS) {
 				DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
 				paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
 			}
-			else if(Data.paytmPaymentState == 0){
+			else if(Data.paytmPaymentState == PayTMPaymentState.FAILURE){
 				DialogPopup.dialogBanner(paymentActivity, "Transaction failed");
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		Data.paytmPaymentState = -1;
+		Data.paytmPaymentState = PayTMPaymentState.INIT;
 
 		HomeActivity.checkForAccessTokenChange(getActivity());
 	}
@@ -488,7 +489,7 @@ public class PaytmRechargeFragment extends Fragment {
 	}
 
 	private void openWebView(String jsonData) {
-		Data.paytmPaymentState = -1;
+		Data.paytmPaymentState = PayTMPaymentState.INIT;
 		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
 		intent.putExtra(Constants.POST_DATA, jsonData);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -552,7 +552,7 @@ public class JSONParser {
 
 
     public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1) {
-//		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
+		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
         String returnResponse = "";
 
         if (currentUserStatus == 2) {

@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -81,6 +82,8 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 //                .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
 //                .commitAllowingStateLoss();
 //        }
+
+		Data.paytmPaymentState = PayTMPaymentState.INIT;
     }
 
 
@@ -335,9 +338,21 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-		getBalance("");
+		if(Data.paytmPaymentState != PayTMPaymentState.SUCCESS) {
+			getBalance("Refresh");
+		}
 	}
 
+	public void updateWalletFragment(){
+		try {
+			Fragment currFrag = getSupportFragmentManager().findFragmentByTag("WalletFragment");
+			if(currFrag != null){
+				currFrag.onResume();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	public void getBalance(final String fragName) {
@@ -391,22 +406,23 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 
 	private void performGetBalanceSuccess(String fragName){
 		try {
-			Fragment currFrag = getSupportFragmentManager().findFragmentByTag("WalletFragment");
-			if(currFrag != null){
-				currFrag.onResume();
-			}
-			currFrag = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
-			if(currFrag != null){
-				currFrag.onResume();
-				if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
+			Fragment currFrag = null;
+			if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
+				currFrag = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
+				if(currFrag != null){
+					currFrag.onResume();
 					((PaytmRechargeFragment) currFrag).performBackPressed();
 				}
 			}
-			currFrag = getSupportFragmentManager().findFragmentByTag("AddPaytmFragment");
-			if(currFrag != null){
-				if(fragName.equalsIgnoreCase(AddPaytmFragment.class.getName())) {
+			else if(fragName.equalsIgnoreCase(AddPaytmFragment.class.getName())){
+				currFrag = getSupportFragmentManager().findFragmentByTag("AddPaytmFragment");
+				if(currFrag != null){
 					((AddPaytmFragment) currFrag).performBackPressed();
 				}
+			}
+			currFrag = getSupportFragmentManager().findFragmentByTag("WalletFragment");
+			if(currFrag != null){
+				currFrag.onResume();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
