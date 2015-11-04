@@ -151,6 +151,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     RelativeLayout relativeLayoutWallet;
     TextView textViewWallet, textViewWalletValue;
+	ProgressWheel progressBarMenuPaytmWalletLoading;
 
     RelativeLayout relativeLayoutPromotions;
     TextView textViewPromotions, textViewPromotionsValue;
@@ -213,6 +214,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	Button buttonRRPaymentOptionChange, buttonFareEstimate, buttonGetARide;
 	TextView textViewRRPaymentOption, textViewRRPaymentOptionMoneyValue, textViewRRETAValue, textViewRRMinFareValue;
 	ImageView imageViewRRWalletIcon;
+	LinearLayout linearLayoutPaytmWalletLoading;
 
 
 
@@ -361,6 +363,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	public static final double FIX_ZOOM_DIAGONAL = 408;
 
+	public static final long PAYTM_CHECK_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
+
 
 
     public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
@@ -470,6 +474,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewWallet.setTypeface(Fonts.latoRegular(this));
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
         textViewWalletValue.setTypeface(Fonts.latoRegular(this));
+		progressBarMenuPaytmWalletLoading = (ProgressWheel) findViewById(R.id.progressBarMenuPaytmWalletLoading);
+		progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
 
         relativeLayoutPromotions = (RelativeLayout) findViewById(R.id.relativeLayoutPromotions);
         textViewPromotions = (TextView) findViewById(R.id.textViewPromotions);
@@ -574,22 +580,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onPromoListFetched(int totalPromoCoupons) {
-				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
-					Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-					buttonRRPaymentOptionChange.setVisibility(View.VISIBLE);
-				}
-				else{
-					Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-					buttonRRPaymentOptionChange.setVisibility(View.GONE);
-				}
                 promoOpened = true;
-				textViewRRMinFareValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
+				textViewRRMinFareValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
                 imageViewMenu.setVisibility(View.GONE);
                 imageViewBack.setVisibility(View.VISIBLE);
 //                genieLayout.setVisibility(View.GONE);
                 centreLocationRl.setVisibility(View.VISIBLE);
                 linearLayoutPromo.setVisibility(View.VISIBLE);
-				setPaymentOptionUI(Data.pickupPaymentOption);
+
+				updatePreferredPaymentOptionUI();
+
 
                 if(totalPromoCoupons > 0){
                     linearLayoutCouponList.setVisibility(View.VISIBLE);
@@ -628,8 +628,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		textViewRRMinFareValue = (TextView) findViewById(R.id.textViewRRMinFareValue); textViewRRMinFareValue.setTypeface(Fonts.latoRegular(this));
 		imageViewRRWalletIcon = (ImageView) findViewById(R.id.imageViewRRWalletIcon);
 
+		linearLayoutPaytmWalletLoading = (LinearLayout) findViewById(R.id.linearLayoutPaytmWalletLoading);
+
+
         ((TextView) findViewById(R.id.textViewRRETA)).setTypeface(Fonts.latoRegular(this));
         ((TextView) findViewById(R.id.textViewRRMinFare)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewPaytmWalletLoading)).setTypeface(Fonts.latoRegular(this));
 
 
 
@@ -1875,8 +1879,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 
+		Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
-		getPaytmBalance();
     }
 
 	private void hideMenuDrawer(){
@@ -2767,7 +2771,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-	private void setPaymentOptionUI(int intPaymentOption){
+	private void setSelectedPaymentOptionUI(int intPaymentOption){
 		try {
 			if(PaymentOption.PAYTM.getOrdinal() == intPaymentOption){
 	//			imageViewRRWalletIcon
@@ -3037,6 +3041,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 			Data.supportFeedbackSubmitted = false;
 
+
+			openDeepLink();
+			performDeepLinkRequest();
+
+			EventsHolder.displayPushHandler = this;
+
+			startNotifsUpdater();
+
+			getPaytmBalance(this);
+
         }
 
         HomeActivity.checkForAccessTokenChange(this);
@@ -3051,14 +3065,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		if(sdkInt < 19) {
 			DialogPopup.showLocationSettingsAlert(activity);
 		}
-
-
-		openDeepLink();
-		performDeepLinkRequest();
-
-		EventsHolder.displayPushHandler = this;
-
-		startNotifsUpdater();
 
 //        genieLayout.setGenieParams();
     }
@@ -6022,47 +6028,84 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	}
 
 
-	private void getPaytmBalance() {
+
+	private void updatePreferredPaymentOptionUI(){
+		try{
+			int preferredPaymentOption = Prefs.with(HomeActivity.this).getInt(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal());
+			if(PaymentOption.PAYTM.getOrdinal() == preferredPaymentOption){
+				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+					Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+					buttonRRPaymentOptionChange.setVisibility(View.VISIBLE);
+					linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
+				}
+				else{
+					Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+					buttonRRPaymentOptionChange.setVisibility(View.GONE);
+					linearLayoutPaytmWalletLoading.setVisibility(View.VISIBLE);
+				}
+			}
+			else{
+				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+				linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
+				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+					buttonRRPaymentOptionChange.setVisibility(View.VISIBLE);
+				}
+				else{
+					buttonRRPaymentOptionChange.setVisibility(View.GONE);
+				}
+			}
+
+			setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void getPaytmBalance(final Activity activity) {
 		try {
-			if(AppStatus.getInstance(this).isOnline(this)) {
-				DialogPopup.showLoadingDialog(this, "Loading paytm...");
-				RequestParams params = new RequestParams();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("client_id", Config.getClientId());
-				params.put("is_access_token_new", "1");
+			long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+			long lastCallDiff = System.currentTimeMillis() - lastPaytmBalanceCall;
+			Log.e("lastCallDiff", "="+lastCallDiff);
+			if(lastCallDiff >= PAYTM_CHECK_BALANCE_REFRESH_TIME) {
+				if (AppStatus.getInstance(this).isOnline(this)) {
+					linearLayoutPaytmWalletLoading.setVisibility(View.VISIBLE);
+					progressBarMenuPaytmWalletLoading.setVisibility(View.VISIBLE);
+					RequestParams params = new RequestParams();
+					params.put("access_token", Data.userData.accessToken);
+					params.put("client_id", Config.getClientId());
+					params.put("is_access_token_new", "1");
 
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
-					@Override
-					public void onSuccess(String response) {
-						Log.i("request succesfull", "response = " + response);
-						try {
-							JSONObject res = new JSONObject(response.toString());
-							if (Data.userData != null) {
-								String paytmStatus = res.optString("STATUS", "INACTIVE");
-								if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-									String balance = res.optString("WALLETBALANCE", "0");
-									Data.userData.setPaytmBalance(Double.parseDouble(balance));
-									Data.userData.setPaytmStatus(paytmStatus);
+					AsyncHttpClient client = Data.getClient();
+					client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(String response) {
+							Log.i("request succesfull", "response = " + response);
+							try {
+								JSONObject jObj = new JSONObject(response.toString());
+								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+
+								if (11 == flag) {
 								} else {
-									Data.userData.setPaytmStatus(paytmStatus);
-									Data.userData.setPaytmBalance(0);
+									JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
+									updatePreferredPaymentOptionUI();
+									setUserData();
 								}
-								setUserData();
-							}
-							Toast.makeText(HomeActivity.this, ""+res.toString(), Toast.LENGTH_LONG).show();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						DialogPopup.dismissLoadingDialog();
-					}
 
-					@Override
-					public void onFailure(Throwable arg0) {
-						Log.e("request fail", arg0.toString());
-						DialogPopup.dismissLoadingDialog();
-					}
-				});
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+							linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
+						}
+
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+							linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
+						}
+					});
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -6071,7 +6114,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-	void selectPaymentOptionPopup(final Activity activity) {
+	private void selectPaymentOptionPopup(final Activity activity) {
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -6097,7 +6140,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				@Override
 				public void onClick(View v) {
 					Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-					setPaymentOptionUI(Data.pickupPaymentOption);
+					Prefs.with(HomeActivity.this).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal());
+					setSelectedPaymentOptionUI(Data.pickupPaymentOption);
 					dialog.dismiss();
 				}
 			});
@@ -6106,7 +6150,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				@Override
 				public void onClick(View v) {
 					Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-					setPaymentOptionUI(Data.pickupPaymentOption);
+					Prefs.with(HomeActivity.this).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.CASH.getOrdinal());
+					setSelectedPaymentOptionUI(Data.pickupPaymentOption);
 					dialog.dismiss();
 				}
 			});

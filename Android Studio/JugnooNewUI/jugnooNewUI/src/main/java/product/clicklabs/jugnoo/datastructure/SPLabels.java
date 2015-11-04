@@ -32,7 +32,10 @@ public class SPLabels {
     ADD_GYM = "Gym",
     ADD_FRIEND = "Friend",
 
-	NOTIFICATION_UNREAD_COUNT = "notification_unread_count"
+	NOTIFICATION_UNREAD_COUNT = "notification_unread_count",
+
+	PAYTM_CHECK_BALANCE_LAST_TIME = "paytmCheckBalanceLastTime",
+	PREFERRED_PAYMENT_OPTION = "preferredPaymentOption"
 
             ;
 

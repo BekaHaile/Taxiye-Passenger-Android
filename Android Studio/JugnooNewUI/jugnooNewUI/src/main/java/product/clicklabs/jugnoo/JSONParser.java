@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
@@ -39,6 +40,7 @@ import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -1190,6 +1192,28 @@ public class JSONParser {
 		}
 		return nearbyDrivers;
 	}
+
+
+
+	public static void parsePaytmBalanceStatus(Context context, JSONObject jObj){
+		try {
+			if (Data.userData != null) {
+				String paytmStatus = jObj.optString("STATUS", "INACTIVE");
+				if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+					String balance = jObj.optString("WALLETBALANCE", "0");
+					Data.userData.setPaytmBalance(Double.parseDouble(balance));
+					Data.userData.setPaytmStatus(paytmStatus);
+				} else {
+					Data.userData.setPaytmStatus(paytmStatus);
+					Data.userData.setPaytmBalance(0);
+				}
+				Prefs.with(context).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 
 }

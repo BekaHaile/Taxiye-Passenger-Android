@@ -335,13 +335,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-		try {
-			if (Data.userData.getPaytmStatus().equalsIgnoreCase("")) {
-				getBalance("");
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+		getBalance("");
 	}
 
 
@@ -369,17 +363,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 								DialogPopup.alertPopup(PaymentActivity.this, "", message);
 							}
 							else{
-								if (Data.userData != null) {
-									String paytmStatus = jObj.optString("STATUS", "INACTIVE");
-									if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-										String balance = jObj.optString("WALLETBALANCE", "0");
-										Data.userData.setPaytmBalance(Double.parseDouble(balance));
-										Data.userData.setPaytmStatus(paytmStatus);
-									} else {
-										Data.userData.setPaytmStatus(paytmStatus);
-										Data.userData.setPaytmBalance(0);
-									}
-								}
+								JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
 								performGetBalanceSuccess(fragName);
 							}
 

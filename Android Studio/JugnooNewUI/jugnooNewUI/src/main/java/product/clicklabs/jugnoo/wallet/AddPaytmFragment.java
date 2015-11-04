@@ -248,6 +248,7 @@ public class AddPaytmFragment extends Fragment {
 				@Override
 				public void onSuccess(String response) {
 					Log.i("request succesfull", "response = " + response);
+					DialogPopup.dismissLoadingDialog();
 					try {
 						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
 
@@ -256,13 +257,9 @@ public class AddPaytmFragment extends Fragment {
 						paymentActivity.getBalance(AddPaytmFragment.class.getName());
 
 					} catch (Exception e) {
-						DialogPopup.dismissLoadingDialog();
 						e.printStackTrace();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
-
-					DialogPopup.dismissLoadingDialog();
-
 				}
 
 				@Override

@@ -201,6 +201,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		super.onResume();
 		try{
 			if(Data.userData != null){
+				textViewJugnooCashBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
 				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
