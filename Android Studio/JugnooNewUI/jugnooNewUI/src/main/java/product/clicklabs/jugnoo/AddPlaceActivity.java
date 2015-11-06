@@ -16,7 +16,6 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
-import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -119,7 +118,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
         });
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
-                new SearchListActionsHandler() {
+                new SearchListAdapter.SearchListActionsHandler() {
 
                     @Override
                     public void onTextChange(String text) {

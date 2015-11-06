@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.NearbyDriversAdapter;
-import product.clicklabs.jugnoo.adapters.NearbyDriversAdapterHandler;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.NearbyDriver;
@@ -232,7 +231,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 	};
 
 
-	NearbyDriversAdapterHandler adapterHandler = new NearbyDriversAdapterHandler() {
+	NearbyDriversAdapter.NearbyDriversAdapterHandler adapterHandler = new NearbyDriversAdapter.NearbyDriversAdapterHandler() {
 		@Override
 		public void itemClicked(NearbyDriver nearbyDriver) {
 			try {

@@ -146,5 +146,10 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         LinearLayout relative;
         int id;
     }
+
+	public interface FeedbackReasonsListEventHandler {
+		void onLastItemSelected(boolean selected);
+	}
+
 }
 

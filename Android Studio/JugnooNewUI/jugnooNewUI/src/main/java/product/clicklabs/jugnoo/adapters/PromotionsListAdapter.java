@@ -277,4 +277,11 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
         }
     }
 
+
+	public interface PromotionListEventHandler {
+		void onDismiss();
+		void onPromoListFetched(int totalPromoCoupons);
+	}
+
+
 }

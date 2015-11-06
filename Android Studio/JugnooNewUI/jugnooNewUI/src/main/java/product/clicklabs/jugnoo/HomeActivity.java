@@ -75,9 +75,7 @@ import java.util.TimerTask;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
-import product.clicklabs.jugnoo.adapters.PromotionListEventHandler;
 import product.clicklabs.jugnoo.adapters.PromotionsListAdapter;
-import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
@@ -557,7 +555,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((TextView) findViewById(R.id.textViewPromoChooseCoupon)).setTypeface(Fonts.latoRegular(this));
         listViewPromotions = (ListView) findViewById(R.id.listViewPromotions);
 
-        promotionsListAdapter = new PromotionsListAdapter(this, new PromotionListEventHandler() {
+        promotionsListAdapter = new PromotionsListAdapter(this, new PromotionsListAdapter.PromotionListEventHandler() {
             @Override
             public void onDismiss() {
                 if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
@@ -658,7 +656,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }));
 
         SearchListAdapter dropLocationAssigningSearchListAdapter = new SearchListAdapter(this, editTextAssigningDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
-            new SearchListActionsHandler() {
+            new SearchListAdapter.SearchListActionsHandler() {
 
 				@Override
 				public void onTextChange(String text) {
@@ -770,7 +768,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         SearchListAdapter dropLocationFinalSearchListAdapter = new SearchListAdapter(this, editTextFinalDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
-            new SearchListActionsHandler() {
+            new SearchListAdapter.SearchListActionsHandler() {
 
 				@Override
 				public void onTextChange(String text) {
@@ -846,7 +844,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }));
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
-            new SearchListActionsHandler() {
+            new SearchListAdapter.SearchListActionsHandler() {
 
 				@Override
 				public void onTextChange(String text) {

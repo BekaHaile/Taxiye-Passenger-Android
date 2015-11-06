@@ -239,6 +239,7 @@ public class SearchListAdapter extends BaseAdapter{
 						}
 						autocompletePredictions.release();
 
+
 						addFavoriteLocations(searchText);
 						setSearchResultsToList();
 						refreshingAutoComplete = false;
@@ -336,6 +337,7 @@ public class SearchListAdapter extends BaseAdapter{
 							final Place myPlace = places.get(0);
 							SearchResult searchResult = new SearchResult(myPlace.getName().toString(), myPlace.getAddress().toString(), myPlace.getLatLng());
 							setSearchResult(searchResult);
+							Log.e("attr", "="+places.getAttributions());
 						}
 						places.release();
 					}
@@ -356,6 +358,19 @@ public class SearchListAdapter extends BaseAdapter{
             }
         });
     }
+
+
+
+	public interface SearchListActionsHandler {
+		void onTextChange(String text);
+		void onSearchPre();
+		void onSearchPost();
+		void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult);
+		void onPlaceSearchPre();
+		void onPlaceSearchPost(SearchResult searchResult);
+		void onPlaceSearchError();
+	}
+
 
 
 }

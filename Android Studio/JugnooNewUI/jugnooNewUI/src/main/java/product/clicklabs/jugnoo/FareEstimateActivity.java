@@ -32,7 +32,6 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -104,7 +103,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
-				new SearchListActionsHandler() {
+				new SearchListAdapter.SearchListActionsHandler() {
 			@Override
 			public void onTextChange(String text) {
 
