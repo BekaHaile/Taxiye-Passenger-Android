@@ -182,6 +182,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
         relativeLayoutDropLocationBar.setVisibility(View.VISIBLE);
         listViewDropLocationSearch.setVisibility(View.VISIBLE);
+		findViewById(R.id.imageViewPoweredByGoogle).setVisibility(View.VISIBLE);
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
 
 
@@ -238,7 +239,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                                     relativeLayoutDropLocationBar.setVisibility(View.GONE);
                                                     listViewDropLocationSearch.setVisibility(View.GONE);
+													findViewById(R.id.imageViewPoweredByGoogle).setVisibility(View.GONE);
                                                     relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
+
 
                                                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 

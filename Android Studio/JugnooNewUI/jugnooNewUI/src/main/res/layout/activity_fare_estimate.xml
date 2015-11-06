@@ -1,8 +1,8 @@
 <LinearLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="@dimen/width"
+    android:layout_height="@dimen/height"
     android:background="@color/white_light_grey"
     android:orientation="vertical">
 
@@ -38,6 +38,11 @@
         android:layout_height="6px"
         android:background="@drawable/shadow_down"
         />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
         <!-- Drop location layout -->
         <RelativeLayout
@@ -103,9 +108,24 @@
             android:divider="@color/transparent"
             android:dividerHeight="0px"
             android:splitMotionEvents="false"
-            android:visibility="gone"
+            android:visibility="visible"
+            android:layout_below="@+id/relativeLayoutDropLocationBar"
+            android:layout_above="@+id/imageViewPoweredByGoogle"
             >
         </ListView>
+
+        <ImageView
+            android:id="@+id/imageViewPoweredByGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/powered_by_google_light"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:padding="8dp"
+            android:tag="DontTouchMe"
+            />
+
+    </RelativeLayout>
 
     <!-- fare estimate layout-->
         <RelativeLayout
@@ -113,6 +133,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
+            android:visibility="gone"
             >
 
 

@@ -1,8 +1,8 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="720px"
-    android:layout_height="1134px"
+    android:layout_width="@dimen/width"
+    android:layout_height="@dimen/height"
     >
 
     <FrameLayout
@@ -22,7 +22,7 @@
             <RelativeLayout
                 android:id="@+id/mapLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/height"
                 android:splitMotionEvents="false"
                 android:visibility="visible">
 
@@ -512,12 +512,11 @@
                     android:layout_marginTop="96px"
                     android:animateLayoutChanges="true"
                     android:splitMotionEvents="false"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:background="@color/black_translucent"
                     >
 
                     <!-- finding driver layout-->
-
                     <RelativeLayout
                         android:id="@+id/relativeLayoutAssigningInfo"
                         android:layout_width="match_parent"
@@ -604,8 +603,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/relativeLayoutAssigningInfo"
-                        android:background="@color/transparent"
-                        android:visibility="gone"
+                        android:background="@color/white_translucent"
+                        android:visibility="visible"
                         >
                         <RelativeLayout
                             android:id="@+id/relativeLayoutAssigningDropLocationBar"
@@ -676,7 +675,9 @@
                             android:id="@+id/scrollViewAssigning"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_below="@+id/relativeLayoutAssigningDropLocationBar">
+                            android:layout_below="@+id/relativeLayoutAssigningDropLocationBar"
+                            android:layout_above="@+id/imageViewPoweredByGoogleAssigning"
+                            >
 
                             <LinearLayout
                                 android:id="@+id/linearLayoutScrollAssigning"
@@ -701,6 +702,17 @@
                             </LinearLayout>
                         </ScrollView>
 
+                        <ImageView
+                            android:id="@+id/imageViewPoweredByGoogleAssigning"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/powered_by_google_light"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true"
+                            android:padding="8dp"
+                            android:tag="DontTouchMe"
+                            />
+
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -713,7 +725,7 @@
                     android:layout_marginTop="96px"
                     android:animateLayoutChanges="true"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     >
 
                     <!-- promo name fare factor layout-->
@@ -1027,7 +1039,9 @@
                             android:id="@+id/scrollViewFinal"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_below="@+id/relativeLayoutFinalDropLocationBar">
+                            android:layout_below="@+id/relativeLayoutFinalDropLocationBar"
+                            android:layout_above="@+id/imageViewPoweredByGoogleFinal"
+                            >
 
                             <LinearLayout
                                 android:id="@+id/linearLayoutScrollFinal"
@@ -1051,6 +1065,17 @@
                             </LinearLayout>
                         </ScrollView>
 
+                        <ImageView
+                            android:id="@+id/imageViewPoweredByGoogleFinal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/powered_by_google_light"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true"
+                            android:padding="8dp"
+                            android:tag="DontTouchMe"
+                            />
+
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -1061,15 +1086,14 @@
             </RelativeLayout>
 
             <!-- search layout -->
-            <LinearLayout
-                android:id="@+id/linearLayoutSearch"
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="96px"
                 android:background="@color/white_translucent"
-                android:orientation="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutSearchBar"
@@ -1155,7 +1179,10 @@
 
                 <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/imageViewPoweredByGoogleSearch"
+                    android:layout_below="@+id/relativeLayoutSearchBar"
+                    >
 
                     <LinearLayout
                         android:id="@+id/linearLayoutScrollSearch"
@@ -1176,9 +1203,23 @@
                             android:layout_width="10px"
                             android:layout_height="10px"
                             android:textSize="28px"/>
+
                     </LinearLayout>
                 </ScrollView>
-            </LinearLayout>
+
+
+                <ImageView
+                    android:id="@+id/imageViewPoweredByGoogleSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/powered_by_google_light"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:padding="8dp"
+                    android:tag="DontTouchMe"
+                    />
+
+            </RelativeLayout>
 
             <!-- end ride layout -->
             <RelativeLayout

@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="SHARE"
+                android:text="FREE RIDES"
                 android:textColor="@color/white"
                 android:textSize="30.6px"/>
 
