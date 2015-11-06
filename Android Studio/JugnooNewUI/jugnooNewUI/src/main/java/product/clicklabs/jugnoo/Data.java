@@ -37,7 +37,8 @@ public class Data {
 	public static final String DRIVER_APP_PACKAGE = "product.clicklabs.jugnoo.driver";
 
 
-	public static String PAYTM_STATUS_ACTIVE = "ACTIVE";
+	public static String PAYTM_STATUS_ACTIVE = "ACTIVE",
+						PAYTM_STATUS_INCATIVE = "INACTIVE";
 
 
 

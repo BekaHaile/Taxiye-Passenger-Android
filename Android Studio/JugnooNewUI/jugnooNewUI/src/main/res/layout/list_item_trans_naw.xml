@@ -65,6 +65,20 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="26px"/>
 
+
+            <TextView
+                android:id="@+id/textViewTransactionMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6px"
+                android:text="Paytm:"
+                android:textColor="@color/blue"
+                android:textSize="26px"
+                android:layout_toLeftOf="@+id/textViewTransactionType"
+                android:visibility="gone"
+                />
+
             <TextView
                 android:id="@+id/textViewTransactionType"
                 android:layout_width="wrap_content"

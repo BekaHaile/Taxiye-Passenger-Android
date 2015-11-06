@@ -197,7 +197,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	
 	
 	class ViewHolderTransaction {
-		TextView textViewTransactionDate, textViewTransactionAmount, textViewTransactionTime, textViewTransactionType;
+		TextView textViewTransactionDate, textViewTransactionAmount, textViewTransactionTime, textViewTransactionType, textViewTransactionMode;
 		LinearLayout relative;
 		int id;
 	}
@@ -236,7 +236,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.latoRegular(context));
 				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.latoLight(context));
 				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.latoLight(context));
-				
+				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.latoLight(context));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 				
 				holder.relative.setTag(holder);
@@ -255,7 +255,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			
 			holder.textViewTransactionDate.setText(transactionInfo.date);
 
-			holder.textViewTransactionAmount.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(transactionInfo.amount));
+			holder.textViewTransactionAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(transactionInfo.amount));
 			holder.textViewTransactionTime.setText(transactionInfo.time);
 			holder.textViewTransactionType.setText(transactionInfo.transactionText);
 			
@@ -264,6 +264,13 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			}
 			else{
 				holder.textViewTransactionType.setTextColor(getResources().getColor(R.color.grey_dark));
+			}
+
+			if(transactionInfo.paytm == 1){
+				holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+			}
+			else{
+				holder.textViewTransactionMode.setVisibility(View.GONE);
 			}
 			
 			return convertView;
@@ -333,12 +340,16 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 									JSONArray jTransactions = jObj.getJSONArray("transactions");
 									for (int i = 0; i < jTransactions.length(); i++) {
 										JSONObject jTransactionI = jTransactions.getJSONObject(i);
+
+										int paytm = jTransactionI.optInt("paytm", 0);
+
 										transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
 												jTransactionI.getInt("txn_type"),
 												jTransactionI.getString("txn_time"),
 												jTransactionI.getString("txn_date"),
 												jTransactionI.getString("txn_text"),
-												jTransactionI.getDouble("amount")));
+												jTransactionI.getDouble("amount"),
+												paytm));
 									}
 
 									if (Data.userData != null) {

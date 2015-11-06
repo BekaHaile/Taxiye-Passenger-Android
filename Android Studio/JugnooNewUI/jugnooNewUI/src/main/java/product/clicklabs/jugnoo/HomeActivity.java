@@ -6045,6 +6045,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					buttonRRPaymentOptionChange.setVisibility(View.VISIBLE);
 					linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
 				}
+				else if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INCATIVE)){
+					Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+					buttonRRPaymentOptionChange.setVisibility(View.GONE);
+					linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
+				}
 				else{
 					Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 					buttonRRPaymentOptionChange.setVisibility(View.GONE);
