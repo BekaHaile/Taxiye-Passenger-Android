@@ -205,7 +205,7 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 				}*/
 
 //				String shareBody = "app string text more text! Get the app at http://jugnoo.in";
-				String shareBody = Data.userData.referralCode + " http://jugnoo.in";
+				String shareBody = Data.userData.referralCode + " http://share.jugnoo.in";
 				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 				sharingIntent.setType("text/plain");
 				PackageManager pm = view.getContext().getPackageManager();
