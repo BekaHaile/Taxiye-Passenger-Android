@@ -228,24 +228,28 @@ public class SearchListAdapter extends BaseAdapter{
 						null).setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
 					@Override
 					public void onResult(AutocompletePredictionBuffer autocompletePredictions) {
-						refreshingAutoComplete = true;
-						autoCompleteSearchResultsForSearch.clear();
-						for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
-							Log.i("TAG", "Desc=" + autocompletePrediction.getDescription() + ", PlaceID=" + autocompletePrediction.getPlaceId()
-									+ ", MatchedSubString=" + autocompletePrediction.getMatchedSubstrings() + ", PlacesType=" + autocompletePrediction.getPlaceTypes());
-							String name = autocompletePrediction.getDescription().split(",")[0];
-							autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult(name,
-									autocompletePrediction.getDescription(), autocompletePrediction.getPlaceId()));
-						}
-						autocompletePredictions.release();
+						try {
+							refreshingAutoComplete = true;
+							autoCompleteSearchResultsForSearch.clear();
+							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
+								Log.i("TAG", "Desc=" + autocompletePrediction.getDescription() + ", PlaceID=" + autocompletePrediction.getPlaceId()
+										+ ", MatchedSubString=" + autocompletePrediction.getMatchedSubstrings() + ", PlacesType=" + autocompletePrediction.getPlaceTypes());
+								String name = autocompletePrediction.getDescription().split(",")[0];
+								autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult(name,
+										autocompletePrediction.getDescription(), autocompletePrediction.getPlaceId()));
+							}
+							autocompletePredictions.release();
 
 
-						addFavoriteLocations(searchText);
-						setSearchResultsToList();
-						refreshingAutoComplete = false;
+							addFavoriteLocations(searchText);
+							setSearchResultsToList();
+							refreshingAutoComplete = false;
 
-						if (!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)) {
-							recallSearch(editTextForSearch.getText().toString().trim());
+							if (!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)) {
+								recallSearch(editTextForSearch.getText().toString().trim());
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
 					}
 				});
@@ -279,49 +283,53 @@ public class SearchListAdapter extends BaseAdapter{
 
 
 	private synchronized void addFavoriteLocations(String searchText){
-		Gson gson = new Gson();
-		if(!Prefs.with(context).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) {
-			if (SPLabels.ADD_GYM.toLowerCase().contains(searchText.toLowerCase()) ||
-					Prefs.with(context).getString(SPLabels.ADD_GYM, "").toLowerCase().contains(searchText.toLowerCase())) {
-				AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_GYM, ""),
-						AutoCompleteSearchResult.class);
-				searchResult.address = searchResult.name+", "+searchResult.address;
-				searchResult.name = SPLabels.ADD_GYM;
-				autoCompleteSearchResultsForSearch.add(0, searchResult);
+		try {
+			Gson gson = new Gson();
+			if(!Prefs.with(context).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) {
+				if (SPLabels.ADD_GYM.toLowerCase().contains(searchText.toLowerCase()) ||
+						Prefs.with(context).getString(SPLabels.ADD_GYM, "").toLowerCase().contains(searchText.toLowerCase())) {
+					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_GYM, ""),
+							AutoCompleteSearchResult.class);
+					searchResult.address = searchResult.name+", "+searchResult.address;
+					searchResult.name = SPLabels.ADD_GYM;
+					autoCompleteSearchResultsForSearch.add(0, searchResult);
+				}
 			}
-		}
 
-		if(!Prefs.with(context).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase("")) {
-			if (SPLabels.ADD_FRIEND.toLowerCase().contains(searchText.toLowerCase()) ||
-					Prefs.with(context).getString(SPLabels.ADD_FRIEND, "").toLowerCase().contains(searchText.toLowerCase())) {
-				AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_FRIEND, ""),
-						AutoCompleteSearchResult.class);
-				searchResult.address = searchResult.name+", "+searchResult.address;
-				searchResult.name = SPLabels.ADD_FRIEND;
-				autoCompleteSearchResultsForSearch.add(0, searchResult);
+			if(!Prefs.with(context).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase("")) {
+				if (SPLabels.ADD_FRIEND.toLowerCase().contains(searchText.toLowerCase()) ||
+						Prefs.with(context).getString(SPLabels.ADD_FRIEND, "").toLowerCase().contains(searchText.toLowerCase())) {
+					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_FRIEND, ""),
+							AutoCompleteSearchResult.class);
+					searchResult.address = searchResult.name+", "+searchResult.address;
+					searchResult.name = SPLabels.ADD_FRIEND;
+					autoCompleteSearchResultsForSearch.add(0, searchResult);
+				}
 			}
-		}
 
-		if(!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-			if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
-					Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())) {
-				AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""),
-						AutoCompleteSearchResult.class);
-				searchResult.address = searchResult.name+", "+searchResult.address;
-				searchResult.name = SPLabels.ADD_WORK;
-				autoCompleteSearchResultsForSearch.add(0, searchResult);
+			if(!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+				if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
+						Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())) {
+					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""),
+							AutoCompleteSearchResult.class);
+					searchResult.address = searchResult.name+", "+searchResult.address;
+					searchResult.name = SPLabels.ADD_WORK;
+					autoCompleteSearchResultsForSearch.add(0, searchResult);
+				}
 			}
-		}
 
-		if(!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-			if(SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
-					Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())) {
-				AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""),
-						AutoCompleteSearchResult.class);
-				searchResult.address = searchResult.name+", "+searchResult.address;
-				searchResult.name = SPLabels.ADD_HOME;
-				autoCompleteSearchResultsForSearch.add(0, searchResult);
+			if(!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+				if(SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
+						Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())) {
+					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""),
+							AutoCompleteSearchResult.class);
+					searchResult.address = searchResult.name+", "+searchResult.address;
+					searchResult.name = SPLabels.ADD_HOME;
+					autoCompleteSearchResultsForSearch.add(0, searchResult);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -333,13 +341,18 @@ public class SearchListAdapter extends BaseAdapter{
 				.setResultCallback(new ResultCallback<PlaceBuffer>() {
 					@Override
 					public void onResult(PlaceBuffer places) {
-						if (places.getStatus().isSuccess()) {
-							final Place myPlace = places.get(0);
-							SearchResult searchResult = new SearchResult(myPlace.getName().toString(), myPlace.getAddress().toString(), myPlace.getLatLng());
-							setSearchResult(searchResult);
-							Log.e("attr", "="+places.getAttributions());
+						try {
+							if (places.getStatus().isSuccess()) {
+								final Place myPlace = places.get(0);
+								SearchResult searchResult = new SearchResult(myPlace.getName().toString(), myPlace.getAddress().toString(), myPlace.getLatLng());
+								searchResult.setAttr(places.getAttributions());
+								setSearchResult(searchResult);
+								Log.e("attr", "="+places.getAttributions());
+							}
+							places.release();
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-						places.release();
 					}
 				});
     }
