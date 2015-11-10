@@ -1029,6 +1029,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				hideAnims();
+				Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
 			}
 
 			@Override
@@ -1047,8 +1048,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         //Top bar events
-        imageViewMenu.setOnClickListener(new OnClickListener() {
+		topRl.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+			}
+		});
 
+        imageViewMenu.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawerLayout.openDrawer(menuLayout);
@@ -1073,7 +1079,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		});
 
         checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
-
 			@Override
 			public boolean onLongClick(View v) {
 				Toast.makeText(getApplicationContext(), "" + Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
@@ -1124,7 +1129,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			@Override
 			public void onClick(View v) {
-				hideMenuDrawer();
 				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
@@ -1143,7 +1147,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-				hideMenuDrawer();
 				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
@@ -1162,7 +1165,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
 				if(Data.userData.showJugnooSharing == 1) {
-					hideMenuDrawer();
 					startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					FlurryEventLogger.event(JUGNOO_LINE_CLICK);
@@ -1174,7 +1176,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-				hideMenuDrawer();
                 startActivity(new Intent(HomeActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(INVITE_EARN_MENU);
@@ -1185,7 +1186,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-				hideMenuDrawer();
                 PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
 				startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1198,7 +1198,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 if (map != null) {
-					hideMenuDrawer();
                     Data.latitude = map.getCameraPosition().target.latitude;
                     Data.longitude = map.getCameraPosition().target.longitude;
 					startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
@@ -1213,7 +1212,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutTransactions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-				hideMenuDrawer();
                 Intent intent = new Intent(HomeActivity.this, RideTransactionsActivity.class);
 				startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1224,7 +1222,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutNotificationMenu.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				hideMenuDrawer();
 				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
@@ -1236,7 +1233,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-				hideMenuDrawer();
 				sendToFareDetails();
                 FlurryEventLogger.event(FARE_DETAILS);
             }
@@ -1246,7 +1242,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-				hideMenuDrawer();
 				startActivity(new Intent(HomeActivity.this, SupportActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(SUPPORT_OPTIONS);
@@ -1257,7 +1252,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-				hideMenuDrawer();
 				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
@@ -1267,12 +1261,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         menuLayout.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
 
             }
         });
+
+
+
+
 
         // Customer initial layout events
         imageViewRideNow.setOnClickListener(new OnClickListener() {
@@ -2155,7 +2152,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
             try {
-                Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewProfile);
+				if(activityResumed){
+					Picasso.with(HomeActivity.this).load(Data.userData.userImage).transform(new CircleTransform()).into(imageViewProfile);
+				}
+				else{
+					Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewProfile);
+				}
             } catch (Exception e) {
                 e.printStackTrace();
             }
