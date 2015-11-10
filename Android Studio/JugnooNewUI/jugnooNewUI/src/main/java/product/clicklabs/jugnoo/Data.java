@@ -38,7 +38,7 @@ public class Data {
 
 
 	public static String PAYTM_STATUS_ACTIVE = "ACTIVE",
-						PAYTM_STATUS_INCATIVE = "INACTIVE";
+						PAYTM_STATUS_INACTIVE = "INACTIVE";
 
 
 

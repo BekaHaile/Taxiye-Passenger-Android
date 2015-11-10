@@ -123,9 +123,8 @@ public class Utils {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+
 	
 	public static void hideSoftKeyboard(Activity activity, View searchET) {
 		try {

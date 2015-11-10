@@ -50,14 +50,43 @@
                     android:splitMotionEvents="false"
                     android:visibility="gone">
 
-                    <ImageView
-                        android:id="@+id/centreLocationPin"
-                        android:layout_width="47px"
-                        android:layout_height="79px"
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutCentrePin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_above="@+id/centreLocationPivot"
-                        android:layout_centerHorizontal="true"
-                        android:background="@drawable/pin_ball"
-                        android:tag="mwar"/>
+                        android:layout_centerHorizontal="true">
+
+                        <ImageView
+                            android:id="@+id/centreLocationPin"
+                            android:layout_width="77px"
+                            android:layout_height="105px"
+                            android:background="@drawable/ic_centre_pin_big"
+                            android:tag="mwar"/>
+
+                        <TextView
+                            android:id="@+id/textViewCentrePinETA"
+                            android:layout_width="77px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="28px"
+                            android:layout_marginTop="9px"
+                            />
+
+                        <TextView
+                            android:id="@+id/textViewCentrePinETAMin"
+                            android:layout_width="77px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="min"
+                            android:textColor="@color/white"
+                            android:textSize="22px"
+                            android:layout_below="@+id/textViewCentrePinETA"
+                            />
+
+                    </RelativeLayout>
 
                     <ImageView
                         android:id="@+id/centreLocationPivot"
@@ -79,7 +108,6 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="4px"
-
                         android:background="@drawable/shadow_down"
                         android:rotation="180"
                         android:layout_above="@+id/relativeLayoutRequestInfo"
@@ -349,7 +377,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:background="@color/black_translucent_level_2"
+                            android:background="@color/black_translucent"
                             android:orientation="vertical"
                             >
 
@@ -396,222 +424,151 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
+                            android:background="@color/black_translucent"
                             android:gravity="center_horizontal"
                             android:orientation="vertical"
                             >
 
                             <LinearLayout
-                                android:id="@+id/linearLayoutCouponList"
                                 android:layout_width="match_parent"
-                                android:layout_height="370px"
+                                android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:orientation="vertical"
                                 android:visibility="visible"
+                                android:layout_marginLeft="40px"
+                                android:layout_marginRight="40px"
+                                android:layout_marginBottom="10px"
+                                android:background="@drawable/background_white_rounded_bordered"
                                 >
-                                <TextView
-                                    android:id="@+id/textViewPromoChooseCoupon"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="20px"
-                                    android:layout_marginTop="16px"
-                                    android:text="SELECT YOUR COUPON"
-                                    android:textColor="@color/grey_black"
-                                    android:textSize="28px"
-                                    />
-
-                                <ImageView
-                                    android:layout_width="520px"
-                                    android:layout_height="2px"
-                                    android:background="@color/grey_light_more"/>
 
                                 <ListView
                                     android:id="@+id/listViewPromotions"
                                     android:layout_width="match_parent"
-                                    android:layout_height="270px"
-                                    android:layout_marginTop="26px"
+                                    android:layout_height="240px"
                                     android:divider="@color/grey_light"
-                                    android:dividerHeight="1px"
+                                    android:dividerHeight="1dp"
                                     android:splitMotionEvents="false"
                                     android:visibility="visible"
                                     android:scrollbarAlwaysDrawVerticalTrack="true"
+                                    android:layout_marginLeft="2px"
+                                    android:layout_marginRight="2px"
                                     >
                                 </ListView>
 
                                 <ImageView
+                                    android:id="@+id/imageViewListViewPromotionsSep"
                                     android:layout_width="match_parent"
                                     android:layout_height="2px"
                                     android:background="@color/grey_light_more"/>
 
-                            </LinearLayout>
 
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="90px"
-                                android:layout_marginTop="0px"
-                                android:splitMotionEvents="false"
-                                >
-
-                                <ImageView
-                                    android:id="@+id/imageViewRRWalletIcon"
-                                    android:layout_width="50px"
-                                    android:layout_height="50px"
-                                    android:background="@color/grey_light_more"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginLeft="20px"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/textViewRRPaymentOption"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="28px"
-                                    android:textColor="@color/grey_black"
-                                    android:text="PAYTM WALLET"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginLeft="20px"
-                                    android:layout_toRightOf="@+id/imageViewRRWalletIcon"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/textViewRRPaymentOptionMoneyValue"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="28px"
-                                    android:textColor="@color/grey_black"
-                                    android:text="@string/rupee_0"
-                                    android:layout_toRightOf="@+id/textViewRRPaymentOption"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginLeft="40px"
-                                    />
-
-
-                                <Button
-                                    android:id="@+id/buttonRRPaymentOptionChange"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:textSize="28px"
-                                    android:textColor="@drawable/text_color_grey_dark_light_selector"
-                                    android:text="CHANGE"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginRight="20px"
-                                    android:background="@drawable/background_transparent"
-                                    android:layout_alignParentRight="true"
-                                    />
-
-
-
-                                <ImageView
+                                <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="2px"
-                                    android:background="@color/grey_light_more"
-                                    android:layout_alignParentBottom="true"/>
-
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="90px"
-                                android:layout_marginTop="0px"
-                                android:splitMotionEvents="false"
-                                >
-
-                                <RelativeLayout
-                                    android:layout_width="360px"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center">
-
-                                    <TextView
-                                        android:id="@+id/textViewRRETA"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="26px"
-                                        android:textColor="@color/grey_dark_less"
-                                        android:text="ETA"
-                                        android:layout_centerHorizontal="true"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/textViewRRETAValue"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="30px"
-                                        android:textColor="@color/grey_black"
-                                        android:text="10 MINS"
-                                        android:layout_centerHorizontal="true"
-                                        android:layout_below="@+id/textViewRRETA"
-                                        />
-
-                                </RelativeLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="360px"
-                                    android:layout_height="match_parent"
-                                    android:layout_alignParentRight="true"
-                                    android:gravity="center"
+                                    android:layout_height="wrap_content"
                                     >
 
-                                    <TextView
-                                        android:id="@+id/textViewRRMinFare"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="26px"
-                                        android:textColor="@color/grey_dark_less"
-                                        android:text="MIN FARE"
+                                    <LinearLayout
+                                        android:id="@+id/linearLayoutRRPaymentOption"
+                                        android:layout_width="320px"
+                                        android:layout_height="145px"
+                                        android:orientation="vertical"
+                                        android:gravity="center"
+                                        >
+                                        
+                                        <ImageView
+                                            android:id="@+id/imageViewRRPaymentOptionIcon"
+                                            android:layout_width="44px"
+                                            android:layout_height="35px"
+                                            android:tag="mwar"
+                                            android:src="@drawable/ic_wallet"
+                                            />
+
+                                        <TextView
+                                            android:id="@+id/textViewRRPaymentOption"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textSize="28px"
+                                            android:textColor="@color/grey_dark"
+                                            android:text="PAYTM WALLET\nRs 120"
+                                            android:layout_centerHorizontal="true"
+                                            android:paddingBottom="5px"
+                                            android:paddingTop="10px"
+                                            android:gravity="center"
+                                            />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/linearLayoutFareEstimate"
+                                        android:layout_width="320px"
+                                        android:layout_height="145px"
+                                        android:orientation="vertical"
+                                        android:layout_alignParentRight="true"
+                                        android:gravity="center"
+                                        >
+
+                                        <ImageView
+                                            android:id="@+id/imageViewFareEstimate"
+                                            android:layout_width="41px"
+                                            android:layout_height="34px"
+                                            android:tag="mwar"
+                                            android:src="@drawable/ic_fare_estimate"
+                                            />
+
+                                        <TextView
+                                            android:id="@+id/textViewFareEstimate"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textSize="28px"
+                                            android:textColor="@color/grey_dark"
+                                            android:text="FARE ESTIMATE"
+                                            android:layout_centerHorizontal="true"
+                                            android:paddingBottom="5px"
+                                            android:paddingTop="10px"
+                                            android:gravity="center"
+                                            />
+
+                                    </LinearLayout>
+
+                                    <ImageView
+                                        android:layout_width="2px"
+                                        android:layout_height="145px"
+                                        android:background="@color/grey_light_more"
                                         android:layout_centerHorizontal="true"
                                         />
-
-                                    <TextView
-                                        android:id="@+id/textViewRRMinFareValue"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="30px"
-                                        android:textColor="@color/grey_black"
-                                        android:text="@string/rupee_0"
-                                        android:layout_centerHorizontal="true"
-                                        android:layout_below="@+id/textViewRRMinFare"
-                                        />
-
 
                                 </RelativeLayout>
 
-                                <ImageView
-                                    android:layout_width="2px"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginTop="10px"
-                                    android:layout_marginBottom="10px"
-                                    android:layout_centerInParent="true"
-                                    android:background="@color/grey_light_more"
-                                    />
 
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="2px"
-                                    android:background="@color/grey_light_more"
-                                    android:layout_alignParentBottom="true"/>
 
-                            </RelativeLayout>
+                            </LinearLayout>
 
-                            <Button
-                                android:id="@+id/buttonFareEstimate"
-                                android:layout_width="440px"
-                                android:layout_height="75px"
-                                android:layout_marginTop="10px"
-                                android:background="@drawable/background_transparent"
-                                android:text="GET FARE ESTIMATE"
-                                android:textColor="@drawable/text_color_yellow_alpha_selector"
-                                android:textSize="@dimen/button_small_text_size"/>
 
                             <Button
                                 android:id="@+id/buttonGetARide"
-                                android:layout_width="440px"
+                                android:layout_width="648px"
                                 android:layout_height="95px"
-                                android:layout_marginBottom="30px"
+                                android:layout_marginBottom="10px"
                                 android:layout_marginTop="0px"
                                 android:background="@drawable/button_yellow"
                                 android:text="GET A RIDE"
                                 android:textColor="@drawable/text_color_white_alpha_selector"
                                 android:textSize="@dimen/button_text_size"/>
+
+                            <TextView
+                                android:id="@+id/textViewRRMinFare"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="26px"
+                                android:textColor="@color/grey_dark"
+                                android:background="@color/white"
+                                android:text="Minimum Fare Rs 15"
+                                android:layout_centerHorizontal="true"
+                                android:paddingBottom="5px"
+                                android:paddingTop="5px"
+                                android:gravity="center"
+                                />
+                            
 
                         </LinearLayout>
 

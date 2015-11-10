@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_white_yellow_selector"
-    android:orientation="vertical"
-    android:splitMotionEvents="false" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:splitMotionEvents="false" >
-
-        <TextView
-            android:id="@+id/textViewCouponTitle"
-            android:layout_width="570px"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="45px"
-            android:layout_marginRight="10px"
-            android:layout_marginTop="27px"
-            android:layout_marginBottom="27px"
-            android:gravity="center_vertical"
-            android:text="1 Free Ride"
-            android:textColor="@color/black_text"
-            android:textSize="30px" />
-
-        <TextView
-            android:id="@+id/textViewTNC"
-            android:layout_width="wrap_content"
-            android:layout_height="80px"
-            android:layout_marginRight="35px"
-            android:layout_gravity="center_vertical"
-            android:text="T&amp;C"
-            android:gravity="center"
-            android:textColor="@color/black_text"
-            android:textSize="30px" />
-    </LinearLayout>
+    android:splitMotionEvents="false"
+    >
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="@color/grey_light" />
+        android:id="@+id/imageViewCoupon"
+        android:layout_width="35px"
+        android:layout_height="35px"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20px"
+        android:src="@drawable/ic_list_coupon"
+        android:tag="mwar"
+        />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/textViewCouponTitle"
+        android:layout_width="400px"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="27px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="27px"
+        android:layout_toRightOf="@+id/imageViewCoupon"
+        android:gravity="center_vertical"
+        android:text="Location Insensitive Discount"
+        android:textColor="@color/black_text"
+        android:textSize="30px"
+        />
+
+    <TextView
+        android:id="@+id/textViewCouponSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20px"
+        android:background="@drawable/background_white_r_more_yellow_b"
+        android:gravity="center"
+        android:paddingBottom="8px"
+        android:paddingLeft="20px"
+        android:paddingRight="20px"
+        android:paddingTop="8px"
+        android:text="SELECT"
+        android:textColor="@color/yellow"
+        android:textSize="26px"
+
+        />
+
+
+</RelativeLayout>

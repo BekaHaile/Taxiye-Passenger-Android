@@ -852,6 +852,15 @@ public class JSONParser {
                     coData.getString("image"),
                     coData.getString("redeemed_on"),
                     coData.getString("expiry_date"), "", ""));
+			promoCouponList.add(new CouponInfo(coData.getInt("account_id"),
+					coData.getInt("coupon_type"),
+					coData.getInt("status"),
+					coData.getString("title"),
+					coData.getString("subtitle"),
+					coData.getString("description"),
+					coData.getString("image"),
+					coData.getString("redeemed_on"),
+					coData.getString("expiry_date"), "", ""));
         }
 
         JSONArray jPromoArr = jObj.getJSONArray("promotions");
