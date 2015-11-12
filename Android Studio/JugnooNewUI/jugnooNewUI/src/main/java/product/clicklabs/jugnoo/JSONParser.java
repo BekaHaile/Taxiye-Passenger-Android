@@ -852,15 +852,6 @@ public class JSONParser {
                     coData.getString("image"),
                     coData.getString("redeemed_on"),
                     coData.getString("expiry_date"), "", ""));
-			promoCouponList.add(new CouponInfo(coData.getInt("account_id"),
-					coData.getInt("coupon_type"),
-					coData.getInt("status"),
-					coData.getString("title"),
-					coData.getString("subtitle"),
-					coData.getString("description"),
-					coData.getString("image"),
-					coData.getString("redeemed_on"),
-					coData.getString("expiry_date"), "", ""));
         }
 
         JSONArray jPromoArr = jObj.getJSONArray("promotions");
@@ -1218,7 +1209,7 @@ public class JSONParser {
 				}
 				Prefs.with(context).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 			}
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

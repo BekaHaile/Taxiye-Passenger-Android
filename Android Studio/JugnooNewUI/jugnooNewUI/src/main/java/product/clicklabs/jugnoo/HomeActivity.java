@@ -2899,7 +2899,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
         try {
-            Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(imageViewInRideDriver);
+			if(!"".equalsIgnoreCase(Data.assignedDriverInfo.image)) {
+				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(imageViewInRideDriver);
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2907,7 +2909,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         Data.assignedDriverInfo.carImage = Data.assignedDriverInfo.carImage.replace("http://graph.facebook", "https://graph.facebook");
         try {
-            Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new CircleTransform()).into(imageViewInRideDriverCar);
+			if(!"".equalsIgnoreCase(Data.assignedDriverInfo.carImage)) {
+				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.carImage).transform(new CircleTransform()).into(imageViewInRideDriverCar);
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.wallet;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,17 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -137,7 +142,16 @@ public class AddPaytmFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				editTextOTP.requestFocus();
+				editTextOTP.setSelection(editTextOTP.getText().length());
 				Utils.showSoftKeyboard(paymentActivity, editTextOTP);
+			}
+		});
+
+		editTextOTP.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				buttonVerifyOTP.performClick();
+				return false;
 			}
 		});
 
@@ -202,82 +216,108 @@ public class AddPaytmFragment extends Fragment {
 
 
 	public void generateOTP() {
-		if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-			DialogPopup.showLoadingDialog(paymentActivity, "Generating OTP...");
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("client_id", Config.getClientId());
-			params.put("is_access_token_new", "1");
+		try {
+			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
+				DialogPopup.showLoadingDialog(paymentActivity, "Generating OTP...");
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("client_id", Config.getClientId());
+				params.put("is_access_token_new", "1");
 
-			AsyncHttpClient client = Data.getClient();
+				AsyncHttpClient client = Data.getClient();
 
-			client.post(Config.getTXN_URL() + "/paytm/request_otp", params, new CustomAsyncHttpResponseHandler() {
+				client.post(Config.getTXN_URL() + "/paytm/request_otp", params, new CustomAsyncHttpResponseHandler() {
 
-				@Override
-				public void onSuccess(String response) {
-					Log.i("request succesfull", "response = " + response);
-					try {
-						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
-						JSONObject res = new JSONObject(response.toString());
-						setUIAfterRequest();
-					} catch (Exception e) {
+					@Override
+					public void onSuccess(String response) {
+						Log.i("request succesfull", "response = " + response);
 						DialogPopup.dismissLoadingDialog();
-						e.printStackTrace();
-						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						try {
+							Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
+							JSONObject jObj = new JSONObject(response);
+							String message = JSONParser.getServerMessage(jObj);
+							int flag = jObj.getInt("flag");
+							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+								Toast.makeText(paymentActivity, message, Toast.LENGTH_SHORT).show();
+								setUIAfterRequest();
+							} else{
+								DialogPopup.alertPopup(paymentActivity, "", message);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						}
 					}
 
-					DialogPopup.dismissLoadingDialog();
-
-				}
-
-				@Override
-				public void onFailure(Throwable arg0) {
-					Log.e("request fail", arg0.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-				}
-			});
+					@Override
+					public void onFailure(Throwable arg0) {
+						Log.e("request fail", arg0.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+					}
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	private void sendOTP(String otp) {
-		if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-			DialogPopup.showLoadingDialog(paymentActivity, "Sending OTP...");
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("client_id", Config.getClientId());
-			params.put("is_access_token_new", "1");
+		try {
+			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
+				DialogPopup.showLoadingDialog(paymentActivity, "Sending OTP...");
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("client_id", Config.getClientId());
+				params.put("is_access_token_new", "1");
 
-			params.put("otp", "" + otp);
+				params.put("otp", "" + otp);
 
-			AsyncHttpClient client = Data.getClient();
+				AsyncHttpClient client = Data.getClient();
 
-			client.post(Config.getTXN_URL() + "/paytm/login_with_otp", params, new CustomAsyncHttpResponseHandler() {
+				client.post(Config.getTXN_URL() + "/paytm/login_with_otp", params, new CustomAsyncHttpResponseHandler() {
 
-				@Override
-				public void onSuccess(String response) {
-					Log.i("request succesfull", "response = " + response);
-					DialogPopup.dismissLoadingDialog();
-					try {
-						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
+					@Override
+					public void onSuccess(String response) {
+						Log.i("request succesfull", "response = " + response);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
 
-						JSONObject res = new JSONObject(response);
+							JSONObject jObj = new JSONObject(response);
+							String message = JSONParser.getServerMessage(jObj);
+							int flag = jObj.getInt("flag");
+							if(ApiResponseFlags.PAYTM_OTP_ERROR.getOrdinal() == flag){
+								DialogPopup.alertPopup(paymentActivity, "", message);
+							} else if(ApiResponseFlags.PAYTM_INACTIVE_LOGGED_IN.getOrdinal() == flag){
+								DialogPopup.alertPopup(paymentActivity, "", message);
+							} else if(ApiResponseFlags.PAYTM_LOGGED_IN.getOrdinal() == flag){
+								if (Data.userData != null) {
+									String balance = jObj.optString("balance", "0");
+									Data.userData.setPaytmBalance(Double.parseDouble(balance));
+									Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
 
-						paymentActivity.getBalance(AddPaytmFragment.class.getName());
+									Prefs.with(paymentActivity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+									paymentActivity.performGetBalanceSuccess(AddPaytmFragment.class.getName());
+								}
+							}
 
-					} catch (Exception e) {
-						e.printStackTrace();
+						} catch (Exception e) {
+							e.printStackTrace();
+							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						}
+					}
+
+					@Override
+					public void onFailure(Throwable arg0) {
+						Log.e("request fail", arg0.toString());
+						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
-				}
-
-				@Override
-				public void onFailure(Throwable arg0) {
-					Log.e("request fail", arg0.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-				}
-			});
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -404,7 +404,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 		}
 	}
 
-	private void performGetBalanceSuccess(String fragName){
+	public void performGetBalanceSuccess(String fragName){
 		try {
 			Fragment currFrag = null;
 			if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
