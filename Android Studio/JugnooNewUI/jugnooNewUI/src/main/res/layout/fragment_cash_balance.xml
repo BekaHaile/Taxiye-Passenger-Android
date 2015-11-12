@@ -91,7 +91,7 @@
                 android:layout_height="40px"
                 android:layout_marginLeft="43px"
                 android:tag="mwar"
-                android:background="@drawable/rupeeicon"
+                android:background="@drawable/ic_rupee"
                 android:layout_centerVertical="true"
                 />
 

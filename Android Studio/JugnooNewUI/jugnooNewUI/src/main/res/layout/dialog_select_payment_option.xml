@@ -47,11 +47,12 @@
 
             <ImageView
                 android:id="@+id/imageViewPaytmWalletIcon"
-                android:layout_width="50px"
-                android:layout_height="50px"
+                android:layout_width="35px"
+                android:layout_height="29px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
-                android:background="@color/grey_light_more"
+                android:src="@drawable/ic_paytm_wallet"
+                android:tag="mwar"
                 />
 
             <TextView
@@ -64,6 +65,19 @@
                 android:text="PayTM"
                 android:textColor="@color/grey_black"
                 android:textSize="30px"
+                />
+
+            <TextView
+                android:id="@+id/textViewPaytmWalletValue"
+                android:layout_width="340px"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10px"
+                android:layout_alignParentRight="true"
+                android:text="Rs. 0000000"
+                android:textColor="@color/grey_black"
+                android:textSize="30px"
+                android:gravity="right"
                 />
 
         </RelativeLayout>
@@ -86,11 +100,12 @@
 
             <ImageView
                 android:id="@+id/imageViewCashIcon"
-                android:layout_width="50px"
-                android:layout_height="50px"
+                android:layout_width="39px"
+                android:layout_height="31px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
-                android:background="@color/grey_light_more"
+                android:tag="mwar"
+                android:src="@drawable/ic_wallet"
                 />
 
             <TextView
@@ -98,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
+                android:layout_marginLeft="15px"
                 android:layout_toRightOf="@+id/imageViewCashIcon"
                 android:text="Cash"
                 android:textColor="@color/grey_black"

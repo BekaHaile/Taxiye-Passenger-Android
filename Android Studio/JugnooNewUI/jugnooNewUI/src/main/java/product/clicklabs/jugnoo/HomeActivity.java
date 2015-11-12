@@ -210,7 +210,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	LinearLayout linearLayoutPromo, linearLayoutPromoShadow;
 	ListView listViewPromotions;
-	ImageView imageViewListViewPromotionsSep;
+	ImageView imageViewListViewPromotionsSep, imageViewRRPaymentOptionIcon;
 	PromotionsListAdapter promotionsListAdapter;
 	LinearLayout linearLayoutRRPaymentOption, linearLayoutFareEstimate;
 	TextView textViewRRPaymentOption, textViewRRMinFare;
@@ -616,6 +616,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		linearLayoutRRPaymentOption = (LinearLayout) findViewById(R.id.linearLayoutRRPaymentOption);
 		textViewRRPaymentOption = (TextView) findViewById(R.id.textViewRRPaymentOption); textViewRRPaymentOption.setTypeface(Fonts.latoRegular(this));
+		imageViewRRPaymentOptionIcon = (ImageView) findViewById(R.id.imageViewRRPaymentOptionIcon);
 
 		linearLayoutFareEstimate = (LinearLayout) findViewById(R.id.linearLayoutFareEstimate);
 		buttonGetARide = (Button) findViewById(R.id.buttonGetARide); buttonGetARide.setTypeface(Fonts.latoRegular(this));
@@ -2774,9 +2775,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		try {
 			if(PaymentOption.PAYTM.getOrdinal() == intPaymentOption){
 				textViewRRPaymentOption.setText("PAYTM WALLET\n"+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+				imageViewRRPaymentOptionIcon.setImageResource(R.drawable.ic_paytm_wallet);
 			}
 			else if(PaymentOption.CASH.getOrdinal() == intPaymentOption){
 				textViewRRPaymentOption.setText("CASH");
+				imageViewRRPaymentOptionIcon.setImageResource(R.drawable.ic_wallet);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -6134,7 +6137,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			TextView textViewSelect = (TextView) dialog.findViewById(R.id.textViewSelect); textViewSelect.setTypeface(Fonts.latoRegular(activity));
 			TextView textViewPaytmWallet = (TextView) dialog.findViewById(R.id.textViewPaytmWallet); textViewPaytmWallet.setTypeface(Fonts.latoRegular(activity));
+			TextView textViewPaytmWalletValue = (TextView) dialog.findViewById(R.id.textViewPaytmWalletValue); textViewPaytmWalletValue.setTypeface(Fonts.latoRegular(activity));
 			TextView textViewCash = (TextView) dialog.findViewById(R.id.textViewCash); textViewCash.setTypeface(Fonts.latoRegular(activity));
+
+			textViewPaytmWalletValue.setText(getResources().getString(R.string.rupee)+ Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
 
 			RelativeLayout relativeLayoutPaytm = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPaytm);
 			RelativeLayout relativeLayoutCash = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutCash);

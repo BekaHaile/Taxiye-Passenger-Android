@@ -477,10 +477,11 @@
                                         
                                         <ImageView
                                             android:id="@+id/imageViewRRPaymentOptionIcon"
-                                            android:layout_width="44px"
-                                            android:layout_height="35px"
+                                            android:layout_width="40px"
+                                            android:layout_height="32px"
                                             android:tag="mwar"
                                             android:src="@drawable/ic_wallet"
+                                            android:scaleType="centerCrop"
                                             />
 
                                         <TextView
