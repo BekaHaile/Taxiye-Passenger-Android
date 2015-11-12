@@ -413,41 +413,45 @@ public class PaytmRechargeFragment extends Fragment {
 
 
 	private void addBalance(String amount) {
-		if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-			DialogPopup.showLoadingDialog(paymentActivity, "Adding Balance...");
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("client_id", Config.getClientId());
-			params.put("is_access_token_new", "1");
+		try {
+			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
+				DialogPopup.showLoadingDialog(paymentActivity, "Adding Balance...");
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("client_id", Config.getClientId());
+				params.put("is_access_token_new", "1");
 
-			params.put("amount", "" + amount);
+				params.put("amount", "" + amount);
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getTXN_URL() + "/paytm/add_money", params, new CustomAsyncHttpResponseHandler() {
+				AsyncHttpClient client = Data.getClient();
+				client.post(Config.getTXN_URL() + "/paytm/add_money", params, new CustomAsyncHttpResponseHandler() {
 
-				@Override
-				public void onSuccess(String response) {
-					Log.i("request succesfull", "response = " + response);
-					DialogPopup.dismissLoadingDialog();
-					try {
-						openWebView(response);
-					} catch (Exception e) {
+					@Override
+					public void onSuccess(String response) {
+						Log.i("request succesfull", "response = " + response);
 						DialogPopup.dismissLoadingDialog();
-						e.printStackTrace();
+						try {
+							openWebView(response);
+						} catch (Exception e) {
+							DialogPopup.dismissLoadingDialog();
+							e.printStackTrace();
+							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						}
+					}
+
+					@Override
+					public void onFailure(Throwable arg0) {
+						Log.e("request fail", arg0.toString());
+						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
-				}
-
-				@Override
-				public void onFailure(Throwable arg0) {
-					Log.e("request fail", arg0.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-				}
-			});
-		}
-		else{
-			DialogPopup.alertPopup(paymentActivity, "", Data.CHECK_INTERNET_MSG);
+				});
+			}
+			else{
+				DialogPopup.alertPopup(paymentActivity, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -483,7 +487,7 @@ public class PaytmRechargeFragment extends Fragment {
 			public void onFailure(Throwable arg0) {
 				Log.e("request fail", arg0.toString());
 				DialogPopup.dismissLoadingDialog();
-				new DialogPopup().alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+				DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 			}
 		});
 	}
