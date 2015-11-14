@@ -1659,8 +1659,8 @@
                         android:layout_width="45px"
                         android:layout_height="45px"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="5px"
-                        android:layout_toLeftOf="@+id/textViewWalletValue"
+                        android:layout_marginRight="20px"
+                        android:layout_toLeftOf="@+id/imageViewWalletArrow"
                         xmlns:wheel="http://schemas.android.com/apk/res-auto"
                         wheel:matProg_barColor="@color/grey_dark_more"
                         wheel:matProg_fillRadius="true"
@@ -1681,7 +1681,9 @@
                         android:padding="10px"
                         android:text="@string/rupee_0"
                         android:textColor="@color/black"
-                        android:textSize="30px"/>
+                        android:textSize="30px"
+                        android:visibility="visible"
+                        />
 
                     <ImageView
                         android:id="@+id/imageViewWalletArrow"

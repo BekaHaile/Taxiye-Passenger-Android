@@ -6076,6 +6076,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				if (AppStatus.getInstance(this).isOnline(this)) {
 					linearLayoutPaytmWalletLoading.setVisibility(View.VISIBLE);
 					progressBarMenuPaytmWalletLoading.setVisibility(View.VISIBLE);
+					textViewWalletValue.setVisibility(View.GONE);
 					RequestParams params = new RequestParams();
 					params.put("access_token", Data.userData.accessToken);
 					params.put("client_id", Config.getClientId());
@@ -6102,6 +6103,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							}
 							progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
 							linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
+							textViewWalletValue.setVisibility(View.VISIBLE);
 						}
 
 						@Override
@@ -6109,6 +6111,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							Log.e("request fail", arg0.toString());
 							progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
 							linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
+							textViewWalletValue.setVisibility(View.VISIBLE);
 						}
 					});
 				}

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
@@ -233,12 +232,10 @@ public class AddPaytmFragment extends Fragment {
 						Log.i("request succesfull", "response = " + response);
 						DialogPopup.dismissLoadingDialog();
 						try {
-							Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
 							JSONObject jObj = new JSONObject(response);
 							String message = JSONParser.getServerMessage(jObj);
 							int flag = jObj.getInt("flag");
 							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-								Toast.makeText(paymentActivity, message, Toast.LENGTH_SHORT).show();
 								setUIAfterRequest();
 							} else{
 								DialogPopup.alertPopup(paymentActivity, "", message);
@@ -282,8 +279,6 @@ public class AddPaytmFragment extends Fragment {
 						Log.i("request succesfull", "response = " + response);
 						DialogPopup.dismissLoadingDialog();
 						try {
-							Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
-
 							JSONObject jObj = new JSONObject(response);
 							String message = JSONParser.getServerMessage(jObj);
 							int flag = jObj.getInt("flag");

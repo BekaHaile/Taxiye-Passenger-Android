@@ -42,7 +42,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	TextView textViewPaytmBalanceValue;
 	ProgressWheel progressBarWallet;
 
-	RelativeLayout relativeLayoutAddPaytm;
+	RelativeLayout relativeLayoutCash, relativeLayoutAddPaytm;
 
 	RelativeLayout relativeLayoutWalletTransactions;
 
@@ -93,6 +93,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		progressBarWallet = (ProgressWheel) rootView.findViewById(R.id.progressBarWallet);
 		progressBarWallet.setVisibility(View.GONE);
 
+		relativeLayoutCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCash); relativeLayoutCash.setVisibility(View.GONE);
 		((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.latoRegular(paymentActivity));
 
 		relativeLayoutAddPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddPaytm);
