@@ -95,7 +95,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="18px"
                     android:gravity="center"
-                    android:text="Add Cash to PayTM\nWallet"
+                    android:text="Add Cash to Paytm\nWallet"
                     android:textColor="@color/grey_dark_more"
                     android:textSize="29px"/>
 

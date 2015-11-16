@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -264,6 +265,9 @@ public class PaytmRechargeFragment extends Fragment {
 
 		try{
 			if(Data.paytmPaymentState == PayTMPaymentState.SUCCESS) {
+				if(AddPaymentPath.FROM_IN_RIDE == PaymentActivity.addPaymentPath){
+					HomeActivity.rechargedOnce = true;
+				}
 				DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
 				paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
 			}

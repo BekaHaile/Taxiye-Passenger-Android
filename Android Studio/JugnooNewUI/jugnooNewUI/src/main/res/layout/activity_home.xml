@@ -102,31 +102,33 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
                     >
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="4px"
-                        android:background="@drawable/shadow_down"
-                        android:rotation="180"
-                        android:layout_above="@+id/relativeLayoutRequestInfo"
-                        />
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutRequestInfo"
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutRequestInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="100px"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/white"
+                        android:orientation="vertical"
                         >
-
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="4px"
+                            android:background="@drawable/shadow_up"
+                            android:layout_above="@+id/linearLayoutRequestInfoInner"
+                            />
                         <LinearLayout
+                            android:id="@+id/linearLayoutRequestInfoInner"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
                             android:animateLayoutChanges="true"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:background="@color/white">
+
 
                             <TextView
                                 android:id="@+id/textViewNearestDriverETA"
@@ -134,19 +136,25 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="20px"
                                 android:layout_marginRight="20px"
+                                android:layout_marginTop="10px"
+                                android:layout_marginBottom="10px"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="Nearest Driver is 4 minutes away"
+                                android:text="Nearest driver is 4 minute away"
                                 android:textColor="@color/black_text"
-                                android:textSize="30px"/>
+                                android:textSize="30px"
+                                android:visibility="visible"
+                                />
 
                             <RelativeLayout
                                 android:id="@+id/relativeLayoutInitialFareFactor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="10px"
                                 android:animateLayoutChanges="true"
+                                android:visibility="visible"
+                                android:layout_marginTop="10px"
+                                android:layout_marginBottom="10px"
                                 >
 
                                 <TextView
@@ -175,9 +183,9 @@
 
                             </RelativeLayout>
                         </LinearLayout>
+                    </LinearLayout>
 
-                    </RelativeLayout>
-
+                    <!-- initial search bar textView-->
                     <RelativeLayout
                         android:id="@+id/relativeLayoutInitialSearchBar"
                         android:layout_width="match_parent"
@@ -232,8 +240,8 @@
                         android:id="@+id/initialMyLocationBtn"
                         android:layout_width="80px"
                         android:layout_height="80px"
-                        android:layout_above="@+id/relativeLayoutRequestInfo"
-                        android:layout_marginBottom="77px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="127px"
                         android:layout_marginLeft="92px"
                         android:background="@drawable/mylocation_btn_selector"
                         android:tag="mwar"
@@ -244,9 +252,9 @@
                         android:id="@+id/imageViewRideNow"
                         android:layout_width="180px"
                         android:layout_height="180px"
-                        android:layout_above="@+id/relativeLayoutRequestInfo"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="40px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="90px"
                         android:src="@drawable/auto_icon_r_selector"
                         android:tag="mwar"
                         />
@@ -268,9 +276,9 @@
                         android:id="@+id/changeLocalityBtn"
                         android:layout_width="648px"
                         android:layout_height="100px"
-                        android:layout_above="@+id/relativeLayoutRequestInfo"
+                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="40px"
+                        android:layout_marginBottom="90px"
                         android:background="@drawable/button_yellow"
                         android:text="CHANGE LOCALITY"
                         android:textColor="@drawable/text_color_white_alpha_selector"
@@ -361,6 +369,7 @@
 
                     </RelativeLayout>
 
+                    <!-- promo layout -->
                     <LinearLayout
                         android:id="@+id/linearLayoutPromo"
                         android:layout_width="match_parent"
@@ -368,7 +377,7 @@
                         android:layout_alignParentBottom="true"
                         android:gravity="center_horizontal|bottom"
                         android:orientation="vertical"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         >
 
 
@@ -575,9 +584,6 @@
 
 
                     </LinearLayout>
-
-
-
 
                 </RelativeLayout>
 
@@ -841,7 +847,7 @@
                         android:id="@+id/linearLayoutInRideDriverInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/relativeLayoutInRideLowJugnooCash"
+                        android:layout_above="@+id/relativeLayoutInRideLowPaytmCash"
                         android:layout_marginBottom="40px"
                         android:layout_marginLeft="40px"
                         android:layout_marginRight="40px"
@@ -975,12 +981,12 @@
                                 android:layout_weight="1"/>
 
                             <Button
-                                android:id="@+id/buttonAddJugnooCash"
+                                android:id="@+id/buttonAddPaytmCash"
                                 android:layout_width="320px"
                                 android:layout_height="90px"
                                 android:background="@drawable/button_white_yellow_blr_selector"
                                 android:singleLine="true"
-                                android:text="Add Jugnoo Cash"
+                                android:text="Add Paytm Cash"
                                 android:textColor="@drawable/text_color_yellow_white_selector"
                                 android:textSize="30px"
                                 android:visibility="gone"/>
@@ -1009,20 +1015,20 @@
                     <!-- low jugnoo cash layout-->
 
                     <RelativeLayout
-                        android:id="@+id/relativeLayoutInRideLowJugnooCash"
+                        android:id="@+id/relativeLayoutInRideLowPaytmCash"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:background="@color/white">
 
                         <TextView
-                            android:id="@+id/textViewInRideLowJugnooCash"
+                            android:id="@+id/textViewInRideLowPaytmCash"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:maxLines="2"
                             android:padding="25px"
-                            android:text="Jugnoo Cash is running low. Recharge now"
+                            android:text="Paytm Cash is running low. Recharge now"
                             android:textColor="@color/grey_dark_more"
                             android:textSize="26px"
                             android:visibility="visible"/>
