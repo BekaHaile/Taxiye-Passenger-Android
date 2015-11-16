@@ -6,6 +6,7 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ import android.widget.Toast;
 
 import com.payu.sdk.Constants;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
 
@@ -79,7 +79,9 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
         boolean disableBack = false;
         if(cancelTransaction){
             cancelTransaction = false;
-            super.onBackPressed();
+			Intent returnIntent = new Intent();
+			setResult(-1, returnIntent);
+			finish();
             return;
         }
         try {
@@ -125,14 +127,12 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
         @Override
         public void onLoadResource(WebView view, String url) {
-            Log.e("onLoadResource url", "==" + url);
             super.onLoadResource(view, url);
         }
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            Log.e("on page started", "on page started");
             progressBar.setVisibility(View.VISIBLE);
 			urlRedirectionCallback(url);
         }
@@ -141,7 +141,6 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
 
-            Log.e("onPageFinished", "url = " + url);
             if (webView.getProgress() > 50) {
                 progressBar.setVisibility(View.GONE);
             }
@@ -161,7 +160,6 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.e("shouldOverride url", "== " + url);
             return false;
         }
 
@@ -169,10 +167,6 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             Log.e("onReceivedError url", "== errorCode="+errorCode+" description="+description+" failingUrl="+failingUrl);
-            String excepUrl = "payu.in";
-            if(!failingUrl.contains(excepUrl)){
-                finish();
-            }
             super.onReceivedError(view, errorCode, description, failingUrl);
         }
 
@@ -183,13 +177,14 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 		try {
 			//https://jugnoo.in/paytm/wallet/success.php
 			//https://jugnoo.in/paytm/wallet/failure.php
+			Log.e("url", "=" + url);
 			if("https://jugnoo.in/paytm/wallet/success.php".equalsIgnoreCase(url)){
-				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction complete", Toast.LENGTH_LONG).show();
-				Data.paytmPaymentState = PayTMPaymentState.SUCCESS;
+				Intent returnIntent = new Intent();
+				setResult(PayTMPaymentState.SUCCESS.getOrdinal(), returnIntent);
 				finish();
 			} else if("https://jugnoo.in/paytm/wallet/failure.php".equalsIgnoreCase(url)){
-				Toast.makeText(PaytmRechargeWebViewActivity.this, "Transaction failed", Toast.LENGTH_LONG).show();
-				Data.paytmPaymentState = PayTMPaymentState.FAILURE;
+				Intent returnIntent = new Intent();
+				setResult(PayTMPaymentState.FAILURE.getOrdinal(), returnIntent);
 				finish();
 			}
 		} catch (Exception e) {

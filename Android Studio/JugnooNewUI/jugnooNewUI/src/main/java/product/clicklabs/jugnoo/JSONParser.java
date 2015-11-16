@@ -78,13 +78,14 @@ public class JSONParser {
             if (fareDetails0.has("fare_threshold_time")) {
                 freeMinutes = fareDetails0.getDouble("fare_threshold_time");
             }
+			double convenienceCharges = fareDetails0.optDouble("convenience_charges", 0);
             Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"),
                     fareDetails0.getDouble("fare_threshold_distance"),
                     fareDetails0.getDouble("fare_per_km"),
-                    farePerMin, freeMinutes, 0, 0);
+                    farePerMin, freeMinutes, 0, 0, convenienceCharges);
         } catch (Exception e) {
             e.printStackTrace();
-            Data.fareStructure = new FareStructure(25, 2, 6, 1, 6, 0, 0);
+            Data.fareStructure = new FareStructure(25, 2, 6, 1, 6, 0, 0, 0);
         }
     }
 
@@ -252,11 +253,13 @@ public class JSONParser {
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
 
+		int paytmEnabled = userData.optInt("paytm_enabled", 0);
+
         return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
-                jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing);
+                jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled);
     }
 
 
@@ -1139,14 +1142,15 @@ public class JSONParser {
                 long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
                 long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
 
-                if(diffStart >= 0 && diffEnd <= 0){
+				double convenienceCharges = jfs.optDouble("convenience_charges", 0);
+				if(diffStart >= 0 && diffEnd <= 0){
                     Data.fareStructure = new FareStructure(jfs.getDouble("fare_fixed"),
                         jfs.getDouble("fare_threshold_distance"),
                         jfs.getDouble("fare_per_km"),
                         jfs.getDouble("fare_per_min"),
                         jfs.getDouble("fare_threshold_time"),
                         jfs.getDouble("fare_per_waiting_min"),
-                        jfs.getDouble("fare_threshold_waiting_time"));
+                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges);
                     Data.fareStructure.fareFactor = fareFactor;
                     break;
                 }
@@ -1199,13 +1203,13 @@ public class JSONParser {
 	public static void parsePaytmBalanceStatus(Context context, JSONObject jObj){
 		try {
 			if (Data.userData != null) {
-				String paytmStatus = jObj.optString("STATUS", "INACTIVE");
+				String paytmStatus = jObj.optString("STATUS", Data.PAYTM_STATUS_INACTIVE);
 				if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 					String balance = jObj.optString("WALLETBALANCE", "0");
 					Data.userData.setPaytmBalance(Double.parseDouble(balance));
 					Data.userData.setPaytmStatus(paytmStatus);
 				} else {
-					Data.userData.setPaytmStatus(paytmStatus);
+					Data.userData.setPaytmStatus(Data.PAYTM_STATUS_INACTIVE);
 					Data.userData.setPaytmBalance(0);
 				}
 				Prefs.with(context).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());

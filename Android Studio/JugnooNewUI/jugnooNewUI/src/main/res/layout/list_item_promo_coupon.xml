@@ -12,7 +12,7 @@
         android:layout_width="35px"
         android:layout_height="35px"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20px"
+        android:layout_marginLeft="17px"
         android:src="@drawable/ic_list_coupon"
         android:tag="mwar"
         />
@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="27px"
         android:layout_marginLeft="10px"
-        android:layout_marginRight="10px"
         android:layout_marginTop="27px"
         android:layout_toRightOf="@+id/imageViewCoupon"
         android:gravity="center_vertical"

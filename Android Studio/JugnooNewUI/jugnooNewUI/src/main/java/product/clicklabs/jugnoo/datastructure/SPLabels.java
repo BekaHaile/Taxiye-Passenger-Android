@@ -35,7 +35,9 @@ public class SPLabels {
 	NOTIFICATION_UNREAD_COUNT = "notification_unread_count",
 
 	PAYTM_CHECK_BALANCE_LAST_TIME = "paytmCheckBalanceLastTime",
-	PREFERRED_PAYMENT_OPTION = "preferredPaymentOption"
+	PREFERRED_PAYMENT_OPTION = "preferredPaymentOption",
+
+	PAYTM_TUTORIAL_SHOWN = "paytm_tutorial_shown" // to clear on logout
 
             ;
 

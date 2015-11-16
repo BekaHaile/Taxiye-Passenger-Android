@@ -39,7 +39,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -49,7 +48,6 @@ public class PaytmRechargeFragment extends Fragment {
 
 	ImageView imageViewBack, imageViewRupeeLogo;
 	TextView textViewTitle;
-	ProgressWheel progressWheel;
 	TextView textViewAddCashHelp;
 
 	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
@@ -101,7 +99,6 @@ public class PaytmRechargeFragment extends Fragment {
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
 
 		imageViewRupeeLogo = (ImageView) rootView.findViewById(R.id.imageViewRupeeLogo);
-		progressWheel = (ProgressWheel) rootView.findViewById(R.id.progressWheel); progressWheel.setVisibility(View.GONE);
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.latoRegular(paymentActivity));
 
 		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.latoRegular(paymentActivity));
@@ -131,6 +128,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				Utils.hideSoftKeyboard(paymentActivity, editTextAmount);
 				performBackPressed();
 			}
 		});
@@ -262,24 +260,6 @@ public class PaytmRechargeFragment extends Fragment {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-
-		try{
-			if(Data.paytmPaymentState == PayTMPaymentState.SUCCESS) {
-				if(AddPaymentPath.FROM_IN_RIDE == PaymentActivity.addPaymentPath){
-					HomeActivity.rechargedOnce = true;
-				}
-				DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
-				paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
-			}
-			else if(Data.paytmPaymentState == PayTMPaymentState.FAILURE){
-				DialogPopup.dialogBanner(paymentActivity, "Transaction failed");
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		Data.paytmPaymentState = PayTMPaymentState.INIT;
-
-		HomeActivity.checkForAccessTokenChange(getActivity());
 	}
 
 	/**
@@ -496,12 +476,45 @@ public class PaytmRechargeFragment extends Fragment {
 		});
 	}
 
+	private int rechargeRequestCode = 1;
+
 	private void openWebView(String jsonData) {
 		Data.paytmPaymentState = PayTMPaymentState.INIT;
 		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
 		intent.putExtra(Constants.POST_DATA, jsonData);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		startActivityForResult(intent, rechargeRequestCode);
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == rechargeRequestCode) {
+			if(resultCode == PayTMPaymentState.SUCCESS.getOrdinal()){
+				Data.paytmPaymentState = PayTMPaymentState.SUCCESS;
+			}
+			else if (resultCode == PayTMPaymentState.FAILURE.getOrdinal()) {
+				Data.paytmPaymentState = PayTMPaymentState.FAILURE;
+			}
+			else{
+				DialogPopup.dialogBanner(paymentActivity, "Transaction cancelled");
+			}
+
+			try{
+				if(Data.paytmPaymentState == PayTMPaymentState.SUCCESS) {
+					if(AddPaymentPath.FROM_IN_RIDE == PaymentActivity.addPaymentPath){
+						HomeActivity.rechargedOnce = true;
+					}
+					DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
+					paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
+				}
+				else if(Data.paytmPaymentState == PayTMPaymentState.FAILURE){
+					DialogPopup.dialogBanner(paymentActivity, "Transaction failed");
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			Data.paytmPaymentState = PayTMPaymentState.INIT;
+		}
+	}
 }

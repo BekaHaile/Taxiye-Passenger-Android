@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import product.clicklabs.jugnoo.Data;
+
 public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, nukkadIcon, jugnooMealsPackageName, jugnooFbBanner;
 	public int canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent, christmasIconEnable, nukkadEnable, enableJugnooMeals,
@@ -11,12 +13,13 @@ public class UserData {
 	public double sharingFareFixed;
 	public int showJugnooSharing;
 	private String paytmStatus;
+	public int paytmEnabled;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
-			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing){
+			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -47,7 +50,13 @@ public class UserData {
 		this.sharingFareFixed = sharingFareFixed;
 		this.showJugnooSharing = showJugnooSharing;
 		this.paytmBalance = 0;
-		this.paytmStatus = "";
+		this.paytmEnabled = paytmEnabled;
+		if(1 == this.paytmEnabled) {
+			this.paytmStatus = "";
+		}
+		else{
+			this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
+		}
 		setTotalWalletBalance();
 	}
 

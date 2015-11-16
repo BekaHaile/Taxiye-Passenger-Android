@@ -118,27 +118,16 @@
                 android:layout_marginTop="40px"
                 >
 
-                <TextView
-                    android:id="@+id/textViewEnterOTP"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:text="Enter Code"
-                    android:textColor="@color/grey_dark_less"
-                    android:textSize="30px"
-                    />
-
                 <EditText
                     android:id="@+id/editTextOTP"
-                    android:layout_width="200px"
+                    android:layout_width="240px"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="5px"
                     android:layout_marginTop="5px"
                     android:background="#0000"
                     android:gravity="center"
-                    android:hint=""
+                    android:hint="Enter Code"
                     android:inputType="number"
                     android:maxLength="6"
                     android:paddingLeft="20px"
@@ -146,10 +135,10 @@
                     android:textColor="@color/grey_dark_more"
                     android:textColorHint="@color/grey_dark_less"
                     android:textCursorDrawable="@null"
-                    android:textSize="32px"/>
+                    android:textSize="34px"/>
 
                 <ImageView
-                    android:layout_width="200px"
+                    android:layout_width="240px"
                     android:layout_height="2px"
                     android:layout_gravity="center_horizontal"
                     android:src="@color/yellow"/>

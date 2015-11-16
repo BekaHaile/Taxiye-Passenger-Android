@@ -47,7 +47,6 @@ public class AddPaytmFragment extends Fragment {
 	TextView textViewAddWalletHelp, textViewOTPMessage, textViewOTPNumber;
 
 	LinearLayout linearLayoutOTP;
-	TextView textViewEnterOTP;
 	EditText editTextOTP;
 
 	Button buttonRequestOTP, buttonVerifyOTP, buttonResendOTP;
@@ -99,7 +98,6 @@ public class AddPaytmFragment extends Fragment {
 		textViewOTPNumber = (TextView) rootView.findViewById(R.id.textViewOTPNumber); textViewOTPNumber.setTypeface(Fonts.latoRegular(paymentActivity));
 
 		linearLayoutOTP = (LinearLayout) rootView.findViewById(R.id.linearLayoutOTP);
-		textViewEnterOTP = (TextView) rootView.findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(paymentActivity));
 		editTextOTP = (EditText) rootView.findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(paymentActivity));
 
 		buttonRequestOTP = (Button) rootView.findViewById(R.id.buttonRequestOTP);	buttonRequestOTP.setTypeface(Fonts.latoRegular(paymentActivity));
@@ -111,6 +109,7 @@ public class AddPaytmFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				Utils.hideSoftKeyboard(paymentActivity, editTextOTP);
 				performBackPressed();
 			}
 		});
@@ -179,7 +178,7 @@ public class AddPaytmFragment extends Fragment {
 
 
 	private void setInitialUI(){
-		textViewOTPMessage.setText("Request an OTP to link PayTM Wallet to");
+		textViewOTPMessage.setText("Request an OTP to link Paytm Wallet to");
 		linearLayoutOTP.setVisibility(View.GONE);
 
 		buttonRequestOTP.setVisibility(View.VISIBLE);
@@ -237,7 +236,11 @@ public class AddPaytmFragment extends Fragment {
 							int flag = jObj.getInt("flag");
 							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 								setUIAfterRequest();
-							} else{
+							}
+							else if(ApiResponseFlags.PAYTM_INVALID_EMAIL.getOrdinal() == flag){
+								DialogPopup.alertPopup(paymentActivity, "", message);
+							}
+							else{
 								DialogPopup.alertPopup(paymentActivity, "", message);
 							}
 						} catch (Exception e) {
@@ -284,13 +287,16 @@ public class AddPaytmFragment extends Fragment {
 							int flag = jObj.getInt("flag");
 							if(ApiResponseFlags.PAYTM_OTP_ERROR.getOrdinal() == flag){
 								DialogPopup.alertPopup(paymentActivity, "", message);
-							} else if(ApiResponseFlags.PAYTM_INACTIVE_LOGGED_IN.getOrdinal() == flag){
+							}
+							else if(ApiResponseFlags.PAYTM_INACTIVE_LOGGED_IN.getOrdinal() == flag){
 								DialogPopup.alertPopup(paymentActivity, "", message);
-							} else if(ApiResponseFlags.PAYTM_LOGGED_IN.getOrdinal() == flag){
+							}
+							else if(ApiResponseFlags.PAYTM_LOGGED_IN.getOrdinal() == flag){
 								if (Data.userData != null) {
 									String balance = jObj.optString("balance", "0");
 									Data.userData.setPaytmBalance(Double.parseDouble(balance));
 									Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
+									Data.userData.paytmEnabled = 1;
 
 									Prefs.with(paymentActivity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									paymentActivity.performGetBalanceSuccess(AddPaytmFragment.class.getName());

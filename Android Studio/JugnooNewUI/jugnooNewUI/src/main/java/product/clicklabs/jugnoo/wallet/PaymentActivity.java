@@ -357,47 +357,48 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 
 	public void getBalance(final String fragName) {
 		try {
-			if(AppStatus.getInstance(this).isOnline(this)) {
-				DialogPopup.showLoadingDialog(this, "Loading...");
-				RequestParams params = new RequestParams();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("client_id", Config.getClientId());
-				params.put("is_access_token_new", "1");
+			if(1 == Data.userData.paytmEnabled) {
+				if (AppStatus.getInstance(this).isOnline(this)) {
+					DialogPopup.showLoadingDialog(this, "Loading...");
+					RequestParams params = new RequestParams();
+					params.put("access_token", Data.userData.accessToken);
+					params.put("client_id", Config.getClientId());
+					params.put("is_access_token_new", "1");
 
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
-					@Override
-					public void onSuccess(String response) {
-						Log.i("request succesfull", "response = " + response);
-						try {
-							JSONObject jObj = new JSONObject(response.toString());
-							String message = JSONParser.getServerMessage(jObj);
-							int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+					AsyncHttpClient client = Data.getClient();
+					client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(String response) {
+							Log.i("request succesfull", "response = " + response);
+							try {
+								JSONObject jObj = new JSONObject(response.toString());
+								String message = JSONParser.getServerMessage(jObj);
+								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 
-							if(11 == flag){
-								DialogPopup.alertPopup(PaymentActivity.this, "", message);
+								if (11 == flag) {
+									DialogPopup.alertPopup(PaymentActivity.this, "", message);
+								} else {
+									JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
+									performGetBalanceSuccess(fragName);
+								}
+
+							} catch (Exception e) {
+								e.printStackTrace();
+								retryDialog(Data.SERVER_ERROR_MSG, fragName);
 							}
-							else{
-								JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
-								performGetBalanceSuccess(fragName);
-							}
-
-						} catch (Exception e) {
-							e.printStackTrace();
-							retryDialog(Data.SERVER_ERROR_MSG, fragName);
+							DialogPopup.dismissLoadingDialog();
 						}
-						DialogPopup.dismissLoadingDialog();
-					}
 
-					@Override
-					public void onFailure(Throwable arg0) {
-						Log.e("request fail", arg0.toString());
-						DialogPopup.dismissLoadingDialog();
-						retryDialog(Data.SERVER_NOT_RESOPNDING_MSG, fragName);
-					}
-				});
-			} else{
-				retryDialog(Data.CHECK_INTERNET_MSG, fragName);
+						@Override
+						public void onFailure(Throwable arg0) {
+							Log.e("request fail", arg0.toString());
+							DialogPopup.dismissLoadingDialog();
+							retryDialog(Data.SERVER_NOT_RESOPNDING_MSG, fragName);
+						}
+					});
+				} else {
+					retryDialog(Data.CHECK_INTERNET_MSG, fragName);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

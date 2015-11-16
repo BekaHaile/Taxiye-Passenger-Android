@@ -134,7 +134,7 @@ public class Data {
 	
 	public static LocationFetcher locationFetcher;
 
-	public static PayTMPaymentState paytmPaymentState = PayTMPaymentState.INIT;
+	public static PayTMPaymentState paytmPaymentState;
 	
 
 	public static final String DEVICE_TYPE = "0";

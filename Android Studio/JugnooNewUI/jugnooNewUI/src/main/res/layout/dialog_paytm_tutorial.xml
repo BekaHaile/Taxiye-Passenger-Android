@@ -1,0 +1,112 @@
+<LinearLayout
+    android:id="@+id/linearLayoutPaytmTutorial"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="603px"
+        android:background="@color/black_translucent_more">
+
+        <ImageView
+            android:id="@+id/imageViewPaytmTut"
+            android:layout_width="176px"
+            android:layout_height="78px"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_paytm_logo_white"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10px"
+            android:tag="mwar"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutWalletTut"
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:background="@drawable/background_white_b_yellow"
+        android:splitMotionEvents="false">
+
+        <ImageView
+            android:id="@+id/imageViewWalletTut"
+            android:layout_width="42px"
+            android:layout_height="35px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="50px"
+            android:src="@drawable/ic_wallet"
+            android:tag="mwar"/>
+
+        <TextView
+            android:id="@+id/textViewWalletTut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="35px"
+            android:layout_toRightOf="@+id/imageViewWalletTut"
+            android:text="Wallet"
+            android:textColor="@drawable/text_color_grey_dark_white_selector"
+            android:textSize="30px"/>
+
+        <TextView
+            android:id="@+id/textViewWalletValueTut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20px"
+            android:layout_toLeftOf="@+id/imageViewWalletArrowTut"
+            android:background="@drawable/background_yellow_rounded"
+            android:gravity="center_vertical|right"
+            android:padding="10px"
+            android:text="@string/rupee_0"
+            android:textColor="@color/black"
+            android:textSize="30px"
+            android:visibility="visible"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewWalletArrowTut"
+            android:layout_width="13px"
+            android:layout_height="26px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40px"
+            android:src="@drawable/arrow_icon_selector"
+            android:tag="mwar"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_translucent_more">
+
+        <ImageView
+            android:id="@+id/imageViewPaytmArrowTut"
+            android:layout_width="36px"
+            android:layout_height="145px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20px"
+            android:src="@drawable/ic_arrow_straight"
+            android:tag="mwar"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewPaytmTutText"
+            android:layout_width="360px"
+            android:layout_height="196px"
+            android:layout_below="@+id/imageViewPaytmArrowTut"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10px"
+            android:src="@drawable/ic_paytm_tut_text"
+            android:tag="mwar"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
+
