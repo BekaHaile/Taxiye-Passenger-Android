@@ -162,6 +162,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	RelativeLayout relativeLayoutNotificationMenu;
 	TextView textViewNotificationValueMenu;
 
+	RelativeLayout relativeLayoutFareEstimate;
     RelativeLayout relativeLayoutFareDetails;
     TextView textViewFareDetails;
 
@@ -212,7 +213,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	ListView listViewPromotions;
 	ImageView imageViewListViewPromotionsSep, imageViewRRPaymentOptionIconPaytm, imageViewRRPaymentOptionIconCash;
 	PromotionsListAdapter promotionsListAdapter;
-	LinearLayout linearLayoutRRPaymentOption, linearLayoutFareEstimate;
+	LinearLayout linearLayoutRRPaymentOption, linearLayoutRRRateCard;
 	TextView textViewRRPaymentOption, textViewRRMinFare;
 	Button buttonGetARide;
 
@@ -275,7 +276,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     //Center Location Layout
     RelativeLayout centreLocationRl;
-    ImageView centreLocationPin;
+    ImageView centreLocationPin, imageViewCenterPinMargin;
 	TextView textViewCentrePinETA;
 
 
@@ -497,6 +498,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		textViewNotificationValueMenu.setTypeface(Fonts.latoRegular(this));
 		((TextView)findViewById(R.id.textViewNotificationMenu)).setTypeface(Fonts.latoRegular(this));
 
+		relativeLayoutFareEstimate = (RelativeLayout) findViewById(R.id.relativeLayoutFareEstimate);
+		((TextView) findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.latoRegular(this));
+
 		relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails); relativeLayoutFareDetails.setVisibility(View.GONE);
         textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails);
         textViewFareDetails.setTypeface(Fonts.latoRegular(this));
@@ -624,14 +628,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		imageViewRRPaymentOptionIconPaytm = (ImageView) findViewById(R.id.imageViewRRPaymentOptionIconPaytm);
 		imageViewRRPaymentOptionIconCash = (ImageView) findViewById(R.id.imageViewRRPaymentOptionIconCash);
 
-		linearLayoutFareEstimate = (LinearLayout) findViewById(R.id.linearLayoutFareEstimate);
+		linearLayoutRRRateCard = (LinearLayout) findViewById(R.id.linearLayoutRRRateCard);
 		buttonGetARide = (Button) findViewById(R.id.buttonGetARide); buttonGetARide.setTypeface(Fonts.latoRegular(this));
 		textViewRRMinFare = (TextView) findViewById(R.id.textViewRRMinFare); textViewRRMinFare.setTypeface(Fonts.latoRegular(this));
 
 		linearLayoutPaytmWalletLoading = (LinearLayout) findViewById(R.id.linearLayoutPaytmWalletLoading);
 
-
-        ((TextView) findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewRRRateCard)).setTypeface(Fonts.latoRegular(this));
 		((TextView) findViewById(R.id.textViewPaytmWalletLoading)).setTypeface(Fonts.latoRegular(this));
 
 
@@ -948,6 +951,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         //Center location layout
         centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
         centreLocationPin = (ImageView) findViewById(R.id.centreLocationPin);
+		imageViewCenterPinMargin = (ImageView) findViewById(R.id.imageViewCenterPinMargin);
 		textViewCentrePinETA = (TextView) findViewById(R.id.textViewCentrePinETA);
 		textViewCentrePinETA.setTypeface(Fonts.latoRegular(this));
 		((TextView) findViewById(R.id.textViewCentrePinETAMin)).setTypeface(Fonts.latoRegular(this));
@@ -1236,12 +1240,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		});
 
+		relativeLayoutFareEstimate.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activityResumed = false;
+				startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.event(FARE_ESTIMATE);
+			}
+		});
+
         relativeLayoutFareDetails.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
 				sendToFareDetails();
-                FlurryEventLogger.event(FARE_DETAILS);
             }
         });
 
@@ -1357,14 +1370,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-		linearLayoutFareEstimate.setOnClickListener(new OnClickListener() {
+		linearLayoutRRRateCard.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				activityResumed = false;
-				startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(FARE_ESTIMATE);
+				sendToFareDetails();
 			}
 		});
 
@@ -1915,6 +1925,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		drawerLayout.closeDrawer(menuLayout);
 	}
 
+	private void setGoogleMapPadding(float bottomPadding){
+		try {
+			if(map != null){
+				map.setPadding(0, 0, 0, (int)(ASSL.Yscale() * bottomPadding));
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewCenterPinMargin.getLayoutParams();
+				params.height = (int)(ASSL.Yscale() * bottomPadding);
+				imageViewCenterPinMargin.setLayoutParams(params);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public void callAnAutoClicked(LatLng requestLatLng){
 		try {
@@ -2053,6 +2076,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         HelpParticularActivity.helpSection = HelpSection.FARE_DETAILS;
         startActivity(new Intent(HomeActivity.this, HelpParticularActivity.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		FlurryEventLogger.event(FARE_DETAILS);
     }
 
 
@@ -2904,23 +2928,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					if(textViewNearestDriverETA.getVisibility() == View.VISIBLE){
 						setBottomMarginOfView(initialMyLocationBtn, 177f);
 						setBottomMarginOfView(imageViewRideNow, 140f);
-						setBottomMarginOfView(changeLocalityBtn, 140f);
+						setBottomMarginOfView(changeLocalityBtn, 170f);
 					}
 					else{
 						setBottomMarginOfView(initialMyLocationBtn, 127f);
 						setBottomMarginOfView(imageViewRideNow, 90f);
-						setBottomMarginOfView(changeLocalityBtn, 90f);
+						setBottomMarginOfView(changeLocalityBtn, 120f);
 					}
                 } else {
                     relativeLayoutInitialFareFactor.setVisibility(View.GONE);
 					setBottomMarginOfView(initialMyLocationBtn, 127f);
 					setBottomMarginOfView(imageViewRideNow, 90f);
-					setBottomMarginOfView(changeLocalityBtn, 90f);
+					setBottomMarginOfView(changeLocalityBtn, 120f);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+		checkForGoogleLogoVisibility();
     }
 
 	private void setBottomMarginOfView(View view, float bottomMargin){
@@ -3562,7 +3588,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								setServiceAvailablityUI(farAwayCity);
 							}
 
-                            setFareFactorToInitialState();
+							setFareFactorToInitialState();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -3573,9 +3599,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         }
-
-
     }
+
+	private void checkForGoogleLogoVisibility(){
+		try{
+			float padding = 0;
+			if(textViewNearestDriverETA.getVisibility() == View.VISIBLE){
+				padding = padding + 58;
+			}
+			if(relativeLayoutInitialFareFactor.getVisibility() == View.VISIBLE){
+				padding = padding + 62;
+			}
+			setGoogleMapPadding(padding);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){

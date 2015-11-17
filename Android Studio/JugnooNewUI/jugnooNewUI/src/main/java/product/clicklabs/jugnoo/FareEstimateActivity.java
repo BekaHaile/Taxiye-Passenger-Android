@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -62,7 +63,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     RelativeLayout relativeLayoutFareEstimateDetails;
     GoogleMap mapLite;
-    TextView textViewPickupLocation, textViewDropLocation, textViewEstimateTime, textViewEstimateDistance, textViewEstimateFare, textViewEstimateFareNote;
+    TextView textViewPickupLocation, textViewDropLocation, textViewEstimateTime, textViewEstimateDistance,
+			textViewEstimateFare, textViewConvenienceCharge, textViewEstimateFareNote;
     Button buttonOk;
 
     public ASSL assl;
@@ -174,6 +176,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         textViewEstimateDistance.setTypeface(Fonts.latoRegular(this));
         textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare);
         textViewEstimateFare.setTypeface(Fonts.latoRegular(this));
+		textViewConvenienceCharge = (TextView) findViewById(R.id.textViewConvenienceCharge);
+		textViewConvenienceCharge.setTypeface(Fonts.latoRegular(this));
+		textViewConvenienceCharge.setText("");
         textViewEstimateFareNote = (TextView) findViewById(R.id.textViewEstimateFareNote);
         textViewEstimateFareNote.setTypeface(Fonts.latoRegular(this));
         buttonOk = (Button) findViewById(R.id.buttonOk);
@@ -305,6 +310,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                     double computedFareMinus = computedFare * 90.0 / 100.0;
                                                     textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFareMinus) + " - " +
                                                         getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFarePlus));
+
+													if(Data.fareStructure.convenienceCharge > 0){
+														textViewConvenienceCharge.setText("Convenience Charges "
+																+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
+													}
+													else{
+														textViewConvenienceCharge.setText("");
+													}
 
 
                                                 } catch (Exception e) {

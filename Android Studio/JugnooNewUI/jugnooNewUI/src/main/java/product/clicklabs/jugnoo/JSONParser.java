@@ -78,7 +78,8 @@ public class JSONParser {
             if (fareDetails0.has("fare_threshold_time")) {
                 freeMinutes = fareDetails0.getDouble("fare_threshold_time");
             }
-			double convenienceCharges = fareDetails0.optDouble("convenience_charges", 0);
+			double convenienceCharges = fareDetails0.optDouble("convenience_charge", 0);
+
             Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"),
                     fareDetails0.getDouble("fare_threshold_distance"),
                     fareDetails0.getDouble("fare_per_km"),
@@ -1142,7 +1143,8 @@ public class JSONParser {
                 long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
                 long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
 
-				double convenienceCharges = jfs.optDouble("convenience_charges", 0);
+				double convenienceCharges = jfs.optDouble("convenience_charge", 0);
+
 				if(diffStart >= 0 && diffEnd <= 0){
                     Data.fareStructure = new FareStructure(jfs.getDouble("fare_fixed"),
                         jfs.getDouble("fare_threshold_distance"),

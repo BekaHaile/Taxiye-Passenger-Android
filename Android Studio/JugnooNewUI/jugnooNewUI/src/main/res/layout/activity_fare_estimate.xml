@@ -306,9 +306,21 @@
                 android:textColor="@color/grey_text"
                 android:textSize="82px"
                 android:text="Rs.100 - Rs.200"
-                android:layout_marginBottom="40px"
+                android:layout_marginBottom="0px"
                 android:gravity="center"
+                android:layout_above="@+id/textViewConvenienceCharge"
+
+                />
+            <TextView
+                android:id="@+id/textViewConvenienceCharge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_text_alpha"
+                android:textSize="24px"
+                android:text="Convenience charges Rs.10"
+                android:layout_marginBottom="20px"
                 android:layout_above="@+id/textViewEstimateFareNote"
+                android:gravity="center"
 
                 />
 
@@ -318,9 +330,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_text_alpha"
-                android:textSize="32px"
+                android:textSize="24px"
                 android:text="Note: This is just an estimate.\nActual cost, time and distance may vary."
-                android:layout_marginBottom="20px"
+                android:layout_marginBottom="10px"
                 android:layout_above="@+id/buttonOk"
                 android:gravity="center"
 

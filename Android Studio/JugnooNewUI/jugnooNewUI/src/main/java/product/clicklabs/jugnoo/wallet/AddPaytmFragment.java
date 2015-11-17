@@ -216,7 +216,7 @@ public class AddPaytmFragment extends Fragment {
 	public void generateOTP() {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-				DialogPopup.showLoadingDialog(paymentActivity, "Generating OTP...");
+				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("client_id", Config.getClientId());
@@ -265,7 +265,7 @@ public class AddPaytmFragment extends Fragment {
 	private void sendOTP(String otp) {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-				DialogPopup.showLoadingDialog(paymentActivity, "Sending OTP...");
+				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("client_id", Config.getClientId());
