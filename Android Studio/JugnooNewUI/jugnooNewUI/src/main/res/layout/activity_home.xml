@@ -150,13 +150,60 @@
 
                     </RelativeLayout>
 
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutGoogleAttr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/dropshadow_grey"
+                        android:layout_below="@+id/relativeLayoutInitialSearchBar"
+                        android:layout_marginTop="-20px"
+                        android:layout_marginLeft="10px"
+                        android:layout_marginRight="10px"
+                        android:paddingBottom="10px"
+                        >
+                        <ImageView
+                            android:id="@+id/imageViewGoogleAttrCross"
+                            android:layout_width="70px"
+                            android:layout_height="70px"
+                            android:padding="20px"
+                            android:layout_marginTop="15px"
+                            android:layout_marginRight="5px"
+                            android:src="@drawable/ic_cross_et"
+                            android:layout_alignParentRight="true"
+                            android:tag="mwar"/>
+
+                        <TextView
+                            android:id="@+id/textViewGoogleAttrText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="15px"
+                            android:layout_marginLeft="20px"
+                            android:layout_marginRight="80px"
+                            android:hint=""
+                            android:textColor="@color/black_text"
+                            android:textSize="24px"/>
+
+                        <ImageView
+                            android:id="@+id/imageViewGoogleAttrPoweredByGoogle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/powered_by_google_light"
+                            android:layout_centerHorizontal="true"
+                            android:layout_below="@+id/textViewGoogleAttrText"
+                            android:layout_marginTop="4dp"
+                            android:tag="DontTouchMe"
+                            />
+
+                    </RelativeLayout>
+
                     <RelativeLayout
                         android:id="@+id/relativeLayoutInitialSearchBar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="100px"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="15px"
-                        android:layout_marginBottom="15px"
                         android:layout_marginLeft="10px"
                         android:layout_marginRight="10px"
                         android:background="@drawable/dropshadow_grey"
@@ -174,7 +221,7 @@
                         <TextView
                             android:id="@+id/textViewInitialSearch"
                             android:layout_width="520px"
-                            android:layout_height="100px"
+                            android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
@@ -199,6 +246,8 @@
                             wheel:matProg_barWidth="3dp"
                             />
                     </RelativeLayout>
+
+
 
                     <Button
                         android:id="@+id/initialMyLocationBtn"
@@ -709,7 +758,7 @@
                             android:src="@drawable/powered_by_google_light"
                             android:layout_centerHorizontal="true"
                             android:layout_alignParentBottom="true"
-                            android:padding="8dp"
+                            android:layout_marginBottom="8dp"
                             android:tag="DontTouchMe"
                             />
 
@@ -1072,7 +1121,7 @@
                             android:src="@drawable/powered_by_google_light"
                             android:layout_centerHorizontal="true"
                             android:layout_alignParentBottom="true"
-                            android:padding="8dp"
+                            android:layout_marginBottom="8dp"
                             android:tag="DontTouchMe"
                             />
 
@@ -1215,7 +1264,7 @@
                     android:src="@drawable/powered_by_google_light"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
-                    android:padding="8dp"
+                    android:layout_marginBottom="8dp"
                     android:tag="DontTouchMe"
                     />
 

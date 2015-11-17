@@ -7,27 +7,22 @@ import java.io.Serializable;
 public class SearchResult implements Serializable{
 	
 	public String name, address;
-	private String attr;
 	public LatLng latLng;
+	private CharSequence thirdPartyAttributions;
 	
 	public SearchResult(String name, String address, LatLng latLng){
 		this.name = name;
 		this.address = address;
 		this.latLng = latLng;
-		this.attr = "";
+		this.thirdPartyAttributions = null;
 	}
 
-	public void setAttr(CharSequence attr){
-		if(attr == null){
-			this.attr = "";
-		}
-		else{
-			this.attr = attr.toString();
-		}
+	public void setThirdPartyAttributions(CharSequence thirdPartyAttributions){
+		this.thirdPartyAttributions = thirdPartyAttributions;
 	}
 
-	public String getAttr(){
-		return attr;
+	public CharSequence getThirdPartyAttributions(){
+		return thirdPartyAttributions;
 	}
 	
 }

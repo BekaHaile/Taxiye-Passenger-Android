@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.MotionEvent;
@@ -207,6 +208,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewInitialSearch;
     ProgressWheel progressBarInitialSearch;
     RelativeLayout relativeLayoutRequestInfo;
+
+	RelativeLayout relativeLayoutGoogleAttr;
+	ImageView imageViewGoogleAttrCross;
+	TextView textViewGoogleAttrText;
 
 
 	//Location Error layout
@@ -547,6 +552,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
         progressBarInitialSearch = (ProgressWheel) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
+
+		relativeLayoutGoogleAttr = (RelativeLayout) findViewById(R.id.relativeLayoutGoogleAttr);
+		imageViewGoogleAttrCross = (ImageView) findViewById(R.id.imageViewGoogleAttrCross);
+		textViewGoogleAttrText = (TextView) findViewById(R.id.textViewGoogleAttrText);
+		textViewGoogleAttrText.setTypeface(Fonts.latoRegular(this));
+		relativeLayoutGoogleAttr.setVisibility(View.GONE);
 
         buttonChalo = (Button) findViewById(R.id.buttonChalo); buttonChalo.setTypeface(Fonts.latoRegular(this));
         linearLayoutPromo = (LinearLayout) findViewById(R.id.linearLayoutPromo); linearLayoutPromo.setVisibility(View.GONE);
@@ -896,7 +907,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewInitialSearch.setText(searchResult.name);
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
                         lastSearchLatLng = searchResult.latLng;
-                    }
+
+						try {
+							Log.e("searchResult.getThirdPartyAttributions()", "="+searchResult.getThirdPartyAttributions());
+							if(searchResult.getThirdPartyAttributions() == null){
+								relativeLayoutGoogleAttr.setVisibility(View.GONE);
+							}
+							else{
+								relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
+								textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
                 }
 
                 @Override
@@ -1300,6 +1324,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 switchPassengerScreen(passengerScreenMode);
             }
         });
+
+		imageViewGoogleAttrCross.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				relativeLayoutGoogleAttr.setVisibility(View.GONE);
+			}
+		});
 
 
         changeLocalityBtn.setOnClickListener(new OnClickListener() {
