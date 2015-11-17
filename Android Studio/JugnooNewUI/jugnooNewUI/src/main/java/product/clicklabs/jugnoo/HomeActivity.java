@@ -2667,6 +2667,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddPaytmCash.setVisibility(View.VISIBLE);
+						updateInRideAddPaytmButtonText();
 
                         textViewInRideLowPaytmCash.setVisibility(View.GONE);
 
@@ -2725,6 +2726,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddPaytmCash.setVisibility(View.VISIBLE);
+						updateInRideAddPaytmButtonText();
 
                         updateLowJugnooCashBanner(mode);
 
@@ -2842,6 +2844,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+	private void updateInRideAddPaytmButtonText(){
+		try{
+			if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+				buttonAddPaytmCash.setText("Add Paytm Cash");
+			}
+			else{
+				buttonAddPaytmCash.setText("Add Paytm Wallet");
+			}
+		} catch(Exception e){
+			buttonAddPaytmCash.setText("Add Paytm Wallet");
+		}
+	}
+
 	private void setSelectedPaymentOptionUI(int intPaymentOption){
 		try {
 			if(PaymentOption.PAYTM.getOrdinal() == intPaymentOption){
@@ -2901,22 +2916,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void updateLowJugnooCashBanner(PassengerScreenMode mode) {
-        if (PassengerScreenMode.P_IN_RIDE == mode) {
-            if (Data.userData != null) {
-                if (HomeActivity.rechargedOnce) {
-                    textViewInRideLowPaytmCash.setVisibility(View.GONE);
-                } else if (Data.userData.getTotalWalletBalance() < MIN_BALANCE_ALERT_VALUE) {
-                    textViewInRideLowPaytmCash.setVisibility(View.VISIBLE);
-                } else {
-                    textViewInRideLowPaytmCash.setVisibility(View.GONE);
-                }
-            } else {
-                textViewInRideLowPaytmCash.setVisibility(View.GONE);
-            }
-        } else {
-            textViewInRideLowPaytmCash.setVisibility(View.GONE);
-        }
-    }
+		if (PassengerScreenMode.P_IN_RIDE == mode && Data.userData != null) {
+			if (HomeActivity.rechargedOnce) {
+				textViewInRideLowPaytmCash.setVisibility(View.GONE);
+			} else if (Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
+					&& Data.userData.getTotalWalletBalance() < MIN_BALANCE_ALERT_VALUE) {
+				textViewInRideLowPaytmCash.setVisibility(View.VISIBLE);
+			} else {
+				textViewInRideLowPaytmCash.setVisibility(View.GONE);
+			}
+		} else {
+			textViewInRideLowPaytmCash.setVisibility(View.GONE);
+		}
+		checkForGoogleLogoVisibilityInRide();
+	}
+
+	private void checkForGoogleLogoVisibilityInRide(){
+		try{
+			float padding = 0;
+			if(textViewInRideLowPaytmCash.getVisibility() == View.VISIBLE){
+				padding = padding + 75;
+			}
+			setGoogleMapPadding(padding);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
 
 
     public void setFareFactorToInitialState() {
@@ -2946,7 +2972,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-		checkForGoogleLogoVisibility();
+		checkForGoogleLogoVisibilityBeforeRide();
     }
 
 	private void setBottomMarginOfView(View view, float bottomMargin){
@@ -3601,7 +3627,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-	private void checkForGoogleLogoVisibility(){
+	private void checkForGoogleLogoVisibilityBeforeRide(){
 		try{
 			float padding = 0;
 			if(textViewNearestDriverETA.getVisibility() == View.VISIBLE){

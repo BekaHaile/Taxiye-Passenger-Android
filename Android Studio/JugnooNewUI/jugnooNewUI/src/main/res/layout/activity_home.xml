@@ -115,7 +115,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     >
 
 
@@ -815,7 +815,7 @@
                     android:layout_marginTop="96px"
                     android:animateLayoutChanges="true"
                     android:splitMotionEvents="false"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
 
                     <!-- promo name fare factor layout-->
@@ -867,7 +867,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/relativeLayoutInRideLowPaytmCash"
-                        android:layout_marginBottom="40px"
+                        android:layout_marginBottom="60px"
                         android:layout_marginLeft="40px"
                         android:layout_marginRight="40px"
                         android:background="@drawable/background_white_rounded"
