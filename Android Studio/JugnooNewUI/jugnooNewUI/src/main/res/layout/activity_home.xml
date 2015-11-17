@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                                 android:id="@+id/textViewCentrePinETA"
                                 android:layout_width="77px"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="9px"
+                                android:layout_marginTop="11px"
                                 android:gravity="center"
                                 android:text="-"
                                 android:textColor="@color/white"
@@ -86,6 +86,7 @@
                                 android:layout_width="77px"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/textViewCentrePinETA"
+                                android:layout_marginTop="-6px"
                                 android:gravity="center"
                                 android:text="min"
                                 android:textColor="@color/white"
@@ -878,7 +879,7 @@
                     android:layout_marginTop="96px"
                     android:animateLayoutChanges="true"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     >
 
                     <!-- promo name fare factor layout-->

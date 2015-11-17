@@ -1223,7 +1223,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
 				startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(JUGNOO_CASH_MENU);
+                FlurryEventLogger.event(WALLET_MENU);
             }
         });
 
@@ -1411,12 +1411,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		linearLayoutRRPaymentOption.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
-					selectPaymentOptionPopup(HomeActivity.this);
+				boolean fireIntent = false;
+				if(Data.userData.paytmEnabled == 1){
+					if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+						selectPaymentOptionPopup(HomeActivity.this);
+						fireIntent = false;
+					}
+					else{
+						fireIntent = true;
+					}
 				}
 				else{
-
+					fireIntent = true;
 				}
+				if(fireIntent){
+					PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
+					startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					FlurryEventLogger.event(WALLET_BEFORE_REQUEST_RIDE);
+				}
+
 			}
 		});
 

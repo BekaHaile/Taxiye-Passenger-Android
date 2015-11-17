@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -63,6 +64,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     ListView listViewDropLocationSearch;
 	LinearLayout linearLayoutScroll;
 	TextView textViewScroll;
+	ScrollView scrollView;
 
 
     RelativeLayout relativeLayoutFareEstimateDetails;
@@ -110,6 +112,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
 		linearLayoutScroll = (LinearLayout) findViewById(R.id.linearLayoutScroll);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+		scrollView = (ScrollView) findViewById(R.id.scrollView);
 
 		linearLayoutScroll.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScroll, textViewScroll, new KeyBoardStateHandler() {
 			@Override
@@ -204,8 +207,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
 
         relativeLayoutDropLocationBar.setVisibility(View.VISIBLE);
-        listViewDropLocationSearch.setVisibility(View.VISIBLE);
-		findViewById(R.id.imageViewPoweredByGoogle).setVisibility(View.VISIBLE);
+		scrollView.setVisibility(View.VISIBLE);
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
 
 
@@ -261,9 +263,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                 try {
 
                                                     relativeLayoutDropLocationBar.setVisibility(View.GONE);
-                                                    listViewDropLocationSearch.setVisibility(View.GONE);
-													findViewById(R.id.imageViewPoweredByGoogle).setVisibility(View.GONE);
-                                                    relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
+													scrollView.setVisibility(View.GONE);
+													relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
 
 
                                                     LatLngBounds.Builder builder = new LatLngBounds.Builder();

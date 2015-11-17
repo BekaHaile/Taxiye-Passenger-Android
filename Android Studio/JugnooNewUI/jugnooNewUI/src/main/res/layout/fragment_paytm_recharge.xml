@@ -241,7 +241,7 @@
                     android:background="@drawable/background_wallet_border"
                     android:digits="0123456789"
                     android:ems="10"
-                    android:hint="@string/amount_value"
+                    android:hint="Enter amount"
                     android:inputType="number|textNoSuggestions"
                     android:paddingLeft="25px"
                     android:paddingRight="25px"

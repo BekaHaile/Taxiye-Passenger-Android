@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -24,6 +23,7 @@ import com.payu.sdk.Constants;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
+import product.clicklabs.jugnoo.utils.Log;
 
 public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
@@ -166,7 +166,7 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            Log.e("onReceivedError url", "== errorCode="+errorCode+" description="+description+" failingUrl="+failingUrl);
+            Log.e("onReceivedError url", "== errorCode=" + errorCode + " description=" + description + " failingUrl=" + failingUrl);
             super.onReceivedError(view, errorCode, description, failingUrl);
         }
 

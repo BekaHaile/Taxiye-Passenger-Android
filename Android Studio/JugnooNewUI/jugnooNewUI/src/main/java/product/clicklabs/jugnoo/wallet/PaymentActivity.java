@@ -247,7 +247,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 
         try {
             postParams = PayU.getInstance(this).getParams(Constants.GET_USER_CARDS, varList);
-            android.util.Log.e("postParams", "postParams = " + postParams);
+            Log.e("postParams", "postParams = " + postParams);
             GetResponseTask getStoredCards = new GetResponseTask(this);
             getStoredCards.execute(postParams);
         } catch (NoSuchAlgorithmException e) {
@@ -264,7 +264,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 
         try {
             postParams = PayU.getInstance(this).getParams(Constants.DELETE_USER_CARD, varList);
-            android.util.Log.e("postParams", "postParams = " + postParams);
+            Log.e("postParams", "postParams = " + postParams);
             GetResponseTask getStoredCards = new GetResponseTask(this);
             getStoredCards.execute(postParams);
         } catch (NoSuchAlgorithmException e) {

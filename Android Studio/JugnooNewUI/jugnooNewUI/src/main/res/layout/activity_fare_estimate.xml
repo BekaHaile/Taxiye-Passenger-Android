@@ -96,7 +96,9 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
 
         <LinearLayout
             android:id="@+id/linearLayoutScroll"
@@ -145,7 +147,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         >
 
 

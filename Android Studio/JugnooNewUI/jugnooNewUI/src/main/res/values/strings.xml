@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
+    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
+    <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -217,7 +217,7 @@
     <string name="invalid_name">Please provide a valid name</string>
     <string name="invalid_info">Please fill correct values</string>
 
-    <string name="amount_range">Recharge amount should be between Rs. 100 - Rs. 5000</string>
+    <string name="amount_range">Recharge amount should be between Rs. 1 - Rs. 5000</string>
     <string name="check_internet_connection">Seems there is an issue with your internet connection. Please check and try again.</string>
 
 

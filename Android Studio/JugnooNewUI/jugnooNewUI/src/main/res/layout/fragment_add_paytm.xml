@@ -192,7 +192,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="40px"
                 android:background="@drawable/button_yellow"
-                android:text="RESEND CODE"
+                android:text="RESEND OTP"
                 android:textColor="@drawable/text_color_white_alpha_selector"
                 android:textSize="@dimen/add_paytm_button_text_size"/>
 
