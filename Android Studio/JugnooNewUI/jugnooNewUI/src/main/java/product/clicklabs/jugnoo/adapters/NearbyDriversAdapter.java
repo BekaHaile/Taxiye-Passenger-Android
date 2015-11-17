@@ -90,4 +90,10 @@ public class NearbyDriversAdapter extends RecyclerView.Adapter<NearbyDriversAdap
 			ASSL.DoMagic(linearLayoutNearby);
 		}
 	}
+
+
+	public interface NearbyDriversAdapterHandler {
+		void itemClicked(NearbyDriver nearbyDriver);
+	}
+
 }

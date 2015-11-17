@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:paddingTop="40dp"
         android:textColor="@android:color/black"
-        android:id="@+id/progress"
+        android:id="@+id/progressWheel"
         android:text="@string/process_your_request"
         android:layout_gravity="center"
         android:gravity="center"

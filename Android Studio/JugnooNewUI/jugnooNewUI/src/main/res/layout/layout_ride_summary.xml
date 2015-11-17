@@ -333,6 +333,7 @@
 
                     <!-- jugnoo cash deducted -->
                     <RelativeLayout
+                        android:id="@+id/relativeLayoutPaidUsingJugnooCash"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6px">
@@ -369,6 +370,47 @@
                             android:textColor="@color/grey_dark_more_receipt"
                             android:textSize="26px"/>
                     </RelativeLayout>
+
+                    <!-- paytm wallet deducted -->
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutPaidUsingPaytm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6px">
+
+                        <TextView
+                            android:id="@+id/textViewEndRidePaytm"
+                            android:layout_width="340px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginLeft="30px"
+                            android:text="Paytm Wallet"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRidePaytmRupee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10px"
+                            android:layout_toLeftOf="@+id/textViewEndRidePaytmValue"
+                            android:gravity="center_vertical"
+                            android:text="@string/rupee"
+                            android:textColor="@color/grey_dark_less"
+                            android:textSize="26px"/>
+
+                        <TextView
+                            android:id="@+id/textViewEndRidePaytmValue"
+                            android:layout_width="110px"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical|right"
+                            android:layout_marginRight="40px"
+                            android:text="0"
+                            android:textColor="@color/grey_dark_more_receipt"
+                            android:textSize="26px"/>
+                    </RelativeLayout>
+
 
                     <!-- to be paid -->
                     <RelativeLayout
@@ -699,7 +741,7 @@
         android:id="@+id/buttonEndRideOk"
         android:layout_width="648px"
         android:layout_height="100px"
-        android:layout_marginTop="30px"
+        android:layout_marginTop="10px"
         android:layout_marginBottom="30px"
         android:layout_below="@+id/linearLayoutReceipt"
         android:layout_centerHorizontal="true"

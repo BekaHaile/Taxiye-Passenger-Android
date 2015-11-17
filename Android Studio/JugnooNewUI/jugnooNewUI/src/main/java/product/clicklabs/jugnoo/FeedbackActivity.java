@@ -30,7 +30,6 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
-import product.clicklabs.jugnoo.adapters.FeedbackReasonsListEventHandler;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
@@ -105,7 +104,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
         textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.latoRegular(this));
         listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);
 
-        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsListEventHandler() {
+        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
             @Override
             public void onLastItemSelected(boolean selected) {
                 if(!selected){

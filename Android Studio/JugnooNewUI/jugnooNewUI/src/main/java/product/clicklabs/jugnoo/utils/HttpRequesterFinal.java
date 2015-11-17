@@ -69,7 +69,7 @@ public class HttpRequesterFinal{
                 throw new Exception();
             }
         } catch (Exception e) {
-            android.util.Log.e("Buffer Error", "Error converting result " + e.toString());
+            Log.e("Buffer Error", "Error converting result " + e.toString());
             json = HttpRequester.SERVER_TIMEOUT + " " +e;
         }
         return json;
@@ -154,7 +154,7 @@ public class HttpRequesterFinal{
             writer.flush();
             writer.close();
         } catch (Exception e1) {
-            android.util.Log.e("file exception", "=-=" + e1.toString());
+            Log.e("file exception", "=-=" + e1.toString());
             e1.printStackTrace();
         }
     }

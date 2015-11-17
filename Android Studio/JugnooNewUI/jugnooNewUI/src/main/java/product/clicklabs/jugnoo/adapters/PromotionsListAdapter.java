@@ -2,14 +2,13 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -44,8 +43,8 @@ import rmn.androidscreenlibrary.ASSL;
 public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNames {
 
     class ViewHolderPromotion {
-        TextView textViewCouponTitle, textViewTNC;
-        LinearLayout relative;
+        TextView textViewCouponTitle, textViewCouponSelect;
+        RelativeLayout relative;
         int id;
     }
 
@@ -59,6 +58,8 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
     private PromoCoupon selectedCoupon;
 
     private PromotionListEventHandler promotionListEventHandler;
+
+	public PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
     public PromotionsListAdapter(Activity context, PromotionListEventHandler promotionListEventHandler) {
         this.context = context;
@@ -94,12 +95,12 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
             convertView = mInflater.inflate(R.layout.list_item_promo_coupon, null);
 
             holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Fonts.latoRegular(context));
-            holder.textViewTNC = (TextView) convertView.findViewById(R.id.textViewTNC); holder.textViewTNC.setTypeface(Fonts.latoLight(context), Typeface.BOLD);
+            holder.textViewCouponSelect = (TextView) convertView.findViewById(R.id.textViewCouponSelect); holder.textViewCouponSelect.setTypeface(Fonts.latoRegular(context));
 
-            holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
+            holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
 
             holder.relative.setTag(holder);
-            holder.textViewTNC.setTag(holder);
+            holder.textViewCouponSelect.setTag(holder);
 
             holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ASSL.DoMagic(holder.relative);
@@ -121,21 +122,21 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
         }
 
         if(selectedCoupon.id == promoCoupon.id){
-            holder.relative.setBackgroundColor(context.getResources().getColor(R.color.yellow));
-            holder.textViewCouponTitle.setTextColor(context.getResources().getColor(R.color.white));
-            holder.textViewTNC.setTextColor(context.getResources().getColor(R.color.white));
+            holder.textViewCouponSelect.setTextColor(context.getResources().getColor(R.color.white));
+			holder.textViewCouponSelect.setBackgroundResource(R.drawable.background_yellow_r_more);
+			holder.textViewCouponSelect.setText("SELECTED");
         }
         else{
-            holder.relative.setBackgroundColor(context.getResources().getColor(R.color.white));
-            holder.textViewCouponTitle.setTextColor(context.getResources().getColor(R.color.black_text));
-            holder.textViewTNC.setTextColor(context.getResources().getColor(R.color.black_text));
+			holder.textViewCouponSelect.setTextColor(context.getResources().getColor(R.color.yellow));
+			holder.textViewCouponSelect.setBackgroundResource(R.drawable.background_white_r_more_yellow_b);
+			holder.textViewCouponSelect.setText("SELECT");
         }
 
         if(promoCoupon.id > -1){
-            holder.textViewTNC.setVisibility(View.VISIBLE);
-        }
+			holder.textViewCouponSelect.setVisibility(View.VISIBLE);
+		}
         else{
-            holder.textViewTNC.setVisibility(View.GONE);
+            holder.textViewCouponSelect.setVisibility(View.GONE);
         }
 
 
@@ -144,33 +145,39 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 
             @Override
             public void onClick(View v) {
-                holder = (ViewHolderPromotion) v.getTag();
-                selectedCoupon = promoCouponList.get(holder.id);
-                notifyDataSetChanged();
+				holder = (ViewHolderPromotion) v.getTag();
+				PromoCoupon promoCoupon = promoCouponList.get(holder.id);
+				if(promoCoupon instanceof CouponInfo){
+					DialogPopup.alertPopupLeftOriented(context, "", ((CouponInfo) promoCoupon).description);
+					if(((CouponInfo)promoCoupon).id == -1){
+						FlurryEventLogger.event(COUPON_SELECTION_NOT_MADE);
+					}
+					else{
+						FlurryEventLogger.event(COUPON_SELECTION_MADE);
+					}
+				}
+				else if(promoCoupon instanceof PromotionInfo){
+					if(((PromotionInfo)promoCoupon).id > 0){
+						DialogPopup.alertPopupHtml(context, "", ((PromotionInfo)promoCoupon).terms);
+						FlurryEventLogger.event(COUPON_SELECTION_MADE);
+					}
+				}
             }
         });
 
-        holder.textViewTNC.setOnClickListener(new View.OnClickListener() {
+        holder.textViewCouponSelect.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                holder = (ViewHolderPromotion) v.getTag();
-                PromoCoupon promoCoupon = promoCouponList.get(holder.id);
-                if(promoCoupon instanceof CouponInfo){
-                    DialogPopup.alertPopupLeftOriented(context, "", ((CouponInfo) promoCoupon).description);
-                    if(((CouponInfo)promoCoupon).id == -1){
-                        FlurryEventLogger.event(COUPON_SELECTION_NOT_MADE);
-                    }
-                    else{
-                        FlurryEventLogger.event(COUPON_SELECTION_MADE);
-                    }
-                }
-                else if(promoCoupon instanceof PromotionInfo){
-                    if(((PromotionInfo)promoCoupon).id > 0){
-                        DialogPopup.alertPopupHtml(context, "", ((PromotionInfo)promoCoupon).terms);
-						FlurryEventLogger.event(COUPON_SELECTION_MADE);
-                    }
-                }
+				holder = (ViewHolderPromotion) v.getTag();
+				if((selectedCoupon != null) && (selectedCoupon.id == promoCouponList.get(holder.id).id)){
+					selectedCoupon = noSelectionCoupon;
+					notifyDataSetChanged();
+				}
+				else{
+					selectedCoupon = promoCouponList.get(holder.id);
+					notifyDataSetChanged();
+				}
             }
         });
 
@@ -247,11 +254,8 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
                                     promoCouponList.addAll(JSONParser.parsePromoCoupons(jObj));
                                     JSONParser.parseCurrentFareStructure(jObj);
 
-//                                    dynamicFactor = jObj.getDouble("dynamic_factor");
-
                                     if(promoCouponList.size() > 0) {
-                                        promoCouponList.add(new CouponInfo(-1, "Don't apply coupon on this ride"));
-                                        selectedCoupon = promoCouponList.get(0);
+                                        selectedCoupon = noSelectionCoupon;
                                         startDismissHandler();
                                     }
                                     else{
@@ -276,5 +280,12 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
                 });
         }
     }
+
+
+	public interface PromotionListEventHandler {
+		void onDismiss();
+		void onPromoListFetched(int totalPromoCoupons);
+	}
+
 
 }

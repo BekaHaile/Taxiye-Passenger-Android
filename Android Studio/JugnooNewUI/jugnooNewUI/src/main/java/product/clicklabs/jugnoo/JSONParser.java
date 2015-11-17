@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -32,6 +33,7 @@ import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
@@ -39,6 +41,7 @@ import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -76,13 +79,15 @@ public class JSONParser {
             if (fareDetails0.has("fare_threshold_time")) {
                 freeMinutes = fareDetails0.getDouble("fare_threshold_time");
             }
+			double convenienceCharges = fareDetails0.optDouble("convenience_charge", 0);
+
             Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"),
                     fareDetails0.getDouble("fare_threshold_distance"),
                     fareDetails0.getDouble("fare_per_km"),
-                    farePerMin, freeMinutes, 0, 0);
+                    farePerMin, freeMinutes, 0, 0, convenienceCharges);
         } catch (Exception e) {
             e.printStackTrace();
-            Data.fareStructure = new FareStructure(25, 2, 6, 1, 6, 0, 0);
+            Data.fareStructure = new FareStructure(25, 2, 6, 1, 6, 0, 0, 0);
         }
     }
 
@@ -250,11 +255,13 @@ public class JSONParser {
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
 
+		int paytmEnabled = userData.optInt("paytm_enabled", 0);
+
         return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
-                jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing);
+                jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled);
     }
 
 
@@ -507,6 +514,7 @@ public class JSONParser {
 		}
 
 		int waitingChargesApplicable = jLastRideData.optInt("waiting_charges_applicable", 0);
+		double paidUsingPaytm = jLastRideData.optDouble("paid_using_paytm", 0);
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber,
@@ -520,7 +528,7 @@ public class JSONParser {
 				jLastRideData.getDouble("to_pay"),
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
-				baseFare, fareFactor, discountTypes, waitingChargesApplicable);
+				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm);
 	}
 
 
@@ -550,7 +558,7 @@ public class JSONParser {
 
 
     public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1) {
-//		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
+		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
         String returnResponse = "";
 
         if (currentUserStatus == 2) {
@@ -1136,14 +1144,16 @@ public class JSONParser {
                 long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
                 long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
 
-                if(diffStart >= 0 && diffEnd <= 0){
+				double convenienceCharges = jfs.optDouble("convenience_charge", 0);
+
+				if(diffStart >= 0 && diffEnd <= 0){
                     Data.fareStructure = new FareStructure(jfs.getDouble("fare_fixed"),
                         jfs.getDouble("fare_threshold_distance"),
                         jfs.getDouble("fare_per_km"),
                         jfs.getDouble("fare_per_min"),
                         jfs.getDouble("fare_threshold_time"),
                         jfs.getDouble("fare_per_waiting_min"),
-                        jfs.getDouble("fare_threshold_waiting_time"));
+                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges);
                     Data.fareStructure.fareFactor = fareFactor;
                     break;
                 }
@@ -1190,6 +1200,38 @@ public class JSONParser {
 		}
 		return nearbyDrivers;
 	}
+
+
+
+	public static void parsePaytmBalanceStatus(Activity activity, JSONObject jObj){
+		try {
+			if (Data.userData != null) {
+				int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+				String message = JSONParser.getServerMessage(jObj);
+				if (ApiResponseFlags.PAYTM_BALANCE_ERROR.getOrdinal() == flag) {
+					Data.userData.setPaytmError(1);
+					Data.userData.setPaytmBalance(0);
+					Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
+				} else {
+					Data.userData.setPaytmError(0);
+					String paytmStatus = jObj.optString("STATUS", Data.PAYTM_STATUS_INACTIVE);
+					if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+						String balance = jObj.optString("WALLETBALANCE", "0");
+						Data.userData.setPaytmBalance(Double.parseDouble(balance));
+						Data.userData.setPaytmStatus(paytmStatus);
+					} else {
+						Data.userData.setPaytmStatus(Data.PAYTM_STATUS_INACTIVE);
+						Data.userData.setPaytmBalance(0);
+					}
+					Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 
 }

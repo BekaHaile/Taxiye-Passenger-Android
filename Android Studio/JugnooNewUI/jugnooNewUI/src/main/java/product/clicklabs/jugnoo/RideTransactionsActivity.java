@@ -441,7 +441,6 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     RideInfo rideInfo = rideInfosList.get(position-1);
 
                     holder.textViewPickupAt.setVisibility(View.GONE);
-                    holder.relativeLayoutTo.setVisibility(View.VISIBLE);
                     holder.textViewAmount.setVisibility(View.VISIBLE);
                     holder.linearLayoutCancel.setVisibility(View.GONE);
 
@@ -470,6 +469,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 						}
 						holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
 						holder.textViewRideCancelled.setVisibility(View.GONE);
+						holder.relativeLayoutTo.setVisibility(View.VISIBLE);
 					}
 					else{
 						holder.textViewDetailsValue.setText(rideInfo.date+",");
@@ -478,6 +478,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 						holder.imageViewDiv.setVisibility(View.VISIBLE);
 						holder.linearLayoutRideReceipt.setVisibility(View.GONE);
 						holder.textViewRideCancelled.setVisibility(View.VISIBLE);
+						holder.relativeLayoutTo.setVisibility(View.GONE);
 					}
 
                 }
@@ -486,7 +487,6 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 RideInfo rideInfo = rideInfosList.get(position);
 
                 holder.textViewPickupAt.setVisibility(View.GONE);
-                holder.relativeLayoutTo.setVisibility(View.VISIBLE);
                 holder.textViewAmount.setVisibility(View.VISIBLE);
                 holder.linearLayoutCancel.setVisibility(View.GONE);
 
@@ -514,6 +514,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 					}
 					holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
 					holder.textViewRideCancelled.setVisibility(View.GONE);
+					holder.relativeLayoutTo.setVisibility(View.VISIBLE);
 				}
 				else{
 					holder.textViewDetailsValue.setText(rideInfo.date+",");
@@ -522,6 +523,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 					holder.imageViewDiv.setVisibility(View.VISIBLE);
 					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
 					holder.textViewRideCancelled.setVisibility(View.VISIBLE);
+					holder.relativeLayoutTo.setVisibility(View.GONE);
 				}
             }
 

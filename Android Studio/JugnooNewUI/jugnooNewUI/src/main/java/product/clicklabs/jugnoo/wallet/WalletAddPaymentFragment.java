@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.wallet;
 
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -106,7 +104,7 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(homeActivity), Typeface.BOLD);
 		
-		textViewHelp = (TextView) rootView.findViewById(R.id.textViewHelp); textViewHelp.setTypeface(Fonts.latoLight(homeActivity));
+		textViewHelp = (TextView) rootView.findViewById(R.id.textViewAddCash); textViewHelp.setTypeface(Fonts.latoLight(homeActivity));
 		
 		editTextAmount = (EditText) rootView.findViewById(R.id.editTextAmount); editTextAmount.setTypeface(Fonts.latoRegular(homeActivity));
         editTextAmount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
@@ -120,9 +118,9 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
 //        rupee.setTypeface(Fonts.latoLight(homeActivity));
 //        rupee.setVisibility(View.GONE);
 		
-		button599 = (Button) rootView.findViewById(R.id.button100); button599.setTypeface(Fonts.latoRegular(homeActivity));
-		button999 = (Button) rootView.findViewById(R.id.button200); button999.setTypeface(Fonts.latoRegular(homeActivity));
-		button1999 = (Button) rootView.findViewById(R.id.button500); button1999.setTypeface(Fonts.latoRegular(homeActivity));
+		button599 = (Button) rootView.findViewById(R.id.buttonAmount1); button599.setTypeface(Fonts.latoRegular(homeActivity));
+		button999 = (Button) rootView.findViewById(R.id.buttonAmount2); button999.setTypeface(Fonts.latoRegular(homeActivity));
+		button1999 = (Button) rootView.findViewById(R.id.buttonAmount3); button1999.setTypeface(Fonts.latoRegular(homeActivity));
 		buttonMakePayment = (Button) rootView.findViewById(R.id.buttonMakePayment); buttonMakePayment.setTypeface(Fonts.latoRegular(homeActivity));
 		
 		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance); textViewCurrentBalance.setTypeface(Fonts.latoRegular(homeActivity));
@@ -306,10 +304,10 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
 		
 		try{
 			try {
-			    textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+(int)Data.userData.jugnooBalance);
+			    textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+(int)Data.userData.getJugnooBalance());
             }catch(Exception e) {
                 textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee) + " "
-                        + (int) Data.userData.jugnooBalance);
+                        + (int) Data.userData.getJugnooBalance());
             }
 		} catch(Exception e){
 			e.printStackTrace();
@@ -334,41 +332,6 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
                 scrolled = false;
             }
         }));
-
-
-        final View activityRootView = rootView.findViewById(R.id.linearLayoutMain);
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                // r will be populated with the coordinates of your view
-                // that area still visible.
-                activityRootView.getWindowVisibleDisplayFrame(r);
-
-                int heightDiff = activityRootView.getRootView().getHeight() - (r.bottom - r.top);
-                if (heightDiff > 100) { // if more than 100 pixels, its
-                    // probably a keyboard...
-
-                    /************** Adapter for the parent List *************/
-
-                    ViewGroup.LayoutParams params_12 = textViewScroll.getLayoutParams();
-
-                    params_12.height = (int) (heightDiff);
-
-                    textViewScroll.setLayoutParams(params_12);
-                    textViewScroll.requestLayout();
-
-                } else {
-
-                    ViewGroup.LayoutParams params = textViewScroll.getLayoutParams();
-                    params.height = 0;
-                    textViewScroll.setLayoutParams(params);
-                    textViewScroll.requestLayout();
-
-                }
-            }
-        });
 
         homeActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
@@ -431,10 +394,10 @@ public class WalletAddPaymentFragment extends Fragment implements FlurryEventNam
             try {
                 editTextAmount.setText("");
 
-                textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.jugnooBalance);
+                textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.getJugnooBalance());
             }catch(Exception e) {
                 textViewCurrentBalanceValue.setText(getResources().getString(R.string.rupee) + " "
-                        + (int) Data.userData.jugnooBalance);
+                        + (int) Data.userData.getJugnooBalance());
             }
             if("failure".equalsIgnoreCase(status)){
                 new DialogPopup().dialogBanner(homeActivity, ""+getResources().getString(R.string.trans_failed));
