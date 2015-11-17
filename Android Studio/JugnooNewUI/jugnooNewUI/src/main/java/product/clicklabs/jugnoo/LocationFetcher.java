@@ -179,17 +179,17 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	private Location getLocation(){
 		try{
 			if(location != null){
-				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
+//				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
 					return location;
-				}
+//				}
 			}
 			else{
 				if(googleApiClient != null && googleApiClient.isConnected()){
 					location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 					Log.e("last fused location", "=" + location);
-					if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
+//					if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
 						return location;
-					}
+//					}
 				}
 			}
 		} catch(Exception e){e.printStackTrace();}
@@ -266,11 +266,11 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		try{
 			if(location!=null){
 				Log.i("loc chanfged ----******", "=" + location);
-				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
+//				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
 					this.location = location;
 					locationUpdate.onLocationChanged(location, priority);
 					saveLatLngToSP(location.getLatitude(), location.getLongitude());
-				}
+//				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();

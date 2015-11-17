@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/rv"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
+
+    <LinearLayout
+        android:id="@+id/innerRl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="70px"
+        android:background="@drawable/dialog_background_color"
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
+
+        <TextView
+            android:id="@+id/textViewSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20px"
+            android:layout_marginTop="20px"
+            android:layout_marginLeft="25px"
+            android:layout_marginRight="25px"
+            android:gravity="center_vertical"
+            android:text="Select preferred payment option"
+            android:textColor="@color/grey_dark"
+            android:textSize="26px"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/grey_light_more"/>
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutPaytm"
+            android:layout_width="530px"
+            android:layout_height="88px"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_white_white_light_grey_selector">
+
+            <TextView
+                android:id="@+id/textViewPaytmWallet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:text="PayTM"
+                android:textColor="@color/grey_black"
+                android:textSize="30px"
+                />
+
+            <TextView
+                android:id="@+id/textViewPaytmWalletValue"
+                android:layout_width="340px"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10px"
+                android:layout_alignParentRight="true"
+                android:text="Rs. 0000000"
+                android:textColor="@color/grey_black"
+                android:textSize="30px"
+                android:gravity="right"
+                />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="530px"
+            android:layout_height="2px"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/yellow"/>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutCash"
+            android:layout_width="530px"
+            android:layout_height="90px"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_white_white_light_grey_selector"
+            android:layout_marginBottom="2px"
+            >
+
+            <TextView
+                android:id="@+id/textViewCash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15px"
+                android:text="Cash"
+                android:textColor="@color/grey_black"
+                android:textSize="30px"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

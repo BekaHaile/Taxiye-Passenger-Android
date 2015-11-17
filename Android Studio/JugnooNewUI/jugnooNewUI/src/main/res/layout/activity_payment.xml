@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/mainHomelayout"
-              android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    android:id="@+id/mainHomelayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="96px"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/yellow">
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/fragLayout"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

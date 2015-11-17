@@ -1291,7 +1291,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
                     private JSONObject jObj;
                     @Override
                     public void onSuccess(String response) {
-                        android.util.Log.e("Server response", "response = " + response);
+                        Log.e("Server response", "response = " + response);
                         try {
                             JSONObject res = new JSONObject(response.toString());
                             Log.e("res", "res = " + res.toString());
@@ -1374,7 +1374,7 @@ public class AddJugnooCashFragment extends Fragment implements View.OnClickListe
 
                     @Override
                     public void onFailure(Throwable arg0) {
-                        android.util.Log.e("request fail", arg0.toString());
+                        Log.e("request fail", arg0.toString());
                         DialogPopup.dismissLoadingDialog();
                     }
                 });
