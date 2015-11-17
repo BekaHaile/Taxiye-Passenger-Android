@@ -1,16 +1,18 @@
 <LinearLayout
     android:id="@+id/linearLayoutPaytmTutorial"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="720px"
+    android:layout_height="1134px"
     android:orientation="vertical"
     >
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="603px"
-        android:background="@color/black_translucent_more">
+        android:layout_height="640px"
+        android:background="@color/black_translucent_more"
+        android:tag="mwar"
+        >
 
         <ImageView
             android:id="@+id/imageViewPaytmTut"
@@ -49,7 +51,7 @@
             android:layout_marginLeft="35px"
             android:layout_toRightOf="@+id/imageViewWalletTut"
             android:text="Wallet"
-            android:textColor="@drawable/text_color_grey_dark_white_selector"
+            android:textColor="@drawable/text_color_grey_dark_light_selector"
             android:textSize="30px"/>
 
         <TextView
