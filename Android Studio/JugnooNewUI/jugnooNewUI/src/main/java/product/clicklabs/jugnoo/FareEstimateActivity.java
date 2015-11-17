@@ -32,7 +32,6 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import product.clicklabs.jugnoo.adapters.SearchListActionsHandler;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -43,6 +42,8 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -60,6 +61,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     EditText editTextDropLocation;
     ProgressWheel progressBarDropLocation;
     ListView listViewDropLocationSearch;
+	LinearLayout linearLayoutScroll;
+	TextView textViewScroll;
+
 
     RelativeLayout relativeLayoutFareEstimateDetails;
     GoogleMap mapLite;
@@ -104,9 +108,23 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         progressBarDropLocation = (ProgressWheel) findViewById(R.id.progressBarDropLocation);
         progressBarDropLocation.setVisibility(View.GONE);
         listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
+		linearLayoutScroll = (LinearLayout) findViewById(R.id.linearLayoutScroll);
+		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
+		linearLayoutScroll.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScroll, textViewScroll, new KeyBoardStateHandler() {
+			@Override
+			public void keyboardOpened() {
+
+			}
+
+			@Override
+			public void keyBoardClosed() {
+
+			}
+		}));
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
-				new SearchListActionsHandler() {
+				new SearchListAdapter.SearchListActionsHandler() {
 			@Override
 			public void onTextChange(String text) {
 
@@ -187,6 +205,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
         relativeLayoutDropLocationBar.setVisibility(View.VISIBLE);
         listViewDropLocationSearch.setVisibility(View.VISIBLE);
+		findViewById(R.id.imageViewPoweredByGoogle).setVisibility(View.VISIBLE);
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
 
 
@@ -243,7 +262,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                                     relativeLayoutDropLocationBar.setVisibility(View.GONE);
                                                     listViewDropLocationSearch.setVisibility(View.GONE);
+													findViewById(R.id.imageViewPoweredByGoogle).setVisibility(View.GONE);
                                                     relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
+
 
                                                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
