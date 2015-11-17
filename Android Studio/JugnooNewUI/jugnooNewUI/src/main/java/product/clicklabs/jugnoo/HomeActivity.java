@@ -1702,7 +1702,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             //30.7500, 76.7800
 			//22.971723, 78.754263
 
-            if (0 == Data.latitude && 0 == Data.longitude) {
+
+			if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
+					|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
 				farAwayCity = "Our service is not available in this area";
 				setServiceAvailablityUI(farAwayCity);

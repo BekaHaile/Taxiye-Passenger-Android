@@ -22,10 +22,12 @@ import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Stores common static data for access for all activities across the application
@@ -202,13 +204,33 @@ public class Data {
             previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 			
 			AccessTokenGenerator.saveLogoutToken(context);
+			clearSPLabelPrefs(context);
 			
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
+	private static void clearSPLabelPrefs(Context context) {
+		try {
+			Prefs.with(context).remove(SPLabels.REFERRAL_OPEN_DATE_MILLIS);
+			Prefs.with(context).remove(SPLabels.REFERRAL_TRANSACTION_COUNT);
+			Prefs.with(context).remove(SPLabels.REFERRAL_APP_OPEN_COUNT);
+			Prefs.with(context).remove(SPLabels.USER_IDENTIFIER);
+			Prefs.with(context).remove(SPLabels.BRANCH_SMS_LINK);
+			Prefs.with(context).remove(SPLabels.BRANCH_WHATSAPP_LINK);
+			Prefs.with(context).remove(SPLabels.BRANCH_FACEBOOK_LINK);
+			Prefs.with(context).remove(SPLabels.BRANCH_EMAIL_LINK);
+			Prefs.with(context).remove(SPLabels.ADD_HOME);
+			Prefs.with(context).remove(SPLabels.ADD_WORK);
+			Prefs.with(context).remove(SPLabels.ADD_GYM);
+			Prefs.with(context).remove(SPLabels.ADD_FRIEND);
+			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 
