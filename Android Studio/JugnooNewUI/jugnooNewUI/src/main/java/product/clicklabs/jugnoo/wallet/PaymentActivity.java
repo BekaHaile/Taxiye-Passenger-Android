@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -372,16 +371,8 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 							Log.i("request succesfull", "response = " + response);
 							try {
 								JSONObject jObj = new JSONObject(response.toString());
-								String message = JSONParser.getServerMessage(jObj);
-								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-
-								if (11 == flag) {
-									DialogPopup.alertPopup(PaymentActivity.this, "", message);
-								} else {
-									JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
-									performGetBalanceSuccess(fragName);
-								}
-
+								JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
+								performGetBalanceSuccess(fragName);
 							} catch (Exception e) {
 								e.printStackTrace();
 								retryDialog(Data.SERVER_ERROR_MSG, fragName);

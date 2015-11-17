@@ -182,7 +182,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		try{
 			if(Data.userData != null){
 				textViewJugnooCashBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
-				textViewPaytmBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+				textViewPaytmBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
 				}
@@ -203,7 +203,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		try{
 			if(Data.userData != null){
 				textViewJugnooCashBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
-				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
 				}

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -1202,19 +1203,29 @@ public class JSONParser {
 
 
 
-	public static void parsePaytmBalanceStatus(Context context, JSONObject jObj){
+	public static void parsePaytmBalanceStatus(Activity activity, JSONObject jObj){
 		try {
 			if (Data.userData != null) {
-				String paytmStatus = jObj.optString("STATUS", Data.PAYTM_STATUS_INACTIVE);
-				if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-					String balance = jObj.optString("WALLETBALANCE", "0");
-					Data.userData.setPaytmBalance(Double.parseDouble(balance));
-					Data.userData.setPaytmStatus(paytmStatus);
-				} else {
-					Data.userData.setPaytmStatus(Data.PAYTM_STATUS_INACTIVE);
+				int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+				String message = JSONParser.getServerMessage(jObj);
+				if (ApiResponseFlags.PAYTM_BALANCE_ERROR.getOrdinal() == flag) {
+					Data.userData.setPaytmError(1);
 					Data.userData.setPaytmBalance(0);
+					Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
+				} else {
+					Data.userData.setPaytmError(0);
+					String paytmStatus = jObj.optString("STATUS", Data.PAYTM_STATUS_INACTIVE);
+					if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+						String balance = jObj.optString("WALLETBALANCE", "0");
+						Data.userData.setPaytmBalance(Double.parseDouble(balance));
+						Data.userData.setPaytmStatus(paytmStatus);
+					} else {
+						Data.userData.setPaytmStatus(Data.PAYTM_STATUS_INACTIVE);
+						Data.userData.setPaytmBalance(0);
+					}
+					Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+
 				}
-				Prefs.with(context).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2900,7 +2900,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private void setSelectedPaymentOptionUI(int intPaymentOption){
 		try {
 			if(PaymentOption.PAYTM.getOrdinal() == intPaymentOption){
-				textViewRRPaymentOption.setText("PAYTM WALLET\n"+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+				textViewRRPaymentOption.setText("PAYTM WALLET\n"+getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
 				imageViewRRPaymentOptionIconPaytm.setVisibility(View.VISIBLE);
 				imageViewRRPaymentOptionIconCash.setVisibility(View.GONE);
 			}
@@ -6289,15 +6289,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							Log.i("request succesfull", "response = " + response);
 							try {
 								JSONObject jObj = new JSONObject(response.toString());
-								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-
-								if (11 == flag) {
-								} else {
-									JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
-									updatePreferredPaymentOptionUI();
-									setUserData();
-								}
-
+								JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
+								updatePreferredPaymentOptionUI();
+								setUserData();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -6353,7 +6347,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			TextView textViewPaytmWalletValue = (TextView) dialog.findViewById(R.id.textViewPaytmWalletValue); textViewPaytmWalletValue.setTypeface(Fonts.latoRegular(activity));
 			TextView textViewCash = (TextView) dialog.findViewById(R.id.textViewCash); textViewCash.setTypeface(Fonts.latoRegular(activity));
 
-			textViewPaytmWalletValue.setText(getResources().getString(R.string.rupee)+ Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+			textViewPaytmWalletValue.setText(getResources().getString(R.string.rupee)+ Data.userData.getPaytmBalanceStr());
 
 			RelativeLayout relativeLayoutPaytm = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPaytm);
 			RelativeLayout relativeLayoutCash = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutCash);

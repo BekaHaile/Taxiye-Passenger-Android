@@ -240,7 +240,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 		try{
 			if(Data.userData != null){
-				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -255,7 +255,7 @@ public class PaytmRechargeFragment extends Fragment {
 		super.onResume();
 		try{
 			if(Data.userData != null){
-				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance()));
+				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
 			}
 		} catch(Exception e){
 			e.printStackTrace();

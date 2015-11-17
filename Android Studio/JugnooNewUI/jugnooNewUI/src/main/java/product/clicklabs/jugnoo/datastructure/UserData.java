@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.utils.Utils;
 
 public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, nukkadIcon, jugnooMealsPackageName, jugnooFbBanner;
@@ -13,7 +14,7 @@ public class UserData {
 	public double sharingFareFixed;
 	public int showJugnooSharing;
 	private String paytmStatus;
-	public int paytmEnabled;
+	public int paytmEnabled, paytmError;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
@@ -51,6 +52,8 @@ public class UserData {
 		this.showJugnooSharing = showJugnooSharing;
 		this.paytmBalance = 0;
 		this.paytmEnabled = paytmEnabled;
+		this.paytmError = 0;
+
 		if(1 == this.paytmEnabled) {
 			this.paytmStatus = "";
 		}
@@ -69,8 +72,20 @@ public class UserData {
 		setTotalWalletBalance();
 	}
 
-	public double getPaytmBalance() {
+	public double getPaytmBalance(){
 		return paytmBalance;
+	}
+
+	public String getPaytmBalanceStr(){
+		if(this.paytmError == 1){
+			return "--";
+		} else{
+			return Utils.getMoneyDecimalFormat().format(getPaytmBalance());
+		}
+	}
+
+	public void setPaytmError(int paytmError){
+		this.paytmError = paytmError;
 	}
 
 	public void setPaytmBalance(double paytmBalance) {
