@@ -6316,10 +6316,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 						@Override
 						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
-							linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
-							textViewWalletValue.setVisibility(View.VISIBLE);
+							try {
+								Log.e("request fail", arg0.toString());
+								JSONParser.setPaytmErrorCase();
+								updatePreferredPaymentOptionUI();
+								setUserData();
+								progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+								linearLayoutPaytmWalletLoading.setVisibility(View.GONE);
+								textViewWalletValue.setVisibility(View.VISIBLE);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					});
 				}
