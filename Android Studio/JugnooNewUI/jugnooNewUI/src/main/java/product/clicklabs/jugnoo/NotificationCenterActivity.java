@@ -1,9 +1,13 @@
 package product.clicklabs.jugnoo;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,8 +22,10 @@ import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.ContactsEntityBean;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 import rmn.androidscreenlibrary.ASSL;
@@ -71,6 +77,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
 		new GetNotificationsAsync().execute();
 
+		new GetAllContacts().execute();
     }
 
 
@@ -106,6 +113,87 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 			}
 			myNotificationAdapter.notifyDataSetChanged();
 		}
+	}
+
+	class GetAllContacts extends AsyncTask<String, String, String>{
+
+		@Override
+		protected String doInBackground(String... strings) {
+			try {
+				/*ContentResolver cr = getContentResolver();
+				Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+                        null, null, null, null);
+				if (cur.getCount() > 0) {
+                    while (cur.moveToNext()) {
+                        String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                        String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        if (Integer.parseInt(cur.getString(
+                                cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                            Cursor pCur = cr.query(
+                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                    null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
+                                    new String[]{id}, null);
+                            while (pCur.moveToNext()) {
+                                String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                Log.v("Name : ", "--> " + name + ", Phone No: ---> " + phoneNo);
+                            }
+                            pCur.close();
+                        }
+                    }
+                }*/
+
+				getContactDetails();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return "";
+		}
+	}
+
+	public ArrayList<ContactsEntityBean> getContactDetails() {
+		ArrayList<ContactsEntityBean> contactList = new ArrayList<ContactsEntityBean>();
+		ContentResolver cr = getContentResolver();
+		Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
+				null, null, null);
+		if (cur.getCount() > 0) {
+			while (cur.moveToNext()) {
+				String id = cur.getString(cur
+						.getColumnIndex(ContactsContract.Contacts._ID));
+				Cursor cur1 = cr.query(
+						ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+						null, ContactsContract.CommonDataKinds.Email.CONTACT_ID
+								+ " = ?", new String[] {
+								id
+						}, null);
+				while (cur1.moveToNext()) {
+					ContactsEntityBean contactsEntityBean = new ContactsEntityBean();
+					// to get the contact names
+					String name = cur1
+							.getString(cur1
+									.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+
+					// Log.e("Name :", name);
+					String email = cur1
+							.getString(cur1
+									.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+
+					// Log.e("Email", email);
+					contactsEntityBean.setPhones(name);
+					contactsEntityBean.setEmails(email);
+					if (email != null) {
+						contactList.add(contactsEntityBean);
+					}
+				}
+				cur1.close();
+			}
+		}
+
+		Log.v("size is ","---> "+contactList.size());
+		for(int i=0; i<contactList.size(); i++){
+			Log.v("name ", contactList.get(i).getPhones()+", email "+contactList.get(i).getEmails());
+		}
+		return contactList;
 	}
 
     public void performBackPressed(){
