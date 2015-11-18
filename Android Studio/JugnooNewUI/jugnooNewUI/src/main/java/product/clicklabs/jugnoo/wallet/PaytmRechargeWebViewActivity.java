@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.payu.sdk.Constants;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
+import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.utils.Log;
 
 public class PaytmRechargeWebViewActivity extends FragmentActivity {
@@ -180,11 +180,11 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 			Log.e("url", "=" + url);
 			if("https://jugnoo.in/paytm/wallet/success.php".equalsIgnoreCase(url)){
 				Intent returnIntent = new Intent();
-				setResult(PayTMPaymentState.SUCCESS.getOrdinal(), returnIntent);
+				setResult(PaytmPaymentState.SUCCESS.getOrdinal(), returnIntent);
 				finish();
 			} else if("https://jugnoo.in/paytm/wallet/failure.php".equalsIgnoreCase(url)){
 				Intent returnIntent = new Intent();
-				setResult(PayTMPaymentState.FAILURE.getOrdinal(), returnIntent);
+				setResult(PaytmPaymentState.FAILURE.getOrdinal(), returnIntent);
 				finish();
 			}
 		} catch (Exception e) {

@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
-                android:text="PayTM"
+                android:text="Paytm"
                 android:textColor="@color/grey_black"
                 android:textSize="30px"
                 />

@@ -31,7 +31,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
-import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
+import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -82,7 +82,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 //                .commitAllowingStateLoss();
 //        }
 
-		Data.paytmPaymentState = PayTMPaymentState.INIT;
+		Data.paytmPaymentState = PaytmPaymentState.INIT;
     }
 
 
@@ -337,7 +337,7 @@ public class PaymentActivity extends BaseFragmentActivity implements PaymentList
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-		if(Data.paytmPaymentState != PayTMPaymentState.SUCCESS) {
+		if(Data.paytmPaymentState != PaytmPaymentState.SUCCESS) {
 			getBalance("Refresh");
 		}
 	}
