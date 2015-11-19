@@ -1336,6 +1336,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
 					if (Data.userData.getPaytmBalance() > 0) {
 						callRequestRide = true;
+						if(Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare){
+							DialogPopup.dialogBanner(activity, "Your paytm cash is low");
+							//TODO verify message
+						}
 					} else {
 						callRequestRide = false;
 						DialogPopup.alertPopup(activity, "", "You do not have Paytm cash, Please select payment method as Cash");
