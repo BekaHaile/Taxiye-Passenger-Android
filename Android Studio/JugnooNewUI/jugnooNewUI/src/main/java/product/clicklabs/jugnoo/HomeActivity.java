@@ -620,7 +620,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						listViewPromotions.setLayoutParams(layoutParamsList);
 					}
 					else{
-						Utils.expandListForFixedHeight(listViewPromotions);
+						Utils.expandListForVariableHeight(listViewPromotions);
 					}
                 }
                 else{
@@ -1337,7 +1337,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					if (Data.userData.getPaytmBalance() > 0) {
 						callRequestRide = true;
 						if(Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare){
-							DialogPopup.dialogBanner(activity, "Your paytm cash is low");
+							DialogPopup.dialogBanner(activity, "Your Paytm cash is low");
 							//TODO verify message
 						}
 					} else {
@@ -6449,6 +6449,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				LinearLayout linearLayoutPaytmTutorial = (LinearLayout) dialog.findViewById(R.id.linearLayoutPaytmTutorial);
 				new ASSL(activity, (LinearLayout) dialog.findViewById(R.id.linearLayoutPaytmTutorial), 1134, 720, true);
 
+				RelativeLayout relativeLayoutAdjustable = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutAdjustable);
+
 				dialog.setCancelable(true);
 				dialog.setCanceledOnTouchOutside(true);
 
@@ -6476,7 +6478,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					}
 				});
 				dialog.show();
-				Prefs.with(activity).save(SPLabels.PAYTM_TUTORIAL_SHOWN, 1);
+
+				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) relativeLayoutAdjustable.getLayoutParams();
+				params.height = relativeLayoutWallet.getTop();
+				relativeLayoutAdjustable.setLayoutParams(params);
+
+				Prefs.with(activity).save(SPLabels.PAYTM_TUTORIAL_SHOWN, 0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

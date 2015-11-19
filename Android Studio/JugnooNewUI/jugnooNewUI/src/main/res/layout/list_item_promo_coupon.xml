@@ -45,7 +45,7 @@
         android:paddingTop="8px"
         android:text="SELECTED"
         android:textColor="@color/yellow"
-        android:textSize="24px"
+        android:textSize="26px"
 
         />
 

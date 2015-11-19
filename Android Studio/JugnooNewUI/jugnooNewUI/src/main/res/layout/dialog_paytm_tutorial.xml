@@ -8,6 +8,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/relativeLayoutAdjustable"
         android:layout_width="match_parent"
         android:layout_height="640px"
         android:background="@color/black_translucent_more"
