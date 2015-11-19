@@ -6354,12 +6354,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 			TextView textViewSelect = (TextView) dialog.findViewById(R.id.textViewSelect); textViewSelect.setTypeface(Fonts.latoRegular(activity));
+			TextView textViewJugnooCashInfo = (TextView) dialog.findViewById(R.id.textViewJugnooCashInfo); textViewJugnooCashInfo.setTypeface(Fonts.latoRegular(activity));
 
 			if(Data.userData.getJugnooBalance() > 0){
-				textViewSelect.append("\n"
-						+ "Jugnoo Cash ("
-						+activity.getResources().getString(R.string.rupee)+Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())
-						+") will be deducted first");
+				textViewJugnooCashInfo.setText("Jugnoo Cash ("
+						+ activity.getResources().getString(R.string.rupee) + Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())
+						+ ") will be deducted first");
+				textViewJugnooCashInfo.setVisibility(View.VISIBLE);
+			}
+			else{
+				textViewJugnooCashInfo.setVisibility(View.GONE);
 			}
 
 			//"Jugnoo Cash will be deducted first, irrespective of mode of payment"
@@ -6368,7 +6372,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			TextView textViewPaytmWalletValue = (TextView) dialog.findViewById(R.id.textViewPaytmWalletValue); textViewPaytmWalletValue.setTypeface(Fonts.latoRegular(activity));
 			TextView textViewCash = (TextView) dialog.findViewById(R.id.textViewCash); textViewCash.setTypeface(Fonts.latoRegular(activity));
 
+			ImageView imageViewPaytmSelection = (ImageView)dialog.findViewById(R.id.imageViewPaytmSelection);
+			ImageView imageViewCashSelection = (ImageView) dialog.findViewById(R.id.imageViewCashSelection);
+
 			textViewPaytmWalletValue.setText(getResources().getString(R.string.rupee)+ Data.userData.getPaytmBalanceStr());
+
+			if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
+				imageViewPaytmSelection.setImageResource(R.drawable.ic_payment_mode_pressed);
+				imageViewCashSelection.setImageResource(R.drawable.ic_payment_mode_selector);
+			} else{
+				imageViewPaytmSelection.setImageResource(R.drawable.ic_payment_mode_selector);
+				imageViewCashSelection.setImageResource(R.drawable.ic_payment_mode_pressed);
+			}
 
 			RelativeLayout relativeLayoutPaytm = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPaytm);
 			RelativeLayout relativeLayoutCash = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutCash);

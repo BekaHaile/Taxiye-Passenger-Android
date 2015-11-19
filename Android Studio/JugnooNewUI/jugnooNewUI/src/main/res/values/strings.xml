@@ -434,5 +434,11 @@
 <item>260,ZM</item>
 <item>263,ZW</item>
 </string-array>
+
+    <string name="payment_option_dialog_title">Select preferred payment option</string>
+    <string name="paytm">Paytm</string>
+    <string name="cash">Cash</string>
+    <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
+
 	
 </resources>
