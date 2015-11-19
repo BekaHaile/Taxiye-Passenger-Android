@@ -18,7 +18,9 @@ public enum AppLinkIndex {
 
 	ACCOUNT(7), // opens Account Screen
 
-	NOTIFICATION_CENTER(8) // opens Notification center Screen
+	NOTIFICATION_CENTER(8), // opens Notification center Screen
+
+	DRIVER_REFERRAL(9) // opens register screen with driver referral code filled
 
 	;
 

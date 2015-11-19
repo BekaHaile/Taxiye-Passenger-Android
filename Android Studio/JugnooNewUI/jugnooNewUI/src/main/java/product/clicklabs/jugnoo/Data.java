@@ -174,7 +174,7 @@ public class Data {
 
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
-    public static String deepLinkClassName = "";
+    public static String deepLinkClassName = "", deepLinkReferralCode = "";
 	public static int deepLinkIndex;
 	public static int deepLinkPickup = -1;
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
@@ -277,6 +277,7 @@ public class Data {
 	public static void getDeepLinkIndexFromIntent(Intent newIntent) {
 		Data.deepLinkIndex = -1;
 		Data.deepLinkPickup = -1;
+		Data.deepLinkReferralCode = "";
 		try {
 			Intent intent = newIntent;
 			String action = intent.getAction();
@@ -286,7 +287,7 @@ public class Data {
 
 			if(data.getQueryParameter("deepindex") != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
-
+				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
 			}
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
@@ -315,7 +316,7 @@ public class Data {
 
 				if(dataTarget.getQueryParameter("deepindex") != null){
 					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
-
+					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
 					Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 				}
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){

@@ -6,6 +6,8 @@ package product.clicklabs.jugnoo.utils;
 public interface FlurryEventNames {
 
     String
+
+			SIGNUP_THROUGH_SMS = "Sign-up through sms",
         SIGNUP = "Sign-up",
         SIGNUP_VIA_FACEBOOK = "Sign-up via Facebook",
         SIGNUP_FINAL = "Sign-up Submit",

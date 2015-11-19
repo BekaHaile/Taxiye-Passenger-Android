@@ -6483,7 +6483,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				params.height = relativeLayoutWallet.getTop();
 				relativeLayoutAdjustable.setLayoutParams(params);
 
-				Prefs.with(activity).save(SPLabels.PAYTM_TUTORIAL_SHOWN, 0);
+				Prefs.with(activity).save(SPLabels.PAYTM_TUTORIAL_SHOWN, 1);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
