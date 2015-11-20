@@ -1,10 +1,9 @@
 package product.clicklabs.jugnoo.datastructure;
 
 /**
- * Created by socomo20 on 11/4/15.
+ * Created by socomo20 on 11/20/15.
  */
 public enum PaytmPaymentState {
-
 	INIT(-1),
 	SUCCESS(1),
 	FAILURE(0);
