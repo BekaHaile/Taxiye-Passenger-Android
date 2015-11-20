@@ -260,7 +260,13 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                         final double distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
                                         final double timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+										runOnUiThread(new Runnable() {
 
+											@Override
+											public void run() {
+												DialogPopup.dismissLoadingDialog();
+											}
+										});
 
                                         runOnUiThread(new Runnable() {
 
@@ -333,7 +339,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 													textViewEstimateFare.setText("");
 													textViewConvenienceCharge.setText("");
 
-													getFareEstimate(FareEstimateActivity.this, sourceLatLng, distanceValue, timeValue);
+													getFareEstimate(FareEstimateActivity.this, sourceLatLng, distanceValue/1000, timeValue/60);
 
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
@@ -348,20 +354,45 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                 DialogPopup.alertPopup(FareEstimateActivity.this, "", "Fare could not be estimated between the selected pickup and drop location");
                                             }
                                         });
+										runOnUiThread(new Runnable() {
+
+											@Override
+											public void run() {
+												DialogPopup.dismissLoadingDialog();
+											}
+										});
                                     }
                                 }
+								else{
+									runOnUiThread(new Runnable() {
+
+										@Override
+										public void run() {
+											DialogPopup.dismissLoadingDialog();
+										}
+									});
+								}
                             }
+							else{
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										DialogPopup.dismissLoadingDialog();
+									}
+								});
+							}
                         } catch (Exception e) {
                             e.printStackTrace();
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									DialogPopup.dismissLoadingDialog();
+								}
+							});
                         }
 
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                DialogPopup.dismissLoadingDialog();
-                            }
-                        });
                     }
                 }).start();
             } else {
@@ -370,6 +401,13 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             }
         } catch (Exception e) {
             e.printStackTrace();
+			runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					DialogPopup.dismissLoadingDialog();
+				}
+			});
         }
     }
 
