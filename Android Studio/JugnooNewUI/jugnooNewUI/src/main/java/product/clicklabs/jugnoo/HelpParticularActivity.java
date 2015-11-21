@@ -60,14 +60,12 @@ public class HelpParticularActivity extends BaseActivity {
         progressBar = (ProgressWheel) findViewById(R.id.progressBar);
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
         textViewInfo.setTypeface(Fonts.latoRegular(this));
+
         webview = (WebView) findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setDatabaseEnabled(true);
 
-
-        //enable Javascript
-        webview.getSettings().setJavaScriptEnabled(true);
 
         //override the web client to open all links in the same webview
         webview.setWebViewClient(new MyWebViewClient1());

@@ -6063,7 +6063,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if (showDialogs) {
                                         DialogPopup.dismissLoadingDialog();
                                     }
-                                    startUIAfterGettingUserStatus();
+									if(!promoOpened) {
+										startUIAfterGettingUserStatus();
+									}
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
