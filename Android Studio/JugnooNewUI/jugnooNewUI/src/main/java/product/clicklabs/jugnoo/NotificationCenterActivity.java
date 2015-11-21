@@ -17,11 +17,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.ContactsEntityBean;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -77,7 +84,10 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
 		new GetNotificationsAsync().execute();
 
-		new GetAllContacts().execute();
+		//new GetAllContacts().execute();
+
+		/*Intent syncContactsIntent = new Intent(NotificationCenterActivity.this, ContactsUploadService.class);
+		startService(syncContactsIntent);*/
     }
 
 
@@ -115,14 +125,15 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 		}
 	}
 
-	class GetAllContacts extends AsyncTask<String, String, String>{
-
+	class GetAllContacts extends AsyncTask<String, String, ArrayList<ContactBean>>{
+		ArrayList<ContactBean> contactList = new ArrayList<ContactBean>();
 		@Override
-		protected String doInBackground(String... strings) {
+		protected ArrayList<ContactBean> doInBackground(String... strings) {
 			try {
-				/*ContentResolver cr = getContentResolver();
+				ContentResolver cr = getContentResolver();
 				Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                         null, null, null, null);
+
 				if (cur.getCount() > 0) {
                     while (cur.moveToNext()) {
                         String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
@@ -134,21 +145,81 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
                                     null,
                                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
                                     new String[]{id}, null);
+
                             while (pCur.moveToNext()) {
-                                String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                                Log.v("Name : ", "--> " + name + ", Phone No: ---> " + phoneNo);
+                                //String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                //Log.v("Name : ", "--> " + name + ", Phone No: ---> " + phoneNo);
+
+								ContactBean contactBean = new ContactBean();
+
+								// Log.e("Name :", name);
+								String phone = pCur
+										.getString(pCur
+												.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+								phone = phone.replace(" ","");
+								// Log.e("Email", email);
+
+
+								contactBean.setName(name);
+								contactBean.setPhone(phone);
+								if (phone != null) {
+									contactList.add(contactBean);
+								}
                             }
                             pCur.close();
                         }
                     }
-                }*/
+                }
 
-				getContactDetails();
+
+
+				Log.v("size is ","---> "+contactList.size());
+				for(int i=0; i<contactList.size(); i++){
+					Log.v("name ", contactList.get(i).getName().toString()+", Phone "+contactList.get(i).getPhone().toString());
+				}
+
+				loadList(contactList);
+
+				//getContactDetails();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "";
+			return contactList;
 		}
+
+		@Override
+		protected void onPostExecute(ArrayList<ContactBean> s) {
+			super.onPostExecute(s);
+
+			Log.v("task", "complete");
+			//textViewTitle.setText(contactList.get(0).getName().toString());
+
+		}
+	}
+
+	public void loadList(ArrayList<ContactBean> list) {
+		Set set = new TreeSet(new Comparator<ContactBean>() {
+			@Override
+			public int compare(ContactBean o1, ContactBean o2) {
+				if(o1.getName().toString().equalsIgnoreCase(o2.getName().toString())){
+					return 0;
+				}
+				return 1;
+			}
+		});
+
+		set.addAll(list);
+
+		System.out.println("\n***** After removing duplicates *******\n");
+
+		final ArrayList<ContactBean> newList = new ArrayList<ContactBean>(set);
+		Log.v("newList size","--->"+newList.size());
+
+		for(int i=0; i<newList.size(); i++){
+			Log.v("name ", newList.get(i).getName().toString()+", Phone "+newList.get(i).getPhone().toString());
+		}
+
+
 	}
 
 	public ArrayList<ContactsEntityBean> getContactDetails() {
@@ -156,10 +227,10 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 		ContentResolver cr = getContentResolver();
 		Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
 				null, null, null);
+
 		if (cur.getCount() > 0) {
 			while (cur.moveToNext()) {
-				String id = cur.getString(cur
-						.getColumnIndex(ContactsContract.Contacts._ID));
+				String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
 				Cursor cur1 = cr.query(
 						ContactsContract.CommonDataKinds.Email.CONTENT_URI,
 						null, ContactsContract.CommonDataKinds.Email.CONTACT_ID
@@ -177,8 +248,9 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 					String email = cur1
 							.getString(cur1
 									.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-
 					// Log.e("Email", email);
+
+
 					contactsEntityBean.setPhones(name);
 					contactsEntityBean.setEmails(email);
 					if (email != null) {

@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.SyncHttpClient;
 
 import java.net.URLDecoder;
 import java.security.KeyStore;
@@ -237,6 +238,7 @@ public class Data {
 
 	
 	public static AsyncHttpClient mainClient;
+	public static SyncHttpClient mainSyncClient;
 	
 	public static final int SOCKET_TIMEOUT = 30000;
 	public static final int CONNECTION_TIMEOUT = 30000;
@@ -262,6 +264,24 @@ public class Data {
 		return mainClient;
 	}
 
+	public static SyncHttpClient getSyncClient() {
+		if (mainSyncClient == null) {
+			mainSyncClient = new SyncHttpClient();
+			try {
+				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+				trustStore.load(null, null);
+				MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+				sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+				mainSyncClient.setSSLSocketFactory(sf);
+			} catch (Exception e) {
+				Log.e("exception in https hostname", "="+e.toString());
+			}
+			mainSyncClient.setConnectTimeout(CONNECTION_TIMEOUT);
+			mainSyncClient.setResponseTimeout(SOCKET_TIMEOUT);
+			mainSyncClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_TIMEOUT);
+		}
+		return mainSyncClient;
+	}
 
 
 

@@ -9,6 +9,7 @@ public class ContactsEntityBean {
     private HashSet<String> emails;
     private HashSet<String> phones;
     private HashSet<String> addresses;
+    private HashSet<String> name;
     private String contactId;
     private boolean checked = false;
 
@@ -16,7 +17,9 @@ public class ContactsEntityBean {
         this.emails = new HashSet<String>();
         this.phones = new HashSet<String>();
         this.addresses = new HashSet<String>();
+        this.name = new HashSet<String>();
     }
+
 
     public HashSet<String> getPhones() {
         return phones;
@@ -42,6 +45,16 @@ public class ContactsEntityBean {
         if (email == null)
             return;
         this.emails.add(email.trim());
+    }
+
+    public HashSet<String> getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name == null)
+            return;
+        this.name.add(name.trim());
     }
 
     public HashSet<String> getEmails() {

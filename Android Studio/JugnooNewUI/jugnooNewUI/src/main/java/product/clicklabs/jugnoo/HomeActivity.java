@@ -2752,6 +2752,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
+                        DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Do you want to make this ride free?", "Invite all your contacts to get 100% Cashback",
+                                "YES", "NO", new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //TODO show dialog
+                                Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
+                                syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
+                                syncContactsIntent.putExtra("session_id", Data.cSessionId);
+                                syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
+                                startService(syncContactsIntent);
+                            }
+                        }, new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                            }
+                        }, false, true);
+
+
+
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
 						relativeLayoutSearch.setVisibility(View.GONE);
@@ -5036,6 +5056,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.cEngagementId = jObj.getString("engagement_id");
 
             Data.cDriverId = jObj.getString("driver_id");
+
             String userName = jObj.getString("user_name");
             String driverPhone = jObj.getString("phone_no");
             String driverImage = jObj.getString("user_image");

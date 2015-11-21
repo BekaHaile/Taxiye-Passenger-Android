@@ -395,7 +395,8 @@
 
 
 
-
+        <service android:enabled="true"
+            android:name="product.clicklabs.jugnoo.ContactsUploadService" />
 
 
 
