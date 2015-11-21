@@ -930,7 +930,7 @@
                         android:id="@+id/linearLayoutInRideDriverInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/relativeLayoutInRideLowPaytmCash"
+                        android:layout_above="@+id/linearLayoutInRideBottom"
                         android:layout_marginBottom="60px"
                         android:layout_marginLeft="40px"
                         android:layout_marginRight="40px"
@@ -961,7 +961,7 @@
                                 android:layout_toRightOf="@+id/imageViewIRWallet"
                                 android:text="PAYTM WALLET"
                                 android:textColor="@color/grey_dark"
-                                android:textSize="26px"
+                                android:textSize="30px"
                                 />
 
                             <TextView
@@ -971,9 +971,9 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="20px"
                                 android:layout_alignParentRight="true"
-                                android:text="Rs. 0000000"
+                                android:text="Rs. 0"
                                 android:textColor="@color/grey_dark"
-                                android:textSize="26px"
+                                android:textSize="30px"
                                 android:gravity="right"
                                 />
 
@@ -1006,7 +1006,7 @@
                                 android:maxLines="2"
                                 android:text="Driver Name\nabc"
                                 android:textColor="@color/grey_dark"
-                                android:textSize="26px"/>
+                                android:textSize="30px"/>
 
 
                             <RelativeLayout
@@ -1055,7 +1055,7 @@
                                 android:maxLines="2"
                                 android:text="Driver\nEnroute"
                                 android:textColor="@color/grey_dark"
-                                android:textSize="26px"/>
+                                android:textSize="30px"/>
 
                         </RelativeLayout>
 
@@ -1110,25 +1110,47 @@
 
                     <!-- low jugnoo cash layout-->
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutInRideLowPaytmCash"
+                    <LinearLayout
+                        android:id="@+id/linearLayoutInRideBottom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/white">
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        >
 
                         <TextView
-                            android:id="@+id/textViewInRideLowPaytmCash"
+                            android:id="@+id/textViewInRideMinimumFare"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:maxLines="2"
-                            android:padding="10px"
-                            android:text="Paytm Cash is running low. Recharge now"
+                            android:padding="8px"
+                            android:text="Minimum Fare Rs. 15"
                             android:textColor="@color/grey_dark_more"
                             android:textSize="26px"
                             android:visibility="visible"/>
-                    </RelativeLayout>
+
+                        <ImageView
+                            android:layout_width="400px"
+                            android:layout_height="2px"
+                            android:layout_marginLeft="2px"
+                            android:layout_marginRight="2px"
+                            android:background="@color/grey_light"
+                            android:layout_gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/textViewInRideConvenienceCharge"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:maxLines="2"
+                            android:padding="8px"
+                            android:text="Convenience Charge Rs. 10"
+                            android:textColor="@color/grey_dark_more"
+                            android:textSize="26px"
+                            android:visibility="visible"/>
+                    </LinearLayout>
 
                     <!-- drop location layout-->
                     <RelativeLayout
