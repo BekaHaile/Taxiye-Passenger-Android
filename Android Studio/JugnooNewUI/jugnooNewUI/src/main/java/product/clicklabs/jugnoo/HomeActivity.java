@@ -1919,7 +1919,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
             }
 
-			if(Data.userData.paytmEnabled == 0 && Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) < 3){
+			if(Data.userData.paytmEnabled != 0 || Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) >= 3){
 				if(!Data.locationSettingsNoPressed) {
 					ReferralActions.incrementAppOpen(this);
 					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
