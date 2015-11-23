@@ -438,7 +438,7 @@
                         android:layout_alignParentBottom="true"
                         android:gravity="center_horizontal|bottom"
                         android:orientation="vertical"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         >
 
 
