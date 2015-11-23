@@ -2751,24 +2751,52 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         }
 
-
+                        //******** If return 0 then show popup, contact not saved in database.
+                        if(Data.userData.contactSaved == 0) {
                         DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Do you want to make this ride free?", "Invite all your contacts to get 100% Cashback",
                                 "YES", "NO", new OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                //TODO show dialog
-                                Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
-                                syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
-                                syncContactsIntent.putExtra("session_id", Data.cSessionId);
-                                syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
-                                startService(syncContactsIntent);
-                            }
-                        }, new OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                                    @Override
+                                    public void onClick(View view) {
+                                        //TODO show dialog
+                                        Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
+                                        syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
+                                        syncContactsIntent.putExtra("session_id", Data.cSessionId);
+                                        syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
+                                        startService(syncContactsIntent);
+                                    }
+                                }, new OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
 
-                            }
-                        }, false, true);
+                                    }
+                                },false, true);
+                        } else{
+
+                        }
+
+                        //******** If return 0 then show popup, contact not saved in database.
+                        /*//if(Data.userData.contactSaved == 0) {
+                            DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this, "Do you want to make this ride free?", "Invite all your contacts to get 100% Cashback",
+                                    "YES", "NO", false , new OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            //TODO show dialog
+                                            Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
+                                            syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
+                                            syncContactsIntent.putExtra("session_id", Data.cSessionId);
+                                            syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
+                                            startService(syncContactsIntent);
+                                        }
+                                    }, new OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                        }
+                                    });
+//                        } else{
+//
+//                        }*/
+
 
 
 

@@ -252,7 +252,7 @@ public class DialogPopup {
             dismissAlertPopup();
             dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-            dialog.setContentView(R.layout.dialog_custom_two_buttons);
+            dialog.setContentView(R.layout.dialog_upload_contacts);
 
             FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
             new ASSL(activity, frameLayout, 1134, 720, true);
@@ -339,6 +339,92 @@ public class DialogPopup {
             e.printStackTrace();
         }
     }
+
+	public static void uploadContactsTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext,
+								final boolean cancelable, final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative) {
+		try {
+			dismissAlertPopup();
+			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.dialog_custom_two_buttons);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, true);
+
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(cancelable);
+			dialog.setCanceledOnTouchOutside(cancelable);
+
+
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
+			textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog
+					.findViewById(R.id.textMessage);
+			textMessage.setTypeface(Fonts.latoRegular(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+			textHead.setText(title);
+			textMessage.setText(message);
+
+
+
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+			btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			if(!"".equalsIgnoreCase(okText)){
+				btnOk.setText(okText);
+			}
+
+			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+			btnCancel.setTypeface(Fonts.latoRegular(activity));
+			if(!"".equalsIgnoreCase(canceltext)){
+				btnCancel.setText(canceltext);
+			}
+
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+					listenerPositive.onClick(view);
+				}
+			});
+
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					listenerNegative.onClick(v);
+				}
+			});
+
+
+			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+				}
+			});
+
+
+			dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if(cancelable){
+						dismissAlertPopup();
+					}
+				}
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	

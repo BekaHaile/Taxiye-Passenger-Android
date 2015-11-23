@@ -14,13 +14,13 @@ public class UserData {
 	public double sharingFareFixed;
 	public int showJugnooSharing;
 	private String paytmStatus;
-	public int paytmEnabled, paytmError;
+	public int paytmEnabled, paytmError, contactSaved;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
-			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled){
+			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled, int contactSaved){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -53,6 +53,7 @@ public class UserData {
 		this.paytmBalance = 0;
 		this.paytmEnabled = paytmEnabled;
 		this.paytmError = 0;
+		this.contactSaved = contactSaved;
 
 		if(1 == this.paytmEnabled) {
 			this.paytmStatus = "";

@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.ContactBean;
+import product.clicklabs.jugnoo.utils.ContactsEntityBean;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
@@ -76,7 +77,7 @@ public class ContactsUploadService extends IntentService {
             mSyncQueue = new ArrayDeque<>();
         }
         contacts.close();
-        syncQueue();
+
 
 
     }
@@ -127,7 +128,7 @@ public class ContactsUploadService extends IntentService {
                 while (cur.moveToNext()) {
                     String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                     String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                    String email = "a";
+                    String email = "null";
                     if (Integer.parseInt(cur.getString(
                             cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                         Cursor pCur = cr.query(
@@ -137,8 +138,6 @@ public class ContactsUploadService extends IntentService {
                                 new String[]{id}, null);
 
                         while (pCur.moveToNext()) {
-
-
                             ContactBean contactBean = new ContactBean();
 
                             // Log.e("Name :", name);
@@ -146,9 +145,6 @@ public class ContactsUploadService extends IntentService {
                                     .getString(pCur
                                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                             phone = phone.replace(" ","");
-
-                            // Log.e("Email", email);
-
 
                             contactBean.setName(name);
                             contactBean.setPhone(phone);
@@ -161,7 +157,44 @@ public class ContactsUploadService extends IntentService {
                     }
                 }
             }
+            cur.close();
 
+            ContentResolver cr1 = getContentResolver();
+            Cursor emailCur = cr1.query(ContactsContract.Contacts.CONTENT_URI, null,
+                    null, null, null);
+
+            if (emailCur.getCount() > 0) {
+                while (emailCur.moveToNext()) {
+                    String id = emailCur.getString(emailCur.getColumnIndex(ContactsContract.Contacts._ID));
+                    Cursor cur1 = cr1.query(
+                            ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                            null, ContactsContract.CommonDataKinds.Email.CONTACT_ID
+                                    + " = ?", new String[]{
+                                    id
+                            }, null);
+                    String phone = "null";
+                    while (cur1.moveToNext()) {
+                        ContactBean contactBean = new ContactBean();
+                        // to get the contact names
+                        String name = cur1
+                                .getString(cur1
+                                        .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+
+                        String email = cur1
+                                .getString(cur1
+                                        .getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+
+                        contactBean.setName(name);
+                        contactBean.setPhone(phone);
+                        contactBean.setEmail(email);
+                        if (email != null) {
+                            contactList.add(contactBean);
+                        }
+                    }
+                    cur1.close();
+                }
+            }
+            emailCur.close();
 
 
             Log.v("size is ", "---> " + contactList.size());
@@ -201,7 +234,7 @@ public class ContactsUploadService extends IntentService {
 
         ContactSyncEntry syncEntry = null;
         for(int i=0; i<newList.size(); i++){
-            //Log.v("name ", newList.get(i).getName().toString()+", Phone "+newList.get(i).getPhone().toString()+", Email "+newList.get(i).getEmail().toString());
+            Log.v("name ", newList.get(i).getName().toString()+", Phone "+newList.get(i).getPhone().toString()+", Email "+newList.get(i).getEmail().toString());
 
             if (syncEntry == null) {
                 syncEntry = new ContactSyncEntry(UPLOAD_BATCH_SIZE);
@@ -225,6 +258,7 @@ public class ContactsUploadService extends IntentService {
         }
 
         Log.d(TAG, "mSyncQueue size = " + mSyncQueue.size());
+        syncQueue();
     }
 
     /**
@@ -253,7 +287,7 @@ public class ContactsUploadService extends IntentService {
     private void syncQueue() {
         Log.d(TAG, "Pending Syncs: %d " + (mSyncQueue != null ? mSyncQueue.size() : 0));
         if (mSyncQueue != null && !mSyncQueue.isEmpty()) {
-
+            try {
             for (ContactSyncEntry currentSyncEntry : mSyncQueue) {
                 //currentSyncEntry.setSynced(true);
                 Log.d(TAG, "Numbers to sync: %d "+ currentSyncEntry.numbersToSync.size());
@@ -294,7 +328,7 @@ public class ContactsUploadService extends IntentService {
 
 
                 JSONArray jsonArray = new JSONArray();
-                try {
+
                     for(int i=0; i<contactsList.size(); i++){
                         JSONObject json = new JSONObject();
                         json.put("name", contactsList.get(i).getName().toString());
@@ -311,10 +345,9 @@ public class ContactsUploadService extends IntentService {
 
                     // Call Api
                     uploadContactsApi(jsonStr, currentSyncEntry);
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+            }
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
     }
@@ -359,7 +392,7 @@ public class ContactsUploadService extends IntentService {
                             Log.i("Server response request_dup_registration", "response = " + response);
 
                             try {
-
+                                Data.userData.contactSaved = 1;
                             }  catch (Exception exception) {
                                 exception.printStackTrace();
                                 //DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -374,6 +407,53 @@ public class ContactsUploadService extends IntentService {
         else {
             //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
+    }
+
+
+    public ArrayList<ContactsEntityBean> getContactDetails() {
+        ArrayList<ContactsEntityBean> contactList = new ArrayList<ContactsEntityBean>();
+        ContentResolver cr = getContentResolver();
+        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
+                null, null, null);
+
+        if (cur.getCount() > 0) {
+            while (cur.moveToNext()) {
+                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                Cursor cur1 = cr.query(
+                        ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                        null, ContactsContract.CommonDataKinds.Email.CONTACT_ID
+                                + " = ?", new String[] {
+                                id
+                        }, null);
+                while (cur1.moveToNext()) {
+                    ContactsEntityBean contactsEntityBean = new ContactsEntityBean();
+                    // to get the contact names
+                    String name = cur1
+                            .getString(cur1
+                                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+
+                    // Log.e("Name :", name);
+                    String email = cur1
+                            .getString(cur1
+                                    .getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                    // Log.e("Email", email);
+
+
+                    contactsEntityBean.setPhones(name);
+                    contactsEntityBean.setEmails(email);
+                    if (email != null) {
+                        contactList.add(contactsEntityBean);
+                    }
+                }
+                cur1.close();
+            }
+        }
+
+        Log.v("size is ","---> "+contactList.size());
+        for(int i=0; i<contactList.size(); i++){
+            Log.v("name ", contactList.get(i).getPhones()+", email "+contactList.get(i).getEmails());
+        }
+        return contactList;
     }
 
     /**
@@ -411,7 +491,7 @@ public class ContactsUploadService extends IntentService {
 
         public void addNumber(String number) {
 
-            if (!TextUtils.isEmpty(number) && !numbersToSync.contains(number)) {
+            if (!TextUtils.isEmpty(number)) {
                 numbersToSync.add(number);
             }
         }
