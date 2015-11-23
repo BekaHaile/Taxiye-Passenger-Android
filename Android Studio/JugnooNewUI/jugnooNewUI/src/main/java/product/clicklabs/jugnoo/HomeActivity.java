@@ -1919,7 +1919,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
             }
 
-			if(Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN, 0) != 0){
+			if(Data.userData.paytmEnabled == 0 && Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) < 3){
 				if(!Data.locationSettingsNoPressed) {
 					ReferralActions.incrementAppOpen(this);
 					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
@@ -6440,7 +6440,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void showPaytmTutorialPopup(final Activity activity) {
 		try {
-			if(Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN, 0) == 0) {
+			if(Data.userData.paytmEnabled == 0 && Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) < 3) {
 				imageViewMenu.performClick();
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -6483,7 +6483,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				params.height = relativeLayoutWallet.getTop();
 				relativeLayoutAdjustable.setLayoutParams(params);
 
-				Prefs.with(activity).save(SPLabels.PAYTM_TUTORIAL_SHOWN, 1);
+				Prefs.with(activity).save(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, (Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0)+1));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

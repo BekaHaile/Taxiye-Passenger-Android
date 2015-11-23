@@ -37,7 +37,7 @@ public class SPLabels {
 	PAYTM_CHECK_BALANCE_LAST_TIME = "paytmCheckBalanceLastTime",
 	PREFERRED_PAYMENT_OPTION = "preferredPaymentOption",
 
-	PAYTM_TUTORIAL_SHOWN = "paytm_tutorial_shown" // to clear on logout
+	PAYTM_TUTORIAL_SHOWN_COUNT = "paytm_tutorial_shown_count"
 
             ;
 
