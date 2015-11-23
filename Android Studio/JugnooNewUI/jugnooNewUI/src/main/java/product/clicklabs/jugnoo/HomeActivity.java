@@ -373,6 +373,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	public static final long PAYTM_CHECK_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
+	public static final int PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT = 1;
+
 
 
     public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
@@ -1919,7 +1921,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
             }
 
-			if(Data.userData.paytmEnabled != 0 || Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) >= 3){
+			if(Data.userData.paytmEnabled != 0 || Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) >= PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT){
 				if(!Data.locationSettingsNoPressed) {
 					ReferralActions.incrementAppOpen(this);
 					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
@@ -6440,7 +6442,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void showPaytmTutorialPopup(final Activity activity) {
 		try {
-			if(Data.userData.paytmEnabled == 0 && Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) < 3) {
+			if(Data.userData.paytmEnabled == 0 && Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) < PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT) {
 				imageViewMenu.performClick();
 				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
