@@ -344,7 +344,8 @@ public class ContactsUploadService extends IntentService {
                     System.out.println("jsonString: " + jsonStr);
 
                     // Call Api
-                    uploadContactsApi(jsonStr, currentSyncEntry);
+                    //uploadContactsApi(jsonStr, currentSyncEntry);
+                    doneWithSync();
             }
             }catch (Exception e){
                 e.printStackTrace();

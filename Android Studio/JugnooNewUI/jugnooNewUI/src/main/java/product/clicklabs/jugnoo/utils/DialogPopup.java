@@ -362,7 +362,7 @@ public class DialogPopup {
 			textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			TextView textMessage = (TextView) dialog
 					.findViewById(R.id.textMessage);
-			textMessage.setTypeface(Fonts.latoRegular(activity));
+			textMessage.setTypeface(Fonts.latoLight(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -379,7 +379,7 @@ public class DialogPopup {
 			}
 
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-			btnCancel.setTypeface(Fonts.latoRegular(activity));
+			btnCancel.setTypeface(Fonts.latoLight(activity));
 			if(!"".equalsIgnoreCase(canceltext)){
 				btnCancel.setText(canceltext);
 			}

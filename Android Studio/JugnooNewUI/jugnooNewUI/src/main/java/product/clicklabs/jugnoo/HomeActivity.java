@@ -2752,7 +2752,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
                         //******** If return 0 then show popup, contact not saved in database.
-                        if(Data.userData.contactSaved == 0) {
+                       /* if(Data.userData.contactSaved == 0) {
                         DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Do you want to make this ride free?", "Invite all your contacts to get 100% Cashback",
                                 "YES", "NO", new OnClickListener() {
                                     @Override
@@ -2772,12 +2772,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 },false, true);
                         } else{
 
-                        }
+                        }*/
 
                         //******** If return 0 then show popup, contact not saved in database.
-                        /*//if(Data.userData.contactSaved == 0) {
-                            DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this, "Do you want to make this ride free?", "Invite all your contacts to get 100% Cashback",
-                                    "YES", "NO", false , new OnClickListener() {
+                        if(Data.userData.contactSaved == 0) {
+                            DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this, getResources().getString(R.string.upload_contact_title),
+                                    getResources().getString(R.string.upload_contact_message), getResources().getString(R.string.upload_contact_yes),
+                                    getResources().getString(R.string.upload_contact_no_thanks), false , new OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             //TODO show dialog
@@ -2793,9 +2794,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                         }
                                     });
-//                        } else{
-//
-//                        }*/
+                        } else{
+
+                        }
 
 
 
