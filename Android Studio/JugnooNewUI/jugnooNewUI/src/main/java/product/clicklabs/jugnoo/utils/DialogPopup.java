@@ -252,7 +252,7 @@ public class DialogPopup {
             dismissAlertPopup();
             dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-            dialog.setContentView(R.layout.dialog_upload_contacts);
+            dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
             FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
             new ASSL(activity, frameLayout, 1134, 720, true);
@@ -346,7 +346,7 @@ public class DialogPopup {
 			dismissAlertPopup();
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_custom_two_buttons);
+			dialog.setContentView(R.layout.dialog_upload_contacts);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
@@ -362,7 +362,7 @@ public class DialogPopup {
 			textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			TextView textMessage = (TextView) dialog
 					.findViewById(R.id.textMessage);
-			textMessage.setTypeface(Fonts.latoLight(activity));
+			textMessage.setTypeface(Fonts.latoRegular(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -379,7 +379,7 @@ public class DialogPopup {
 			}
 
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-			btnCancel.setTypeface(Fonts.latoLight(activity));
+			btnCancel.setTypeface(Fonts.latoRegular(activity));
 			if(!"".equalsIgnoreCase(canceltext)){
 				btnCancel.setText(canceltext);
 			}

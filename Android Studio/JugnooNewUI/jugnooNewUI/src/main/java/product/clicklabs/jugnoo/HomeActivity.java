@@ -1348,6 +1348,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
 					FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
 				}
+
+                Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
 			}
 		});
 
@@ -2775,7 +2777,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }*/
 
                         //******** If return 0 then show popup, contact not saved in database.
-                        if(Data.userData.contactSaved == 0) {
+                        if(Data.userData.contactSaved == 0 && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)) {
                             DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this, getResources().getString(R.string.upload_contact_title),
                                     getResources().getString(R.string.upload_contact_message), getResources().getString(R.string.upload_contact_yes),
                                     getResources().getString(R.string.upload_contact_no_thanks), false , new OnClickListener() {
@@ -2791,7 +2793,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     }, new OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-
+                                            Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                         }
                                     });
                         } else{
