@@ -1261,7 +1261,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
-				FlurryEventLogger.event(NOTIFICATION_CENTER_DRAWER);
+				FlurryEventLogger.event(NOTIFICATION_CENTER_MENU);
 			}
 		});
 
@@ -1346,13 +1346,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						callRequestRide = false;
 						DialogPopup.alertPopup(activity, "", "You do not have Paytm cash, Please select payment method as Cash");
 					}
+					FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
 				} else {
+					FlurryEventLogger.event(CASH_SELECTED_WHEN_REQUESTING);
 					callRequestRide = true;
 				}
 				if(callRequestRide){
 					promoCouponSelectedForRide = promotionsListAdapter.getSelectedCoupon();
 					callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
 					FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
+					if(promoCouponSelectedForRide.id > 0){
+						FlurryEventLogger.event(COUPONS_SELECTED);
+					} else{
+						FlurryEventLogger.event(COUPON_NOT_SELECTED);
+					}
 				}
 			}
 		});

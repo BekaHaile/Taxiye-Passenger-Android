@@ -69,6 +69,32 @@ public class Utils {
 			}
 		}
 	}
+
+	/**
+	 * Compares two float values with epsilon precision
+	 * @param f1 float value 1
+	 * @param f2 float value 2
+	 * @return 1 if d1 > d2,
+	 * -1 if d1 < d2 &
+	 * 0 if d1 == d2
+	 */
+	public static int compareFloat(float f1, float f2){
+		if(f1 == f2){
+			return 0;
+		}
+		else{
+			float epsilon = 0.0000001f;
+			if((f1 - f2) > epsilon){
+				return 1;
+			}
+			else if((f1 - f2) < epsilon){
+				return -1;
+			}
+			else{
+				return 0;
+			}
+		}
+	}
 	
 	
 	/**

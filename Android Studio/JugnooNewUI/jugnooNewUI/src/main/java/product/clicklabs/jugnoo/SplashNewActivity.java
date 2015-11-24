@@ -304,6 +304,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
+				FlurryEventLogger.event(CALL_WHEN_NO_INTERNET);
 			}
 		});
 
