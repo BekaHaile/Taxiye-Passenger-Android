@@ -334,6 +334,7 @@ public class Data {
 		}
 
 		Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+		Log.e("deepLinkReferralCode =", "=" + Data.deepLinkReferralCode);
 	}
 
 	

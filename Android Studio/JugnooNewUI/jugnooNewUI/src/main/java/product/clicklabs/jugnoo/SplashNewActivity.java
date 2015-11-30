@@ -121,15 +121,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
 						try {
 
-							if(referringParams.has("pickup_lat") && referringParams.has("pickup_lng")){
+							if (referringParams.has("pickup_lat") && referringParams.has("pickup_lng")) {
 								Data.deepLinkPickup = 1;
 								Data.deepLinkPickupLatitude = Double.parseDouble(referringParams.optString("pickup_lat"));
 								Data.deepLinkPickupLongitude = Double.parseDouble(referringParams.optString("pickup_lng"));
-							}
-							else{
-								if(Data.deepLinkIndex == -1){
+							} else {
+								if (Data.deepLinkIndex == -1) {
 									Data.deepLinkIndex = referringParams.optInt("deepindex", -1);
 									Data.deepLinkReferralCode = referringParams.optString("referral_code", "");
+									Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
+									if ("".equalsIgnoreCase(pair.first)
+											&& !"".equalsIgnoreCase(Data.deviceToken)) {
+										sendToRegisterThroughSms(Data.deepLinkReferralCode);
+									}
 								}
 							}
 
@@ -143,6 +147,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					}
 				}
 			}, this.getIntent().getData(), this);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

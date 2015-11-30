@@ -153,7 +153,7 @@ public class ReferralActions implements FlurryEventNames {
                                     facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
                                             Data.referralMessages.fbShareCaption,
                                             Data.referralMessages.fbShareDescription,
-                                            link + "?deepindex=0" + "&referral_code=" + Data.userData.referralCode,
+                                            link,
                                             Data.userData.jugnooFbBanner);
 
                                     //30.707810, 76.761957
@@ -166,7 +166,9 @@ public class ReferralActions implements FlurryEventNames {
                             public void onBranchError(String error) {
                                 Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
                             }
-                        }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK, SPLabels.BRANCH_FACEBOOK_LINK, Data.userData.userIdentifier);
+                        }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK,
+                                SPLabels.BRANCH_FACEBOOK_LINK,
+                                Data.userData.userIdentifier, Data.userData.referralCode);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -190,20 +192,17 @@ public class ReferralActions implements FlurryEventNames {
                 public void onBranchLinkCreated(String link) {
                     PackageManager pm = activity.getPackageManager();
                     try {
-                        if(Data.userData != null) {
-                            Intent waIntent = new Intent(Intent.ACTION_SEND);
-                            waIntent.setType("text/plain");
-                            String text = Data.referralMessages.referralSharingMessage;
+                        Intent waIntent = new Intent(Intent.ACTION_SEND);
+                        waIntent.setType("text/plain");
+                        String text = Data.referralMessages.referralSharingMessage;
 
-                            PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-                            Log.d("info", "=" + info);
-                            waIntent.setPackage("com.whatsapp");
+                        PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+                        Log.d("info", "=" + info);
+                        waIntent.setPackage("com.whatsapp");
 
-                            waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n"
-                                    + link + "?deepindex=0"
-                                    + "&referral_code=" + Data.userData.referralCode);
-                            activity.startActivity(Intent.createChooser(waIntent, "Share with"));
-                        }
+                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n"
+                                + link);
+                        activity.startActivity(Intent.createChooser(waIntent, "Share with"));
                     } catch (PackageManager.NameNotFoundException e) {
                         Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
                     }
@@ -213,7 +212,9 @@ public class ReferralActions implements FlurryEventNames {
                 public void onBranchError(String error) {
                     Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP, SPLabels.BRANCH_WHATSAPP_LINK, Data.userData.userIdentifier);
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
+                    SPLabels.BRANCH_WHATSAPP_LINK,
+                    Data.userData.userIdentifier, Data.userData.referralCode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -226,21 +227,20 @@ public class ReferralActions implements FlurryEventNames {
             new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
-                    if(Data.userData != null) {
-                        Uri sms_uri = Uri.parse("smsto:");
-                        Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
-                        sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n"
-                                + link + "?deepindex=0"
-                                + "&referral_code=" + Data.userData.referralCode);
-                        activity.startActivity(sms_intent);
-                    }
+                    Uri sms_uri = Uri.parse("smsto:");
+                    Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
+                    sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n"
+                            + link);
+                    activity.startActivity(sms_intent);
                 }
 
                 @Override
                 public void onBranchError(String error) {
                     Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS, SPLabels.BRANCH_SMS_LINK, Data.userData.userIdentifier);
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS,
+                    SPLabels.BRANCH_SMS_LINK,
+                    Data.userData.userIdentifier, Data.userData.referralCode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -253,23 +253,22 @@ public class ReferralActions implements FlurryEventNames {
             new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
-                    if(Data.userData != null) {
-                        Intent email = new Intent(Intent.ACTION_SEND);
-                        email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
-                        email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-                        email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
-                                + link + "?deepindex=0"
-                                + "&referral_code=" + Data.userData.referralCode); //
-                        email.setType("message/rfc822");
-                        activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
-                    }
+                    Intent email = new Intent(Intent.ACTION_SEND);
+                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+                    email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
+                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
+                            + link); //
+                    email.setType("message/rfc822");
+                    activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
                 }
 
                 @Override
                 public void onBranchError(String error) {
                     Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
                 }
-            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL, SPLabels.BRANCH_EMAIL_LINK, Data.userData.userIdentifier);
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
+                    SPLabels.BRANCH_EMAIL_LINK,
+                    Data.userData.userIdentifier, Data.userData.referralCode);
         } catch (Exception e) {
             e.printStackTrace();
         }
