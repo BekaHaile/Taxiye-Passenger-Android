@@ -149,15 +149,17 @@ public class ReferralActions implements FlurryEventNames {
                         new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                             @Override
                             public void onBranchLinkCreated(String link) {
-                                facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
-                                    Data.referralMessages.fbShareCaption,
-                                    Data.referralMessages.fbShareDescription,
-                                    link+"?deepindex=0",
-                                    Data.userData.jugnooFbBanner);
+                                if(Data.userData != null) {
+                                    facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
+                                            Data.referralMessages.fbShareCaption,
+                                            Data.referralMessages.fbShareDescription,
+                                            link + "?deepindex=0" + "&referral_code=" + Data.userData.referralCode,
+                                            Data.userData.jugnooFbBanner);
 
-								//30.707810, 76.761957
-								// ?pickup_lat=30.707810&pickup_lng=76.761957
-								//http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0
+                                    //30.707810, 76.761957
+                                    // ?pickup_lat=30.707810&pickup_lng=76.761957
+                                    //http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0
+                                }
                             }
 
                             @Override
@@ -188,16 +190,20 @@ public class ReferralActions implements FlurryEventNames {
                 public void onBranchLinkCreated(String link) {
                     PackageManager pm = activity.getPackageManager();
                     try {
-                        Intent waIntent = new Intent(Intent.ACTION_SEND);
-                        waIntent.setType("text/plain");
-                        String text = Data.referralMessages.referralSharingMessage;
+                        if(Data.userData != null) {
+                            Intent waIntent = new Intent(Intent.ACTION_SEND);
+                            waIntent.setType("text/plain");
+                            String text = Data.referralMessages.referralSharingMessage;
 
-                        PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-                        Log.d("info", "=" + info);
-                        waIntent.setPackage("com.whatsapp");
+                            PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+                            Log.d("info", "=" + info);
+                            waIntent.setPackage("com.whatsapp");
 
-                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n" + link+"?deepindex=0");
-                        activity.startActivity(Intent.createChooser(waIntent, "Share with"));
+                            waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n"
+                                    + link + "?deepindex=0"
+                                    + "&referral_code=" + Data.userData.referralCode);
+                            activity.startActivity(Intent.createChooser(waIntent, "Share with"));
+                        }
                     } catch (PackageManager.NameNotFoundException e) {
                         Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
                     }
@@ -220,10 +226,14 @@ public class ReferralActions implements FlurryEventNames {
             new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
-                    Uri sms_uri = Uri.parse("smsto:");
-                    Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
-                    sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n" + link+"?deepindex=0");
-                    activity.startActivity(sms_intent);
+                    if(Data.userData != null) {
+                        Uri sms_uri = Uri.parse("smsto:");
+                        Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
+                        sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n"
+                                + link + "?deepindex=0"
+                                + "&referral_code=" + Data.userData.referralCode);
+                        activity.startActivity(sms_intent);
+                    }
                 }
 
                 @Override
@@ -243,12 +253,16 @@ public class ReferralActions implements FlurryEventNames {
             new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
-                    Intent email = new Intent(Intent.ACTION_SEND);
-                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
-                    email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + link+"?deepindex=0"); //
-                    email.setType("message/rfc822");
-                    activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
+                    if(Data.userData != null) {
+                        Intent email = new Intent(Intent.ACTION_SEND);
+                        email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+                        email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
+                        email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
+                                + link + "?deepindex=0"
+                                + "&referral_code=" + Data.userData.referralCode); //
+                        email.setType("message/rfc822");
+                        activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
+                    }
                 }
 
                 @Override

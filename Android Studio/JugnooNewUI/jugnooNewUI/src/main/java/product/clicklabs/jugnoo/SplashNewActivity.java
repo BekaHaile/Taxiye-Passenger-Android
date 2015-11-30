@@ -479,13 +479,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 	private void sendToRegisterThroughSms(String referralCode){
-		FlurryEventLogger.event(SIGNUP_THROUGH_SMS);
-		RegisterScreen.facebookLogin = false;
-		Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
-		intent.putExtra("referral_code", referralCode);
-		startActivity(intent);
-		finish();
-		overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		if(!"".equalsIgnoreCase(referralCode)) {
+			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
+			RegisterScreen.facebookLogin = false;
+			Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
+			intent.putExtra("referral_code", referralCode);
+			startActivity(intent);
+			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		}
 	}
 
 	public void getDeviceToken() {
@@ -688,9 +690,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			if (!AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 			}
-			if (AppLinkIndex.DRIVER_REFERRAL.getOrdinal() == Data.deepLinkIndex) {
-				sendToRegisterThroughSms(Data.deepLinkReferralCode);
-			}
+			sendToRegisterThroughSms(Data.deepLinkReferralCode);
 		}
 	}
 
