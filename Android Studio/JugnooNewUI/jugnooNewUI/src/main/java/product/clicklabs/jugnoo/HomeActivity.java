@@ -404,7 +404,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-		Data.getDeepLinkIndexFromIntent(getIntent());
+//		Data.getDeepLinkIndexFromIntent(getIntent());
 
 		EventsHolder.displayPushHandler = this;
 

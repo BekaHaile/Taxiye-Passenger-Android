@@ -160,7 +160,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	public void onNewIntent(Intent intent) {
 		this.setIntent(intent);
-//		Data.getDeepLinkIndexFromIntent(intent);
 	}
 
 
@@ -485,6 +484,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void sendToRegisterThroughSms(String referralCode){
 		if(!"".equalsIgnoreCase(referralCode)) {
+			Data.deepLinkIndex = -1;
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
 			RegisterScreen.facebookLogin = false;
 			Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
