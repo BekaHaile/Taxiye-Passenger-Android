@@ -27,7 +27,7 @@ public class BranchMetricsUtils {
     }
 
     public void getBranchLinkForChannel(String channel, final String spKey, final String userIdentifier,
-                                        final String referralCode){
+                                        final String referralCode, final String referringUserName){
         String existingUrl = Prefs.with(context).getString(spKey, "");
         String existingUserIdentifier = Prefs.with(context).getString(SPLabels.USER_IDENTIFIER, "");
         if(!userIdentifier.equalsIgnoreCase(existingUserIdentifier)){
@@ -40,6 +40,7 @@ public class BranchMetricsUtils {
                 params.put("referring_user_identifier", userIdentifier);
 				params.put("deepindex", "0");
                 params.put("referral_code", referralCode);
+                params.put("referring_user_name", referringUserName);
             } catch (Exception ex) { }
 
             Branch branch = Branch.getInstance(context);

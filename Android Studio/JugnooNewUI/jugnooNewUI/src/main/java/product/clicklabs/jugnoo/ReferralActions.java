@@ -168,7 +168,7 @@ public class ReferralActions implements FlurryEventNames {
                             }
                         }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK,
                                 SPLabels.BRANCH_FACEBOOK_LINK,
-                                Data.userData.userIdentifier, Data.userData.referralCode);
+                                Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -214,7 +214,7 @@ public class ReferralActions implements FlurryEventNames {
                 }
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
                     SPLabels.BRANCH_WHATSAPP_LINK,
-                    Data.userData.userIdentifier, Data.userData.referralCode);
+                    Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -240,7 +240,7 @@ public class ReferralActions implements FlurryEventNames {
                 }
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS,
                     SPLabels.BRANCH_SMS_LINK,
-                    Data.userData.userIdentifier, Data.userData.referralCode);
+                    Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -268,7 +268,7 @@ public class ReferralActions implements FlurryEventNames {
                 }
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
                     SPLabels.BRANCH_EMAIL_LINK,
-                    Data.userData.userIdentifier, Data.userData.referralCode);
+                    Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName);
         } catch (Exception e) {
             e.printStackTrace();
         }
