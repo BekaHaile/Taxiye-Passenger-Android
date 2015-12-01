@@ -211,8 +211,10 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
-				}
-				else{
+				} else if(Data.userData.getPaytmStatus().equalsIgnoreCase("")){
+                    showPaytmActiveUI();
+                    textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" --");
+                } else{
 					showPaytmInactiveUI();
 				}
 			}

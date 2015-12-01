@@ -1930,8 +1930,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			if(Data.userData.paytmEnabled != 0 || Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) >= PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT){
 				if(!Data.locationSettingsNoPressed) {
-					ReferralActions.incrementAppOpen(this);
-					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
+//					ReferralActions.incrementAppOpen(this);
+//					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
 				}
 			}
 			new Handler().postDelayed(new Runnable() {
@@ -2986,7 +2986,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		if (PassengerScreenMode.P_IN_RIDE == mode && Data.userData != null) {
 			if (HomeActivity.rechargedOnce) {
 				textViewInRideLowPaytmCash.setVisibility(View.GONE);
-			} else if (Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
+			} else if (Data.userData.paytmEnabled == 1
+                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
 					&& Data.userData.getTotalWalletBalance() < MIN_BALANCE_ALERT_VALUE) {
 				textViewInRideLowPaytmCash.setVisibility(View.VISIBLE);
 			} else {
