@@ -609,7 +609,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.GONE);
 				imageViewRideNow.setVisibility(View.GONE);
 
-
+                setGoogleMapPadding(50);
 				updatePreferredPaymentOptionUI();
 
                 if(totalPromoCoupons > 0){
@@ -2284,6 +2284,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
+            updateInRideAddPaytmButtonText();
             updateLowJugnooCashBanner(passengerScreenMode);
         } catch (Exception e) {
             e.printStackTrace();
@@ -2913,7 +2914,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void updateInRideAddPaytmButtonText(){
 		try{
-			if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+            if (Data.userData.paytmEnabled == 1) {
 				buttonAddPaytmCash.setText("Add Paytm Cash");
 			}
 			else{

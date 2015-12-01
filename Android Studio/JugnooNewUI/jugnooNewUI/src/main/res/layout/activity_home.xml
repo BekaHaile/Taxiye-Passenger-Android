@@ -438,7 +438,7 @@
                         android:layout_alignParentBottom="true"
                         android:gravity="center_horizontal|bottom"
                         android:orientation="vertical"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         >
 
 
@@ -627,7 +627,7 @@
                                 android:id="@+id/buttonGetARide"
                                 android:layout_width="648px"
                                 android:layout_height="95px"
-                                android:layout_marginBottom="16px"
+                                android:layout_marginBottom="36px"
                                 android:layout_marginTop="0px"
                                 android:background="@drawable/button_yellow"
                                 android:text="GET A RIDE"

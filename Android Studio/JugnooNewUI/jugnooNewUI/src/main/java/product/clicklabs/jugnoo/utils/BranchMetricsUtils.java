@@ -41,6 +41,7 @@ public class BranchMetricsUtils {
 				params.put("deepindex", "0");
                 params.put("referral_code", referralCode);
                 params.put("referring_user_name", referringUserName);
+                Log.e("branch link params", ""+params.toString());
             } catch (Exception ex) { }
 
             Branch branch = Branch.getInstance(context);
