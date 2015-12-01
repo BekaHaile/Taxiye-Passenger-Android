@@ -1330,7 +1330,6 @@
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_above="@+id/imageViewPoweredByGoogleSearch"
                     android:layout_below="@+id/relativeLayoutSearchBar"
                     >
 

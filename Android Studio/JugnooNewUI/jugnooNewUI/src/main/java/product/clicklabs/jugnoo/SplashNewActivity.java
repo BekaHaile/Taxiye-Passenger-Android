@@ -524,6 +524,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							finish();
 						}
 					}, false, false);
+
 		}
 		else{
 			relativeLayoutLoginSignupButtons.setVisibility(View.GONE);

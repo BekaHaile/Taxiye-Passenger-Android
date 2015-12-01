@@ -19,7 +19,6 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.payu.sdk.Constants;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
@@ -44,10 +43,10 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_paytm_recharge_webview);
 
-        webView = (WebView) findViewById(com.payu.sdk.R.id.webview);
+        webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-        progressBar = (ProgressBar) findViewById(com.payu.sdk.R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
 

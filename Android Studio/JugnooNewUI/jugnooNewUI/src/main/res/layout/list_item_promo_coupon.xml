@@ -9,11 +9,11 @@
 
     <ImageView
         android:id="@+id/imageViewCoupon"
-        android:layout_width="35px"
-        android:layout_height="35px"
+        android:layout_width="40px"
+        android:layout_height="40px"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="17px"
-        android:src="@drawable/ic_list_coupon"
+        android:layout_marginLeft="12px"
+        android:src="@drawable/promotion_icon_normal"
         android:tag="mwar"
         />
 

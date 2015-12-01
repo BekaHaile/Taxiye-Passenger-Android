@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.payu.sdk.Constants;
 
 import org.json.JSONObject;
 
@@ -46,7 +45,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 	LinearLayout relative;
 
-	ImageView imageViewBack, imageViewRupeeLogo;
+	ImageView imageViewBack;
 	TextView textViewTitle;
 	TextView textViewAddCashHelp;
 
@@ -98,7 +97,6 @@ public class PaytmRechargeFragment extends Fragment {
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
 
-		imageViewRupeeLogo = (ImageView) rootView.findViewById(R.id.imageViewRupeeLogo);
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.latoRegular(paymentActivity));
 
 		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.latoRegular(paymentActivity));
