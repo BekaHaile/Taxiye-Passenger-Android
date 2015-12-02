@@ -31,6 +31,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 
 public class GCMIntentService extends GcmListenerService {
@@ -466,6 +467,14 @@ public class GCMIntentService extends GcmListenerService {
 
 					} else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
 						Database2.getInstance(this).deleteNotificationTable();
+					} else if (PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal() == flag) {
+						String message1 = jObj.getString("message");
+						if(HomeActivity.appInterruptHandler != null && Utils.isForeground(this)){
+							HomeActivity.appInterruptHandler.showDialog(message1);
+						}
+						else{
+							Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, message1);
+						}
 					}
 
 				} catch (Exception e) {

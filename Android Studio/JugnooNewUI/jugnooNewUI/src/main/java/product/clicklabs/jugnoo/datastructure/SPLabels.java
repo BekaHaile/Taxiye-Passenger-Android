@@ -42,4 +42,5 @@ public class SPLabels {
 
             ;
 
+    public static final String UPLOAD_CONTACTS_ERROR = "upload_contacts_error";
 }

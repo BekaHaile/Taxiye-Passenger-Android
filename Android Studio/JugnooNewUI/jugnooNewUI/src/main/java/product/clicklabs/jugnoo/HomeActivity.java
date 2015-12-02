@@ -3267,6 +3267,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			getPaytmBalance(this);
 
+
+            String alertMessage = Prefs.with(this).getString(SPLabels.UPLOAD_CONTACTS_ERROR, "");
+            if(!"".equalsIgnoreCase(alertMessage)){
+                Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, "");
+                DialogPopup.alertPopup(this, "", alertMessage);
+            }
+
         }
 
         HomeActivity.checkForAccessTokenChange(this);
@@ -5856,6 +5863,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void run() {
+            }
+        });
+    }
+
+    @Override
+    public void showDialog(final String message) {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                DialogPopup.alertPopup(HomeActivity.this, "", message);
             }
         });
     }

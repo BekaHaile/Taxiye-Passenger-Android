@@ -44,6 +44,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
@@ -524,6 +525,17 @@ public class Utils {
             e.printStackTrace();
         }
 
+    }
+
+
+    public static boolean isForeground(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Activity.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager
+                .getRunningTasks(1);
+        ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
+        if (componentInfo.getPackageName().equals(context.getPackageName()))
+            return true;
+        return false;
     }
 
 
