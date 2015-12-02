@@ -38,7 +38,7 @@ public class SPLabels {
 	PREFERRED_PAYMENT_OPTION = "preferredPaymentOption",
     UPLOAD_CONTACT_NO_THANKS = "upload_contact_no_thanks",
 
-	PAYTM_TUTORIAL_SHOWN = "paytm_tutorial_shown" // to clear on logout
+	PAYTM_TUTORIAL_SHOWN_COUNT = "paytm_tutorial_shown_count"
 
             ;
 

@@ -6,8 +6,8 @@
     <dimen name="shadow_width">30dp</dimen>
     <dimen name="actionbar_home_width">30dp</dimen>
 
-    <dimen name="width">720px</dimen>
-    <dimen name="height">1134px</dimen>
+    <dimen name="screen_width">720px</dimen>
+    <dimen name="screen_height">1134px</dimen>
     
     <dimen name="button_corner_radius">5dp</dimen>
     <dimen name="button_corner_radius_more">7dp</dimen>
@@ -52,6 +52,32 @@
     <dimen name="save_card_details_text_size">15.37px</dimen>
 
     <dimen name="redirect_bank_text_size">19.21px</dimen>
+
+
+
+
+
+
+    <dimen name="payment_option_dialog_margin">70px</dimen>
+    <dimen name="payment_option_dialog_title_text_size">28px</dimen>
+    <dimen name="payment_option_dialog_title_margin_lr">25px</dimen>
+    <dimen name="payment_option_dialog_title_margin_tb">20px</dimen>
+    <dimen name="payment_option_selection_icon_width">40px</dimen>
+    <dimen name="payment_option_selection_icon_height">40px</dimen>
+    <dimen name="payment_option_selection_icon_margin_left">10px</dimen>
+    <dimen name="payment_option_text_margin_left">10px</dimen>
+    <dimen name="payment_option_text_size">30px</dimen>
+    <dimen name="payment_option_rl_width">530px</dimen>
+    <dimen name="payment_option_paytm_rl_height">88px</dimen>
+    <dimen name="payment_option_cash_rl_height">90px</dimen>
+    <dimen name="payment_option_paytm_balance_text_width">340px</dimen>
+    <dimen name="payment_option_paytm_balance_text_right_margin">10px</dimen>
+    <dimen name="payment_option_paytm_balance_text_text_size">30px</dimen>
+
+    <dimen name="line_width">2px</dimen>
+
+    <dimen name="dialog_border_width">2px</dimen>
+
 
 
 

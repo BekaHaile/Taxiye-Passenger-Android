@@ -1,8 +1,8 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/width"
-    android:layout_height="@dimen/height"
+    android:layout_width="@dimen/screen_width"
+    android:layout_height="@dimen/screen_height"
     >
 
     <FrameLayout
@@ -22,7 +22,7 @@
             <RelativeLayout
                 android:id="@+id/mapLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height"
+                android:layout_height="@dimen/screen_height"
                 android:splitMotionEvents="false"
                 android:visibility="visible">
 
@@ -116,7 +116,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
 
 
@@ -438,7 +438,7 @@
                         android:layout_alignParentBottom="true"
                         android:gravity="center_horizontal|bottom"
                         android:orientation="vertical"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         >
 
 
@@ -457,7 +457,7 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/white"
                                 android:orientation="horizontal"
-                                android:visibility="gone"
+                                android:visibility="visible"
                                 >
 
                                 <product.clicklabs.jugnoo.utils.ProgressWheel
@@ -627,7 +627,7 @@
                                 android:id="@+id/buttonGetARide"
                                 android:layout_width="648px"
                                 android:layout_height="95px"
-                                android:layout_marginBottom="16px"
+                                android:layout_marginBottom="36px"
                                 android:layout_marginTop="0px"
                                 android:background="@drawable/button_yellow"
                                 android:text="GET A RIDE"
@@ -1330,7 +1330,6 @@
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_above="@+id/imageViewPoweredByGoogleSearch"
                     android:layout_below="@+id/relativeLayoutSearchBar"
                     >
 

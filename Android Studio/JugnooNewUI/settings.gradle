@@ -1,2 +1,1 @@
-include ':PayU', ':CustomBrowser-release'
 include ':jugnooNewUI'

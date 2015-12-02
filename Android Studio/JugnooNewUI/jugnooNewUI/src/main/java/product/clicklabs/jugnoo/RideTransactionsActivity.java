@@ -608,6 +608,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 						else{
 							DialogPopup.alertPopup(RideTransactionsActivity.this, "", Data.CHECK_INTERNET_MSG);
 						}
+						FlurryEventLogger.event(RIDE_SUMMARY_CHECKED_LATER);
 
 					} catch (Exception e) {
 						e.printStackTrace();

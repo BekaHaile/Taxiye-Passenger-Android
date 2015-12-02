@@ -6,6 +6,8 @@ package product.clicklabs.jugnoo.utils;
 public interface FlurryEventNames {
 
     String
+
+			SIGNUP_THROUGH_REFERRAL = "Sign-up through Referral Deep link",
         SIGNUP = "Sign-up",
         SIGNUP_VIA_FACEBOOK = "Sign-up via Facebook",
         SIGNUP_FINAL = "Sign-up Submit",
@@ -108,7 +110,20 @@ public interface FlurryEventNames {
         PRIVACY_POLICY = "Privacy policy",
         ABOUT_JUGOO_AUTOS = "About Jugoo Autos",
 	NOTIFICATION_ICON = "Notification Icon",
-	NOTIFICATION_CENTER_DRAWER = "Notification center drawer"
+	NOTIFICATION_CENTER_DRAWER = "Notification center drawer",
+
+			CALL_WHEN_NO_INTERNET =	"Call when no internet",
+			COUPONS_SELECTED =	"Coupons selected",
+			COUPON_NOT_SELECTED =	"Coupon not selected",
+			RECENT_TRANSACTIONS =	"Recent transactions",
+			JUGNOO_CASH_CHECKED =	"Jugnoo cash checked",
+			PAYTM_WALLET_ADD_CLICKED =	"paytm wallet add clicked",
+			PAYTM_WALLET_OPENED =	"paytm wallet opened",
+			NOTIFICATION_CENTER_MENU =	"notification center menu",
+			RIDE_SUMMARY_CHECKED_LATER =	"Ride summary checked later",
+			CASH_SELECTED_WHEN_REQUESTING =	"cash selected when requesting",
+			PAYTM_SELECTED_WHEN_REQUESTING =	"Paytm selected when requesting"
+
 
 				;
 

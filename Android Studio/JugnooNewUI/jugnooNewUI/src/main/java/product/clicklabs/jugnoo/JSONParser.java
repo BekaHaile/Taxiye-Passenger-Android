@@ -1209,11 +1209,8 @@ public class JSONParser {
 		try {
 			if (Data.userData != null) {
 				int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-				String message = JSONParser.getServerMessage(jObj);
 				if (ApiResponseFlags.PAYTM_BALANCE_ERROR.getOrdinal() == flag) {
-					Data.userData.setPaytmError(1);
-					Data.userData.setPaytmBalance(0);
-					Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
+					setPaytmErrorCase();
 				} else {
 					Data.userData.setPaytmError(0);
 					String paytmStatus = jObj.optString("STATUS", Data.PAYTM_STATUS_INACTIVE);
@@ -1226,8 +1223,19 @@ public class JSONParser {
 						Data.userData.setPaytmBalance(0);
 					}
 					Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
-
 				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void setPaytmErrorCase(){
+		try {
+			if (Data.userData != null) {
+				Data.userData.setPaytmError(1);
+				Data.userData.setPaytmBalance(0);
+				Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
