@@ -609,7 +609,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.GONE);
 				imageViewRideNow.setVisibility(View.GONE);
 
-                setGoogleMapPadding(50);
+                setGoogleMapPadding(45);
 				updatePreferredPaymentOptionUI();
 
                 if(totalPromoCoupons > 0){
@@ -2587,6 +2587,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
 
                             pickupLocationMarker = map.addMarker(markerOptions);
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									if(map != null && Data.pickupLatLng != null){
+										map.animateCamera(CameraUpdateFactory.newLatLng(Data.pickupLatLng));
+									}
+								}
+							}, 1000);
                         }
 
                         stopDropLocationSearchUI(false);
@@ -3040,8 +3048,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-		checkForGoogleLogoVisibilityBeforeRide();
+		if(!promoOpened) {
+			checkForGoogleLogoVisibilityBeforeRide();
+		}
     }
 
 	private void setBottomMarginOfView(View view, float bottomMargin){
