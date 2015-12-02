@@ -591,6 +591,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onDismiss() {
                 if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+					if(dialogSelectPaymentOption != null){
+						dialogSelectPaymentOption.dismiss();
+					}
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
@@ -609,7 +612,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.GONE);
 				imageViewRideNow.setVisibility(View.GONE);
 
-                setGoogleMapPadding(45);
+                setGoogleMapPadding(40);
 				updatePreferredPaymentOptionUI();
 
                 if(totalPromoCoupons > 0){
@@ -6361,24 +6364,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	}
 
 
-
+	private Dialog dialogSelectPaymentOption;
 	private void selectPaymentOptionPopup(final Activity activity) {
 		try {
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_select_payment_option);
+			dialogSelectPaymentOption = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialogSelectPaymentOption.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialogSelectPaymentOption.setContentView(R.layout.dialog_select_payment_option);
 
-			new ASSL(activity, (FrameLayout) dialog.findViewById(R.id.rv), 1134, 720, true);
+			new ASSL(activity, (FrameLayout) dialogSelectPaymentOption.findViewById(R.id.rv), 1134, 720, true);
 
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			WindowManager.LayoutParams layoutParams = dialogSelectPaymentOption.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
+			dialogSelectPaymentOption.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialogSelectPaymentOption.setCancelable(true);
+			dialogSelectPaymentOption.setCanceledOnTouchOutside(true);
 
 
-			TextView textViewSelect = (TextView) dialog.findViewById(R.id.textViewSelect); textViewSelect.setTypeface(Fonts.latoRegular(activity));
-			TextView textViewJugnooCashInfo = (TextView) dialog.findViewById(R.id.textViewJugnooCashInfo); textViewJugnooCashInfo.setTypeface(Fonts.latoRegular(activity));
+			TextView textViewSelect = (TextView) dialogSelectPaymentOption.findViewById(R.id.textViewSelect); textViewSelect.setTypeface(Fonts.latoRegular(activity));
+			TextView textViewJugnooCashInfo = (TextView) dialogSelectPaymentOption.findViewById(R.id.textViewJugnooCashInfo); textViewJugnooCashInfo.setTypeface(Fonts.latoRegular(activity));
 
 			if(Data.userData.getJugnooBalance() > 0){
 				textViewJugnooCashInfo.setText("Jugnoo Cash ("
@@ -6392,12 +6395,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			//"Jugnoo Cash will be deducted first, irrespective of mode of payment"
 
-			TextView textViewPaytmWallet = (TextView) dialog.findViewById(R.id.textViewPaytmWallet); textViewPaytmWallet.setTypeface(Fonts.latoRegular(activity));
-			TextView textViewPaytmWalletValue = (TextView) dialog.findViewById(R.id.textViewPaytmWalletValue); textViewPaytmWalletValue.setTypeface(Fonts.latoRegular(activity));
-			TextView textViewCash = (TextView) dialog.findViewById(R.id.textViewCash); textViewCash.setTypeface(Fonts.latoRegular(activity));
+			TextView textViewPaytmWallet = (TextView) dialogSelectPaymentOption.findViewById(R.id.textViewPaytmWallet); textViewPaytmWallet.setTypeface(Fonts.latoRegular(activity));
+			TextView textViewPaytmWalletValue = (TextView) dialogSelectPaymentOption.findViewById(R.id.textViewPaytmWalletValue); textViewPaytmWalletValue.setTypeface(Fonts.latoRegular(activity));
+			TextView textViewCash = (TextView) dialogSelectPaymentOption.findViewById(R.id.textViewCash); textViewCash.setTypeface(Fonts.latoRegular(activity));
 
-			ImageView imageViewPaytmSelection = (ImageView)dialog.findViewById(R.id.imageViewPaytmSelection);
-			ImageView imageViewCashSelection = (ImageView) dialog.findViewById(R.id.imageViewCashSelection);
+			ImageView imageViewPaytmSelection = (ImageView)dialogSelectPaymentOption.findViewById(R.id.imageViewPaytmSelection);
+			ImageView imageViewCashSelection = (ImageView) dialogSelectPaymentOption.findViewById(R.id.imageViewCashSelection);
 
 			textViewPaytmWalletValue.setText(getResources().getString(R.string.rupee)+ Data.userData.getPaytmBalanceStr());
 
@@ -6409,8 +6412,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				imageViewCashSelection.setImageResource(R.drawable.ic_payment_mode_pressed);
 			}
 
-			RelativeLayout relativeLayoutPaytm = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPaytm);
-			RelativeLayout relativeLayoutCash = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutCash);
+			RelativeLayout relativeLayoutPaytm = (RelativeLayout) dialogSelectPaymentOption.findViewById(R.id.relativeLayoutPaytm);
+			RelativeLayout relativeLayoutCash = (RelativeLayout) dialogSelectPaymentOption.findViewById(R.id.relativeLayoutCash);
 
 			relativeLayoutPaytm.setOnClickListener(new OnClickListener() {
 				@Override
@@ -6419,7 +6422,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
 						Prefs.with(HomeActivity.this).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal());
 						setSelectedPaymentOptionUI(Data.pickupPaymentOption);
-						dialog.dismiss();
+						dialogSelectPaymentOption.dismiss();
 					} else{
 						DialogPopup.alertPopup(activity, "", "You do not have Paytm cash, Please select payment method as Cash");
 					}
@@ -6432,26 +6435,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 					Prefs.with(HomeActivity.this).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.CASH.getOrdinal());
 					setSelectedPaymentOptionUI(Data.pickupPaymentOption);
-					dialog.dismiss();
+					dialogSelectPaymentOption.dismiss();
 				}
 			});
 
 
-			dialog.findViewById(R.id.innerRl).setOnClickListener(new OnClickListener() {
+			dialogSelectPaymentOption.findViewById(R.id.innerRl).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 				}
 			});
 
-			dialog.findViewById(R.id.rv).setOnClickListener(new OnClickListener() {
+			dialogSelectPaymentOption.findViewById(R.id.rv).setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					dialog.dismiss();
+					dialogSelectPaymentOption.dismiss();
 				}
 			});
 
-			dialog.show();
+			dialogSelectPaymentOption.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
