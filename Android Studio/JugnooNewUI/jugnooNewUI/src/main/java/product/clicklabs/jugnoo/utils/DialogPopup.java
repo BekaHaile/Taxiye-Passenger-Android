@@ -340,11 +340,11 @@ public class DialogPopup {
         }
     }
 
-	public static void uploadContactsTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext,
+	public static Dialog uploadContactsTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext,
 								final boolean cancelable, final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative) {
 		try {
 			dismissAlertPopup();
-			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_upload_contacts);
 
@@ -394,12 +394,12 @@ public class DialogPopup {
 
 			btnCancel.setOnClickListener(new View.OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-					listenerNegative.onClick(v);
-				}
-			});
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    listenerNegative.onClick(v);
+                }
+            });
 
 
 			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
@@ -412,17 +412,19 @@ public class DialogPopup {
 
 			dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					if(cancelable){
-						dismissAlertPopup();
-					}
-				}
-			});
+                @Override
+                public void onClick(View v) {
+                    if (cancelable) {
+                        dismissAlertPopup();
+                    }
+                }
+            });
 
 			dialog.show();
+            return dialog;
 		} catch (Exception e) {
 			e.printStackTrace();
+            return null;
 		}
 	}
 	

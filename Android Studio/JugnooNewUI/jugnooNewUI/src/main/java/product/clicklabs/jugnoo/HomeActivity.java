@@ -346,7 +346,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
-    Dialog noDriversDialog;
+    Dialog noDriversDialog, dialogUploadContacts;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
 
@@ -2782,7 +2782,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         //******** If return 0 then show popup, contact not saved in database.
                         if(Data.userData.contactSaved == 0 && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)) {
-                            DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this, getResources().getString(R.string.upload_contact_title),
+                            dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this, getResources().getString(R.string.upload_contact_title),
                                     getResources().getString(R.string.upload_contact_message), getResources().getString(R.string.upload_contact_yes),
                                     getResources().getString(R.string.upload_contact_no_thanks), false , new OnClickListener() {
                                         @Override
@@ -2852,7 +2852,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         break;
 
                     case P_RIDE_END:
-
+                        if(dialogUploadContacts != null){
+                            if(dialogUploadContacts.isShowing()) {
+                                dialogUploadContacts.dismiss();
+                            }
+                        }
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
 						relativeLayoutSearch.setVisibility(View.GONE);
