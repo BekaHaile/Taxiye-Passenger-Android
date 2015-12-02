@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:splitMotionEvents="false"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -116,7 +116,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     >
 
 
@@ -589,9 +589,9 @@
 
                                         <ImageView
                                             android:id="@+id/imageViewRRRateCard"
-                                            android:layout_width="41px"
-                                            android:layout_height="34px"
-                                            android:src="@drawable/ic_fare_estimate"
+                                            android:layout_width="40px"
+                                            android:layout_height="27px"
+                                            android:src="@drawable/ic_rate_card"
                                             android:tag="mwar"
                                             />
 
@@ -665,7 +665,7 @@
                     android:animateLayoutChanges="true"
                     android:background="@color/black_translucent"
                     android:splitMotionEvents="false"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
 
                     <!-- finding driver layout-->
@@ -720,7 +720,7 @@
                         android:id="@+id/assigningMyLocationBtn"
                         android:layout_width="80px"
                         android:layout_height="80px"
-                        android:layout_above="@+id/relativeLayoutAssigningButtons"
+                        android:layout_above="@+id/linearLayoutAssigningButtons"
                         android:layout_marginBottom="40px"
                         android:layout_marginLeft="50px"
                         android:background="@drawable/mylocation_btn_selector"
@@ -728,26 +728,28 @@
                         android:visibility="gone"
                         />
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutAssigningButtons"
+                    <LinearLayout
+                        android:id="@+id/linearLayoutAssigningButtons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="40px"
-                        android:splitMotionEvents="false">
+                        android:splitMotionEvents="false"
+                        android:orientation="vertical"
+                        >
 
 
                         <Button
                             android:id="@+id/initialCancelRideBtn"
                             android:layout_width="100px"
                             android:layout_height="100px"
-                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="40px"
+                            android:layout_gravity="center_horizontal"
                             android:background="@drawable/cancel_request_button"
                             android:tag="mwar"
                             android:textColor="@drawable/text_color_white_alpha_selector"
                             android:textSize="@dimen/button_text_size"/>
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
                     <!-- drop location layout-->
                     <RelativeLayout
@@ -1993,8 +1995,8 @@
                         android:id="@+id/imageViewFareEstimate"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:layout_width="41px"
-                        android:layout_height="34px"
+                        android:layout_width="49px"
+                        android:layout_height="67px"
                         android:src="@drawable/ic_fare_estimate"
                         android:tag="mwar"/>
 

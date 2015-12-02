@@ -226,7 +226,7 @@
 
 	<!-- Upload contacts dialog Strings -->
 	<string name="upload_contact_title">Do you want to make this ride free?</string>
-	<string name="upload_contact_message">By tapping "Yes" you will automatically \n invite all your contacts.</string>
+	<string name="upload_contact_message">By tapping \'YES\' you will automatically \n invite all your contacts.</string>
 	<string name="upload_contact_yes">YES</string>
 	<string name="upload_contact_no_thanks">No, Thanks</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>

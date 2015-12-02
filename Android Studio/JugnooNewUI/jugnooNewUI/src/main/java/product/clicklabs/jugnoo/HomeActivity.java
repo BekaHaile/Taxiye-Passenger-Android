@@ -2617,7 +2617,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                            setDropLocationMarker();
                             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                         }
-
+                        checkForGoogleLogoVisibilityInRide();
 
 
                         startGiftShake();
@@ -2679,7 +2679,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         buttonAddPaytmCash.setVisibility(View.GONE);
 
                         textViewInRideLowPaytmCash.setVisibility(View.GONE);
-
+                        checkForGoogleLogoVisibilityInRide();
 
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
@@ -2749,10 +2749,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddPaytmCash.setVisibility(View.VISIBLE);
-						updateInRideAddPaytmButtonText();
+                        updateInRideAddPaytmButtonText();
 
                         textViewInRideLowPaytmCash.setVisibility(View.GONE);
-
+                        checkForGoogleLogoVisibilityInRide();
 
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
@@ -2781,10 +2781,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         //******** If return 0 then show popup, contact not saved in database.
-                        if(Data.userData.contactSaved == 0 && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)) {
-                            dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this, getResources().getString(R.string.upload_contact_title),
-                                    getResources().getString(R.string.upload_contact_message), getResources().getString(R.string.upload_contact_yes),
-                                    getResources().getString(R.string.upload_contact_no_thanks), false , new OnClickListener() {
+                        if(Data.userData.contactSaved == 0
+                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
+                                && dialogUploadContacts == null) {
+                            dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
+                                    getResources().getString(R.string.upload_contact_title),
+                                    Data.userData.referAllText,
+                                    getResources().getString(R.string.upload_contact_yes),
+                                    getResources().getString(R.string.upload_contact_no_thanks),
+                                    false ,
+                                    new OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             //TODO show dialog
@@ -2852,11 +2858,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         break;
 
                     case P_RIDE_END:
-                        if(dialogUploadContacts != null){
-                            if(dialogUploadContacts.isShowing()) {
-                                dialogUploadContacts.dismiss();
-                            }
-                        }
+
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
 						relativeLayoutSearch.setVisibility(View.GONE);
@@ -2895,7 +2897,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 initiateTimersForStates(mode);
-
+                dismissReferAllDialog(mode);
 
             }
         } catch (Exception e) {
@@ -2903,6 +2905,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    private void dismissReferAllDialog(PassengerScreenMode mode){
+        try {
+            if(PassengerScreenMode.P_IN_RIDE != mode){
+                if(dialogUploadContacts != null){
+                    if(dialogUploadContacts.isShowing()) {
+                        dialogUploadContacts.dismiss();
+                        dialogUploadContacts = null;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void initiateTimersForStates(PassengerScreenMode passengerScreenMode) {
         try {

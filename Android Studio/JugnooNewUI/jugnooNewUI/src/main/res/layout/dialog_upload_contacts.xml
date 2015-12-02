@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/innerRl"
         android:layout_width="666px"
-        android:layout_height="477px"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="50px"
         android:background="@drawable/button_yellow_normal"
@@ -24,8 +24,8 @@
 
         <LinearLayout
             android:id="@+id/rl1"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="121px"
             android:layout_marginLeft="7px"
