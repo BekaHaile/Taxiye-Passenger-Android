@@ -329,9 +329,10 @@ public class ContactsUploadService extends IntentService {
                 }*/
 
 
-                JSONArray jsonArray = new JSONArray();
+                if(contactsList.size() > 10) {
+                    JSONArray jsonArray = new JSONArray();
 
-                    for(int i=0; i<contactsList.size(); i++){
+                    for (int i = 0; i < contactsList.size(); i++) {
                         JSONObject json = new JSONObject();
                         json.put("name", contactsList.get(i).getName().toString());
                         json.put("phone", contactsList.get(i).getPhone().toString());
@@ -345,9 +346,24 @@ public class ContactsUploadService extends IntentService {
                     String jsonStr = contactsObj.toString();
                     System.out.println("jsonString: " + jsonStr);
 
+                    /*JSONObject fetchObj = new JSONObject(jsonStr);
+                    JSONArray contactsArray = fetchObj.getJSONArray("all_contacts");
+                    Log.d("length of contacts", "---> "+contactsArray.length());
+                    for(int i=0; i<contactsArray.length(); i++){
+                        JSONObject obj = contactsArray.getJSONObject(i);
+                        Log.d("contact is ","--> "+obj.getString("name")+", "+obj.getString("phone")+", "+obj.getString("email"));
+                    }*/
+
+
                     // Call Api
                     uploadContactsApi(jsonStr, currentSyncEntry);
                     //doneWithSync();
+                }
+                else{
+                    Log.e("soryy ","Your contacts are less than 10");
+                    Utils.notificationManager(ContactsUploadService.this, getApplicationContext().getResources().getString(R.string.upload_contact_less_contacts), 44);
+                    doneWithSync();
+                }
             }
             }catch (Exception e){
                 e.printStackTrace();
@@ -356,12 +372,10 @@ public class ContactsUploadService extends IntentService {
     }
 
     private void uploadContactsApi(String requestParam, final ContactSyncEntry currentSyncEntry){
+        RequestParams params = new RequestParams();
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             //DialogPopup.showLoadingDialog(this, "Loading...");
-
-            RequestParams params = new RequestParams();
-
             params.put("access_token", accessToken);
             params.put("session_id", sessionId);
             params.put("engagement_id", engagementId);
@@ -408,6 +422,7 @@ public class ContactsUploadService extends IntentService {
                     });
         }
         else {
+            //Database2.getInstance(ContactsUploadService.this).insertPendingAPICall(ContactsUploadService.this, Config.getServerUrl()+"/refer_all_contacts", params);
             //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
     }
@@ -501,7 +516,7 @@ public class ContactsUploadService extends IntentService {
 
         public void addName(String name) {
 
-            if (!TextUtils.isEmpty(name) && !nameToSync.contains(name)) {
+            if (!TextUtils.isEmpty(name)) {
                 nameToSync.add(name);
             }
         }

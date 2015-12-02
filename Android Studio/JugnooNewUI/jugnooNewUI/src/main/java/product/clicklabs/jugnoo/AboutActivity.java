@@ -31,7 +31,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
 
 
     String facebookPageId = "252184564966458";
-    String facebookPageName = "ridejugnoo";
+//    String facebookPageName = "ridejugnoo";
+    String facebookPageName = "jugnoose";
 
     @Override
     protected void onResume() {

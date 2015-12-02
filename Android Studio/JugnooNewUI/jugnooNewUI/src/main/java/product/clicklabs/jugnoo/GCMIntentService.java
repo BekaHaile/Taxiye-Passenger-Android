@@ -430,8 +430,6 @@ public class GCMIntentService extends GcmListenerService {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-
-
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
 						double balance = jObj.getDouble("balance");
