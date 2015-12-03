@@ -1995,9 +1995,9 @@
                         android:id="@+id/imageViewFareEstimate"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:layout_width="49px"
-                        android:layout_height="67px"
-                        android:src="@drawable/ic_fare_estimate"
+                        android:layout_width="37px"
+                        android:layout_height="45px"
+                        android:src="@drawable/ic_fare_estimate_selector"
                         android:tag="mwar"/>
 
                     <TextView
