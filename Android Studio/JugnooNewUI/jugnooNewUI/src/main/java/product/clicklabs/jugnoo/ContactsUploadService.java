@@ -151,7 +151,7 @@ public class ContactsUploadService extends IntentService {
                             contactBean.setName(name);
                             contactBean.setPhone(phone);
                             contactBean.setEmail(email);
-                            if (phone != null) {
+                            if (phone != null && (phone.length() >= 10)) {
                                 contactList.add(contactBean);
                             }
                         }
@@ -161,7 +161,7 @@ public class ContactsUploadService extends IntentService {
             }
             cur.close();
 
-            ContentResolver cr1 = getContentResolver();
+            /*ContentResolver cr1 = getContentResolver();
             Cursor emailCur = cr1.query(ContactsContract.Contacts.CONTENT_URI, null,
                     null, null, null);
 
@@ -196,7 +196,7 @@ public class ContactsUploadService extends IntentService {
                     cur1.close();
                 }
             }
-            emailCur.close();
+            emailCur.close();*/
 
 
             Log.v("size is ", "---> " + contactList.size());
@@ -333,11 +333,12 @@ public class ContactsUploadService extends IntentService {
                     JSONArray jsonArray = new JSONArray();
 
                     for (int i = 0; i < contactsList.size(); i++) {
-                        JSONObject json = new JSONObject();
+                        /*JSONObject json = new JSONObject();
                         json.put("name", contactsList.get(i).getName().toString());
                         json.put("phone", contactsList.get(i).getPhone().toString());
                         json.put("email", contactsList.get(i).getEmail().toString());
-                        jsonArray.put(json);
+                        jsonArray.put(json);*/
+                        jsonArray.put(contactsList.get(i).getPhone());
                     }
 
                     JSONObject contactsObj = new JSONObject();
@@ -346,12 +347,14 @@ public class ContactsUploadService extends IntentService {
                     String jsonStr = contactsObj.toString();
                     System.out.println("jsonString: " + jsonStr);
 
+
                     /*JSONObject fetchObj = new JSONObject(jsonStr);
                     JSONArray contactsArray = fetchObj.getJSONArray("all_contacts");
                     Log.d("length of contacts", "---> "+contactsArray.length());
                     for(int i=0; i<contactsArray.length(); i++){
-                        JSONObject obj = contactsArray.getJSONObject(i);
-                        Log.d("contact is ","--> "+obj.getString("name")+", "+obj.getString("phone")+", "+obj.getString("email"));
+                        //JSONObject obj = contactsArray.getJSONObject(i);
+                        Log.d("contact is","--> "+contactsArray.get(i));
+//                        Log.d("contact is ","--> "+obj.getString("name")+", "+obj.getString("phone")+", "+obj.getString("email"));
                     }*/
 
 
