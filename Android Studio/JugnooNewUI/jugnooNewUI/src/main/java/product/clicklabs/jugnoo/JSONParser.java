@@ -747,7 +747,7 @@ public class JSONParser {
 
 
     public static String getPromoName(JSONObject jObject) {
-        String promoName = "No Promo Code applied";
+        String promoName = Data.NO_PROMO_APPLIED;
         try {
             String coupon = "", promotion = "";
             try {
@@ -771,7 +771,7 @@ public class JSONParser {
             } else if (!"".equalsIgnoreCase(promotion)) {
                 promoName = promotion;
             } else {
-                promoName = "No Promo Code applied";
+                promoName = Data.NO_PROMO_APPLIED;
             }
         } catch (Exception e) {
             e.printStackTrace();

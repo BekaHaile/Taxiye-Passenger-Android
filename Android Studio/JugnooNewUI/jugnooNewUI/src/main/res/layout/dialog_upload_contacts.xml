@@ -56,7 +56,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15px"
                 android:gravity="center"
-                android:lineSpacingExtra="10px"
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
                 android:text="@string/upload_contact_message"
@@ -87,7 +86,7 @@
                 android:singleLine="true"
                 android:text="@string/upload_contact_no_thanks"
                 android:textColor="@drawable/text_color_grey_dark_light_selector"
-                android:textSize="34px" />
+                android:textSize="28px" />
 
 
         </LinearLayout>

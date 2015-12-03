@@ -2785,7 +2785,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         //******** If return 0 then show popup, contact not saved in database.
                         if(Data.userData.contactSaved == 0
                                 && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
-                                && dialogUploadContacts == null) {
+                                && dialogUploadContacts == null
+								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
                             dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
 									Data.userData.referAllTitle,
                                     Data.userData.referAllText,
@@ -2807,7 +2808,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         @Override
                                         public void onClick(View view) {
                                             Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
-                                            //Utils.notificationManager(HomeActivity.this, "Your contacts are less than 10", 44);
                                         }
                                     });
                         } else{
@@ -2913,8 +2913,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(dialogUploadContacts != null){
                     if(dialogUploadContacts.isShowing()) {
                         dialogUploadContacts.dismiss();
-                        dialogUploadContacts = null;
                     }
+					dialogUploadContacts = null;
                 }
             }
         } catch (Exception e) {
@@ -3129,7 +3129,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textViewInRideDriverCarNumber.setText("");
         }
 
-        if (!"No Promo Code applied".equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+        if (!Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
             textViewInRidePromoName.setText(Data.assignedDriverInfo.promoName);
         } else {
             textViewInRidePromoName.setText("");

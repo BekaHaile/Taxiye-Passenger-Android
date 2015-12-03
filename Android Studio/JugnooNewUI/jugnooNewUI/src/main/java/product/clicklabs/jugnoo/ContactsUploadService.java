@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.view.View;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.SyncHttpClient;
 
-import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,7 +28,6 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.ContactsEntityBean;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -404,6 +400,7 @@ public class ContactsUploadService extends IntentService {
                         @Override
                         public void onFailure(Throwable arg3) {
                             Log.e("request fail", arg3.toString());
+							Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                             doneWithSync();
                         }
 
@@ -412,7 +409,15 @@ public class ContactsUploadService extends IntentService {
                             Log.i("Server response request_dup_registration", "response = " + response);
 
                             try {
-                                Data.userData.contactSaved = 1;
+								JSONObject jObj = new JSONObject(response);
+								int flag = jObj.getInt("flag");
+								String message = JSONParser.getServerMessage(jObj);
+								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+									Data.userData.contactSaved = 1;
+								}
+								else{
+									Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+								}
                             }  catch (Exception exception) {
                                 exception.printStackTrace();
                                 //DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
