@@ -638,6 +638,8 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
+								double jugnooBalance = jObj.optDouble("jugnoo_balance", Data.userData.getJugnooBalance());
+								Data.userData.setJugnooBalance(jugnooBalance);
                             } catch (Exception exception) {
                                 exception.printStackTrace();
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

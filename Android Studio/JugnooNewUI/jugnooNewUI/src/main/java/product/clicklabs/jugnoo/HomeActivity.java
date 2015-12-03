@@ -2290,8 +2290,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-            updateInRideAddPaytmButtonText();
-            updateLowJugnooCashBanner(passengerScreenMode);
+			if(!promoOpened) {
+				updateInRideAddPaytmButtonText();
+				updateLowJugnooCashBanner(passengerScreenMode);
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2785,7 +2787,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
                                 && dialogUploadContacts == null) {
                             dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
-                                    getResources().getString(R.string.upload_contact_title),
+									Data.userData.referAllTitle,
                                     Data.userData.referAllText,
                                     getResources().getString(R.string.upload_contact_yes),
                                     getResources().getString(R.string.upload_contact_no_thanks),
@@ -2977,7 +2979,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void updateInRideAddPaytmButtonText(){
 		try{
-            if (Data.userData.paytmEnabled == 1) {
+            if (Data.userData.paytmEnabled == 1 && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 				buttonAddPaytmCash.setText("Add Paytm Cash");
 			}
 			else{
