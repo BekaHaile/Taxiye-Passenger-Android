@@ -55,6 +55,7 @@ import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -120,13 +121,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
 						try {
 
-							if(referringParams.has("pickup_lat") && referringParams.has("pickup_lng")){
+							if (referringParams.has("pickup_lat") && referringParams.has("pickup_lng")) {
 								Data.deepLinkPickup = 1;
 								Data.deepLinkPickupLatitude = Double.parseDouble(referringParams.optString("pickup_lat"));
 								Data.deepLinkPickupLongitude = Double.parseDouble(referringParams.optString("pickup_lng"));
-							}
-							else{
-								Data.deepLinkIndex = referringParams.optInt("deepindex", -1);
+							} else {
+								if (Data.deepLinkIndex == -1) {
+									Data.deepLinkIndex = referringParams.optInt("deepindex", -1);
+									Data.deepLinkReferralCode = referringParams.optString("referral_code", "");
+									Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
+									if ("".equalsIgnoreCase(pair.first)
+											&& !"".equalsIgnoreCase(Data.deviceToken)) {
+										sendToRegisterThroughSms(Data.deepLinkReferralCode);
+									}
+								}
 							}
 
 							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
@@ -139,6 +147,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					}
 				}
 			}, this.getIntent().getData(), this);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -151,7 +160,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	public void onNewIntent(Intent intent) {
 		this.setIntent(intent);
-//		Data.getDeepLinkIndexFromIntent(intent);
 	}
 
 
@@ -195,7 +203,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		Data.splashIntentUri = getIntent().getData();
 
-//		Data.getDeepLinkIndexFromIntent(getIntent());
+		Data.getDeepLinkIndexFromIntent(getIntent());
 
 
 		try {
@@ -300,6 +308,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
+				FlurryEventLogger.event(CALL_WHEN_NO_INTERNET);
 			}
 		});
 
@@ -473,6 +482,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	}
 
+	private void sendToRegisterThroughSms(String referralCode){
+		if(!"".equalsIgnoreCase(referralCode)) {
+			Data.deepLinkIndex = -1;
+			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
+			RegisterScreen.facebookLogin = false;
+			Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
+			intent.putExtra("referral_code", referralCode);
+			startActivity(intent);
+			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		}
+	}
+
 	public void getDeviceToken() {
 		if(ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){
 			DialogPopup.alertPopupTwoButtonsWithListeners(SplashNewActivity.this, "", "You need to uninstall Jugnoo Drivers App first to use this app", "Uninstall", "Cancel",
@@ -502,6 +524,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							finish();
 						}
 					}, false, false);
+
 		}
 		else{
 			relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
@@ -673,6 +696,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			if (!AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 			}
+			sendToRegisterThroughSms(Data.deepLinkReferralCode);
 		}
 	}
 

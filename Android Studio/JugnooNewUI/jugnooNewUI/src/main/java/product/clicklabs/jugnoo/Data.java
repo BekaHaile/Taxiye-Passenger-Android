@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.SyncHttpClient;
 
 import java.net.URLDecoder;
 import java.security.KeyStore;
@@ -18,7 +19,7 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
-import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
+import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
@@ -45,6 +46,7 @@ public class Data {
 
 
     public static final String INVALID_ACCESS_TOKEN = "invalid access token";
+	public static final String NO_PROMO_APPLIED = "No Promo Code applied";
 
 	public static final String SHARED_PREF_NAME = "myPref", SETTINGS_SHARED_PREF_NAME = "settingsPref";
 	public static final String SP_ACCESS_TOKEN_KEY = "access_token",
@@ -136,7 +138,7 @@ public class Data {
 	
 	public static LocationFetcher locationFetcher;
 
-	public static PayTMPaymentState paytmPaymentState;
+	public static PaytmPaymentState paytmPaymentState;
 	
 
 	public static final String DEVICE_TYPE = "0";
@@ -174,7 +176,7 @@ public class Data {
 
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
-    public static String deepLinkClassName = "";
+    public static String deepLinkClassName = "", deepLinkReferralCode = "";
 	public static int deepLinkIndex;
 	public static int deepLinkPickup = -1;
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
@@ -237,6 +239,7 @@ public class Data {
 
 	
 	public static AsyncHttpClient mainClient;
+	public static SyncHttpClient mainSyncClient;
 	
 	public static final int SOCKET_TIMEOUT = 30000;
 	public static final int CONNECTION_TIMEOUT = 30000;
@@ -262,6 +265,24 @@ public class Data {
 		return mainClient;
 	}
 
+	public static SyncHttpClient getSyncClient() {
+		if (mainSyncClient == null) {
+			mainSyncClient = new SyncHttpClient();
+			try {
+				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+				trustStore.load(null, null);
+				MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+				sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+				mainSyncClient.setSSLSocketFactory(sf);
+			} catch (Exception e) {
+				Log.e("exception in https hostname", "="+e.toString());
+			}
+			mainSyncClient.setConnectTimeout(CONNECTION_TIMEOUT);
+			mainSyncClient.setResponseTimeout(SOCKET_TIMEOUT);
+			mainSyncClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_TIMEOUT);
+		}
+		return mainSyncClient;
+	}
 
 
 
@@ -277,6 +298,7 @@ public class Data {
 	public static void getDeepLinkIndexFromIntent(Intent newIntent) {
 		Data.deepLinkIndex = -1;
 		Data.deepLinkPickup = -1;
+		Data.deepLinkReferralCode = "";
 		try {
 			Intent intent = newIntent;
 			String action = intent.getAction();
@@ -286,7 +308,7 @@ public class Data {
 
 			if(data.getQueryParameter("deepindex") != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
-
+				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
 			}
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
@@ -302,7 +324,6 @@ public class Data {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
 
 			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
 			try {
@@ -315,7 +336,7 @@ public class Data {
 
 				if(dataTarget.getQueryParameter("deepindex") != null){
 					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
-
+					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
 					Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 				}
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
@@ -328,11 +349,11 @@ public class Data {
 					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
 				}
 			} catch (Exception e1) {
-				e1.printStackTrace();
 			}
 		}
 
 		Log.e("Deeplink =", "=" + Data.deepLinkIndex);
+		Log.e("deepLinkReferralCode =", "=" + Data.deepLinkReferralCode);
 	}
 
 	

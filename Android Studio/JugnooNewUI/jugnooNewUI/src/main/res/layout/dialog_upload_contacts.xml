@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:orientation="vertical"
+    android:splitMotionEvents="false" >
+
+    <RelativeLayout
+        android:id="@+id/innerRl"
+        android:layout_width="666px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="50px"
+        android:background="@drawable/button_yellow_normal"
+        android:splitMotionEvents="false" >
+
+        <ImageView
+            android:layout_width="119px"
+            android:layout_height="76px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25px"
+            android:background="@drawable/envelope"/>
+
+        <LinearLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="121px"
+            android:layout_marginLeft="7px"
+            android:layout_marginBottom="7px"
+            android:layout_marginRight="7px"
+            android:background="@drawable/button_white_normal"
+            android:splitMotionEvents="false" >
+
+            <TextView
+                android:id="@+id/textHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25px"
+                android:gravity="center"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:text="@string/upload_contact_title"
+                android:textColor="@color/grey_dark_more"
+                android:textSize="34px"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/textMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15px"
+                android:gravity="center"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:text="@string/upload_contact_message"
+                android:textColor="@color/grey_dark"
+                android:textSize="30px" />
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="545px"
+                android:layout_height="90px"
+                android:background="@drawable/button_yellow"
+                android:singleLine="true"
+                android:layout_marginTop="20px"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/upload_contact_yes"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="34px" />
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="307px"
+                android:layout_height="70px"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/imageView1"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10px"
+                android:background="@drawable/background_transparent"
+                android:singleLine="true"
+                android:text="@string/upload_contact_no_thanks"
+                android:textColor="@drawable/text_color_grey_dark_light_selector"
+                android:textSize="28px" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

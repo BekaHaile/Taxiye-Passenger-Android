@@ -445,6 +445,15 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             e.printStackTrace();
         }
 
+		try{
+			if(getIntent().hasExtra("referral_code")){
+				String referralCode = getIntent().getStringExtra("referral_code");
+				editTextReferralCode.setText(referralCode);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
 
         linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
             @Override

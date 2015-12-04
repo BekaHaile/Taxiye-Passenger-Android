@@ -36,9 +36,11 @@ public class SPLabels {
 
 	PAYTM_CHECK_BALANCE_LAST_TIME = "paytmCheckBalanceLastTime",
 	PREFERRED_PAYMENT_OPTION = "preferredPaymentOption",
+    UPLOAD_CONTACT_NO_THANKS = "upload_contact_no_thanks",
 
-	PAYTM_TUTORIAL_SHOWN = "paytm_tutorial_shown" // to clear on logout
+	PAYTM_TUTORIAL_SHOWN_COUNT = "paytm_tutorial_shown_count"
 
             ;
 
+    public static final String UPLOAD_CONTACTS_ERROR = "upload_contacts_error";
 }

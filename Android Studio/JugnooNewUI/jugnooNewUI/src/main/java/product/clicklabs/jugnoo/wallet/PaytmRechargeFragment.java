@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.payu.sdk.Constants;
 
 import org.json.JSONObject;
 
@@ -31,7 +30,7 @@ import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
-import product.clicklabs.jugnoo.datastructure.PayTMPaymentState;
+import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -46,7 +45,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 	LinearLayout relative;
 
-	ImageView imageViewBack, imageViewRupeeLogo;
+	ImageView imageViewBack;
 	TextView textViewTitle;
 	TextView textViewAddCashHelp;
 
@@ -85,7 +84,7 @@ public class PaytmRechargeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_paytm_recharge, container, false);
 
-		Data.paytmPaymentState = PayTMPaymentState.INIT;
+		Data.paytmPaymentState = PaytmPaymentState.INIT;
 
 		paymentActivity = (PaymentActivity) getActivity();
 
@@ -98,7 +97,6 @@ public class PaytmRechargeFragment extends Fragment {
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
 
-		imageViewRupeeLogo = (ImageView) rootView.findViewById(R.id.imageViewRupeeLogo);
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.latoRegular(paymentActivity));
 
 		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.latoRegular(paymentActivity));
@@ -479,7 +477,7 @@ public class PaytmRechargeFragment extends Fragment {
 	private int rechargeRequestCode = 1;
 
 	private void openWebView(String jsonData) {
-		Data.paytmPaymentState = PayTMPaymentState.INIT;
+		Data.paytmPaymentState = PaytmPaymentState.INIT;
 		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
 		intent.putExtra(Constants.POST_DATA, jsonData);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -490,31 +488,31 @@ public class PaytmRechargeFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == rechargeRequestCode) {
-			if(resultCode == PayTMPaymentState.SUCCESS.getOrdinal()){
-				Data.paytmPaymentState = PayTMPaymentState.SUCCESS;
+			if(resultCode == PaytmPaymentState.SUCCESS.getOrdinal()){
+				Data.paytmPaymentState = PaytmPaymentState.SUCCESS;
 			}
-			else if (resultCode == PayTMPaymentState.FAILURE.getOrdinal()) {
-				Data.paytmPaymentState = PayTMPaymentState.FAILURE;
+			else if (resultCode == PaytmPaymentState.FAILURE.getOrdinal()) {
+				Data.paytmPaymentState = PaytmPaymentState.FAILURE;
 			}
 			else{
 				DialogPopup.dialogBanner(paymentActivity, "Transaction cancelled");
 			}
 
 			try{
-				if(Data.paytmPaymentState == PayTMPaymentState.SUCCESS) {
+				if(Data.paytmPaymentState == PaytmPaymentState.SUCCESS) {
 					if(AddPaymentPath.FROM_IN_RIDE == PaymentActivity.addPaymentPath){
 						HomeActivity.rechargedOnce = true;
 					}
 					DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
 					paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
 				}
-				else if(Data.paytmPaymentState == PayTMPaymentState.FAILURE){
+				else if(Data.paytmPaymentState == PaytmPaymentState.FAILURE){
 					DialogPopup.dialogBanner(paymentActivity, "Transaction failed");
 				}
 			} catch(Exception e){
 				e.printStackTrace();
 			}
-			Data.paytmPaymentState = PayTMPaymentState.INIT;
+			Data.paytmPaymentState = PaytmPaymentState.INIT;
 		}
 	}
 }

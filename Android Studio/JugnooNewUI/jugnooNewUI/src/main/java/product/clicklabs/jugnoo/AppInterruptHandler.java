@@ -28,4 +28,6 @@ public interface AppInterruptHandler {
 
     void onEmergencyContactVerified(int emergencyContactId);
 
+	void showDialog(String message);
+
 }

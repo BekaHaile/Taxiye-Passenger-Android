@@ -20,6 +20,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -124,6 +125,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 //						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 //								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName())).commit();
 //				FlurryEventLogger.event(ADDING_JUGNOO_CASH);
+				FlurryEventLogger.event(JUGNOO_CASH_CHECKED);
 
 			}
 		});
@@ -138,6 +140,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 							.commit();
+					FlurryEventLogger.event(PAYTM_WALLET_OPENED);
 				}
 
 			}
@@ -152,6 +155,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 							.commit();
+					FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 				}
 			}
 		});
@@ -175,6 +179,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();
+				FlurryEventLogger.event(RECENT_TRANSACTIONS);
 			}
 		});
 
@@ -206,8 +211,10 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
-				}
-				else{
+				} else if(Data.userData.getPaytmStatus().equalsIgnoreCase("")){
+                    showPaytmActiveUI();
+                    textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" --");
+                } else{
 					showPaytmInactiveUI();
 				}
 			}

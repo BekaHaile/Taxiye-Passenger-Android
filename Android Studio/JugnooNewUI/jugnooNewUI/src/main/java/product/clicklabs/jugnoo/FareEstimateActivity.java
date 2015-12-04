@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -27,16 +28,20 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -255,6 +260,13 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                         final double distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
                                         final double timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+										runOnUiThread(new Runnable() {
+
+											@Override
+											public void run() {
+												DialogPopup.dismissLoadingDialog();
+											}
+										});
 
                                         runOnUiThread(new Runnable() {
 
@@ -324,23 +336,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                                     textViewEstimateTime.setText(timeText);
                                                     textViewEstimateDistance.setText(distanceText);
+													textViewEstimateFare.setText("");
+													textViewConvenienceCharge.setText("");
 
-
-                                                    DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
-                                                    double computedFare = Data.fareStructure.calculateFare(distanceValue / 1000, timeValue / 60, 0);
-                                                    double computedFarePlus = computedFare * 110.0 / 100.0;
-                                                    double computedFareMinus = computedFare * 90.0 / 100.0;
-                                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFareMinus) + " - " +
-                                                        getResources().getString(R.string.rupee) + " " + decimalFormatNoDecimal.format(computedFarePlus));
-
-													if(Data.fareStructure.convenienceCharge > 0){
-														textViewConvenienceCharge.setText("Convenience Charges "
-																+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
-													}
-													else{
-														textViewConvenienceCharge.setText("");
-													}
-
+													getFareEstimate(FareEstimateActivity.this, sourceLatLng, distanceValue/1000, timeValue/60);
 
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
@@ -355,20 +354,45 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                 DialogPopup.alertPopup(FareEstimateActivity.this, "", "Fare could not be estimated between the selected pickup and drop location");
                                             }
                                         });
+										runOnUiThread(new Runnable() {
+
+											@Override
+											public void run() {
+												DialogPopup.dismissLoadingDialog();
+											}
+										});
                                     }
                                 }
+								else{
+									runOnUiThread(new Runnable() {
+
+										@Override
+										public void run() {
+											DialogPopup.dismissLoadingDialog();
+										}
+									});
+								}
                             }
+							else{
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										DialogPopup.dismissLoadingDialog();
+									}
+								});
+							}
                         } catch (Exception e) {
                             e.printStackTrace();
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									DialogPopup.dismissLoadingDialog();
+								}
+							});
                         }
 
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                DialogPopup.dismissLoadingDialog();
-                            }
-                        });
                     }
                 }).start();
             } else {
@@ -377,8 +401,111 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             }
         } catch (Exception e) {
             e.printStackTrace();
+			runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					DialogPopup.dismissLoadingDialog();
+				}
+			});
         }
     }
+
+
+	private void updateFareEstimate(){
+
+	}
+
+	/**
+	 * ASync for calculating fare estimate from server
+	 */
+	public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final double distanceValue, final double timeValue) {
+		if (!HomeActivity.checkIfUserDataNull(activity)) {
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("start_latitude", "" + sourceLatLng.latitude);
+				params.put("start_longitude", "" + sourceLatLng.longitude);
+				params.put("ride_distance", "" + distanceValue);
+				params.put("ride_time", "" + timeValue);
+
+				AsyncHttpClient client = Data.getClient();
+				client.post(Config.getServerUrl() + "/get_fare_estimate", params,
+						new CustomAsyncHttpResponseHandler() {
+							private JSONObject jObj;
+
+							@Override
+							public void onFailure(Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								DialogPopup.dismissLoadingDialog();
+								retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
+							}
+
+							@Override
+							public void onSuccess(String response) {
+								Log.e("Server response", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+
+									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+										int flag = jObj.getInt("flag");
+										String message = JSONParser.getServerMessage(jObj);
+										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+											String minFare = jObj.getString("min_fare");
+											String maxFare = jObj.getString("max_fare");
+											double convenienceCharge = jObj.optDouble("convenience_charge", 0);
+
+											textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + minFare + " - " +
+													getResources().getString(R.string.rupee) + " " + maxFare);
+
+											if(convenienceCharge > 0){
+												textViewConvenienceCharge.setText("Convenience Charges "
+														+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
+											}
+											else{
+												if(Data.fareStructure != null && Data.fareStructure.convenienceCharge > 0){
+													textViewConvenienceCharge.setText("Convenience Charges "
+															+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
+												}
+												else{
+													textViewConvenienceCharge.setText("");
+												}
+											}
+										} else {
+											retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);
+										}
+									}
+								} catch (Exception exception) {
+									exception.printStackTrace();
+									retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, distanceValue, timeValue);
+								}
+								DialogPopup.dismissLoadingDialog();
+							}
+
+						});
+			} else {
+				retryDialog(activity, Data.CHECK_INTERNET_MSG, sourceLatLng, distanceValue, timeValue);
+			}
+		}
+	}
+
+	private void retryDialog(final Activity activity, String message, final LatLng sourceLatLng, final double distanceValue, final double timeValue){
+		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message, "Retry", "Cancel",
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						getFareEstimate(activity, sourceLatLng, distanceValue, timeValue);
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						performBackPressed();
+					}
+				}, false, false);
+	}
 
 
     public void performBackPressed() {

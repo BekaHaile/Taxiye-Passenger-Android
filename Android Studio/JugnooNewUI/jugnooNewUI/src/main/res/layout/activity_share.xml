@@ -138,7 +138,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:padding="20px"
-            android:text="TextView"
+            android:text=""
             android:textColor="@color/black_text"
             android:textSize="32px"/>
     </LinearLayout>
