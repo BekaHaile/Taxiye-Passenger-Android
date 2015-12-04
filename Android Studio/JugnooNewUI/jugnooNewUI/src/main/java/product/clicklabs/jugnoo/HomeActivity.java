@@ -267,7 +267,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	LinearLayout linearLayoutInRideBottom;
 	RelativeLayout relativeLayoutIRPaymentOption;
 	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue, textViewInRideMinimumFare;
-	ImageView imageViewIRButtonSep;
 
 
 
@@ -812,7 +811,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.latoRegular(this));
 		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.latoRegular(this));
 		textViewInRideMinimumFare = (TextView) findViewById(R.id.textViewInRideMinimumFare); textViewInRideMinimumFare.setTypeface(Fonts.latoRegular(this));
-		imageViewIRButtonSep = (ImageView) findViewById(R.id.imageViewIRButtonSep);
 
 
 
@@ -2648,7 +2646,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             map.clear();
 
-                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng));
+                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, false));
 
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng));
 
@@ -2676,11 +2674,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddPaytmCash.setVisibility(View.GONE);
-
+                        updateUIInRideFareInfo();
                         checkForGoogleLogoVisibilityInRide();
-						imageViewIRButtonSep.setVisibility(View.VISIBLE);
-						buttonCallDriver.setBackgroundResource(R.drawable.button_white_yellow_brr_selector);
-						updateUIInRideFareInfo();
 
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
@@ -2710,7 +2705,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             map.clear();
 
-                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng));
+                            pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
 
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng));
 
@@ -2748,15 +2743,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         setAssignedDriverData(mode);
 
+
+                        buttonCancelRide.setVisibility(View.GONE);
                         buttonAddPaytmCash.setVisibility(View.VISIBLE);
                         updateInRideAddPaytmButtonText();
-
-                        checkForGoogleLogoVisibilityInRide();
-						buttonCancelRide.setVisibility(View.GONE);
-						imageViewIRButtonSep.setVisibility(View.GONE);
-						buttonCallDriver.setBackgroundResource(R.drawable.button_white_yellow_br_selector);
 						updateUIInRideFareInfo();
-
+                        checkForGoogleLogoVisibilityInRide();
 
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
@@ -2774,7 +2766,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             map.clear();
 
                             if (Data.pickupLatLng != null) {
-                                map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng));
+                                map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
                             }
 
                             if(Data.dropLatLng != null) {
@@ -2840,14 +2832,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 						setDropLocationEngagedUI();
 
-
                         setAssignedDriverData(mode);
 
-						buttonCancelRide.setVisibility(View.GONE);
-						imageViewIRButtonSep.setVisibility(View.GONE);
-						buttonCallDriver.setBackgroundResource(R.drawable.button_white_yellow_br_selector);
-						updateUIInRideFareInfo();
-
+                        buttonCancelRide.setVisibility(View.GONE);
+                        buttonAddPaytmCash.setVisibility(View.VISIBLE);
+                        updateInRideAddPaytmButtonText();
+                        updateUIInRideFareInfo();
+                        checkForGoogleLogoVisibilityInRide();
 
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
@@ -3011,7 +3002,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if(Data.fareStructure != null) {
 				textViewInRideMinimumFare.setVisibility(View.VISIBLE);
 				textViewInRideMinimumFare.setText("Minimum Fare "+
-						getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
+						getResources().getString(R.string.rupee)+" "
+                        +Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
 			}
 			else{
 				textViewInRideMinimumFare.setVisibility(View.GONE);
@@ -3172,16 +3164,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
             if (!"".equalsIgnoreCase(Data.assignedDriverInfo.getEta())) {
                 try {
-                    double etaMin = Double.parseDouble(Data.assignedDriverInfo.getEta());
-                    if (etaMin > 1) {
-                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
-                    } else {
-                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minute");
-                    }
+//                    double etaMin = Double.parseDouble(Data.assignedDriverInfo.getEta());
+//                    if (etaMin > 1) {
+//                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
+//                    } else {
+//                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minute");
+//                    }
+                    pickupLocationMarker.setIcon(BitmapDescriptorFactory
+                            .fromBitmap(CustomMapMarkerCreator
+                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 14)));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
+//                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
                 }
+                textViewInRideState.setText("Driver Enroute");
             }
         } else if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
             textViewInRideState.setText("Driver arrived at pick up point");
@@ -3813,13 +3809,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng){
+    public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, boolean inRide){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("pickup location");
         markerOptions.snippet("");
         markerOptions.position(latLng);
-//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
-		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 14)));
+        if(inRide){
+            markerOptions.icon(BitmapDescriptorFactory
+                    .fromBitmap(CustomMapMarkerCreator
+                            .createPinMarkerBitmapStart(HomeActivity.this, assl)));
+        } else{
+            markerOptions.icon(BitmapDescriptorFactory
+                    .fromBitmap(CustomMapMarkerCreator
+                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 14)));
+        }
+//
         return markerOptions;
     }
 
@@ -4472,9 +4476,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         }
                                         if (Data.assignedDriverInfo != null) {
                                             Data.assignedDriverInfo.latLng = driverCurrentLatLng;
-											if(Integer.parseInt(eta) < 10){
-												eta = "0"+eta;
-											}
                                             Data.assignedDriverInfo.setEta(eta);
                                         }
 
