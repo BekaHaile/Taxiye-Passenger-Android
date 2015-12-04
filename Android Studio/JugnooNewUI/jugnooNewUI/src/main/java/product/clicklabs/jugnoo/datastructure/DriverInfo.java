@@ -12,7 +12,8 @@ public class DriverInfo {
 	public LatLng latLng;
 	public int freeRide;
 	
-	public String promoName = Data.NO_PROMO_APPLIED, eta = "10";
+	public String promoName = Data.NO_PROMO_APPLIED;
+	private String eta = "10";
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -48,7 +49,7 @@ public class DriverInfo {
 			this.promoName = promoName;
 		}
 		if(!"".equalsIgnoreCase(eta)){
-			this.eta = eta;
+			setEta(eta);
 		}
 	}
 	
@@ -63,7 +64,18 @@ public class DriverInfo {
 		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = 0;
 	}
-	
+
+	public void setEta(String eta){
+		if(Integer.parseInt(eta) < 10){
+			eta = "0"+eta;
+		}
+		this.eta = eta;
+	}
+
+	public String getEta(){
+		return this.eta;
+	}
+
 	@Override
 	public String toString() {
 		return  "Name: " + name + "\n" +

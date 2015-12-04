@@ -266,7 +266,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewScrollFinal;
 	LinearLayout linearLayoutInRideBottom;
 	RelativeLayout relativeLayoutIRPaymentOption;
-	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue, textViewInRideMinimumFare, textViewInRideConvenienceCharge;
+	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue, textViewInRideMinimumFare;
 	ImageView imageViewIRButtonSep;
 
 
@@ -812,7 +812,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.latoRegular(this));
 		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.latoRegular(this));
 		textViewInRideMinimumFare = (TextView) findViewById(R.id.textViewInRideMinimumFare); textViewInRideMinimumFare.setTypeface(Fonts.latoRegular(this));
-		textViewInRideConvenienceCharge = (TextView) findViewById(R.id.textViewInRideConvenienceCharge); textViewInRideConvenienceCharge.setTypeface(Fonts.latoRegular(this));
 		imageViewIRButtonSep = (ImageView) findViewById(R.id.imageViewIRButtonSep);
 
 
@@ -2786,10 +2785,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         //******** If return 0 then show popup, contact not saved in database.
-                        if(Data.userData.contactSaved == 0
-                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
-                                && dialogUploadContacts == null
-								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+//                        if(Data.userData.contactSaved == 0
+//                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
+//                                && dialogUploadContacts == null
+//								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
                             dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
 									Data.userData.referAllTitle,
                                     Data.userData.referAllText,
@@ -2813,9 +2812,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                         }
                                     });
-                        } else{
-
-                        }
+//                        }
 
 
 
@@ -3015,18 +3012,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				textViewInRideMinimumFare.setVisibility(View.VISIBLE);
 				textViewInRideMinimumFare.setText("Minimum Fare "+
 						getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
-				if(Data.fareStructure.convenienceCharge > 0){
-					textViewInRideConvenienceCharge.setVisibility(View.VISIBLE);
-					textViewInRideConvenienceCharge.setText("Convenience Charge "+
-							getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
-				}
-				else{
-					textViewInRideConvenienceCharge.setVisibility(View.GONE);
-				}
 			}
 			else{
 				textViewInRideMinimumFare.setVisibility(View.GONE);
-				textViewInRideConvenienceCharge.setVisibility(View.GONE);
 			}
 		} catch(Exception e){}
 		checkForGoogleLogoVisibilityInRide();
@@ -3078,9 +3066,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		try{
 			float padding = 0;
 			if(textViewInRideMinimumFare.getVisibility() == View.VISIBLE){
-				padding = padding + 42;
-			}
-			if(textViewInRideConvenienceCharge.getVisibility() == View.VISIBLE){
 				padding = padding + 42;
 			}
 			setGoogleMapPadding(padding);
@@ -3185,17 +3170,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void updateDriverETAText(PassengerScreenMode passengerScreenMode) {
         if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
-            if (!"".equalsIgnoreCase(Data.assignedDriverInfo.eta)) {
+            if (!"".equalsIgnoreCase(Data.assignedDriverInfo.getEta())) {
                 try {
-                    double etaMin = Double.parseDouble(Data.assignedDriverInfo.eta);
+                    double etaMin = Double.parseDouble(Data.assignedDriverInfo.getEta());
                     if (etaMin > 1) {
-                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minutes");
+                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
                     } else {
-                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minute");
+                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minute");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.eta + " minutes");
+                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
                 }
             }
         } else if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
@@ -3833,7 +3818,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.title("pickup location");
         markerOptions.snippet("");
         markerOptions.position(latLng);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
+//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
+		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 14)));
         return markerOptions;
     }
 
@@ -4486,7 +4472,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         }
                                         if (Data.assignedDriverInfo != null) {
                                             Data.assignedDriverInfo.latLng = driverCurrentLatLng;
-                                            Data.assignedDriverInfo.eta = eta;
+											if(Integer.parseInt(eta) < 10){
+												eta = "0"+eta;
+											}
+                                            Data.assignedDriverInfo.setEta(eta);
                                         }
 
                                         HomeActivity.this.runOnUiThread(new Runnable() {
