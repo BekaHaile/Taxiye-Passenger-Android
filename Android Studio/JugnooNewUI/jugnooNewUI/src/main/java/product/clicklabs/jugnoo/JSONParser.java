@@ -256,12 +256,18 @@ public class JSONParser {
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
 
 		int paytmEnabled = userData.optInt("paytm_enabled", 0);
+        int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
+        String referAllText = userData.optString("refer_all_text", context.getResources().getString(R.string.upload_contact_message));
+		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
 
-        return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
+
+
+		return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
-                jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled);
+                jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
+                contactSaved, referAllText, referAllTitle);
     }
 
 
@@ -741,7 +747,7 @@ public class JSONParser {
 
 
     public static String getPromoName(JSONObject jObject) {
-        String promoName = "No Promo Code applied";
+        String promoName = Data.NO_PROMO_APPLIED;
         try {
             String coupon = "", promotion = "";
             try {
@@ -765,7 +771,7 @@ public class JSONParser {
             } else if (!"".equalsIgnoreCase(promotion)) {
                 promoName = promotion;
             } else {
-                promoName = "No Promo Code applied";
+                promoName = Data.NO_PROMO_APPLIED;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1207,11 +1213,8 @@ public class JSONParser {
 		try {
 			if (Data.userData != null) {
 				int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-				String message = JSONParser.getServerMessage(jObj);
 				if (ApiResponseFlags.PAYTM_BALANCE_ERROR.getOrdinal() == flag) {
-					Data.userData.setPaytmError(1);
-					Data.userData.setPaytmBalance(0);
-					Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
+					setPaytmErrorCase();
 				} else {
 					Data.userData.setPaytmError(0);
 					String paytmStatus = jObj.optString("STATUS", Data.PAYTM_STATUS_INACTIVE);
@@ -1224,8 +1227,19 @@ public class JSONParser {
 						Data.userData.setPaytmBalance(0);
 					}
 					Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
-
 				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void setPaytmErrorCase(){
+		try {
+			if (Data.userData != null) {
+				Data.userData.setPaytmError(1);
+				Data.userData.setPaytmBalance(0);
+				Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

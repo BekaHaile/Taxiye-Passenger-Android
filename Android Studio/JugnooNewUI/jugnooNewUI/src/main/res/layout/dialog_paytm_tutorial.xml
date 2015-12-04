@@ -8,6 +8,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/relativeLayoutAdjustable"
         android:layout_width="match_parent"
         android:layout_height="640px"
         android:background="@color/black_translucent_more"
@@ -92,9 +93,9 @@
             android:layout_width="36px"
             android:layout_height="145px"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20px"
+            android:layout_marginTop="10px"
             android:src="@drawable/ic_arrow_straight"
-            android:tag="mwar"
+            android:tag="mhar"
             />
 
         <ImageView
@@ -103,9 +104,9 @@
             android:layout_height="196px"
             android:layout_below="@+id/imageViewPaytmArrowTut"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="0px"
             android:src="@drawable/ic_paytm_tut_text"
-            android:tag="mwar"
+            android:tag="mhar"
             />
 
     </RelativeLayout>

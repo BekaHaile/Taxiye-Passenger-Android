@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -32,6 +34,8 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -53,6 +57,10 @@ public class AddPaytmFragment extends Fragment {
 
 	View rootView;
 	PaymentActivity paymentActivity;
+
+	ScrollView scrollView;
+	LinearLayout linearLayoutMain;
+	TextView textViewScroll;
 
 
 	@Override
@@ -104,6 +112,9 @@ public class AddPaytmFragment extends Fragment {
 		buttonVerifyOTP = (Button) rootView.findViewById(R.id.buttonVerifyOTP);	buttonVerifyOTP.setTypeface(Fonts.latoRegular(paymentActivity));
 		buttonResendOTP = (Button) rootView.findViewById(R.id.buttonResendOTP);	buttonResendOTP.setTypeface(Fonts.latoRegular(paymentActivity));
 
+		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
+		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
+		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -118,7 +129,7 @@ public class AddPaytmFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				generateOTP();
+				generateOTP(false);
 			}
 		});
 
@@ -142,6 +153,7 @@ public class AddPaytmFragment extends Fragment {
 				editTextOTP.requestFocus();
 				editTextOTP.setSelection(editTextOTP.getText().length());
 				Utils.showSoftKeyboard(paymentActivity, editTextOTP);
+				onClickListener.onClick(v);
 			}
 		});
 
@@ -152,12 +164,14 @@ public class AddPaytmFragment extends Fragment {
 				return false;
 			}
 		});
+		editTextOTP.setOnFocusChangeListener(onFocusChangeListener);
+		editTextOTP.setOnClickListener(onClickListener);
 
 		buttonResendOTP.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				generateOTP();
+				generateOTP(true);
 			}
 		});
 
@@ -169,6 +183,18 @@ public class AddPaytmFragment extends Fragment {
 			e.printStackTrace();
 		}
 
+		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+			@Override
+			public void keyboardOpened() {
+
+			}
+
+			@Override
+			public void keyBoardClosed() {
+
+			}
+		}));
+
 		setInitialUI();
 
 
@@ -176,6 +202,39 @@ public class AddPaytmFragment extends Fragment {
 	}
 
 
+	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+
+		@Override
+		public void onFocusChange(final View v, boolean hasFocus) {
+			if (hasFocus) {
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						scrollView.smoothScrollTo(0, textViewScroll.getTop());
+					}
+				}, 200);
+			} else {
+				try {
+					((EditText)v).setError(null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				((EditText)v).setError(null);
+			}
+		}
+	};
+
+	private View.OnClickListener onClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(final View v) {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					scrollView.smoothScrollTo(0, textViewScroll.getTop());
+				}
+			}, 200);
+		}
+	};
 
 	private void setInitialUI(){
 		textViewOTPMessage.setText("Request an OTP to link Paytm Wallet to");
@@ -213,7 +272,7 @@ public class AddPaytmFragment extends Fragment {
 	}
 
 
-	public void generateOTP() {
+	public void generateOTP(final boolean retry) {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
@@ -236,6 +295,9 @@ public class AddPaytmFragment extends Fragment {
 							int flag = jObj.getInt("flag");
 							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 								setUIAfterRequest();
+								if(retry){
+									DialogPopup.dialogBanner(paymentActivity, "OTP sent successfully");
+								}
 							}
 							else if(ApiResponseFlags.PAYTM_INVALID_EMAIL.getOrdinal() == flag){
 								DialogPopup.alertPopup(paymentActivity, "", message);

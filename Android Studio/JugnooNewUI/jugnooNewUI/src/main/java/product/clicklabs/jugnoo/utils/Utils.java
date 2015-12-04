@@ -2,6 +2,9 @@ package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -9,9 +12,13 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.view.View;
@@ -37,9 +44,11 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 
 
 public class Utils {
@@ -62,6 +71,32 @@ public class Utils {
 				return 1;
 			}
 			else if((d1 - d2) < epsilon){
+				return -1;
+			}
+			else{
+				return 0;
+			}
+		}
+	}
+
+	/**
+	 * Compares two float values with epsilon precision
+	 * @param f1 float value 1
+	 * @param f2 float value 2
+	 * @return 1 if d1 > d2,
+	 * -1 if d1 < d2 &
+	 * 0 if d1 == d2
+	 */
+	public static int compareFloat(float f1, float f2){
+		if(f1 == f2){
+			return 0;
+		}
+		else{
+			float epsilon = 0.0000001f;
+			if((f1 - f2) > epsilon){
+				return 1;
+			}
+			else if((f1 - f2) < epsilon){
 				return -1;
 			}
 			else{
@@ -468,6 +503,66 @@ public class Utils {
 		}
 		return "127.0.0.1";
 	}
+
+
+    public static void notificationManager(Context context, String message, int NOTIFICATION_ID) {
+
+        try {
+            long when = System.currentTimeMillis();
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            Log.v("message", "," + message);
+
+            Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+
+
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            builder.setAutoCancel(true);
+            builder.setContentTitle("Autos");
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            builder.setContentText(message);
+            builder.setTicker(message);
+
+
+//            if (ring) {
+//                builder.setLights(Color.GREEN, 500, 500);
+//            } else {
+                builder.setDefaults(Notification.DEFAULT_ALL);
+//            }
+
+            builder.setWhen(when);
+            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.jugnoo_icon));
+            builder.setSmallIcon(R.drawable.notification_icon);
+            builder.setContentIntent(intent);
+
+
+            Notification notification = builder.build();
+            notificationManager.notify(NOTIFICATION_ID, notification);
+
+//            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+//            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+//            wl.acquire(15000);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public static boolean isForeground(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Activity.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager
+                .getRunningTasks(1);
+        ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
+        if (componentInfo.getPackageName().equals(context.getPackageName()))
+            return true;
+        return false;
+    }
 
 
 }

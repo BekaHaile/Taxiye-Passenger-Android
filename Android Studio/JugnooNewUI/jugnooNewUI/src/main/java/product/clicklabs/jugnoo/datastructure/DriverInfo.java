@@ -4,13 +4,15 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.Data;
+
 public class DriverInfo {
 	
 	public String userId, name, image, carImage, phoneNumber, rating, carNumber;
 	public LatLng latLng;
 	public int freeRide;
 	
-	public String promoName = "No Promo Code applied", eta = "10";
+	public String promoName = Data.NO_PROMO_APPLIED, eta = "10";
 	
 	public DriverInfo(String userId){
 		this.userId = userId;

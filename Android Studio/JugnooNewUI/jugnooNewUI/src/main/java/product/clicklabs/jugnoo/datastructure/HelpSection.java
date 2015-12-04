@@ -8,7 +8,7 @@ public enum HelpSection {
 	FAQ(1, "FAQs"),
 	PRIVACY(2, "Privacy Policy"),
 	TERMS(3, "Terms of Use"),
-	FARE_DETAILS(4, "Fare Details"),
+	FARE_DETAILS(4, "Rate Card"),
 	SCHEDULES_TNC(5, "Terms of Schedule"),
 	WALLET_PROMOTIONS(7, "Wallet Promotions")
 	;

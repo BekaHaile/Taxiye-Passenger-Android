@@ -145,23 +145,24 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 
             @Override
             public void onClick(View v) {
-				holder = (ViewHolderPromotion) v.getTag();
-				PromoCoupon promoCoupon = promoCouponList.get(holder.id);
-				if(promoCoupon instanceof CouponInfo){
-					DialogPopup.alertPopupLeftOriented(context, "", ((CouponInfo) promoCoupon).description);
-					if(((CouponInfo)promoCoupon).id == -1){
-						FlurryEventLogger.event(COUPON_SELECTION_NOT_MADE);
-					}
-					else{
-						FlurryEventLogger.event(COUPON_SELECTION_MADE);
-					}
-				}
-				else if(promoCoupon instanceof PromotionInfo){
-					if(((PromotionInfo)promoCoupon).id > 0){
-						DialogPopup.alertPopupHtml(context, "", ((PromotionInfo)promoCoupon).terms);
-						FlurryEventLogger.event(COUPON_SELECTION_MADE);
-					}
-				}
+//				holder = (ViewHolderPromotion) v.getTag();
+//				PromoCoupon promoCoupon = promoCouponList.get(holder.id);
+//				if(promoCoupon instanceof CouponInfo){
+//					DialogPopup.alertPopupLeftOriented(context, "", ((CouponInfo) promoCoupon).description);
+//					if(((CouponInfo)promoCoupon).id == -1){
+//						FlurryEventLogger.event(COUPON_SELECTION_NOT_MADE);
+//					}
+//					else{
+//						FlurryEventLogger.event(COUPON_SELECTION_MADE);
+//					}
+//				}
+//				else if(promoCoupon instanceof PromotionInfo){
+//					if(((PromotionInfo)promoCoupon).id > 0){
+//						DialogPopup.alertPopupHtml(context, "", ((PromotionInfo)promoCoupon).terms);
+//						FlurryEventLogger.event(COUPON_SELECTION_MADE);
+//					}
+//				}
+                performSelectClick(v);
             }
         });
 
@@ -169,19 +170,26 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 
             @Override
             public void onClick(View v) {
-				holder = (ViewHolderPromotion) v.getTag();
-				if((selectedCoupon != null) && (selectedCoupon.id == promoCouponList.get(holder.id).id)){
-					selectedCoupon = noSelectionCoupon;
-					notifyDataSetChanged();
-				}
-				else{
-					selectedCoupon = promoCouponList.get(holder.id);
-					notifyDataSetChanged();
-				}
+                performSelectClick(v);
             }
         });
 
         return convertView;
+    }
+
+    private void performSelectClick(View v){
+        try {
+            holder = (ViewHolderPromotion) v.getTag();
+            if ((selectedCoupon != null) && (selectedCoupon.id == promoCouponList.get(holder.id).id)) {
+                selectedCoupon = noSelectionCoupon;
+                notifyDataSetChanged();
+            } else {
+                selectedCoupon = promoCouponList.get(holder.id);
+                notifyDataSetChanged();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 

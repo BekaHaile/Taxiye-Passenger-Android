@@ -73,7 +73,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="6px"
                 android:text="Paytm:"
-                android:textColor="@color/blue"
+                android:textColor="@color/blue_light"
                 android:textSize="26px"
                 android:layout_toLeftOf="@+id/textViewTransactionType"
                 android:visibility="gone"

@@ -72,6 +72,7 @@
             android:textColor="@color/black_text"
             android:textSize="18px"
             android:layout_alignParentBottom="true"
+            android:visibility="gone"
             />
 
     </RelativeLayout>
