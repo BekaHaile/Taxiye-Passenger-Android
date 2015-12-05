@@ -1994,18 +1994,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		drawerLayout.closeDrawer(menuLayout);
 	}
 
+	private float googleMapPadding = 0;
 	private void setGoogleMapPadding(float bottomPadding){
 		try {
 			if(map != null){
 				map.setPadding(0, 0, 0, (int)(ASSL.Yscale() * bottomPadding));
+				googleMapPadding = bottomPadding;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void setCentrePinAccToGoogleMapPadding(){
+		try {
+			if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
 				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewCenterPinMargin.getLayoutParams();
-				params.height = (int)(ASSL.Yscale() * bottomPadding);
+				params.height = (int) (ASSL.Yscale() * googleMapPadding);
 				imageViewCenterPinMargin.setLayoutParams(params);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+
 
 
 	public void callAnAutoClicked(LatLng requestLatLng){
@@ -2204,6 +2217,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     zoomedForSearch = false;
                     lastSearchLatLng = null;
+					setCentrePinAccToGoogleMapPadding();
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2999,11 +3013,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void updateUIInRideFareInfo(){
 		try{
-			if(Data.fareStructure != null) {
+			if(Data.assignedDriverInfo.getFareFixed() > 0) {
 				textViewInRideMinimumFare.setVisibility(View.VISIBLE);
 				textViewInRideMinimumFare.setText("Minimum Fare "+
-						getResources().getString(R.string.rupee)+" "
-                        +Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
+						getResources().getString(R.string.rupee)+" "+Data.assignedDriverInfo.getFareFixedStr());
 			}
 			else{
 				textViewInRideMinimumFare.setVisibility(View.GONE);
@@ -3177,7 +3190,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
 //                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
                 }
-                textViewInRideState.setText("Driver Enroute");
+                textViewInRideState.setText("Driver\nEnroute");
             }
         } else if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
             textViewInRideState.setText("Driver arrived at pick up point");
@@ -5081,7 +5094,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (jObj.getString("session_id").equalsIgnoreCase(Data.cSessionId)) {
                     cancelTimerUpdateDrivers();
                     cancelTimerRequestRide();
-                    fetchAcceptedDriverInfoAndChangeState(jObj);
+                    fetchAcceptedDriverInfoAndChangeState(jObj, false);
                 }
             }
         } catch (Exception e) {
@@ -5096,25 +5109,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj) {
+    public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj, boolean inRide) {
         try {
             cancelTimerRequestRide();
-            passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-//			{
-//	            "user_name": "Shankar Bhagwati",
-//	            "session_id": 798,
-//	            "driver_car_image": "",
-//	            "flag": 5,
-//	            "engagement_id": "2704",
-//	            "phone_no": "+919780298413",
-//	            "driver_id": 207,
-//	            "rating": 4.888888888888889,
-//	            "user_image": "http:\/\/graph.facebook.com\/717496164959213\/picture?width=160&height=160"
-//	        }
 
             Data.cSessionId = jObj.getString("session_id");
             Data.cEngagementId = jObj.getString("engagement_id");
-
             Data.cDriverId = jObj.getString("driver_id");
 
             String userName = jObj.getString("user_name");
@@ -5140,126 +5140,64 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (jObj.has("driver_car_no")) {
                 carNumber = jObj.getString("driver_car_no");
             }
-
             int freeRide = 0;
             if (jObj.has("free_ride")) {
                 freeRide = jObj.getInt("free_ride");
             }
-
+			String eta = "5";
+			if (jObj.has("eta")) {
+				eta = jObj.getString("eta");
+			}
             String driverRating = jObj.getString("rating");
+			String promoName = JSONParser.getPromoName(jObj);
 
             Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
+			Data.startRidePreviousLatLng = Data.pickupLatLng;
 
-            String promoName = JSONParser.getPromoName(jObj);
-            String eta = "5";
-            if (jObj.has("eta")) {
-                eta = jObj.getString("eta");
-            }
+			double fareFactor = 1.0;
+			if (jObj.has("fare_factor")) {
+				fareFactor = jObj.getDouble("fare_factor");
+			}
+			Data.userData.fareFactor = fareFactor;
+			double fareFixed = jObj.optDouble("fare_fixed", 0);
+			int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.NO.getOrdinal());
+
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
-                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta);
+                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta, fareFixed, preferredPaymentMode);
 
 
-            double fareFactor = 1.0;
-            if (jObj.has("fare_factor")) {
-                fareFactor = jObj.getDouble("fare_factor");
-            }
 
-            Data.userData.fareFactor = fareFactor;
+			if(inRide){
+				initializeStartRideVariables();
+				passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						switchPassengerScreen(passengerScreenMode);
+					}
+				});
+			}
+			else{
+				passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Log.e("assignedDriverInfo", "=" + Data.assignedDriverInfo);
+						Log.e("myLocation", "=" + myLocation);
+						if (myLocation != null) {
+							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+							switchPassengerScreen(passengerScreenMode);
+						}
+					}
+				});
+			}
 
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.e("assignedDriverInfo", "=" + Data.assignedDriverInfo);
-                    Log.e("myLocation", "=" + myLocation);
-                    if (myLocation != null) {
-                        passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-                        switchPassengerScreen(passengerScreenMode);
-                    }
-                }
-            });
-
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    public void fetchAcceptedDriverStartRideInfoAndChangeState(JSONObject jObj) {
-        try {
-            cancelTimerRequestRide();
-            passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-
-            // response = {
-            // "flag": 114,
-            // "driver_id": 1,
-            // "user_name": "Name",
-            // "phone_no": "0172",
-            // "user_image": "abcd.png",
-            // "driver_car_image": "wxyz.png",
-            // "driver_car_number": "1234",
-            // "rating": 5,
-            // "current_location_latitude": 11,
-            // "current_location_longitude": 11,
-            // "engagement_id": 1,
-            // "session_id": 1};};
-
-            Data.cSessionId = jObj.getString("session_id");
-            Data.cEngagementId = jObj.getString("engagement_id");
-
-            Data.cDriverId = jObj.getString("driver_id");
-
-            String userName = jObj.getString("user_name");
-            String driverPhone = jObj.getString("phone_no");
-            String driverImage = jObj.getString("user_image");
-            String driverCarImage = jObj.getString("driver_car_image");
-            double latitude = jObj.getDouble("current_location_latitude");
-            double longitude = jObj.getDouble("current_location_longitude");
-            String driverRating = jObj.getString("rating");
-
-            String carNumber = "";
-            if (jObj.has("driver_car_no")) {
-                carNumber = jObj.getString("driver_car_no");
-            }
-
-            int freeRide = 0;
-            if (jObj.has("free_ride")) {
-                freeRide = jObj.getInt("free_ride");
-            }
-
-            String promoName = JSONParser.getPromoName(jObj);
-
-            String eta = "5";
-            if (jObj.has("eta")) {
-                eta = jObj.getString("eta");
-            }
-
-            Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
-                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta);
-
-
-            double fareFactor = 1.0;
-            if (jObj.has("fare_factor")) {
-                fareFactor = jObj.getDouble("fare_factor");
-            }
-
-            Data.userData.fareFactor = fareFactor;
-
-            Data.startRidePreviousLatLng = Data.pickupLatLng;
-            initializeStartRideVariables();
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    switchPassengerScreen(passengerScreenMode);
-                }
-            });
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void clearRideSPData() {
@@ -5698,12 +5636,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
                                                 if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                                     cancelTimerRequestRide();
-                                                    fetchAcceptedDriverInfoAndChangeState(jObj);
+                                                    fetchAcceptedDriverInfoAndChangeState(jObj, false);
                                                 }
                                             } else if (ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag) {
                                                 if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                                     cancelTimerRequestRide();
-                                                    fetchAcceptedDriverStartRideInfoAndChangeState(jObj);
+													fetchAcceptedDriverInfoAndChangeState(jObj, true);
                                                 }
                                             } else if (ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");

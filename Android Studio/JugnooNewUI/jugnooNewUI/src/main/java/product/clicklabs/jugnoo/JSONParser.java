@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.NearbyDriver;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -575,9 +576,9 @@ public class JSONParser {
             String engagementId = "", sessionId = "", userId = "", latitude = "", longitude = "",
                     driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", driverCarNumber = "",
                     pickupLatitude = "", pickupLongitude = "";
-            int freeRide = 0;
-            String promoName = "", eta = "";
-            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0;
+            int freeRide = 0, preferredPaymentMode = PaymentOption.NO.getOrdinal();
+			String promoName = "", eta = "";
+            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -654,6 +655,9 @@ public class JSONParser {
                                 fareFactor = jObject.getDouble("fare_factor");
                             }
 
+							fareFixed = jObject.optDouble("fare_fixed", 0);
+							preferredPaymentMode = jObject.optInt("preferred_payment_mode", PaymentOption.NO.getOrdinal());
+
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);
@@ -710,7 +714,7 @@ public class JSONParser {
 
 
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
-                        driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta);
+                        driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta, fareFixed, preferredPaymentMode);
 
                 Data.userData.fareFactor = fareFactor;
 
