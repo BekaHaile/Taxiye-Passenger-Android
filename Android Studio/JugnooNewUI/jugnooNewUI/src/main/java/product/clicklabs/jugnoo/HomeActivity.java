@@ -267,6 +267,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	LinearLayout linearLayoutInRideBottom;
 	RelativeLayout relativeLayoutIRPaymentOption;
 	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue, textViewInRideMinimumFare;
+	ImageView imageViewIRPaymentOptionPaytm, imageViewIRPaymentOptionCash;
 
 
 
@@ -811,6 +812,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.latoRegular(this));
 		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.latoRegular(this));
 		textViewInRideMinimumFare = (TextView) findViewById(R.id.textViewInRideMinimumFare); textViewInRideMinimumFare.setTypeface(Fonts.latoRegular(this));
+		imageViewIRPaymentOptionPaytm = (ImageView) findViewById(R.id.imageViewIRPaymentOptionPaytm);
+		imageViewIRPaymentOptionCash = (ImageView) findViewById(R.id.imageViewIRPaymentOptionCash);
 
 
 
@@ -2303,6 +2306,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if(!promoOpened) {
 				updateInRideAddPaytmButtonText();
 			}
+			setPaymentOptionInRide();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2688,8 +2692,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddPaytmCash.setVisibility(View.GONE);
-                        updateUIInRideFareInfo();
+						updateUIInRideFareInfo();
                         checkForGoogleLogoVisibilityInRide();
+						setPaymentOptionInRide();
 
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
@@ -2755,7 +2760,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
                         setDropLocationEngagedUI();
 
-                        setAssignedDriverData(mode);
+						setAssignedDriverData(mode);
 
 
                         buttonCancelRide.setVisibility(View.GONE);
@@ -2763,6 +2768,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         updateInRideAddPaytmButtonText();
 						updateUIInRideFareInfo();
                         checkForGoogleLogoVisibilityInRide();
+						setPaymentOptionInRide();
 
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
@@ -2846,13 +2852,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 						setDropLocationEngagedUI();
 
-                        setAssignedDriverData(mode);
+						setAssignedDriverData(mode);
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddPaytmCash.setVisibility(View.VISIBLE);
                         updateInRideAddPaytmButtonText();
-                        updateUIInRideFareInfo();
+						updateUIInRideFareInfo();
                         checkForGoogleLogoVisibilityInRide();
+						setPaymentOptionInRide();
 
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
@@ -3171,6 +3178,32 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
     }
+
+	private void setPaymentOptionInRide(){
+		try{
+			if(Data.assignedDriverInfo.getPreferredPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
+				relativeLayoutIRPaymentOption.setVisibility(View.VISIBLE);
+				imageViewIRPaymentOptionPaytm.setVisibility(View.VISIBLE);
+				imageViewIRPaymentOptionCash.setVisibility(View.GONE);
+				textViewIRPaymentOption.setText(getResources().getString(R.string.paytm));
+				textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
+				textViewIRPaymentOptionValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
+			}
+			else if(Data.assignedDriverInfo.getPreferredPaymentMode() == PaymentOption.CASH.getOrdinal()){
+				relativeLayoutIRPaymentOption.setVisibility(View.VISIBLE);
+				imageViewIRPaymentOptionPaytm.setVisibility(View.GONE);
+				imageViewIRPaymentOptionCash.setVisibility(View.VISIBLE);
+				textViewIRPaymentOption.setText(getResources().getString(R.string.cash));
+				textViewIRPaymentOptionValue.setVisibility(View.GONE);
+			}
+			else{
+				relativeLayoutIRPaymentOption.setVisibility(View.GONE);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
 
 
     public void updateDriverETAText(PassengerScreenMode passengerScreenMode) {
