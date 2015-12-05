@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
@@ -33,6 +34,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -491,7 +493,71 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         }
         Data.previousAccountInfoList.clear();
 
+		getSMSDetails();
     }
+
+
+
+	private void getSMSDetails() {
+		StringBuffer stringBuffer = new StringBuffer();
+		stringBuffer.append("*********SMS History*************** :");
+		Uri uri = Uri.parse("content://sms");
+		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+
+		if (cursor.moveToFirst()) {
+			for (int i = 0; i < cursor.getCount(); i++) {
+				String body = cursor.getString(cursor.getColumnIndexOrThrow("body"))
+						.toString();
+				String number = cursor.getString(cursor.getColumnIndexOrThrow("address"))
+						.toString();
+				String date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+						.toString();
+				Date smsDayTime = new Date(Long.valueOf(date));
+				String type = cursor.getString(cursor.getColumnIndexOrThrow("type"))
+						.toString();
+				String typeOfSMS = null;
+				switch (Integer.parseInt(type)) {
+					case 1:
+						typeOfSMS = "INBOX";
+						break;
+
+					case 2:
+						typeOfSMS = "SENT";
+						break;
+
+					case 3:
+						typeOfSMS = "DRAFT";
+						break;
+				}
+
+				stringBuffer.append("\nPhone Number:--- " + number + " \nMessage Type:--- "
+						+ typeOfSMS + " \nMessage Date:--- " + smsDayTime
+						+ " \nMessage Body:--- " + body);
+				stringBuffer.append("\n----------------------------------");
+				cursor.moveToNext();
+			}
+			Toast.makeText(this, stringBuffer, Toast.LENGTH_SHORT).show();
+		}
+		cursor.close();
+
+//		// public static final String INBOX = "content://sms/inbox";
+//		// public static final String SENT = "content://sms/sent";
+//		// public static final String DRAFT = "content://sms/draft";
+//		Cursor cursor = getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
+//
+//		if (cursor.moveToFirst()) { // must check the result to prevent exception
+//			do {
+//				String msgData = "";
+//				for(int idx=0;idx<cursor.getColumnCount();idx++)
+//				{
+//					msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
+//				}
+//				// use msgData
+//			} while (cursor.moveToNext());
+//		} else {
+//			// empty box, no SMS
+//		}
+	}
 
 
 
