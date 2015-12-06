@@ -501,20 +501,20 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 	private void getSMSDetails() {
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("*********SMS History*************** :");
-		Uri uri = Uri.parse("content://sms");
-		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+		Uri uri = Uri.parse("content://sms/inbox");
+        long now = System.currentTimeMillis();
+        long last1 = now - 60*60*1000;//1h in millis
+        String[] selectionArgs = new String[]{Long.toString(last1)};
+        String selection = "date" + ">?";
+		Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
 
 		if (cursor.moveToFirst()) {
 			for (int i = 0; i < cursor.getCount(); i++) {
-				String body = cursor.getString(cursor.getColumnIndexOrThrow("body"))
-						.toString();
-				String number = cursor.getString(cursor.getColumnIndexOrThrow("address"))
-						.toString();
-				String date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
-						.toString();
+				String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+                String number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+				String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
 				Date smsDayTime = new Date(Long.valueOf(date));
-				String type = cursor.getString(cursor.getColumnIndexOrThrow("type"))
-						.toString();
+				String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
 				String typeOfSMS = null;
 				switch (Integer.parseInt(type)) {
 					case 1:
@@ -536,7 +536,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 				stringBuffer.append("\n----------------------------------");
 				cursor.moveToNext();
 			}
-			Toast.makeText(this, stringBuffer, Toast.LENGTH_SHORT).show();
+            DialogPopup.alertPopup(this, "", stringBuffer.toString());
 		}
 		cursor.close();
 
