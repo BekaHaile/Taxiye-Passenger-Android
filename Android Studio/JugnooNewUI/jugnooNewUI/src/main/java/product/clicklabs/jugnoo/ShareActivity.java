@@ -114,7 +114,8 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 				String strPre = Data.referralMessages.referralMessage.split(Data.userData.referralCode)[0];
 				String strPost = Data.referralMessages.referralMessage.split(Data.userData.referralCode)[1];
 				textViewCode.setText(Data.userData.referralCode);
-				textViewDesc.setText(Data.referralMessages.referralMessage);
+				textViewDesc.setText(Data.referralMessages.referralShortMessage);
+				Log.v("length of short message", "--> "+textViewDesc.getText().length());
 				
 				SpannableString sstr = new SpannableString(Data.userData.referralCode);
 				final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
