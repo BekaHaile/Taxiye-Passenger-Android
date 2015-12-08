@@ -576,7 +576,7 @@ public class JSONParser {
             String engagementId = "", sessionId = "", userId = "", latitude = "", longitude = "",
                     driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", driverCarNumber = "",
                     pickupLatitude = "", pickupLongitude = "";
-            int freeRide = 0, preferredPaymentMode = PaymentOption.NO.getOrdinal();
+            int freeRide = 0, preferredPaymentMode = PaymentOption.CASH.getOrdinal();
 			String promoName = "", eta = "";
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
 
@@ -655,8 +655,12 @@ public class JSONParser {
                                 fareFactor = jObject.getDouble("fare_factor");
                             }
 
-							fareFixed = jObject.optDouble("fare_fixed", 0);
-							preferredPaymentMode = jObject.optInt("preferred_payment_mode", PaymentOption.NO.getOrdinal());
+                            try{
+                                fareFixed = jObject.optJSONObject("fare_details").optDouble("fare_fixed", 0);
+                            } catch(Exception e){
+                                e.printStackTrace();
+                            }
+							preferredPaymentMode = jObject.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
 
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {

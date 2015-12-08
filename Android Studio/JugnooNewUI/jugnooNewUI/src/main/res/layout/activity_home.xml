@@ -936,7 +936,7 @@
                         android:layout_marginBottom="60px"
                         android:layout_marginLeft="40px"
                         android:layout_marginRight="40px"
-                        android:background="@drawable/background_white_rounded"
+                        android:background="@drawable/dropshadow_grey"
                         android:orientation="vertical">
 
                         <RelativeLayout
@@ -1087,8 +1087,6 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:layout_marginLeft="2px"
-                            android:layout_marginRight="2px"
                             android:background="@color/grey_light"/>
 
                         <LinearLayout
@@ -1144,7 +1142,6 @@
                     </LinearLayout>
 
                     <!-- low jugnoo cash layout-->
-
                     <LinearLayout
                         android:id="@+id/linearLayoutInRideBottom"
                         android:layout_width="match_parent"

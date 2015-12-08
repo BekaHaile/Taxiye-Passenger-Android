@@ -3164,7 +3164,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (PassengerScreenMode.P_REQUEST_FINAL == mode || PassengerScreenMode.P_DRIVER_ARRIVED == mode) {
             updateDriverETAText(mode);
         } else {
-            textViewInRideState.setText("Ride in progress");
+            textViewInRideState.setText("Ride in\nprogress");
         }
 
 
@@ -3189,15 +3189,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
 				textViewIRPaymentOptionValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
 			}
-			else if(Data.assignedDriverInfo.getPreferredPaymentMode() == PaymentOption.CASH.getOrdinal()){
+			else{
 				relativeLayoutIRPaymentOption.setVisibility(View.VISIBLE);
 				imageViewIRPaymentOptionPaytm.setVisibility(View.GONE);
 				imageViewIRPaymentOptionCash.setVisibility(View.VISIBLE);
 				textViewIRPaymentOption.setText(getResources().getString(R.string.cash));
 				textViewIRPaymentOptionValue.setVisibility(View.GONE);
-			}
-			else{
-				relativeLayoutIRPaymentOption.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -3226,7 +3223,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewInRideState.setText("Driver\nEnroute");
             }
         } else if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-            textViewInRideState.setText("Driver arrived at pick up point");
+            textViewInRideState.setText("Driver arrived\nat Pickup");
         }
     }
 
@@ -5192,8 +5189,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				fareFactor = jObj.getDouble("fare_factor");
 			}
 			Data.userData.fareFactor = fareFactor;
-			double fareFixed = jObj.optDouble("fare_fixed", 0);
-			int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.NO.getOrdinal());
+			double fareFixed = 0;
+            try{
+                fareFixed = jObj.optJSONObject("fare_details").optDouble("fare_fixed", 0);
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+			int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
 
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
