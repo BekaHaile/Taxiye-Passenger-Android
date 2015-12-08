@@ -91,8 +91,8 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
         webViewReferralCaption = (WebView) findViewById(R.id.webViewReferralCaption);
 		textViewReferralCode = (TextView) findViewById(R.id.textViewReferralCode); textViewReferralCode.setTypeface(Fonts.latoRegular(this));
         textViewReferralCaption = (TextView) findViewById(R.id.textViewReferralCaption); textViewReferralCaption.setTypeface(Fonts.latoRegular(this));
-		((TextView)findViewById(R.id.textViewShare)).setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-		textViewDesc = (TextView)findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.latoLight(this));
+		((TextView)findViewById(R.id.textViewShare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewDesc = (TextView)findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.latoRegular(this));
 		textViewMoreInfo = (TextView)findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.latoRegular(this));
 
 		textViewCode = (TextView)findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.latoRegular(this));
@@ -164,10 +164,10 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 		textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+                FlurryEventLogger.event(INVITE_EARN_MORE_INFO);
 				DialogPopup.alertPopupWithListener(ShareActivity.this, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-
 					}
 				});
 			}
@@ -177,58 +177,64 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 		buttonInvite.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				/*try {
-					Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-					shareIntent.setType("text/plain");
-					shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Content to share");
-					PackageManager pm = getApplicationContext().getPackageManager();
-					List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
-					for (final ResolveInfo app : activityList) {
-						if ((app.activityInfo.name).contains("facebook")) {
-							final ActivityInfo activity = app.activityInfo;
-							final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
-							shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-							shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-							shareIntent.setComponent(name);
-							startActivity(shareIntent);
-							break;
-						}
-						else{
-							Intent share = new Intent(Intent.ACTION_SEND);
-							share.setType("text/plain");
-							share.putExtra(Intent.EXTRA_TEXT, Data.userData.referralCode);
-							//share.putExtra(Intent.EXTRA_TEXT, "http://www.jugnoo.in");
-							startActivity(Intent.createChooser(share, "Share Text"));
-						}
-					}
-				}catch (Exception e){
-					e.printStackTrace();
-				}*/
-
+//				try {
+//					Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+//					shareIntent.setType("text/plain");
+//					shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Content to share");
+//					PackageManager pm = getApplicationContext().getPackageManager();
+//					List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+//					for (final ResolveInfo app : activityList) {
+//						if ((app.activityInfo.name).contains("facebook")) {
+//							final ActivityInfo activity = app.activityInfo;
+//							final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+//							shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+//							shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//							shareIntent.setComponent(name);
+//							startActivity(shareIntent);
+//							break;
+//						}
+//						else{
+//							Intent share = new Intent(Intent.ACTION_SEND);
+//							share.setType("text/plain");
+//							share.putExtra(Intent.EXTRA_TEXT, Data.userData.referralCode);
+//							//share.putExtra(Intent.EXTRA_TEXT, "http://www.jugnoo.in");
+//							startActivity(Intent.createChooser(share, "Share Text"));
+//						}
+//					}
+//				}catch (Exception e){
+//					e.printStackTrace();
+//				}
+//
 //				String shareBody = "app string text more text! Get the app at http://jugnoo.in";
-				String shareBody = Data.userData.referralCode + " http://share.jugnoo.in";
-				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-				sharingIntent.setType("text/plain");
-				PackageManager pm = view.getContext().getPackageManager();
-				List<ResolveInfo> activityList = pm.queryIntentActivities(sharingIntent, 0);
-				for(final ResolveInfo app : activityList) {
-					Log.i("ShareActivity", "app.actinfo.name: " + app.activityInfo.name);
-					//if((app.activityInfo.name).contains("facebook")) {
-					if("com.facebook.katana.ShareLinkActivity".equals(app.activityInfo.name)) {
-						Log.v("facebook","facebook sdk called");
-						sharingIntent.putExtra(Intent.EXTRA_SUBJECT, Data.userData.referralCode);
-						sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-						//startActivity(Intent.createChooser(sharingIntent, "Share idea"));
-						break;
-					} else {
-						sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "app name");
-						sharingIntent.putExtra(android.content.Intent.EXTRA_TITLE, "JUgnoo");
-						sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-						//startActivity(Intent.createChooser(sharingIntent, "Share"));
-						//break;
-					}
-				}
-				startActivity(Intent.createChooser(sharingIntent, "Share"));
+//				String shareBody = Data.userData.referralCode + " http://share.jugnoo.in";
+//				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+//				sharingIntent.setType("text/plain");
+//				PackageManager pm = view.getContext().getPackageManager();
+//				List<ResolveInfo> activityList = pm.queryIntentActivities(sharingIntent, 0);
+//				for(final ResolveInfo app : activityList) {
+//					Log.i("ShareActivity", "app.actinfo.name: " + app.activityInfo.name);
+//					//if((app.activityInfo.name).contains("facebook")) {
+//					if("com.facebook.katana.ShareLinkActivity".equals(app.activityInfo.name)) {
+//						Log.v("facebook","facebook sdk called");
+//						sharingIntent.putExtra(Intent.EXTRA_SUBJECT, Data.userData.referralCode);
+//						sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+//						//startActivity(Intent.createChooser(sharingIntent, "Share idea"));
+//						break;
+//					} else {
+//						sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
+//						sharingIntent.putExtra(android.content.Intent.EXTRA_TITLE, "JUgnoo");
+//						sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+//						//startActivity(Intent.createChooser(sharingIntent, "Share"));
+//						//break;
+//					}
+//				}
+//				startActivity(Intent.createChooser(sharingIntent, "Share"));
+                if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
+                    ReferralActions.openGenericShareIntent(ShareActivity.this, callbackManager);
+                    FlurryEventLogger.event(INVITE_GENERIC);
+                } else{
+                    DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
+                }
 			}
 		});
 		

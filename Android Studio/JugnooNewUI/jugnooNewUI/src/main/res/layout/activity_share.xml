@@ -74,9 +74,9 @@
                 android:id="@+id/textViewShare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20px"
+                android:textSize="24px"
                 android:layout_marginTop="62px"
-                android:textColor="#9E9EA4"
+                android:textColor="@color/grey_dark"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="@string/share_your_code"
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="44px"
                 android:layout_marginTop="77px"
-                android:textColor="@color/black"
+                android:textColor="@color/black_text"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text=""
@@ -103,11 +103,12 @@
                 android:paddingRight="20px"
                 android:layout_marginTop="53px"
                 android:maxLines="2"
-                android:textColor="#6B6B76"
+                android:textColor="@color/grey_dark_more"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="@string/free_ride_desc"
                 />
+            <!-- #6B6B76-->
 
             <TextView
                 android:id="@+id/textViewMoreInfo"
@@ -115,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="44px"
                 android:layout_marginTop="30px"
-                android:textColor="@color/black"
+                android:textColor="@drawable/text_color_black_alpha_selector"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="More Info"

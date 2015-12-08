@@ -17,6 +17,7 @@ public class BranchMetricsUtils {
     public static final String BRANCH_CHANNEL_WHATSAPP = "Whatsapp";
     public static final String BRANCH_CHANNEL_FACEBOOK = "Facebook";
     public static final String BRANCH_CHANNEL_EMAIL = "Email";
+    public static final String BRANCH_CHANNEL_GENERIC = "Generic";
 
     private Context context;
     private BranchMetricsEventHandler branchMetricsEventHandler;

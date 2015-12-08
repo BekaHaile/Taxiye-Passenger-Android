@@ -30,6 +30,7 @@ public class FacebookLoginHelper {
     private Activity activity;
     private FacebookLoginCallback facebookLoginCallback;
     private FacebookUserData facebookUserData;
+    private boolean fetchData = true;
 
     public FacebookLoginHelper(Activity activity, CallbackManager callbackManager, FacebookLoginCallback facebookLoginCallback) {
         facebookUserData = null;
@@ -39,29 +40,29 @@ public class FacebookLoginHelper {
         FacebookSdk.sdkInitialize(activity);
 
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-			@Override
-			public void onSuccess(LoginResult loginResult) {
-				accessToken = loginResult.getAccessToken();
-				if (accessToken != null) {
-					if (accessToken.isExpired()) {
-						callOpenActiveSession();
-					} else {
-						AccessToken.setCurrentAccessToken(accessToken);
-						requestMe(accessToken);
-					}
-				}
-			}
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                accessToken = loginResult.getAccessToken();
+                if (accessToken != null) {
+                    if (accessToken.isExpired()) {
+                        callOpenActiveSession();
+                    } else {
+                        AccessToken.setCurrentAccessToken(accessToken);
+                        requestMe(accessToken, fetchData);
+                    }
+                }
+            }
 
-			@Override
-			public void onCancel() {
-				FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Login cancelled");
-			}
+            @Override
+            public void onCancel() {
+                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Login cancelled");
+            }
 
-			@Override
-			public void onError(FacebookException exception) {
-				FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook\n" + exception.toString());
-			}
-		});
+            @Override
+            public void onError(FacebookException exception) {
+                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook\n" + exception.toString());
+            }
+        });
     }
 
 
@@ -74,7 +75,22 @@ public class FacebookLoginHelper {
             if (accessToken.isExpired()) {
                 callOpenActiveSession();
             } else {
-                requestMe(accessToken);
+                requestMe(accessToken, true);
+            }
+        }
+    }
+
+    public void openFacebookSession(boolean fetchData) {
+        this.fetchData = fetchData;
+        accessToken = AccessToken.getCurrentAccessToken();
+        Log.i("accessToken", "=" + accessToken);
+        if (accessToken == null) {
+            callOpenActiveSession();
+        } else {
+            if (accessToken.isExpired()) {
+                callOpenActiveSession();
+            } else {
+                requestMe(accessToken, fetchData);
             }
         }
     }
@@ -85,18 +101,19 @@ public class FacebookLoginHelper {
     }
 
 
-    private void requestMe(final AccessToken accessToken) {
-		DialogPopup.showLoadingDialog(activity, "Loading...");
-        GraphRequest request = GraphRequest.newMeRequest(
-            accessToken,
-            new GraphRequest.GraphJSONObjectCallback() {
-                @Override
-                public void onCompleted(
-                    JSONObject object,
-                    GraphResponse response) {
-					DialogPopup.dismissLoadingDialog();
+    private void requestMe(final AccessToken accessToken, boolean fetchData) {
+        if(fetchData) {
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+            GraphRequest request = GraphRequest.newMeRequest(
+                    accessToken,
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+                            DialogPopup.dismissLoadingDialog();
 
-                    Log.e("object", "=" + object);
+                            Log.e("object", "=" + object);
 //                    {
 //                        "id": "270452659807369",
 //                        "first_name": "Shankar",
@@ -111,32 +128,35 @@ public class FacebookLoginHelper {
 //                        "updated_time": "2014-04-25T04:25:00+0000"
 //                    }
 
-                    if (object != null) {
-                        String fbId = object.optString("id");
-                        String firstName = object.optString("first_name");
-                        String lastName = object.optString("last_name");
-                        String userName = object.optString("user_name");
+                            if (object != null) {
+                                String fbId = object.optString("id");
+                                String firstName = object.optString("first_name");
+                                String lastName = object.optString("last_name");
+                                String userName = object.optString("user_name");
 
-                        String userEmail = object.optString("email");
-                        if(userEmail == null || "".equalsIgnoreCase(userEmail)){
-                            if(userName != null && !"".equalsIgnoreCase(userName)){
-                                userEmail = userName + "@facebook.com";
-                            }
-                            else{
-                                userEmail = fbId + "@facebook.com";
+                                String userEmail = object.optString("email");
+                                if (userEmail == null || "".equalsIgnoreCase(userEmail)) {
+                                    if (userName != null && !"".equalsIgnoreCase(userName)) {
+                                        userEmail = userName + "@facebook.com";
+                                    } else {
+                                        userEmail = fbId + "@facebook.com";
+                                    }
+                                }
+
+                                facebookUserData = new FacebookUserData(accessToken.getToken(), fbId, firstName, lastName, userName, userEmail);
+                                Log.e("facebookUserData", "=" + facebookUserData);
+                                facebookLoginCallback.facebookLoginDone(facebookUserData);
+                            } else {
+                                facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook");
                             }
                         }
-
-                        facebookUserData = new FacebookUserData(accessToken.getToken(), fbId, firstName, lastName, userName, userEmail);
-                        Log.e("facebookUserData", "=" + facebookUserData);
-                        facebookLoginCallback.facebookLoginDone(facebookUserData);
-                    }
-                    else{
-                        facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook");
-                    }
-                }
-            });
-        request.executeAsync();
+                    });
+            request.executeAsync();
+        }
+        else{
+            facebookUserData = new FacebookUserData(accessToken.getToken(), "", "", "", "", "");
+            facebookLoginCallback.facebookLoginDone(facebookUserData);
+        }
     }
 
 
