@@ -9,10 +9,12 @@ public class ReferralMessages{
     public String referralCaption;
     public int referralCaptionEnabled;
     public String referralEmailSubject, referralPopupText;
+    public String referralShortMessage;
+    public String referralMoreInfoMessage;
 
 
 	public ReferralMessages(String referralMessage, String referralSharingMessage, String fbShareCaption, String fbShareDescription, String referralCaption, int referralCaptionEnabled,
-                            String referralEmailSubject, String referralPopupText){
+                            String referralEmailSubject, String referralPopupText, String referralShortMessage, String referralMoreInfoMessage){
 		this.referralMessage = referralMessage;
 		this.referralSharingMessage = referralSharingMessage;
 		this.fbShareCaption = fbShareCaption;
@@ -21,6 +23,8 @@ public class ReferralMessages{
         this.referralCaptionEnabled = referralCaptionEnabled;
         this.referralEmailSubject = referralEmailSubject;
 		this.referralPopupText = referralPopupText;
+		this.referralShortMessage = referralShortMessage;
+		this.referralMoreInfoMessage = referralMoreInfoMessage;
 	}
 	
 }

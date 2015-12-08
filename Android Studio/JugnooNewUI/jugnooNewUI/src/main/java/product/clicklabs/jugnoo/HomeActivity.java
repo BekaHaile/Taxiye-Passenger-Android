@@ -301,13 +301,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
 
 
-
-
-
-
-
-
-
     // data variables declaration
 
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -3529,8 +3522,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
-
     @Override
     protected void onPause() {
 		stopNotifsUpdater();
@@ -3605,7 +3596,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             ActivityCompat.finishAffinity(this);
         }
     }
-
 
     @Override
     public void onDestroy() {
@@ -3824,8 +3814,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		}
 	}
 
-
-
     public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("pickup location");
@@ -3834,7 +3822,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
         return markerOptions;
     }
-
 
     public MarkerOptions getAssignedDriverCarMarkerOptions(LatLng latlng){
         MarkerOptions markerOptions1 = new MarkerOptions();
@@ -3845,9 +3832,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions1.anchor(0.5f, 0.7f);
         return markerOptions1;
     }
-
-
-
 
     public void addDriverMarkerForCustomer(DriverInfo driverInfo) {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -3883,7 +3867,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
     public void showDriverMarkersAndPanMap(final LatLng userLatLng) {
         try {
 			if("".equalsIgnoreCase(farAwayCity)) {
@@ -3911,7 +3894,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
 
     public void zoomToCurrentLocationWithOneDriver(final LatLng userLatLng) {
 
@@ -3982,7 +3964,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
 	Thread pickupAddressFetcherThread;
 	private void getPickupAddress(final LatLng currentLatLng){
 		stopPickupAddressFetcherThread();
@@ -4032,11 +4013,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		});
 	}
-
-
-
-
-
 
     /**
      * ASync for cancelCustomerRequestAsync from server
@@ -4426,11 +4402,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
     }
-
-
-
-
-
 
     //Customer's timer
     Timer timerDriverLocationUpdater;
