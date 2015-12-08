@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
@@ -493,70 +494,88 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         }
         Data.previousAccountInfoList.clear();
 
-		getSMSDetails();
+
+        new ReadSMSAsync().execute();
     }
 
 
+    private class ReadSMSAsync extends AsyncTask<String, Integer, String>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-	private void getSMSDetails() {
-		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("*********SMS History*************** :");
-		Uri uri = Uri.parse("content://sms/inbox");
-        long now = System.currentTimeMillis();
-        long last1 = now - 60*60*1000;//1h in millis
-        String[] selectionArgs = new String[]{Long.toString(last1)};
-        String selection = "date" + ">?";
-		Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
+        @Override
+        protected String doInBackground(String... params) {
+            String referralCode = getSmsFindReferralCode(1*60*60*1000);
+            return referralCode;
+        }
 
-		if (cursor.moveToFirst()) {
-			for (int i = 0; i < cursor.getCount(); i++) {
-				String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-                String number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-				String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-				Date smsDayTime = new Date(Long.valueOf(date));
-				String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
-				String typeOfSMS = null;
-				switch (Integer.parseInt(type)) {
-					case 1:
-						typeOfSMS = "INBOX";
-						break;
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            editTextReferralCode.setText(s);
+        }
+    }
 
-					case 2:
-						typeOfSMS = "SENT";
-						break;
+	private String getSmsFindReferralCode(long diff) {
+        String referralCode = "";
+        try {
+            Uri uri = Uri.parse("content://sms/inbox");
+            long now = System.currentTimeMillis();
+            long last1 = now - diff;    //in millis
+            String[] selectionArgs = new String[]{Long.toString(last1)};
+            String selection = "date" + ">?";
+            Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
 
-					case 3:
-						typeOfSMS = "DRAFT";
-						break;
-				}
+            if (cursor != null && cursor.moveToFirst()) {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+                    String number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+                    String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                    Date smsDayTime = new Date(Long.valueOf(date));
+                    String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
+                    String typeOfSMS = null;
+                    switch (Integer.parseInt(type)) {
+                        case 1:
+                            typeOfSMS = "INBOX";
+                            break;
 
-				stringBuffer.append("\nPhone Number:--- " + number + " \nMessage Type:--- "
-						+ typeOfSMS + " \nMessage Date:--- " + smsDayTime
-						+ " \nMessage Body:--- " + body);
-				stringBuffer.append("\n----------------------------------");
-				cursor.moveToNext();
-			}
-            DialogPopup.alertPopup(this, "", stringBuffer.toString());
-		}
-		cursor.close();
+                        case 2:
+                            typeOfSMS = "SENT";
+                            break;
 
-//		// public static final String INBOX = "content://sms/inbox";
-//		// public static final String SENT = "content://sms/sent";
-//		// public static final String DRAFT = "content://sms/draft";
-//		Cursor cursor = getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
-//
-//		if (cursor.moveToFirst()) { // must check the result to prevent exception
-//			do {
-//				String msgData = "";
-//				for(int idx=0;idx<cursor.getColumnCount();idx++)
-//				{
-//					msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
-//				}
-//				// use msgData
-//			} while (cursor.moveToNext());
-//		} else {
-//			// empty box, no SMS
-//		}
+                        case 3:
+                            typeOfSMS = "DRAFT";
+                            break;
+                    }
+                    Log.e("body", "="+body);
+                    try {
+                        if(body.contains("Jugnoo")){
+                            String[] codeArr = body.split("code\\ ");
+                            String[] spaceArr = codeArr[1].split("\\ ");
+                            String rCode = spaceArr[0];
+                            if(!"".equalsIgnoreCase(rCode)){
+                                referralCode = rCode;
+                                break;
+                            }
+                        }
+                    } catch (Exception e) {}
+//                    stringBuffer.append("\nPhone Number:--- " + number + " \nMessage Type:--- "
+//                            + typeOfSMS + " \nMessage Date:--- " + smsDayTime
+//                            + " \nMessage Body:--- " + body);
+//                    stringBuffer.append("\n----------------------------------");
+                    cursor.moveToNext();
+                }
+//                DialogPopup.alertPopup(this, "", stringBuffer.toString());
+            }
+            if (cursor != null){
+                cursor.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return referralCode;
 	}
 
 
