@@ -57,6 +57,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.SyncHttpClient;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -2797,6 +2798,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         @Override
                                         public void onClick(View view) {
                                             //TODO show dialog
+                                            DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                             Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                             Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
                                             syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
@@ -2807,7 +2809,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     }, new OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-                                            Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
+                                            Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
+                                            uploadContactsApi();
                                         }
                                     });
                         } else{
@@ -3263,6 +3266,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        DialogPopup.dismissLoadingDialog();
+    }
 
     @Override
     protected void onResume() {
@@ -6585,5 +6594,61 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 	}
+
+    private void uploadContactsApi(){
+        RequestParams params = new RequestParams();
+        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+            DialogPopup.showLoadingDialog(this, "Loading...");
+            params.put("access_token", Data.userData.accessToken);
+            //params.put("session_id", Data.cSessionId);
+            params.put("engagement_id", Data.cEngagementId);
+            params.put("user_response", -1);
+            Log.i("access_token and session_id", Data.userData.accessToken + ", " + Data.cSessionId + ", " + Data.cEngagementId);
+
+            Log.i("params request_dup_registration", "=" + params);
+
+
+            //SyncHttpClient client1 = Data.getSyncClient();
+            AsyncHttpClient client = Data.getClient();
+            client.post(Config.getServerUrl() + "/refer_all_contacts", params,
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
+
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            DialogPopup.dismissLoadingDialog();
+                            Log.e("request fail", arg3.toString());
+                            //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                        }
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Response of referral", "response = " + response);
+                            DialogPopup.dismissLoadingDialog();
+                            try {
+                                JSONObject jObj = new JSONObject(response);
+                                int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
+                                if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                    Data.userData.contactSaved = -1;
+                                }
+                                else{
+                                    //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                                }
+                            }  catch (Exception exception) {
+                                exception.printStackTrace();
+                                //DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+
+
+                        }
+                    });
+        }
+        else {
+            //Database2.getInstance(ContactsUploadService.this).insertPendingAPICall(ContactsUploadService.this, Config.getServerUrl()+"/refer_all_contacts", params);
+            //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+        }
+    }
 
 }

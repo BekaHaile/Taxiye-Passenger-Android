@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 
@@ -28,6 +29,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.ContactsEntityBean;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -75,10 +77,8 @@ public class ContactsUploadService extends IntentService {
             mSyncQueue = new ArrayDeque<>();
         }
         contacts.close();
-
-
-
     }
+
 
     /**
      * Method that hashes contacts and syncs them to server
@@ -276,7 +276,12 @@ public class ContactsUploadService extends IntentService {
 
     private void doneWithSync() {
         Log.d(TAG, "STOP SERVICE");
+        Intent intent = new Intent(ContactsUploadService.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
         stopSelf();
+
     }
 
     /**
