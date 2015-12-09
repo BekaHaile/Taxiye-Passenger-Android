@@ -57,6 +57,14 @@ public class ContactsUploadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+		Handler handler = new Handler(getMainLooper());
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				DialogPopup.showLoadingDialog(ContactsUploadService.this, "Loading...");
+			}
+		});
+
         if(intent.hasExtra("access_token")){
             accessToken = intent.getExtras().get("access_token").toString();
             sessionId = intent.getExtras().get("session_id").toString();
@@ -406,6 +414,13 @@ public class ContactsUploadService extends IntentService {
                         public void onFailure(Throwable arg3) {
                             Log.e("request fail", arg3.toString());
 							Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+							Handler handler = new Handler(getMainLooper());
+							handler.post(new Runnable() {
+								@Override
+								public void run() {
+									DialogPopup.dismissAlertPopup();
+								}
+							});
                             doneWithSync();
                         }
 
@@ -430,6 +445,13 @@ public class ContactsUploadService extends IntentService {
                             //DialogPopup.dismissLoadingDialog();
                             currentSyncEntry.setSynced(true);
                             checkIfAllSynced();
+							Handler handler = new Handler(getMainLooper());
+							handler.post(new Runnable() {
+								@Override
+								public void run() {
+									DialogPopup.dismissAlertPopup();
+								}
+							});
                             doneWithSync();
                         }
                     });
