@@ -2,9 +2,11 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
@@ -33,6 +35,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -491,7 +494,89 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         }
         Data.previousAccountInfoList.clear();
 
+
+        new ReadSMSAsync().execute();
     }
+
+
+    private class ReadSMSAsync extends AsyncTask<String, Integer, String>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String referralCode = getSmsFindReferralCode(1*60*60*1000);
+            return referralCode;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            editTextReferralCode.setText(s);
+        }
+    }
+
+	private String getSmsFindReferralCode(long diff) {
+        String referralCode = "";
+        try {
+            Uri uri = Uri.parse("content://sms/inbox");
+            long now = System.currentTimeMillis();
+            long last1 = now - diff;    //in millis
+            String[] selectionArgs = new String[]{Long.toString(last1)};
+            String selection = "date" + ">?";
+            Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+                    String number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+                    String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                    Date smsDayTime = new Date(Long.valueOf(date));
+                    String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
+                    String typeOfSMS = null;
+                    switch (Integer.parseInt(type)) {
+                        case 1:
+                            typeOfSMS = "INBOX";
+                            break;
+
+                        case 2:
+                            typeOfSMS = "SENT";
+                            break;
+
+                        case 3:
+                            typeOfSMS = "DRAFT";
+                            break;
+                    }
+                    Log.e("body", "="+body);
+                    try {
+                        if(body.contains("Jugnoo")){
+                            String[] codeArr = body.split("code\\ ");
+                            String[] spaceArr = codeArr[1].split("\\ ");
+                            String rCode = spaceArr[0];
+                            if(!"".equalsIgnoreCase(rCode)){
+                                referralCode = rCode;
+                                break;
+                            }
+                        }
+                    } catch (Exception e) {}
+//                    stringBuffer.append("\nPhone Number:--- " + number + " \nMessage Type:--- "
+//                            + typeOfSMS + " \nMessage Date:--- " + smsDayTime
+//                            + " \nMessage Body:--- " + body);
+//                    stringBuffer.append("\n----------------------------------");
+                    cursor.moveToNext();
+                }
+//                DialogPopup.alertPopup(this, "", stringBuffer.toString());
+            }
+            if (cursor != null){
+                cursor.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return referralCode;
+	}
 
 
 
