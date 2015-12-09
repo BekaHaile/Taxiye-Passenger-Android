@@ -99,6 +99,7 @@
 	<string name="driver_type">Driver Type</string>
 	<string name="ride_type">Ride Type</string>
 	<string name="invite_friends">Invite Friends</string>
+	<string name="invite_friends_caps">INVITE FRIENDS</string>
 	<string name="about">About</string>
 	<string name="support">Support</string>
 	<string name="sos">SOS</string>
@@ -219,6 +220,8 @@
 
     <string name="amount_range">Recharge amount should be between Rs. 1 - Rs. 5000</string>
     <string name="check_internet_connection">Seems there is an issue with your internet connection. Please check and try again.</string>
+	<string name="share_your_code">SHARE YOUR CODE</string>
+	<string name="free_ride_desc">Send friends free rides and \n you\'ll get one too, up to \u20B9 100!</string>
 
 
 

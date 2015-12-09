@@ -28,6 +28,7 @@ public interface FlurryEventNames {
         REFERRAL_GIFT_ICON = "Referral_Gift_icon",
         INVITE_FACEBOOK = "Invite&Earn_ Facebook",
         INVITE_WHATSAPP = "Invite&Earn_ Whatsapp",
+            INVITE_GENERIC = "Invite&Earn Generic",
         INVITE_MESSAGE = "Invite&Earn_ Messaging",
         INVITE_EMAIL = "Invite&Earn_ Email",
         PICKUP_LOCATION_SET = "Pick up location set",
@@ -81,6 +82,7 @@ public interface FlurryEventNames {
 			WALLET_VIA_TUTORIAL = "Wallet opened via Tutorial",
         RECENT_TRANSACTION_LOOK_UP = "Recent transaction look up",
         INVITE_EARN_JUGNOO_CASH = "Invite&Earn_Jugnoo Cash",
+            INVITE_EARN_MORE_INFO = "Invite&Earn more info",
         ADDING_JUGNOO_CASH = "Adding Jugnoo Cash",
         ADD_JUGNOO_CASH_WITH_GIVEN_AMOUNT = "Add Jugnoo cash with Given amount",
         ADD_JUGNOO_CASH_MANUALLY = "Add Jugnoo cash Manually",
@@ -122,9 +124,21 @@ public interface FlurryEventNames {
 			NOTIFICATION_CENTER_MENU =	"notification center menu",
 			RIDE_SUMMARY_CHECKED_LATER =	"Ride summary checked later",
 			CASH_SELECTED_WHEN_REQUESTING =	"cash selected when requesting",
-			PAYTM_SELECTED_WHEN_REQUESTING =	"Paytm selected when requesting"
+			PAYTM_SELECTED_WHEN_REQUESTING =	"Paytm selected when requesting",
+
+	GENERIC_FACEBOOK = "Generic Facebook share",
+	GENERIC_EMAIL = "Generic Email share",
+	GENERIC_WHATSAPP = "Generic Whatsapp share",
+	GENERIC_SMS_OTHER = "Generic SMS and other share"
 
 
 				;
+
+
+
+	String BRANCH_EVENT_REQUEST_RIDE = "request_ride",
+			BRANCH_EVENT_RIDE_COMPLETED = "ride_completed"
+
+			;
 
 }

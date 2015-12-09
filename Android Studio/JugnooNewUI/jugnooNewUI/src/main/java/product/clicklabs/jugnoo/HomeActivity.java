@@ -101,6 +101,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -300,13 +301,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue, textViewAddFav;
     Button buttonEndRideOk;
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
-
-
-
-
-
-
-
 
 
     // data variables declaration
@@ -1345,7 +1339,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						callRequestRide = true;
 						if(Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare){
 							DialogPopup.dialogBanner(activity, "Your Paytm cash is low");
-							//TODO verify message
 						}
 					} else {
 						callRequestRide = false;
@@ -3538,8 +3531,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
-
     @Override
     protected void onPause() {
 		stopNotifsUpdater();
@@ -3614,7 +3605,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             ActivityCompat.finishAffinity(this);
         }
     }
-
 
     @Override
     public void onDestroy() {
@@ -3833,8 +3823,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		}
 	}
 
-
-
     public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("pickup location");
@@ -3843,7 +3831,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapStart(HomeActivity.this, assl)));
         return markerOptions;
     }
-
 
     public MarkerOptions getAssignedDriverCarMarkerOptions(LatLng latlng){
         MarkerOptions markerOptions1 = new MarkerOptions();
@@ -3854,9 +3841,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions1.anchor(0.5f, 0.7f);
         return markerOptions1;
     }
-
-
-
 
     public void addDriverMarkerForCustomer(DriverInfo driverInfo) {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -3892,7 +3876,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
     public void showDriverMarkersAndPanMap(final LatLng userLatLng) {
         try {
 			if("".equalsIgnoreCase(farAwayCity)) {
@@ -3920,7 +3903,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
 
     public void zoomToCurrentLocationWithOneDriver(final LatLng userLatLng) {
 
@@ -3991,7 +3973,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
 	Thread pickupAddressFetcherThread;
 	private void getPickupAddress(final LatLng currentLatLng){
 		stopPickupAddressFetcherThread();
@@ -4041,11 +4022,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		});
 	}
-
-
-
-
-
 
     /**
      * ASync for cancelCustomerRequestAsync from server
@@ -4435,11 +4411,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
     }
-
-
-
-
-
 
     //Customer's timer
     Timer timerDriverLocationUpdater;
@@ -5653,6 +5624,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if (myLocation != null && myLocation.hasAccuracy()) {
                                         nameValuePairs.add(new BasicNameValuePair("location_accuracy", "" + myLocation.getAccuracy()));
                                     }
+
                                 } else {
                                     nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "1"));
                                 }
@@ -5710,7 +5682,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     long elapsedTime = stopTime - startTime;
                                                     executionTime = serverRequestStartTime + elapsedTime;
                                                 }
-
+												if ("".equalsIgnoreCase(Data.cSessionId)) {
+													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE);
+												}
                                                 Data.cSessionId = jObj.getString("session_id");
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
                                                 if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
@@ -5856,6 +5830,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED);
             }
         });
 

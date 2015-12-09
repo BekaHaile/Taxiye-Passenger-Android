@@ -17,6 +17,7 @@ public class BranchMetricsUtils {
     public static final String BRANCH_CHANNEL_WHATSAPP = "Whatsapp";
     public static final String BRANCH_CHANNEL_FACEBOOK = "Facebook";
     public static final String BRANCH_CHANNEL_EMAIL = "Email";
+    public static final String BRANCH_CHANNEL_GENERIC = "Generic";
 
     private Context context;
     private BranchMetricsEventHandler branchMetricsEventHandler;
@@ -64,5 +65,16 @@ public class BranchMetricsUtils {
             branchMetricsEventHandler.onBranchLinkCreated(existingUrl);
         }
     }
+
+	public interface BranchMetricsEventHandler {
+		void onBranchLinkCreated(String link);
+		void onBranchError(String error);
+	}
+
+
+	public static void logEvent(Context context, String eventName){
+		Branch branch = Branch.getInstance(context);
+		branch.userCompletedAction(eventName);
+	}
 
 }

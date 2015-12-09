@@ -355,6 +355,12 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity
+            android:name="product.clicklabs.jugnoo.SearchWithFilterable"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
 
         <activity
             android:name="product.clicklabs.jugnoo.JugnooLineActivity"

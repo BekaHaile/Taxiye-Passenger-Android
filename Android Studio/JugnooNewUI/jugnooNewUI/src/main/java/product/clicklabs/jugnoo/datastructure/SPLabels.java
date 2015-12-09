@@ -24,6 +24,7 @@ public class SPLabels {
     BRANCH_WHATSAPP_LINK = "branchWhatsappLink",
     BRANCH_FACEBOOK_LINK = "branchFacebookLink",
     BRANCH_EMAIL_LINK = "branchEmailLink",
+            BRANCH_GENERIC_LINK = "branchGenericLink",
 
 
 	SUPPORT_CONTACT = "supportContact",

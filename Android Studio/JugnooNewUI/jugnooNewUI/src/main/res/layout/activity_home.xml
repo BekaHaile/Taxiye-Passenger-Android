@@ -2044,7 +2044,7 @@
                         android:layout_height="45px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="50px"
-                        android:src="@drawable/fare_details_icon_selector"
+                        android:src="@drawable/notification_center_icon"
                         android:tag="mwar"/>
 
                     <TextView
