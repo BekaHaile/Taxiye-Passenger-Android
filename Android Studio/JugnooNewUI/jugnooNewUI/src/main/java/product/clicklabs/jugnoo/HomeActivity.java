@@ -100,6 +100,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -1337,7 +1338,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						callRequestRide = true;
 						if(Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare){
 							DialogPopup.dialogBanner(activity, "Your Paytm cash is low");
-							//TODO verify message
 						}
 					} else {
 						callRequestRide = false;
@@ -5615,6 +5615,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if (myLocation != null && myLocation.hasAccuracy()) {
                                         nameValuePairs.add(new BasicNameValuePair("location_accuracy", "" + myLocation.getAccuracy()));
                                     }
+
                                 } else {
                                     nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "1"));
                                 }
@@ -5672,7 +5673,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     long elapsedTime = stopTime - startTime;
                                                     executionTime = serverRequestStartTime + elapsedTime;
                                                 }
-
+												if ("".equalsIgnoreCase(Data.cSessionId)) {
+													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE);
+												}
                                                 Data.cSessionId = jObj.getString("session_id");
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
                                                 if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
@@ -5818,6 +5821,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED);
             }
         });
 

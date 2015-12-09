@@ -66,4 +66,15 @@ public class BranchMetricsUtils {
         }
     }
 
+	public interface BranchMetricsEventHandler {
+		void onBranchLinkCreated(String link);
+		void onBranchError(String error);
+	}
+
+
+	public static void logEvent(Context context, String eventName){
+		Branch branch = Branch.getInstance(context);
+		branch.userCompletedAction(eventName);
+	}
+
 }

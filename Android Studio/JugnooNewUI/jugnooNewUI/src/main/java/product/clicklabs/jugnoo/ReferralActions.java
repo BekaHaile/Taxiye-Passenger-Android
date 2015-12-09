@@ -22,7 +22,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.utils.BranchMetricsEventHandler;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
@@ -152,7 +151,7 @@ public class ReferralActions implements FlurryEventNames {
             public void facebookLoginDone(FacebookUserData facebookUserData) {
                 try {
                     if(Data.userData != null){
-                        new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+                        new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                             @Override
                             public void onBranchLinkCreated(String link) {
                                 if(Data.userData != null) {
@@ -193,36 +192,26 @@ public class ReferralActions implements FlurryEventNames {
         facebookLoginHelper = new FacebookLoginHelper(activity, callbackManager, new FacebookLoginCallback() {
             @Override
             public void facebookLoginDone(FacebookUserData facebookUserData) {
-                try {
-                    if(Data.userData != null){
-                        facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
-                                Data.referralMessages.fbShareCaption,
-                                Data.referralMessages.fbShareDescription,
-                                link,
-                                Data.userData.jugnooFbBanner);
-
-                        //30.707810, 76.761957
-                        // ?pickup_lat=30.707810&pickup_lng=76.761957
-                        //http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
             public void facebookLoginError(String message) {
-                Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
             }
         });
-        facebookLoginHelper.openFacebookSession(false);
+		if(Data.userData != null && Data.referralMessages != null) {
+			facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
+					Data.referralMessages.fbShareCaption,
+					Data.referralMessages.fbShareDescription,
+					link,
+					Data.userData.jugnooFbBanner);
+		}
     }
 
 
     public static void shareToWhatsapp(final Activity activity) {
 
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     PackageManager pm = activity.getPackageManager();
@@ -259,7 +248,7 @@ public class ReferralActions implements FlurryEventNames {
 
     public static void sendSMSIntent(final Activity activity){
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     Uri sms_uri = Uri.parse("smsto:");
@@ -285,7 +274,7 @@ public class ReferralActions implements FlurryEventNames {
     public static void openMailIntent(final Activity activity){
         try {
 
-            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     Intent email = new Intent(Intent.ACTION_SEND);
@@ -311,7 +300,7 @@ public class ReferralActions implements FlurryEventNames {
 
     public static void openGenericShareIntent(final Activity activity, final CallbackManager callbackManager){
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
 //                    Intent email = new Intent(Intent.ACTION_SEND);
@@ -372,13 +361,35 @@ public class ReferralActions implements FlurryEventNames {
                 ResolveInfo info = (ResolveInfo) adapter.getItem(which);
                 if (info.activityInfo.packageName.contains("facebook")) {
                     shareToFacebookBasic(activity, callbackManager, link);
-                } else {
+					FlurryEventLogger.event(GENERIC_FACEBOOK);
+                }
+				else if(info.activityInfo.packageName.contains("com.google.android.gm")
+						|| info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
+						|| info.activityInfo.packageName.contains("com.microsoft.office.outlook")
+						|| info.activityInfo.packageName.contains("com.google.android.apps.inbox")){
+					Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+					intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+					intent.setType("text/plain");
+					intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+					intent.putExtra(Intent.EXTRA_TEXT, body);
+					activity.startActivity(intent);
+					FlurryEventLogger.event(GENERIC_EMAIL);
+				}
+				else if(info.activityInfo.packageName.contains("com.whatsapp")){
+					Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+					intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+					intent.setType("text/plain");
+					intent.putExtra(Intent.EXTRA_TEXT, body);
+					activity.startActivity(intent);
+					FlurryEventLogger.event(GENERIC_WHATSAPP);
+				}
+				else {
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
                     intent.setType("text/plain");
-                    intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                     intent.putExtra(Intent.EXTRA_TEXT, body);
                     activity.startActivity(intent);
+					FlurryEventLogger.event(GENERIC_SMS_OTHER);
                 }
             }
         });
