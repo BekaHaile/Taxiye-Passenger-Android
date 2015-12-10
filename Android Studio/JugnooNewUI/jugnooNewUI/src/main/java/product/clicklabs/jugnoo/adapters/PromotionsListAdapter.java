@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -187,6 +186,7 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
                 selectedCoupon = promoCouponList.get(holder.id);
                 notifyDataSetChanged();
             }
+			promotionListEventHandler.onPromoSelected(selectedCoupon);
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -293,6 +293,7 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 	public interface PromotionListEventHandler {
 		void onDismiss();
 		void onPromoListFetched(int totalPromoCoupons);
+		void onPromoSelected(PromoCoupon promoCoupon);
 	}
 
 
