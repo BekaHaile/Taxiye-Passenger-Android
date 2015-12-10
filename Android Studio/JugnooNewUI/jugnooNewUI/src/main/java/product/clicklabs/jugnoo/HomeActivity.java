@@ -57,7 +57,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -255,6 +254,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutInRideInfo;
     TextView textViewInRidePromoName, textViewInRideFareFactor;
     Button customerInRideMyLocationBtn;
+	LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState;
     Button buttonCancelRide, buttonAddPaytmCash, buttonCallDriver;
@@ -762,6 +762,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor);
         textViewInRideFareFactor.setTypeface(Fonts.latoRegular(this));
         customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
+		linearLayoutInRideDriverInfo = (LinearLayout) findViewById(R.id.linearLayoutInRideDriverInfo);
         imageViewInRideDriver = (ImageView) findViewById(R.id.imageViewInRideDriver);
         textViewInRideDriverName = (TextView) findViewById(R.id.textViewInRideDriverName);
         textViewInRideDriverName.setTypeface(Fonts.latoRegular(this));
@@ -2791,10 +2792,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         //******** If return 0 then show popup, contact not saved in database.
-//                        if(Data.userData.contactSaved == 0
-//                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
-//                                && dialogUploadContacts == null
-//								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+                        if(Data.userData.contactSaved == 0
+                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
+                                && dialogUploadContacts == null
+								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+							drawerLayout.closeDrawer(menuLayout);
                             dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
 									Data.userData.referAllTitle,
                                     Data.userData.referAllText,
@@ -2804,7 +2806,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     new OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-                                            //TODO show dialog
                                             DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                             Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                             Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
@@ -2820,7 +2821,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             uploadContactsApi();
                                         }
                                     });
-//                        }
+                        }
 
 
 
@@ -3073,9 +3074,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private void checkForGoogleLogoVisibilityInRide(){
 		try{
 			float padding = 0;
-			if(textViewInRideMinimumFare.getVisibility() == View.VISIBLE){
+			if (textViewInRideMinimumFare.getVisibility() == View.VISIBLE) {
 				padding = padding + 42;
 			}
+			padding = padding + 365;
 			setGoogleMapPadding(padding);
 		} catch(Exception e){
 			e.printStackTrace();

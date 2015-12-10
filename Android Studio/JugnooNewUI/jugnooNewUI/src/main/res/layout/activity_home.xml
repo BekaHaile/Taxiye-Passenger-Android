@@ -24,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/screen_height"
                 android:splitMotionEvents="false"
+                android:layout_marginTop="@dimen/home_top_bar_height"
                 android:visibility="visible">
 
                 <fragment
@@ -39,6 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
+                android:layout_marginTop="@dimen/home_top_bar_height"
                 android:visibility="visible"
                 >
 
@@ -114,7 +116,6 @@
                     android:id="@+id/initialLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="96px"
                     android:splitMotionEvents="false"
                     android:visibility="gone"
                     >
@@ -661,7 +662,6 @@
                     android:id="@+id/assigningLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="96px"
                     android:animateLayoutChanges="true"
                     android:background="@color/black_translucent"
                     android:splitMotionEvents="false"
@@ -878,7 +878,6 @@
                     android:id="@+id/requestFinalLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="96px"
                     android:animateLayoutChanges="true"
                     android:splitMotionEvents="false"
                     android:visibility="visible"
@@ -922,7 +921,7 @@
                         android:layout_width="80px"
                         android:layout_height="80px"
                         android:layout_above="@+id/linearLayoutInRideDriverInfo"
-                        android:layout_marginBottom="40px"
+                        android:layout_marginBottom="60px"
                         android:layout_marginLeft="50px"
                         android:background="@drawable/mylocation_btn_selector"
                         android:tag="mwar"/>
@@ -933,7 +932,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/linearLayoutInRideBottom"
-                        android:layout_marginBottom="60px"
+                        android:layout_marginBottom="20px"
                         android:layout_marginLeft="40px"
                         android:layout_marginRight="40px"
                         android:background="@drawable/dropshadow_grey"
@@ -1286,7 +1285,7 @@
                 android:id="@+id/relativeLayoutSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="96px"
+                android:layout_marginTop="@dimen/home_top_bar_height"
                 android:background="@color/white_translucent"
                 android:splitMotionEvents="false"
                 android:visibility="gone">
@@ -1420,7 +1419,7 @@
                 android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="96px"
+                android:layout_marginTop="@dimen/home_top_bar_height"
                 android:splitMotionEvents="false"
                 android:visibility="gone">
 
@@ -1441,7 +1440,7 @@
                 <RelativeLayout
                     android:id="@+id/topRl"
                     android:layout_width="match_parent"
-                    android:layout_height="96px"
+                    android:layout_height="@dimen/home_top_bar_height"
                     android:background="@color/yellow"
                     android:splitMotionEvents="false">
 
