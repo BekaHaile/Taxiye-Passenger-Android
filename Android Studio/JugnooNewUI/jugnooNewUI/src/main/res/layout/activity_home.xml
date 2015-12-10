@@ -921,7 +921,7 @@
                         android:layout_width="80px"
                         android:layout_height="80px"
                         android:layout_above="@+id/linearLayoutInRideDriverInfo"
-                        android:layout_marginBottom="60px"
+                        android:layout_marginBottom="65px"
                         android:layout_marginLeft="50px"
                         android:background="@drawable/mylocation_btn_selector"
                         android:tag="mwar"/>

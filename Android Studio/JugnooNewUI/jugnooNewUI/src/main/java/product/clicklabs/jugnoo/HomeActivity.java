@@ -3089,7 +3089,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if (textViewInRideMinimumFare.getVisibility() == View.VISIBLE) {
 				padding = padding + 42;
 			}
-			padding = padding + 355;
+            linearLayoutInRideDriverInfo.measure(0, 0);
+
+
+			padding = padding + 355f;
 			setGoogleMapPadding(padding);
 		} catch(Exception e){
 			e.printStackTrace();
