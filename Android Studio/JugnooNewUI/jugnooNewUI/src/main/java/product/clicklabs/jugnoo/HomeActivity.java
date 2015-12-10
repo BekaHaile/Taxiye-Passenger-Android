@@ -638,6 +638,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			public void onPromoSelected(PromoCoupon promoCoupon) {
 				displayAlertAndCheckForSelectedPaytmCoupon(promoCoupon);
 			}
+
+			@Override
+			public void onLowPaytmBalance() {
+				DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_no_cash_when_selecting_coupon));
+			}
 		});
         listViewPromotions.setAdapter(promotionsListAdapter);
 

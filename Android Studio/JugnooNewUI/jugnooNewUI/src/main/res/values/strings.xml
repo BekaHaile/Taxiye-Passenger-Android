@@ -454,5 +454,6 @@
     <string name="paytm_coupon_selected_but_paytm_option_not_selected">You need to select Paytm as Preferred payment option to avail this coupon</string>
     <string name="paytm_low_cash">Your Paytm cash is low</string>
     <string name="paytm_no_cash">You do not have Paytm cash, Please select payment method as Cash</string>
+    <string name="paytm_no_cash_when_selecting_coupon">You do not have enough Paytm cash</string>
 	
 </resources>
