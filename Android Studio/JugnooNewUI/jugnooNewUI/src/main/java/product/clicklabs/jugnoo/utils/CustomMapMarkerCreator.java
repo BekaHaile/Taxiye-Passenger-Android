@@ -95,8 +95,8 @@ public class CustomMapMarkerCreator {
 		final Rect boundsText = new Rect();
 
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
-		int width = (int)(86.0f * 0.95 * scale);
-		int height = (int)(117.0f * 0.95 * scale);
+		int width = (int)(86.0f * 0.85 * scale);
+		int height = (int)(117.0f * 0.85 * scale);
 
 		final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 		final Bitmap bmpText = Bitmap.createBitmap(width, height, conf);
@@ -113,8 +113,8 @@ public class CustomMapMarkerCreator {
 		shape.draw(canvasText);
 		Log.e("getTextBitmap text", "=" + text);
 
-		canvasText.drawText(text, canvasText.getWidth() / 2, (35f*assl.Yscale()), paint);
-		canvasText.drawText("min", canvasText.getWidth() / 2, (int)(40f*assl.Yscale()) + boundsText.height(), paint);
+		canvasText.drawText(text, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
+		canvasText.drawText("min", canvasText.getWidth() / 2, (int)(35f*assl.Yscale()) + boundsText.height(), paint);
 
 
 		return bmpText;

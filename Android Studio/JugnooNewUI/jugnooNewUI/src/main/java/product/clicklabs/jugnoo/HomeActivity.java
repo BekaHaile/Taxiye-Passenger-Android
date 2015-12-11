@@ -2473,6 +2473,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_INITIAL:
 
+                        GCMIntentService.clearNotifications(HomeActivity.this);
+
 						Data.dropLatLng = null;
 
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -3225,7 +3227,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                    }
                     pickupLocationMarker.setIcon(BitmapDescriptorFactory
                             .fromBitmap(CustomMapMarkerCreator
-                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 14)));
+                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 12)));
                 } catch (Exception e) {
                     e.printStackTrace();
 //                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
@@ -3877,7 +3879,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } else{
             markerOptions.icon(BitmapDescriptorFactory
                     .fromBitmap(CustomMapMarkerCreator
-                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 14)));
+                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 12)));
         }
 //
         return markerOptions;

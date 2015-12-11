@@ -121,6 +121,13 @@
                 android:gravity="center"
                 android:text="More Info"
                 />
+            <ImageView
+                android:layout_width="174px"
+                android:layout_height="4px"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/black_text_alpha"
+                android:layout_marginTop="-2px"
+                />
 
             <Button
                 android:id="@+id/buttonInvite"
