@@ -113,4 +113,11 @@ public class UserData {
 	public void setPaytmStatus(String paytmStatus) {
 		this.paytmStatus = paytmStatus;
 	}
+
+	public void deletePaytm(){
+		this.paytmEnabled = 0;
+		this.paytmBalance = 0;
+		this.paytmError = 0;
+		this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
+	}
 }

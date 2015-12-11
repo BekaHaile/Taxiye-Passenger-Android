@@ -34,6 +34,17 @@
             android:layout_marginLeft="10px"
             android:padding="20px"
             android:src="@drawable/back_white_selector"/>
+
+        <TextView
+            android:id="@+id/textViewTitleEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25px"
+            android:layout_centerVertical="true"
+            android:text="EDIT"
+            android:textColor="@color/white"
+            android:textSize="30.6px"/>
     </RelativeLayout>
 
     <ScrollView
@@ -145,6 +156,13 @@
 
 
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutInner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:splitMotionEvents="false">
 
                 <LinearLayout
                     android:layout_width="720px"
@@ -307,6 +325,18 @@
 
 
             </LinearLayout>
+            </LinearLayout>
+            <Button
+                android:id="@+id/buttonRemoveWallet"
+                android:visibility="gone"
+                android:layout_width="620px"
+                android:layout_height="84px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="60px"
+                android:background="@drawable/button_yellow"
+                android:text="REMOVE WALLET"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/button_text_size"/>
 
             <TextView
                 android:id="@+id/textViewScroll"
