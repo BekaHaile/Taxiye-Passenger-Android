@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 
@@ -28,6 +29,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.ContactsEntityBean;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -55,6 +57,14 @@ public class ContactsUploadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+		Handler handler = new Handler(getMainLooper());
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				DialogPopup.showLoadingDialog(ContactsUploadService.this, "Loading...");
+			}
+		});
+
         if(intent.hasExtra("access_token")){
             accessToken = intent.getExtras().get("access_token").toString();
             sessionId = intent.getExtras().get("session_id").toString();
@@ -75,10 +85,8 @@ public class ContactsUploadService extends IntentService {
             mSyncQueue = new ArrayDeque<>();
         }
         contacts.close();
-
-
-
     }
+
 
     /**
      * Method that hashes contacts and syncs them to server
@@ -276,7 +284,12 @@ public class ContactsUploadService extends IntentService {
 
     private void doneWithSync() {
         Log.d(TAG, "STOP SERVICE");
+        Intent intent = new Intent(ContactsUploadService.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
         stopSelf();
+
     }
 
     /**
@@ -401,6 +414,13 @@ public class ContactsUploadService extends IntentService {
                         public void onFailure(Throwable arg3) {
                             Log.e("request fail", arg3.toString());
 							Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+							Handler handler = new Handler(getMainLooper());
+							handler.post(new Runnable() {
+								@Override
+								public void run() {
+									DialogPopup.dismissAlertPopup();
+								}
+							});
                             doneWithSync();
                         }
 
@@ -425,6 +445,13 @@ public class ContactsUploadService extends IntentService {
                             //DialogPopup.dismissLoadingDialog();
                             currentSyncEntry.setSynced(true);
                             checkIfAllSynced();
+							Handler handler = new Handler(getMainLooper());
+							handler.post(new Runnable() {
+								@Override
+								public void run() {
+									DialogPopup.dismissAlertPopup();
+								}
+							});
                             doneWithSync();
                         }
                     });

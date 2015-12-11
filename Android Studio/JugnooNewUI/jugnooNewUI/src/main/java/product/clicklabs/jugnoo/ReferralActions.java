@@ -1,11 +1,14 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,8 +18,10 @@ import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 
+import java.util.List;
+
+import product.clicklabs.jugnoo.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.utils.BranchMetricsEventHandler;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
@@ -146,7 +151,7 @@ public class ReferralActions implements FlurryEventNames {
             public void facebookLoginDone(FacebookUserData facebookUserData) {
                 try {
                     if(Data.userData != null){
-                        new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+                        new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                             @Override
                             public void onBranchLinkCreated(String link) {
                                 if(Data.userData != null) {
@@ -180,14 +185,33 @@ public class ReferralActions implements FlurryEventNames {
                 Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
             }
         });
-        facebookLoginHelper.openFacebookSession();
+        facebookLoginHelper.openFacebookSession(false);
+    }
+
+    public static void shareToFacebookBasic(final Activity activity, CallbackManager callbackManager, final String link){
+        facebookLoginHelper = new FacebookLoginHelper(activity, callbackManager, new FacebookLoginCallback() {
+            @Override
+            public void facebookLoginDone(FacebookUserData facebookUserData) {
+            }
+
+            @Override
+            public void facebookLoginError(String message) {
+            }
+        });
+		if(Data.userData != null && Data.referralMessages != null) {
+			facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
+					Data.referralMessages.fbShareCaption,
+					Data.referralMessages.fbShareDescription,
+					link,
+					Data.userData.jugnooFbBanner);
+		}
     }
 
 
     public static void shareToWhatsapp(final Activity activity) {
 
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     PackageManager pm = activity.getPackageManager();
@@ -224,7 +248,7 @@ public class ReferralActions implements FlurryEventNames {
 
     public static void sendSMSIntent(final Activity activity){
         try {
-            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     Uri sms_uri = Uri.parse("smsto:");
@@ -250,7 +274,7 @@ public class ReferralActions implements FlurryEventNames {
     public static void openMailIntent(final Activity activity){
         try {
 
-            new BranchMetricsUtils(activity, new BranchMetricsEventHandler() {
+            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
                     Intent email = new Intent(Intent.ACTION_SEND);
@@ -274,7 +298,103 @@ public class ReferralActions implements FlurryEventNames {
         }
     }
 
+    public static void openGenericShareIntent(final Activity activity, final CallbackManager callbackManager){
+        try {
+            new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+                @Override
+                public void onBranchLinkCreated(String link) {
+//                    Intent email = new Intent(Intent.ACTION_SEND);
+//                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+//                    email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
+//                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
+//                            + link); //
+//                    email.setType("message/rfc822");
+//                    activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
+//                    PackageManager pm = activity.getPackageManager();
+//                    List<ResolveInfo> activityList = pm.queryIntentActivities(sharingIntent, 0);
+//                    for(final ResolveInfo app : activityList) {
+//                        Log.i("ShareActivity", "app.actinfo.name: " + app.activityInfo.name);
+//                        if("com.facebook.katana.ShareLinkActivity".equals(app.activityInfo.name)) {
+//                            Log.v("facebook","facebook sdk called");
+//                            break;
+//                        } else {
+//                            break;
+//                        }
+//                    }
+//                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+//                    sharingIntent.setType("text/plain");
+//                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
+//                    sharingIntent.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
+//                            + link);
+//                    activity.startActivity(Intent.createChooser(sharingIntent, "Share"));
 
+                    shareGeneric(activity, callbackManager,
+                            Data.referralMessages.referralEmailSubject,
+                            Data.referralMessages.referralSharingMessage + "\n" + link,
+                            link);
+                }
+
+                @Override
+                public void onBranchError(String error) {
+                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                }
+            }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_GENERIC,
+                    SPLabels.BRANCH_GENERIC_LINK,
+                    Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void shareGeneric(final Activity activity, final CallbackManager callbackManager,
+                             final String subject, final String body, final String link) {
+        Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sendIntent.setType("text/plain");
+        List activities = activity.getPackageManager().queryIntentActivities(sendIntent, 0);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Share with...");
+        final ShareIntentListAdapter adapter = new ShareIntentListAdapter(activity,
+                R.layout.list_item_share_intent, activities.toArray());
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ResolveInfo info = (ResolveInfo) adapter.getItem(which);
+                if (info.activityInfo.packageName.contains("facebook")) {
+                    shareToFacebookBasic(activity, callbackManager, link);
+					FlurryEventLogger.event(GENERIC_FACEBOOK);
+                }
+				else if(info.activityInfo.packageName.contains("com.google.android.gm")
+						|| info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
+						|| info.activityInfo.packageName.contains("com.microsoft.office.outlook")
+						|| info.activityInfo.packageName.contains("com.google.android.apps.inbox")){
+					Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+					intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+					intent.setType("text/plain");
+					intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+					intent.putExtra(Intent.EXTRA_TEXT, body);
+					activity.startActivity(intent);
+					FlurryEventLogger.event(GENERIC_EMAIL);
+				}
+				else if(info.activityInfo.packageName.contains("com.whatsapp")){
+					Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+					intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+					intent.setType("text/plain");
+					intent.putExtra(Intent.EXTRA_TEXT, body);
+					activity.startActivity(intent);
+					FlurryEventLogger.event(GENERIC_WHATSAPP);
+				}
+				else {
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_TEXT, body);
+                    activity.startActivity(intent);
+					FlurryEventLogger.event(GENERIC_SMS_OTHER);
+                }
+            }
+        });
+        builder.create().show();
+    }
 
 
     public static void incrementAppOpen(Context context){

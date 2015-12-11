@@ -26,6 +26,11 @@ public class DeviceTokenGenerator {
 					} catch(Exception e){
 						e.printStackTrace();
 					} finally{
+						if(token == null){
+							token = "not_found";
+						} else if(token.equalsIgnoreCase("")){
+							token = "not_found";
+						}
 						deviceTokenReceiver.deviceTokenReceived(token);
 					}
 				}

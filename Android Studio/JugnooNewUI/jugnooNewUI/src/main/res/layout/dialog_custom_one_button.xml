@@ -55,7 +55,7 @@
                 android:paddingRight="40px"
                 android:text="Message"
                 android:textColor="@color/grey_dark"
-                android:textSize="34px" />
+                android:textSize="36px" />
 
 
             <ImageView

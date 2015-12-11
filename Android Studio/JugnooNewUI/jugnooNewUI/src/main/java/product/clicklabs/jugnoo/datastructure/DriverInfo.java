@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.utils.Utils;
 
 public class DriverInfo {
 	
@@ -12,12 +13,16 @@ public class DriverInfo {
 	public LatLng latLng;
 	public int freeRide;
 	
-	public String promoName = Data.NO_PROMO_APPLIED, eta = "10";
+	public String promoName = Data.NO_PROMO_APPLIED;
+	private String eta = "10";
+	private double fareFixed;
+	private int preferredPaymentMode;
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
-	
+
+	//for drivers to show in free state
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide){
@@ -31,10 +36,11 @@ public class DriverInfo {
 		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = freeRide;
 	}
-	
+
+	//for engagement
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, String promoName, String eta){
+			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -48,10 +54,13 @@ public class DriverInfo {
 			this.promoName = promoName;
 		}
 		if(!"".equalsIgnoreCase(eta)){
-			this.eta = eta;
+			setEta(eta);
 		}
+		this.fareFixed = fareFixed;
+		this.preferredPaymentMode = preferredPaymentMode;
 	}
-	
+
+	//for last ride data
 	public DriverInfo(String userId, String name, String image, String carImage, String carNumber){
 		this.userId = userId;
 		this.latLng = new LatLng(0, 0);
@@ -63,7 +72,24 @@ public class DriverInfo {
 		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = 0;
 	}
-	
+
+	public void setEta(String eta){
+//        try {
+//            if(Integer.parseInt(eta) < 10){
+//                eta = "0"+eta;
+//            }
+//        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//        }
+        this.eta = eta;
+	}
+
+	public String getEta(){
+		return this.eta;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return  "Name: " + name + "\n" +
@@ -76,13 +102,22 @@ public class DriverInfo {
 			if(((DriverInfo)o).userId.equalsIgnoreCase(this.userId)){
 				return true;
 			}
-			else{
-				return false;
-			}
 		} catch(Exception e){
-			return false;
 		}
+		return false;
 	}
-	
-	
+
+
+	public double getFareFixed() {
+		return fareFixed;
+	}
+
+	public String getFareFixedStr(){
+		return Utils.getMoneyDecimalFormat().format(getFareFixed());
+	}
+
+	public int getPreferredPaymentMode() {
+		return preferredPaymentMode;
+	}
+
 }
