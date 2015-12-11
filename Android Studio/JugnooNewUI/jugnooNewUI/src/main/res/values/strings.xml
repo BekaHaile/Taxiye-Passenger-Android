@@ -450,5 +450,8 @@
     <string name="cash">Cash</string>
     <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
 
+
+
+    <string name="promocode_invalid_message_on_signup">Invalid Promo Code</string>
 	
 </resources>

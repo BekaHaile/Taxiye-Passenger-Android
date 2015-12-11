@@ -57,7 +57,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -1933,12 +1932,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
 				}
 			}
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					showPaytmTutorialPopup(HomeActivity.this);
-				}
-			}, 1000);
+			if(Data.userData.getPromoSuccess() != 0) {
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						showPaytmTutorialPopup(HomeActivity.this);
+					}
+				}, 1000);
+			}
 
 			switchUserScreen();
 
@@ -1979,6 +1980,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		try{
 			Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		try{
+			if(Data.userData.getPromoSuccess() == 0){
+				DialogPopup.dialogBannerWithCancelListener(this,
+						getResources().getString(R.string.promocode_invalid_message_on_signup),
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								relativeLayoutPromotions.performClick();
+							}
+						},
+						10000);
+				Data.userData.setPromoSuccess(1);
+			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}

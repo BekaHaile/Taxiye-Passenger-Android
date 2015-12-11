@@ -431,6 +431,10 @@ public class DialogPopup {
 	
 	
 	public static void dialogBanner(Activity activity, String message) {
+		dialogBannerWithCancelListener(activity, message, null, 5000);
+	}
+
+	public static void dialogBannerWithCancelListener(Activity activity, String message, final View.OnClickListener onClickListener, long timeToDismiss){
 		try {
 			dismissAlertPopup();
 
@@ -449,20 +453,23 @@ public class DialogPopup {
 
 			linearLayout.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					if(onClickListener != null) {
+						onClickListener.onClick(v);
+					}
+				}
+			});
 
 			dialog.show();
 			new Handler().postDelayed(new Runnable() {
 
-                @Override
-                public void run() {
-                    DialogPopup.dismissAlertPopup();
-                }
-            }, 5000);
+				@Override
+				public void run() {
+					DialogPopup.dismissAlertPopup();
+				}
+			}, timeToDismiss);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
