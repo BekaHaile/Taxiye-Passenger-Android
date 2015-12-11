@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
+	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+    <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -230,6 +230,8 @@
 	<string name="upload_contact_yes">YES</string>
 	<string name="upload_contact_no_thanks">MAYBE NEXT TIME</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
+
+	<string name="accessibility_service_description">description</string>
 
 	
 	
