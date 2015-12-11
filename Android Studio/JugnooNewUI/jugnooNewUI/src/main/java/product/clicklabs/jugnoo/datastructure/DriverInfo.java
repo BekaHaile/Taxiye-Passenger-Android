@@ -74,13 +74,13 @@ public class DriverInfo {
 	}
 
 	public void setEta(String eta){
-        try {
-            if(Integer.parseInt(eta) < 10){
-                eta = "0"+eta;
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if(Integer.parseInt(eta) < 10){
+//                eta = "0"+eta;
+//            }
+//        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//        }
         this.eta = eta;
 	}
 

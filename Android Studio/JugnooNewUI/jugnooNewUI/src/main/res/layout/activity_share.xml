@@ -74,7 +74,7 @@
                 android:id="@+id/textViewShare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24px"
+                android:textSize="22px"
                 android:layout_marginTop="62px"
                 android:textColor="@color/grey_dark"
                 android:layout_centerInParent="true"
@@ -98,7 +98,7 @@
                 android:id="@+id/textViewDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="44px"
+                android:textSize="40px"
                 android:paddingLeft="20px"
                 android:paddingRight="20px"
                 android:layout_marginTop="53px"
@@ -114,12 +114,19 @@
                 android:id="@+id/textViewMoreInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="44px"
+                android:textSize="40px"
                 android:layout_marginTop="30px"
                 android:textColor="@drawable/text_color_black_alpha_selector"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="More Info"
+                />
+            <ImageView
+                android:layout_width="174px"
+                android:layout_height="4px"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/black_text_alpha"
+                android:layout_marginTop="-2px"
                 />
 
             <Button

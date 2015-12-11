@@ -57,7 +57,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -71,6 +70,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -255,6 +255,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutInRideInfo;
     TextView textViewInRidePromoName, textViewInRideFareFactor;
     Button customerInRideMyLocationBtn;
+	LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState;
     Button buttonCancelRide, buttonAddPaytmCash, buttonCallDriver;
@@ -632,6 +633,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					imageViewListViewPromotionsSep.setVisibility(View.GONE);
                 }
             }
+
+			@Override
+			public void onPromoSelected(PromoCoupon promoCoupon) {
+				displayAlertAndCheckForSelectedPaytmCoupon(promoCoupon);
+			}
+
+			@Override
+			public void onLowPaytmBalance() {
+				DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_no_cash_when_selecting_coupon));
+			}
 		});
         listViewPromotions.setAdapter(promotionsListAdapter);
 
@@ -762,6 +773,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor);
         textViewInRideFareFactor.setTypeface(Fonts.latoRegular(this));
         customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
+		linearLayoutInRideDriverInfo = (LinearLayout) findViewById(R.id.linearLayoutInRideDriverInfo);
         imageViewInRideDriver = (ImageView) findViewById(R.id.imageViewInRideDriver);
         textViewInRideDriverName = (TextView) findViewById(R.id.textViewInRideDriverName);
         textViewInRideDriverName.setTypeface(Fonts.latoRegular(this));
@@ -1340,34 +1352,37 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		buttonGetARide.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean callRequestRide = true;
-				if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
-					if (Data.userData.getPaytmBalance() > 0) {
-						callRequestRide = true;
-						if(Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare){
-							DialogPopup.dialogBanner(activity, "Your Paytm cash is low");
+				boolean proceed = displayAlertAndCheckForSelectedPaytmCoupon(promotionsListAdapter.getSelectedCoupon());
+				if(proceed) {
+					boolean callRequestRide = true;
+					if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
+						if (Data.userData.getPaytmBalance() > 0) {
+							callRequestRide = true;
+							if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare) {
+								DialogPopup.dialogBanner(activity, getResources().getString(R.string.paytm_low_cash));
+							}
+						} else {
+							callRequestRide = false;
+							DialogPopup.alertPopup(activity, "", getResources().getString(R.string.paytm_no_cash));
 						}
+						FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
 					} else {
-						callRequestRide = false;
-						DialogPopup.alertPopup(activity, "", "You do not have Paytm cash, Please select payment method as Cash");
+						FlurryEventLogger.event(CASH_SELECTED_WHEN_REQUESTING);
+						callRequestRide = true;
 					}
-					FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
-				} else {
-					FlurryEventLogger.event(CASH_SELECTED_WHEN_REQUESTING);
-					callRequestRide = true;
-				}
-				if(callRequestRide){
-					promoCouponSelectedForRide = promotionsListAdapter.getSelectedCoupon();
-					callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
-					FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
-					if(promoCouponSelectedForRide.id > 0){
-						FlurryEventLogger.event(COUPONS_SELECTED);
-					} else{
-						FlurryEventLogger.event(COUPON_NOT_SELECTED);
+					if (callRequestRide) {
+						promoCouponSelectedForRide = promotionsListAdapter.getSelectedCoupon();
+						callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
+						FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
+						if (promoCouponSelectedForRide.id > 0) {
+							FlurryEventLogger.event(COUPONS_SELECTED);
+						} else {
+							FlurryEventLogger.event(COUPON_NOT_SELECTED);
+						}
 					}
-				}
 
-                Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+					Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+				}
 			}
 		});
 
@@ -2458,6 +2473,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_INITIAL:
 
+                        GCMIntentService.clearNotifications(HomeActivity.this);
+
 						Data.dropLatLng = null;
 
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -2626,7 +2643,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                            setDropLocationMarker();
                             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
                         }
-                        checkForGoogleLogoVisibilityInRide();
+						setGoogleMapPadding(0);
 
 
                         startGiftShake();
@@ -2687,7 +2704,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddPaytmCash.setVisibility(View.GONE);
 						updateUIInRideFareInfo();
-                        checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
                         stopGiftShake();
@@ -2761,7 +2777,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         buttonAddPaytmCash.setVisibility(View.VISIBLE);
                         updateInRideAddPaytmButtonText();
 						updateUIInRideFareInfo();
-                        checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
                         stopGiftShake();
@@ -2791,10 +2806,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         //******** If return 0 then show popup, contact not saved in database.
-//                        if(Data.userData.contactSaved == 0
-//                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
-//                                && dialogUploadContacts == null
-//								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+                        if(Data.userData.contactSaved == 0
+                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
+                                && dialogUploadContacts == null
+								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+							drawerLayout.closeDrawer(menuLayout);
                             dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
 									Data.userData.referAllTitle,
                                     Data.userData.referAllText,
@@ -2804,7 +2820,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     new OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-                                            //TODO show dialog
                                             DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                             Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                             Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
@@ -2820,7 +2835,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             uploadContactsApi();
                                         }
                                     });
-//                        }
+                        }
 
 
 
@@ -2854,7 +2869,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         buttonAddPaytmCash.setVisibility(View.VISIBLE);
                         updateInRideAddPaytmButtonText();
 						updateUIInRideFareInfo();
-                        checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
                         stopGiftShake();
@@ -2878,6 +2892,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
+						setGoogleMapPadding(0);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -3073,9 +3088,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private void checkForGoogleLogoVisibilityInRide(){
 		try{
 			float padding = 0;
-			if(textViewInRideMinimumFare.getVisibility() == View.VISIBLE){
+			if (textViewInRideMinimumFare.getVisibility() == View.VISIBLE) {
 				padding = padding + 42;
 			}
+			padding = padding + 350f;
 			setGoogleMapPadding(padding);
 		} catch(Exception e){
 			e.printStackTrace();
@@ -3211,7 +3227,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                    }
                     pickupLocationMarker.setIcon(BitmapDescriptorFactory
                             .fromBitmap(CustomMapMarkerCreator
-                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 14)));
+                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 12)));
                 } catch (Exception e) {
                     e.printStackTrace();
 //                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
@@ -3863,7 +3879,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } else{
             markerOptions.icon(BitmapDescriptorFactory
                     .fromBitmap(CustomMapMarkerCreator
-                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 14)));
+                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 12)));
         }
 //
         return markerOptions;
@@ -5962,7 +5978,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onClick(View v) {
                     Utils.openCallIntent(activity, primaryPhone);
-                    raiseSOSAlertAPI(activity, CALL);
+					raiseSOSAlertAPI(activity, CALL);
                     FlurryEventLogger.event(SOS_CALL_TO_EMERGENCY_CONTACT);
                 }
             },
@@ -5991,7 +6007,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         "Auto Details: "+Data.assignedDriverInfo.carNumber;
 
                     Utils.openSMSIntent(activity, phoneString, message);
-                    raiseSOSAlertAPI(activity, SMS);
+					raiseSOSAlertAPI(activity, SMS);
                     FlurryEventLogger.event(SOS_SMS_TO_EMERGENCY_CONTACT);
                 }
             }, true, false, new DialogInterface.OnCancelListener() {
@@ -6304,6 +6320,58 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		});
 	}
 
+
+	private boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon){
+		boolean proceed = true;
+		try {
+			boolean paytmCouponSelected = false;
+			if(promoCoupon instanceof CouponInfo){
+				if(((CouponInfo)promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))){
+					paytmCouponSelected = true;
+				}
+			}
+			else if(promoCoupon instanceof PromotionInfo){
+				if(((PromotionInfo)promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))){
+					paytmCouponSelected = true;
+				}
+			}
+
+			if(paytmCouponSelected){
+				if(PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption){
+					OnClickListener onClickListenerPaymentOption = new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							linearLayoutRRPaymentOption.performClick();
+						}
+					};
+					OnClickListener onClickListenerCancel = new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+						}
+					};
+					if(Data.userData.paytmEnabled == 1){
+						DialogPopup.alertPopupWithListener(this, "",
+								getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
+								onClickListenerPaymentOption);
+					} else{
+						DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+								getResources().getString(R.string.paytm_coupon_selected_but_paytm_not_added),
+								getResources().getString(R.string.ok),
+								getResources().getString(R.string.cancel),
+								onClickListenerPaymentOption,
+								onClickListenerCancel,
+								true, false);
+					}
+					proceed = false;
+					return proceed;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			proceed = true;
+		}
+		return proceed;
+	}
 
 
 	private void updatePreferredPaymentOptionUI(){

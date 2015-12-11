@@ -18,6 +18,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -31,7 +32,6 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -179,14 +179,39 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 
     private void performSelectClick(View v){
         try {
-            holder = (ViewHolderPromotion) v.getTag();
-            if ((selectedCoupon != null) && (selectedCoupon.id == promoCouponList.get(holder.id).id)) {
-                selectedCoupon = noSelectionCoupon;
-                notifyDataSetChanged();
-            } else {
-                selectedCoupon = promoCouponList.get(holder.id);
-                notifyDataSetChanged();
-            }
+			holder = (ViewHolderPromotion) v.getTag();
+			PromoCoupon promoCoupon = promoCouponList.get(holder.id);
+
+			boolean paytmCouponSelected = false;
+			if(promoCoupon instanceof CouponInfo){
+				if(((CouponInfo)promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(context.getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))){
+					paytmCouponSelected = true;
+				}
+			}
+			else if(promoCoupon instanceof PromotionInfo){
+				if(((PromotionInfo)promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(context.getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))){
+					paytmCouponSelected = true;
+				}
+			}
+			boolean lowBalance = false;
+			if(paytmCouponSelected){
+				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
+						&& Data.userData.getPaytmBalance() <= 0){
+					lowBalance = true;
+					promotionListEventHandler.onLowPaytmBalance();
+				}
+			}
+
+			if(!lowBalance) {
+				if ((selectedCoupon != null) && (selectedCoupon.id == promoCouponList.get(holder.id).id)) {
+					selectedCoupon = noSelectionCoupon;
+					notifyDataSetChanged();
+				} else {
+					selectedCoupon = promoCouponList.get(holder.id);
+					notifyDataSetChanged();
+				}
+				promotionListEventHandler.onPromoSelected(selectedCoupon);
+			}
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -293,6 +318,8 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 	public interface PromotionListEventHandler {
 		void onDismiss();
 		void onPromoListFetched(int totalPromoCoupons);
+		void onPromoSelected(PromoCoupon promoCoupon);
+		void onLowPaytmBalance();
 	}
 
 
