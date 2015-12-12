@@ -54,7 +54,6 @@ public class GenieActivity extends Activity implements LocationUpdate {
     private ImageView imageViewClose;
     private TextView textViewJugnoo, textViewETA, textViewBaseFair, textViewPerKM, textViewWait;
     LocationFetcher locationFetcher;
-    private ProgressWheel progressWheel;
     private String accessToken;
 
     @Override
@@ -71,7 +70,6 @@ public class GenieActivity extends Activity implements LocationUpdate {
         textViewBaseFair = (TextView)findViewById(R.id.textViewBaseFair);
         textViewPerKM = (TextView)findViewById(R.id.textViewPerKM);
         textViewWait = (TextView)findViewById(R.id.textViewWait);
-        progressWheel = (ProgressWheel)findViewById(R.id.progress_wheel);
 
         Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(GenieActivity.this);
         if(!"".equalsIgnoreCase(pair.first)){

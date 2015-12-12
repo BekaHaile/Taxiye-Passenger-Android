@@ -15,6 +15,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,14 +47,21 @@ import java.util.TimerTask;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GeniePositonsSaver;
 import product.clicklabs.jugnoo.utils.LocationFetcherBG;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.SimpleAnimator;
 
 
@@ -68,6 +77,7 @@ public class GenieService extends Service implements View.OnClickListener {
     private LinearLayout txtView, txt_linearlayout;
     private ImageView chatheadImg, removeImg;
     private TextView txt1;
+    private RelativeLayout relativeLayoutJeaniePopup;
 
     private RelativeLayout relativeUpward, relativeDownward;
     private View convertView;
@@ -95,7 +105,7 @@ public class GenieService extends Service implements View.OnClickListener {
     public long animDuration = 350;
 
     private RelativeLayout relativeLayoutInner;
-    private String accessToken;
+    private String accessToken, eta = "", baseFair = "", fairPerKM = "", fairPerMin = "";
 
     private LocationFetcherBG locationFetcherBG;
     private LatLng latLng;
@@ -379,9 +389,12 @@ public class GenieService extends Service implements View.OnClickListener {
                             time_end = System.currentTimeMillis();
                             //showAllJugnooApps();
 
-                            Intent intent = new Intent(GenieService.this, GenieActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+//                            Intent intent = new Intent(GenieService.this, GenieActivity.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+
+                            showJeaniePopup();
+
 
                         } else {
                             resetGeniePostion(x_start);
@@ -406,28 +419,119 @@ public class GenieService extends Service implements View.OnClickListener {
 
     }
 
+
+    private void showJeaniePopup(){
+
+        LinearLayout linearLayoutInner;
+        ImageView imageViewClose;
+        TextView textViewJugnoo, textViewETA, textViewBaseFair, textViewPerKM, textViewWait;
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        relativeLayoutJeaniePopup = (RelativeLayout) inflater.inflate(R.layout.dialog_genie_layout, null);
+
+        linearLayoutInner = (LinearLayout)relativeLayoutJeaniePopup.findViewById(R.id.innerRl);
+        imageViewClose = (ImageView)relativeLayoutJeaniePopup.findViewById(R.id.close);
+        textViewJugnoo = (TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewJugnoo);
+        textViewETA = (TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewETA);
+        textViewBaseFair = (TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewBaseFair);
+        textViewPerKM = (TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewPerKM);
+        textViewWait = (TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewWait);
+
+        Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
+        if(!"".equalsIgnoreCase(pair.first)){
+            accessToken = pair.first;
+        }
+
+        String s= eta+" \nmins";
+        SpannableString ss=  new SpannableString(s);
+        ss.setSpan(new RelativeSizeSpan(1.75f), 0, 2, 0); // set size
+        //ss1.setSpan(new ForegroundColorSpan(Color.RED), 0, 5, 0);// set color
+        textViewETA.setText(ss);
+        textViewBaseFair.setText(baseFair);
+        textViewPerKM.setText(fairPerKM+"/");
+        textViewWait.setText(fairPerMin+"/");
+
+        textViewJugnoo.setTypeface(Fonts.latoRegular(this));
+        textViewETA.setTypeface(Fonts.latoRegular(this));
+        textViewBaseFair.setTypeface(Fonts.latoRegular(this));
+        textViewPerKM.setTypeface(Fonts.latoRegular(this));
+        textViewWait.setTypeface(Fonts.latoRegular(this));
+        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewKMTxt)).setTypeface(Fonts.latoLight(this));
+        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewMinTxt)).setTypeface(Fonts.latoLight(this));
+
+
+        linearLayoutInner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //finish();
+                windowManager.removeView(relativeLayoutJeaniePopup);
+                stopSelf();
+                Intent intent = new Intent(GenieService.this, SplashNewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
+        imageViewClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                windowManager.removeView(relativeLayoutJeaniePopup);
+                chatheadView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        final WindowManager.LayoutParams paramsRv = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        paramsRv.gravity = Gravity.TOP | Gravity.LEFT;
+        paramsRv.x = 0;
+        paramsRv.y = 0;
+
+        windowManager.addView(relativeLayoutJeaniePopup, paramsRv);
+        ASSL.DoMagic(relativeLayoutJeaniePopup);
+        chatheadView.setVisibility(View.GONE);
+
+    }
+
     private void getNearestDriver(){
         if (AppStatus.getInstance(GenieService.this).isOnline(GenieService.this)) {
             RequestParams params = new RequestParams();
             params.put("access_token", accessToken);
-            params.put("latitude", latLng.latitude);
-            params.put("longitude", latLng.longitude);
+            params.put("lat", latLng.latitude);
+            params.put("long", latLng.longitude);
             AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/find_a_driver", params,
+            client.post(Config.getServerUrl() + "/fare_estimate_for_sticky_at_pickup", params,
                     new CustomAsyncHttpResponseHandler() {
                         private JSONObject jObj;
 
                         @Override
                         public void onFailure(Throwable arg3) {
-                            //DialogPopup.dismissLoadingDialog();
-                            //endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
                             chatheadView.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onSuccess(String response) {
                             Log.i("Response find_a_driver", "response = " + response);
-                            chatheadView.setVisibility(View.VISIBLE);
+                            try {
+                                JSONObject jObj = new JSONObject(response);
+                                int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
+                                eta = jObj.optString("eta");
+                                baseFair = jObj.optString("base_fare");
+                                fairPerKM = jObj.optString("fare_per_km");
+                                fairPerMin = jObj.optString("fare_per_min");
+                                if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                    chatheadView.setVisibility(View.VISIBLE);
+                                }
+
+                            }  catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+
 
                         }
                     });
@@ -1508,8 +1612,9 @@ public class GenieService extends Service implements View.OnClickListener {
             double longitude  = intent.getDoubleExtra("longitude", 0);
             latLng = new LatLng(latitude, longitude);
 
-            Log.v("sticky latlng","--> "+latitude+", "+longitude);
-            chatheadView.setVisibility(View.VISIBLE);
+            getNearestDriver();
+            Log.v("sticky latlng", "--> " + latitude + ", " + longitude);
+            //chatheadView.setVisibility(View.VISIBLE);
             locationFetcherBG.destroy();
         }
         else{
@@ -1556,6 +1661,11 @@ public class GenieService extends Service implements View.OnClickListener {
             locationFetcherBG.destroy();
         } catch(Exception e){}
 
+
+        try{
+            windowManager.removeView(relativeLayoutJeaniePopup);
+        } catch(Exception e){
+        }
 
     }
 
