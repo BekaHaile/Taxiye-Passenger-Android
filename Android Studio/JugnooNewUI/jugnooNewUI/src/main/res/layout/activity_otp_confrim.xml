@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:text="VERIFICATION"
             android:textColor="@color/black_text"
-            android:textSize="30.6px"/>
+            android:textSize="@dimen/top_bar_title_text_size"/>
 
         <ImageView
             android:id="@+id/imageViewBack"

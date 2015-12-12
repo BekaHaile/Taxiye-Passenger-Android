@@ -8,7 +8,12 @@
 
     <dimen name="screen_width">720px</dimen>
     <dimen name="screen_height">1134px</dimen>
-    
+
+    <dimen name="top_bar_height">96px</dimen>
+
+    <dimen name="top_bar_title_text_size">@dimen/top_bar_title_text_size</dimen>
+
+
     <dimen name="button_corner_radius">5dp</dimen>
     <dimen name="button_corner_radius_more">7dp</dimen>
     <dimen name="wallet_button_corner_radius">2dp</dimen>
@@ -78,7 +83,6 @@
 
     <dimen name="dialog_border_width">2px</dimen>
 
-    <dimen name="home_top_bar_height">96px</dimen>
 
 
 

@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:text="ADD PAYTM"
             android:textColor="@color/white"
-            android:textSize="30.6px"/>
+            android:textSize="@dimen/top_bar_title_text_size"/>
 
         <ImageView
             android:id="@+id/imageViewBack"
