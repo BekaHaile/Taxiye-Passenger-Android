@@ -190,7 +190,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
-                    android:text="About"
+                    android:text="Who are we?"
                     android:textColor="@drawable/text_color_grey_dark_white_selector"
                     android:textSize="34px" />
 

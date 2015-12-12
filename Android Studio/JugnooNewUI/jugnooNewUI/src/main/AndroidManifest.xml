@@ -25,6 +25,7 @@
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     
     
@@ -373,7 +374,7 @@
 
 
 
-
+        <receiver android:name=".utils.LocationReceiver" />
 
         <service android:enabled="true"
             android:name="product.clicklabs.jugnoo.ContactsUploadService" />

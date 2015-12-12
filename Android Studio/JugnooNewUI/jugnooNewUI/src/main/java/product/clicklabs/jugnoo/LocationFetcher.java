@@ -55,11 +55,12 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		destroy();
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 		if(resp == ConnectionResult.SUCCESS){														// google play services working
-			if(Utils.isLocationEnabled(context)){															// location fetching enabled
-                buildGoogleApiClient(context);
-			}
-			else{																					// location disabled
-			}
+//			if(Utils.isLocationEnabled(context)){															// location fetching enabled
+//                buildGoogleApiClient(context);
+//			}
+//			else{																					// location disabled
+//			}
+			buildGoogleApiClient(context);
 		}
 		else{																						// google play services not working
 			Log.e("Google Play error", "=" + resp);
@@ -77,7 +78,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		}, 2000);
 	}
 	
-	private synchronized void saveLatLngToSP(double latitude, double longitude){
+	public static synchronized void saveLatLngToSP(Context context, double latitude, double longitude){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putString(LOCATION_LAT, ""+latitude);
@@ -269,7 +270,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 //				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
 					this.location = location;
 					locationUpdate.onLocationChanged(location, priority);
-					saveLatLngToSP(location.getLatitude(), location.getLongitude());
+					saveLatLngToSP(context, location.getLatitude(), location.getLongitude());
 //				}
 			}
 		}catch(Exception e){

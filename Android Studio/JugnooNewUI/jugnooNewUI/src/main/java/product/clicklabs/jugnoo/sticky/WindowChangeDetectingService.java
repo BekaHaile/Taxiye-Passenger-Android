@@ -5,7 +5,10 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.util.Pair;
 import android.view.accessibility.AccessibilityEvent;
+
+import product.clicklabs.jugnoo.AccessTokenGenerator;
 
 /**
  * Created by socomo on 12/10/15.
@@ -33,14 +36,21 @@ public class WindowChangeDetectingService extends AccessibilityService {
     {
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
         {
-            String packageName = event.getPackageName() != null ? event.getPackageName().toString() : "";
-            String activityName = event.getClassName() != null ? event.getClassName().toString() : "";
-            Log.d("packageName is","---> "+packageName);
-            if((packageName.equalsIgnoreCase("com.ubercab")) || (packageName.equalsIgnoreCase("com.olacabs.customer"))){
-                startService(new Intent(this, GenieService.class));
-            }else {
-                stopService(new Intent(this, GenieService.class));
-            }
+            Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
+
+                String packageName = event.getPackageName() != null ? event.getPackageName().toString() : "";
+                String activityName = event.getClassName() != null ? event.getClassName().toString() : "";
+                Log.d("packageName is","---> "+packageName);
+                if(((packageName.equalsIgnoreCase("com.ubercab")) || (packageName.equalsIgnoreCase("com.olacabs.customer"))
+                        || (packageName.equalsIgnoreCase("com.winit.merucab")) || (packageName.equalsIgnoreCase("com.autoncab.customer"))
+                        || (packageName.equalsIgnoreCase("com.gcs.telerickshaw")) || (packageName.equalsIgnoreCase("com.tfs.consumer")))
+                        && (!"".equalsIgnoreCase(pair.first))){
+                    startService(new Intent(this, GenieService.class));
+                }else {
+                    stopService(new Intent(this, GenieService.class));
+                }
+
+
             // do something with the information
             // ...
         }

@@ -15,7 +15,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,13 +33,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import product.clicklabs.jugnoo.AccessTokenGenerator;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.GeniePositonsSaver;
+import product.clicklabs.jugnoo.utils.LocationFetcherBG;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.SimpleAnimator;
 
 
@@ -82,12 +95,19 @@ public class GenieService extends Service implements View.OnClickListener {
     public long animDuration = 350;
 
     private RelativeLayout relativeLayoutInner;
+    private String accessToken;
+
+    private LocationFetcherBG locationFetcherBG;
+    private LatLng latLng;
+
 
     @SuppressWarnings("deprecation")
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
+
+        locationFetcherBG = new LocationFetcherBG(this, 60000);
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         new ASSL(this, 1134, 720, true);
@@ -120,6 +140,11 @@ public class GenieService extends Service implements View.OnClickListener {
 
         /*convertView = inflater.inflate(R.layout.dialog_genie_layout, null);
         relativeLayoutInner = (RelativeLayout)convertView.findViewById(R.id.innerRl);*/
+
+        Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(GenieService.this);
+        if(!"".equalsIgnoreCase(pair.first)){
+            accessToken = pair.first;
+        }
 
 
 
@@ -195,6 +220,10 @@ public class GenieService extends Service implements View.OnClickListener {
         windowManager.addView(chatheadView, params);
 
         ASSL.DoMagic(chatheadView);
+
+        /* Initially Visiblity of stick is gone, will open
+            when server response is in success */
+        chatheadView.setVisibility(View.GONE);
 
 
         chatheadView.setOnTouchListener(new View.OnTouchListener() {
@@ -371,116 +400,48 @@ public class GenieService extends Service implements View.OnClickListener {
 
         reflectParams();
 
+
+
         //checkRunningApps();
 
     }
 
-    private void checkRunningApps(){
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                // this code will be executed after 2 seconds
-                Handler handler = new Handler(getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.v("running app is ","--> "+isForeground("com.ubercab"));
-                        if(isForeground("com.ubercab")){
-                            chatheadView.setVisibility(View.VISIBLE);
-                        }else{
+    private void getNearestDriver(){
+        if (AppStatus.getInstance(GenieService.this).isOnline(GenieService.this)) {
+            RequestParams params = new RequestParams();
+            params.put("access_token", accessToken);
+            params.put("latitude", latLng.latitude);
+            params.put("longitude", latLng.longitude);
+            AsyncHttpClient client = Data.getClient();
+            client.post(Config.getServerUrl() + "/find_a_driver", params,
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
+
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            //DialogPopup.dismissLoadingDialog();
+                            //endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
                             chatheadView.setVisibility(View.GONE);
                         }
-                        /*if(chatheadView.getVisibility() == View.VISIBLE){
-                            chatheadView.setVisibility(View.GONE);
-                        }else{
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Response find_a_driver", "response = " + response);
                             chatheadView.setVisibility(View.VISIBLE);
-                        }*/
-                    }
-                });
-            }
-        }, 1, 5000);
-    }
 
-    public boolean isForeground(String myPackage) {
-        ActivityManager manager = (ActivityManager) this
-                .getSystemService(Activity.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager
-                .getRunningTasks(10);
+                        }
+                    });
+        } else {
 
-        ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
-        Log.v("size of ruuning app is ","--> "+runningTaskInfo.size());
-
-        for (int i = 0; i < runningTaskInfo.size(); i++)
-        {
-            Log.d("Executed app", "Application executed : " +runningTaskInfo.get(i).baseActivity.toShortString()+ "\t\t ID: "+runningTaskInfo.get(i).id+"");
         }
-        /*for(int i=0; i<runningTaskInfo.size(); i++){
-            ComponentName componentInfo1 = runningTaskInfo.get(i).topActivity;
-            Log.v("top app is "+i,"--> "+componentInfo1.getPackageName());
-        }*/
-
-        if (componentInfo.getPackageName().equals(myPackage))
-            return true;
-        return false;
     }
+
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            /*case R.id.imageViewMeals1:
-                if (!mealsAnimating1) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.MEALS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewMeals2:
-                if (!mealsAnimating2) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.MEALS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewFatafat1:
-                if (!fatafatAnimating1) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.FATAFAT_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewFatafat2:
-                if (!fatafatAnimating2) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.FATAFAT_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewAutos1:
-                if (!autosAnimating1) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.AUTOS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case R.id.imageViewAutos2:
-                if (!autosAnimating2) {
-                    try {
-                        CustomAppLauncher.launchApp(GenieService.this, AccessTokenGenerator.AUTOS_PACKAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;*/
+
         }
 
 
@@ -1541,6 +1502,20 @@ public class GenieService extends Service implements View.OnClickListener {
         }
 
         iLife++;*/
+
+        if(intent.hasExtra("latitude")){
+            double latitude  = intent.getDoubleExtra("latitude", 0);
+            double longitude  = intent.getDoubleExtra("longitude", 0);
+            latLng = new LatLng(latitude, longitude);
+
+            Log.v("sticky latlng","--> "+latitude+", "+longitude);
+            chatheadView.setVisibility(View.VISIBLE);
+            locationFetcherBG.destroy();
+        }
+        else{
+
+        }
+
         return START_STICKY;
     }
 
@@ -1576,6 +1551,10 @@ public class GenieService extends Service implements View.OnClickListener {
         } catch (Exception E) {
 
         }
+
+        try{
+            locationFetcherBG.destroy();
+        } catch(Exception e){}
 
 
     }
