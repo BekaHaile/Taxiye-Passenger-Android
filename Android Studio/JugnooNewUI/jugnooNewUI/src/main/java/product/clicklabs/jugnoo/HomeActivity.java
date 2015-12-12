@@ -57,7 +57,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -3561,8 +3560,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onPause() {
 		stopNotifsUpdater();
         destroyFusedLocationFetchers();
-
-        GCMIntentService.clearNotifications(getApplicationContext());
 
         try {
             if (userMode == UserMode.PASSENGER) {
