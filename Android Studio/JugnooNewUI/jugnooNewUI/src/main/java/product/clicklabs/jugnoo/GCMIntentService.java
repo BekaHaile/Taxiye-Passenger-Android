@@ -363,17 +363,35 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
 						}
 
+						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						String message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
-						if("".equalsIgnoreCase(phoneNo)){
+						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
+							generateNotificationForCall(this, message1, NOTIFICATION_ID, phoneNo);
+						} else{
 							if (HomeActivity.appInterruptHandler != null) {
 								notificationManagerResume(this, message1, false);
 							} else {
 								notificationManager(this, message1, false);
 							}
 						}
-						else{
-							generateNotificationForCall(this, message1, NOTIFICATION_ID, phoneNo);
+
+					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
+						String driverArrivedMessage = jObj.getString(KEY_MESSAGE);
+						if (HomeActivity.appInterruptHandler != null) {
+							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
+						}
+
+						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
+							generateNotificationForCall(this, driverArrivedMessage, NOTIFICATION_ID, phoneNo);
+						} else{
+							if (HomeActivity.appInterruptHandler != null) {
+								notificationManagerResume(this, driverArrivedMessage, false);
+							} else {
+								notificationManager(this, driverArrivedMessage, false);
+							}
 						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
@@ -392,26 +410,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 							notificationManager(this, "Your ride has started.", false);
 						}
-					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
-
-						String driverArrivedMessage = jObj.getString("message");
-
-						if (HomeActivity.appInterruptHandler != null) {
-							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
-						}
-
-						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
-						if("".equalsIgnoreCase(phoneNo)){
-							if (HomeActivity.appInterruptHandler != null) {
-								notificationManagerResume(this, driverArrivedMessage, false);
-							} else {
-								notificationManager(this, driverArrivedMessage, false);
-							}
-						}
-						else{
-							generateNotificationForCall(this, driverArrivedMessage, NOTIFICATION_ID, phoneNo);
-						}
-
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						String engagementId = jObj.getString("engagement_id");
 
