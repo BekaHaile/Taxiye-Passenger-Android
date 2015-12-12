@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/screen_height"
                 android:splitMotionEvents="false"
-                android:layout_marginTop="@dimen/home_top_bar_height"
+                android:layout_marginTop="@dimen/top_bar_height"
                 android:visibility="visible">
 
                 <fragment
@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
-                android:layout_marginTop="@dimen/home_top_bar_height"
+                android:layout_marginTop="@dimen/top_bar_height"
                 android:visibility="visible"
                 >
 
@@ -1285,7 +1285,7 @@
                 android:id="@+id/relativeLayoutSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/home_top_bar_height"
+                android:layout_marginTop="@dimen/top_bar_height"
                 android:background="@color/white_translucent"
                 android:splitMotionEvents="false"
                 android:visibility="gone">
@@ -1419,7 +1419,7 @@
                 android:id="@+id/endRideReviewRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/home_top_bar_height"
+                android:layout_marginTop="@dimen/top_bar_height"
                 android:splitMotionEvents="false"
                 android:visibility="gone">
 
@@ -1440,7 +1440,7 @@
                 <RelativeLayout
                     android:id="@+id/topRl"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/home_top_bar_height"
+                    android:layout_height="@dimen/top_bar_height"
                     android:background="@color/yellow"
                     android:splitMotionEvents="false">
 
