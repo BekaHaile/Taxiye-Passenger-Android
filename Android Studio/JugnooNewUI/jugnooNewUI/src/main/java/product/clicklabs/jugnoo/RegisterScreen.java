@@ -514,7 +514,9 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            editTextReferralCode.setText(s);
+            if (editTextReferralCode.getText().toString().equalsIgnoreCase("")) {
+                editTextReferralCode.setText(s);
+            }
         }
     }
 
