@@ -5829,10 +5829,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
                     rateAppPopup(activity);
                 } else {
-                    if (skipped && Data.customerRateAppFlag == 1) {
-                        rateAppPopup(activity);
-                    } else {
-                    }
                 }
 				firstTimeZoom = false;
 				pickupDropZoomed = false;
