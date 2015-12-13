@@ -34,6 +34,19 @@
             android:layout_marginLeft="10px"
             android:padding="20px"
             android:src="@drawable/back_white_selector"/>
+
+        <TextView
+            android:id="@+id/textViewTitleEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:padding="15px"
+            android:text="EDIT"
+            android:textColor="@drawable/text_color_white_dark_selector"
+            android:textSize="30.6px"
+            />
     </RelativeLayout>
 
     <ScrollView
@@ -47,15 +60,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:splitMotionEvents="false">
-
-
+            android:splitMotionEvents="false"
+            >
 
 
             <LinearLayout
                 android:layout_width="720px"
                 android:layout_height="fill_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -69,8 +82,8 @@
                         android:layout_height="53px"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="30px"
-                        android:tag="mwar"
                         android:src="@drawable/ic_paytm_logo_big"
+                        android:tag="mwar"
                         />
 
                 </RelativeLayout>
@@ -94,6 +107,7 @@
                     android:layout_marginTop="27px"
                     android:background="@color/white"
                     >
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="2px"
@@ -147,166 +161,188 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="720px"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40px"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:id="@+id/linearLayoutInner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible"
+                    >
 
-                    <ImageView
-                        android:layout_width="250px"
-                        android:layout_height="2px"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="14px"
-                        android:layout_marginRight="14px"
-                        android:background="@color/grey_dark_less"
-                        />
-
-                    <TextView
-                        android:id="@+id/textViewAddCash"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="720px"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="40px"
                         android:gravity="center"
-                        android:text="Add cash"
-                        android:textColor="@color/grey_dark_more"
-                        android:textSize="36px"/>
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="250px"
-                        android:layout_height="2px"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="14px"
-                        android:layout_marginRight="14px"
-                        android:background="@color/grey_dark_less"
+                        <ImageView
+                            android:layout_width="250px"
+                            android:layout_height="2px"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="14px"
+                            android:layout_marginRight="14px"
+                            android:background="@color/grey_dark_less"
+                            />
+
+                        <TextView
+                            android:id="@+id/textViewAddCash"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:text="Add cash"
+                            android:textColor="@color/grey_dark_more"
+                            android:textSize="36px"/>
+
+                        <ImageView
+                            android:layout_width="250px"
+                            android:layout_height="2px"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="14px"
+                            android:layout_marginRight="14px"
+                            android:background="@color/grey_dark_less"
+                            />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="720px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40px"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/buttonAmount1"
+                            android:layout_width="176px"
+                            android:layout_height="74px"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="50px"
+                            android:background="@drawable/background_wallet_border"
+                            android:gravity="center"
+                            android:text="@string/first_amount"
+                            android:textColor="@color/bg_grey_opaque"
+                            android:textSize="30px"/>
+
+
+                        <Button
+                            android:id="@+id/buttonAmount2"
+                            android:layout_width="176px"
+                            android:layout_height="74px"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="50px"
+                            android:background="@drawable/background_wallet_border"
+                            android:gravity="center"
+                            android:text="@string/middle_amount"
+                            android:textColor="@color/bg_grey_opaque"
+                            android:textSize="30px"/>
+
+
+                        <Button
+                            android:id="@+id/buttonAmount3"
+                            android:layout_width="176px"
+                            android:layout_height="74px"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="45px"
+                            android:background="@drawable/background_wallet_border"
+                            android:gravity="center"
+                            android:text="@string/last_amount"
+                            android:textColor="@color/bg_grey_opaque"
+                            android:textSize="30px"/>
+
+
+                    </LinearLayout>
+
+
+                    <EditText
+                        android:id="@+id/editTextAmount"
+                        android:layout_width="620px"
+                        android:layout_height="80px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="50px"
+                        android:background="@drawable/background_wallet_border"
+                        android:digits="0123456789"
+                        android:ems="10"
+                        android:hint="Enter amount"
+                        android:inputType="number|textNoSuggestions"
+                        android:maxLength="5"
+                        android:paddingLeft="25px"
+                        android:paddingRight="25px"
+                        android:singleLine="true"
+                        android:textColor="@color/bg_grey_opaque"
+                        android:textColorHint="@color/black_text_alpha"
+                        android:textSize="28px"
                         />
 
+
+                    <Button
+                        android:id="@+id/buttonMakePayment"
+                        android:layout_width="620px"
+                        android:layout_height="84px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="60px"
+                        android:background="@drawable/button_yellow"
+                        android:text="Genrate OTP"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="@dimen/button_text_size"
+                        android:visibility="gone"
+                        />
+
+
+                    <Button
+                        android:id="@+id/buttonMakePaymentOTP"
+                        android:layout_width="620px"
+                        android:layout_height="84px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="50px"
+                        android:background="@drawable/button_yellow"
+                        android:text="Send OTP"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="@dimen/button_text_size"
+                        android:visibility="gone"
+                        />
+
+                    <Button
+                        android:id="@+id/buttonAddMoney"
+                        android:layout_width="620px"
+                        android:layout_height="84px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="60px"
+                        android:background="@drawable/button_yellow"
+                        android:text="ADD PAYTM CASH"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="@dimen/button_text_size"/>
+
+
+                    <Button
+                        android:id="@+id/buttonWithdrawMoney"
+                        android:layout_width="620px"
+                        android:layout_height="84px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="50px"
+                        android:background="@drawable/button_yellow"
+                        android:text="Withdraw Money"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="@dimen/button_text_size"
+                        android:visibility="gone"
+                        />
+
+
                 </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="720px"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40px"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/buttonAmount1"
-                        android:layout_width="176px"
-                        android:layout_height="74px"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="50px"
-                        android:background="@drawable/background_wallet_border"
-                        android:gravity="center"
-                        android:text="@string/first_amount"
-                        android:textColor="@color/bg_grey_opaque"
-                        android:textSize="30px"/>
-
-
-                    <Button
-                        android:id="@+id/buttonAmount2"
-                        android:layout_width="176px"
-                        android:layout_height="74px"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="50px"
-                        android:background="@drawable/background_wallet_border"
-                        android:gravity="center"
-                        android:text="@string/middle_amount"
-                        android:textColor="@color/bg_grey_opaque"
-                        android:textSize="30px"/>
-
-
-                    <Button
-                        android:id="@+id/buttonAmount3"
-                        android:layout_width="176px"
-                        android:layout_height="74px"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="45px"
-                        android:background="@drawable/background_wallet_border"
-                        android:gravity="center"
-                        android:text="@string/last_amount"
-                        android:textColor="@color/bg_grey_opaque"
-                        android:textSize="30px"/>
-
-
-                </LinearLayout>
-
-
-                <EditText
-                    android:id="@+id/editTextAmount"
-                    android:layout_width="620px"
-                    android:layout_height="80px"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="50px"
-                    android:background="@drawable/background_wallet_border"
-                    android:digits="0123456789"
-                    android:ems="10"
-                    android:maxLength="5"
-                    android:hint="Enter amount"
-                    android:inputType="number|textNoSuggestions"
-                    android:paddingLeft="25px"
-                    android:paddingRight="25px"
-                    android:singleLine="true"
-                    android:textColor="@color/bg_grey_opaque"
-                    android:textColorHint="@color/black_text_alpha"
-                    android:textSize="28px"
-                    />
-
-
-                <Button
-                    android:id="@+id/buttonMakePayment"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="60px"
-                    android:background="@drawable/button_yellow"
-                    android:text="Genrate OTP"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/button_text_size"
-                    android:visibility="gone"
-                    />
-
-
-                <Button
-                    android:id="@+id/buttonMakePaymentOTP"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="50px"
-                    android:background="@drawable/button_yellow"
-                    android:text="Send OTP"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/button_text_size"
-                    android:visibility="gone"
-                    />
-
-                <Button
-                    android:id="@+id/buttonAddMoney"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="60px"
-                    android:background="@drawable/button_yellow"
-                    android:text="ADD PAYTM CASH"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/button_text_size"/>
-
-
-                <Button
-                    android:id="@+id/buttonWithdrawMoney"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="50px"
-                    android:background="@drawable/button_yellow"
-                    android:text="Withdraw Money"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/button_text_size"
-                    android:visibility="gone"
-                    />
-
-
             </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonRemoveWallet"
+                android:layout_width="620px"
+                android:layout_height="84px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="200px"
+                android:background="@drawable/button_yellow"
+                android:text="REMOVE WALLET"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/button_text_size"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/textViewScroll"

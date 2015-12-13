@@ -120,7 +120,14 @@ public class UserData {
 		return promoSuccess;
 	}
 
-	public void setPromoSuccess(int promoSuccess){
+	public void setPromoSuccess(int promoSuccess) {
 		this.promoSuccess = promoSuccess;
+	}
+
+	public void deletePaytm(){
+		this.paytmEnabled = 0;
+		this.paytmBalance = 0;
+		this.paytmError = 0;
+		this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 	}
 }
