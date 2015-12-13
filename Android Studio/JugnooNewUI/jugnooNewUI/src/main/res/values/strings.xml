@@ -459,5 +459,20 @@
     <string name="who_are_we">Who are we?</string>
     <string name="about_caps">ABOUT</string>
 
+    <string name="request_accepted_message">Your request has been accepted</string>
+    <string name="auto_number_params">Auto Number: %s</string>
+
+
+
+
+
+
+
+
+
+
+    <string name="call_number">call_number</string>
+
+
 	
 </resources>

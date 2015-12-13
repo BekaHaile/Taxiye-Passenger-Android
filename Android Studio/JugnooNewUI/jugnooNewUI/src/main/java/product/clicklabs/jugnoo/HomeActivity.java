@@ -3587,8 +3587,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		stopNotifsUpdater();
         destroyFusedLocationFetchers();
 
-        GCMIntentService.clearNotifications(getApplicationContext());
-
         try {
             if (userMode == UserMode.PASSENGER) {
                 pauseAllTimers();
