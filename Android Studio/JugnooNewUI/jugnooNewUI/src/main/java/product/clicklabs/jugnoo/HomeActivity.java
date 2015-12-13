@@ -296,7 +296,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ScrollView scrollViewEndRide;
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
-	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
+	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
+        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
 	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
@@ -890,16 +891,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
         textViewAddFav = (TextView)findViewById(R.id.textViewAddFav);
         linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
+            @Override
+            public void keyboardOpened() {
 
-			}
+            }
 
-			@Override
-			public void keyBoardClosed() {
+            @Override
+            public void keyBoardClosed() {
 
-			}
-		}));
+            }
+        }));
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
             new SearchListAdapter.SearchListActionsHandler() {
@@ -1031,6 +1032,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
+        relativeLayoutEndRideDiscount = (RelativeLayout) findViewById(R.id.relativeLayoutEndRideDiscount);
 		relativeLayoutPaidUsingJugnooCash = (RelativeLayout) findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
 		relativeLayoutPaidUsingPaytm = (RelativeLayout) findViewById(R.id.relativeLayoutPaidUsingPaytm);
 		linearLayoutEndRideTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideTime);
@@ -2394,6 +2396,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							textViewEndRideDiscount.setText("Discounts");
 							textViewEndRideDiscountRupee.setVisibility(View.GONE);
 							textViewEndRideDiscountValue.setVisibility(View.GONE);
+                            relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 						}
 						else if(Data.endRideData.discountTypes.size() > 0){
 							listViewEndRideDiscounts.setVisibility(View.GONE);
@@ -2401,6 +2404,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+                            relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 						}
 						else{
 							listViewEndRideDiscounts.setVisibility(View.GONE);
@@ -2408,6 +2412,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+                            if(Data.endRideData.discount > 0){
+                                relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
+                            } else{
+                                relativeLayoutEndRideDiscount.setVisibility(View.GONE);
+                            }
 						}
 
                         textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare));

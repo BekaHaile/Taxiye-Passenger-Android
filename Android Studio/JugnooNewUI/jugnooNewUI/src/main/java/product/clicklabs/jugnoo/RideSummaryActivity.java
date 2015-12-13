@@ -56,7 +56,8 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 	ScrollView scrollViewEndRide;
 
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
-	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
+	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
+		relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
 	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
 	TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
@@ -139,6 +140,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
 		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
+		relativeLayoutEndRideDiscount = (RelativeLayout) findViewById(R.id.relativeLayoutEndRideDiscount);
 		relativeLayoutPaidUsingJugnooCash = (RelativeLayout) findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
 		relativeLayoutPaidUsingPaytm = (RelativeLayout) findViewById(R.id.relativeLayoutPaidUsingPaytm);
 		linearLayoutEndRideTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideTime);
@@ -263,6 +265,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 					textViewEndRideDiscount.setText("Discounts");
 					textViewEndRideDiscountRupee.setVisibility(View.GONE);
 					textViewEndRideDiscountValue.setVisibility(View.GONE);
+					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 				}
 				else if(endRideData.discountTypes.size() > 0){
 					listViewEndRideDiscounts.setVisibility(View.GONE);
@@ -270,6 +273,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 					textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
 					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
 					textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.discount));
+					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 				}
 				else{
 					listViewEndRideDiscounts.setVisibility(View.GONE);
@@ -277,6 +281,11 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 					textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
 					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
 					textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.discount));
+					if(endRideData.discount > 0){
+						relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
+					} else{
+						relativeLayoutEndRideDiscount.setVisibility(View.GONE);
+					}
 				}
 
 				textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.finalFare));
