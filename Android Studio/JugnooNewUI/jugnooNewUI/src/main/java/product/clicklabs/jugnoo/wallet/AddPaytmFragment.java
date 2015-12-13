@@ -143,6 +143,7 @@ public class AddPaytmFragment extends Fragment {
 					editTextOTP.setError("Please enter OTP");
 				} else {
 					sendOTP(editTextOTP.getText().toString().trim());
+					Utils.hideSoftKeyboard(paymentActivity, editTextOTP);
 				}
 			}
 		});

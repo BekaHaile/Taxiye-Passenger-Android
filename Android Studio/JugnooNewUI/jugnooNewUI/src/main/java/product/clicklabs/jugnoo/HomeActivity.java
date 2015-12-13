@@ -323,8 +323,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     static Location myLocation;
 
 
-    static UserMode userMode;
-    static PassengerScreenMode passengerScreenMode;
+    public static UserMode userMode;
+    public static PassengerScreenMode passengerScreenMode;
 
 
     FindDriversETAAsync findDriversETAAsync;

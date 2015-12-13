@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.wallet;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -27,18 +26,17 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.EmergencyContactsActivity;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -197,29 +195,34 @@ public class PaytmRechargeFragment extends Fragment {
 		textViewTitleEdit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				linearLayoutInner.setVisibility(View.GONE);
 				buttonRemoveWallet.setVisibility(View.VISIBLE);
-
-
+				textViewTitleEdit.setVisibility(View.GONE);
+				textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.white_light_grey));
 			}
 		});
 
 		buttonRemoveWallet.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				DialogPopup.alertPopupTwoButtonsWithListeners(paymentActivity, "", "Are you sure you want to remove this payment method?", "Cancel", "Remove",
-						new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-							}
-						},
+				if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
+					|| PassengerScreenMode.P_SEARCH == HomeActivity.passengerScreenMode) {
+					DialogPopup.alertPopupTwoButtonsWithListeners(paymentActivity, "",
+						paymentActivity.getResources().getString(R.string.paytm_remove_alert),
+						paymentActivity.getResources().getString(R.string.remove),
+						paymentActivity.getResources().getString(R.string.cancel),
 						new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								removeWallet();
 							}
+						},
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							}
 						}, false, false);
+				}
 			}
 		});
 
@@ -280,6 +283,17 @@ public class PaytmRechargeFragment extends Fragment {
 			e.printStackTrace();
 		}
 
+
+		if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
+			|| PassengerScreenMode.P_SEARCH == HomeActivity.passengerScreenMode) {
+			textViewTitleEdit.setVisibility(View.VISIBLE);
+		}
+		else{
+			textViewTitleEdit.setVisibility(View.GONE);
+		}
+		buttonRemoveWallet.setVisibility(View.GONE);
+
+
 		return rootView;
 	}
 
@@ -335,7 +349,14 @@ public class PaytmRechargeFragment extends Fragment {
 	 * Method used to remove fragment from stack
 	 */
 	public void performBackPressed() {
-		getActivity().getSupportFragmentManager().popBackStack("PaytmRechargeFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+		if(buttonRemoveWallet.getVisibility() == View.VISIBLE){
+			linearLayoutInner.setVisibility(View.VISIBLE);
+			buttonRemoveWallet.setVisibility(View.GONE);
+			textViewTitleEdit.setVisibility(View.VISIBLE);
+			textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.grey_dark_more));
+		} else {
+			getActivity().getSupportFragmentManager().popBackStack("PaytmRechargeFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+		}
 	}
 
 
@@ -533,7 +554,8 @@ public class PaytmRechargeFragment extends Fragment {
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dialogBanner(paymentActivity, message);
 								Data.userData.deletePaytm();
-								imageViewBack.performClick();
+								performBackPressed();
+								performBackPressed();
 								paymentActivity.performGetBalanceSuccess("");
 							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);
@@ -559,6 +581,8 @@ public class PaytmRechargeFragment extends Fragment {
 			e.printStackTrace();
 		}
 	}
+
+
 	private int rechargeRequestCode = 1;
 
 	private void openWebView(String jsonData) {

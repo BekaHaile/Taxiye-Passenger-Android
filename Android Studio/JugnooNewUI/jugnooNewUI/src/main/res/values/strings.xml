@@ -450,5 +450,9 @@
     <string name="cash">Cash</string>
     <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
 
+	<string name="paytm_remove_alert">Are you sure you want to remove this payment method?</string>
+
+	<string name="remove">Remove</string>
+
 	
 </resources>
