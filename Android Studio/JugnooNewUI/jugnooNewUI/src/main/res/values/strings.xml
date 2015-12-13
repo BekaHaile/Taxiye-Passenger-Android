@@ -464,15 +464,8 @@
 
 
 
-
-
-
-
-
-
-
     <string name="call_number">call_number</string>
 
+    <string name="promocode_invalid_message_on_signup">Invalid Promo Code</string>
 
-	
 </resources>

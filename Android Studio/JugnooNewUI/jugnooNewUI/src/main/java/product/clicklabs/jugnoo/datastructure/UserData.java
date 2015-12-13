@@ -16,13 +16,14 @@ public class UserData {
 	private String paytmStatus;
 	public int paytmEnabled, paytmError, contactSaved;
     public String referAllText, referAllTitle;
+	private int promoSuccess;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
 			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled,
-                    int contactSaved, String referAllText, String referAllTitle){
+                    int contactSaved, String referAllText, String referAllTitle, int promoSuccess){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -58,6 +59,7 @@ public class UserData {
 		this.contactSaved = contactSaved;
         this.referAllText = referAllText;
 		this.referAllTitle = referAllTitle;
+		this.promoSuccess = promoSuccess;
 
 		if(1 == this.paytmEnabled) {
 			this.paytmStatus = "";
@@ -112,5 +114,13 @@ public class UserData {
 
 	public void setPaytmStatus(String paytmStatus) {
 		this.paytmStatus = paytmStatus;
+	}
+
+	public int getPromoSuccess() {
+		return promoSuccess;
+	}
+
+	public void setPromoSuccess(int promoSuccess){
+		this.promoSuccess = promoSuccess;
 	}
 }

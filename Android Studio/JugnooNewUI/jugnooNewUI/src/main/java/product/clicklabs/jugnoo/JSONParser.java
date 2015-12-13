@@ -255,6 +255,7 @@ public class JSONParser {
 		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
+		int promoSuccess = userData.optInt("promo_success", 1);
 
 		int paytmEnabled = userData.optInt("paytm_enabled", 0);
         int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
@@ -268,7 +269,7 @@ public class JSONParser {
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
-                contactSaved, referAllText, referAllTitle);
+                contactSaved, referAllText, referAllTitle, promoSuccess);
     }
 
 
