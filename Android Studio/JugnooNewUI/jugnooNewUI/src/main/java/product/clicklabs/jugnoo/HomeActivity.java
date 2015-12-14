@@ -1986,15 +1986,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		try{
 			if(Data.userData.getPromoSuccess() == 0){
-				DialogPopup.dialogBannerWithCancelListener(this,
-						getResources().getString(R.string.promocode_invalid_message_on_signup),
-						new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								relativeLayoutPromotions.performClick();
-							}
-						},
-						10000);
+                DialogPopup.alertPopupWithListener(HomeActivity.this, "",
+                    getResources().getString(R.string.promocode_invalid_message_on_signup),
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            relativeLayoutPromotions.performClick();
+                        }
+                    });
 				Data.userData.setPromoSuccess(1);
 			}
 		} catch(Exception e){

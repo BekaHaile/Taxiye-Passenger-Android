@@ -452,6 +452,6 @@
 
 
 
-    <string name="promocode_invalid_message_on_signup">Invalid Promo Code</string>
+    <string name="promocode_invalid_message_on_signup">Invalid Promo code! Enter correct code to avail benefits</string>
 	
 </resources>
