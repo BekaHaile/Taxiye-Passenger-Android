@@ -44,4 +44,7 @@ public class SPLabels {
             ;
 
     public static final String UPLOAD_CONTACTS_ERROR = "upload_contacts_error";
+    public static final String FB_EVENT_REQUEST_RIDE_LOGGED = "fb_event_request_ride_logged";
+    public static final String FB_EVENT_RIDE_COMPLETED_LOGGED = "fb_event_ride_completed_logged";
+
 }
