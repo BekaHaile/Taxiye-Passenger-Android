@@ -108,6 +108,7 @@ import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -5693,6 +5694,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 }
 												if ("".equalsIgnoreCase(Data.cSessionId)) {
 													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE);
+                                                    FbEvents.logEventRequestRide(HomeActivity.this);
 												}
                                                 Data.cSessionId = jObj.getString("session_id");
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -5836,6 +5838,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
 				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED);
+                FbEvents.logEventRideCompleted(HomeActivity.this);
+
             }
         });
 
