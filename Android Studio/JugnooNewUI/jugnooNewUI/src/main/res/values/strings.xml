@@ -466,11 +466,11 @@
 
     <string name="call_number">call_number</string>
 
-    <string name="promocode_invalid_message_on_signup">Invalid Promo Code</string>
 
 	<string name="paytm_remove_alert">Are you sure you want to remove this payment method?</string>
 
 	<string name="remove">Remove</string>
 
-	
+    <string name="promocode_invalid_message_on_signup">Invalid Promo code! Enter correct code to avail benefits</string>
+
 </resources>
