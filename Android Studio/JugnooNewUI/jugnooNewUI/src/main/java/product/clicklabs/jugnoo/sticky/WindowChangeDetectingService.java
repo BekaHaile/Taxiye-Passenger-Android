@@ -4,12 +4,12 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 import android.util.Pair;
 import android.view.accessibility.AccessibilityEvent;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
@@ -50,7 +50,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
                     selectedPackageName = packageName;
                 }
 
-                Log.d("packageName is","---> "+packageName);
+                Log.d("packageName is", "---> " + packageName);
                 if(((packageName.equalsIgnoreCase("com.ubercab")) || (packageName.equalsIgnoreCase("com.olacabs.customer"))
                         || (packageName.equalsIgnoreCase("com.winit.merucab")) || (packageName.equalsIgnoreCase("com.autoncab.customer"))
                         || (packageName.equalsIgnoreCase("com.gcs.telerickshaw")) || (packageName.equalsIgnoreCase("com.tfs.consumer"))
