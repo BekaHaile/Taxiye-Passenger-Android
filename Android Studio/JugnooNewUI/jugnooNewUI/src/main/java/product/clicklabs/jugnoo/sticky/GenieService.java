@@ -1,11 +1,8 @@
 package product.clicklabs.jugnoo.sticky;
 
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -44,10 +41,6 @@ import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -56,16 +49,15 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GeniePositonsSaver;
 import product.clicklabs.jugnoo.utils.LocationFetcherBG;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.SimpleAnimator;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -75,7 +67,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 
 
-public class GenieService extends Service implements View.OnClickListener {
+public class GenieService extends Service implements View.OnClickListener, FlurryEventNames {
 
     private WindowManager windowManager;
     private RelativeLayout chatheadView, removeView;
@@ -482,7 +474,9 @@ public class GenieService extends Service implements View.OnClickListener {
                 stopSelf();
                 Intent intent = new Intent(GenieService.this, SplashNewActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.putExtra("transfer_from_jeanie", 1);
                 startActivity(intent);
+				FlurryEventLogger.event(JUGNOO_STICKY_TRANSFER_TO_APP);
             }
         });
 
@@ -508,6 +502,8 @@ public class GenieService extends Service implements View.OnClickListener {
         windowManager.addView(relativeLayoutJeaniePopup, paramsRv);
         ASSL.DoMagic(relativeLayoutJeaniePopup);
         chatheadView.setVisibility(View.GONE);
+
+		FlurryEventLogger.event(JUGNOO_STICKY_EXPANDED);
 
     }
 
@@ -543,6 +539,7 @@ public class GenieService extends Service implements View.OnClickListener {
                                 if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag)
                                         && (Integer.parseInt(eta) != 0)){
                                     chatheadView.setVisibility(View.VISIBLE);
+									FlurryEventLogger.event(JUGNOO_STICKY_OPENED);
                                 }
 
                             }  catch (Exception exception) {

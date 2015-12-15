@@ -2187,6 +2187,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             } else {
                 checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
             }
+			if(Data.TRANSFER_FROM_JEANIE == 1){
+				FlurryEventLogger.event(JUGNOO_STICKY_RIDE_CONFIRMATION);
+				Data.TRANSFER_FROM_JEANIE = 0;
+			}
         } else {
 
             Data.cEngagementId = "";

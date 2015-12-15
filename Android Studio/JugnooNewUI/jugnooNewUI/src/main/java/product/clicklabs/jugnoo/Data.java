@@ -188,6 +188,9 @@ public class Data {
 	public static LatLng lastRefreshLatLng;
 
 
+	public static int TRANSFER_FROM_JEANIE = 0;
+
+
 	
 	public static void clearDataOnLogout(Context context){
 		try{

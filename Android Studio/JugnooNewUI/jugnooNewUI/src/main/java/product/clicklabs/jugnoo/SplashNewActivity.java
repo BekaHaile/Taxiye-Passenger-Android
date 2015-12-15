@@ -55,7 +55,6 @@ import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -214,6 +213,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
+
+		try{
+			Data.TRANSFER_FROM_JEANIE = 0;
+			if(getIntent().hasExtra("transfer_from_jeanie")){
+				Data.TRANSFER_FROM_JEANIE = getIntent().getIntExtra("transfer_from_jeanie", 0);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 
 		FacebookSdk.sdkInitialize(this);
 

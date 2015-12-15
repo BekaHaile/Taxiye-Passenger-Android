@@ -122,9 +122,14 @@ public interface FlurryEventNames {
 			NOTIFICATION_CENTER_MENU =	"notification center menu",
 			RIDE_SUMMARY_CHECKED_LATER =	"Ride summary checked later",
 			CASH_SELECTED_WHEN_REQUESTING =	"cash selected when requesting",
-			PAYTM_SELECTED_WHEN_REQUESTING =	"Paytm selected when requesting"
+			PAYTM_SELECTED_WHEN_REQUESTING =	"Paytm selected when requesting",
+
+	JUGNOO_STICKY_OPENED = "Jugnoo Sticky opened",
+	JUGNOO_STICKY_EXPANDED = "Jugnoo Sticky expanded",
+	JUGNOO_STICKY_TRANSFER_TO_APP = "Jugnoo Sticky transfer to app",
+	JUGNOO_STICKY_RIDE_CONFIRMATION = "Jugnoo Sticky Ride confirmation"
 
 
-				;
+			;
 
 }
