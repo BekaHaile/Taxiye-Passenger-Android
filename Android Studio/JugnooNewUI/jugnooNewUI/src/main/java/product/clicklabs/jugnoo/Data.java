@@ -8,6 +8,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.SyncHttpClient;
 
+import org.json.JSONObject;
+
 import java.net.URLDecoder;
 import java.security.KeyStore;
 import java.util.ArrayList;
@@ -186,6 +188,12 @@ public class Data {
 	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
 	public static LatLng lastRefreshLatLng;
+
+	public static JSONObject branchReferringParams = null;
+	public static String branchReferringLink = "";
+
+
+	public static int TRANSFER_FROM_JEANIE = 0;
 
 
 	

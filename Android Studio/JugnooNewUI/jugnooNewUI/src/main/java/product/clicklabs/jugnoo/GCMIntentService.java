@@ -28,13 +28,14 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 
-public class GCMIntentService extends GcmListenerService {
+public class GCMIntentService extends GcmListenerService implements Constants {
 
     public static final int NOTIFICATION_ID = 1;
     public static final int PROMOTION_NOTIFICATION_ID = 1212;
@@ -184,6 +185,57 @@ public class GCMIntentService extends GcmListenerService {
 
     }
 
+	@SuppressWarnings("deprecation")
+	private void generateNotificationForCall(Context context, String message, int notificationId, String callNumber) {
+
+		try {
+			long when = System.currentTimeMillis();
+
+			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+			Log.v("message", "," + message);
+
+			Intent notificationIntent;
+			if(HomeActivity.appInterruptHandler != null){
+				notificationIntent = new Intent(context, HomeActivity.class);
+			} else{
+				notificationIntent = new Intent(context, SplashNewActivity.class);
+			}
+
+			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+			builder.setAutoCancel(false);
+			builder.setContentTitle(context.getResources().getString(R.string.app_name));
+			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+			builder.setContentText(message);
+			builder.setTicker(message);
+			builder.setDefaults(Notification.DEFAULT_ALL);
+			builder.setWhen(when);
+			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+			builder.setSmallIcon(R.drawable.notification_icon);
+
+			Intent intentCall = new Intent(context, CallActivity.class);
+			intentCall.putExtra(context.getResources().getString(R.string.call_number), callNumber);
+			PendingIntent pendingIntentCall = PendingIntent.getActivity(this, 123411, intentCall, PendingIntent.FLAG_UPDATE_CURRENT);
+			builder.addAction(android.R.drawable.sym_action_call, context.getResources().getString(R.string.call_driver), pendingIntentCall);
+
+			builder.setContentIntent(intent);
+
+			Notification notification = builder.build();
+			notificationManager.notify(notificationId, notification);
+
+			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+			wl.acquire(15000);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomIDAnotherApp(Context context, String message, int notificationId, String packageName) {
 
@@ -297,22 +349,51 @@ public class GCMIntentService extends GcmListenerService {
 		try {
 			Log.e("Recieved a gcm message arg1...", "," + data);
 
-			if (!"".equalsIgnoreCase(data.getString("message", ""))) {
+			if (!"".equalsIgnoreCase(data.getString(KEY_MESSAGE, ""))) {
 
-				String message = data.getString("message");
+				String message = data.getString(KEY_MESSAGE);
 
 				try {
 					JSONObject jObj = new JSONObject(message);
 
-					int flag = jObj.getInt("flag");
+					int flag = jObj.getInt(KEY_FLAG);
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
-							notificationManagerResume(this, "Your request has been accepted", false);
-						} else {
-							notificationManager(this, "Your request has been accepted", false);
 						}
+
+						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						String message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
+							generateNotificationForCall(this, message1, NOTIFICATION_ID, phoneNo);
+						} else{
+							if (HomeActivity.appInterruptHandler != null) {
+								notificationManagerResume(this, message1, false);
+							} else {
+								notificationManager(this, message1, false);
+							}
+						}
+
+					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
+						String driverArrivedMessage = jObj.getString(KEY_MESSAGE);
+						if (HomeActivity.appInterruptHandler != null) {
+							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
+						}
+
+						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
+							generateNotificationForCall(this, driverArrivedMessage, NOTIFICATION_ID, phoneNo);
+						} else{
+							if (HomeActivity.appInterruptHandler != null) {
+								notificationManagerResume(this, driverArrivedMessage, false);
+							} else {
+								notificationManager(this, driverArrivedMessage, false);
+							}
+						}
+
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
 
 						if (HomeActivity.appInterruptHandler != null) {
@@ -329,17 +410,6 @@ public class GCMIntentService extends GcmListenerService {
 
 							notificationManager(this, "Your ride has started.", false);
 						}
-					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
-
-						String driverArrivedMessage = jObj.getString("message");
-
-						if (HomeActivity.appInterruptHandler != null) {
-							notificationManagerResume(this, driverArrivedMessage, false);
-							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
-						} else {
-							notificationManager(this, driverArrivedMessage, false);
-						}
-
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						String engagementId = jObj.getString("engagement_id");
 

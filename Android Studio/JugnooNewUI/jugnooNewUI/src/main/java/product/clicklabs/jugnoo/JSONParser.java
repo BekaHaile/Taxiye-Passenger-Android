@@ -88,7 +88,7 @@ public class JSONParser {
                     farePerMin, freeMinutes, 0, 0, convenienceCharges);
         } catch (Exception e) {
             e.printStackTrace();
-            Data.fareStructure = new FareStructure(25, 2, 6, 1, 6, 0, 0, 0);
+            Data.fareStructure = new FareStructure(15, 0, 4, 1, 0, 0, 0, 0);
         }
     }
 
@@ -255,11 +255,15 @@ public class JSONParser {
 		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
+		int promoSuccess = userData.optInt("promo_success", 1);
 
 		int paytmEnabled = userData.optInt("paytm_enabled", 0);
         int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
         String referAllText = userData.optString("refer_all_text", context.getResources().getString(R.string.upload_contact_message));
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
+
+        int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
+        Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
 
 
 
@@ -268,7 +272,7 @@ public class JSONParser {
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
-                contactSaved, referAllText, referAllTitle);
+                contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie);
     }
 
 

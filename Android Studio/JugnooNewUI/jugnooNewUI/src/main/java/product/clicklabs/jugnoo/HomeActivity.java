@@ -16,10 +16,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.MotionEvent;
@@ -100,6 +102,7 @@ import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -108,6 +111,7 @@ import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -296,7 +300,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ScrollView scrollViewEndRide;
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
-	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
+	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
+        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
 	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
@@ -324,8 +329,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     static Location myLocation;
 
 
-    static UserMode userMode;
-    static PassengerScreenMode passengerScreenMode;
+    public static UserMode userMode;
+    public static PassengerScreenMode passengerScreenMode;
 
 
     FindDriversETAAsync findDriversETAAsync;
@@ -890,16 +895,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
         textViewAddFav = (TextView)findViewById(R.id.textViewAddFav);
         linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
+            @Override
+            public void keyboardOpened() {
 
-			}
+            }
 
-			@Override
-			public void keyBoardClosed() {
+            @Override
+            public void keyBoardClosed() {
 
-			}
-		}));
+            }
+        }));
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
             new SearchListAdapter.SearchListActionsHandler() {
@@ -1031,6 +1036,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		relativeLayoutLuggageCharge = (RelativeLayout) findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) findViewById(R.id.relativeLayoutConvenienceCharge);
+        relativeLayoutEndRideDiscount = (RelativeLayout) findViewById(R.id.relativeLayoutEndRideDiscount);
 		relativeLayoutPaidUsingJugnooCash = (RelativeLayout) findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
 		relativeLayoutPaidUsingPaytm = (RelativeLayout) findViewById(R.id.relativeLayoutPaidUsingPaytm);
 		linearLayoutEndRideTime = (LinearLayout) findViewById(R.id.linearLayoutEndRideTime);
@@ -1948,12 +1954,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
 				}
 			}
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					showPaytmTutorialPopup(HomeActivity.this);
-				}
-			}, 1000);
+
+			if(Data.userData.getPromoSuccess() != 0) {
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+//						showPaytmTutorialPopup(HomeActivity.this);
+					}
+				}, 1000);
+			}
+
+
+            if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
+                    &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
+                Prefs.with(activity).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
+                // for tutorial screens
+                startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
+            }
+
+
 
 			switchUserScreen();
 
@@ -1994,6 +2013,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		try{
 			Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		try{
+			if(Data.userData.getPromoSuccess() == 0){
+                DialogPopup.alertPopupWithListener(HomeActivity.this, "",
+                    getResources().getString(R.string.promocode_invalid_message_on_signup),
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            relativeLayoutPromotions.performClick();
+                        }
+                    });
+				Data.userData.setPromoSuccess(1);
+			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -2194,6 +2229,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             } else {
                 checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
             }
+			if(Data.TRANSFER_FROM_JEANIE == 1){
+				FlurryEventLogger.event(JUGNOO_STICKY_RIDE_CONFIRMATION);
+				Data.TRANSFER_FROM_JEANIE = 0;
+			}
         } else {
 
             Data.cEngagementId = "";
@@ -2394,6 +2433,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							textViewEndRideDiscount.setText("Discounts");
 							textViewEndRideDiscountRupee.setVisibility(View.GONE);
 							textViewEndRideDiscountValue.setVisibility(View.GONE);
+                            relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 						}
 						else if(Data.endRideData.discountTypes.size() > 0){
 							listViewEndRideDiscounts.setVisibility(View.GONE);
@@ -2401,6 +2441,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+                            relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 						}
 						else{
 							listViewEndRideDiscounts.setVisibility(View.GONE);
@@ -2408,6 +2449,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							textViewEndRideDiscountRupee.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
 							textViewEndRideDiscountValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.discount));
+                            if(Data.endRideData.discount > 0){
+                                relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
+                            } else{
+                                relativeLayoutEndRideDiscount.setVisibility(View.GONE);
+                            }
 						}
 
                         textViewEndRideFinalFareValue.setText(Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare));
@@ -3382,7 +3428,53 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			DialogPopup.showLocationSettingsAlert(activity);
 		}
 
+        if (!isAccessibilitySettingsOn(getApplicationContext())) {
+            Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+        }else{
+            Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+        }
 //        genieLayout.setGenieParams();
+    }
+
+    // To check if service is enabled
+    private boolean isAccessibilitySettingsOn(Context mContext) {
+        int accessibilityEnabled = 0;
+        final String service = "product.clicklabs.jugnoo/product.clicklabs.jugnoo.sticky.WindowChangeDetectingService";
+        boolean accessibilityFound = false;
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    mContext.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+            Log.v("Jugnoo Jeanie", "accessibilityEnabled = " + accessibilityEnabled);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e("Jugnoo Jeanie", "Error finding setting, default accessibility to not found: "
+                    + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            Log.v("Jugnoo Jeanie", "***ACCESSIBILIY IS ENABLED*** -----------------");
+            String settingValue = Settings.Secure.getString(
+                    mContext.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                TextUtils.SimpleStringSplitter splitter = mStringColonSplitter;
+                splitter.setString(settingValue);
+                while (splitter.hasNext()) {
+                    String accessabilityService = splitter.next();
+
+                    Log.v("Jugnoo Jeanie", "-------------- > accessabilityService :: " + accessabilityService);
+                    if (accessabilityService.equalsIgnoreCase(service)) {
+                        Log.v("Jugnoo Jeanie", "We've found the correct setting - accessibility is switched on!");
+                        return true;
+                    }
+                }
+            }
+        } else {
+            Log.v("Jugnoo Jeanie", "***ACCESSIBILIY IS DISABLED***");
+        }
+
+        return accessibilityFound;
     }
 
 	private void startNotifsUpdater(){
@@ -3577,8 +3669,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onPause() {
 		stopNotifsUpdater();
         destroyFusedLocationFetchers();
-
-        GCMIntentService.clearNotifications(getApplicationContext());
 
         try {
             if (userMode == UserMode.PASSENGER) {
@@ -5666,7 +5756,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     executionTime = serverRequestStartTime + elapsedTime;
                                                 }
 												if ("".equalsIgnoreCase(Data.cSessionId)) {
-													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE);
+													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE, true);
+                                                    FbEvents.logEvent(HomeActivity.this, FB_EVENT_REQUEST_RIDE, true);
 												}
                                                 Data.cSessionId = jObj.getString("session_id");
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -5803,17 +5894,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
                     rateAppPopup(activity);
                 } else {
-                    if (skipped && Data.customerRateAppFlag == 1) {
-                        rateAppPopup(activity);
-                    } else {
-                    }
                 }
 				firstTimeZoom = false;
 				pickupDropZoomed = false;
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
-				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED);
+				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
+                FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED, true);
+
             }
         });
 

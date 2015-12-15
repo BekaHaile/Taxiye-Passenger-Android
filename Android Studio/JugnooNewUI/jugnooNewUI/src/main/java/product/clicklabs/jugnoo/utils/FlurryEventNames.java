@@ -129,16 +129,28 @@ public interface FlurryEventNames {
 	GENERIC_FACEBOOK = "Generic Facebook share",
 	GENERIC_EMAIL = "Generic Email share",
 	GENERIC_WHATSAPP = "Generic Whatsapp share",
-	GENERIC_SMS_OTHER = "Generic SMS and other share"
+	GENERIC_SMS_OTHER = "Generic SMS and other share",
+
+	JUGNOO_STICKY_OPENED = "Jugnoo Sticky opened",
+	JUGNOO_STICKY_EXPANDED = "Jugnoo Sticky expanded",
+	JUGNOO_STICKY_TRANSFER_TO_APP = "Jugnoo Sticky transfer to app",
+	JUGNOO_STICKY_RIDE_CONFIRMATION = "Jugnoo Sticky Ride confirmation"
 
 
-				;
+			;
 
 
 
 	String BRANCH_EVENT_REQUEST_RIDE = "request_ride",
-			BRANCH_EVENT_RIDE_COMPLETED = "ride_completed"
+			BRANCH_EVENT_RIDE_COMPLETED = "ride_completed",
+			BRANCH_EVENT_REGISTRATION = "registration"
 
 			;
+
+    String FB_EVENT_REQUEST_RIDE = "request_ride",
+        FB_EVENT_RIDE_COMPLETED = "ride_completed",
+		FB_EVENT_REGISTRATION = "registration"
+
+            ;
 
 }
