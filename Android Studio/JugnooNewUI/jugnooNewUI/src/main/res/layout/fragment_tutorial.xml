@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:background="@color/transparent"
+    >
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="720px"
+        android:layout_height="1134px" />
+
+    <TextView
+
+        android:id="@+id/skip_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="#FFD931"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="Finish"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        >
+        <View
+            android:id="@+id/dot_one"
+            android:layout_width="30px"
+            android:layout_height="30px"
+            android:background="@drawable/circle_grey"
+            />
+        <View
+            android:id="@+id/dot_two"
+            android:layout_width="30px"
+            android:layout_height="30px"
+            android:layout_marginLeft="20px"
+            android:background="@drawable/circle_white"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

@@ -35,10 +35,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.apache.http.Header;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -48,6 +51,7 @@ import java.util.TimerTask;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -63,6 +67,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.SimpleAnimator;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -116,6 +121,11 @@ public class GenieService extends Service implements View.OnClickListener {
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
+
+        SplashNewActivity.initializeServerURL(this);
+
+        FlurryAgent.init(this, Config.getFlurryKey());
+        FlurryAgent.onStartSession(this, Config.getFlurryKey());
 
         locationFetcherBG = new LocationFetcherBG(this, 60000);
         //if(getIntent.hasExtra("package_name")){
@@ -509,10 +519,38 @@ public class GenieService extends Service implements View.OnClickListener {
             params.put("long", latLng.longitude);
             AsyncHttpClient client = Data.getClient();
             client.post(Config.getServerUrl() + "/fare_estimate_for_jeanie", params,
-                    new CustomAsyncHttpResponseHandler() {
+                    new AsyncHttpResponseHandler() {
                         private JSONObject jObj;
 
                         @Override
+                        public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                            Log.e("on failure", "on failure");
+                            chatheadView.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                            String response = new String(bytes);
+                            Log.i("Response find_a_driver", "response = " + response);
+                            try {
+                                JSONObject jObj = new JSONObject(response);
+                                int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
+                                eta = jObj.optString("eta");
+                                baseFair = jObj.optString("base_fare");
+                                fairPerKM = jObj.optString("fare_per_km");
+                                fairPerMin = jObj.optString("fare_per_min");
+                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag)
+                                        && (Integer.parseInt(eta) != 0)){
+                                    chatheadView.setVisibility(View.VISIBLE);
+                                }
+
+                            }  catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                        }
+
+                        /*@Override
                         public void onFailure(Throwable arg3) {
                             chatheadView.setVisibility(View.GONE);
                         }
@@ -538,7 +576,7 @@ public class GenieService extends Service implements View.OnClickListener {
                             }
 
 
-                        }
+                        }*/
                     });
         } else {
 
@@ -1628,7 +1666,19 @@ public class GenieService extends Service implements View.OnClickListener {
             locationFetcherBG.destroy();
         }
         else{
+            if(Utils.compareDouble(LocationFetcher.getSavedLatFromSP(this), 0) != 0
+                    && Utils.compareDouble(LocationFetcher.getSavedLngFromSP(this), 0) != 0 ){
 
+                double latitude  = LocationFetcher.getSavedLatFromSP(this);
+                double longitude  = LocationFetcher.getSavedLngFromSP(this);
+                latLng = new LatLng(latitude, longitude);
+
+                getNearestDriver();
+                Log.v("sticky latlng", "--> " + latitude + ", " + longitude);
+                //chatheadView.setVisibility(View.VISIBLE);
+                locationFetcherBG.destroy();
+
+            }
         }
 
         return START_STICKY;
@@ -1641,7 +1691,7 @@ public class GenieService extends Service implements View.OnClickListener {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-
+        FlurryAgent.onEndSession(this);
         try {
             if (chatheadView != null) {
                 windowManager.removeView(chatheadView);

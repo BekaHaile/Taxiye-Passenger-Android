@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:orientation="vertical"
+    android:background="@color/transparent"
+    android:layout_width="720px"
+    android:layout_height="1134px">
+
+    <RelativeLayout
+        android:id="@+id/tutorial_one"
+        android:layout_width="720px"
+        android:layout_height="1134px"
+        android:background="@drawable/jeanie_tutorial_1"
+        android:visibility="gone"
+        android:tag="mwar">
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tutorial_two"
+        android:orientation="vertical"
+        android:layout_width="720px"
+        android:visibility="gone"
+        android:tag="mwar"
+        android:background="@drawable/jeanie_tutorial_2"
+        android:layout_height="1134px">
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

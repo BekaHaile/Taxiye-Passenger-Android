@@ -46,7 +46,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
                 String activityName = event.getClassName() != null ? event.getClassName().toString() : "";
 
                 if((!packageName.equalsIgnoreCase(Prefs.with(this).getString("remove_chat_head", "")))){
-                    //Prefs.with(this).save("remove_chat_head", packageName);
+                    Prefs.with(this).save("remove_chat_head", "");
                     selectedPackageName = packageName;
                 }
 
@@ -58,7 +58,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
                         && (!"".equalsIgnoreCase(pair.first))
                         && (Prefs.with(this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true)
                         && (Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1)
-                        && (!Prefs.with(this).getString("remove_chat_head", "").equalsIgnoreCase(selectedPackageName))){
+                        && (!Prefs.with(this).getString("remove_chat_head", "").equalsIgnoreCase(packageName))
+                   ){
                     selectedPackageName = packageName;
                     Intent intent = new Intent(this, GenieService.class);
                     intent.putExtra("package_name", packageName);
