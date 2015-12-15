@@ -1,12 +1,15 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +40,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -46,6 +50,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -64,11 +69,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	TextView textViewScroll;
 
 	EditText editTextUserName, editTextEmail, editTextPhone;
-	ImageView imageViewEditName, imageViewEditEmail, imageViewEditPhoneNo;
+	ImageView imageViewEditName, imageViewEditEmail, imageViewEditPhoneNo, imageViewJugnooJeanie;
 	ImageView imageViewEmailVerifyStatus;
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
-	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddFav;
+	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddFav, relativeLayoutJugnooJeanie;
 	TextView textViewChangePassword, textViewEmergencyContact, textViewAddFav;
 
 
@@ -101,6 +106,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		imageViewEditName = (ImageView) findViewById(R.id.imageViewEditName);
 		imageViewEditEmail = (ImageView) findViewById(R.id.imageViewEditEmail);
 		imageViewEditPhoneNo = (ImageView) findViewById(R.id.imageViewEditPhoneNo);
+        imageViewJugnooJeanie = (ImageView)findViewById(R.id.imageViewJugnooJeanie);
 		
 		
 		imageViewEmailVerifyStatus = (ImageView) findViewById(R.id.imageViewEmailVerifyStatus);
@@ -118,6 +124,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		textViewAddFav = (TextView) findViewById(R.id.textViewAddFav); textViewAddFav.setTypeface(Fonts.latoRegular(this));
 		relativeLayoutAddFav.setVisibility(View.GONE);
 
+        relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
+        relativeLayoutJugnooJeanie.setVisibility(View.GONE);
+        if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1){
+            relativeLayoutJugnooJeanie.setVisibility(View.VISIBLE);
+        }
 
         topBar = (RelativeLayout) findViewById(R.id.topBar);
 
@@ -153,6 +164,26 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             public void onClick(View v) {
                 performBackPressed();
                 dissmissEmailVerify();
+            }
+        });
+
+
+
+        imageViewJugnooJeanie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isAccessibilitySettingsOn(getApplicationContext())) {
+                    if(Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false){
+                        Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+                        imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
+                    }else{
+                        Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+                        imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
+                    }
+                }
+                else{
+                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                }
             }
         });
 
@@ -599,6 +630,14 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	@Override
 	protected void onResume() {
 		super.onResume();
+        if (!isAccessibilitySettingsOn(getApplicationContext())) {
+            Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+            imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
+        }else{
+            Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+            imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
+        }
+
 		HomeActivity.checkForAccessTokenChange(this);
 		
 		reloadProfileAPI(this);
@@ -615,12 +654,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
-	}
-	
-	@Override
+    }
+
+    @Override
 	protected void onDestroy() {
 		super.onDestroy();
-		ASSL.closeActivity(relative);
+        ASSL.closeActivity(relative);
 		System.gc();
 	}
 	
@@ -910,6 +949,46 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	}
 
 
+    // To check if service is enabled
+    private boolean isAccessibilitySettingsOn(Context mContext) {
+        int accessibilityEnabled = 0;
+        final String service = "product.clicklabs.jugnoo/product.clicklabs.jugnoo.sticky.WindowChangeDetectingService";
+        boolean accessibilityFound = false;
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    mContext.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+            Log.v("Jugnoo Jeanie", "accessibilityEnabled = " + accessibilityEnabled);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e("Jugnoo Jeanie", "Error finding setting, default accessibility to not found: "
+                    + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            Log.v("Jugnoo Jeanie", "***ACCESSIBILIY IS ENABLED*** -----------------");
+            String settingValue = Settings.Secure.getString(
+                    mContext.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                TextUtils.SimpleStringSplitter splitter = mStringColonSplitter;
+                splitter.setString(settingValue);
+                while (splitter.hasNext()) {
+                    String accessabilityService = splitter.next();
+
+                    Log.v("Jugnoo Jeanie", "-------------- > accessabilityService :: " + accessabilityService);
+                    if (accessabilityService.equalsIgnoreCase(service)) {
+                        Log.v("Jugnoo Jeanie", "We've found the correct setting - accessibility is switched on!");
+                        return true;
+                    }
+                }
+            }
+        } else {
+            Log.v("Jugnoo Jeanie", "***ACCESSIBILIY IS DISABLED***");
+        }
+
+        return accessibilityFound;
+    }
 
 
 }

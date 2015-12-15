@@ -39,10 +39,13 @@ public class SPLabels {
 	PREFERRED_PAYMENT_OPTION = "preferredPaymentOption",
     UPLOAD_CONTACT_NO_THANKS = "upload_contact_no_thanks",
 
-	PAYTM_TUTORIAL_SHOWN_COUNT = "paytm_tutorial_shown_count"
+	PAYTM_TUTORIAL_SHOWN_COUNT = "paytm_tutorial_shown_count",
+    JUGNOO_JEANIE_TUTORIAL_SHOWN = "jugnoo_jeanie_tutorial_shown"
+
 
             ;
 
     public static final String UPLOAD_CONTACTS_ERROR = "upload_contacts_error";
-
+    public static final String JUGNOO_JEANIE_STATE = "jugnoo_jeanie_state";
+    public static final String SHOW_JUGNOO_JEANIE = "show_jugnoo_jeanie";
 }

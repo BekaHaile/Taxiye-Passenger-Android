@@ -25,6 +25,7 @@
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     
     
@@ -384,7 +385,7 @@
 
 
 
-
+        <receiver android:name=".utils.LocationReceiver" />
 
         <service android:enabled="true"
             android:name="product.clicklabs.jugnoo.ContactsUploadService" />
@@ -415,6 +416,33 @@
             </intent-filter>
         </service>
 
+        <receiver android:name=".sticky.BootCompletedIntentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".sticky.WindowChangeDetectingService"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibilityservice" />
+        </service>
+
+        <service android:name=".sticky.GenieService" />
+
+
+        <activity
+            android:name=".sticky.JugnooJeanieTutorialActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait" >
+        </activity>
 
 
 

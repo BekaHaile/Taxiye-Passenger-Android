@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/rv"
+android:layout_width="720px"
+android:layout_height="1134px"
+android:orientation="vertical"
+android:background="@color/black_alpha"
+android:splitMotionEvents="false" >
+
+
+    <LinearLayout
+        android:id="@+id/innerRl"
+        android:layout_width="fill_parent"
+        android:layout_height="150px"
+        android:layout_gravity="center"
+        android:layout_marginLeft="35px"
+        android:layout_marginRight="35px"
+        android:layout_marginTop="100px"
+        android:tag="mwar"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:splitMotionEvents="false" >
+
+        <RelativeLayout
+            android:layout_width="136px"
+            android:layout_height="match_parent"
+            android:background="@color/yellow_jugnoo">
+
+
+            <TextView
+                android:id="@+id/textViewJugnoo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:paddingLeft="10px"
+                android:layout_marginLeft="-100px"
+                android:rotation="-90"
+                android:textSize="32px"
+                android:text="Jugnoo"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/textViewETA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:layout_marginRight="10px"
+                android:lineSpacingExtra="-7px"
+                android:layout_centerVertical="true"
+                android:textSize="32px"
+                android:text="5\n mins"
+                android:textColor="@color/white"/>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="20px"
+            android:layout_height="match_parent"
+            android:text="@string/rupee"
+            android:layout_marginLeft="20px"
+            android:paddingBottom="40px"
+            android:textColor="@color/yellow_jugnoo"
+            android:textSize="32px"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/textViewBaseFair"
+            android:layout_width="90px"
+            android:textSize="55px"
+            android:gravity="left|center_vertical"
+            android:text=""
+            android:textColor="@color/black"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_width="2px"
+            android:layout_height="match_parent"
+            android:src="@drawable/line_icon"/>
+
+        <TextView
+            android:layout_width="20px"
+            android:layout_height="match_parent"
+            android:text="@string/rupee"
+            android:layout_marginLeft="20px"
+            android:paddingBottom="40px"
+            android:textColor="@color/yellow_jugnoo"
+            android:textSize="32px"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/textViewPerKM"
+            android:layout_width="wrap_content"
+            android:textSize="55px"
+            android:text=""
+            android:gravity="left|center_vertical"
+            android:textColor="@color/black"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/textViewKMTxt"
+            android:layout_width="70px"
+            android:textSize="32px"
+            android:gravity="left|center_vertical"
+            android:paddingTop="20px"
+            android:text="KM"
+            android:textColor="@color/black"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_width="2px"
+            android:layout_height="match_parent"
+            android:src="@drawable/line_icon"/>
+
+        <TextView
+            android:layout_width="20px"
+            android:layout_height="match_parent"
+            android:text="@string/rupee"
+            android:layout_marginLeft="20px"
+            android:paddingBottom="40px"
+            android:textColor="@color/yellow_jugnoo"
+            android:textSize="32px"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/textViewWait"
+            android:layout_width="wrap_content"
+            android:textSize="55px"
+            android:text=""
+            android:gravity="left|center_vertical"
+            android:textColor="@color/black"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/textViewMinTxt"
+            android:layout_width="70px"
+            android:textSize="32px"
+            android:gravity="left|center_vertical"
+            android:paddingTop="20px"
+            android:text="Min"
+            android:textColor="@color/black"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_width="2px"
+            android:layout_height="match_parent"
+            android:rotation="180"
+            android:src="@drawable/line_icon"/>
+        
+        <ImageView
+            android:layout_width="17px"
+            android:layout_height="47px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20px"
+            android:src="@drawable/right_icon"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="47px"
+        android:layout_height="47px"
+        android:layout_marginLeft="15px"
+        android:layout_marginTop="80px"
+        android:src="@drawable/pupup_cancel_icon"/>
+
+</RelativeLayout>

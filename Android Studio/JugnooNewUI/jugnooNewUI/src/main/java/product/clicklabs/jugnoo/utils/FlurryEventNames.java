@@ -129,10 +129,15 @@ public interface FlurryEventNames {
 	GENERIC_FACEBOOK = "Generic Facebook share",
 	GENERIC_EMAIL = "Generic Email share",
 	GENERIC_WHATSAPP = "Generic Whatsapp share",
-	GENERIC_SMS_OTHER = "Generic SMS and other share"
+	GENERIC_SMS_OTHER = "Generic SMS and other share",
+
+	JUGNOO_STICKY_OPENED = "Jugnoo Sticky opened",
+	JUGNOO_STICKY_EXPANDED = "Jugnoo Sticky expanded",
+	JUGNOO_STICKY_TRANSFER_TO_APP = "Jugnoo Sticky transfer to app",
+	JUGNOO_STICKY_RIDE_CONFIRMATION = "Jugnoo Sticky Ride confirmation"
 
 
-				;
+			;
 
 
 

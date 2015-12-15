@@ -193,6 +193,9 @@ public class Data {
 	public static String branchReferringLink = "";
 
 
+	public static int TRANSFER_FROM_JEANIE = 0;
+
+
 	
 	public static void clearDataOnLogout(Context context){
 		try{

@@ -216,6 +216,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 
 
+		try{
+			Data.TRANSFER_FROM_JEANIE = 0;
+			if(getIntent().hasExtra("transfer_from_jeanie")){
+				Data.TRANSFER_FROM_JEANIE = getIntent().getIntExtra("transfer_from_jeanie", 0);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
 		FacebookSdk.sdkInitialize(this);
 
 		Utils.disableSMSReceiver(this);

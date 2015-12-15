@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Jugnoo Autos</string>
+    <string name="app_name">Jugnoo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
@@ -233,6 +233,13 @@
 	<string name="upload_contact_yes">YES</string>
 	<string name="upload_contact_no_thanks">NO</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
+	
+	<string name="jugnoo_jeanie">Jugnoo Jeanie</string>
+	<string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
+		We believe you should always get the best deal for your daily commute and thus we are allowing you to compare other available options with Jugnoo ETA and prices.
+		Get the best deal always!\n
+		And don’t worry about the standard privacy notification on the next screen, we will never store any of your actions from Jugnoo Jeanie.
+		It is simply a tool to compare and reduce your commute costs.  </string>
 
 	
 	
