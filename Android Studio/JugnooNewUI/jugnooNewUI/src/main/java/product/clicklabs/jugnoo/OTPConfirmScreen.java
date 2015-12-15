@@ -33,9 +33,11 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -512,6 +514,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                                             Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
                                             Database.getInstance(OTPConfirmScreen.this).close();
                                             loginDataFetched = true;
+											BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+											FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
                                         }
                                     } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
                                         String error = jObj.getString("error");
@@ -620,6 +624,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                                             loginDataFetched = true;
                                             Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
                                             Database.getInstance(OTPConfirmScreen.this).close();
+											BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+											FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
                                         }
                                     } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
                                         String error = jObj.getString("error");

@@ -88,7 +88,7 @@ public class JSONParser {
                     farePerMin, freeMinutes, 0, 0, convenienceCharges);
         } catch (Exception e) {
             e.printStackTrace();
-            Data.fareStructure = new FareStructure(25, 2, 6, 1, 6, 0, 0, 0);
+            Data.fareStructure = new FareStructure(15, 0, 5, 1, 0, 0, 0, 0);
         }
     }
 

@@ -137,12 +137,14 @@ public interface FlurryEventNames {
 
 
 	String BRANCH_EVENT_REQUEST_RIDE = "request_ride",
-			BRANCH_EVENT_RIDE_COMPLETED = "ride_completed"
+			BRANCH_EVENT_RIDE_COMPLETED = "ride_completed",
+			BRANCH_EVENT_REGISTRATION = "registration"
 
 			;
 
     String FB_EVENT_REQUEST_RIDE = "request_ride",
-        FB_EVENT_RIDE_COMPLETED = "ride_completed"
+        FB_EVENT_RIDE_COMPLETED = "ride_completed",
+		FB_EVENT_REGISTRATION = "registration"
 
             ;
 

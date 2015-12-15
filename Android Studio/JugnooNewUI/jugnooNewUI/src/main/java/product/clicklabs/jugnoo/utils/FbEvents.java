@@ -4,27 +4,24 @@ import android.content.Context;
 
 import com.facebook.appevents.AppEventsLogger;
 
-import product.clicklabs.jugnoo.datastructure.SPLabels;
-
 /**
  * Created by shankar on 12/14/15.
  */
-public class FbEvents implements FlurryEventNames{
+public class FbEvents {
 
-    public static void logEventRequestRide(Context context){
-        if(Prefs.with(context).getInt(SPLabels.FB_EVENT_REQUEST_RIDE_LOGGED, 0) == 0) {
-            AppEventsLogger logger = AppEventsLogger.newLogger(context);
-            logger.logEvent(FB_EVENT_REQUEST_RIDE);
-            Prefs.with(context).save(SPLabels.FB_EVENT_REQUEST_RIDE_LOGGED, 1);
-        }
-    }
-
-    public static void logEventRideCompleted(Context context){
-        if(Prefs.with(context).getInt(SPLabels.FB_EVENT_RIDE_COMPLETED_LOGGED, 0) == 0) {
-            AppEventsLogger logger = AppEventsLogger.newLogger(context);
-            logger.logEvent(FB_EVENT_RIDE_COMPLETED);
-            Prefs.with(context).save(SPLabels.FB_EVENT_RIDE_COMPLETED_LOGGED, 1);
-        }
+    public static void logEvent(Context context, String eventName, boolean oneTime){
+		if(oneTime) {
+			String spPrefix = "fb_";
+			if (Prefs.with(context).getInt(spPrefix+eventName, 0) == 0) {
+				AppEventsLogger logger = AppEventsLogger.newLogger(context);
+				logger.logEvent(eventName);
+				Prefs.with(context).save(spPrefix+eventName, 1);
+			}
+		}
+		else{
+			AppEventsLogger logger = AppEventsLogger.newLogger(context);
+			logger.logEvent(eventName);
+		}
     }
 
 }

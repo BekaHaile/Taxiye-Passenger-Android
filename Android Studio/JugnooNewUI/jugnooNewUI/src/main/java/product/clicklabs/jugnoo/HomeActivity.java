@@ -5692,8 +5692,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     executionTime = serverRequestStartTime + elapsedTime;
                                                 }
 												if ("".equalsIgnoreCase(Data.cSessionId)) {
-													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE);
-                                                    FbEvents.logEventRequestRide(HomeActivity.this);
+													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE, true);
+                                                    FbEvents.logEvent(HomeActivity.this, FB_EVENT_REQUEST_RIDE, true);
 												}
                                                 Data.cSessionId = jObj.getString("session_id");
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -5836,8 +5836,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
-				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED);
-                FbEvents.logEventRideCompleted(HomeActivity.this);
+				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
+                FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED, true);
 
             }
         });
