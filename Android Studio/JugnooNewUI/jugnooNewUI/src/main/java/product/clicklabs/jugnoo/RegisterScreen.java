@@ -693,6 +693,17 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             params.put("device_token", Data.deviceToken);
             params.put("unique_device_id", Data.uniqueDeviceId);
 
+			if(Data.branchReferringParams != null){
+				params.put("branch_referring_params", Data.branchReferringParams.toString());
+			} else{
+				params.put("branch_referring_params", "");
+			}
+			if(Data.branchReferringLink != null){
+				params.put("branch_referring_link", Data.branchReferringLink);
+			} else{
+				params.put("branch_referring_link", "");
+			}
+
 
 			if(Utils.isDeviceRooted()){
 				params.put("device_rooted", "1");
@@ -816,6 +827,16 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 				params.put("device_rooted", "0");
 			}
 
+			if(Data.branchReferringParams != null){
+				params.put("branch_referring_params", Data.branchReferringParams.toString());
+			} else{
+				params.put("branch_referring_params", "");
+			}
+			if(Data.branchReferringLink != null){
+				params.put("branch_referring_link", Data.branchReferringLink);
+			} else{
+				params.put("branch_referring_link", "");
+			}
 
             Log.e("register_using_facebook params", params.toString());
 
