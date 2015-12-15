@@ -44,4 +44,5 @@ public class SPLabels {
 
     public static final String UPLOAD_CONTACTS_ERROR = "upload_contacts_error";
     public static final String JUGNOO_JEANIE_STATE = "jugnoo_jeanie_state";
+    public static final String SHOW_JUGNOO_JEANIE = "show_jugnoo_jeanie";
 }

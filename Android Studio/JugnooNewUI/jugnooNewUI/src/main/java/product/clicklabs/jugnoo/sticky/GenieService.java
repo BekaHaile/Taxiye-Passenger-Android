@@ -105,7 +105,7 @@ public class GenieService extends Service implements View.OnClickListener {
     public long animDuration = 350;
 
     private RelativeLayout relativeLayoutInner;
-    private String accessToken, eta = "", baseFair = "", fairPerKM = "", fairPerMin = "";
+    private String accessToken, eta = "", baseFair = "", fairPerKM = "", fairPerMin = "", packageName = "";
 
     private LocationFetcherBG locationFetcherBG;
     private LatLng latLng;
@@ -118,6 +118,8 @@ public class GenieService extends Service implements View.OnClickListener {
         super.onCreate();
 
         locationFetcherBG = new LocationFetcherBG(this, 60000);
+        //if(getIntent.hasExtra("package_name")){
+        //packageName = intent.getStringExtra("package_name");
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         new ASSL(this, 1134, 720, true);
@@ -150,6 +152,8 @@ public class GenieService extends Service implements View.OnClickListener {
 
         /*convertView = inflater.inflate(R.layout.dialog_genie_layout, null);
         relativeLayoutInner = (RelativeLayout)convertView.findViewById(R.id.innerRl);*/
+
+
 
         Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(GenieService.this);
         if(!"".equalsIgnoreCase(pair.first)){
@@ -504,7 +508,7 @@ public class GenieService extends Service implements View.OnClickListener {
             params.put("lat", latLng.latitude);
             params.put("long", latLng.longitude);
             AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/fare_estimate_for_sticky_at_pickup", params,
+            client.post(Config.getServerUrl() + "/fare_estimate_for_jeanie", params,
                     new CustomAsyncHttpResponseHandler() {
                         private JSONObject jObj;
 
@@ -524,7 +528,8 @@ public class GenieService extends Service implements View.OnClickListener {
                                 baseFair = jObj.optString("base_fare");
                                 fairPerKM = jObj.optString("fare_per_km");
                                 fairPerMin = jObj.optString("fare_per_min");
-                                if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag)
+                                        && (Integer.parseInt(eta) != 0)){
                                     chatheadView.setVisibility(View.VISIBLE);
                                 }
 
@@ -1607,6 +1612,11 @@ public class GenieService extends Service implements View.OnClickListener {
 
         iLife++;*/
 
+        if(intent.hasExtra("package_name")) {
+            packageName = intent.getStringExtra("package_name");
+            Log.d("package name in service","--> "+packageName);
+        }
+
         if(intent.hasExtra("latitude")){
             double latitude  = intent.getDoubleExtra("latitude", 0);
             double longitude  = intent.getDoubleExtra("longitude", 0);
@@ -1635,6 +1645,7 @@ public class GenieService extends Service implements View.OnClickListener {
         try {
             if (chatheadView != null) {
                 windowManager.removeView(chatheadView);
+                Prefs.with(this).save("remove_chat_head", packageName);
             }
         } catch (Exception E) {
 

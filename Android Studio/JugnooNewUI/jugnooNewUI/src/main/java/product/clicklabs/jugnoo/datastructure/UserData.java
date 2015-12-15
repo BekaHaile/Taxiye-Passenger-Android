@@ -12,7 +12,7 @@ public class UserData {
 	public int numCouponsAvaliable;
 	public double fareFactor;
 	public double sharingFareFixed;
-	public int showJugnooSharing;
+	public int showJugnooSharing, showJugnooJeanie;
 	private String paytmStatus;
 	public int paytmEnabled, paytmError, contactSaved;
     public String referAllText, referAllTitle;
@@ -22,7 +22,7 @@ public class UserData {
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
 			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled,
-                    int contactSaved, String referAllText, String referAllTitle){
+                    int contactSaved, String referAllText, String referAllTitle, int showJugnooJeanie){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -58,6 +58,7 @@ public class UserData {
 		this.contactSaved = contactSaved;
         this.referAllText = referAllText;
 		this.referAllTitle = referAllTitle;
+		this.showJugnooJeanie = showJugnooJeanie;
 
 		if(1 == this.paytmEnabled) {
 			this.paytmStatus = "";

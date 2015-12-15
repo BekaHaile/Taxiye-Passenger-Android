@@ -260,6 +260,9 @@ public class JSONParser {
         String referAllText = userData.optString("refer_all_text", context.getResources().getString(R.string.upload_contact_message));
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
 
+        int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
+        Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
+
 
 
 		return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
@@ -267,7 +270,7 @@ public class JSONParser {
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
-                contactSaved, referAllText, referAllTitle);
+                contactSaved, referAllText, referAllTitle, showJugnooJeanie);
     }
 
 

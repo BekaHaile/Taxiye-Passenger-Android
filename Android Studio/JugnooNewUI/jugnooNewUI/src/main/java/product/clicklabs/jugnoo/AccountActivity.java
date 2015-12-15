@@ -73,7 +73,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	ImageView imageViewEmailVerifyStatus;
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
-	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddFav;
+	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddFav, relativeLayoutJugnooJeanie;
 	TextView textViewChangePassword, textViewEmergencyContact, textViewAddFav;
 
 
@@ -124,6 +124,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		textViewAddFav = (TextView) findViewById(R.id.textViewAddFav); textViewAddFav.setTypeface(Fonts.latoRegular(this));
 		relativeLayoutAddFav.setVisibility(View.GONE);
 
+        relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
+        relativeLayoutJugnooJeanie.setVisibility(View.GONE);
+        if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1){
+            relativeLayoutJugnooJeanie.setVisibility(View.VISIBLE);
+        }
 
         topBar = (RelativeLayout) findViewById(R.id.topBar);
 
