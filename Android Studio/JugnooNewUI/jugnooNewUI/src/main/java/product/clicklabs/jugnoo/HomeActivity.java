@@ -1971,8 +1971,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 // for tutorial screens
                 startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
             }
-			//TODO remove line
-			startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
 
 
 

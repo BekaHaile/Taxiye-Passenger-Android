@@ -40,7 +40,7 @@
             android:layout_height="255px"
             android:src="@drawable/jeanie_tutorial_2_2"
             android:layout_marginTop="510px"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="0px"
             android:tag="mwar"
             />
 
