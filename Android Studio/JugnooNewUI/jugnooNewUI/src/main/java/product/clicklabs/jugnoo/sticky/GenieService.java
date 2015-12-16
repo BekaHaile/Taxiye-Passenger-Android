@@ -417,7 +417,7 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
             }
         });
 
-        reflectParams();
+//        reflectParams();
 
 
 
