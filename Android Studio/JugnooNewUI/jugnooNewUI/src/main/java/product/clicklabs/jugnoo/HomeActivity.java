@@ -3430,11 +3430,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			DialogPopup.showLocationSettingsAlert(activity);
 		}
 
-        if (!isAccessibilitySettingsOn(getApplicationContext())) {
-            Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-        }else{
+
+        if((isAccessibilitySettingsOn(getApplicationContext())
+                && (Prefs.with(HomeActivity.this).contains(SPLabels.JUGNOO_JEANIE_STATE) == false))){
             Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+        }else{
+            if((isAccessibilitySettingsOn(getApplicationContext())
+                    && (Prefs.with(HomeActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))){
+                Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+            }else{
+                //Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+            }
         }
+
+
 //        genieLayout.setGenieParams();
     }
 

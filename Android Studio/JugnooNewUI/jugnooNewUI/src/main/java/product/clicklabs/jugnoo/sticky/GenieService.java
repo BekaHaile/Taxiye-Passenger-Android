@@ -448,7 +448,12 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
             accessToken = pair.first;
         }
 
-        String s= eta+" \nmins";
+        String s;
+        if(Integer.parseInt(eta) == 1){
+            s = eta+" \nmin";
+        }else{
+            s = eta+" \nmins";
+        }
         SpannableString ss=  new SpannableString(s);
         ss.setSpan(new RelativeSizeSpan(1.75f), 0, 2, 0); // set size
         //ss1.setSpan(new ForegroundColorSpan(Color.RED), 0, 5, 0);// set color
@@ -1689,10 +1694,12 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
         // TODO Auto-generated method stub
         super.onDestroy();
         FlurryAgent.onEndSession(this);
+        Prefs.with(this).save("remove_chat_head", packageName);
+        Log.v("onDestroy service", "onDestroy service "+Prefs.with(this).getString("remove_chat_head", ""));
         try {
             if (chatheadView != null) {
                 windowManager.removeView(chatheadView);
-                Prefs.with(this).save("remove_chat_head", packageName);
+
             }
         } catch (Exception E) {
 

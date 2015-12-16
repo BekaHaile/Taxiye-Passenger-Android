@@ -74,8 +74,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
 	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddFav, relativeLayoutJugnooJeanie;
-	TextView textViewChangePassword, textViewEmergencyContact, textViewAddFav;
-
+	TextView textViewChangePassword, textViewEmergencyContact, textViewAddFav, textViewJugnooJeanie;
+    private boolean setJeanieState;
 
 	Button buttonLogout;
 
@@ -125,6 +125,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		relativeLayoutAddFav.setVisibility(View.GONE);
 
         relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
+        textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.latoRegular(this));
         relativeLayoutJugnooJeanie.setVisibility(View.GONE);
         if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1){
             relativeLayoutJugnooJeanie.setVisibility(View.VISIBLE);
@@ -183,6 +184,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 }
                 else{
                     startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                    setJeanieState = true;
                 }
             }
         });
@@ -630,12 +632,24 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 	@Override
 	protected void onResume() {
 		super.onResume();
-        if (!isAccessibilitySettingsOn(getApplicationContext())) {
-            Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-            imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
+        if(setJeanieState){
+            setJeanieState = false;
+            if(isAccessibilitySettingsOn(getApplicationContext())){
+                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
+            }else{ //((!isAccessibilitySettingsOn(getApplicationContext()) && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false))) {
+                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
+            }
         }else{
-            Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-            imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
+            if((isAccessibilitySettingsOn(getApplicationContext())
+                    && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))){
+                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
+            }else{ //((!isAccessibilitySettingsOn(getApplicationContext()) && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false))) {
+                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
+            }
         }
 
 		HomeActivity.checkForAccessTokenChange(this);
