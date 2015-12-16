@@ -233,13 +233,19 @@
 	<string name="upload_contact_yes">YES</string>
 	<string name="upload_contact_no_thanks">NO</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
-	
+
+
+	<!-- Jugnoo Jeanie Strings-->
 	<string name="jugnoo_jeanie">Jugnoo Jeanie</string>
 	<string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
 		We believe you should always get the best deal for your daily commute and thus we are allowing you to compare other available options with Jugnoo ETA and prices.
 		Get the best deal always!\n
 		And don’t worry about the standard privacy notification on the next screen, we will never store any of your actions from Jugnoo Jeanie.
 		It is simply a tool to compare and reduce your commute costs.  </string>
+
+	<!-- Account Settings Strings -->
+	<string name="add_home">Add Home</string>
+	<string name="add_work">Add Work</string>
 
 	
 	
