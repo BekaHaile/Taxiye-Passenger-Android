@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -78,6 +79,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
+			if(Build.VERSION.SDK_INT >= 16){
+				builder.setPriority(Notification.PRIORITY_HIGH);
+			}
 
 
             Notification notification = builder.build();
@@ -125,6 +129,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
+			if(Build.VERSION.SDK_INT >= 16){
+				builder.setPriority(Notification.PRIORITY_HIGH);
+			}
 
 
             Notification notification = builder.build();
@@ -171,8 +178,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
+			if(Build.VERSION.SDK_INT >= 16){
+				builder.setPriority(Notification.PRIORITY_HIGH);
+			}
 
-            Notification notification = builder.build();
+			Notification notification = builder.build();
             notificationManager.notify(notificationId, notification);
 
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -222,6 +232,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			builder.addAction(android.R.drawable.sym_action_call, context.getResources().getString(R.string.call_driver), pendingIntentCall);
 
 			builder.setContentIntent(intent);
+			if(Build.VERSION.SDK_INT >= 16){
+				builder.setPriority(Notification.PRIORITY_HIGH);
+			}
 
 			Notification notification = builder.build();
 			notificationManager.notify(notificationId, notification);
@@ -273,6 +286,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
+			if(Build.VERSION.SDK_INT >= 16){
+				builder.setPriority(Notification.PRIORITY_HIGH);
+			}
 
             Notification notification = builder.build();
             notificationManager.notify(notificationId, notification);
@@ -318,6 +334,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setBigContentTitle(title).setSummaryText(message));
 			builder.setContentText(message);
 			builder.setTicker(message);
+			if(Build.VERSION.SDK_INT >= 16){
+				builder.setPriority(Notification.PRIORITY_HIGH);
+			}
 
 			Notification notification = builder.build();
 			notificationManager.notify(notificationId, notification);
