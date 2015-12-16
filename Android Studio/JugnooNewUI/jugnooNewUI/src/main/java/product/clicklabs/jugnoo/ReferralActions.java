@@ -254,7 +254,7 @@ public class ReferralActions implements FlurryEventNames {
                     Uri sms_uri = Uri.parse("smsto:");
                     Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
                     sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n"
-                            + link);
+                        + link);
                     activity.startActivity(sms_intent);
                 }
 
@@ -350,7 +350,8 @@ public class ReferralActions implements FlurryEventNames {
                              final String subject, final String body, final String link) {
         Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
         sendIntent.setType("text/plain");
-        List activities = activity.getPackageManager().queryIntentActivities(sendIntent, 0);
+        List<ResolveInfo> activities = activity.getPackageManager().queryIntentActivities(sendIntent, 0);
+        sortApps(activities);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Share with...");
         final ShareIntentListAdapter adapter = new ShareIntentListAdapter(activity,
@@ -394,6 +395,45 @@ public class ReferralActions implements FlurryEventNames {
             }
         });
         builder.create().show();
+    }
+
+
+    private static void sortApps(List<ResolveInfo> infos){
+        try{
+            ResolveInfo fb = null, whatsapp = null, sms = null, mail = null;
+            for(int i=0; i<infos.size(); i++){
+                ResolveInfo info = infos.get(i);
+                if (info.activityInfo.packageName.contains("com.facebook.katana") && fb == null) {
+                    fb = infos.remove(i);
+                }
+                else if((info.activityInfo.packageName.contains("com.google.android.gm")
+                    || info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
+                    || info.activityInfo.packageName.contains("com.microsoft.office.outlook")
+                    || info.activityInfo.packageName.contains("com.google.android.apps.inbox")) && mail == null){
+                    mail = infos.remove(i);
+                }
+                else if(info.activityInfo.packageName.contains("com.whatsapp") && whatsapp == null){
+                    whatsapp = infos.remove(i);
+                }
+                else if(info.activityInfo.packageName.contains("com.android.mms") && sms == null){
+                    sms = infos.remove(i);
+                }
+            }
+            if(mail != null){
+                infos.add(0, mail);
+            }
+            if(sms != null){
+                infos.add(0, sms);
+            }
+            if(whatsapp != null){
+                infos.add(0, whatsapp);
+            }
+            if(fb != null){
+                infos.add(0, fb);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 
