@@ -122,7 +122,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 		relativeLayoutAddFav = (RelativeLayout) findViewById(R.id.relativeLayoutAddFav);
 		textViewAddFav = (TextView) findViewById(R.id.textViewAddFav); textViewAddFav.setTypeface(Fonts.latoRegular(this));
-		relativeLayoutAddFav.setVisibility(View.GONE);
+		//relativeLayoutAddFav.setVisibility(View.GONE);
 
         relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
         textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.latoRegular(this));
