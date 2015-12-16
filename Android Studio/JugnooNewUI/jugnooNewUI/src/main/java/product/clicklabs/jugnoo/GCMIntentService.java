@@ -45,7 +45,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 
     @SuppressWarnings("deprecation")
-    private void notificationManager(Context context, String message, boolean ring) {
+    private void notificationManager(Context context, String title, String message, boolean ring) {
 
         try {
             long when = System.currentTimeMillis();
@@ -62,7 +62,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setContentTitle("Autos");
+            builder.setContentTitle(title);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
@@ -94,7 +94,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
     }
 
     @SuppressWarnings("deprecation")
-    private void notificationManagerResume(Context context, String message, boolean ring) {
+    private void notificationManagerResume(Context context, String title, String message, boolean ring) {
 
         try {
             long when = System.currentTimeMillis();
@@ -110,7 +110,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setContentTitle("Autos");
+            builder.setContentTitle(title);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
@@ -144,7 +144,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 
     @SuppressWarnings("deprecation")
-    private void notificationManagerCustomID(Context context, String message, int notificationId, int deepindex) {
+    private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex) {
 
         try {
             long when = System.currentTimeMillis();
@@ -162,7 +162,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setContentTitle("Autos");
+            builder.setContentTitle(title);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
@@ -186,7 +186,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
     }
 
 	@SuppressWarnings("deprecation")
-	private void generateNotificationForCall(Context context, String message, int notificationId, String callNumber) {
+	private void generateNotificationForCall(Context context, String title, String message, int notificationId, String callNumber) {
 
 		try {
 			long when = System.currentTimeMillis();
@@ -207,7 +207,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 			builder.setAutoCancel(false);
-			builder.setContentTitle(context.getResources().getString(R.string.app_name));
+			builder.setContentTitle(title);
 			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 			builder.setContentText(message);
 			builder.setTicker(message);
@@ -237,7 +237,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 	}
 
     @SuppressWarnings("deprecation")
-    private void notificationManagerCustomIDAnotherApp(Context context, String message, int notificationId, String packageName) {
+    private void notificationManagerCustomIDAnotherApp(Context context, String title, String message, int notificationId, String packageName) {
 
         try {
             long when = System.currentTimeMillis();
@@ -264,7 +264,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setContentTitle("Autos");
+            builder.setContentTitle(title);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
@@ -288,7 +288,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
     }
 
 	@SuppressWarnings("deprecation")
-	private void notificationManagerCustomIDWithBitmap(Context context, String message, int notificationId, int deepindex, Bitmap bitmap) {
+	private void notificationManagerCustomIDWithBitmap(Context context, String title, String message, int notificationId, int deepindex, Bitmap bitmap) {
 
 		try {
 			long when = System.currentTimeMillis();
@@ -308,14 +308,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 			builder.setAutoCancel(true);
-			builder.setContentTitle("Autos");
+			builder.setContentTitle(title);
 			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 			builder.setDefaults(Notification.DEFAULT_ALL);
 			builder.setWhen(when);
 			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
 			builder.setSmallIcon(R.drawable.notification_icon);
 			builder.setContentIntent(intent);
-			builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setBigContentTitle("Autos").setSummaryText(message));
+			builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setBigContentTitle(title).setSummaryText(message));
 			builder.setContentText(message);
 			builder.setTicker(message);
 
@@ -357,6 +357,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					JSONObject jObj = new JSONObject(message);
 
 					int flag = jObj.getInt(KEY_FLAG);
+					String title = jObj.optString("title", getResources().getString(R.string.app_name));
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {
@@ -367,12 +368,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						String message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, message1, NOTIFICATION_ID, phoneNo);
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo);
 						} else{
 							if (HomeActivity.appInterruptHandler != null) {
-								notificationManagerResume(this, message1, false);
+								notificationManagerResume(this, title, message1, false);
 							} else {
-								notificationManager(this, message1, false);
+								notificationManager(this, title, message1, false);
 							}
 						}
 
@@ -385,19 +386,19 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, driverArrivedMessage, NOTIFICATION_ID, phoneNo);
+							generateNotificationForCall(this, title, driverArrivedMessage, NOTIFICATION_ID, phoneNo);
 						} else{
 							if (HomeActivity.appInterruptHandler != null) {
-								notificationManagerResume(this, driverArrivedMessage, false);
+								notificationManagerResume(this, title, driverArrivedMessage, false);
 							} else {
-								notificationManager(this, driverArrivedMessage, false);
+								notificationManager(this, title, driverArrivedMessage, false);
 							}
 						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
 
 						if (HomeActivity.appInterruptHandler != null) {
-							notificationManagerResume(this, "Your ride has started.", false);
+							notificationManagerResume(this, title, "Your ride has started.", false);
 							HomeActivity.appInterruptHandler.startRideForCustomer(0);
 						} else {
 							String SHARED_PREF_NAME = "myPref",
@@ -408,32 +409,32 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
 							editor.commit();
 
-							notificationManager(this, "Your ride has started.", false);
+							notificationManager(this, title, "Your ride has started.", false);
 						}
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						String engagementId = jObj.getString("engagement_id");
 
 						if (HomeActivity.appInterruptHandler != null) {
 							if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
-								notificationManagerResume(this, "Your ride has ended.", false);
+								notificationManagerResume(this, title, "Your ride has ended.", false);
 								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
 							}
 						} else {
-							notificationManager(this, "Your ride has ended.", false);
+							notificationManager(this, title, "Your ride has ended.", false);
 						}
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1);
-							notificationManagerResume(this, "Your ride has been cancelled due to an unexpected issue", false);
+							notificationManagerResume(this, title, "Your ride has been cancelled due to an unexpected issue", false);
 						} else {
-							notificationManager(this, "Your ride has been cancelled due to an unexpected issue", false);
+							notificationManager(this, title, "Your ride has been cancelled due to an unexpected issue", false);
 						}
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
 						if (HomeActivity.activity == null) {
-							notificationManager(this, "" + message1, false);
+							notificationManager(this, title, "" + message1, false);
 						} else {
-							notificationManagerResume(this, "" + message1, false);
+							notificationManagerResume(this, title, "" + message1, false);
 						}
 					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
 						String log = jObj.getString("log");
@@ -444,9 +445,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						String logMessage = jObj.getString("message");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onChangeStatePushReceived();
-							notificationManagerResume(this, logMessage, false);
+							notificationManagerResume(this, title, logMessage, false);
 						} else {
-							notificationManager(this, logMessage, false);
+							notificationManager(this, title, logMessage, false);
 						}
 					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
@@ -455,11 +456,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							Log.e("jObj=", "=" + jObj);
 							String clientId = jObj.getString("client_id");
 							if (AccessTokenGenerator.MEALS_CLIENT_ID.equalsIgnoreCase(clientId)) {
-								notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.MEALS_PACKAGE);
+								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.MEALS_PACKAGE);
 							} else if (AccessTokenGenerator.FATAFAT_CLIENT_ID.equalsIgnoreCase(clientId)) {
-								notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.FATAFAT_PACKAGE);
+								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.FATAFAT_PACKAGE);
 							} else {
-								notificationManagerCustomIDAnotherApp(this, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.AUTOS_PACKAGE);
+								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.AUTOS_PACKAGE);
 							}
 						}
 						else {
@@ -470,11 +471,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 							if(!"".equalsIgnoreCase(picture)){
 								int deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								new BigImageNotifAsync(message1, deepindex, picture).execute();
+								new BigImageNotifAsync(title, message1, deepindex, picture).execute();
 							}
 							else{
 								int deepindex = jObj.optInt("deepindex", -1);
-								notificationManagerCustomID(this, message1, PROMOTION_NOTIFICATION_ID, deepindex);
+								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex);
 							}
 						}
 
@@ -506,18 +507,18 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						double balance = jObj.getDouble("balance");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onJugnooCashAddedByDriver(balance, message1);
-							notificationManagerResume(this, message1, false);
+							notificationManagerResume(this, title, message1, false);
 						} else {
-							notificationManager(this, message1, false);
+							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.EMERGENCY_CONTACT_VERIFIED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
 						int emergencyContactId = jObj.getInt("id");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onEmergencyContactVerified(emergencyContactId);
-							notificationManagerResume(this, message1, false);
+							notificationManagerResume(this, title, message1, false);
 						} else {
-							notificationManager(this, message1, false);
+							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.OTP_VERIFIED_BY_CALL.getOrdinal() == flag) {
 						String otp = jObj.getString("message");
@@ -533,7 +534,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}
-						notificationManagerCustomID(this, "Your account has been verified", NOTIFICATION_ID, -1);
+						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1);
 
 					} else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
 						Database2.getInstance(this).deleteNotificationTable();
@@ -562,12 +563,13 @@ public class GCMIntentService extends GcmListenerService implements Constants {
     private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
 
         private Bitmap bitmap = null;
-        private String message, picture;
+        private String title, message, picture;
         private int deepindex;
 
-        public BigImageNotifAsync(String message, int deepindex, String picture){
+        public BigImageNotifAsync(String title, String message, int deepindex, String picture){
             this.deepindex = deepindex;
             this.picture = picture;
+			this.title = title;
             this.message = message;
         }
 
@@ -593,11 +595,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
         protected void onPostExecute(Bitmap result) {
             // execution of result of Long time consuming operation
             try {
-                notificationManagerCustomIDWithBitmap(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
+                notificationManagerCustomIDWithBitmap(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
 				if(EventsHolder.displayPushHandler != null){ EventsHolder.displayPushHandler.onDisplayMessagePushReceived(); }
             }catch (Exception e){
                 e.printStackTrace();
-                notificationManagerCustomID(GCMIntentService.this, message, PROMOTION_NOTIFICATION_ID, deepindex);
+                notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex);
             }
         }
 
