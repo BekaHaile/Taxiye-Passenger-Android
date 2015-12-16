@@ -376,7 +376,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					JSONObject jObj = new JSONObject(message);
 
 					int flag = jObj.getInt(KEY_FLAG);
-					String title = jObj.optString("title", getResources().getString(R.string.app_name));
+					String title = jObj.optString(KEY_TITLE, getResources().getString(R.string.app_name));
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {

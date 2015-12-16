@@ -7,6 +7,7 @@ public interface Constants {
 
 	String KEY_FLAG = "flag";
 	String KEY_MESSAGE = "message";
+	String KEY_TITLE = "title";
 
 	String KEY_ENGAGEMENT_ID = "engagement_id";
 	String KEY_PHONE_NO = "phone_no";
