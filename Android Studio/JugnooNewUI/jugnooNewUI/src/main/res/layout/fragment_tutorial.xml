@@ -2,19 +2,18 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rv"
-    android:layout_width="720px"
-    android:layout_height="1134px"
+    android:layout_width="@dimen/screen_width"
+    android:layout_height="@dimen/screen_height"
     android:background="@color/transparent"
     >
 
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
-        android:layout_width="720px"
-        android:layout_height="1134px" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
-
         android:id="@+id/skip_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

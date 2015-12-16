@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.R;
@@ -67,7 +66,8 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
 //        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_points_tutorial1, container, false);
         mainLay = (RelativeLayout)rootView.findViewById(R.id.mainLayout);
-        new ASSL(getActivity(), mainLay, 1134, 720, false);
+		mainLay.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+		ASSL.DoMagic(mainLay);
 
         first = (RelativeLayout) rootView.findViewById(R.id.tutorial_one);
 
