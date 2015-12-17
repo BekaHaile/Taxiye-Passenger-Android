@@ -312,7 +312,7 @@ public class SearchListAdapter extends BaseAdapter{
 						Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())) {
 					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""),
 							AutoCompleteSearchResult.class);
-					searchResult.address = searchResult.name+", "+searchResult.address;
+					//searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_WORK;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
 				}
@@ -323,7 +323,7 @@ public class SearchListAdapter extends BaseAdapter{
 						Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())) {
 					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""),
 							AutoCompleteSearchResult.class);
-					searchResult.address = searchResult.name+", "+searchResult.address;
+					//searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_HOME;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
 				}

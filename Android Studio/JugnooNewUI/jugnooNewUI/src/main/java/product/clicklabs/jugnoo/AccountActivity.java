@@ -76,7 +76,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	EditText editTextUserName, editTextEmail, editTextPhone;
 	ImageView imageViewEditName, imageViewEditEmail, imageViewEditPhoneNo, imageViewJugnooJeanie;
-	ImageView imageViewEmailVerifyStatus;
+	ImageView imageViewEmailVerifyStatus, imageViewEditHome, imageViewEditWork;
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
 	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
@@ -127,8 +127,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.latoRegular(this));
 
 		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
+        imageViewEditHome = (ImageView)findViewById(R.id.imageViewEditHome);
 		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.latoRegular(this));
         relativeLayoutAddWork = (RelativeLayout) findViewById(R.id.relativeLayoutAddWork);
+        imageViewEditWork = (ImageView)findViewById(R.id.imageViewEditWork);
         textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.latoRegular(this));
 		//relativeLayoutAddFav.setVisibility(View.GONE);
 
@@ -459,6 +461,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 intent.putExtra("requestCode", "HOME");
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
                 startActivityForResult(intent, ADD_HOME);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
                 /*startActivity(new Intent(AccountActivity.this, AddPlaceActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -474,6 +477,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 intent.putExtra("requestCode", "WORK");
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
                 startActivityForResult(intent, ADD_WORK);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
                 /*startActivity(new Intent(AccountActivity.this, AddFavouritePlaces.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -482,33 +486,45 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             }
         });
 
+        imageViewEditHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutAddHome.performClick();
+            }
+        });
 
+        imageViewEditWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutAddWork.performClick();
+            }
+        });
 
 
 		buttonLogout.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-				DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "Cancel",
-						new View.OnClickListener() {
+                DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "Cancel",
+                        new View.OnClickListener() {
 
-							@Override
-							public void onClick(View v) {
-								logoutAsync(AccountActivity.this);
-							}
-						},
-						new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                logoutAsync(AccountActivity.this);
+                            }
+                        },
+                        new View.OnClickListener() {
 
-							@Override
-							public void onClick(View v) {
-							}
-						},
-						true, false);
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        },
+                        true, false);
                 dissmissEmailVerify();
 
-			}
-		});
+            }
+        });
 
 
 
@@ -1037,22 +1053,26 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
             Gson gson = new Gson();
             AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            String s = "Home \n" + searchResult.name + ", " + searchResult.address;
+            //String s = "Home \n" + searchResult.name + ", " + searchResult.address;
+            String s = "Home \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
             textViewAddHome.setText(ss1);
+            imageViewEditHome.setVisibility(View.VISIBLE);
         }
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
             Gson gson = new Gson();
             AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            String s = "Work \n" + searchResult.name + ", " + searchResult.address;
+            //String s = "Work \n" + searchResult.name + ", " + searchResult.address;
+            String s = "Work \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
             textViewAddWork.setText(ss1);
+            imageViewEditWork.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1068,26 +1088,32 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
             if (requestCode == ADD_HOME) {
                 if(searchResult != null){
-                    String s = "Home \n" + searchResult.name + " " + searchResult.address;
+                    //String s = "Home \n" + searchResult.name + " " + searchResult.address;
+                    String s = "Home \n" + searchResult.address;
                     SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
                     ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
                     textViewAddHome.setText(ss1);
                     Prefs.with(AccountActivity.this).save(SPLabels.ADD_HOME, strResult);
+                    imageViewEditHome.setVisibility(View.VISIBLE);
                 }else {
                     textViewAddHome.setText("Add Home");
+                    imageViewEditHome.setVisibility(View.GONE);
                 }
 
             } else if (requestCode == ADD_WORK) {
                 if(searchResult != null) {
-                    String s = "Work \n" + searchResult.name + " " + searchResult.address;
+                    //String s = "Work \n" + searchResult.name + " " + searchResult.address;
+                    String s = "Work \n" + searchResult.address;
                     SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
                     ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
                     textViewAddWork.setText(ss1);
                     Prefs.with(AccountActivity.this).save(SPLabels.ADD_WORK, strResult);
+                    imageViewEditWork.setVisibility(View.VISIBLE);
                 }else{
                     textViewAddWork.setText("Add Work");
+                    imageViewEditWork.setVisibility(View.GONE);
                 }
             } else {
                 Log.v("onActivityResult else part", "onActivityResult else part");
