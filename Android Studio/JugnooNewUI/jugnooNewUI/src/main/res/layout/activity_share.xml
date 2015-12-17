@@ -2,8 +2,8 @@
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="720px"
-    android:layout_height="1134px"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white">
 
     <LinearLayout
@@ -27,7 +27,7 @@
                 android:layout_centerVertical="true"
                 android:text="FREE RIDES"
                 android:textColor="@color/white"
-                android:textSize="30.6px"/>
+                android:textSize="@dimen/top_bar_title_text_size"/>
 
             <ImageView
                 android:id="@+id/imageViewBack"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Jugnoo Autos</string>
+    <string name="app_name">Jugnoo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
@@ -10,7 +10,7 @@
 
     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+    <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -233,6 +233,13 @@
 	<string name="upload_contact_yes">YES</string>
 	<string name="upload_contact_no_thanks">NO</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
+	
+	<string name="jugnoo_jeanie">Jugnoo Jeanie</string>
+	<string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
+		We believe you should always get the best deal for your daily commute and thus we are allowing you to compare other available options with Jugnoo ETA and prices.
+		Get the best deal always!\n
+		And don’t worry about the standard privacy notification on the next screen, we will never store any of your actions from Jugnoo Jeanie.
+		It is simply a tool to compare and reduce your commute costs.  </string>
 
 	
 	
@@ -451,9 +458,26 @@
     <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
 
     <string name="paytm_coupon_selected_but_paytm_not_added">You need to add Paytm Wallet to avail this coupon</string>
-    <string name="paytm_coupon_selected_but_paytm_option_not_selected">You need to select Paytm as Preferred payment option to avail this coupon</string>
+    <string name="paytm_coupon_selected_but_paytm_option_not_selected">You need to select Paytm as preferred payment option to avail this coupon</string>
     <string name="paytm_low_cash">Your Paytm cash is low</string>
     <string name="paytm_no_cash">You do not have Paytm cash, Please select payment method as Cash</string>
     <string name="paytm_no_cash_when_selecting_coupon">You do not have enough Paytm cash</string>
-	
+
+    <string name="who_are_we">Who are we?</string>
+    <string name="about_caps">ABOUT</string>
+
+    <string name="request_accepted_message">Your request has been accepted</string>
+    <string name="auto_number_params">Auto Number: %s</string>
+
+
+
+    <string name="call_number">call_number</string>
+
+
+	<string name="paytm_remove_alert">Are you sure you want to remove this payment method?</string>
+
+	<string name="remove">Remove</string>
+
+    <string name="promocode_invalid_message_on_signup">Invalid Promo code! Enter correct code to avail benefits</string>
+
 </resources>

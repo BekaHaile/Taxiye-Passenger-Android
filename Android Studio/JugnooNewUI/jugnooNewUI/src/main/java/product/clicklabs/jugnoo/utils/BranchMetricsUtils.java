@@ -72,9 +72,19 @@ public class BranchMetricsUtils {
 	}
 
 
-	public static void logEvent(Context context, String eventName){
-		Branch branch = Branch.getInstance(context);
-		branch.userCompletedAction(eventName);
+	public static void logEvent(Context context, String eventName, boolean oneTime){
+		if(oneTime) {
+			String spPrefix = "branch_";
+			if (Prefs.with(context).getInt(spPrefix+eventName, 0) == 0) {
+				Branch branch = Branch.getInstance(context);
+				branch.userCompletedAction(eventName);
+				Prefs.with(context).save(spPrefix+eventName, 1);
+			}
+		}
+		else{
+			Branch branch = Branch.getInstance(context);
+			branch.userCompletedAction(eventName);
+		}
 	}
 
 }

@@ -27,9 +27,12 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -46,7 +49,7 @@ public class PaytmRechargeFragment extends Fragment {
 	LinearLayout relative;
 
 	ImageView imageViewBack;
-	TextView textViewTitle;
+	TextView textViewTitle, textViewTitleEdit;
 	TextView textViewAddCashHelp;
 
 	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
@@ -54,14 +57,14 @@ public class PaytmRechargeFragment extends Fragment {
 	TextView textViewAddCash;
 	EditText editTextAmount;
 	Button buttonAmount1, buttonAmount2, buttonAmount3, buttonAddMoney;
-	Button buttonMakePayment, buttonMakePaymentOTP, buttonWithdrawMoney;
+	Button buttonMakePayment, buttonMakePaymentOTP, buttonWithdrawMoney, buttonRemoveWallet;
 
 	View rootView;
 	PaymentActivity paymentActivity;
 
 	ScrollView scrollView;
 	TextView textViewScroll;
-	LinearLayout linearLayoutMain;
+	LinearLayout linearLayoutMain, linearLayoutInner;
 	boolean scrolled = false;
 
 	String amount1 = "500", amount2 = "1000", amount3 = "2000";
@@ -90,12 +93,15 @@ public class PaytmRechargeFragment extends Fragment {
 
 
 		relative = (LinearLayout) rootView.findViewById(R.id.relative);
+		linearLayoutInner = (LinearLayout) rootView.findViewById(R.id.linearLayoutInner);
+
 		new ASSL(paymentActivity, relative, 1134, 720, false);
 
 //		setupUI(rootView.findViewById(R.id.relative));
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
+		textViewTitleEdit = (TextView) rootView.findViewById(R.id.textViewTitleEdit); textViewTitleEdit.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
 
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.latoRegular(paymentActivity));
 
@@ -114,6 +120,7 @@ public class PaytmRechargeFragment extends Fragment {
 		buttonMakePaymentOTP = (Button) rootView.findViewById(R.id.buttonMakePaymentOTP); buttonMakePaymentOTP.setTypeface(Fonts.latoRegular(paymentActivity));
 		buttonMakePayment = (Button) rootView.findViewById(R.id.buttonMakePayment);	buttonMakePayment.setTypeface(Fonts.latoRegular(paymentActivity));
 		buttonWithdrawMoney = (Button) rootView.findViewById(R.id.buttonWithdrawMoney);	buttonWithdrawMoney.setTypeface(Fonts.latoRegular(paymentActivity));
+		buttonRemoveWallet = (Button) rootView.findViewById(R.id.buttonRemoveWallet);	buttonRemoveWallet.setTypeface(Fonts.latoRegular(paymentActivity));
 
 
 		scrolled = false;
@@ -185,7 +192,39 @@ public class PaytmRechargeFragment extends Fragment {
 			}
 		});
 
+		textViewTitleEdit.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				linearLayoutInner.setVisibility(View.GONE);
+				buttonRemoveWallet.setVisibility(View.VISIBLE);
+				textViewTitleEdit.setVisibility(View.GONE);
+				textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.white_light_grey));
+			}
+		});
 
+		buttonRemoveWallet.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
+					|| PassengerScreenMode.P_SEARCH == HomeActivity.passengerScreenMode) {
+					DialogPopup.alertPopupTwoButtonsWithListeners(paymentActivity, "",
+						paymentActivity.getResources().getString(R.string.paytm_remove_alert),
+						paymentActivity.getResources().getString(R.string.remove),
+						paymentActivity.getResources().getString(R.string.cancel),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								removeWallet();
+							}
+						},
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							}
+						}, false, false);
+				}
+			}
+		});
 
 
 
@@ -244,6 +283,17 @@ public class PaytmRechargeFragment extends Fragment {
 			e.printStackTrace();
 		}
 
+
+		if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
+			|| PassengerScreenMode.P_SEARCH == HomeActivity.passengerScreenMode) {
+			textViewTitleEdit.setVisibility(View.VISIBLE);
+		}
+		else{
+			textViewTitleEdit.setVisibility(View.GONE);
+		}
+		buttonRemoveWallet.setVisibility(View.GONE);
+
+
 		return rootView;
 	}
 
@@ -299,7 +349,14 @@ public class PaytmRechargeFragment extends Fragment {
 	 * Method used to remove fragment from stack
 	 */
 	public void performBackPressed() {
-		getActivity().getSupportFragmentManager().popBackStack("PaytmRechargeFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+		if(buttonRemoveWallet.getVisibility() == View.VISIBLE){
+			linearLayoutInner.setVisibility(View.VISIBLE);
+			buttonRemoveWallet.setVisibility(View.GONE);
+			textViewTitleEdit.setVisibility(View.VISIBLE);
+			textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.grey_dark_more));
+		} else {
+			getActivity().getSupportFragmentManager().popBackStack("PaytmRechargeFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+		}
 	}
 
 
@@ -473,6 +530,58 @@ public class PaytmRechargeFragment extends Fragment {
 			}
 		});
 	}
+
+	private void removeWallet() {
+		try {
+			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
+				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("client_id", Config.getClientId());
+				params.put("is_access_token_new", "1");
+
+				AsyncHttpClient client = Data.getClient();
+
+				client.post(Config.getTXN_URL() + "/paytm/delete_paytm", params, new CustomAsyncHttpResponseHandler() {
+
+					@Override
+					public void onSuccess(String response) {
+						Log.i("request succesfull", "response = " + response);
+						try {
+							JSONObject jObj = new JSONObject(response);
+							String message = JSONParser.getServerMessage(jObj);
+							int flag = jObj.getInt("flag");
+							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								DialogPopup.dialogBanner(paymentActivity, message);
+								Data.userData.deletePaytm();
+								performBackPressed();
+								performBackPressed();
+								paymentActivity.performGetBalanceSuccess("");
+							} else {
+								DialogPopup.alertPopup(paymentActivity, "", message);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void onFailure(Throwable arg0) {
+						Log.e("request fail", arg0.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+					}
+				});
+			} else{
+				DialogPopup.alertPopup(paymentActivity, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	private int rechargeRequestCode = 1;
 

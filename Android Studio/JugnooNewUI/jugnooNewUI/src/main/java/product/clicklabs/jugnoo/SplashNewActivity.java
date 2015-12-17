@@ -55,7 +55,6 @@ import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -141,6 +140,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+						Data.branchReferringParams = referringParams;
+						Data.branchReferringLink = referringParams.optString("link", "");
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
 						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
 						// "+is_first_session":false,"+clicked_branch_link":true}
@@ -214,6 +215,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
+
+		try{
+			Data.TRANSFER_FROM_JEANIE = 0;
+			if(getIntent().hasExtra("transfer_from_jeanie")){
+				Data.TRANSFER_FROM_JEANIE = getIntent().getIntExtra("transfer_from_jeanie", 0);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 
 		FacebookSdk.sdkInitialize(this);
 

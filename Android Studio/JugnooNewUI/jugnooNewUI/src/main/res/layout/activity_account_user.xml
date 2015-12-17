@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
-    android:layout_width="720px"
-    android:layout_height="1134px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
     android:background="@color/white_light_grey" >
 
     <RelativeLayout
@@ -26,7 +26,7 @@
                 android:layout_centerVertical="true"
                 android:text="MY ACCOUNT"
                 android:textColor="@color/white"
-                android:textSize="30.6px" />
+                android:textSize="@dimen/top_bar_title_text_size" />
 
             <ImageView
                 android:id="@+id/imageViewBack"
@@ -303,6 +303,44 @@
                             android:layout_height="2px"
                             android:src="@color/yellow_alpha"
                             android:layout_gravity="center_horizontal" />
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutJugnooJeanie"
+                        android:layout_width="match_parent"
+                        android:layout_height="90px"
+                        android:layout_marginTop="30px"
+                        android:background="@color/white" >
+
+
+                        <TextView
+                            android:id="@+id/textViewJugnooJeanie"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="50px"
+                            android:gravity="center"
+                            android:text="@string/jugnoo_jeanie"
+                            android:textColor="@drawable/text_color_black_alpha_selector"
+                            android:textSize="28px" />
+
+                        <ImageView
+                            android:id="@+id/imageViewJugnooJeanie"
+                            android:layout_width="92px"
+                            android:layout_height="56px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="40px"
+                            android:src="@drawable/jugnoo_sticky_off"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:layout_alignParentBottom="true"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@color/yellow_alpha" />
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutChangePassword"

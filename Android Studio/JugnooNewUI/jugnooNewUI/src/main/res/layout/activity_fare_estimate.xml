@@ -1,8 +1,8 @@
 <LinearLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/screen_width"
-    android:layout_height="@dimen/screen_height"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white_light_grey"
     android:orientation="vertical">
 
@@ -21,7 +21,7 @@
             android:layout_centerVertical="true"
             android:text="FARE ESTIMATE"
             android:textColor="@color/white"
-            android:textSize="30.6px"/>
+            android:textSize="@dimen/top_bar_title_text_size"/>
 
         <ImageView
             android:id="@+id/imageViewBack"

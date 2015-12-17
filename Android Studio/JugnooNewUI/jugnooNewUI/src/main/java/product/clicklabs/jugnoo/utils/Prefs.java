@@ -37,6 +37,10 @@ public class Prefs {
 		return singleton;
 	}
 
+	public boolean contains(String key){
+		return preferences.contains(key);
+	}
+
 	public void save(String key, boolean value) {
 		editor.putBoolean(key, value).apply();
 	}

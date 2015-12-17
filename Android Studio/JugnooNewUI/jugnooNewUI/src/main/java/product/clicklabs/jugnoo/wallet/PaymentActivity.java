@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +8,7 @@ import android.view.ViewGroup;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
-import org.apache.http.NameValuePair;
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Data;
@@ -81,14 +73,25 @@ public class PaymentActivity extends BaseFragmentActivity{
 
     @Override
     public void onBackPressed() {
+		try {
+			if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                 finish();
+                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            } else {
+                Fragment paytmRechargeFragment = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
+                if(paytmRechargeFragment != null && paytmRechargeFragment.isVisible()
+                    && paytmRechargeFragment instanceof PaytmRechargeFragment){
+                    ((PaytmRechargeFragment)paytmRechargeFragment).performBackPressed();
+                } else{
+                    super.onBackPressed();
+                }
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+			super.onBackPressed();
+		}
+	}
 
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-             finish();
-            overridePendingTransition(R.anim.left_in, R.anim.left_out);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
 
 
