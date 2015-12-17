@@ -4,14 +4,14 @@
     android:id="@+id/rv"
     android:orientation="vertical"
     android:background="@color/transparent"
-    android:layout_width="720px"
-    android:layout_height="1134px">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     ​
     <FrameLayout
         android:id="@+id/frame_content"
         android:background="@color/transparent"
-        android:layout_width="720px"
-        android:layout_height="1134px">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         ​
         ​
     </FrameLayout>
