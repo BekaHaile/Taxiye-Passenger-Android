@@ -1,8 +1,8 @@
 <LinearLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/screen_width"
-    android:layout_height="@dimen/screen_height"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white_light_grey"
     android:orientation="vertical">
 
