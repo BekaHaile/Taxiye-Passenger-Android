@@ -53,6 +53,7 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -60,13 +61,15 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RegisterScreen extends BaseActivity implements LocationUpdate, FlurryEventNames {
+public class RegisterScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants {
 
     RelativeLayout topBar;
     TextView textViewTitle;
     ImageView imageViewBack;
 
-    Button buttonFacebookSignup;
+	LinearLayout linearLayoutSocialSignup;
+    ImageView imageViewFacebookSignup, imageViewGoogleSignup;
+	RelativeLayout orDivRl;
     TextView orText;
 
     EditText editTextUserName, editTextEmail, editTextPhone, editTextPassword, editTextReferralCode;
@@ -81,6 +84,8 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
     LinearLayout relative;
 
     String name = "", referralCode = "", emailId = "", phoneNo = "", password = "", accessToken = "";
+
+	private static int GOOGLE_SIGNIN_REQ_CODE = 1124;
 
     public static RegisterationType registerationType = RegisterationType.EMAIL;
     boolean sendToOtpScreen = false;
@@ -123,8 +128,10 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-        buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup);
-        buttonFacebookSignup.setTypeface(Fonts.latoRegular(this));
+		linearLayoutSocialSignup = (LinearLayout) findViewById(R.id.linearLayoutSocialSignup);
+		imageViewFacebookSignup = (ImageView) findViewById(R.id.imageViewFacebookSignup);
+		imageViewGoogleSignup = (ImageView) findViewById(R.id.imageViewGoogleSignup);
+		orDivRl = (RelativeLayout) findViewById(R.id.orDivRl);
         orText = (TextView) findViewById(R.id.orText);
         orText.setTypeface(Fonts.latoRegular(getApplicationContext()));
 
@@ -169,7 +176,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         });
 
 
-        buttonFacebookSignup.setOnClickListener(new View.OnClickListener() {
+		imageViewFacebookSignup.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -178,6 +185,18 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                 facebookLoginHelper.openFacebookSession();
             }
         });
+
+		imageViewGoogleSignup.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				FlurryEventLogger.event(SIGNUP_VIA_GOOGLE);
+				Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
+				startActivityForResult(new Intent(RegisterScreen.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
+			}
+		});
+
+
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -643,7 +662,18 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             super.onActivityResult(requestCode, resultCode, data);
-            callbackManager.onActivityResult(requestCode, resultCode, data);
+			if(RESULT_OK == resultCode){
+				if(requestCode == GOOGLE_SIGNIN_REQ_CODE){
+					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
+					Toast.makeText(RegisterScreen.this, ""+Data.googleSignInAccount, Toast.LENGTH_SHORT).show();
+				}
+				else{
+					callbackManager.onActivityResult(requestCode, resultCode, data);
+				}
+			}
+			else{
+				callbackManager.onActivityResult(requestCode, resultCode, data);
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }

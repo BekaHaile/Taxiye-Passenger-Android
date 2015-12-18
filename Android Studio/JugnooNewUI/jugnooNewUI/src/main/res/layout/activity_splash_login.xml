@@ -78,7 +78,6 @@
                 <ImageView
                     android:layout_width="94px"
                     android:layout_height="98px"
-                    android:src="@drawable/facebook_button_icon"
                     android:tag="mwar"/>
             </RelativeLayout>
 

@@ -10,6 +10,7 @@ public interface FlurryEventNames {
 			SIGNUP_THROUGH_REFERRAL = "Sign-up through Referral Deep link",
         SIGNUP = "Sign-up",
         SIGNUP_VIA_FACEBOOK = "Sign-up via Facebook",
+	SIGNUP_VIA_GOOGLE = "Signup via google",
         SIGNUP_FINAL = "Sign-up Submit",
         OTP_VERIFIED_WITH_SMS = "OTP verified with SMS",
         CHANGE_PHONE_OTP_NOT_RECEIVED = "Changed phone number_OTP Not received",
