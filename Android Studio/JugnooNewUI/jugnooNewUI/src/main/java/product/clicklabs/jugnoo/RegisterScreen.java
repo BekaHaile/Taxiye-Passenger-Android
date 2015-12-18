@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
+import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -81,7 +82,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
     String name = "", referralCode = "", emailId = "", phoneNo = "", password = "", accessToken = "";
 
-    public static boolean facebookLogin = false;
+    public static RegisterationType registerationType = RegisterationType.EMAIL;
     boolean sendToOtpScreen = false;
 
     public static JSONObject multipleCaseJSON;
@@ -280,7 +281,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                 String emailId = editTextEmail.getText().toString().trim();
                 boolean noFbEmail = false;
 
-                if (facebookLogin && emailId.equalsIgnoreCase("")) {
+                if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
                     emailId = "n@n.c";
                     noFbEmail = true;
                 }
@@ -318,12 +319,16 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                     if (Utils.isEmailValid(emailId)) {
                                         if (password.length() >= 6) {
 
-                                            if (facebookLogin) {
+                                            if (RegisterationType.FACEBOOK == registerationType) {
                                                 if (noFbEmail) {
                                                     emailId = "";
                                                 }
                                                 sendFacebookSignupValues(RegisterScreen.this, referralCode, phoneNo, password);
-                                            } else {
+                                            }
+											else if(RegisterationType.GOOGLE == registerationType){
+
+											}
+											else {
                                                 sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password);
                                             }
                                             FlurryEventLogger.event(SIGNUP_FINAL);
@@ -373,7 +378,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             @Override
             public void facebookLoginDone(FacebookUserData facebookUserData) {
                 Data.facebookUserData = facebookUserData;
-                facebookLogin = true;
+				registerationType = RegisterationType.FACEBOOK;
                 editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
                 editTextEmail.setText(Data.facebookUserData.userEmail);
 
@@ -413,7 +418,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
 
         try {
-            if (facebookLogin) {
+            if (RegisterationType.FACEBOOK == registerationType) {
                 editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
                 editTextUserName.setEnabled(false);
                 if ("".equalsIgnoreCase(Data.facebookUserData.userEmail)) {
@@ -424,17 +429,34 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                     editTextEmail.setEnabled(false);
                 }
             }
+			else if(RegisterationType.GOOGLE == registerationType){
+				editTextUserName.setText(Data.googleSignInAccount.getDisplayName());
+				editTextUserName.setEnabled(false);
+				if ("".equalsIgnoreCase(Data.googleSignInAccount.getEmail())) {
+					editTextEmail.setText("");
+					editTextEmail.setEnabled(true);
+				} else {
+					editTextEmail.setText(Data.googleSignInAccount.getEmail());
+					editTextEmail.setEnabled(false);
+				}
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
             if (getIntent().hasExtra("back_from_otp")) {
-                if (facebookLogin) {
+                if (RegisterationType.FACEBOOK == registerationType) {
                     editTextReferralCode.setText(OTPConfirmScreen.facebookRegisterData.referralCode);
                     editTextPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo));
                     editTextPassword.setText(OTPConfirmScreen.facebookRegisterData.password);
-                } else {
+                }
+				else if(RegisterationType.GOOGLE == registerationType){
+					editTextReferralCode.setText(OTPConfirmScreen.googleRegisterData.referralCode);
+					editTextPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.googleRegisterData.phoneNo));
+					editTextPassword.setText(OTPConfirmScreen.googleRegisterData.password);
+				}
+				else {
                     editTextUserName.setText(OTPConfirmScreen.emailRegisterData.name);
                     editTextEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
                     editTextReferralCode.setText(OTPConfirmScreen.emailRegisterData.referralCode);
@@ -904,22 +926,35 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
     }
 
 
+
+	private void generateOTPRegisterData(){
+		if(RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+			OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
+					Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
+					Data.facebookUserData.accessToken,
+					Data.facebookUserData.userEmail,
+					Data.facebookUserData.userName,
+					phoneNo, password, referralCode, accessToken);
+		}
+		else if(RegisterationType.GOOGLE == RegisterScreen.registerationType){
+			OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
+					Data.googleSignInAccount.getDisplayName(),
+					Data.googleSignInAccount.getEmail(),
+					Data.googleSignInAccount.getPhotoUrl().toString(),
+					phoneNo, password, referralCode, accessToken);
+		}
+		else{
+			OTPConfirmScreen.intentFromRegister = true;
+			OTPConfirmScreen.emailRegisterData = new EmailRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
+		}
+	}
+
     /**
      * Send intent to otp screen by making required data objects
      */
     public void sendIntentToOtpScreen() {
-        if (!RegisterScreen.facebookLogin) {
-            OTPConfirmScreen.intentFromRegister = true;
-            OTPConfirmScreen.emailRegisterData = new EmailRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
-        } else {
-            OTPConfirmScreen.intentFromRegister = true;
-            OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
-                Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
-                Data.facebookUserData.accessToken,
-                Data.facebookUserData.userEmail,
-                Data.facebookUserData.userName,
-                phoneNo, password, referralCode, accessToken);
-        }
+		OTPConfirmScreen.intentFromRegister = true;
+		generateOTPRegisterData();
 		Intent intent = new Intent(RegisterScreen.this, OTPConfirmScreen.class);
 		intent.putExtra("show_timer", 1);
 		startActivity(intent);
@@ -929,16 +964,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
 
     public void parseDataSendToMultipleAccountsScreen(Activity activity, JSONObject jObj) {
-        if (RegisterScreen.facebookLogin) {
-            OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
-                Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
-                Data.facebookUserData.accessToken,
-                Data.facebookUserData.userEmail,
-                Data.facebookUserData.userName,
-                phoneNo, password, referralCode, accessToken);
-        } else {
-            OTPConfirmScreen.emailRegisterData = new EmailRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
-        }
+		generateOTPRegisterData();
         RegisterScreen.multipleCaseJSON = jObj;
         if (Data.previousAccountInfoList == null) {
             Data.previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
@@ -992,5 +1018,10 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         Data.loginLatitude = location.getLatitude();
         Data.loginLongitude = location.getLongitude();
     }
+
+
+	public enum RegisterationType{
+		EMAIL, FACEBOOK, GOOGLE
+	}
 
 }

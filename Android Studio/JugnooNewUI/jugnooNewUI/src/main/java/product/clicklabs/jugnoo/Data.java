@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.SyncHttpClient;
@@ -166,6 +167,7 @@ public class Data {
 	public static int pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 
 	public static FacebookUserData facebookUserData;
+	public static GoogleSignInAccount googleSignInAccount;
 	
 	
 	

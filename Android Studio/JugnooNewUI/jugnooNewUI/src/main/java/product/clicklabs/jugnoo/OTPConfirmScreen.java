@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
+import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -82,6 +83,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	public static boolean intentFromRegister = true;
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
+	public static GoogleRegisterData googleRegisterData;
 
 	public static String OTP_SCREEN_OPEN = null;
 
@@ -191,9 +193,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				String otpCode = editTextOTP.getText().toString().trim();
 				if (otpCode.length() > 0) {
-					if (RegisterScreen.facebookLogin) {
+					if (RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode);
-					} else {
+					}
+					else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+
+					}
+					else {
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode);
 					}
 					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
@@ -241,9 +247,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			@Override
 			public void onClick(View v) {
-				if (RegisterScreen.facebookLogin) {
+				if (RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
 					initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
-				} else {
+				}
+				else if (RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType) {
+					initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
+				}
+				else {
 					initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
 				}
 				FlurryEventLogger.event(CALL_ME_OTP);
@@ -278,8 +288,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		//new start
 		try {
-			if(RegisterScreen.facebookLogin){
+			if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
 				textViewOtpNumber.setText(facebookRegisterData.phoneNo);
+			}
+			else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				textViewOtpNumber.setText(googleRegisterData.phoneNo);
 			}
 			else{
 				textViewOtpNumber.setText(emailRegisterData.phoneNo);

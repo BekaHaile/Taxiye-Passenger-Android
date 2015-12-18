@@ -305,7 +305,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(SIGNUP);
-				RegisterScreen.facebookLogin = false;
+				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
 				startActivity(intent);
 				finish();
@@ -496,7 +496,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		if(!"".equalsIgnoreCase(referralCode)) {
 			Data.deepLinkIndex = -1;
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
-			RegisterScreen.facebookLogin = false;
+			RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 			Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
 			intent.putExtra("referral_code", referralCode);
 			startActivity(intent);
