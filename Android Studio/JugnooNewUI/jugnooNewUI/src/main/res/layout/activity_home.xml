@@ -275,7 +275,7 @@
                             android:layout_marginLeft="20px"
                             android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
                             android:background="@color/transparent"
-                            android:gravity="center_vertical"
+                            android:gravity="center"
                             android:hint="Set pick up location"
                             android:singleLine="true"
                             android:textColor="@color/black_text"
@@ -1288,7 +1288,7 @@
                 android:layout_marginTop="@dimen/top_bar_height"
                 android:background="@color/white_translucent"
                 android:splitMotionEvents="false"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutSearchBar"

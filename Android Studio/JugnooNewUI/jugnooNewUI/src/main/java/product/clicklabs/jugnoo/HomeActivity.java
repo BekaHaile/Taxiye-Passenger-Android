@@ -916,6 +916,93 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         showSearchLayout();
 
+        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
+                new SearchListAdapter.SearchListActionsHandler() {
+
+                    @Override
+                    public void onTextChange(String text) {
+                        if(text.length() > 0){
+                            imageViewSearchCross.setVisibility(View.VISIBLE);
+                        /*if((Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) ||
+                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) ||
+                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) ||
+                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase(""))){
+                            textViewAddHome.setVisibility(View.VISIBLE);
+                        }else{
+                            textViewAddHome.setVisibility(View.GONE);
+                        }*/
+                            if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
+                                relativeLayoutAddHome.setVisibility(View.VISIBLE);
+                            }else{
+                                relativeLayoutAddHome.setVisibility(View.GONE);
+                            }
+                            if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
+                                relativeLayoutAddWork.setVisibility(View.VISIBLE);
+                            }else{
+                                relativeLayoutAddWork.setVisibility(View.GONE);
+                            }
+                        }
+                        else{
+                            imageViewSearchCross.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onSearchPre() {
+                        progressBarSearch.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onSearchPost() {
+                        progressBarSearch.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+                        FlurryEventLogger.event(PICKUP_LOCATION_SET);
+                        textViewInitialSearch.setText(autoCompleteSearchResult.name);
+                        zoomedForSearch = true;
+                        lastSearchLatLng = null;
+                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        switchPassengerScreen(passengerScreenMode);
+                    }
+
+                    @Override
+                    public void onPlaceSearchPre() {
+                        progressBarInitialSearch.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onPlaceSearchPost(SearchResult searchResult) {
+                        progressBarInitialSearch.setVisibility(View.GONE);
+                        if (map != null && searchResult != null) {
+                            textViewInitialSearch.setText(searchResult.name);
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
+                            lastSearchLatLng = searchResult.latLng;
+
+                            try {
+                                Log.e("searchResult.getThirdPartyAttributions()", "="+searchResult.getThirdPartyAttributions());
+                                if(searchResult.getThirdPartyAttributions() == null){
+                                    relativeLayoutGoogleAttr.setVisibility(View.GONE);
+                                }
+                                else{
+                                    relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
+                                    textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onPlaceSearchError() {
+                        progressBarInitialSearch.setVisibility(View.GONE);
+                    }
+                });
+
+        listViewSearch.setAdapter(searchListAdapter);
+
         relativeLayoutAddHome.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -2024,92 +2111,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }else{
             relativeLayoutAddWork.setVisibility(View.GONE);
         }
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
-                new SearchListAdapter.SearchListActionsHandler() {
 
-                    @Override
-                    public void onTextChange(String text) {
-                        if(text.length() > 0){
-                            imageViewSearchCross.setVisibility(View.VISIBLE);
-                        /*if((Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) ||
-                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) ||
-                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) ||
-                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase(""))){
-                            textViewAddHome.setVisibility(View.VISIBLE);
-                        }else{
-                            textViewAddHome.setVisibility(View.GONE);
-                        }*/
-                            if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
-                                relativeLayoutAddHome.setVisibility(View.VISIBLE);
-                            }else{
-                                relativeLayoutAddHome.setVisibility(View.GONE);
-                            }
-                            if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
-                                relativeLayoutAddWork.setVisibility(View.VISIBLE);
-                            }else{
-                                relativeLayoutAddWork.setVisibility(View.GONE);
-                            }
-                        }
-                        else{
-                            imageViewSearchCross.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onSearchPre() {
-                        progressBarSearch.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onSearchPost() {
-                        progressBarSearch.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
-                        FlurryEventLogger.event(PICKUP_LOCATION_SET);
-                        textViewInitialSearch.setText(autoCompleteSearchResult.name);
-                        zoomedForSearch = true;
-                        lastSearchLatLng = null;
-                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                        switchPassengerScreen(passengerScreenMode);
-                    }
-
-                    @Override
-                    public void onPlaceSearchPre() {
-                        progressBarInitialSearch.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onPlaceSearchPost(SearchResult searchResult) {
-                        progressBarInitialSearch.setVisibility(View.GONE);
-                        if (map != null && searchResult != null) {
-                            textViewInitialSearch.setText(searchResult.name);
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
-                            lastSearchLatLng = searchResult.latLng;
-
-                            try {
-                                Log.e("searchResult.getThirdPartyAttributions()", "="+searchResult.getThirdPartyAttributions());
-                                if(searchResult.getThirdPartyAttributions() == null){
-                                    relativeLayoutGoogleAttr.setVisibility(View.GONE);
-                                }
-                                else{
-                                    relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
-                                    textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onPlaceSearchError() {
-                        progressBarInitialSearch.setVisibility(View.GONE);
-                    }
-                });
-
-        listViewSearch.setAdapter(searchListAdapter);
     }
 
 
