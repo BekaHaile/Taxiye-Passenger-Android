@@ -70,10 +70,6 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 			// Signed in successfully, show authenticated UI.
 			GoogleSignInAccount acct = result.getSignInAccount();
 			Intent intent = new Intent();
-//			intent.putExtra(KEY_GOOGLE_NAME, acct.getDisplayName());
-//			intent.putExtra(KEY_GOOGLE_EMAIL, acct.getEmail());
-//			intent.putExtra(KEY_GOOGLE_ID, acct.getId());
-//			intent.putExtra(KEY_GOOGLE_IMAGE, acct.getPhotoUrl().toString());
 			intent.putExtra(KEY_GOOGLE_PARCEL, acct);
 			setResult(RESULT_OK, intent);
 			signOut();

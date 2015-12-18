@@ -18,6 +18,7 @@ public interface FlurryEventNames {
 		GIVE_MISSED_CALL = "Give missed call",
         LOGIN_OPTION_MAIN = "Login option main",
         LOGIN_VIA_FACEBOOK = "Login via Facebook",
+        LOGIN_VIA_GOOGLE = "Login via Google",
         LOGIN_VIA_EMAIL = "Login via E-mail",
         FORGOT_PASSWORD = "forgot password",
         PASSWORD_RETRIEVED = "password retrieved",

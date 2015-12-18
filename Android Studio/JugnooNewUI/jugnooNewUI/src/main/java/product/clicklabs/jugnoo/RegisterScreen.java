@@ -35,7 +35,6 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -85,7 +84,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
     String name = "", referralCode = "", emailId = "", phoneNo = "", password = "", accessToken = "";
 
-	private static int GOOGLE_SIGNIN_REQ_CODE = 1124;
+	private static final int GOOGLE_SIGNIN_REQ_CODE = 1124;
 
     public static RegisterationType registerationType = RegisterationType.EMAIL;
     boolean sendToOtpScreen = false;
@@ -129,8 +128,8 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 		linearLayoutSocialSignup = (LinearLayout) findViewById(R.id.linearLayoutSocialSignup);
-		imageViewFacebookSignup = (ImageView) findViewById(R.id.imageViewFacebookSignup);
-		imageViewGoogleSignup = (ImageView) findViewById(R.id.imageViewGoogleSignup);
+		imageViewFacebookSignup = (ImageView) findViewById(R.id.imageViewFacebookLogin);
+		imageViewGoogleSignup = (ImageView) findViewById(R.id.imageViewGoogleLogin);
 		orDivRl = (RelativeLayout) findViewById(R.id.orDivRl);
         orText = (TextView) findViewById(R.id.orText);
         orText.setTypeface(Fonts.latoRegular(getApplicationContext()));
@@ -397,12 +396,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             @Override
             public void facebookLoginDone(FacebookUserData facebookUserData) {
                 Data.facebookUserData = facebookUserData;
-				registerationType = RegisterationType.FACEBOOK;
-                editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
-                editTextEmail.setText(Data.facebookUserData.userEmail);
-
-                editTextUserName.setEnabled(false);
-                editTextEmail.setEnabled(false);
+                fillSocialAccountInfo(RegisterationType.FACEBOOK);
                 FlurryEventLogger.registerViaFBClicked(Data.facebookUserData.fbId);
             }
 
@@ -436,32 +430,9 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         });
 
 
-        try {
-            if (RegisterationType.FACEBOOK == registerationType) {
-                editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
-                editTextUserName.setEnabled(false);
-                if ("".equalsIgnoreCase(Data.facebookUserData.userEmail)) {
-                    editTextEmail.setText("");
-                    editTextEmail.setEnabled(true);
-                } else {
-                    editTextEmail.setText(Data.facebookUserData.userEmail);
-                    editTextEmail.setEnabled(false);
-                }
-            }
-			else if(RegisterationType.GOOGLE == registerationType){
-				editTextUserName.setText(Data.googleSignInAccount.getDisplayName());
-				editTextUserName.setEnabled(false);
-				if ("".equalsIgnoreCase(Data.googleSignInAccount.getEmail())) {
-					editTextEmail.setText("");
-					editTextEmail.setEnabled(true);
-				} else {
-					editTextEmail.setText(Data.googleSignInAccount.getEmail());
-					editTextEmail.setEnabled(false);
-				}
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        fillSocialAccountInfo(RegisterScreen.registerationType);
+
 
         try {
             if (getIntent().hasExtra("back_from_otp")) {
@@ -540,6 +511,55 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
     }
 
 
+    private void fillSocialAccountInfo(RegisterationType registerationType){
+        try {
+            RegisterScreen.registerationType = registerationType;
+            if (RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+                editTextUserName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+                editTextEmail.setText(Data.facebookUserData.userEmail);
+
+                if(Data.facebookUserData.firstName != null && !Data.facebookUserData.firstName.equalsIgnoreCase("")){
+                    editTextUserName.setEnabled(false);
+                } else{
+                    editTextUserName.setEnabled(true);
+                }
+                if(Data.facebookUserData.userEmail != null && !Data.facebookUserData.userEmail.equalsIgnoreCase("")) {
+                    editTextEmail.setEnabled(false);
+                } else {
+
+                    editTextEmail.setEnabled(true);
+                }
+            }
+            else if(RegisterationType.GOOGLE == RegisterScreen.registerationType){
+                editTextUserName.setText(Data.googleSignInAccount.getDisplayName());
+                editTextEmail.setText(Data.googleSignInAccount.getEmail());
+
+                if(Data.googleSignInAccount.getDisplayName() != null && !Data.googleSignInAccount.getDisplayName().equalsIgnoreCase("")){
+                    editTextUserName.setEnabled(false);
+                } else{
+                    editTextUserName.setEnabled(true);
+                }
+                if(Data.googleSignInAccount.getEmail() != null && !Data.googleSignInAccount.getEmail().equalsIgnoreCase("")) {
+                    editTextEmail.setEnabled(false);
+                } else {
+
+                    editTextEmail.setEnabled(true);
+                }
+            }
+            if(RegisterationType.EMAIL == RegisterScreen.registerationType){
+                linearLayoutSocialSignup.setVisibility(View.VISIBLE);
+                orDivRl.setVisibility(View.VISIBLE);
+            }
+            else{
+                linearLayoutSocialSignup.setVisibility(View.GONE);
+                orDivRl.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private class ReadSMSAsync extends AsyncTask<String, Integer, String>{
         @Override
         protected void onPreExecute() {
@@ -574,24 +594,24 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             if (cursor != null && cursor.moveToFirst()) {
                 for (int i = 0; i < cursor.getCount(); i++) {
                     String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-                    String number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+//                    String number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
                     String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-                    Date smsDayTime = new Date(Long.valueOf(date));
+//                    Date smsDayTime = new Date(Long.valueOf(date));
                     String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
-                    String typeOfSMS = null;
-                    switch (Integer.parseInt(type)) {
-                        case 1:
-                            typeOfSMS = "INBOX";
-                            break;
-
-                        case 2:
-                            typeOfSMS = "SENT";
-                            break;
-
-                        case 3:
-                            typeOfSMS = "DRAFT";
-                            break;
-                    }
+//                    String typeOfSMS = null;
+//                    switch (Integer.parseInt(type)) {
+//                        case 1:
+//                            typeOfSMS = "INBOX";
+//                            break;
+//
+//                        case 2:
+//                            typeOfSMS = "SENT";
+//                            break;
+//
+//                        case 3:
+//                            typeOfSMS = "DRAFT";
+//                            break;
+//                    }
                     Log.e("body", "="+body);
                     try {
                         if(body.contains("Jugnoo")){
@@ -665,7 +685,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 			if(RESULT_OK == resultCode){
 				if(requestCode == GOOGLE_SIGNIN_REQ_CODE){
 					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
-					Toast.makeText(RegisterScreen.this, ""+Data.googleSignInAccount, Toast.LENGTH_SHORT).show();
+                    fillSocialAccountInfo(RegisterationType.GOOGLE);
 				}
 				else{
 					callbackManager.onActivityResult(requestCode, resultCode, data);

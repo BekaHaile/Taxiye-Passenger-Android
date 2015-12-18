@@ -53,18 +53,19 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryEventNames{
+public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
 
     RelativeLayout topRl;
 	TextView textViewTitle;
 	ImageView imageViewBack;
-	
-	Button buttonFacebookLogin;
+
+    ImageView imageViewFacebookLogin, imageViewGoogleLogin;
 	
 	TextView orText;
 	
@@ -99,6 +100,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 	String enteredEmail = "";
 
 	public static boolean phoneNoLogin = false;
+
+    private static final int GOOGLE_SIGNIN_REQ_CODE = 1124;
 	
 	
 	public void resetFlags(){
@@ -143,8 +146,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
         topRl = (RelativeLayout) findViewById(R.id.topRl);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		
-		buttonFacebookLogin = (Button) findViewById(R.id.buttonFacebookLogin); buttonFacebookLogin.setTypeface(Fonts.latoRegular(this));
+
+        imageViewFacebookLogin = (ImageView) findViewById(R.id.imageViewFacebookLogin);
+        imageViewGoogleLogin = (ImageView) findViewById(R.id.imageViewGoogleLogin);
 
 		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Fonts.latoRegular(this));
 		
@@ -205,13 +209,13 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                             } else {
                                 email = "+91" + email;
                                 sendLoginValues(SplashLogin.this, email, password, true);
-								phoneNoLogin = true;
+                                phoneNoLogin = true;
                             }
                         } else {
                             if (isEmailValid(email)) {
                                 enteredEmail = email;
                                 sendLoginValues(SplashLogin.this, email, password, false);
-								phoneNoLogin = false;
+                                phoneNoLogin = false;
                             } else {
                                 editTextEmail.requestFocus();
                                 editTextEmail.setError("Please enter valid email");
@@ -320,9 +324,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                 return true;
             }
         });
-		
-		
-		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
+
+
+        imageViewFacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
@@ -332,6 +336,15 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
             }
         });
 
+        imageViewGoogleLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
+                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                loginDataFetched = false;
+                startActivityForResult(new Intent(SplashLogin.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
+            }
+        });
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -839,6 +852,19 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
             callbackManager.onActivityResult(requestCode, resultCode, data);
+            if(RESULT_OK == resultCode){
+                if(requestCode == GOOGLE_SIGNIN_REQ_CODE){
+                    Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
+                    Toast.makeText(this, Data.googleSignInAccount.getEmail(), Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    callbackManager.onActivityResult(requestCode, resultCode, data);
+                }
+            }
+            else{
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

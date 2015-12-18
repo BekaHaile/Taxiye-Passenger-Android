@@ -45,7 +45,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:splitMotionEvents="false" >
+            android:splitMotionEvents="false"
+            android:animateLayoutChanges="true"
+            >
 
             <ImageView
                 android:id="@+id/imageViewJugnooIcon"
@@ -63,10 +65,11 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40px"
                 android:orientation="horizontal"
+                android:splitMotionEvents="false"
                 >
 
                 <ImageView
-                    android:id="@+id/imageViewFacebookSignup"
+                    android:id="@+id/imageViewFacebookLogin"
                     android:layout_width="@dimen/social_button_width"
                     android:layout_height="@dimen/social_button_height"
                     android:src="@drawable/ic_facebook_button"
@@ -74,7 +77,7 @@
                     />
 
                 <ImageView
-                    android:id="@+id/imageViewGoogleSignup"
+                    android:id="@+id/imageViewGoogleLogin"
                     android:layout_width="@dimen/social_button_width"
                     android:layout_height="@dimen/social_button_height"
                     android:src="@drawable/ic_google_button"
