@@ -106,17 +106,19 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
             public void onClick(View view) {
                 if(placeName.equalsIgnoreCase(SPLabels.ADD_HOME)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
+                    addPlacesApi("", "", "home", "");
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_WORK)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
+                    addPlacesApi("", "", "work", "");
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_GYM)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_GYM, "");
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_FRIEND)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_FRIEND, "");
                 }
-                Intent intent=new Intent();
+                /*Intent intent=new Intent();
                 intent.putExtra("PLACE", "");
                 setResult(RESULT_OK, intent);
-                finish();
+                finish();*/
             }
         });
 

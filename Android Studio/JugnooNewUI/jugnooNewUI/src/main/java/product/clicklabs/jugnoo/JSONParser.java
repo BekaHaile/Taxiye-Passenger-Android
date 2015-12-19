@@ -270,19 +270,29 @@ public class JSONParser {
             for(int i=0; i<userSavedAddressArray.length(); i++){
                 JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
                 if(jsonObject.optString("type").equalsIgnoreCase("home")){
-                    JSONObject json = new JSONObject();
-                    json.put("address", jsonObject.optString("address"));
-                    json.put("name", jsonObject.optString("type"));
-                    json.put("placeId", jsonObject.optString("google_place_id"));
-                    String strResult = json.toString();
-                    Prefs.with(context).save(SPLabels.ADD_HOME, strResult);
+                    if(!jsonObject.optString("address").equalsIgnoreCase("")){
+                        JSONObject json = new JSONObject();
+                        json.put("address", jsonObject.optString("address"));
+                        json.put("name", jsonObject.optString("type"));
+                        json.put("placeId", jsonObject.optString("google_place_id"));
+                        String strResult = json.toString();
+                        Prefs.with(context).save(SPLabels.ADD_HOME, strResult);
+                    }else {
+                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                    }
+
                 }else if(jsonObject.optString("type").equalsIgnoreCase("work")){
-                    JSONObject json = new JSONObject();
-                    json.put("address", jsonObject.optString("address"));
-                    json.put("name", jsonObject.optString("type"));
-                    json.put("placeId", jsonObject.optString("google_place_id"));
-                    String strResult = json.toString();
-                    Prefs.with(context).save(SPLabels.ADD_WORK, strResult);
+                    if(!jsonObject.optString("address").equalsIgnoreCase("")){
+                        JSONObject json = new JSONObject();
+                        json.put("address", jsonObject.optString("address"));
+                        json.put("name", jsonObject.optString("type"));
+                        json.put("placeId", jsonObject.optString("google_place_id"));
+                        String strResult = json.toString();
+                        Prefs.with(context).save(SPLabels.ADD_WORK, strResult);
+                    }else {
+                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                    }
+
                 }
             }
         }
