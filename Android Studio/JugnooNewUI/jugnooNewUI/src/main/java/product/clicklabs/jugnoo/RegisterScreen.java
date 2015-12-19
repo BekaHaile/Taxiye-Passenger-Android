@@ -344,7 +344,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                                 sendFacebookSignupValues(RegisterScreen.this, referralCode, phoneNo, password);
                                             }
 											else if(RegisterationType.GOOGLE == registerationType){
-
+												sendGoogleSignupValues(RegisterScreen.this, referralCode, phoneNo, password);
 											}
 											else {
                                                 sendSignupValues(RegisterScreen.this, name, referralCode, emailId, phoneNo, password);
@@ -595,9 +595,9 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                 for (int i = 0; i < cursor.getCount(); i++) {
                     String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
 //                    String number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-                    String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+//                    String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
 //                    Date smsDayTime = new Date(Long.valueOf(date));
-                    String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
+//                    String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
 //                    String typeOfSMS = null;
 //                    switch (Integer.parseInt(type)) {
 //                        case 1:
@@ -615,8 +615,8 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                     Log.e("body", "="+body);
                     try {
                         if(body.contains("Jugnoo")){
-                            String[] codeArr = body.split("code\\ ");
-                            String[] spaceArr = codeArr[1].split("\\ ");
+                            String[] codeArr = body.split("code ");
+                            String[] spaceArr = codeArr[1].split(" ");
                             String rCode = spaceArr[0];
                             if(!"".equalsIgnoreCase(rCode)){
                                 referralCode = rCode;
@@ -972,9 +972,126 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         } else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
-
     }
 
+
+	/**
+	 * ASync for login from server
+	 */
+	public void sendGoogleSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			resetFlags();
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			RequestParams params = new RequestParams();
+
+			if (Data.locationFetcher != null) {
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+			params.put("user_google_id", Data.googleSignInAccount.getId());
+			params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
+			params.put("user_google_mail", Data.googleSignInAccount.getEmail());
+			params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
+
+			params.put("phone_no", phoneNo);
+			params.put("password", password);
+			params.put("referral_code", referralCode);
+
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("device_token", Data.deviceToken);
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", "" + Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("client_id", Config.getClientId());
+
+
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
+
+			if(Data.branchReferringParams != null){
+				params.put("branch_referring_params", Data.branchReferringParams.toString());
+			} else{
+				params.put("branch_referring_params", "");
+			}
+			if(Data.branchReferringLink != null){
+				params.put("branch_referring_link", Data.branchReferringLink);
+			} else{
+				params.put("branch_referring_link", "");
+			}
+
+			Log.e("register_using_facebook params", params.toString());
+
+
+			AsyncHttpClient client = Data.getClient();
+			client.post(Config.getServerUrl() + "/register_using_google", params,
+					new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response register_using_google", "response = " + response);
+
+							try {
+								jObj = new JSONObject(response);
+
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+										int flag = jObj.getInt("flag");
+										if (ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag) {
+											String error = jObj.getString("error");
+											DialogPopup.alertPopup(activity, "", error);
+										} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
+											String error = jObj.getString("error");
+											DialogPopup.alertPopup(activity, "", error);
+										} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+											RegisterScreen.this.phoneNo = jObj.getString("phone_no");
+											RegisterScreen.this.password = password;
+											RegisterScreen.this.referralCode = referralCode;
+											RegisterScreen.this.accessToken = jObj.getString("access_token");
+											Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+											sendToOtpScreen = true;
+										} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+											RegisterScreen.this.phoneNo = phoneNo;
+											RegisterScreen.this.password = password;
+											RegisterScreen.this.referralCode = referralCode;
+											RegisterScreen.this.accessToken = "";
+											parseDataSendToMultipleAccountsScreen(activity, jObj);
+										} else {
+											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										}
+										DialogPopup.dismissLoadingDialog();
+									}
+								} else {
+									DialogPopup.dismissLoadingDialog();
+								}
+							} catch (Exception exception) {
+								exception.printStackTrace();
+								DialogPopup.dismissLoadingDialog();
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+						}
+					});
+		} else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+	}
 
 
 	private void generateOTPRegisterData(){

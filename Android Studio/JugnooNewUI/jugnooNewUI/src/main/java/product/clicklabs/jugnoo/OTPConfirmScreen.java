@@ -197,7 +197,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode);
 					}
 					else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
-
+						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode);
 					}
 					else {
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode);
@@ -663,7 +663,110 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
             }
         }
 	}
-	
+
+
+
+	public void verifyOtpViaGoogle(final Activity activity, String otp) {
+		if(!checkIfRegisterDataNull(activity)) {
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+
+				RequestParams params = new RequestParams();
+
+				if (Data.locationFetcher != null) {
+					Data.loginLatitude = Data.locationFetcher.getLatitude();
+					Data.loginLongitude = Data.locationFetcher.getLongitude();
+				}
+
+				params.put("user_google_id", Data.googleSignInAccount.getId());
+				params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
+				params.put("user_google_mail", Data.googleSignInAccount.getEmail());
+				params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
+
+				params.put("device_token", Data.deviceToken);
+				params.put("device_type", Data.DEVICE_TYPE);
+				params.put("device_name", Data.deviceName);
+				params.put("app_version", "" + Data.appVersion);
+				params.put("os_version", Data.osVersion);
+				params.put("country", Data.country);
+				params.put("unique_device_id", Data.uniqueDeviceId);
+				params.put("latitude", "" + Data.loginLatitude);
+				params.put("longitude", "" + Data.loginLongitude);
+				params.put("client_id", Config.getClientId());
+				params.put("otp", otp);
+
+				if(Utils.isDeviceRooted()){
+					params.put("device_rooted", "1");
+				}
+				else{
+					params.put("device_rooted", "0");
+				}
+
+				Log.i("params", "" + params);
+
+
+				AsyncHttpClient client = Data.getClient();
+				client.post(Config.getServerUrl() + "/verify_otp", params,
+						new CustomAsyncHttpResponseHandler() {
+							private JSONObject jObj;
+
+							@Override
+							public void onFailure(Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								DialogPopup.dismissLoadingDialog();
+								DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
+
+							@Override
+							public void onSuccess(String response) {
+								Log.v("Server response", "response = " + response);
+
+								try {
+									jObj = new JSONObject(response);
+
+									int flag = jObj.getInt("flag");
+
+									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+										if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+											String error = jObj.getString("error");
+											DialogPopup.alertPopup(activity, "", error);
+										} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
+											String error = jObj.getString("error");
+											DialogPopup.alertPopup(activity, "", error);
+										} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+											if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+												new JSONParser().parseAccessTokenLoginData(activity, response);
+												loginDataFetched = true;
+												Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
+												Database.getInstance(OTPConfirmScreen.this).close();
+												BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+												FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
+											}
+										} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+											String error = jObj.getString("error");
+											DialogPopup.alertPopup(activity, "", error);
+										} else {
+											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										}
+										DialogPopup.dismissLoadingDialog();
+									} else {
+										DialogPopup.dismissLoadingDialog();
+									}
+
+								} catch (Exception exception) {
+									exception.printStackTrace();
+									DialogPopup.dismissLoadingDialog();
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								}
+							}
+						});
+			} else {
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+		}
+	}
+
 	
 	/**
 	 * ASync for initiating OTP Call from server
