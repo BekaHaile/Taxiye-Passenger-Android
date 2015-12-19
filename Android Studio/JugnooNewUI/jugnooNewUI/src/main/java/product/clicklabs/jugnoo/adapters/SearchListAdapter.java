@@ -184,7 +184,7 @@ public class SearchListAdapter extends BaseAdapter{
 						AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
 						if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
 							searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-							getSearchResultFromPlaceId(autoCompleteSearchResult.placeId);
+							getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.placeId);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -312,7 +312,7 @@ public class SearchListAdapter extends BaseAdapter{
 						Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())) {
 					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""),
 							AutoCompleteSearchResult.class);
-					searchResult.address = searchResult.name+", "+searchResult.address;
+					//searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_WORK;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
 				}
@@ -323,7 +323,7 @@ public class SearchListAdapter extends BaseAdapter{
 						Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())) {
 					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""),
 							AutoCompleteSearchResult.class);
-					searchResult.address = searchResult.name+", "+searchResult.address;
+					//searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_HOME;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
 				}
@@ -335,7 +335,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 
 
-    private synchronized void getSearchResultFromPlaceId(final String placeId) {
+    private synchronized void getSearchResultFromPlaceId(final String placeName, final String placeId) {
         searchListActionsHandler.onPlaceSearchPre();
 		Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
 				.setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -345,10 +345,14 @@ public class SearchListAdapter extends BaseAdapter{
 							if (places.getStatus().isSuccess()) {
 								final Place myPlace = places.get(0);
 								final CharSequence thirdPartyAttributions = places.getAttributions();
-								SearchResult searchResult = new SearchResult(myPlace.getName().toString(), myPlace.getAddress().toString(), myPlace.getLatLng());
+                                String placeNameToSet = placeName;
+                                /*if(!("Home".equalsIgnoreCase(placeNameToSet)) && !("Work".equalsIgnoreCase(placeNameToSet))){
+                                    placeNameToSet = myPlace.getName().toString();
+                                }*/
+								SearchResult searchResult = new SearchResult(placeName, myPlace.getAddress().toString(), myPlace.getLatLng());
 								searchResult.setThirdPartyAttributions(thirdPartyAttributions);
 								setSearchResult(searchResult);
-								Log.e("thirdPartyAttributions placesattr", "="+places.getAttributions());
+                                Log.e("thirdPartyAttributions placesattr", "=" + places.getAttributions());
 							}
 							places.release();
 						} catch (Exception e) {

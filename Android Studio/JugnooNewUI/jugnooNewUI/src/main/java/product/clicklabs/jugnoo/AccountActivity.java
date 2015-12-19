@@ -3,13 +3,17 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +29,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.BlurTransform;
@@ -37,6 +42,7 @@ import org.json.JSONObject;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
@@ -61,7 +67,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
     RelativeLayout topBar;
 	TextView textViewTitle;
 	ImageView imageViewBack;
-	
+
 	ImageView imageViewUserImageBlur, imageViewProfileImage;
 
 	ScrollView scrollView;
@@ -70,13 +76,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	EditText editTextUserName, editTextEmail, editTextPhone;
 	ImageView imageViewEditName, imageViewEditEmail, imageViewEditPhoneNo, imageViewJugnooJeanie;
-	ImageView imageViewEmailVerifyStatus;
+	ImageView imageViewEmailVerifyStatus, imageViewEditHome, imageViewEditWork;
 	RelativeLayout relativeLayoutEmailVerify;
 	TextView textViewEmailVerifyMessage, textViewEmailVerify;
-	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddFav, relativeLayoutJugnooJeanie;
-	TextView textViewChangePassword, textViewEmergencyContact, textViewAddFav, textViewJugnooJeanie;
+	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
+	TextView textViewChangePassword, textViewEmergencyContact, textViewAddHome, textViewAddWork, textViewJugnooJeanie;
     private boolean setJeanieState;
-
+    public static final int ADD_HOME = 2, ADD_WORK = 3;
 	Button buttonLogout;
 
 	@Override
@@ -86,43 +92,47 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
-		
+
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		
+
 		imageViewUserImageBlur = (ImageView) findViewById(R.id.imageViewUserImageBlur);
 		imageViewProfileImage = (ImageView) findViewById(R.id.imageViewProfileImage);
-		
+
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
-		
+
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.latoRegular(this));
 		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.latoRegular(this));
 		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.latoRegular(this));
 
         ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
-		
+
 		imageViewEditName = (ImageView) findViewById(R.id.imageViewEditName);
 		imageViewEditEmail = (ImageView) findViewById(R.id.imageViewEditEmail);
 		imageViewEditPhoneNo = (ImageView) findViewById(R.id.imageViewEditPhoneNo);
         imageViewJugnooJeanie = (ImageView)findViewById(R.id.imageViewJugnooJeanie);
-		
-		
+
+
 		imageViewEmailVerifyStatus = (ImageView) findViewById(R.id.imageViewEmailVerifyStatus);
 		relativeLayoutEmailVerify = (RelativeLayout) findViewById(R.id.relativeLayoutEmailVerify);
 		textViewEmailVerifyMessage = (TextView) findViewById(R.id.textViewEmailVerifyMessage); textViewEmailVerifyMessage.setTypeface(Fonts.latoRegular(this));
 		textViewEmailVerify = (TextView) findViewById(R.id.textViewEmailVerify); textViewEmailVerify.setTypeface(Fonts.latoRegular(this));
-		
+
 		relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
 		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Fonts.latoRegular(this));
 
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
         textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.latoRegular(this));
 
-		relativeLayoutAddFav = (RelativeLayout) findViewById(R.id.relativeLayoutAddFav);
-		textViewAddFav = (TextView) findViewById(R.id.textViewAddFav); textViewAddFav.setTypeface(Fonts.latoRegular(this));
-		relativeLayoutAddFav.setVisibility(View.GONE);
+		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
+        imageViewEditHome = (ImageView)findViewById(R.id.imageViewEditHome);
+		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.latoRegular(this));
+        relativeLayoutAddWork = (RelativeLayout) findViewById(R.id.relativeLayoutAddWork);
+        imageViewEditWork = (ImageView)findViewById(R.id.imageViewEditWork);
+        textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.latoRegular(this));
+		//relativeLayoutAddFav.setVisibility(View.GONE);
 
         relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
         textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.latoRegular(this));
@@ -136,10 +146,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
 		buttonLogout = (Button) findViewById(R.id.buttonLogout); buttonLogout.setTypeface(Fonts.latoRegular(this));
-		
-		
-		
+
+
+
 		setUserData(false);
+        setSavePlaces();
 
         //setSavePlaces();
 
@@ -158,7 +169,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             }
         });
 
-		
+
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -215,7 +226,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         });
 
 		editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
+
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if(hasFocus){
@@ -235,8 +246,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 editTextPhone.setError(null);
             }
         });
-		
-		
+
+
 		imageViewEditName.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -264,7 +275,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 dissmissEmailVerify();
             }
         });
-		
+
 		editTextUserName.setOnEditorActionListener(new OnEditorActionListener() {
 
             @Override
@@ -284,9 +295,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 return true;
             }
         });
-		
-		
-		
+
+
+
 		imageViewEditEmail.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -316,7 +327,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 dissmissEmailVerify();
             }
         });
-		
+
 		editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
 
             @Override
@@ -336,7 +347,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 return true;
             }
         });
-		
+
 
 		imageViewEditPhoneNo.setOnClickListener(new View.OnClickListener() {
 
@@ -372,7 +383,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 dissmissEmailVerify();
             }
         });
-		
+
 		editTextPhone.setOnEditorActionListener(new OnEditorActionListener() {
 
             @Override
@@ -392,7 +403,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 return true;
             }
         });
-		
+
 		imageViewEmailVerifyStatus.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -406,11 +417,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 }
             }
         });
-		
 
-		
+
+
 		relativeLayoutEmailVerify.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if(EmailVerificationStatus.EMAIL_UNVERIFIED.getOrdinal() == Data.userData.emailVerificationStatus){
@@ -421,9 +432,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 				}
 			}
 		});
-		
+
 		relativeLayoutChangePassword.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(AccountActivity.this, ChangePasswordActivity.class));
@@ -443,47 +454,80 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             }
         });
 
-        relativeLayoutAddFav.setOnClickListener(new View.OnClickListener() {
+        relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(AccountActivity.this,AddPlaceActivity.class);
+                intent.putExtra("requestCode", "HOME");
+                intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
+                startActivityForResult(intent, ADD_HOME);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                /*startActivity(new Intent(AccountActivity.this, AddPlaceActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                dissmissEmailVerify();
+                FlurryEventLogger.event(FAVORITE_LOCATION_TO_BE_ADDED);*/
+            }
+        });
+
+        relativeLayoutAddWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(AccountActivity.this,AddPlaceActivity.class);
+                intent.putExtra("requestCode", "WORK");
+                intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
+                startActivityForResult(intent, ADD_WORK);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                /*startActivity(new Intent(AccountActivity.this, AddFavouritePlaces.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                dissmissEmailVerify();
+                FlurryEventLogger.event(FAVORITE_LOCATION_TO_BE_ADDED);*/
+            }
+        });
+
+        imageViewEditHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutAddHome.performClick();
+            }
+        });
+
+        imageViewEditWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutAddWork.performClick();
+            }
+        });
+
+
+		buttonLogout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, AddFavouritePlaces.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "Cancel",
+                        new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                logoutAsync(AccountActivity.this);
+                            }
+                        },
+                        new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        },
+                        true, false);
                 dissmissEmailVerify();
-                FlurryEventLogger.event(FAVORITE_LOCATION_TO_BE_ADDED);
+
             }
         });
 
 
 
-		
-		buttonLogout.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-
-				DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "Cancel", 
-						new View.OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								logoutAsync(AccountActivity.this);
-							}
-						}, 
-						new View.OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-							}
-						}, 
-						true, false);
-                dissmissEmailVerify();
-			
-			}
-		});
-		
-
-		
 		final View activityRootView = findViewById(R.id.linearLayoutMain);
 		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
@@ -521,9 +565,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 						}
 					}
 				});
-		
+
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
+
 	}
 
 
@@ -567,15 +611,15 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			editTextUserName.setEnabled(false);
 			editTextEmail.setEnabled(false);
 			editTextPhone.setEnabled(false);
-			
+
 			editTextUserName.setText(Data.userData.userName);
 			editTextEmail.setText(Data.userData.userEmail);
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
-			
+
 			if(EmailVerificationStatus.EMAIL_UNVERIFIED.getOrdinal() == Data.userData.emailVerificationStatus){
 				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
 				imageViewEmailVerifyStatus.setImageResource(R.drawable.warning_icon);
-				
+
 				relativeLayoutEmailVerify.setVisibility(View.GONE);
 				textViewEmailVerifyMessage.setText("Please verify the Address.");
 				textViewEmailVerify.setText("VERIFY ME");
@@ -583,7 +627,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			else if(EmailVerificationStatus.WRONG_EMAIL.getOrdinal() == Data.userData.emailVerificationStatus){
 				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
 				imageViewEmailVerifyStatus.setImageResource(R.drawable.alert_icon);
-				
+
 				relativeLayoutEmailVerify.setVisibility(View.GONE);
 				textViewEmailVerifyMessage.setText("Please enter a valid Address.");
 				textViewEmailVerify.setText("CHANGE");
@@ -593,7 +637,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 					imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
 					imageViewEmailVerifyStatus.setImageResource(R.drawable.ok_icon);
 					new Handler().postDelayed(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							imageViewEmailVerifyStatus.setVisibility(View.GONE);
@@ -605,8 +649,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 				}
 				relativeLayoutEmailVerify.setVisibility(View.GONE);
 			}
-			
-			
+
+
 			try{
 				if(!"".equalsIgnoreCase(Data.userData.userImage)){
 					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform()).into(imageViewProfileImage);
@@ -620,15 +664,15 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		}
 	}
 
-	
-	
+
+
 	public void performBackPressed(){
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
-	
 
-	
+
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -653,12 +697,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         }
 
 		HomeActivity.checkForAccessTokenChange(this);
-		
+
 		reloadProfileAPI(this);
 
 		scrollView.scrollTo(0, 0);
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -676,20 +720,20 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         ASSL.closeActivity(relative);
 		System.gc();
 	}
-	
-	
-	
+
+
+
 	public void updateUserProfileAPI(final Activity activity, final String updatedField, final ProfileUpdateMode profileUpdateMode) {
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
-			
+
 			DialogPopup.showLoadingDialog(activity, "Updating...");
-			
+
 			RequestParams params = new RequestParams();
-		
+
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
-			
+
 			if(ProfileUpdateMode.EMAIL.getOrdinal() == profileUpdateMode.getOrdinal()){
 				params.put("updated_user_email", updatedField);
 			}
@@ -699,8 +743,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			else{
 				params.put("updated_user_name", updatedField);
 			}
-			
-			
+
+
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/update_user_profile", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -762,9 +806,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		}
 
 	}
-	
-	
-	
+
+
+
 	public void reloadProfileAPI(final Activity activity) {
         if(!HomeActivity.checkIfUserDataNull(activity)) {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
@@ -825,21 +869,21 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             }
         }
 	}
-	
-	
-	
-	
+
+
+
+
 	public void sendEmailVerifyLink(final Activity activity) {
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
-			
+
 			DialogPopup.showLoadingDialog(activity, "Updating...");
-			
+
 			RequestParams params = new RequestParams();
-		
+
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
-			
+
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/send_verify_email_link", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -884,21 +928,21 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
-	
-	
+
+
 	void logoutAsync(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
+
 			DialogPopup.showLoadingDialog(activity, "Please Wait ...");
-			
+
 			RequestParams params = new RequestParams();
-			
+
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 			params.put("client_id", Config.getClientId());
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
-		
+
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl()+"/logout_user", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -914,10 +958,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 						@Override
 						public void onSuccess(String response) {
 							Log.v("Server response", "response = " + response);
-	
+
 							try {
 								jObj = new JSONObject(response);
-								
+
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 									int flag = jObj.getInt("flag");
 									if(ApiResponseFlags.AUTH_LOGOUT_FAILURE.getOrdinal() == flag){
@@ -927,16 +971,16 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 									else if(ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag){
 
 										PicassoTools.clearCache(Picasso.with(activity));
-										
+
 										FacebookLoginHelper.logoutFacebook();
-										
+
 										GCMIntentService.clearNotifications(activity);
-										
+
 										Data.clearDataOnLogout(activity);
-										
+
 										HomeActivity.userMode = UserMode.PASSENGER;
 										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-										
+
 										ActivityCompat.finishAffinity(activity);
 										Intent intent = new Intent(activity, SplashNewActivity.class);
 										startActivity(intent);
@@ -954,7 +998,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
-						
+
 					});
 		}
 		else {
@@ -1004,5 +1048,77 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         return accessibilityFound;
     }
 
+    private void setSavePlaces() {
+        if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+            String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
+            Gson gson = new Gson();
+            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            //String s = "Home \n" + searchResult.name + ", " + searchResult.address;
+            String s = "Home \n" + searchResult.address;
+            SpannableString ss1 = new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
+            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+            textViewAddHome.setText(ss1);
+            imageViewEditHome.setVisibility(View.VISIBLE);
+        }
+
+        if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+            String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
+            Gson gson = new Gson();
+            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            //String s = "Work \n" + searchResult.name + ", " + searchResult.address;
+            String s = "Work \n" + searchResult.address;
+            SpannableString ss1 = new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
+            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+            textViewAddWork.setText(ss1);
+            imageViewEditWork.setVisibility(View.VISIBLE);
+        }
+    }
+
+    // Call Back method  to get the Message form other Activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK) {
+            // check if the request code is same as what is passed  here it is 2
+            String strResult = data.getStringExtra("PLACE");
+            Gson gson = new Gson();
+            AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+            if (requestCode == ADD_HOME) {
+                if(searchResult != null){
+                    //String s = "Home \n" + searchResult.name + " " + searchResult.address;
+                    String s = "Home \n" + searchResult.address;
+                    SpannableString ss1 = new SpannableString(s);
+                    ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
+                    ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+                    textViewAddHome.setText(ss1);
+                    Prefs.with(AccountActivity.this).save(SPLabels.ADD_HOME, strResult);
+                    imageViewEditHome.setVisibility(View.VISIBLE);
+                }else {
+                    textViewAddHome.setText("Add Home");
+                    imageViewEditHome.setVisibility(View.GONE);
+                }
+
+            } else if (requestCode == ADD_WORK) {
+                if(searchResult != null) {
+                    //String s = "Work \n" + searchResult.name + " " + searchResult.address;
+                    String s = "Work \n" + searchResult.address;
+                    SpannableString ss1 = new SpannableString(s);
+                    ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
+                    ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+                    textViewAddWork.setText(ss1);
+                    Prefs.with(AccountActivity.this).save(SPLabels.ADD_WORK, strResult);
+                    imageViewEditWork.setVisibility(View.VISIBLE);
+                }else{
+                    textViewAddWork.setText("Add Work");
+                    imageViewEditWork.setVisibility(View.GONE);
+                }
+            } else {
+                Log.v("onActivityResult else part", "onActivityResult else part");
+                }
+            }
+    }
 
 }

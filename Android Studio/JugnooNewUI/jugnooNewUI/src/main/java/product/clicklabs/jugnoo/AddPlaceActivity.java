@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,11 +16,21 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
+import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -95,17 +106,19 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
             public void onClick(View view) {
                 if(placeName.equalsIgnoreCase(SPLabels.ADD_HOME)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
+                    addPlacesApi("", "", "home", "");
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_WORK)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
+                    addPlacesApi("", "", "work", "");
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_GYM)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_GYM, "");
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_FRIEND)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_FRIEND, "");
                 }
-                Intent intent=new Intent();
+                /*Intent intent=new Intent();
                 intent.putExtra("PLACE", "");
                 setResult(RESULT_OK, intent);
-                finish();
+                finish();*/
             }
         });
 
@@ -145,13 +158,17 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                         Gson gson = new Gson();
                         String strResult = gson.toJson(autoCompleteSearchResult);
 
-                        Log.v("onPlaceClick result ","---> "+strResult);
+                        if(placeName.equalsIgnoreCase("HOME")){
+                            addPlacesApi(autoCompleteSearchResult.address, autoCompleteSearchResult.placeId, "home", strResult);
+                            Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, strResult);
+                        }else if(placeName.equalsIgnoreCase("WORK")){
+                            addPlacesApi(autoCompleteSearchResult.address, autoCompleteSearchResult.placeId, "work", strResult);
+                            Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
+                        }
+                        Log.v("onPlaceClick result ", "---> " + strResult);
 
-                        editTextSearch.setText(autoCompleteSearchResult.name+", "+autoCompleteSearchResult.address);
-                        Intent intent=new Intent();
-                        intent.putExtra("PLACE", strResult);
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        editTextSearch.setText(autoCompleteSearchResult.name + ", " + autoCompleteSearchResult.address);
+
                     }
 
                     @Override
@@ -162,6 +179,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                     @Override
                     public void onPlaceSearchPost(SearchResult searchResult) {
                         Log.v("Search result ", "---> " + searchResult.getClass().getName());
+
                     }
 
                     @Override
@@ -242,5 +260,54 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
 	}
+
+    public void addPlacesApi(String address, String googlePlaceId, String type, final String strResult) {
+        if(AppStatus.getInstance(AddPlaceActivity.this).isOnline(AddPlaceActivity.this)) {
+
+            DialogPopup.showLoadingDialog(AddPlaceActivity.this, "Updating...");
+
+            RequestParams params = new RequestParams();
+
+            params.put("access_token", Data.userData.accessToken);
+            params.put("address", address);
+            params.put("google_place_id", googlePlaceId);
+            params.put("type", type);
+
+            AsyncHttpClient client = Data.getClient();
+            client.post(Config.getServerUrl() + "/add_home_and_work_address", params,
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
+
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                            DialogPopup.dismissLoadingDialog();
+                            DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        }
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Server response", "response = " + response);
+                            DialogPopup.dismissLoadingDialog();
+                            try {
+                                jObj = new JSONObject(response);
+                                Intent intent=new Intent();
+                                intent.putExtra("PLACE", strResult);
+                                setResult(RESULT_OK, intent);
+                                finish();
+
+                            }  catch (Exception exception) {
+                                exception.printStackTrace();
+                                DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.dismissLoadingDialog();
+                            }
+                        }
+                    });
+        }
+        else {
+            DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.CHECK_INTERNET_MSG);
+        }
+
+    }
 
 }

@@ -21,8 +21,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,6 +60,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.CircleTransform;
@@ -251,7 +255,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ScrollView scrollViewAssigning;
     LinearLayout linearLayoutScrollAssigning;
     TextView textViewScrollAssigning;
-	boolean cancelTouchHold = false;
+	boolean cancelTouchHold = false, addPlaces;
 
 
     //Request Final Layout
@@ -301,14 +305,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
-        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
+        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm, relativeLayoutAddHome, relativeLayoutAddWork;
 	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
-	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue, textViewAddFav;
+	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue, textViewAddHome, textViewAddWork;
     Button buttonEndRideOk;
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
 
@@ -403,6 +407,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     CallbackManager callbackManager;
+    public static final int ADD_HOME = 2, ADD_WORK = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -893,7 +898,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         listViewSearch = (NonScrollListView) findViewById(R.id.listViewSearch);
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
-        textViewAddFav = (TextView)findViewById(R.id.textViewAddFav);
+        relativeLayoutAddHome = (RelativeLayout)findViewById(R.id.relativeLayoutAddHome);
+        relativeLayoutAddWork = (RelativeLayout)findViewById(R.id.relativeLayoutAddWork);
+        textViewAddHome = (TextView)findViewById(R.id.textViewAddHome);
+        textViewAddWork = (TextView)findViewById(R.id.textViewAddWork);
         linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
@@ -906,88 +914,115 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         }));
 
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
-            new SearchListAdapter.SearchListActionsHandler() {
+        showSearchLayout();
 
-				@Override
-				public void onTextChange(String text) {
-					if(text.length() > 0){
-						imageViewSearchCross.setVisibility(View.VISIBLE);
-                        if((Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) ||
+        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
+                new SearchListAdapter.SearchListActionsHandler() {
+
+                    @Override
+                    public void onTextChange(String text) {
+                        if(text.length() > 0){
+                            imageViewSearchCross.setVisibility(View.VISIBLE);
+                        /*if((Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) ||
                                 (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) ||
                                 (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) ||
                                 (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase(""))){
-                            textViewAddFav.setVisibility(View.GONE);
+                            textViewAddHome.setVisibility(View.VISIBLE);
                         }else{
-                            textViewAddFav.setVisibility(View.GONE);
+                            textViewAddHome.setVisibility(View.GONE);
+                        }*/
+                            if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
+                                relativeLayoutAddHome.setVisibility(View.VISIBLE);
+                            }else{
+                                relativeLayoutAddHome.setVisibility(View.GONE);
+                            }
+                            if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
+                                relativeLayoutAddWork.setVisibility(View.VISIBLE);
+                            }else{
+                                relativeLayoutAddWork.setVisibility(View.GONE);
+                            }
                         }
-					}
-					else{
-						imageViewSearchCross.setVisibility(View.GONE);
-					}
-				}
+                        else{
+                            imageViewSearchCross.setVisibility(View.GONE);
+                        }
+                    }
 
-				@Override
-                public void onSearchPre() {
-                    progressBarSearch.setVisibility(View.VISIBLE);
-                }
+                    @Override
+                    public void onSearchPre() {
+                        progressBarSearch.setVisibility(View.VISIBLE);
+                    }
 
-                @Override
-                public void onSearchPost() {
-                    progressBarSearch.setVisibility(View.GONE);
-                }
+                    @Override
+                    public void onSearchPost() {
+                        progressBarSearch.setVisibility(View.GONE);
+                    }
 
-                @Override
-                public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
-                    FlurryEventLogger.event(PICKUP_LOCATION_SET);
-                    textViewInitialSearch.setText(autoCompleteSearchResult.name);
-                    zoomedForSearch = true;
-                    lastSearchLatLng = null;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(passengerScreenMode);
-                }
+                    @Override
+                    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+                        FlurryEventLogger.event(PICKUP_LOCATION_SET);
+                        textViewInitialSearch.setText(autoCompleteSearchResult.name);
+                        zoomedForSearch = true;
+                        lastSearchLatLng = null;
+                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        switchPassengerScreen(passengerScreenMode);
+                    }
 
-                @Override
-                public void onPlaceSearchPre() {
-                    progressBarInitialSearch.setVisibility(View.VISIBLE);
-                }
+                    @Override
+                    public void onPlaceSearchPre() {
+                        progressBarInitialSearch.setVisibility(View.VISIBLE);
+                    }
 
-                @Override
-                public void onPlaceSearchPost(SearchResult searchResult) {
-                    progressBarInitialSearch.setVisibility(View.GONE);
-                    if (map != null && searchResult != null) {
-                        textViewInitialSearch.setText(searchResult.name);
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
-                        lastSearchLatLng = searchResult.latLng;
+                    @Override
+                    public void onPlaceSearchPost(SearchResult searchResult) {
+                        progressBarInitialSearch.setVisibility(View.GONE);
+                        if (map != null && searchResult != null) {
+                            textViewInitialSearch.setText(searchResult.name);
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
+                            lastSearchLatLng = searchResult.latLng;
 
-						try {
-							Log.e("searchResult.getThirdPartyAttributions()", "="+searchResult.getThirdPartyAttributions());
-							if(searchResult.getThirdPartyAttributions() == null){
-								relativeLayoutGoogleAttr.setVisibility(View.GONE);
-							}
-							else{
-								relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
-								textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-                }
+                            try {
+                                Log.e("searchResult.getThirdPartyAttributions()", "="+searchResult.getThirdPartyAttributions());
+                                if(searchResult.getThirdPartyAttributions() == null){
+                                    relativeLayoutGoogleAttr.setVisibility(View.GONE);
+                                }
+                                else{
+                                    relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
+                                    textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
 
-                @Override
-                public void onPlaceSearchError() {
-                    progressBarInitialSearch.setVisibility(View.GONE);
-                }
-            });
+                    @Override
+                    public void onPlaceSearchError() {
+                        progressBarInitialSearch.setVisibility(View.GONE);
+                    }
+                });
 
         listViewSearch.setAdapter(searchListAdapter);
 
-        textViewAddFav.setOnClickListener(new OnClickListener() {
+        relativeLayoutAddHome.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(HomeActivity.this,AddFavouritePlaces.class);
-                startActivity(intent);
+                Intent intent=new Intent(HomeActivity.this,AddPlaceActivity.class);
+                intent.putExtra("requestCode", "HOME");
+                intent.putExtra("address", Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, ""));
+                //startActivity(intent);
+                startActivityForResult(intent, ADD_HOME);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
+        relativeLayoutAddWork.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(HomeActivity.this,AddPlaceActivity.class);
+                intent.putExtra("requestCode", "WORK");
+                intent.putExtra("address", Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, ""));
+                //startActivity(intent);
+                startActivityForResult(intent, ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
@@ -2065,7 +2100,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		}
 	}
 
+    private void showSearchLayout(){
+        if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
+            relativeLayoutAddHome.setVisibility(View.VISIBLE);
+        }else{
+            relativeLayoutAddHome.setVisibility(View.GONE);
+        }
+        if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
+            relativeLayoutAddWork.setVisibility(View.VISIBLE);
+        }else{
+            relativeLayoutAddWork.setVisibility(View.GONE);
+        }
 
+    }
 
 
 	public void callAnAutoClicked(LatLng requestLatLng){
@@ -3358,87 +3405,91 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onResume() {
         super.onResume();
 
-        if (!checkIfUserDataNull(HomeActivity.this)) {
-            setUserData();
+        if(!addPlaces) {
+            if (!checkIfUserDataNull(HomeActivity.this)) {
+                setUserData();
 
-            try {
-                if (activityResumed) {
-                    if (!feedbackSkipped && !promoOpened) {
-						callAndHandleStateRestoreAPI(false);
-                    }
-					initiateTimersForStates(passengerScreenMode);
+                try {
+                    if (activityResumed) {
+                        if (!feedbackSkipped && !promoOpened) {
+                            callAndHandleStateRestoreAPI(false);
+                        }
+                        initiateTimersForStates(passengerScreenMode);
 
-                    if (!intentFired) {
-                        if (userMode == UserMode.PASSENGER &&
-                            (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
-                            if (map != null && myLocation != null) {
-                                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+                        if (!intentFired) {
+                            if (userMode == UserMode.PASSENGER &&
+                                    (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
+                                if (map != null && myLocation != null) {
+                                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+                                }
                             }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+
+                try {
+                    if (Data.supportFeedbackSubmitted) {
+                        drawerLayout.closeDrawer(menuLayout);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                DialogPopup.dialogBanner(HomeActivity.this, "Thank you for your valuable feedback");
+                            }
+                        }, 300);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Data.supportFeedbackSubmitted = false;
+
+
+                openDeepLink();
+                performDeepLinkRequest();
+
+                EventsHolder.displayPushHandler = this;
+
+                startNotifsUpdater();
+
+                getPaytmBalance(this);
+
+
+                String alertMessage = Prefs.with(this).getString(SPLabels.UPLOAD_CONTACTS_ERROR, "");
+                if (!"".equalsIgnoreCase(alertMessage)) {
+                    Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, "");
+                    DialogPopup.alertPopup(this, "", alertMessage);
+                }
+
             }
 
-			try{
-				if(Data.supportFeedbackSubmitted) {
-					drawerLayout.closeDrawer(menuLayout);
-					new Handler().postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							DialogPopup.dialogBanner(HomeActivity.this, "Thank you for your valuable feedback");
-						}
-					}, 300);
-				}
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-			Data.supportFeedbackSubmitted = false;
+            HomeActivity.checkForAccessTokenChange(this);
 
+            activityResumed = true;
+            intentFired = false;
+            feedbackSkipped = false;
 
-			openDeepLink();
-			performDeepLinkRequest();
+            initializeFusedLocationFetchers();
 
-			EventsHolder.displayPushHandler = this;
-
-			startNotifsUpdater();
-
-			getPaytmBalance(this);
-
-
-            String alertMessage = Prefs.with(this).getString(SPLabels.UPLOAD_CONTACTS_ERROR, "");
-            if(!"".equalsIgnoreCase(alertMessage)){
-                Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, "");
-                DialogPopup.alertPopup(this, "", alertMessage);
+            int sdkInt = android.os.Build.VERSION.SDK_INT;
+            if (sdkInt < 19) {
+                DialogPopup.showLocationSettingsAlert(activity);
             }
 
-        }
 
-        HomeActivity.checkForAccessTokenChange(this);
-
-        activityResumed = true;
-        intentFired = false;
-        feedbackSkipped = false;
-
-		initializeFusedLocationFetchers();
-
-		int sdkInt = android.os.Build.VERSION.SDK_INT;
-		if(sdkInt < 19) {
-			DialogPopup.showLocationSettingsAlert(activity);
-		}
-
-
-        if((isAccessibilitySettingsOn(getApplicationContext())
-                && (Prefs.with(HomeActivity.this).contains(SPLabels.JUGNOO_JEANIE_STATE) == false))){
-            Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-        }else{
-            if((isAccessibilitySettingsOn(getApplicationContext())
-                    && (Prefs.with(HomeActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))){
+            if ((isAccessibilitySettingsOn(getApplicationContext())
+                    && (Prefs.with(HomeActivity.this).contains(SPLabels.JUGNOO_JEANIE_STATE) == false))) {
                 Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-            }else{
-                //Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+            } else {
+                if ((isAccessibilitySettingsOn(getApplicationContext())
+                        && (Prefs.with(HomeActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))) {
+                    Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+                } else {
+                    //Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+                }
             }
+        }else{
+            addPlaces = false;
         }
 
 
@@ -3630,9 +3681,38 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         try {
-            super.onActivityResult(requestCode, resultCode, data);
-            callbackManager.onActivityResult(requestCode, resultCode, data);
+            if(resultCode==RESULT_OK) {
+                if (requestCode == ADD_HOME) {
+                    String strResult = data.getStringExtra("PLACE");
+                    Gson gson = new Gson();
+                    AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+                    if(searchResult != null){
+                        addPlaces = true;
+                        Prefs.with(HomeActivity.this).save(SPLabels.ADD_HOME, strResult);
+                        showSearchLayout();
+                    }else {
+                        textViewAddHome.setText("Add Home");
+                    }
+
+                } else if (requestCode == ADD_WORK) {
+                    String strResult = data.getStringExtra("PLACE");
+                    Gson gson = new Gson();
+                    AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+                    if(searchResult != null) {
+                        addPlaces = true;
+                        Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
+                        showSearchLayout();
+                    }else{
+                        textViewAddWork.setText("Add Work");
+                    }
+                } else {
+                    Log.v("onActivityResult else part", "onActivityResult else part");
+                    callbackManager.onActivityResult(requestCode, resultCode, data);
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6764,5 +6844,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
     }
+
+
 
 }
