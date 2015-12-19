@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
+	<!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+     <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -246,6 +246,12 @@
 	<!-- Account Settings Strings -->
 	<string name="add_home">Add Home</string>
 	<string name="add_work">Add Work</string>
+	
+	<!-- Ride Summary New Strings -->
+	<string name="total_fare">Total Fare</string>
+	<string name="Cash_to_be_paid">Cash to be paid</string>
+	<string name="view_invoice">View Invoice</string>
+	<string name="rate_your_ride">RATE YOUR RIDE</string>
 
 	
 	

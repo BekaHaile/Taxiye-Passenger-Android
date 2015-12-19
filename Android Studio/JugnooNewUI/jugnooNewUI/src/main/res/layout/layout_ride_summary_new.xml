@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayoutRideSummary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_conte`nt"
+        android:layout_marginTop="38px"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150px"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="360px"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewTotalFare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_fare"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/textViewTotalFareValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewTotalFare"
+                    android:text="90"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:src="@color/grey_dark_less" />
+
+            <LinearLayout
+                android:layout_width="360px"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50px"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewCashPaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/total_fare"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/textViewCashPaidValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewTotalFare"
+                    android:text="90"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="50px"
+            android:layout_marginTop="50px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="44px"
+                android:layout_height="44px"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="20px"
+                android:src="@drawable/ic_ride_receipt" />
+
+            <TextView
+                android:id="@+id/textViewInvoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/view_invoice" />
+
+            <ImageView
+                android:layout_width="13px"
+                android:layout_height="26px"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@+id/textViewInvoice"
+                android:src="@drawable/arrow_icon_selector" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20px"
+                android:layout_toLeftOf="@+id/textViewRateYourRide"
+                android:src="@color/grey_dark_less" />
+
+            <TextView
+                android:id="@+id/textViewRateYourRide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/rate_your_ride" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@+id/textViewRateYourRide"
+                android:src="@color/grey_dark_less" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
+
+            <RatingBar
+                android:id="@+id/ratingBarFeedback"
+                style="@style/YellowRatingBarNew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50px"
+                android:numStars="5"
+                android:rating="1"
+                android:stepSize="1.0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewWhatImprove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginTop="20px"
+                    android:text="What could we improve?"
+                    android:textColor="@color/black_text_alpha"
+                    android:textSize="30px" />
+            </LinearLayout>
+
+            <product.clicklabs.jugnoo.utils.NonScrollGridView
+                android:id="@+id/gridViewFeedbackReasons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20px"
+                android:divider="@color/transparent"
+                android:dividerHeight="0px"
+                android:numColumns="2"
+                android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollGridView>
+
+
+            <EditText
+                android:id="@+id/editTextFeedback"
+                android:layout_width="match_parent"
+                android:layout_height="200px"
+                android:layout_marginLeft="40px"
+                android:layout_marginRight="40px"
+                android:layout_marginTop="20px"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:gravity="left"
+                android:hint="Please share your valuable feedback"
+                android:padding="20px"
+                android:scrollbars="vertical"
+                android:textSize="28px" />
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutOtherError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px">
+
+                <TextView
+                    android:id="@+id/textViewOtherError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="60px"
+                    android:text="* Required"
+                    android:textColor="@color/red_status"
+                    android:textSize="22px" />
+
+
+            </RelativeLayout>
+
+
+            <Button
+                android:id="@+id/buttonSubmitFeedback"
+                android:layout_width="648px"
+                android:layout_height="80px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="40px"
+                android:layout_marginTop="40px"
+                android:background="@drawable/button_yellow"
+                android:text="SUBMIT"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/button_text_size" />
+
+            <TextView
+                android:id="@+id/textViewScroll"
+                android:layout_width="20px"
+                android:layout_height="20px"
+                android:text=" " />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

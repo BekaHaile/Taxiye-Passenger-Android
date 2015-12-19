@@ -39,6 +39,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -126,6 +127,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.NonScrollGridView;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -283,13 +285,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //Search Layout
-    RelativeLayout relativeLayoutSearch;
+    RelativeLayout relativeLayoutSearch, relativeLayoutAddHome, relativeLayoutAddWork;
     EditText editTextSearch;
     ProgressWheel progressBarSearch;
 	ImageView imageViewSearchCross;
     NonScrollListView listViewSearch;
     LinearLayout linearLayoutScrollSearch;
-    TextView textViewScrollSearch;
+    TextView textViewScrollSearch, textViewAddHome, textViewAddWork;
+
+    //
 
 
     //Center Location Layout
@@ -301,20 +305,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     //End Ride layout
     RelativeLayout endRideReviewRl;
-    ScrollView scrollViewEndRide;
+
+    RatingBar ratingBarFeedback;
+    TextView textViewWhatImprove;
+    NonScrollGridView gridViewFeedbackReasons;
+
+    /*ScrollView scrollViewEndRide;
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
-        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm, relativeLayoutAddHome, relativeLayoutAddWork;
+        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
 	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
-	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue, textViewAddHome, textViewAddWork;
+	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
-	EndRideDiscountsAdapter endRideDiscountsAdapter;
+	EndRideDiscountsAdapter endRideDiscountsAdapter;*/
 
 
     // data variables declaration
@@ -1046,7 +1055,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Review Layout
         endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
-        scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
+        /*scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
 
         textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.latoRegular(this));
         textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.latoRegular(this));
@@ -1111,7 +1120,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		((TextView) findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));*/
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -1780,19 +1789,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 
-        buttonEndRideOk.setOnClickListener(new OnClickListener() {
+        /*buttonEndRideOk.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 GCMIntentService.clearNotifications(HomeActivity.this);
-                if (userMode == UserMode.PASSENGER) {
+                *//*if (userMode == UserMode.PASSENGER) {
                     Intent intent = new Intent(HomeActivity.this, FeedbackActivity.class);
                     intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.AFTER_RIDE.getOrdinal());
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                }
+                }*//*
+
+                DialogPopup.alertPopupFromPoint(HomeActivity.this, "title", "message");
             }
-        });
+        });*/
 
 
 
@@ -2443,11 +2454,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
 //                        genieLayout.setVisibility(View.GONE);
-
-                        scrollViewEndRide.scrollTo(0, 0);
-
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
+
+                        /*scrollViewEndRide.scrollTo(0, 0);
+
 
                         textViewEndRideDriverName.setText(Data.assignedDriverInfo.name);
                         textViewEndRideDriverCarNumber.setText(Data.assignedDriverInfo.carNumber);
@@ -2545,7 +2556,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						else{
 							linearLayoutEndRideWaitTime.setVisibility(View.GONE);
 							textViewEndRideTime.setText("Time");
-						}
+						}*/
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -3015,6 +3026,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 initiateTimersForStates(mode);
                 dismissReferAllDialog(mode);
+
+
+
+                endRideReviewRl.setVisibility(View.VISIBLE);
 
             }
         } catch (Exception e) {
