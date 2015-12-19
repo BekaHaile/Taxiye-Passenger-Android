@@ -378,6 +378,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					int flag = jObj.getInt(KEY_FLAG);
 					String title = jObj.optString(KEY_TITLE, getResources().getString(R.string.app_name));
 
+
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
@@ -415,9 +416,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
-
+						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						if (HomeActivity.appInterruptHandler != null) {
-							notificationManagerResume(this, title, "Your ride has started.", false);
+							notificationManagerResume(this, title, message1, false);
 							HomeActivity.appInterruptHandler.startRideForCustomer(0);
 						} else {
 							String SHARED_PREF_NAME = "myPref",
@@ -428,25 +429,27 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
 							editor.commit();
 
-							notificationManager(this, title, "Your ride has started.", false);
+							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
+						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
 
 						if (HomeActivity.appInterruptHandler != null) {
 							if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
-								notificationManagerResume(this, title, "Your ride has ended.", false);
+								notificationManagerResume(this, title, message1, false);
 								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
 							}
 						} else {
-							notificationManager(this, title, "Your ride has ended.", false);
+							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
+						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has been cancelled due to an unexpected issue");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1);
-							notificationManagerResume(this, title, "Your ride has been cancelled due to an unexpected issue", false);
+							notificationManagerResume(this, title, message1, false);
 						} else {
-							notificationManager(this, title, "Your ride has been cancelled due to an unexpected issue", false);
+							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
