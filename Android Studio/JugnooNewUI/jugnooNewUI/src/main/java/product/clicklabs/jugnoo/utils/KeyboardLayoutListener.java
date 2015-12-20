@@ -42,12 +42,14 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
 
             /************** Adapter for the parent List *************/
 
+        if(resizeTextView) {
             ViewGroup.LayoutParams params_12 = textViewScroll
                 .getLayoutParams();
 
             params_12.height = (int) (heightDiff);
 
             textViewScroll.setLayoutParams(params_12);
+        }
 
             if(keyBoardState != 1){
                 keyBoardStateHandler.keyboardOpened();

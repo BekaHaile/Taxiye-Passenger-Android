@@ -135,7 +135,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler {
+		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler, Constants {
 
 
     DrawerLayout drawerLayout;                                                                        // views declaration
@@ -1082,8 +1082,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onLastItemSelected(boolean selected) {
                 if(!selected){
-                    if(textViewRSOtherError.getVisibility() == View.VISIBLE){
-                        textViewRSOtherError.setVisibility(View.GONE);
+                    if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
+                        textViewRSOtherError.setText("");
                     }
                 }
             }
@@ -1099,6 +1099,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
         layoutParams.height = (int)(ASSL.Yscale() * 200);
         editTextRSFeedback.setLayoutParams(layoutParams);
+        textViewRSOtherError.setText("");
 
         /*scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
 
@@ -1847,8 +1848,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
-                    if (textViewRSOtherError.getVisibility() == View.VISIBLE) {
-                        textViewRSOtherError.setVisibility(View.GONE);
+                    if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
+                        textViewRSOtherError.setText("");
                     }
                 }
             }
@@ -1896,11 +1897,74 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void keyBoardClosed() {
-                    editTextRSFeedback.setHint("Please share your valuable feedback");
+                    editTextRSFeedback.setHint(getString(R.string.please_share_your_feedback));
                 }
             });
         linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
         keyboardLayoutListener.setResizeTextView(false);
+
+        buttonRSSubmitFeedback.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String feedbackStr = editTextRSFeedback.getText().toString().trim();
+                int rating = (int) ratingBarRSFeedback.getRating();
+                rating = Math.abs(rating);
+                Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
+
+                String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
+                boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
+
+                if (0 == rating) {
+                    DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
+                    FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                } else {
+                    if(Data.feedbackReasons.size() > 0 && rating <= 3){
+                        if(feedbackReasons.length() > 0){
+                            if(isLastReasonSelected && feedbackStr.length() == 0){
+                                textViewRSOtherError.setText(getString(R.string.star_required));
+                                return;
+                            }
+                        }
+                        else{
+                            DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.please_provide_reason_for_rating));
+                            return;
+                        }
+                    }
+
+                    if (feedbackStr.length() > 300) {
+                        editTextRSFeedback.requestFocus();
+                        editTextRSFeedback.setError(getString(R.string.review_must_be_in));
+                    } else {
+                        submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
+                            rating, feedbackStr, feedbackReasons);
+                        FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
+                        if (feedbackStr.length() > 0) {
+                            FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                        }
+                    }
+                }
+            }
+        });
+
+        buttonRSSkipFeedback.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                skipFeedbackForCustomerAsync(HomeActivity.this, Data.cEngagementId);
+                FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
+            }
+        });
+
+        linearLayoutRSViewInvoice.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Data.endRideData != null) {
+                    Intent intent = new Intent(HomeActivity.this, RideSummaryActivity.class);
+                    intent.putExtra(KEY_END_RIDE_DATA, 1);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+            }
+        });
 
         /*buttonEndRideOk.setOnClickListener(new OnClickListener() {
 
@@ -2570,6 +2634,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
 
+                        textViewRSTotalFareValue.setText(String.format(getString(R.string.ruppes_value_format),
+                            "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.fare)));
+                        textViewRSCashPaidValue.setText(String.format(getString(R.string.ruppes_value_format),
+                            ""+Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
+
                         /*scrollViewEndRide.scrollTo(0, 0);
 
 
@@ -3142,7 +3211,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-                endRideReviewRl.setVisibility(View.VISIBLE);
+//                endRideReviewRl.setVisibility(View.VISIBLE);
 
             }
         } catch (Exception e) {
@@ -6121,6 +6190,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+                Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
+
 				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
                 FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED, true);
 
@@ -6973,6 +7044,108 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
+
+
+
+    private void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
+        try {
+            final RequestParams params = new RequestParams();
+            params.put("access_token", Data.userData.accessToken);
+            params.put("engagement_id", engagementId);
+
+            final String url = Config.getServerUrl() + "/skip_rating_by_customer";
+
+            try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
+
+            AsyncHttpClient client = Data.getClient();
+            client.post(url, params,
+                new CustomAsyncHttpResponseHandler() {
+
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.i("Server response", "response = " + response);
+
+                    }
+                });
+
+            Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+
+            HomeActivity.feedbackSkipped = true;
+            HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId,
+                                            final int givenRating, String feedbackText, String feedbackReasons) {
+        try {
+            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+                DialogPopup.showLoadingDialog(activity, "Loading...");
+
+                RequestParams params = new RequestParams();
+
+                params.put("access_token", Data.userData.accessToken);
+                params.put("given_rating", "" + givenRating);
+                params.put("engagement_id", engagementId);
+                params.put("driver_id", ratingReceiverId);
+                params.put("feedback", feedbackText);
+                params.put("feedback_reasons", feedbackReasons);
+
+                Log.i("params", "=" + params);
+
+                AsyncHttpClient client = Data.getClient();
+                client.post(Config.getServerUrl() + "/rate_the_driver", params,
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
+
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                            DialogPopup.dismissLoadingDialog();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        }
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Server response", "response = " + response);
+                            try {
+                                jObj = new JSONObject(response);
+                                int flag = jObj.getInt("flag");
+                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                    if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                        Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
+                                        if (HomeActivity.appInterruptHandler != null) {
+                                            HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating, false);
+                                        }
+                                        try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
+                                    } else {
+                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    }
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+                            DialogPopup.dismissLoadingDialog();
+                        }
+                    });
+            } else {
+                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }
