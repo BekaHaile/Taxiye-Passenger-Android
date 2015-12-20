@@ -48,7 +48,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
-import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -119,7 +118,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 
-		linearLayoutScroll.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScroll, textViewScroll, new KeyBoardStateHandler() {
+		linearLayoutScroll.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScroll, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
 			@Override
 			public void keyboardOpened() {
 

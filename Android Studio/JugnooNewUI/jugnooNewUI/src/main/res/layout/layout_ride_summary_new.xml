@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
+    android:id="@+id/scrollViewRideSummary"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relativeLayoutRideSummary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
     <LinearLayout
+        android:id="@+id/linearLayoutRideSummary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_conte`nt"
+        android:layout_height="wrap_content"
         android:layout_marginTop="38px"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,58 +23,57 @@
             <LinearLayout
                 android:layout_width="360px"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewTotalFare"
+                    android:id="@+id/textViewRSTotalFare"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/total_fare"
-                    android:textColor="@color/black" />
+                    android:textSize="30px"
+                    android:textColor="@color/grey_dark_more"/>
 
                 <TextView
-                    android:id="@+id/textViewTotalFareValue"
+                    android:id="@+id/textViewRSTotalFareValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textViewTotalFare"
                     android:text="90"
-                    android:textColor="@color/black" />
+                    android:textSize="30px"
+                    android:textColor="@color/grey_dark_more"/>
             </LinearLayout>
 
             <ImageView
                 android:layout_width="2px"
                 android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:src="@color/grey_dark_less" />
+                android:src="@color/grey_dark_less"/>
 
             <LinearLayout
                 android:layout_width="360px"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="50px"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewCashPaid"
+                    android:id="@+id/textViewRSCashPaid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:text="@string/total_fare"
-                    android:textColor="@color/black" />
+                    android:textSize="30px"
+                    android:textColor="@color/grey_dark_more"/>
 
                 <TextView
-                    android:id="@+id/textViewCashPaidValue"
+                    android:id="@+id/textViewRSCashPaidValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textViewTotalFare"
                     android:text="90"
-                    android:textColor="@color/black" />
+                    android:textSize="30px"
+                    android:textColor="@color/grey_dark_more"/>
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayoutRSViewInvoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -84,23 +85,24 @@
             <ImageView
                 android:layout_width="44px"
                 android:layout_height="44px"
-                android:layout_alignParentLeft="true"
                 android:layout_marginRight="20px"
-                android:src="@drawable/ic_ride_receipt" />
+                android:src="@drawable/ic_ride_receipt"/>
 
             <TextView
-                android:id="@+id/textViewInvoice"
+                android:id="@+id/textViewRSInvoice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="@string/view_invoice" />
+                android:text="@string/view_invoice"
+                android:textSize="30px"
+                android:textColor="@color/grey_dark_more"
+                />
 
             <ImageView
                 android:layout_width="13px"
                 android:layout_height="26px"
                 android:layout_marginLeft="20px"
-                android:layout_toRightOf="@+id/textViewInvoice"
-                android:src="@drawable/arrow_icon_selector" />
+                android:src="@drawable/arrow_icon_selector"/>
 
         </LinearLayout>
 
@@ -114,125 +116,117 @@
                 android:layout_height="2px"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="20px"
-                android:layout_toLeftOf="@+id/textViewRateYourRide"
-                android:src="@color/grey_dark_less" />
+                android:layout_toLeftOf="@+id/textViewRSRateYourRide"
+                android:src="@color/grey_dark_less"/>
 
             <TextView
-                android:id="@+id/textViewRateYourRide"
+                android:id="@+id/textViewRSRateYourRide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/rate_your_ride" />
+                android:text="@string/rate_your_ride"
+                android:textSize="30px"
+                android:textColor="@color/grey_dark_more"/>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
-                android:layout_toRightOf="@+id/textViewRateYourRide"
-                android:src="@color/grey_dark_less" />
+                android:layout_toRightOf="@+id/textViewRSRateYourRide"
+                android:src="@color/grey_dark_less"/>
         </RelativeLayout>
 
 
-        <LinearLayout
-            android:id="@+id/linearLayoutMain"
+        <RatingBar
+            android:id="@+id/ratingBarRSFeedback"
+            style="@style/YellowRatingBarNew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50px"
+            android:numStars="5"
+            android:rating="1"
+            android:stepSize="1.0"/>
+
+
+        <TextView
+            android:id="@+id/textViewRSWhatImprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="20px"
+            android:text="@string/what_could_we_improve"
+            android:textColor="@color/black_text_alpha"
+            android:textSize="30px"/>
+
+        <product.clicklabs.jugnoo.utils.NonScrollGridView
+            android:id="@+id/gridViewRSFeedbackReasons"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical"
-            android:splitMotionEvents="false">
-
-            <RatingBar
-                android:id="@+id/ratingBarFeedback"
-                style="@style/YellowRatingBarNew"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50px"
-                android:numStars="5"
-                android:rating="1"
-                android:stepSize="1.0" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textViewWhatImprove"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30px"
-                    android:layout_marginTop="20px"
-                    android:text="What could we improve?"
-                    android:textColor="@color/black_text_alpha"
-                    android:textSize="30px" />
-            </LinearLayout>
-
-            <product.clicklabs.jugnoo.utils.NonScrollGridView
-                android:id="@+id/gridViewFeedbackReasons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20px"
-                android:divider="@color/transparent"
-                android:dividerHeight="0px"
-                android:numColumns="2"
-                android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollGridView>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+            android:divider="@color/transparent"
+            android:dividerHeight="0px"
+            android:numColumns="2"
+            android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollGridView>
 
 
-            <EditText
-                android:id="@+id/editTextFeedback"
-                android:layout_width="match_parent"
-                android:layout_height="200px"
-                android:layout_marginLeft="40px"
-                android:layout_marginRight="40px"
-                android:layout_marginTop="20px"
-                android:background="@drawable/background_white_rounded_bordered"
-                android:gravity="left"
-                android:hint="Please share your valuable feedback"
-                android:padding="20px"
-                android:scrollbars="vertical"
-                android:textSize="28px" />
+        <EditText
+            android:id="@+id/editTextRSFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="200px"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="40px"
+            android:layout_marginTop="20px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:gravity="left"
+            android:hint="@string/please_share_your_feedback"
+            android:padding="20px"
+            android:scrollbars="vertical"
+            android:textSize="28px"/>
 
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutOtherError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10px">
-
-                <TextView
-                    android:id="@+id/textViewOtherError"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="60px"
-                    android:text="* Required"
-                    android:textColor="@color/red_status"
-                    android:textSize="22px" />
+        <TextView
+            android:id="@+id/textViewRSOtherError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="60px"
+            android:layout_marginTop="10px"
+            android:text="@string/star_required"
+            android:textColor="@color/red_status"
+            android:textSize="22px"/>
 
 
-            </RelativeLayout>
+        <Button
+            android:id="@+id/buttonRSSubmitFeedback"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10px"
+            android:layout_marginTop="40px"
+            android:background="@drawable/button_yellow"
+            android:text="@string/submit_caps"
+            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textSize="@dimen/button_text_size"/>
 
+        <Button
+            android:id="@+id/buttonRSSkipFeedback"
+            android:layout_width="250px"
+            android:layout_height="@dimen/button_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="40px"
+            android:layout_marginTop="10px"
+            android:background="@drawable/background_transparent"
+            android:text="@string/skip"
+            android:textColor="@drawable/text_color_grey_dark_light_selector"
+            android:textSize="@dimen/button_small_text_size"/>
 
-            <Button
-                android:id="@+id/buttonSubmitFeedback"
-                android:layout_width="648px"
-                android:layout_height="80px"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="40px"
-                android:layout_marginTop="40px"
-                android:background="@drawable/button_yellow"
-                android:text="SUBMIT"
-                android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/button_text_size" />
-
-            <TextView
-                android:id="@+id/textViewScroll"
-                android:layout_width="20px"
-                android:layout_height="20px"
-                android:text=" " />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/textViewRSScroll"
+            android:layout_width="20px"
+            android:layout_height="20px"
+            android:text=" "/>
 
     </LinearLayout>
 </ScrollView>

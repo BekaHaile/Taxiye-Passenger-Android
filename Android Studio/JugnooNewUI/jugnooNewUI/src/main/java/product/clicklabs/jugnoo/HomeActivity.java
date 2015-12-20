@@ -20,12 +20,11 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,7 +82,7 @@ import java.util.TimerTask;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
-import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
+import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.PromotionsListAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
@@ -95,7 +94,6 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
-import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
@@ -121,7 +119,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
-import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
@@ -305,10 +302,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     //End Ride layout
     RelativeLayout endRideReviewRl;
+    ScrollView scrollViewRideSummary;
+    LinearLayout linearLayoutRideSummary;
+    TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
+    LinearLayout linearLayoutRSViewInvoice;
 
-    RatingBar ratingBarFeedback;
-    TextView textViewWhatImprove;
-    NonScrollGridView gridViewFeedbackReasons;
+    RatingBar ratingBarRSFeedback;
+    TextView textViewRSWhatImprove, textViewRSOtherError;
+    NonScrollGridView gridViewRSFeedbackReasons;
+    FeedbackReasonsAdapter feedbackReasonsAdapter;
+    EditText editTextRSFeedback;
+    Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
+    TextView textViewRSScroll;
 
     /*ScrollView scrollViewEndRide;
 
@@ -716,17 +721,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         scrollViewAssigning.setVisibility(View.GONE);
         linearLayoutScrollAssigning = (LinearLayout) findViewById(R.id.linearLayoutScrollAssigning);
         textViewScrollAssigning = (TextView) findViewById(R.id.textViewScrollAssigning);
-        linearLayoutScrollAssigning.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollAssigning, textViewScrollAssigning, new KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
+        linearLayoutScrollAssigning.getViewTreeObserver()
+            .addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollAssigning, textViewScrollAssigning,
+                new KeyboardLayoutListener.KeyBoardStateHandler() {
+                    @Override
+                    public void keyboardOpened() {
 
-            }
+                    }
 
-            @Override
-            public void keyBoardClosed() {
+                    @Override
+                    public void keyBoardClosed() {
 
-            }
-        }));
+                    }
+                }));
 
         SearchListAdapter dropLocationAssigningSearchListAdapter = new SearchListAdapter(this, editTextAssigningDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
             new SearchListAdapter.SearchListActionsHandler() {
@@ -821,7 +828,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         scrollViewFinal.setVisibility(View.GONE);
         linearLayoutScrollFinal = (LinearLayout) findViewById(R.id.linearLayoutScrollFinal);
         textViewScrollFinal = (TextView) findViewById(R.id.textViewScrollFinal);
-        linearLayoutScrollFinal.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollFinal, textViewScrollFinal, new KeyBoardStateHandler() {
+        linearLayoutScrollFinal.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollFinal, textViewScrollFinal, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
 
@@ -911,7 +918,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAddWork = (RelativeLayout)findViewById(R.id.relativeLayoutAddWork);
         textViewAddHome = (TextView)findViewById(R.id.textViewAddHome);
         textViewAddWork = (TextView)findViewById(R.id.textViewAddWork);
-        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
+        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
 
@@ -1027,7 +1034,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAddWork.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(HomeActivity.this,AddPlaceActivity.class);
+                Intent intent = new Intent(HomeActivity.this, AddPlaceActivity.class);
                 intent.putExtra("requestCode", "WORK");
                 intent.putExtra("address", Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, ""));
                 //startActivity(intent);
@@ -1055,6 +1062,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Review Layout
         endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
+
+        scrollViewRideSummary = (ScrollView) findViewById(R.id.scrollViewRideSummary);
+        linearLayoutRideSummary = (LinearLayout) findViewById(R.id.linearLayoutRideSummary);
+        textViewRSTotalFareValue = (TextView) findViewById(R.id.textViewRSTotalFareValue); textViewRSTotalFareValue.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView)findViewById(R.id.textViewRSTotalFare)).setTypeface(Fonts.latoRegular(this));
+        textViewRSCashPaidValue = (TextView) findViewById(R.id.textViewRSCashPaidValue); textViewRSCashPaidValue.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView)findViewById(R.id.textViewRSCashPaid)).setTypeface(Fonts.latoRegular(this));
+        linearLayoutRSViewInvoice = (LinearLayout) findViewById(R.id.linearLayoutRSViewInvoice);
+        ((TextView)findViewById(R.id.textViewRSInvoice)).setTypeface(Fonts.latoRegular(this));
+        ((TextView)findViewById(R.id.textViewRSRateYourRide)).setTypeface(Fonts.latoRegular(this));
+
+        ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
+        textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove); textViewRSWhatImprove.setTypeface(Fonts.latoRegular(this));
+        textViewRSOtherError = (TextView) findViewById(R.id.textViewRSOtherError); textViewRSOtherError.setTypeface(Fonts.latoRegular(this));
+        gridViewRSFeedbackReasons = (NonScrollGridView) findViewById(R.id.gridViewRSFeedbackReasons);
+        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons,
+            new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
+            @Override
+            public void onLastItemSelected(boolean selected) {
+                if(!selected){
+                    if(textViewRSOtherError.getVisibility() == View.VISIBLE){
+                        textViewRSOtherError.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+        gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+        editTextRSFeedback = (EditText) findViewById(R.id.editTextRSFeedback); editTextRSFeedback.setTypeface(Fonts.latoRegular(this));
+        buttonRSSubmitFeedback = (Button) findViewById(R.id.buttonRSSubmitFeedback); buttonRSSubmitFeedback.setTypeface(Fonts.latoRegular(this));
+        buttonRSSkipFeedback = (Button) findViewById(R.id.buttonRSSkipFeedback); buttonRSSkipFeedback.setTypeface(Fonts.latoRegular(this));
+        textViewRSScroll = (TextView) findViewById(R.id.textViewRSScroll);
+
+        textViewRSWhatImprove.setVisibility(View.GONE);
+        gridViewRSFeedbackReasons.setVisibility(View.GONE);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+        layoutParams.height = (int)(ASSL.Yscale() * 200);
+        editTextRSFeedback.setLayoutParams(layoutParams);
+
         /*scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
 
         textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.latoRegular(this));
@@ -1588,73 +1633,73 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //        });
 
 		assigningLayout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-			}
-		});
+            }
+        });
 
 		initialCancelRideBtn.setOnTouchListener(new View.OnTouchListener() {
 
-			Handler handler = new Handler();
-			Runnable runnable = new Runnable() {
-				@Override
-				public void run() {
-					if (cancelTouchHold) {
-						if ("".equalsIgnoreCase(Data.cSessionId)) {
-							if (checkForGPSAccuracyTimer != null) {
-								if (checkForGPSAccuracyTimer.isRunning) {
-									checkForGPSAccuracyTimer.stopTimer();
-									customerUIBackToInitialAfterCancel();
-								}
-							}
-						} else {
-							textViewFindingDriver.setText("Cancelling");
-							progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
-							progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
-							progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
-							progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
-							cancelCustomerRequestAsync(HomeActivity.this);
-							FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
-						}
-						cancelTouchHold = false;
-					}
-				}
-			};
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (cancelTouchHold) {
+                        if ("".equalsIgnoreCase(Data.cSessionId)) {
+                            if (checkForGPSAccuracyTimer != null) {
+                                if (checkForGPSAccuracyTimer.isRunning) {
+                                    checkForGPSAccuracyTimer.stopTimer();
+                                    customerUIBackToInitialAfterCancel();
+                                }
+                            }
+                        } else {
+                            textViewFindingDriver.setText("Cancelling");
+                            progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
+                            progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
+                            progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
+                            progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
+                            cancelCustomerRequestAsync(HomeActivity.this);
+                            FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
+                        }
+                        cancelTouchHold = false;
+                    }
+                }
+            };
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				int action = event.getAction();
-				switch (action) {
-					case MotionEvent.ACTION_DOWN:
-						textViewFindingDriver.setText("HOLD TO CANCEL");
-						progressBarFindingDriver.setSmoothProgressDrawableSpeed(0.5f);
-						progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(false);
-						progressBarFindingDriver.setSmoothProgressDrawableReversed(false);
-						progressBarFindingDriver.progressiveStart();
-						progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(0.9f);
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        textViewFindingDriver.setText("HOLD TO CANCEL");
+                        progressBarFindingDriver.setSmoothProgressDrawableSpeed(0.5f);
+                        progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(false);
+                        progressBarFindingDriver.setSmoothProgressDrawableReversed(false);
+                        progressBarFindingDriver.progressiveStart();
+                        progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(0.9f);
 
-						handler.postDelayed(runnable, 2000);
-						cancelTouchHold = true;
+                        handler.postDelayed(runnable, 2000);
+                        cancelTouchHold = true;
 
-						break;
+                        break;
 
-					case MotionEvent.ACTION_UP:
-						if (cancelTouchHold) {
-							cancelTouchHold = false;
-							textViewFindingDriver.setText("Finding a Jugnoo driver...");
-							progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
-							progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
-							progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
-							progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
+                    case MotionEvent.ACTION_UP:
+                        if (cancelTouchHold) {
+                            cancelTouchHold = false;
+                            textViewFindingDriver.setText("Finding a Jugnoo driver...");
+                            progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
+                            progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
+                            progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
+                            progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
 
-							handler.removeCallbacks(runnable);
-						}
-						break;
-				}
-				return true;
-			}
-		});
+                            handler.removeCallbacks(runnable);
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
 
 
 
@@ -1772,11 +1817,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 		imageViewFinalDropLocationCross.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				editTextFinalDropLocation.setText("");
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                editTextFinalDropLocation.setText("");
+            }
+        });
 
 
         // End ride review layout events
@@ -1788,6 +1833,74 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+        editTextRSFeedback.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    if (textViewRSOtherError.getVisibility() == View.VISIBLE) {
+                        textViewRSOtherError.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+
+        ratingBarRSFeedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (Data.feedbackReasons.size() > 0) {
+                    if (rating > 0 && rating <= 3) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewRSWhatImprove.setVisibility(View.VISIBLE);
+                                gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+
+                                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+                                layoutParams.height = (int) (ASSL.Yscale() * 150);
+                                editTextRSFeedback.setLayoutParams(layoutParams);
+                            }
+                        }, 205);
+                    } else {
+                        textViewRSWhatImprove.setVisibility(View.GONE);
+                        gridViewRSFeedbackReasons.setVisibility(View.GONE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+                        layoutParams.height = (int) (ASSL.Yscale() * 200);
+                        editTextRSFeedback.setLayoutParams(layoutParams);
+                    }
+                }
+            }
+        });
+
+        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutRideSummary, textViewRSScroll,
+            new KeyboardLayoutListener.KeyBoardStateHandler() {
+                @Override
+                public void keyboardOpened() {
+                    editTextRSFeedback.setHint("");
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollViewRideSummary.smoothScrollTo(0, editTextRSFeedback.getTop() - ((int) (ASSL.Yscale() * 15)));
+                        }
+                    }, 200);
+                }
+
+                @Override
+                public void keyBoardClosed() {
+                    editTextRSFeedback.setHint("Please share your valuable feedback");
+                }
+            });
+        linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+        keyboardLayoutListener.setResizeTextView(false);
 
         /*buttonEndRideOk.setOnClickListener(new OnClickListener() {
 

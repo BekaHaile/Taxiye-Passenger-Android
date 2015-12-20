@@ -252,6 +252,11 @@
 	<string name="Cash_to_be_paid">Cash to be paid</string>
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">RATE YOUR RIDE</string>
+	<string name="submit_caps">SUBMIT</string>
+	<string name="skip">Skip</string>
+	<string name="star_required">* Required</string>
+	<string name="please_share_your_feedback">Please share your valuable feedback</string>
+	<string name="what_could_we_improve">What could we improve?</string>
 
 	
 	
