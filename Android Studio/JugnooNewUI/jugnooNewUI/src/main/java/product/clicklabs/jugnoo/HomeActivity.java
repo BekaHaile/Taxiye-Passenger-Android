@@ -254,7 +254,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ScrollView scrollViewAssigning;
     LinearLayout linearLayoutScrollAssigning;
     TextView textViewScrollAssigning;
-	boolean cancelTouchHold = false, addPlaces;
+	boolean cancelTouchHold = false, placeAdded;
 
 
     //Request Final Layout
@@ -3613,13 +3613,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onResume() {
         super.onResume();
 
-        if(!addPlaces) {
             if (!checkIfUserDataNull(HomeActivity.this)) {
                 setUserData();
 
                 try {
                     if (activityResumed) {
-                        if (!feedbackSkipped && !promoOpened) {
+                        if (!feedbackSkipped && !promoOpened && !placeAdded) {
                             callAndHandleStateRestoreAPI(false);
                         }
                         initiateTimersForStates(passengerScreenMode);
@@ -3676,6 +3675,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             activityResumed = true;
             intentFired = false;
             feedbackSkipped = false;
+            placeAdded = false;
 
             initializeFusedLocationFetchers();
 
@@ -3696,9 +3696,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     //Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
                 }
             }
-        }else{
-            addPlaces = false;
-        }
 
 
 //        genieLayout.setGenieParams();
@@ -3897,7 +3894,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Gson gson = new Gson();
                     AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
                     if(searchResult != null){
-                        addPlaces = true;
+                        placeAdded = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_HOME, strResult);
                         showSearchLayout();
                     }else {
@@ -3909,7 +3906,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Gson gson = new Gson();
                     AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
                     if(searchResult != null) {
-                        addPlaces = true;
+                        placeAdded = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
                         showSearchLayout();
                     }else{

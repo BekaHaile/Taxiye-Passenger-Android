@@ -264,7 +264,11 @@
 	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
 	<string name="review_must_be_in">Review must be in 300 letters.</string>
 
-	
+
+	<!-- Add Places -->
+	<string name="remove_place_confirm_dialog_message">Are you sure you want to remove this saved place?</string>
+
+
 	
 	<string-array name="CountryCodes" >
 <item>93,AF</item>

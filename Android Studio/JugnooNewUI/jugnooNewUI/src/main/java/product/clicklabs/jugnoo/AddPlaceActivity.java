@@ -100,17 +100,33 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
         buttonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(placeName.equalsIgnoreCase(SPLabels.ADD_HOME)){
-                    Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
-                    addPlacesApi("", "", "home", "");
-                }else if(placeName.equalsIgnoreCase(SPLabels.ADD_WORK)){
-                    Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
-                    addPlacesApi("", "", "work", "");
-                }else if(placeName.equalsIgnoreCase(SPLabels.ADD_GYM)){
-                    Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_GYM, "");
-                }else if(placeName.equalsIgnoreCase(SPLabels.ADD_FRIEND)){
-                    Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_FRIEND, "");
-                }
+                DialogPopup.alertPopupTwoButtonsWithListeners(AddPlaceActivity.this, "",
+                    getString(R.string.remove_place_confirm_dialog_message),
+                    getString(R.string.remove),
+                    getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(placeName.equalsIgnoreCase(SPLabels.ADD_HOME)){
+                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
+                                addPlacesApi("", "", "home", "");
+                            }else if(placeName.equalsIgnoreCase(SPLabels.ADD_WORK)){
+                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
+                                addPlacesApi("", "", "work", "");
+                            }else if(placeName.equalsIgnoreCase(SPLabels.ADD_GYM)){
+                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_GYM, "");
+                            }else if(placeName.equalsIgnoreCase(SPLabels.ADD_FRIEND)){
+                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_FRIEND, "");
+                            }
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }, false, false);
+
                 /*Intent intent=new Intent();
                 intent.putExtra("PLACE", "");
                 setResult(RESULT_OK, intent);
