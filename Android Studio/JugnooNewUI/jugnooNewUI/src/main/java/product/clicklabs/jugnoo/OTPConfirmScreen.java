@@ -739,10 +739,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 											if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 												new JSONParser().parseAccessTokenLoginData(activity, response);
 												loginDataFetched = true;
-												Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
+												Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.googleSignInAccount.getEmail());
 												Database.getInstance(OTPConfirmScreen.this).close();
 												BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
-												FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
 											}
 										} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 											String error = jObj.getString("error");
