@@ -1546,7 +1546,7 @@
                 android:visibility="gone">
 
                 <include
-                    layout="@layout/layout_ride_summary"
+                    layout="@layout/layout_ride_summary_new"
                     ></include>
 
             </RelativeLayout>

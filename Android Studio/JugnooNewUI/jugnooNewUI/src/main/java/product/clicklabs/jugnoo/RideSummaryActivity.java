@@ -40,7 +40,7 @@ import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class RideSummaryActivity extends BaseFragmentActivity implements FlurryEventNames {
+public class RideSummaryActivity extends BaseFragmentActivity implements FlurryEventNames, Constants {
 
     RelativeLayout relative;
 
@@ -210,6 +210,10 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 				else{
 					getRideSummaryAPI(this, ""+engagementId);
 				}
+			}
+			else if(intent.hasExtra(KEY_END_RIDE_DATA)){
+				endRideData = Data.endRideData;
+				setRideData();
 			}
 			else{
 				throw new Exception();

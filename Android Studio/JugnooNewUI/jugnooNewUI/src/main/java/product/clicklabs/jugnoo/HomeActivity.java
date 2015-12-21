@@ -20,12 +20,11 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,6 +38,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -82,7 +82,7 @@ import java.util.TimerTask;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
-import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
+import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.PromotionsListAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
@@ -94,7 +94,6 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
-import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
@@ -120,12 +119,12 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
-import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.NonScrollGridView;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -136,7 +135,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler {
+		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler, Constants {
 
 
     DrawerLayout drawerLayout;                                                                        // views declaration
@@ -283,13 +282,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //Search Layout
-    RelativeLayout relativeLayoutSearch;
+    RelativeLayout relativeLayoutSearch, relativeLayoutAddHome, relativeLayoutAddWork;
     EditText editTextSearch;
     ProgressWheel progressBarSearch;
 	ImageView imageViewSearchCross;
     NonScrollListView listViewSearch;
     LinearLayout linearLayoutScrollSearch;
-    TextView textViewScrollSearch;
+    TextView textViewScrollSearch, textViewAddHome, textViewAddWork;
+
+    //
 
 
     //Center Location Layout
@@ -301,20 +302,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     //End Ride layout
     RelativeLayout endRideReviewRl;
-    ScrollView scrollViewEndRide;
+    ScrollView scrollViewRideSummary;
+    LinearLayout linearLayoutRideSummary;
+    TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
+    LinearLayout linearLayoutRSViewInvoice;
+
+    RatingBar ratingBarRSFeedback;
+    TextView textViewRSWhatImprove, textViewRSOtherError;
+    NonScrollGridView gridViewRSFeedbackReasons;
+    FeedbackReasonsAdapter feedbackReasonsAdapter;
+    EditText editTextRSFeedback;
+    Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
+    TextView textViewRSScroll;
+
+    /*ScrollView scrollViewEndRide;
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
-        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm, relativeLayoutAddHome, relativeLayoutAddWork;
+        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
 	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
-	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue, textViewAddHome, textViewAddWork;
+	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
-	EndRideDiscountsAdapter endRideDiscountsAdapter;
+	EndRideDiscountsAdapter endRideDiscountsAdapter;*/
 
 
     // data variables declaration
@@ -707,17 +721,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         scrollViewAssigning.setVisibility(View.GONE);
         linearLayoutScrollAssigning = (LinearLayout) findViewById(R.id.linearLayoutScrollAssigning);
         textViewScrollAssigning = (TextView) findViewById(R.id.textViewScrollAssigning);
-        linearLayoutScrollAssigning.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollAssigning, textViewScrollAssigning, new KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
+        linearLayoutScrollAssigning.getViewTreeObserver()
+            .addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollAssigning, textViewScrollAssigning,
+                new KeyboardLayoutListener.KeyBoardStateHandler() {
+                    @Override
+                    public void keyboardOpened() {
 
-            }
+                    }
 
-            @Override
-            public void keyBoardClosed() {
+                    @Override
+                    public void keyBoardClosed() {
 
-            }
-        }));
+                    }
+                }));
 
         SearchListAdapter dropLocationAssigningSearchListAdapter = new SearchListAdapter(this, editTextAssigningDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
             new SearchListAdapter.SearchListActionsHandler() {
@@ -812,7 +828,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         scrollViewFinal.setVisibility(View.GONE);
         linearLayoutScrollFinal = (LinearLayout) findViewById(R.id.linearLayoutScrollFinal);
         textViewScrollFinal = (TextView) findViewById(R.id.textViewScrollFinal);
-        linearLayoutScrollFinal.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollFinal, textViewScrollFinal, new KeyBoardStateHandler() {
+        linearLayoutScrollFinal.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollFinal, textViewScrollFinal, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
 
@@ -902,7 +918,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAddWork = (RelativeLayout)findViewById(R.id.relativeLayoutAddWork);
         textViewAddHome = (TextView)findViewById(R.id.textViewAddHome);
         textViewAddWork = (TextView)findViewById(R.id.textViewAddWork);
-        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
+        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
 
@@ -1018,7 +1034,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAddWork.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(HomeActivity.this,AddPlaceActivity.class);
+                Intent intent = new Intent(HomeActivity.this, AddPlaceActivity.class);
                 intent.putExtra("requestCode", "WORK");
                 intent.putExtra("address", Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, ""));
                 //startActivity(intent);
@@ -1046,7 +1062,46 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Review Layout
         endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
-        scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
+
+        scrollViewRideSummary = (ScrollView) findViewById(R.id.scrollViewRideSummary);
+        linearLayoutRideSummary = (LinearLayout) findViewById(R.id.linearLayoutRideSummary);
+        textViewRSTotalFareValue = (TextView) findViewById(R.id.textViewRSTotalFareValue); textViewRSTotalFareValue.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView)findViewById(R.id.textViewRSTotalFare)).setTypeface(Fonts.latoRegular(this));
+        textViewRSCashPaidValue = (TextView) findViewById(R.id.textViewRSCashPaidValue); textViewRSCashPaidValue.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView)findViewById(R.id.textViewRSCashPaid)).setTypeface(Fonts.latoRegular(this));
+        linearLayoutRSViewInvoice = (LinearLayout) findViewById(R.id.linearLayoutRSViewInvoice);
+        ((TextView)findViewById(R.id.textViewRSInvoice)).setTypeface(Fonts.latoRegular(this));
+        ((TextView)findViewById(R.id.textViewRSRateYourRide)).setTypeface(Fonts.latoRegular(this));
+
+        ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
+        textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove); textViewRSWhatImprove.setTypeface(Fonts.latoRegular(this));
+        textViewRSOtherError = (TextView) findViewById(R.id.textViewRSOtherError); textViewRSOtherError.setTypeface(Fonts.latoRegular(this));
+        gridViewRSFeedbackReasons = (NonScrollGridView) findViewById(R.id.gridViewRSFeedbackReasons);
+        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons,
+            new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
+            @Override
+            public void onLastItemSelected(boolean selected) {
+                if(!selected){
+                    if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
+                        textViewRSOtherError.setText("");
+                    }
+                }
+            }
+        });
+        gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+        editTextRSFeedback = (EditText) findViewById(R.id.editTextRSFeedback); editTextRSFeedback.setTypeface(Fonts.latoRegular(this));
+        buttonRSSubmitFeedback = (Button) findViewById(R.id.buttonRSSubmitFeedback); buttonRSSubmitFeedback.setTypeface(Fonts.latoRegular(this));
+        buttonRSSkipFeedback = (Button) findViewById(R.id.buttonRSSkipFeedback); buttonRSSkipFeedback.setTypeface(Fonts.latoRegular(this));
+        textViewRSScroll = (TextView) findViewById(R.id.textViewRSScroll);
+
+        textViewRSWhatImprove.setVisibility(View.GONE);
+        gridViewRSFeedbackReasons.setVisibility(View.GONE);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+        layoutParams.height = (int)(ASSL.Yscale() * 200);
+        editTextRSFeedback.setLayoutParams(layoutParams);
+        textViewRSOtherError.setText("");
+
+        /*scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
 
         textViewEndRideDriverName = (TextView) findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.latoRegular(this));
         textViewEndRideDriverCarNumber = (TextView) findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.latoRegular(this));
@@ -1111,7 +1166,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((TextView) findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		((TextView) findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEndRideFareFactor)).setTypeface(Fonts.latoRegular(this));*/
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -1579,73 +1634,73 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //        });
 
 		assigningLayout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-			}
-		});
+            }
+        });
 
 		initialCancelRideBtn.setOnTouchListener(new View.OnTouchListener() {
 
-			Handler handler = new Handler();
-			Runnable runnable = new Runnable() {
-				@Override
-				public void run() {
-					if (cancelTouchHold) {
-						if ("".equalsIgnoreCase(Data.cSessionId)) {
-							if (checkForGPSAccuracyTimer != null) {
-								if (checkForGPSAccuracyTimer.isRunning) {
-									checkForGPSAccuracyTimer.stopTimer();
-									customerUIBackToInitialAfterCancel();
-								}
-							}
-						} else {
-							textViewFindingDriver.setText("Cancelling");
-							progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
-							progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
-							progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
-							progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
-							cancelCustomerRequestAsync(HomeActivity.this);
-							FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
-						}
-						cancelTouchHold = false;
-					}
-				}
-			};
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (cancelTouchHold) {
+                        if ("".equalsIgnoreCase(Data.cSessionId)) {
+                            if (checkForGPSAccuracyTimer != null) {
+                                if (checkForGPSAccuracyTimer.isRunning) {
+                                    checkForGPSAccuracyTimer.stopTimer();
+                                    customerUIBackToInitialAfterCancel();
+                                }
+                            }
+                        } else {
+                            textViewFindingDriver.setText("Cancelling");
+                            progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
+                            progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
+                            progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
+                            progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
+                            cancelCustomerRequestAsync(HomeActivity.this);
+                            FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
+                        }
+                        cancelTouchHold = false;
+                    }
+                }
+            };
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				int action = event.getAction();
-				switch (action) {
-					case MotionEvent.ACTION_DOWN:
-						textViewFindingDriver.setText("HOLD TO CANCEL");
-						progressBarFindingDriver.setSmoothProgressDrawableSpeed(0.5f);
-						progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(false);
-						progressBarFindingDriver.setSmoothProgressDrawableReversed(false);
-						progressBarFindingDriver.progressiveStart();
-						progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(0.9f);
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        textViewFindingDriver.setText("HOLD TO CANCEL");
+                        progressBarFindingDriver.setSmoothProgressDrawableSpeed(0.5f);
+                        progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(false);
+                        progressBarFindingDriver.setSmoothProgressDrawableReversed(false);
+                        progressBarFindingDriver.progressiveStart();
+                        progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(0.9f);
 
-						handler.postDelayed(runnable, 2000);
-						cancelTouchHold = true;
+                        handler.postDelayed(runnable, 2000);
+                        cancelTouchHold = true;
 
-						break;
+                        break;
 
-					case MotionEvent.ACTION_UP:
-						if (cancelTouchHold) {
-							cancelTouchHold = false;
-							textViewFindingDriver.setText("Finding a Jugnoo driver...");
-							progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
-							progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
-							progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
-							progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
+                    case MotionEvent.ACTION_UP:
+                        if (cancelTouchHold) {
+                            cancelTouchHold = false;
+                            textViewFindingDriver.setText("Finding a Jugnoo driver...");
+                            progressBarFindingDriver.setSmoothProgressDrawableSpeed(2.0f);
+                            progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(1.5f);
+                            progressBarFindingDriver.setSmoothProgressDrawableMirrorMode(true);
+                            progressBarFindingDriver.setSmoothProgressDrawableReversed(true);
 
-							handler.removeCallbacks(runnable);
-						}
-						break;
-				}
-				return true;
-			}
-		});
+                            handler.removeCallbacks(runnable);
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
 
 
 
@@ -1763,11 +1818,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 		imageViewFinalDropLocationCross.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				editTextFinalDropLocation.setText("");
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                editTextFinalDropLocation.setText("");
+            }
+        });
 
 
         // End ride review layout events
@@ -1779,20 +1834,153 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+        editTextRSFeedback.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        buttonEndRideOk.setOnClickListener(new OnClickListener() {
+            }
 
             @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
+                        textViewRSOtherError.setText("");
+                    }
+                }
+            }
+        });
+
+        ratingBarRSFeedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (Data.feedbackReasons.size() > 0) {
+                    if (rating > 0 && rating <= 3) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewRSWhatImprove.setVisibility(View.VISIBLE);
+                                gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+
+                                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+                                layoutParams.height = (int) (ASSL.Yscale() * 150);
+                                editTextRSFeedback.setLayoutParams(layoutParams);
+                            }
+                        }, 205);
+                    } else {
+                        textViewRSWhatImprove.setVisibility(View.GONE);
+                        gridViewRSFeedbackReasons.setVisibility(View.GONE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+                        layoutParams.height = (int) (ASSL.Yscale() * 200);
+                        editTextRSFeedback.setLayoutParams(layoutParams);
+                    }
+                }
+            }
+        });
+
+        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutRideSummary, textViewRSScroll,
+            new KeyboardLayoutListener.KeyBoardStateHandler() {
+                @Override
+                public void keyboardOpened() {
+                    editTextRSFeedback.setHint("");
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollViewRideSummary.smoothScrollTo(0, editTextRSFeedback.getTop() - ((int) (ASSL.Yscale() * 15)));
+                        }
+                    }, 200);
+                }
+
+                @Override
+                public void keyBoardClosed() {
+                    editTextRSFeedback.setHint(getString(R.string.please_share_your_feedback));
+                }
+            });
+        linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+        keyboardLayoutListener.setResizeTextView(false);
+
+        buttonRSSubmitFeedback.setOnClickListener(new OnClickListener() {
+            @Override
             public void onClick(View v) {
-                GCMIntentService.clearNotifications(HomeActivity.this);
-                if (userMode == UserMode.PASSENGER) {
-                    Intent intent = new Intent(HomeActivity.this, FeedbackActivity.class);
-                    intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.AFTER_RIDE.getOrdinal());
+                String feedbackStr = editTextRSFeedback.getText().toString().trim();
+                int rating = (int) ratingBarRSFeedback.getRating();
+                rating = Math.abs(rating);
+                Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
+
+                String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
+                boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
+
+                if (0 == rating) {
+                    DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
+                    FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                } else {
+                    if(Data.feedbackReasons.size() > 0 && rating <= 3){
+                        if(feedbackReasons.length() > 0){
+                            if(isLastReasonSelected && feedbackStr.length() == 0){
+                                textViewRSOtherError.setText(getString(R.string.star_required));
+                                return;
+                            }
+                        }
+                        else{
+                            DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.please_provide_reason_for_rating));
+                            return;
+                        }
+                    }
+
+                    if (feedbackStr.length() > 300) {
+                        editTextRSFeedback.requestFocus();
+                        editTextRSFeedback.setError(getString(R.string.review_must_be_in));
+                    } else {
+                        submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
+                            rating, feedbackStr, feedbackReasons);
+                        FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
+                        if (feedbackStr.length() > 0) {
+                            FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                        }
+                    }
+                }
+            }
+        });
+
+        buttonRSSkipFeedback.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                skipFeedbackForCustomerAsync(HomeActivity.this, Data.cEngagementId);
+                FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
+            }
+        });
+
+        linearLayoutRSViewInvoice.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Data.endRideData != null) {
+                    Intent intent = new Intent(HomeActivity.this, RideSummaryActivity.class);
+                    intent.putExtra(KEY_END_RIDE_DATA, 1);
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
             }
         });
+
+        /*buttonEndRideOk.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                GCMIntentService.clearNotifications(HomeActivity.this);
+                *//*if (userMode == UserMode.PASSENGER) {
+                    Intent intent = new Intent(HomeActivity.this, FeedbackActivity.class);
+                    intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.AFTER_RIDE.getOrdinal());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }*//*
+
+                DialogPopup.alertPopupFromPoint(HomeActivity.this, "title", "message");
+            }
+        });*/
 
 
 
@@ -2443,11 +2631,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
 //                        genieLayout.setVisibility(View.GONE);
-
-                        scrollViewEndRide.scrollTo(0, 0);
-
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
+
+                        scrollViewRideSummary.scrollTo(0, 0);
+                        ratingBarRSFeedback.setRating(0f);
+
+                        textViewRSTotalFareValue.setText(String.format(getString(R.string.ruppes_value_format),
+                            "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
+                        textViewRSCashPaidValue.setText(String.format(getString(R.string.ruppes_value_format),
+                            ""+Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
+
+                        Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
+
+                        /*scrollViewEndRide.scrollTo(0, 0);
+
 
                         textViewEndRideDriverName.setText(Data.assignedDriverInfo.name);
                         textViewEndRideDriverCarNumber.setText(Data.assignedDriverInfo.carNumber);
@@ -2545,7 +2743,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						else{
 							linearLayoutEndRideWaitTime.setVisibility(View.GONE);
 							textViewEndRideTime.setText("Time");
-						}
+						}*/
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -3015,6 +3213,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 initiateTimersForStates(mode);
                 dismissReferAllDialog(mode);
+
+
+
+//                endRideReviewRl.setVisibility(View.VISIBLE);
 
             }
         } catch (Exception e) {
@@ -5993,6 +6195,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+                Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
+
 				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
                 FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED, true);
 
@@ -6845,6 +7049,108 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
+
+
+
+    private void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
+        try {
+            final RequestParams params = new RequestParams();
+            params.put("access_token", Data.userData.accessToken);
+            params.put("engagement_id", engagementId);
+
+            final String url = Config.getServerUrl() + "/skip_rating_by_customer";
+
+            try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
+
+            AsyncHttpClient client = Data.getClient();
+            client.post(url, params,
+                new CustomAsyncHttpResponseHandler() {
+
+                    @Override
+                    public void onFailure(Throwable arg3) {
+                        Log.e("request fail", arg3.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.i("Server response", "response = " + response);
+
+                    }
+                });
+
+            Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+
+            HomeActivity.feedbackSkipped = true;
+            HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId,
+                                            final int givenRating, String feedbackText, String feedbackReasons) {
+        try {
+            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+                DialogPopup.showLoadingDialog(activity, "Loading...");
+
+                RequestParams params = new RequestParams();
+
+                params.put("access_token", Data.userData.accessToken);
+                params.put("given_rating", "" + givenRating);
+                params.put("engagement_id", engagementId);
+                params.put("driver_id", ratingReceiverId);
+                params.put("feedback", feedbackText);
+                params.put("feedback_reasons", feedbackReasons);
+
+                Log.i("params", "=" + params);
+
+                AsyncHttpClient client = Data.getClient();
+                client.post(Config.getServerUrl() + "/rate_the_driver", params,
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
+
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                            DialogPopup.dismissLoadingDialog();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        }
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Server response", "response = " + response);
+                            try {
+                                jObj = new JSONObject(response);
+                                int flag = jObj.getInt("flag");
+                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                    if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                        Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
+                                        if (HomeActivity.appInterruptHandler != null) {
+                                            HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating, false);
+                                        }
+                                        try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
+                                    } else {
+                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    }
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+                            DialogPopup.dismissLoadingDialog();
+                        }
+                    });
+            } else {
+                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

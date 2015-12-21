@@ -62,7 +62,7 @@
 
 
 
-
+    <!-- payment option dialog dimensions -->
     <dimen name="payment_option_dialog_margin">70px</dimen>
     <dimen name="payment_option_dialog_title_text_size">28px</dimen>
     <dimen name="payment_option_dialog_title_margin_lr">25px</dimen>
@@ -79,11 +79,19 @@
     <dimen name="payment_option_paytm_balance_text_right_margin">10px</dimen>
     <dimen name="payment_option_paytm_balance_text_text_size">30px</dimen>
 
+
     <dimen name="line_width">2px</dimen>
 
     <dimen name="dialog_border_width">2px</dimen>
+    <dimen name="button_width">648px</dimen>
+    <dimen name="button_height">80px</dimen>
 
 
+
+
+    <!-- end ride screen dimensions -->
+    <dimen name="end_ride_fare_value_text_size">44px</dimen>
+    <dimen name="end_ride_fare_title_text_size">26px</dimen>
 
 
 

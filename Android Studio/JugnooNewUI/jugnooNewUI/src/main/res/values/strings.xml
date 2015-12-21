@@ -246,6 +246,21 @@
 	<!-- Account Settings Strings -->
 	<string name="add_home">Add Home</string>
 	<string name="add_work">Add Work</string>
+	
+	<!-- Ride Summary New Strings -->
+	<string name="total_fare">Total Fare</string>
+	<string name="Cash_to_be_paid">Cash to be paid</string>
+	<string name="view_invoice">View Invoice</string>
+	<string name="rate_your_ride">RATE YOUR RIDE</string>
+	<string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
+	<string name="skip">Skip</string>
+	<string name="star_required">* Required</string>
+	<string name="please_share_your_feedback">Please share your valuable feedback</string>
+	<string name="what_could_we_improve">What could we improve?</string>
+	<string name="ruppes_value_format">\u20B9 %s</string>
+	<string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
+	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
+	<string name="review_must_be_in">Review must be in 300 letters.</string>
 
 	
 	
