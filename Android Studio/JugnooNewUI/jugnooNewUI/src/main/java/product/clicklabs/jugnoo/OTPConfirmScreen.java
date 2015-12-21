@@ -421,7 +421,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
     public static boolean checkIfRegisterDataNull(Activity activity){
         try {
-            if(emailRegisterData == null && facebookRegisterData == null){
+            if(emailRegisterData == null && facebookRegisterData == null && googleRegisterData == null){
                 activity.startActivity(new Intent(activity, SplashNewActivity.class));
                 activity.finish();
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -683,6 +683,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
 				params.put("user_google_mail", Data.googleSignInAccount.getEmail());
 				params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
+				params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 				params.put("device_token", Data.deviceToken);
 				params.put("device_type", Data.DEVICE_TYPE);

@@ -810,6 +810,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
 			params.put("user_google_mail", Data.googleSignInAccount.getEmail());
 			params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
+			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 			params.put("device_token", Data.deviceToken);
 			params.put("device_type", Data.DEVICE_TYPE);
@@ -967,7 +968,6 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
             if(RESULT_OK == resultCode){
                 if(requestCode == GOOGLE_SIGNIN_REQ_CODE){
                     Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
-                    Toast.makeText(this, Data.googleSignInAccount.getEmail(), Toast.LENGTH_SHORT).show();
 					sendGoogleLoginValues(this);
                 }
                 else{

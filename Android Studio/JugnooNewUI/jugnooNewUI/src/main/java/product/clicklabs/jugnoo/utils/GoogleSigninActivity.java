@@ -13,6 +13,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import product.clicklabs.jugnoo.R;
+
 import static product.clicklabs.jugnoo.Constants.KEY_ERROR;
 import static product.clicklabs.jugnoo.Constants.KEY_GOOGLE_PARCEL;
 
@@ -34,6 +36,7 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestEmail()
 				.requestId()
+				.requestIdToken(getString(R.string.google_server_client_id))
 				.build();
 
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -69,6 +72,10 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 		if (result.isSuccess()) {
 			// Signed in successfully, show authenticated UI.
 			GoogleSignInAccount acct = result.getSignInAccount();
+
+			String idToken = acct.getIdToken();
+			Log.e(TAG, "idToken="+idToken);
+
 			Intent intent = new Intent();
 			intent.putExtra(KEY_GOOGLE_PARCEL, acct);
 			setResult(RESULT_OK, intent);

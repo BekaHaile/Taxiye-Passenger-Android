@@ -994,6 +994,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 			params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
 			params.put("user_google_mail", Data.googleSignInAccount.getEmail());
 			params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
+            params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 			params.put("phone_no", phoneNo);
 			params.put("password", password);
