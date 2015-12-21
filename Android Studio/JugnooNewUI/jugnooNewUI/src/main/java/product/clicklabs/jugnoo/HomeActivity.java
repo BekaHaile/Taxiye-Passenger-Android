@@ -2638,7 +2638,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         scrollViewRideSummary.scrollTo(0, 0);
                         ratingBarRSFeedback.setRating(0f);
-
+                        editTextRSFeedback.setText("");
+                        for(int i=0; i<Data.feedbackReasons.size(); i++){
+                            Data.feedbackReasons.get(i).checked = false;
+                        }
+                        feedbackReasonsAdapter.notifyDataSetChanged();
                         textViewRSTotalFareValue.setText(String.format(getString(R.string.ruppes_value_format),
                             "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
                         textViewRSCashPaidValue.setText(String.format(getString(R.string.ruppes_value_format),
