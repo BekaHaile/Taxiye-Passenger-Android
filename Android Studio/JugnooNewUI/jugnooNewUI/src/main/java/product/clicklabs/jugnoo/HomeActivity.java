@@ -2634,10 +2634,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
 
+                        scrollViewRideSummary.scrollTo(0, 0);
+                        ratingBarRSFeedback.setRating(0f);
+
                         textViewRSTotalFareValue.setText(String.format(getString(R.string.ruppes_value_format),
-                            "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.fare)));
+                            "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
                         textViewRSCashPaidValue.setText(String.format(getString(R.string.ruppes_value_format),
                             ""+Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
+
+                        Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
 
                         /*scrollViewEndRide.scrollTo(0, 0);
 
