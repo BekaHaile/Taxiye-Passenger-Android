@@ -1877,6 +1877,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
                         layoutParams.height = (int) (ASSL.Yscale() * 200);
                         editTextRSFeedback.setLayoutParams(layoutParams);
+                        textViewRSOtherError.setText("");
                     }
                 }
             }
@@ -3618,7 +3619,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 try {
                     if (activityResumed) {
-                        if (!feedbackSkipped && !promoOpened && !placeAdded) {
+                        if (!feedbackSkipped && !promoOpened && !placeAdded
+                            && PassengerScreenMode.P_RIDE_END != passengerScreenMode) {
                             callAndHandleStateRestoreAPI(false);
                         }
                         initiateTimersForStates(passengerScreenMode);
@@ -6519,7 +6521,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if (showDialogs) {
                                         DialogPopup.dismissLoadingDialog();
                                     }
-									if(!promoOpened) {
+									if(!promoOpened && !placeAdded) {
 										startUIAfterGettingUserStatus();
 									}
                                 } catch (Exception e) {

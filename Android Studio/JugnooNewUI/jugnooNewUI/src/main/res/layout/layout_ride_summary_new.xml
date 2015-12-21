@@ -197,7 +197,8 @@
             android:layout_width="wrap_content"
             android:layout_height="32px"
             android:layout_marginLeft="60px"
-            android:layout_marginTop="10px">
+            android:layout_marginTop="10px"
+            android:animateLayoutChanges="true">
         <TextView
             android:id="@+id/textViewRSOtherError"
             android:layout_width="wrap_content"
