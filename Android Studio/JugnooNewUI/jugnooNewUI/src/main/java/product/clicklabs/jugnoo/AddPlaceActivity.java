@@ -216,6 +216,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                 buttonRemove.setVisibility(View.VISIBLE);
             }else {
                 buttonRemove.setVisibility(View.GONE);
+                textViewTitle.setText("ADD "+placeName);
             }
         }
     }
