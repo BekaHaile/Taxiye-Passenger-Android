@@ -29,7 +29,7 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
+import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
@@ -52,18 +53,19 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryEventNames{
+public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
 
     RelativeLayout topRl;
 	TextView textViewTitle;
 	ImageView imageViewBack;
-	
-	Button buttonFacebookLogin;
+
+    ImageView imageViewFacebookLogin, imageViewGoogleLogin;
 	
 	TextView orText;
 	
@@ -87,8 +89,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 
 
 	
-	boolean loginDataFetched = false, facebookRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
-	int otpFlag = 0; 
+	boolean loginDataFetched = false, facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
 	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "";
 
 
@@ -99,13 +100,16 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 	String enteredEmail = "";
 
 	public static boolean phoneNoLogin = false;
+
+    private static final int GOOGLE_SIGNIN_REQ_CODE = 1124;
 	
 	
 	public void resetFlags(){
 		loginDataFetched = false;
 		facebookRegister = false;
+		googleRegister = false;
 		sendToOtpScreen = false;
-		otpFlag = 0;
+		RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 		phoneNoOfUnverifiedAccount = "";
 		otpErrorMsg = "";
 		notRegisteredMsg = "";
@@ -142,8 +146,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
         topRl = (RelativeLayout) findViewById(R.id.topRl);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		
-		buttonFacebookLogin = (Button) findViewById(R.id.buttonFacebookLogin); buttonFacebookLogin.setTypeface(Fonts.latoRegular(this));
+
+        imageViewFacebookLogin = (ImageView) findViewById(R.id.imageViewFacebookLogin);
+        imageViewGoogleLogin = (ImageView) findViewById(R.id.imageViewGoogleLogin);
 
 		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Fonts.latoRegular(this));
 		
@@ -170,9 +175,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		
 		if (emails == null) {																			// if emails from database are not null
 			emails = new String[]{};
-			adapter = new ArrayAdapter<String>(this, R.layout.dropdown_textview, emails);
+			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
 		} else {																						// else reinitializing emails to be empty
-			adapter = new ArrayAdapter<String>(this, R.layout.dropdown_textview, emails);
+			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
 		}
 		
 		adapter.setDropDownViewResource(R.layout.dropdown_textview);					// setting email array to EditText DropDown list
@@ -182,88 +187,88 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		
 		buttonEmailLogin.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
-                String email = editTextEmail.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
-                if ("".equalsIgnoreCase(email)) {
-                    editTextEmail.requestFocus();
-                    editTextEmail.setError("Please enter email or phone number");
-                } else {
-                    if ("".equalsIgnoreCase(password)) {
-                        editTextPassword.requestFocus();
-                        editTextPassword.setError("Please enter password");
-                    } else {
-                        boolean onlyDigits = Utils.checkIfOnlyDigits(email);
-                        if (onlyDigits) {
-                            email = Utils.retrievePhoneNumberTenChars(email);
-                            if (!Utils.validPhoneNumber(email)) {
-                                editTextEmail.requestFocus();
-                                editTextEmail.setError("Please enter valid phone number");
-                            } else {
-                                email = "+91" + email;
-                                sendLoginValues(SplashLogin.this, email, password, true);
+			@Override
+			public void onClick(View v) {
+				Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+				String email = editTextEmail.getText().toString().trim();
+				String password = editTextPassword.getText().toString().trim();
+				if ("".equalsIgnoreCase(email)) {
+					editTextEmail.requestFocus();
+					editTextEmail.setError("Please enter email or phone number");
+				} else {
+					if ("".equalsIgnoreCase(password)) {
+						editTextPassword.requestFocus();
+						editTextPassword.setError("Please enter password");
+					} else {
+						boolean onlyDigits = Utils.checkIfOnlyDigits(email);
+						if (onlyDigits) {
+							email = Utils.retrievePhoneNumberTenChars(email);
+							if (!Utils.validPhoneNumber(email)) {
+								editTextEmail.requestFocus();
+								editTextEmail.setError("Please enter valid phone number");
+							} else {
+								email = "+91" + email;
+								sendLoginValues(SplashLogin.this, email, password, true);
 								phoneNoLogin = true;
-                            }
-                        } else {
-                            if (isEmailValid(email)) {
-                                enteredEmail = email;
-                                sendLoginValues(SplashLogin.this, email, password, false);
+							}
+						} else {
+							if (isEmailValid(email)) {
+								enteredEmail = email;
+								sendLoginValues(SplashLogin.this, email, password, false);
 								phoneNoLogin = false;
-                            } else {
-                                editTextEmail.requestFocus();
-                                editTextEmail.setError("Please enter valid email");
-                            }
-                        }
+							} else {
+								editTextEmail.requestFocus();
+								editTextEmail.setError("Please enter valid email");
+							}
+						}
 
-                        FlurryEventLogger.event(LOGIN_VIA_EMAIL);
-                    }
-                }
-            }
-        });
+						FlurryEventLogger.event(LOGIN_VIA_EMAIL);
+					}
+				}
+			}
+		});
 
 
         editTextEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+			}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
+			}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (Utils.checkIfOnlyDigits(s.toString())) {
-                    InputFilter[] fArray = new InputFilter[1];
-                    fArray[0] = new InputFilter.LengthFilter(10);
-                    editTextEmail.setFilters(fArray);
-                } else {
-                    InputFilter[] fArray = new InputFilter[1];
-                    fArray[0] = new InputFilter.LengthFilter(1000);
-                    editTextEmail.setFilters(fArray);
-                }
-            }
-        });
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (Utils.checkIfOnlyDigits(s.toString())) {
+					InputFilter[] fArray = new InputFilter[1];
+					fArray[0] = new InputFilter.LengthFilter(10);
+					editTextEmail.setFilters(fArray);
+				} else {
+					InputFilter[] fArray = new InputFilter[1];
+					fArray[0] = new InputFilter.LengthFilter(1000);
+					editTextEmail.setFilters(fArray);
+				}
+			}
+		});
 		
 		
 		
 		
 		textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
-                ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
-                startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                finish();
-                FlurryEventLogger.event(FORGOT_PASSWORD);
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+				ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
+				startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				finish();
+				FlurryEventLogger.event(FORGOT_PASSWORD);
+			}
+		});
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -283,23 +288,23 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 
         editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
 
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        editTextPassword.requestFocus();
-                        break;
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				int result = actionId & EditorInfo.IME_MASK_ACTION;
+				switch (result) {
+					case EditorInfo.IME_ACTION_DONE:
+						editTextPassword.requestFocus();
+						break;
 
-                    case EditorInfo.IME_ACTION_NEXT:
-                        editTextPassword.requestFocus();
-                        break;
+					case EditorInfo.IME_ACTION_NEXT:
+						editTextPassword.requestFocus();
+						break;
 
-                    default:
-                }
-                return true;
-            }
-        });
+					default:
+				}
+				return true;
+			}
+		});
 
 		editTextPassword.setOnEditorActionListener(new OnEditorActionListener() {
 
@@ -319,18 +324,27 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                 return true;
             }
         });
-		
-		
-		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
+
+
+        imageViewFacebookLogin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
+				Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+				loginDataFetched = false;
+				facebookLoginHelper.openFacebookSession();
+			}
+		});
+
+        imageViewGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
+                FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
                 Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
                 loginDataFetched = false;
-                facebookLoginHelper.openFacebookSession();
+                startActivityForResult(new Intent(SplashLogin.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
             }
         });
-
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -368,7 +382,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		
 		
 		try {
-			if(getIntent().hasExtra("back_from_otp") && !RegisterScreen.facebookLogin){
+			if(getIntent().hasExtra("back_from_otp") && RegisterScreen.RegisterationType.EMAIL == RegisterScreen.registerationType){
 				if(phoneNoLogin) {
 					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
 				}
@@ -484,7 +498,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			Data.locationFetcher = new LocationFetcher(SplashLogin.this, 1000, 1);
 		}
 
-		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		int resp = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
 		if(resp != ConnectionResult.SUCCESS){
 			Log.e("Google Play Service Error ","="+resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashLogin.this);
@@ -580,8 +594,6 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 
 			Log.i("params", "="+params);
 			
-			String url = Config.getServerUrl() + "/login_using_email_or_phone_no";
-
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/login_using_email_or_phone_no", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -615,7 +627,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 									}
 									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
                                         if(isPhoneNumber){
-                                            enteredEmail = jObj.getString("user_email");;
+                                            enteredEmail = jObj.getString("user_email");
                                         }
                                         else{
                                             enteredEmail = emailId;
@@ -624,7 +636,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                                         accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 										otpErrorMsg = jObj.getString("error");
-										otpFlag = 0;
+										RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 										sendToOtpScreen = true;
 									}
 									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
@@ -704,9 +716,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 
 
 			Log.i("params", ""+params);
-			
-			String url = Config.getServerUrl() + "/login_using_facebook";
-		
+
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/login_using_facebook", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -743,7 +753,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                                         accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 										otpErrorMsg = jObj.getString("error");
-										otpFlag = 1;
+										RegisterScreen.registerationType = RegisterScreen.RegisterationType.FACEBOOK;
 										sendToOtpScreen = true;
 									}
 									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
@@ -777,7 +787,121 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		}
 
 	}
-	
+
+
+
+
+	/**
+	 * ASync for google login from server
+	 */
+	public void sendGoogleLoginValues(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			resetFlags();
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			RequestParams params = new RequestParams();
+
+			if(Data.locationFetcher != null){
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+			params.put("user_google_id", Data.googleSignInAccount.getId());
+			params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
+			params.put("user_google_mail", Data.googleSignInAccount.getEmail());
+			params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
+			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
+
+			params.put("device_token", Data.deviceToken);
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", ""+Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", ""+Data.loginLatitude);
+			params.put("longitude", ""+Data.loginLongitude);
+			params.put("client_id", Config.getClientId());
+
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			} else{
+				params.put("device_rooted", "0");
+			}
+
+
+			Log.i("params", ""+params);
+
+			AsyncHttpClient client = Data.getClient();
+			client.post(Config.getServerUrl() + "/login_using_google", params,
+					new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+
+							try {
+								jObj = new JSONObject(response);
+
+								int flag = jObj.getInt("flag");
+
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										facebookRegister = true;
+										notRegisteredMsg = error;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										DialogPopup.alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+										accessToken = jObj.getString("access_token");
+										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+										otpErrorMsg = jObj.getString("error");
+										RegisterScreen.registerationType = RegisterScreen.RegisterationType.GOOGLE;
+										sendToOtpScreen = true;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
+											loginDataFetched = true;
+
+											Database.getInstance(SplashLogin.this).insertEmail(Data.googleSignInAccount.getEmail());
+										}
+									}
+									else{
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+								else{
+									DialogPopup.dismissLoadingDialog();
+								}
+
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
+							}
+
+						}
+					});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
 	
 	
 	
@@ -792,21 +916,27 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			@Override
 			public void onClick(View v) {
 				DialogPopup.dismissAlertPopup();
-				if(0 == otpFlag){
-					RegisterScreen.facebookLogin = false;
+				OTPConfirmScreen.intentFromRegister = false;
+				if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+					OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
+							Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
+							Data.facebookUserData.accessToken,
+							Data.facebookUserData.userEmail,
+							Data.facebookUserData.userName,
+							phoneNoOfUnverifiedAccount, "", "", accessToken);
+				}
+				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+					OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
+							Data.googleSignInAccount.getDisplayName(),
+							Data.googleSignInAccount.getEmail(),
+							Data.googleSignInAccount.getPhotoUrl().toString(),
+							phoneNoOfUnverifiedAccount, "", "", accessToken);
+				}
+				else{
 					OTPConfirmScreen.intentFromRegister = false;
 					OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "", accessToken);
 				}
-				else if(1 == otpFlag){
-					RegisterScreen.facebookLogin = true;
-					OTPConfirmScreen.intentFromRegister = false;
-					OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
-                        Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
-                        Data.facebookUserData.accessToken,
-                        Data.facebookUserData.userEmail,
-                        Data.facebookUserData.userName,
-                        phoneNoOfUnverifiedAccount, "", "", accessToken);
-				}
+
 				Intent intent = new Intent(SplashLogin.this, OTPConfirmScreen.class);
 				intent.putExtra("show_timer", 0);
 				startActivity(intent);
@@ -817,25 +947,36 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 	}
 	
 	
-	public void sendIntentToRegisterScreen(){
+	public void sendIntentToRegisterScreen(final RegisterScreen.RegisterationType registerationType){
 		DialogPopup.alertPopupWithListener(this, "", notRegisteredMsg, new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				RegisterScreen.facebookLogin = true;
+				RegisterScreen.registerationType = registerationType;
 				startActivity(new Intent(SplashLogin.this, RegisterScreen.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 	}
-	
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
             callbackManager.onActivityResult(requestCode, resultCode, data);
+            if(RESULT_OK == resultCode){
+                if(requestCode == GOOGLE_SIGNIN_REQ_CODE){
+                    Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
+					sendGoogleLoginValues(this);
+                }
+                else{
+                    callbackManager.onActivityResult(requestCode, resultCode, data);
+                }
+            }
+            else{
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -864,21 +1005,18 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		}
 		else if(hasFocus && facebookRegister){
 			facebookRegister = false;
-			sendIntentToRegisterScreen();
+			sendIntentToRegisterScreen(RegisterScreen.RegisterationType.FACEBOOK);
+		}
+		else if(hasFocus && googleRegister){
+			googleRegister = false;
+			sendIntentToRegisterScreen(RegisterScreen.RegisterationType.GOOGLE);
 		}
 		else if(hasFocus && sendToOtpScreen){
 			sendIntentToOtpScreen();
 		}
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	@Override

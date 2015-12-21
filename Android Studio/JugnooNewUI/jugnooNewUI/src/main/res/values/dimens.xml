@@ -88,6 +88,10 @@
 
 
 
+    <dimen name="social_button_width">282px</dimen>
+    <dimen name="social_button_height">86px</dimen>
+    <dimen name="social_button_google_left_margin">60px</dimen>
+
 
     <!-- end ride screen dimensions -->
     <dimen name="end_ride_fare_value_text_size">44px</dimen>

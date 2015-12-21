@@ -99,11 +99,16 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
                 String email = "";
                 String phone = "";
 
-                if(RegisterScreen.facebookLogin) {
+                if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
                     name = OTPConfirmScreen.facebookRegisterData.fbName;
                     email = OTPConfirmScreen.facebookRegisterData.fbUserEmail;
                     phone = OTPConfirmScreen.facebookRegisterData.phoneNo;
                 }
+				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+					name = OTPConfirmScreen.googleRegisterData.name;
+					email = OTPConfirmScreen.googleRegisterData.email;
+					phone = OTPConfirmScreen.googleRegisterData.phoneNo;
+				}
                 else{
                     name = OTPConfirmScreen.emailRegisterData.name;
                     email = OTPConfirmScreen.emailRegisterData.emailId;
@@ -117,17 +122,22 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 
 
         try{
-            if(RegisterScreen.facebookLogin) {
+			if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
                 textViewRegisterNameValue.setText(OTPConfirmScreen.facebookRegisterData.fbName);
                 textViewRegisterEmailValue.setText(OTPConfirmScreen.facebookRegisterData.fbUserEmail);
                 textViewRegisterPhoneValue.setText(OTPConfirmScreen.facebookRegisterData.phoneNo);
             }
+			else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				textViewRegisterNameValue.setText(OTPConfirmScreen.googleRegisterData.name);
+				textViewRegisterEmailValue.setText(OTPConfirmScreen.googleRegisterData.email);
+				textViewRegisterPhoneValue.setText(OTPConfirmScreen.googleRegisterData.phoneNo);
+			}
             else{
                 textViewRegisterNameValue.setText(OTPConfirmScreen.emailRegisterData.name);
                 textViewRegisterEmailValue.setText(OTPConfirmScreen.emailRegisterData.emailId);
                 textViewRegisterPhoneValue.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
             }
-            editTextMessage.setHint("You have already created "+Data.previousAccountInfoList.size()+" accounts from this device. Please explain the reason for creating a new account.");
+            editTextMessage.setHint("You have already created " + Data.previousAccountInfoList.size() + " accounts from this device. Please explain the reason for creating a new account.");
         } catch(Exception e){
             e.printStackTrace();
             performBackPressed();

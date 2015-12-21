@@ -8,6 +8,7 @@ public interface Constants {
 	String KEY_FLAG = "flag";
 	String KEY_MESSAGE = "message";
 	String KEY_TITLE = "title";
+	String KEY_ERROR = "error";
 
 	String KEY_ACCESS_TOKEN = "access_token";
 	String KEY_ENGAGEMENT_ID = "engagement_id";
@@ -17,5 +18,10 @@ public interface Constants {
 
 	String KEY_END_RIDE_DATA = "end_ride_data";
 	String KEY_APP_MONITORING_TIME_TO_SAVE = "app_monitoring_time";
+	String KEY_GOOGLE_NAME = "google_name";
+	String KEY_GOOGLE_EMAIL = "google_email";
+	String KEY_GOOGLE_ID = "google_id";
+	String KEY_GOOGLE_IMAGE = "google_image";
+	String KEY_GOOGLE_PARCEL = "google_parcel";
 
 }
