@@ -415,6 +415,12 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name="product.clicklabs.jugnoo.FetchAppDataService"
+            android:enabled="true"
+            >
+        </service>
+
 
 
 

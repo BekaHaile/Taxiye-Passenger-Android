@@ -16,15 +16,21 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by aneeshbansal on 16/12/15.
  */
-public class FetchAppDataService extends IntentService {
+public class FetchAppDataService extends IntentService implements Constants {
+
+	public FetchAppDataService(){
+		this("FetchAppDataService");
+	}
 	/**
 	 * Creates an IntentService.  Invoked by your subclass's constructor.
 	 *
@@ -37,49 +43,49 @@ public class FetchAppDataService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 
-		if(intent.hasExtra("access_token")){
-			String accessToken = intent.getStringExtra("access_token");
-			fetchAppList(this, accessToken);
+		if (intent.hasExtra(KEY_ACCESS_TOKEN)) {
+			String accessToken = intent.getStringExtra(KEY_ACCESS_TOKEN);
+//			long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (System.currentTimeMillis() + (24 * 60 * 60 * 1000)));
+			long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (0));
+			fetchAppList(this, accessToken, timeToSave);
 		}
 
 	}
 
-	public void fetchAppList(final Context context, final String accessToken) {
+	public void fetchAppList(final Context context, final String accessToken, final long timeToSave) {
 		try {
 			if (AppStatus.getInstance(context).isOnline(context)) {
 
 				RequestParams params = new RequestParams();
-				params.put("access_token", accessToken);
+				params.put(KEY_ACCESS_TOKEN, accessToken);
 				SyncHttpClient client = Data.getSyncClient();
-				client.post(Config.getServerUrl() + "/fetch_application_list", params,
+				client.post(Config.getServerUrl() + "/get_active_app_list", params,
 						new CustomAsyncHttpResponseHandler() {
 
 							@Override
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
 							}
+
 							@Override
 							public void onSuccess(String response) {
-
 								try {
 									JSONObject jObj = new JSONObject(response);
 									int flag = jObj.getInt("flag");
-
-									if (ApiResponseFlags.APP_INSTALLED_INFO.getOrdinal() == flag) {
-
+									if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 										ArrayList<AppPackage> appPackageList = new ArrayList<>();
-										JSONArray jsonArray = jObj.getJSONArray("application");
+										JSONArray jsonArray = jObj.getJSONArray("app_list");
 										for (int i = 0; i < jsonArray.length(); i++) {
 											JSONObject jsonObject = jsonArray.getJSONObject(i);
-											AppPackage appPackage = new AppPackage(jsonObject.getString("package_name"));
+											AppPackage appPackage = new AppPackage(jsonObject.getInt("app_id"),
+													jsonObject.getString("package_name"));
 											appPackageList.add(appPackage);
 										}
 										Utils.checkAppsArrayInstall(context, appPackageList);
 										Gson gson = new Gson();
 										String arr = gson.toJson(appPackageList);
-										Log.e("appPackageList", "="+arr);
-										returnAppList(context, accessToken, arr);
-
+										Log.e("appPackageList", "=" + arr);
+										returnAppList(context, accessToken, arr, timeToSave);
 									}
 								} catch (Exception e) {
 									e.printStackTrace();
@@ -93,37 +99,40 @@ public class FetchAppDataService extends IntentService {
 	}
 
 
-	public void returnAppList(final Context context, String accessToken, String appPackagesStr) {
+	public void returnAppList(final Context context, String accessToken, String appPackagesStr, final long timeToSave) {
 		try {
 			if (AppStatus.getInstance(context).isOnline(context)) {
 
 				RequestParams params = new RequestParams();
 				params.put("access_token", accessToken);
-				params.put("applications", appPackagesStr);
+				params.put("app_data", appPackagesStr);
+				Log.i("112", accessToken);
+				Log.i("113",appPackagesStr);
 
 				SyncHttpClient client = Data.getSyncClient();
-				client.post(Config.getServerUrl() + "/fetch_application_list", params,
-					new CustomAsyncHttpResponseHandler() {
+				client.post(Config.getServerUrl() + "/update_user_installed_app", params,
+						new CustomAsyncHttpResponseHandler() {
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-						}
-						@Override
-						public void onSuccess(String response) {
-
-							try {
-								JSONObject jObj = new JSONObject(response);
-								int flag = jObj.getInt("flag");
-
-								if (ApiResponseFlags.APP_INSTALLED_INFO.getOrdinal() == flag) {
-
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
+							@Override
+							public void onFailure(Throwable arg3) {
+								Log.e("request fail", arg3.toString());
 							}
-						}
-					});
+
+							@Override
+							public void onSuccess(String response) {
+
+								try {
+									JSONObject jObj = new JSONObject(response);
+									int flag = jObj.getInt("flag");
+
+									if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+										Prefs.with(context).save(SPLabels.APP_MONITORING_TRIGGER_TIME, timeToSave);
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

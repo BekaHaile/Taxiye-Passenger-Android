@@ -574,7 +574,10 @@ public class Utils {
 		List<ApplicationInfo> applications = pm.getInstalledApplications(flags);
 		for(int i=0; i< appPackages.size(); i++){
 			for (ApplicationInfo appInfo : applications) {
-				appPackages.get(i).setInstalled(appInfo.packageName.equalsIgnoreCase(appPackages.get(i).getPackageName())?1:0);
+				if(appInfo.packageName.equalsIgnoreCase(appPackages.get(i).getPackageName())){
+					appPackages.get(i).setInstalled(1);
+					break;
+				}
 			}
 		}
 		return;

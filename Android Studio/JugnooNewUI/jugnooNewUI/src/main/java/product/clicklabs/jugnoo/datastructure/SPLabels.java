@@ -44,4 +44,5 @@ public class SPLabels {
             ;
 
     public static final String UPLOAD_CONTACTS_ERROR = "upload_contacts_error";
+    public static final String APP_MONITORING_TRIGGER_TIME = "app_monitoring_trigger_time";
 }

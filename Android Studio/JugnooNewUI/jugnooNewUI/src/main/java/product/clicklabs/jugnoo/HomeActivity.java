@@ -128,7 +128,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler {
+		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler, Constants {
 
 
     DrawerLayout drawerLayout;                                                                        // views declaration
@@ -2020,6 +2020,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		}
 
 		Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+
+
 
     }
 

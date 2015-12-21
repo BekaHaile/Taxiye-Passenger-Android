@@ -8,18 +8,39 @@ import com.google.gson.annotations.SerializedName;
  */
 public class AppPackage {
 
-	public AppPackage(String packageName) {
+	public AppPackage(int appId, String packageName) {
+		this.appId =appId;
 		this.packageName = packageName;
 		this.installed = 0;
 	}
 
+	@SerializedName("app_id")
+	@Expose
+	private int appId;
 	@SerializedName("package_name")
 	@Expose
 	private String packageName;
-	@SerializedName("installed")
+	@SerializedName("status")
 	@Expose
 	private Integer installed;
 
+	/**
+	 *
+	 * @return
+	 * The appId
+	 */
+	public int getAppID() {
+		return appId;
+	}
+
+	/**
+	 *
+	 * @param appId
+	 * The package_name
+	 */
+	public void setAppID(int appId) {
+		this.appId = appId;
+	}
 	/**
 	 *
 	 * @return

@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
@@ -46,7 +47,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 
-public class JSONParser {
+public class JSONParser implements Constants {
 
     public JSONParser() {
 
@@ -310,6 +311,25 @@ public class JSONParser {
         parseFeedbackReasonArrayList(jObj);
 
         Data.referralMessages = parseReferralMessages(jObj);
+
+        int userAppMonitoring = jLoginObject.optInt("user_app_monitoring", 0);
+        if(userAppMonitoring == 1){
+			double serverTimeInDays = jLoginObject.optDouble("user_app_monitoring_duration", 1.0);
+			long serverTimeInMillis = (long)(serverTimeInDays * (double)(24 * 60 * 60 * 1000));
+            long currentTime = System.currentTimeMillis();
+            long savedTime = Prefs.with(context).getLong(SPLabels.APP_MONITORING_TRIGGER_TIME, currentTime);
+
+			if(savedTime <= currentTime){
+				Intent intent = new Intent(context, FetchAppDataService.class);
+				intent.putExtra(KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				intent.putExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (currentTime + serverTimeInMillis));
+				context.startService(intent);
+			} else {
+
+			}
+
+        }
+
 
         return resp;
     }
