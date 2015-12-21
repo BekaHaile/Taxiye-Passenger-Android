@@ -2258,6 +2258,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
+
+
     }
 
 	private void hideMenuDrawer(){

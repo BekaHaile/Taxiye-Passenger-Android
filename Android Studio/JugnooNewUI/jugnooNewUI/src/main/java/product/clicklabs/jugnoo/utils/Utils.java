@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -49,6 +50,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.AppPackage;
 
 
 public class Utils {
@@ -564,5 +566,21 @@ public class Utils {
         return false;
     }
 
+	public static void checkAppsArrayInstall(Context context, ArrayList<AppPackage> appPackages) {
+		int flags = PackageManager.GET_META_DATA |
+				PackageManager.GET_SHARED_LIBRARY_FILES |
+				PackageManager.GET_UNINSTALLED_PACKAGES;
+		PackageManager pm = context.getPackageManager();
+		List<ApplicationInfo> applications = pm.getInstalledApplications(flags);
+		for(int i=0; i< appPackages.size(); i++){
+			for (ApplicationInfo appInfo : applications) {
+				if(appInfo.packageName.equalsIgnoreCase(appPackages.get(i).getPackageName())){
+					appPackages.get(i).setInstalled(1);
+					break;
+				}
+			}
+		}
+		return;
+	}
 
 }
