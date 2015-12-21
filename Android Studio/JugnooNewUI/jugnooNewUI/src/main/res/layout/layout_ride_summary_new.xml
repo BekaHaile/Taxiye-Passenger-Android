@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/total_fare"
-                    android:textSize="26px"
+                    android:textSize="@dimen/end_ride_fare_title_text_size"
                     android:textColor="@color/grey_black"/>
 
                 <TextView
@@ -38,8 +38,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="90"
-                    android:textSize="40px"
-                    android:textColor="@color/black_text"/>
+                    android:textSize="@dimen/end_ride_fare_value_text_size"
+                    android:textColor="@color/black_text"
+                    android:layout_marginTop="10px"
+                    />
             </LinearLayout>
 
             <ImageView
@@ -61,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Cash_to_be_paid"
-                    android:textSize="26px"
+                    android:textSize="@dimen/end_ride_fare_title_text_size"
                     android:textColor="@color/grey_black"/>
 
                 <TextView
@@ -69,8 +71,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="90"
-                    android:textSize="40px"
-                    android:textColor="@color/black_text"/>
+                    android:textSize="@dimen/end_ride_fare_value_text_size"
+                    android:textColor="@color/black_text"
+                    android:layout_marginTop="10px"
+                    />
             </LinearLayout>
         </LinearLayout>
 
