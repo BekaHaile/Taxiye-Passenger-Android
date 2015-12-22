@@ -97,7 +97,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         >
 
         <LinearLayout
@@ -106,6 +106,108 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+
+            <LinearLayout
+                android:id="@+id/linearLayoutAddFav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relativeLayoutSearchBar"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutAddHome"
+                    android:layout_width="match_parent"
+                    android:layout_height="90px"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="20px"
+                    android:visibility="gone"
+                    android:background="@drawable/background_wallet_border" >
+
+
+                    <TextView
+                        android:id="@+id/textViewAddHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:maxLines="2"
+                        android:paddingRight="20px"
+                        android:layout_toRightOf="@+id/imageViewAddHome"
+                        android:layout_toLeftOf="@+id/imageViewEditHome"
+                        android:gravity="center_vertical"
+                        android:text="@string/add_home"
+                        android:textColor="@drawable/text_color_black_alpha_selector"
+                        android:textSize="28px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewAddHome"
+                        android:layout_width="36px"
+                        android:layout_height="34px"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40px"
+                        android:src="@drawable/home"
+                        android:tag="mwar" />
+
+                    <ImageView
+                        android:id="@+id/imageViewEditHome"
+                        android:layout_width="68px"
+                        android:layout_height="68px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="15px"
+                        android:layout_marginRight="20px"
+                        android:src="@drawable/edit_icon_selector"
+                        android:tag="mwar" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutAddWork"
+                    android:layout_width="match_parent"
+                    android:layout_height="90px"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="20px"
+                    android:visibility="gone"
+                    android:background="@drawable/background_wallet_border" >
+
+
+                    <TextView
+                        android:id="@+id/textViewAddWork"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:maxLines="2"
+                        android:paddingRight="20px"
+                        android:layout_toRightOf="@+id/imageViewAddWork"
+                        android:layout_toLeftOf="@+id/imageViewEditWork"
+                        android:gravity="center_vertical"
+                        android:text="@string/add_work"
+                        android:textColor="@drawable/text_color_black_alpha_selector"
+                        android:textSize="28px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewAddWork"
+                        android:layout_width="36px"
+                        android:layout_height="34px"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40px"
+                        android:src="@drawable/work"
+                        android:tag="mwar" />
+
+                    <ImageView
+                        android:id="@+id/imageViewEditWork"
+                        android:layout_width="68px"
+                        android:layout_height="68px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="15px"
+                        android:layout_marginRight="20px"
+                        android:src="@drawable/edit_icon_selector"
+                        android:tag="mwar" />
+                </RelativeLayout>
+            </LinearLayout>
 
             <!-- Drop location listView-->
             <product.clicklabs.jugnoo.utils.NonScrollListView
@@ -147,7 +249,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         >
 
 

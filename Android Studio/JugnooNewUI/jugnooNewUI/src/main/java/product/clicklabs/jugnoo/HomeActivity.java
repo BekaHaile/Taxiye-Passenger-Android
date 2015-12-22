@@ -407,7 +407,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     CallbackManager callbackManager;
-    public static final int ADD_HOME = 2, ADD_WORK = 3;
+    public final int ADD_HOME = 2, ADD_WORK = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
