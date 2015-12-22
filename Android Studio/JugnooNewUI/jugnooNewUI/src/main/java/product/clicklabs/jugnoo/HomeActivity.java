@@ -707,7 +707,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         scrollViewAssigning.setVisibility(View.GONE);
         linearLayoutScrollAssigning = (LinearLayout) findViewById(R.id.linearLayoutScrollAssigning);
         textViewScrollAssigning = (TextView) findViewById(R.id.textViewScrollAssigning);
-        linearLayoutScrollAssigning.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollAssigning, textViewScrollAssigning, new KeyBoardStateHandler() {
+
+        linearLayoutScrollAssigning.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollAssigning,
+                textViewScrollAssigning, new KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
 
@@ -902,7 +904,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAddWork = (RelativeLayout)findViewById(R.id.relativeLayoutAddWork);
         textViewAddHome = (TextView)findViewById(R.id.textViewAddHome);
         textViewAddWork = (TextView)findViewById(R.id.textViewAddWork);
-        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
+
+        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch,
+                textViewScrollSearch, new KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
 
@@ -923,14 +927,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     public void onTextChange(String text) {
                         if(text.length() > 0){
                             imageViewSearchCross.setVisibility(View.VISIBLE);
-                        /*if((Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) ||
-                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) ||
-                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) ||
-                                (Prefs.with(HomeActivity.this).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase(""))){
-                            textViewAddHome.setVisibility(View.VISIBLE);
-                        }else{
-                            textViewAddHome.setVisibility(View.GONE);
-                        }*/
+                            relativeLayoutAddHome.setVisibility(View.GONE);
+                            relativeLayoutAddWork.setVisibility(View.GONE);
+
+                        }
+                        else{
+                            imageViewSearchCross.setVisibility(View.GONE);
                             if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
                                 relativeLayoutAddHome.setVisibility(View.VISIBLE);
                             }else{
@@ -941,9 +943,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }else{
                                 relativeLayoutAddWork.setVisibility(View.GONE);
                             }
-                        }
-                        else{
-                            imageViewSearchCross.setVisibility(View.GONE);
                         }
                     }
 
