@@ -2365,7 +2365,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             shakeCount = 0;
             shakeHandler.removeCallbacks(shakeRunnable);
         } catch(Exception e){
-            e.printStackTrace();
         }
     }
 
