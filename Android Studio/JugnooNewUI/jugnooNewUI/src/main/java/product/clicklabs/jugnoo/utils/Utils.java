@@ -13,14 +13,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -564,5 +563,18 @@ public class Utils {
         return false;
     }
 
+
+
+	public static int dpToPx(Context context, int dp) {
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+		int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+		return px;
+	}
+
+	public static int pxToDp(Context context, int px) {
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+		int dp = Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+		return dp;
+	}
 
 }
