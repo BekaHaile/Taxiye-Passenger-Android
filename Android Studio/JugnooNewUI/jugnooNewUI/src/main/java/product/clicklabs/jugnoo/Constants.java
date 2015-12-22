@@ -23,5 +23,6 @@ public interface Constants {
 	String KEY_GOOGLE_ID = "google_id";
 	String KEY_GOOGLE_IMAGE = "google_image";
 	String KEY_GOOGLE_PARCEL = "google_parcel";
+	String KEY_ETA = "eta";
 
 }
