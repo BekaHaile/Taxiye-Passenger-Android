@@ -4110,20 +4110,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     simpleJSONParser = null;
                     nameValuePairs = null;
 
-//		    			{
-//		    			    "flag": 175,
-//		    			    "drivers": [
-//		    			        {
-//		    			            "user_id": 209,
-//		    			            "user_name": "Driver 2",
-//		    			            "phone_no": "+919780298413",
-//		    			            "latitude": 30.718963,
-//		    			            "longitude": 76.810523,
-//		    			            "rating": 5
-//		    			        }
-//		    			    ],
-//		    			    "eta": 1
-//		    			}
+//                    {
+//                        "flag": 175,
+//                        "drivers": [
+//                        {
+//                            "user_id": 1164,
+//                            "user_name": "Driver 2",
+//                            "phone_no": "",
+//                            "latitude": 30.692124,
+//                            "longitude": 76.840996,
+//                            "vehicle_type": 1,
+//                            "distance": 4045.59,
+//                            "rating": 4.609195402298851
+//                        },
+//                        {
+//                            "user_id": 1110,
+//                            "user_name": "Dss",
+//                            "phone_no": "",
+//                            "latitude": 30.759017,
+//                            "longitude": 76.783457,
+//                            "vehicle_type": 1,
+//                            "distance": 5276.76,
+//                            "rating": 4.510989010989011
+//                        }
+//                        ],
+//                        "eta": 24,
+//                        "fare_factor": 1
+//                    }
 
                     if (result.contains(HttpRequester.SERVER_TIMEOUT)) {
                     } else {
@@ -6008,6 +6021,64 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 String response = new HttpRequester().getJSONFromUrlParams(Config.getServerUrl() + "/request_ride", nameValuePairs);
 
                                 Log.e("response of request_ride", "=" + response);
+
+
+//                                {
+//                                    "flag": 105,
+//                                    "log": "Assigning driver",
+//                                    "session_id": 41082,
+//                                    "latitude": 30.718031,
+//                                    "longitude": 76.811286,
+//                                    "start_time": "2015-12-22 05:55:59"
+//                                }
+
+//                                {
+//                                    "engagement_id": 52949,
+//                                    "session_id": 41085,
+//                                    "driver_id": 1515,
+//                                    "pickup_latitude": 30.718031,
+//                                    "pickup_longitude": 76.811286,
+//                                    "status": 1,
+//                                    "free_ride": 0,
+//                                    "fare_factor": 1,
+//                                    "fare_details": {
+//                                    "id": 5,
+//                                        "fare_fixed": 15,
+//                                        "fare_per_km": 5,
+//                                        "fare_threshold_distance": 0,
+//                                        "fare_per_min": 1,
+//                                        "fare_threshold_time": 0,
+//                                        "night_fare_applicable": 0,
+//                                        "fare_per_waiting_min": 2,
+//                                        "fare_threshold_waiting_time": 0,
+//                                        "type": 0,
+//                                        "per_ride_driver_subsidy": 0,
+//                                        "accept_subsidy_per_km": 0,
+//                                        "accept_subsidy_threshold_distance": 0,
+//                                        "accept_subsidy_before_threshold": 0,
+//                                        "accept_subsidy_after_threshold": 0
+//                                },
+//                                    "coupon": "",
+//                                    "promotion": "",
+//                                    "user_name": "Driver 007",
+//                                    "phone_no": "+916000000040",
+//                                    "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
+//                                    "driver_car_image": "",
+//                                    "driver_car_no": "DL 4C 1234",
+//                                    "current_location_latitude": 30.719034,
+//                                    "current_location_longitude": 76.810056,
+//                                    "total_rating_got_driver": 8,
+//                                    "total_rating_driver": 35,
+//                                    "rating": 4.375,
+//                                    "eta": 1,
+//                                    "flag": 107,
+//                                    "preferred_payment_mode": 1
+//                                }
+
+//                                {
+//                                    "flag": 106,
+//                                    "log": "Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later."
+//                                }
 
                                 if (response.contains(HttpRequester.SERVER_TIMEOUT)) {
                                     Log.e("timeout", "=");
