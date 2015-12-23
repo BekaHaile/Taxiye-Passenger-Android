@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -160,7 +161,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         });
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.linearLayoutContainer, new PlaceSearchListFragment(this), PlaceSearchListFragment.class.getSimpleName())
+                .add(R.id.linearLayoutContainer, new PlaceSearchListFragment(this, mGoogleApiClient), PlaceSearchListFragment.class.getSimpleName())
                 .addToBackStack(PlaceSearchListFragment.class.getSimpleName())
                 .commitAllowingStateLoss();
 
@@ -199,10 +200,13 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                             public void run() {
                                                 try {
 
-                                                    getSupportFragmentManager().beginTransaction()
-                                                            .remove(getSupportFragmentManager()
-                                                                    .findFragmentByTag(PlaceSearchListFragment.class.getSimpleName()))
-                                                    .commit();
+                                                    Fragment frag = getSupportFragmentManager()
+                                                            .findFragmentByTag(PlaceSearchListFragment.class.getSimpleName());
+                                                    if(frag != null) {
+                                                        getSupportFragmentManager().beginTransaction()
+                                                                .remove(frag)
+                                                                .commit();
+                                                    }
 
                                                     linearLayoutContainer.setVisibility(View.GONE);
 													relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
@@ -425,7 +429,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                     public void onClick(View v) {
                         performBackPressed();
                     }
-				}, false, false);
+                }, false, false);
 	}
 
 
@@ -456,7 +460,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 	@Override
 	public void onStop() {
 		mGoogleApiClient.disconnect();
-		super.onStop();
+        super.onStop();
 	}
 
 	@Override

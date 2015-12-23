@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
@@ -103,6 +104,7 @@ import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -133,7 +135,8 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import rmn.androidscreenlibrary.ASSL;
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler {
+		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler,
+        SearchListAdapter.SearchListActionsHandler{
 
 
     DrawerLayout drawerLayout;                                                                        // views declaration
@@ -281,12 +284,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     //Search Layout
     RelativeLayout relativeLayoutSearch;
-    EditText editTextSearch;
-    ProgressWheel progressBarSearch;
-	ImageView imageViewSearchCross;
-    NonScrollListView listViewSearch;
-    LinearLayout linearLayoutScrollSearch;
-    TextView textViewScrollSearch;
+
 
 
     //Center Location Layout
@@ -302,14 +300,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
-        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm, relativeLayoutAddHome, relativeLayoutAddWork;
+        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
 	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
 	NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
 			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
-	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue, textViewAddHome, textViewAddWork;
+	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
 
@@ -900,144 +898,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Search Layout
 		relativeLayoutSearch = (RelativeLayout) findViewById(R.id.relativeLayoutSearch);
-        editTextSearch = (EditText) findViewById(R.id.editTextSearch);
-        editTextSearch.setTypeface(Fonts.latoRegular(this));
-        progressBarSearch = (ProgressWheel) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
-		imageViewSearchCross = (ImageView) findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
-        listViewSearch = (NonScrollListView) findViewById(R.id.listViewSearch);
-        linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
-        textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
-        relativeLayoutAddHome = (RelativeLayout)findViewById(R.id.relativeLayoutAddHome);
-        relativeLayoutAddWork = (RelativeLayout)findViewById(R.id.relativeLayoutAddWork);
-        textViewAddHome = (TextView)findViewById(R.id.textViewAddHome);
-        textViewAddWork = (TextView)findViewById(R.id.textViewAddWork);
-
-        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch,
-                textViewScrollSearch, new KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
-
-            }
-
-            @Override
-            public void keyBoardClosed() {
-
-            }
-        }));
-
-        showSearchLayout();
-
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
-                new SearchListAdapter.SearchListActionsHandler() {
-
-                    @Override
-                    public void onTextChange(String text) {
-                        if(text.length() > 0){
-                            imageViewSearchCross.setVisibility(View.VISIBLE);
-                            relativeLayoutAddHome.setVisibility(View.GONE);
-                            relativeLayoutAddWork.setVisibility(View.GONE);
-
-                        }
-                        else{
-                            imageViewSearchCross.setVisibility(View.GONE);
-                            if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
-                                relativeLayoutAddHome.setVisibility(View.VISIBLE);
-                            }else{
-                                relativeLayoutAddHome.setVisibility(View.GONE);
-                            }
-                            if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
-                                relativeLayoutAddWork.setVisibility(View.VISIBLE);
-                            }else{
-                                relativeLayoutAddWork.setVisibility(View.GONE);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onSearchPre() {
-                        progressBarSearch.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onSearchPost() {
-                        progressBarSearch.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
-                        FlurryEventLogger.event(PICKUP_LOCATION_SET);
-                        textViewInitialSearch.setText(autoCompleteSearchResult.name);
-                        zoomedForSearch = true;
-                        lastSearchLatLng = null;
-                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                        switchPassengerScreen(passengerScreenMode);
-                    }
-
-                    @Override
-                    public void onPlaceSearchPre() {
-                        progressBarInitialSearch.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onPlaceSearchPost(SearchResult searchResult) {
-                        progressBarInitialSearch.setVisibility(View.GONE);
-                        if (map != null && searchResult != null) {
-                            textViewInitialSearch.setText(searchResult.name);
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
-                            lastSearchLatLng = searchResult.latLng;
-
-                            try {
-                                Log.e("searchResult.getThirdPartyAttributions()", "="+searchResult.getThirdPartyAttributions());
-                                if(searchResult.getThirdPartyAttributions() == null){
-                                    relativeLayoutGoogleAttr.setVisibility(View.GONE);
-                                }
-                                else{
-                                    relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
-                                    textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onPlaceSearchError() {
-                        progressBarInitialSearch.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onPlaceSaved() {
-
-                    }
-                });
-
-        listViewSearch.setAdapter(searchListAdapter);
-
-        relativeLayoutAddHome.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(HomeActivity.this,AddPlaceActivity.class);
-                intent.putExtra("requestCode", "HOME");
-                intent.putExtra("address", Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, ""));
-                //startActivity(intent);
-                startActivityForResult(intent, ADD_HOME);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }
-        });
-
-        relativeLayoutAddWork.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(HomeActivity.this,AddPlaceActivity.class);
-                intent.putExtra("requestCode", "WORK");
-                intent.putExtra("address", Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, ""));
-                //startActivity(intent);
-                startActivityForResult(intent, ADD_WORK);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }
-        });
-
 
 
 
@@ -1134,7 +994,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				hideAnims();
-				Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
+				Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
 			}
 
 			@Override
@@ -1213,8 +1073,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 textViewInitialSearch.setText("");
-                editTextSearch.setText("");
-                Utils.hideSoftKeyboard(HomeActivity.this, editTextSearch);
+                Utils.hideSoftKeyboard(HomeActivity.this, editTextFinalDropLocation);
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
                 FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
@@ -1455,9 +1314,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                editTextSearch.requestFocus();
-                editTextSearch.setText(textViewInitialSearch.getText().toString());
-                editTextSearch.setSelection(editTextSearch.getText().length());
+//                editTextSearch.requestFocus();
+//                editTextSearch.setText(textViewInitialSearch.getText().toString());
+//                editTextSearch.setSelection(editTextSearch.getText().length());
 //                Utils.showSoftKeyboard(HomeActivity.this, editTextSearch);
                 passengerScreenMode = PassengerScreenMode.P_SEARCH;
                 switchPassengerScreen(passengerScreenMode);
@@ -1700,21 +1559,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		});
 
-        editTextSearch.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                editTextSearch.requestFocus();
-                Utils.showSoftKeyboard(HomeActivity.this, editTextSearch);
-            }
-        });
-
-		imageViewSearchCross.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				editTextSearch.setText("");
-			}
-		});
 
 
         // customer request final layout events
@@ -2114,19 +1959,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		}
 	}
 
-    private void showSearchLayout(){
-        if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
-            relativeLayoutAddHome.setVisibility(View.VISIBLE);
-        }else{
-            relativeLayoutAddHome.setVisibility(View.GONE);
-        }
-        if(Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
-            relativeLayoutAddWork.setVisibility(View.VISIBLE);
-        }else{
-            relativeLayoutAddWork.setVisibility(View.GONE);
-        }
-
-    }
 
 
 	public void callAnAutoClicked(LatLng requestLatLng){
@@ -2609,7 +2441,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
-						relativeLayoutSearch.setVisibility(View.GONE);
+                        relativeLayoutSearchSetVisiblity(View.GONE);
 						requestFinalLayout.setVisibility(View.GONE);
                         if (Data.userData != null && Data.userData.canChangeLocation == 1) {
                             centreLocationRl.setVisibility(View.VISIBLE);
@@ -2691,7 +2523,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
-						relativeLayoutSearch.setVisibility(View.VISIBLE);
+                        relativeLayoutSearchSetVisiblity(View.VISIBLE);
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
@@ -2711,7 +2543,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.VISIBLE);
-						relativeLayoutSearch.setVisibility(View.GONE);
+                        relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
@@ -2792,7 +2624,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
-						relativeLayoutSearch.setVisibility(View.GONE);
+                        relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
@@ -2856,7 +2688,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
-						relativeLayoutSearch.setVisibility(View.GONE);
+                        relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
@@ -2949,7 +2781,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
-						relativeLayoutSearch.setVisibility(View.GONE);
+                        relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
@@ -2991,7 +2823,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
-						relativeLayoutSearch.setVisibility(View.GONE);
+                        relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
@@ -3012,7 +2844,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
-						relativeLayoutSearch.setVisibility(View.GONE);
+                        relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
                         endRideReviewRl.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
@@ -3105,6 +2937,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
+    private void relativeLayoutSearchSetVisiblity(int visiblity){
+        if(View.VISIBLE == visiblity){
+            relativeLayoutSearch.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutSearch.getId(), new PlaceSearchListFragment(this, mGoogleApiClient),
+                            PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_SEARCH)
+                    .addToBackStack(PlaceSearchListFragment.class.getSimpleName())
+                    .commitAllowingStateLoss();
+        } else{
+            relativeLayoutSearch.setVisibility(View.GONE);
+            Fragment frag = getSupportFragmentManager()
+                    .findFragmentByTag(PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_SEARCH);
+            if(frag != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .remove(frag)
+                        .commit();
+            }
+        }
+    }
+
 
 	private void updateInRideAddPaytmButtonText(){
 		try{
@@ -3316,7 +3170,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				textViewIRPaymentOptionValue.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
-			e.printStackTrace();
 		}
 	}
 
@@ -3577,7 +3430,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		}
 	};
 
-	private class UpdateNotificationsAsync extends AsyncTask<String, String, String>{
+
+    private class UpdateNotificationsAsync extends AsyncTask<String, String, String>{
 
 		private Handler updateNotifsHandler;
 		private Runnable updateNotifsRunnable;
@@ -3705,9 +3559,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if(searchResult != null){
                         addPlaces = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_HOME, strResult);
-                        showSearchLayout();
                     }else {
-                        textViewAddHome.setText("Add Home");
                     }
 
                 } else if (requestCode == ADD_WORK) {
@@ -3717,9 +3569,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if(searchResult != null) {
                         addPlaces = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
-                        showSearchLayout();
                     }else{
-                        textViewAddWork.setText("Add Work");
                     }
                 } else {
                     Log.v("onActivityResult else part", "onActivityResult else part");
@@ -3792,7 +3642,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private void backFromSearchToInitial(){
 		try {
 			textViewInitialSearch.setText("");
-			editTextSearch.setText("");
 			passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			switchPassengerScreen(passengerScreenMode);
 			FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
@@ -6855,6 +6704,93 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
+
+    @Override
+    public void onTextChange(String text) {
+
+    }
+
+    @Override
+    public void onSearchPre() {
+
+    }
+
+    @Override
+    public void onSearchPost() {
+
+    }
+
+    @Override
+    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+
+        if(PassengerScreenMode.P_INITIAL == passengerScreenMode
+                || PassengerScreenMode.P_SEARCH == passengerScreenMode){
+            FlurryEventLogger.event(PICKUP_LOCATION_SET);
+            textViewInitialSearch.setText(autoCompleteSearchResult.name);
+            zoomedForSearch = true;
+            lastSearchLatLng = null;
+            passengerScreenMode = PassengerScreenMode.P_INITIAL;
+            switchPassengerScreen(passengerScreenMode);
+        }
+
+        Log.e("onPlaceClick", "="+autoCompleteSearchResult);
+    }
+
+    @Override
+    public void onPlaceSearchPre() {
+
+        if(PassengerScreenMode.P_INITIAL == passengerScreenMode
+                || PassengerScreenMode.P_SEARCH == passengerScreenMode){
+            progressBarInitialSearch.setVisibility(View.VISIBLE);
+        }
+
+        Log.e("onPlaceSearchPre", "=");
+    }
+
+    @Override
+    public void onPlaceSearchPost(SearchResult searchResult) {
+
+        if(PassengerScreenMode.P_INITIAL == passengerScreenMode
+                || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+            progressBarInitialSearch.setVisibility(View.GONE);
+            if (map != null && searchResult != null) {
+                textViewInitialSearch.setText(searchResult.name);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
+                lastSearchLatLng = searchResult.latLng;
+
+                try {
+                    Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
+                    if (searchResult.getThirdPartyAttributions() == null) {
+                        relativeLayoutGoogleAttr.setVisibility(View.GONE);
+                    } else {
+                        relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
+                        textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Log.e("onPlaceSearchPost", "="+searchResult);
+    }
+
+    @Override
+    public void onPlaceSearchError() {
+
+        if(PassengerScreenMode.P_INITIAL == passengerScreenMode
+                || PassengerScreenMode.P_SEARCH == passengerScreenMode){
+            progressBarInitialSearch.setVisibility(View.VISIBLE);
+        }
+
+        Log.e("onPlaceSearchError", "=");
+    }
+
+    @Override
+    public void onPlaceSaved() {
+        addPlaces = true;
+    }
 
 
 }

@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -35,6 +34,7 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class PlaceSearchListFragment extends Fragment implements FlurryEventNames,
@@ -60,8 +60,9 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	private final int ADD_HOME = 2, ADD_WORK = 3;
 
-	public PlaceSearchListFragment(SearchListAdapter.SearchListActionsHandler searchListActionsHandler){
+	public PlaceSearchListFragment(SearchListAdapter.SearchListActionsHandler searchListActionsHandler, GoogleApiClient mGoogleApiClient){
 		this.searchListActionsHandler = searchListActionsHandler;
+		this.mGoogleApiClient = mGoogleApiClient;
 	}
 
     @Override
@@ -70,14 +71,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
         FlurryAgent.init(activity, Config.getFlurryKey());
         FlurryAgent.onStartSession(activity, Config.getFlurryKey());
         FlurryAgent.onEvent(PlaceSearchListFragment.class.getSimpleName() + " started");
-		mGoogleApiClient.connect();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         FlurryAgent.onEndSession(activity);
-		mGoogleApiClient.disconnect();
     }
 	
 
@@ -86,14 +85,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
         rootView = inflater.inflate(R.layout.fragment_place_search_list, container, false);
 
         activity = getActivity();
-
-		mGoogleApiClient = new GoogleApiClient
-				.Builder(activity)
-				.addApi(Places.GEO_DATA_API)
-				.addApi(Places.PLACE_DETECTION_API)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.build();
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		linearLayoutRoot.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 
@@ -125,6 +116,22 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 			}
 		}));
+
+		editTextSearch.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				editTextSearch.requestFocus();
+				Utils.showSoftKeyboard(activity, editTextSearch);
+			}
+		});
+
+		imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextSearch.setText("");
+			}
+		});
 
 		showSearchLayout();
 

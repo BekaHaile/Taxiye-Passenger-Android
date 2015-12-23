@@ -182,6 +182,7 @@ public class SearchListAdapter extends BaseAdapter{
 						holder = (ViewHolderSearchItem) v.getTag();
 						Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
 						AutoCompleteSearchResult autoCompleteSearchResult = autoCompleteSearchResults.get(holder.id);
+                        Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
 						if (!"".equalsIgnoreCase(autoCompleteSearchResult.placeId)) {
 							searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
 							getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.placeId);
@@ -232,8 +233,6 @@ public class SearchListAdapter extends BaseAdapter{
 							refreshingAutoComplete = true;
 							autoCompleteSearchResultsForSearch.clear();
 							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
-								Log.i("TAG", "Desc=" + autocompletePrediction.getDescription() + ", PlaceID=" + autocompletePrediction.getPlaceId()
-										+ ", MatchedSubString=" + autocompletePrediction.getMatchedSubstrings() + ", PlacesType=" + autocompletePrediction.getPlaceTypes());
 								String name = autocompletePrediction.getDescription().split(",")[0];
 								autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult(name,
 										autocompletePrediction.getDescription(), autocompletePrediction.getPlaceId()));
@@ -337,11 +336,13 @@ public class SearchListAdapter extends BaseAdapter{
 
     private synchronized void getSearchResultFromPlaceId(final String placeName, final String placeId) {
         searchListActionsHandler.onPlaceSearchPre();
+        Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 		Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
 				.setResultCallback(new ResultCallback<PlaceBuffer>() {
 					@Override
 					public void onResult(PlaceBuffer places) {
 						try {
+                            Log.e("SearchListAdapter", "getPlaceById response="+places);
 							if (places.getStatus().isSuccess()) {
 								final Place myPlace = places.get(0);
 								final CharSequence thirdPartyAttributions = places.getAttributions();
@@ -359,6 +360,7 @@ public class SearchListAdapter extends BaseAdapter{
 						}
 					}
 				});
+        Log.v("after call back", "after call back");
     }
 
     private synchronized void setSearchResult(final SearchResult searchResult) {
