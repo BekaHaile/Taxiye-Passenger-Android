@@ -2851,11 +2851,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setDropLocationEngagedUI(){
         if(Data.dropLatLng == null){
-            relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
+            linearLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
         }
         else{
             setDropLocationMarker();
-            relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+            linearLayoutFinalDropLocationClick.setVisibility(View.GONE);
         }
     }
 
@@ -4302,7 +4302,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 											PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
 											PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                                         stopDropLocationSearchUI(true);
-                                        relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+                                        linearLayoutFinalDropLocationClick.setVisibility(View.GONE);
 
 										if(Data.dropLatLng != null){
 											setDropLocationMarker();
@@ -6531,9 +6531,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onTextChange(String text) {
-        if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+        if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
+                && !"".equalsIgnoreCase(text)){
             dropLocationSearchText = text;
         }
     }
