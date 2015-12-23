@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -42,13 +44,15 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	
 	private LinearLayout linearLayoutRoot;
 
+	private RelativeLayout relativeLayoutSearchBar;
 	private EditText editTextSearch;
 	private ProgressWheel progressBarSearch;
 	private ImageView imageViewSearchCross;
 	
 	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
 	private TextView textViewAddHome, textViewAddWork;
-	
+
+	private ScrollView scrollViewSearch;
 	private LinearLayout linearLayoutScrollSearch;
 	private NonScrollListView listViewSearch;
 	private TextView textViewScrollSearch;
@@ -75,7 +79,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
     @Override
     public void onStop() {
-        super.onStop();
+		super.onStop();
         FlurryAgent.onEndSession(activity);
     }
 	
@@ -84,18 +88,19 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_place_search_list, container, false);
 
+
         activity = getActivity();
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
-		linearLayoutRoot.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 
-				ViewGroup.LayoutParams.MATCH_PARENT));
-		ASSL.DoMagic(linearLayoutRoot);
+		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
 
 
+		relativeLayoutSearchBar = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSearchBar);
 		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
 		editTextSearch.setTypeface(Fonts.latoRegular(activity));
 		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
+		scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
 		linearLayoutScrollSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutScrollSearch);
 		textViewScrollSearch = (TextView) rootView.findViewById(R.id.textViewScrollSearch);
@@ -171,22 +176,26 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 					@Override
 					public void onPlaceSearchPre() {
+						progressBarSearch.setVisibility(View.VISIBLE);
 						searchListActionsHandler.onPlaceSearchPre();
 					}
 
 					@Override
 					public void onPlaceSearchPost(SearchResult searchResult) {
+						progressBarSearch.setVisibility(View.GONE);
 						searchListActionsHandler.onPlaceSearchPost(searchResult);
 					}
 
 					@Override
 					public void onPlaceSearchError() {
+						progressBarSearch.setVisibility(View.GONE);
 						searchListActionsHandler.onPlaceSearchError();
 					}
 
 					@Override
 					public void onPlaceSaved() {
 					}
+
 				});
 
 		listViewSearch.setAdapter(searchListAdapter);
@@ -212,7 +221,21 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
-		
+
+
+		Bundle bundle = getArguments();
+		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
+		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, getString(R.string.search_state_edit_text_hint));
+		editTextSearch.setText(text);
+		editTextSearch.setHint(hint);
+		new Handler().post(new Runnable() {
+			@Override
+			public void run() {
+				editTextSearch.requestFocus();
+				editTextSearch.setSelection(editTextSearch.getText().length());
+				Utils.showSoftKeyboard(activity, editTextSearch);
+			}
+		});
 
         return rootView;
 	}
@@ -285,6 +308,26 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			e.printStackTrace();
 		}
 		searchListActionsHandler.onPlaceSaved();
+	}
+
+	public int getScrollViewSearchVisiblity(){
+		return scrollViewSearch.getVisibility();
+	}
+
+	public void setScrollViewSearchVisiblity(int visiblity){
+		scrollViewSearch.setVisibility(visiblity);
+	}
+
+	public ProgressWheel getProgressBarSearch(){
+		return progressBarSearch;
+	}
+
+	public EditText getEditTextSearch(){
+		return editTextSearch;
+	}
+
+	public void setRelativeLayoutSearchBarBackground(int drawableId){
+		relativeLayoutSearchBar.setBackgroundResource(drawableId);
 	}
 
 }

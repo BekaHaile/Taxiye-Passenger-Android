@@ -346,10 +346,6 @@ public class SearchListAdapter extends BaseAdapter{
 							if (places.getStatus().isSuccess()) {
 								final Place myPlace = places.get(0);
 								final CharSequence thirdPartyAttributions = places.getAttributions();
-                                String placeNameToSet = placeName;
-                                /*if(!("Home".equalsIgnoreCase(placeNameToSet)) && !("Work".equalsIgnoreCase(placeNameToSet))){
-                                    placeNameToSet = myPlace.getName().toString();
-                                }*/
 								SearchResult searchResult = new SearchResult(placeName, myPlace.getAddress().toString(), myPlace.getLatLng());
 								searchResult.setThirdPartyAttributions(thirdPartyAttributions);
 								setSearchResult(searchResult);
