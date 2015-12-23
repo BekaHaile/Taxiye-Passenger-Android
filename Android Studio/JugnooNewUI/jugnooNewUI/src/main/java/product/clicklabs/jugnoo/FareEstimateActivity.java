@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -60,7 +61,9 @@ import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
-public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        SearchListAdapter.SearchListActionsHandler{
 
     LinearLayout relative;
 
@@ -130,16 +133,16 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         showAddPlaceLayout();
 
 		linearLayoutScroll.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScroll, textViewScroll, new KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
+            @Override
+            public void keyboardOpened() {
 
-			}
+            }
 
-			@Override
-			public void keyBoardClosed() {
+            @Override
+            public void keyBoardClosed() {
 
-			}
-		}));
+            }
+        }));
 
         SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
 				new SearchListAdapter.SearchListActionsHandler() {
@@ -271,6 +274,16 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
+
+
+        relativeLayoutDropLocationBar.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.linearLayoutContainer, new PlaceSearchListFragment(this), PlaceSearchListFragment.class.getSimpleName())
+                .addToBackStack(PlaceSearchListFragment.class.getSimpleName())
+                .commitAllowingStateLoss();
+
     }
 
     private void showAddPlaceLayout(){
@@ -636,5 +649,40 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onTextChange(String text) {
+
+    }
+
+    @Override
+    public void onSearchPre() {
+
+    }
+
+    @Override
+    public void onSearchPost() {
+
+    }
+
+    @Override
+    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+
+    }
+
+    @Override
+    public void onPlaceSearchPre() {
+
+    }
+
+    @Override
+    public void onPlaceSearchPost(SearchResult searchResult) {
+
+    }
+
+    @Override
+    public void onPlaceSearchError() {
+
     }
 }

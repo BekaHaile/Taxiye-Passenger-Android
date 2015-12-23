@@ -39,6 +39,13 @@
         android:background="@drawable/shadow_down"
         />
 
+    <LinearLayout
+        android:id="@+id/linearLayoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
     <!-- Drop location layout -->
     <RelativeLayout
         android:id="@+id/relativeLayoutDropLocationBar"
@@ -243,6 +250,7 @@
 
     </ScrollView>
 
+    </LinearLayout>
     <!-- fare estimate layout-->
     <RelativeLayout
         android:id="@+id/relativeLayoutFareEstimateDetails"
