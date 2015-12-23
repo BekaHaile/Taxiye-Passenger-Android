@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -23,9 +22,7 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
-import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -185,6 +182,11 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                     @Override
                     public void onPlaceSearchError() {
                         //progressBarInitialSearch.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onPlaceSaved() {
+
                     }
                 });
 

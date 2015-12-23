@@ -13,4 +13,6 @@ public interface Constants {
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
 	String KEY_DRIVER_CAR_NO = "driver_car_no";
 
+	int ADD_HOME = 2, ADD_WORK = 3;
+
 }

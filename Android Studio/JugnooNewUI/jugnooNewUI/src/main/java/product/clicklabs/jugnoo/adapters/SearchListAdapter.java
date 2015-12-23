@@ -386,6 +386,7 @@ public class SearchListAdapter extends BaseAdapter{
 		void onPlaceSearchPre();
 		void onPlaceSearchPost(SearchResult searchResult);
 		void onPlaceSearchError();
+        void onPlaceSaved();
 	}
 
 

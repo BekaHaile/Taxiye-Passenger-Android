@@ -176,6 +176,10 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					public void onPlaceSearchError() {
 						searchListActionsHandler.onPlaceSearchError();
 					}
+
+					@Override
+					public void onPlaceSaved() {
+					}
 				});
 
 		listViewSearch.setAdapter(searchListAdapter);
@@ -273,6 +277,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		searchListActionsHandler.onPlaceSaved();
 	}
 
 }

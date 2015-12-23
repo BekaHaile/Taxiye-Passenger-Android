@@ -21,11 +21,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -770,6 +767,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                    DialogPopup.dismissLoadingDialog();
 					progressBarAssigningDropLocation.setVisibility(View.GONE);
                 }
+
+                @Override
+                public void onPlaceSaved() {
+
+                }
             });
 
         listViewAssigningDropLocationSearch.setAdapter(dropLocationAssigningSearchListAdapter);
@@ -886,6 +888,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                    DialogPopup.dismissLoadingDialog();
 					progressBarFinalDropLocation.setVisibility(View.GONE);
                 }
+
+                @Override
+                public void onPlaceSaved() {
+
+                }
             });
         listViewFinalDropLocationSearch.setAdapter(dropLocationFinalSearchListAdapter);
 
@@ -997,6 +1004,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void onPlaceSearchError() {
                         progressBarInitialSearch.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onPlaceSaved() {
+
                     }
                 });
 
@@ -1327,6 +1339,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
 				activityResumed = false;
+                if(map != null) {
+                    Data.pickupLatLng = map.getCameraPosition().target;
+                }
 				startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.event(FARE_ESTIMATE);

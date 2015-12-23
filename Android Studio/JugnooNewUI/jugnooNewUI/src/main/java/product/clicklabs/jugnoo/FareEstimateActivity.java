@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,12 +8,9 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -29,7 +25,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
@@ -41,7 +36,6 @@ import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -52,12 +46,8 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.HttpRequester;
-import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
-import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
@@ -70,14 +60,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     TextView textViewTitle;
     ImageView imageViewBack;
 
-    RelativeLayout relativeLayoutDropLocationBar, relativeLayoutAddHome, relativeLayoutAddWork;;
-    EditText editTextDropLocation;
-    ProgressWheel progressBarDropLocation;
-    ListView listViewDropLocationSearch;
-	LinearLayout linearLayoutScroll;
-	TextView textViewScroll, textViewAddHome, textViewAddWork;
-	ScrollView scrollView;
-    public final int ADD_HOME = 2, ADD_WORK = 3;
+    LinearLayout linearLayoutContainer;
 
     RelativeLayout relativeLayoutFareEstimateDetails;
     GoogleMap mapLite;
@@ -116,79 +99,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 
-        relativeLayoutDropLocationBar = (RelativeLayout) findViewById(R.id.relativeLayoutDropLocationBar);
-        editTextDropLocation = (EditText) findViewById(R.id.editTextDropLocation);
-        editTextDropLocation.setTypeface(Fonts.latoRegular(this));
-        progressBarDropLocation = (ProgressWheel) findViewById(R.id.progressBarDropLocation);
-        progressBarDropLocation.setVisibility(View.GONE);
-        listViewDropLocationSearch = (ListView) findViewById(R.id.listViewDropLocationSearch);
-		linearLayoutScroll = (LinearLayout) findViewById(R.id.linearLayoutScroll);
-		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
-		scrollView = (ScrollView) findViewById(R.id.scrollView);
-        relativeLayoutAddHome = (RelativeLayout)findViewById(R.id.relativeLayoutAddHome);
-        relativeLayoutAddWork = (RelativeLayout)findViewById(R.id.relativeLayoutAddWork);
-        textViewAddHome = (TextView)findViewById(R.id.textViewAddHome);
-        textViewAddWork = (TextView)findViewById(R.id.textViewAddWork);
-
-        showAddPlaceLayout();
-
-		linearLayoutScroll.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScroll, textViewScroll, new KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
-
-            }
-
-            @Override
-            public void keyBoardClosed() {
-
-            }
-        }));
-
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextDropLocation, new LatLng(30.75, 76.78), mGoogleApiClient,
-				new SearchListAdapter.SearchListActionsHandler() {
-			@Override
-			public void onTextChange(String text) {
-                if(text.length() > 0){
-                    relativeLayoutAddHome.setVisibility(View.GONE);
-                    relativeLayoutAddWork.setVisibility(View.GONE);
-                }
-                else{
-                    showAddPlaceLayout();
-                }
-			}
-
-			@Override
-            public void onSearchPre() {
-                progressBarDropLocation.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onSearchPost() {
-                progressBarDropLocation.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
-
-            }
-
-            @Override
-            public void onPlaceSearchPre() {
-                DialogPopup.showLoadingDialog(FareEstimateActivity.this, "Loading...");
-            }
-
-            @Override
-            public void onPlaceSearchPost(SearchResult searchResult) {
-                getDirectionsAndComputeFare(Data.pickupLatLng, searchResult.latLng);
-                FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
-            }
-
-            @Override
-            public void onPlaceSearchError() {
-                DialogPopup.dismissLoadingDialog();
-            }
-        });
-        listViewDropLocationSearch.setAdapter(searchListAdapter);
+        linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
 
         relativeLayoutFareEstimateDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareEstimateDetails);
 
@@ -229,9 +140,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         buttonOk = (Button) findViewById(R.id.buttonOk);
         buttonOk.setTypeface(Fonts.latoRegular(this));
 
-
-        relativeLayoutDropLocationBar.setVisibility(View.VISIBLE);
-		scrollView.setVisibility(View.VISIBLE);
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
 
 
@@ -251,52 +159,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             }
         });
 
-        relativeLayoutAddHome.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(FareEstimateActivity.this,AddPlaceActivity.class);
-                intent.putExtra("requestCode", "HOME");
-                intent.putExtra("address", Prefs.with(FareEstimateActivity.this).getString(SPLabels.ADD_HOME, ""));
-                //startActivity(intent);
-                startActivityForResult(intent, ADD_HOME);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }
-        });
-
-        relativeLayoutAddWork.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(FareEstimateActivity.this,AddPlaceActivity.class);
-                intent.putExtra("requestCode", "WORK");
-                intent.putExtra("address", Prefs.with(FareEstimateActivity.this).getString(SPLabels.ADD_WORK, ""));
-                //startActivity(intent);
-                startActivityForResult(intent, ADD_WORK);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }
-        });
-
-
-        relativeLayoutDropLocationBar.setVisibility(View.GONE);
-        scrollView.setVisibility(View.GONE);
-
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.linearLayoutContainer, new PlaceSearchListFragment(this), PlaceSearchListFragment.class.getSimpleName())
                 .addToBackStack(PlaceSearchListFragment.class.getSimpleName())
                 .commitAllowingStateLoss();
 
-    }
-
-    private void showAddPlaceLayout(){
-        if(Prefs.with(FareEstimateActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
-            relativeLayoutAddHome.setVisibility(View.VISIBLE);
-        }else{
-            relativeLayoutAddHome.setVisibility(View.GONE);
-        }
-        if(Prefs.with(FareEstimateActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
-            relativeLayoutAddWork.setVisibility(View.VISIBLE);
-        }else{
-            relativeLayoutAddWork.setVisibility(View.GONE);
-        }
     }
 
     private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng) {
@@ -316,6 +183,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                     JSONObject jObj = new JSONObject(result);
                                     final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
                                     if (jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
+
                                         final String startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address");
                                         final String endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address");
 
@@ -324,13 +192,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                         final double distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
                                         final double timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
-										runOnUiThread(new Runnable() {
-
-											@Override
-											public void run() {
-												DialogPopup.dismissLoadingDialog();
-											}
-										});
 
                                         runOnUiThread(new Runnable() {
 
@@ -338,8 +199,12 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                             public void run() {
                                                 try {
 
-                                                    relativeLayoutDropLocationBar.setVisibility(View.GONE);
-													scrollView.setVisibility(View.GONE);
+                                                    getSupportFragmentManager().beginTransaction()
+                                                            .remove(getSupportFragmentManager()
+                                                                    .findFragmentByTag(PlaceSearchListFragment.class.getSimpleName()))
+                                                    .commit();
+
+                                                    linearLayoutContainer.setVisibility(View.GONE);
 													relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
 
 
@@ -407,6 +272,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
+                                                    DialogPopup.dismissLoadingDialog();
                                                 }
                                             }
                                         });
@@ -416,15 +282,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                             @Override
                                             public void run() {
                                                 DialogPopup.alertPopup(FareEstimateActivity.this, "", "Fare could not be estimated between the selected pickup and drop location");
+                                                DialogPopup.dismissLoadingDialog();
                                             }
                                         });
-										runOnUiThread(new Runnable() {
-
-											@Override
-											public void run() {
-												DialogPopup.dismissLoadingDialog();
-											}
-										});
                                     }
                                 }
 								else{
@@ -476,18 +336,12 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     }
 
 
-	private void updateFareEstimate(){
-
-	}
-
 	/**
 	 * ASync for calculating fare estimate from server
 	 */
 	public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final double distanceValue, final double timeValue) {
 		if (!HomeActivity.checkIfUserDataNull(activity)) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				DialogPopup.showLoadingDialog(activity, "Loading...");
-
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("start_latitude", "" + sourceLatLng.latitude);
@@ -551,23 +405,26 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 						});
 			} else {
 				retryDialog(activity, Data.CHECK_INTERNET_MSG, sourceLatLng, distanceValue, timeValue);
+                DialogPopup.dismissLoadingDialog();
 			}
-		}
+		} else{
+            DialogPopup.dismissLoadingDialog();
+        }
 	}
 
 	private void retryDialog(final Activity activity, String message, final LatLng sourceLatLng, final double distanceValue, final double timeValue){
 		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message, "Retry", "Cancel",
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						getFareEstimate(activity, sourceLatLng, distanceValue, timeValue);
-					}
-				},
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						performBackPressed();
-					}
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getFareEstimate(activity, sourceLatLng, distanceValue, timeValue);
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        performBackPressed();
+                    }
 				}, false, false);
 	}
 
@@ -615,43 +472,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 	}
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        try {
-            if(resultCode==RESULT_OK) {
-                if (requestCode == ADD_HOME) {
-                    String strResult = data.getStringExtra("PLACE");
-                    Gson gson = new Gson();
-                    AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
-                    if(searchResult != null){
-                        Prefs.with(FareEstimateActivity.this).save(SPLabels.ADD_HOME, strResult);
-                        //showSearchLayout();
-                    }else {
-                        textViewAddHome.setText("Add Home");
-                    }
-
-                } else if (requestCode == ADD_WORK) {
-                    String strResult = data.getStringExtra("PLACE");
-                    Gson gson = new Gson();
-                    AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
-                    if(searchResult != null) {
-                        Prefs.with(FareEstimateActivity.this).save(SPLabels.ADD_WORK, strResult);
-                        //showSearchLayout();
-                    }else{
-                        textViewAddWork.setText("Add Work");
-                    }
-                } else {
-                    Log.v("onActivityResult else part", "onActivityResult else part");
-                }
-                showAddPlaceLayout();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public void onTextChange(String text) {
 
     }
@@ -673,16 +493,21 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     @Override
     public void onPlaceSearchPre() {
-
+        DialogPopup.showLoadingDialog(FareEstimateActivity.this, "Loading...");
     }
 
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
-
+        getDirectionsAndComputeFare(Data.pickupLatLng, searchResult.latLng);
+        FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
     }
 
     @Override
     public void onPlaceSearchError() {
+        DialogPopup.dismissLoadingDialog();
+    }
 
+    @Override
+    public void onPlaceSaved() {
     }
 }
