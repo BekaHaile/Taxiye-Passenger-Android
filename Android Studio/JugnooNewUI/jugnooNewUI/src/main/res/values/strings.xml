@@ -251,7 +251,14 @@
 	<!-- Account Settings Strings -->
 	<string name="add_home">Add Home</string>
 	<string name="add_work">Add Work</string>
-	
+
+
+	<!-- Search state strings -->
+	<string name="search_state_edit_text_hint">Set pick up location</string>
+
+	<!-- Assigning state strings -->
+	<string name="assigning_state_edit_text_hint">Set drop location</string>
+
 	<!-- Ride Summary New Strings -->
 	<string name="total_fare">Total Fare</string>
 	<string name="Cash_to_be_paid">Cash to be paid</string>

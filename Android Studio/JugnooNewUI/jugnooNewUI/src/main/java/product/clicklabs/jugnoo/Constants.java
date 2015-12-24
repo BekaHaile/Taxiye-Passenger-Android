@@ -15,7 +15,6 @@ public interface Constants {
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
 	String KEY_DRIVER_CAR_NO = "driver_car_no";
-
 	String KEY_END_RIDE_DATA = "end_ride_data";
 	String KEY_APP_MONITORING_TIME_TO_SAVE = "app_monitoring_time";
 	String KEY_GOOGLE_NAME = "google_name";
@@ -24,5 +23,9 @@ public interface Constants {
 	String KEY_GOOGLE_IMAGE = "google_image";
 	String KEY_GOOGLE_PARCEL = "google_parcel";
 	String KEY_ETA = "eta";
+	int ADD_HOME = 2, ADD_WORK = 3;
+
+	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
+	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
 
 }
