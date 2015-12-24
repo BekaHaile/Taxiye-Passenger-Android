@@ -1096,6 +1096,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     textViewAddHome.setText(ss1);
                     Prefs.with(AccountActivity.this).save(SPLabels.ADD_HOME, strResult);
                     imageViewEditHome.setVisibility(View.VISIBLE);
+                    String savedWorkStr = Prefs.with(this).getString(SPLabels.ADD_WORK, "");
+                    if("".equalsIgnoreCase(savedWorkStr)){
+                        textViewAddWork.setText("Add Work");
+                        imageViewEditWork.setVisibility(View.GONE);
+                    }
                 }else {
                     textViewAddHome.setText("Add Home");
                     imageViewEditHome.setVisibility(View.GONE);
@@ -1111,6 +1116,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     textViewAddWork.setText(ss1);
                     Prefs.with(AccountActivity.this).save(SPLabels.ADD_WORK, strResult);
                     imageViewEditWork.setVisibility(View.VISIBLE);
+                    String savedHomeStr = Prefs.with(this).getString(SPLabels.ADD_HOME, "");
+                    if("".equalsIgnoreCase(savedHomeStr)){
+                        textViewAddHome.setText("Add Home");
+                        imageViewEditHome.setVisibility(View.GONE);
+                    }
                 }else{
                     textViewAddWork.setText("Add Work");
                     imageViewEditWork.setVisibility(View.GONE);

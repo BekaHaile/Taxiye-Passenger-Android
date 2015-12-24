@@ -4214,6 +4214,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         passengerScreenMode = PassengerScreenMode.P_RIDE_END;
                                         switchPassengerScreen(passengerScreenMode);
 
+                                        Utils.hideSoftKeyboard(activity, textViewInitialSearch);
+
                                         setUserData();
 
                                     } else {
@@ -6531,7 +6533,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onTextChange(String text) {
-        if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+        if((PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+                || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                 && !"".equalsIgnoreCase(text)){

@@ -310,24 +310,8 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		searchListActionsHandler.onPlaceSaved();
 	}
 
-	public int getScrollViewSearchVisiblity(){
-		return scrollViewSearch.getVisibility();
-	}
-
-	public void setScrollViewSearchVisiblity(int visiblity){
-		scrollViewSearch.setVisibility(visiblity);
-	}
-
 	public ProgressWheel getProgressBarSearch(){
 		return progressBarSearch;
-	}
-
-	public EditText getEditTextSearch(){
-		return editTextSearch;
-	}
-
-	public void setRelativeLayoutSearchBarBackground(int drawableId){
-		relativeLayoutSearchBar.setBackgroundResource(drawableId);
 	}
 
 }

@@ -77,7 +77,7 @@
                 android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
                 android:layout_toLeftOf="@+id/linearLayoutClose"
                 android:background="@color/transparent"
-                android:hint="Set pick up location"
+                android:hint=""
                 android:singleLine="true"
                 android:textColor="@color/black_text"
                 android:textCursorDrawable="@null"
@@ -122,7 +122,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/relativeLayoutSearchBar"
-            android:layout_above="@+id/buttonRemove">
+            android:layout_above="@+id/buttonRemove"
+            android:fillViewport="false">
 
             <LinearLayout
                 android:id="@+id/linearLayoutScrollSearch"
@@ -138,6 +139,18 @@
                     android:splitMotionEvents="false">
                 </product.clicklabs.jugnoo.utils.NonScrollListView>
 
+                <ImageView
+                    android:id="@+id/imageViewPoweredByGoogleSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/powered_by_google_light"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:tag="DontTouchMe"
+                    />
+
+
                 <TextView
                     android:id="@+id/textViewScrollSearch"
                     android:layout_width="10px"
@@ -150,12 +163,12 @@
         <Button
             android:id="@+id/buttonRemove"
             android:layout_width="648px"
-            android:layout_height="100px"
+            android:layout_height="85px"
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="30px"
-            android:layout_marginTop="30px"
+            android:layout_marginTop="20px"
             android:background="@drawable/button_yellow"
             android:text="REMOVE "
             android:textColor="@drawable/text_color_white_alpha_selector"

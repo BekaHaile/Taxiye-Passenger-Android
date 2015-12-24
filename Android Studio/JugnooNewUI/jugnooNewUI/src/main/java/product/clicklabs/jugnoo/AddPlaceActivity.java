@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -29,8 +30,6 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -53,6 +52,9 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
     private String placeName;
 
 	private GoogleApiClient mGoogleApiClient;
+
+    private final String TYPE_HOME = "home";
+    private final String TYPE_WORK = "work";
 
 
     @Override
@@ -79,43 +81,24 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         progressBarSearch = (ProgressWheel) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
         listViewSearch = (NonScrollListView) findViewById(R.id.listViewSearch);
-        //linearLayoutSearch = (LinearLayout) findViewById(R.id.linearLayoutSearch);
         imageViewSearchCross = (ImageView) findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
 
 
-        linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new
-                KeyboardLayoutListener(linearLayoutScrollSearch, textViewScrollSearch, new KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
-
-            }
-
-            @Override
-            public void keyBoardClosed() {
-
-            }
-        }));
 
         buttonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(placeName.equalsIgnoreCase(SPLabels.ADD_HOME)){
-                    Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
-                    addPlacesApi("", "", "home", "");
+                    addPlacesApi("", "", TYPE_HOME, "", false);
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_WORK)){
-                    Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
-                    addPlacesApi("", "", "work", "");
+                    addPlacesApi("", "", TYPE_WORK, "", false);
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_GYM)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_GYM, "");
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_FRIEND)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_FRIEND, "");
                 }
-                /*Intent intent=new Intent();
-                intent.putExtra("PLACE", "");
-                setResult(RESULT_OK, intent);
-                finish();*/
             }
         });
 
@@ -156,12 +139,28 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                         String strResult = gson.toJson(autoCompleteSearchResult);
 
                         if(placeName.equalsIgnoreCase("HOME")){
-                            addPlacesApi(autoCompleteSearchResult.address, autoCompleteSearchResult.placeId, "home", strResult);
-                            Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, strResult);
-                        }else if(placeName.equalsIgnoreCase("WORK")){
-                            addPlacesApi(autoCompleteSearchResult.address, autoCompleteSearchResult.placeId, "work", strResult);
-                            Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
+                            String savedWorkStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_WORK, "");
+                            boolean removeOther = false;
+                            if(!"".equalsIgnoreCase(savedWorkStr)){
+                                AutoCompleteSearchResult savedWork = gson.fromJson(savedWorkStr, AutoCompleteSearchResult.class);
+                                if(savedWork.getPlaceId().equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())){
+                                    removeOther = true;
+                                }
+                            }
+                            addPlacesApi(autoCompleteSearchResult.address, autoCompleteSearchResult.placeId, TYPE_HOME, strResult, removeOther);
                         }
+                        else if(placeName.equalsIgnoreCase("WORK")){
+                            String savedHomeStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_HOME, "");
+                            boolean removeOther = false;
+                            if(!"".equalsIgnoreCase(savedHomeStr)){
+                                AutoCompleteSearchResult savedHome = gson.fromJson(savedHomeStr, AutoCompleteSearchResult.class);
+                                if(savedHome.getPlaceId().equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())){
+                                    removeOther = true;
+                                }
+                            }
+                            addPlacesApi(autoCompleteSearchResult.address, autoCompleteSearchResult.placeId, TYPE_WORK, strResult, removeOther);
+                        }
+
                         Log.v("onPlaceClick result ", "---> " + strResult);
 
                         editTextSearch.setText(autoCompleteSearchResult.name + ", " + autoCompleteSearchResult.address);
@@ -207,6 +206,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
             placeName = getIntent().getStringExtra("requestCode");
             textViewTitle.setText("EDIT "+placeName);
             buttonRemove.setText("REMOVE "+placeName);
+            editTextSearch.setHint("Enter "+placeName.toLowerCase()+" location");
 
             if(!getIntent().getStringExtra("address").equalsIgnoreCase("")){
                 Gson gson = new Gson();
@@ -264,51 +264,93 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 	public void onConnectionFailed(ConnectionResult connectionResult) {
 	}
 
-    public void addPlacesApi(String address, String googlePlaceId, String type, final String strResult) {
-        if(AppStatus.getInstance(AddPlaceActivity.this).isOnline(AddPlaceActivity.this)) {
+    public void addPlacesApi(final String address, final String googlePlaceId, final String type,
+                             final String strResult, final boolean removeOther) {
+        try {
+            if(AppStatus.getInstance(AddPlaceActivity.this).isOnline(AddPlaceActivity.this)) {
 
-            DialogPopup.showLoadingDialog(AddPlaceActivity.this, "Updating...");
+                RequestParams params = new RequestParams();
 
-            RequestParams params = new RequestParams();
+                if(removeOther){
+                    params.put("access_token", Data.userData.accessToken);
+                    params.put("address", "");
+                    params.put("google_place_id", "");
 
-            params.put("access_token", Data.userData.accessToken);
-            params.put("address", address);
-            params.put("google_place_id", googlePlaceId);
-            params.put("type", type);
+                    if(type.equalsIgnoreCase(TYPE_HOME)){
+                        params.put("type", TYPE_WORK);
+                    } else if(type.equalsIgnoreCase(TYPE_WORK)){
+                        params.put("type", TYPE_HOME);
+                    }
+                }
+                else{
+                    params.put("access_token", Data.userData.accessToken);
+                    params.put("address", address);
+                    params.put("google_place_id", googlePlaceId);
+                    params.put("type", type);
+                }
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/add_home_and_work_address", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+				DialogPopup.showLoadingDialog(AddPlaceActivity.this, "Updating...");
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            DialogPopup.dismissLoadingDialog();
-                            DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                        }
+				AsyncHttpClient client = Data.getClient();
+				client.post(Config.getServerUrl() + "/add_home_and_work_address", params,
+						new CustomAsyncHttpResponseHandler() {
+							private JSONObject jObj;
 
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response", "response = " + response);
-                            DialogPopup.dismissLoadingDialog();
-                            try {
-                                jObj = new JSONObject(response);
-                                Intent intent=new Intent();
-                                intent.putExtra("PLACE", strResult);
-                                setResult(RESULT_OK, intent);
-                                finish();
+							@Override
+							public void onFailure(Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								DialogPopup.dismissLoadingDialog();
+								DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+							}
 
-                            }  catch (Exception exception) {
-                                exception.printStackTrace();
-                                DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_ERROR_MSG);
-                                DialogPopup.dismissLoadingDialog();
-                            }
-                        }
-                    });
-        }
-        else {
-            DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.CHECK_INTERNET_MSG);
+							@Override
+							public void onSuccess(String response) {
+								Log.i("Server response", "response = " + response);
+								DialogPopup.dismissLoadingDialog();
+								try {
+									jObj = new JSONObject(response);
+									int flag = jObj.optInt("", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+									String message = JSONParser.getServerMessage(jObj);
+									if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+
+                                        if(removeOther){
+                                            if(type.equalsIgnoreCase(TYPE_HOME)){
+                                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
+                                            } else if(type.equalsIgnoreCase(TYPE_WORK)){
+                                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
+                                            }
+                                            addPlacesApi(address, googlePlaceId, type, strResult, false);
+                                        }
+                                        else{
+                                            if(type.equalsIgnoreCase(TYPE_HOME)){
+                                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, strResult);
+                                            } else if(type.equalsIgnoreCase(TYPE_WORK)){
+                                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
+                                            }
+
+                                            Intent intent=new Intent();
+                                            intent.putExtra("PLACE", strResult);
+                                            setResult(RESULT_OK, intent);
+                                            finish();
+                                            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                                        }
+
+									} else{
+										DialogPopup.alertPopup(AddPlaceActivity.this, "", message);
+									}
+								}  catch (Exception exception) {
+									exception.printStackTrace();
+									DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.dismissLoadingDialog();
+								}
+							}
+						});
+			}
+			else {
+				DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.CHECK_INTERNET_MSG);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
