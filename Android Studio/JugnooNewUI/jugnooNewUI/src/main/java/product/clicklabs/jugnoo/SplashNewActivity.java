@@ -87,7 +87,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
-	Button buttonNoNetCall;
+	Button buttonNoNetCall, buttonRefresh;
 
 	boolean loginDataFetched = false, resumed = false;
 
@@ -279,9 +279,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
 		textViewNoNet.setTypeface(Fonts.latoRegular(this));
 		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall);
-		buttonNoNetCall.setTypeface(Fonts.latoRegular(this));
+		buttonNoNetCall.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
+		buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
+		buttonRefresh.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
 
-		buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
+		//buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
 
 
 		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
@@ -319,6 +321,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			public void onClick(View v) {
 				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
 				FlurryEventLogger.event(CALL_WHEN_NO_INTERNET);
+			}
+		});
+
+		buttonRefresh.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				relative.performClick();
 			}
 		});
 

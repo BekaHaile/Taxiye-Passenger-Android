@@ -103,15 +103,6 @@
             android:name="product.clicklabs.jugnoo.RegistrationIntentService"
             />
 
-
-
-
-
-
-
-
-
-        
         <activity
             android:name="product.clicklabs.jugnoo.SplashNewActivity"
             android:label="@string/app_name"
