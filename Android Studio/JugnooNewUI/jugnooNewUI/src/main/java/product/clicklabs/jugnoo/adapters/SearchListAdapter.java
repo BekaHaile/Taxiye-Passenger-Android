@@ -63,6 +63,7 @@ public class SearchListAdapter extends BaseAdapter{
     ArrayList<AutoCompleteSearchResult> autoCompleteSearchResults;
 
 	private GoogleApiClient mGoogleApiClient;
+    private boolean showSavedPlaces;
 
     /**
      * Constructor for initializing search base adapter
@@ -85,6 +86,7 @@ public class SearchListAdapter extends BaseAdapter{
             this.defaultSearchPivotLatLng = searchPivotLatLng;
             this.searchListActionsHandler = searchListActionsHandler;
 			this.mGoogleApiClient = mGoogleApiClient;
+            this.showSavedPlaces = true;
             this.editTextForSearch.addTextChangedListener(new TextWatcher() {
 
                 @Override
@@ -217,6 +219,10 @@ public class SearchListAdapter extends BaseAdapter{
 		}
 	}
 
+    public void setShowSavedPlaces(boolean showSavedPlaces) {
+        this.showSavedPlaces = showSavedPlaces;
+    }
+
 
     private boolean refreshingAutoComplete = false;
 
@@ -239,8 +245,9 @@ public class SearchListAdapter extends BaseAdapter{
 							}
 							autocompletePredictions.release();
 
-
-							addFavoriteLocations(searchText);
+                            if(showSavedPlaces) {
+                                addFavoriteLocations(searchText);
+                            }
 							setSearchResultsToList();
 							refreshingAutoComplete = false;
 
@@ -339,23 +346,23 @@ public class SearchListAdapter extends BaseAdapter{
         Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 		Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
 				.setResultCallback(new ResultCallback<PlaceBuffer>() {
-					@Override
-					public void onResult(PlaceBuffer places) {
-						try {
-                            Log.e("SearchListAdapter", "getPlaceById response="+places);
-							if (places.getStatus().isSuccess()) {
-								final Place myPlace = places.get(0);
-								final CharSequence thirdPartyAttributions = places.getAttributions();
-								SearchResult searchResult = new SearchResult(placeName, myPlace.getAddress().toString(), myPlace.getLatLng());
-								searchResult.setThirdPartyAttributions(thirdPartyAttributions);
-								setSearchResult(searchResult);
-							}
-							places.release();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
+                    @Override
+                    public void onResult(PlaceBuffer places) {
+                        try {
+                            Log.e("SearchListAdapter", "getPlaceById response=" + places);
+                            if (places.getStatus().isSuccess()) {
+                                final Place myPlace = places.get(0);
+                                final CharSequence thirdPartyAttributions = places.getAttributions();
+                                SearchResult searchResult = new SearchResult(placeName, myPlace.getAddress().toString(), myPlace.getLatLng());
+                                searchResult.setThirdPartyAttributions(thirdPartyAttributions);
+                                setSearchResult(searchResult);
+                            }
+                            places.release();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
         Log.v("after call back", "after call back");
     }
 

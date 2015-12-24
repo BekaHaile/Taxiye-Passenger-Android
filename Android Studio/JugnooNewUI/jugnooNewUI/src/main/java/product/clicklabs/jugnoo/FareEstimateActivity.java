@@ -54,7 +54,7 @@ import rmn.androidscreenlibrary.ASSL;
 
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SearchListAdapter.SearchListActionsHandler{
+        SearchListAdapter.SearchListActionsHandler, Constants{
 
     LinearLayout relative;
 
@@ -160,9 +160,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             }
         });
 
+        PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
+        bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+        placeSearchListFragment.setArguments(bundle);
+
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.linearLayoutContainer, new PlaceSearchListFragment(this, mGoogleApiClient), PlaceSearchListFragment.class.getSimpleName())
-                .addToBackStack(PlaceSearchListFragment.class.getSimpleName())
+                .add(R.id.linearLayoutContainer, placeSearchListFragment, PlaceSearchListFragment.class.getSimpleName())
                 .commitAllowingStateLoss();
 
     }

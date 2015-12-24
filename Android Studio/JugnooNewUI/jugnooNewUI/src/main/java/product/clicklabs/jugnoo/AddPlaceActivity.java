@@ -188,6 +188,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
                     }
                 });
+        searchListAdapter.setShowSavedPlaces(false);
 
         listViewSearch.setAdapter(searchListAdapter);
 
