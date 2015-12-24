@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -21,8 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
@@ -33,6 +36,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -43,13 +47,15 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import rmn.androidscreenlibrary.ASSL;
 
 public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames{
-	
+
+	private final String TAG = "OTPConfirmScreen";
+
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
@@ -287,14 +293,58 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		//new start
 		try {
-			if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
-				textViewOtpNumber.setText(facebookRegisterData.phoneNo);
-			}
-			else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
-				textViewOtpNumber.setText(googleRegisterData.phoneNo);
+			//https://v.jugnoo.in/123456
+			Uri data = getIntent().getData();
+			String host = "verify";
+			Gson gson = new Gson();
+//			jugnooautos://verify?otp=1234
+			Toast.makeText(this, data+"", Toast.LENGTH_LONG).show();
+
+			if(data != null && data.getHost().equalsIgnoreCase(host)) {
+				Toast.makeText(this, data.toString(), Toast.LENGTH_LONG).show();
+				String otp = data.getQueryParameter("otp");
+
+				String registrationMode = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE,
+						"" + RegisterScreen.registerationType);
+				String registerData = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA, "");
+
+				if((""+RegisterScreen.RegisterationType.FACEBOOK).equalsIgnoreCase(registrationMode)
+						&& !"".equalsIgnoreCase(registerData)){
+					facebookRegisterData = gson.fromJson(registerData, FacebookRegisterData.class);
+					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
+				}
+				else if((""+RegisterScreen.RegisterationType.GOOGLE).equalsIgnoreCase(registrationMode)
+						&& !"".equalsIgnoreCase(registerData)){
+					googleRegisterData = gson.fromJson(registerData, GoogleRegisterData.class);
+					textViewOtpNumber.setText(googleRegisterData.phoneNo);
+				}
+				else if((""+RegisterScreen.RegisterationType.EMAIL).equalsIgnoreCase(registrationMode)
+						&& !"".equalsIgnoreCase(registerData)){
+					emailRegisterData = gson.fromJson(registerData, EmailRegisterData.class);
+					textViewOtpNumber.setText(emailRegisterData.phoneNo);
+				}
+				if(otp != null && !"".equalsIgnoreCase(otp)){
+					editTextOTP.setText(otp);
+					editTextOTP.setSelection(editTextOTP.getText().length());
+					buttonVerify.performClick();
+				}
 			}
 			else{
-				textViewOtpNumber.setText(emailRegisterData.phoneNo);
+				if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + RegisterScreen.RegisterationType.FACEBOOK);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(facebookRegisterData, FacebookRegisterData.class));
+				}
+				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+					textViewOtpNumber.setText(googleRegisterData.phoneNo);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+RegisterScreen.RegisterationType.GOOGLE);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(googleRegisterData, GoogleRegisterData.class));
+				}
+				else{
+					textViewOtpNumber.setText(emailRegisterData.phoneNo);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+RegisterScreen.RegisterationType.EMAIL);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(emailRegisterData, EmailRegisterData.class));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -347,17 +397,19 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		OTP_SCREEN_OPEN = "yes";
 
 
-		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
+//		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+//			@Override
+//			public void keyboardOpened() {
+//
+//			}
+//
+//			@Override
+//			public void keyBoardClosed() {
+//
+//			}
+//		}));
 
-			}
 
-			@Override
-			public void keyBoardClosed() {
-
-			}
-		}));
 
 	}
 
@@ -412,7 +464,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		HomeActivity.checkForAccessTokenChange(this);
 
-        checkIfRegisterDataNull(this);
+//        checkIfRegisterDataNull(this);
 
 	}
 
@@ -574,11 +626,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 }
 
 
-                params.put("user_fb_id", Data.facebookUserData.fbId);
-                params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
-                params.put("fb_access_token", Data.facebookUserData.accessToken);
-                params.put("fb_mail", Data.facebookUserData.userEmail);
-                params.put("username", Data.facebookUserData.userName);
+                params.put("user_fb_id", facebookRegisterData.fbId);
+                params.put("user_fb_name", facebookRegisterData.fbName);
+                params.put("fb_access_token", facebookRegisterData.accessToken);
+                params.put("fb_mail", facebookRegisterData.fbUserEmail);
+                params.put("username", facebookRegisterData.fbUserName);
 
                 params.put("device_token", Data.deviceToken);
                 params.put("device_type", Data.DEVICE_TYPE);
@@ -634,7 +686,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                                         if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
                                             new JSONParser().parseAccessTokenLoginData(activity, response);
                                             loginDataFetched = true;
-                                            Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
+                                            Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
                                             Database.getInstance(OTPConfirmScreen.this).close();
 											BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
 											FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
@@ -678,11 +730,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					Data.loginLongitude = Data.locationFetcher.getLongitude();
 				}
 
-				params.put("user_google_id", Data.googleSignInAccount.getId());
-				params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
-				params.put("user_google_mail", Data.googleSignInAccount.getEmail());
-				params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
-				params.put("google_access_token", Data.googleSignInAccount.getIdToken());
+				params.put("user_google_id", googleRegisterData.id);
+				params.put("user_google_name", googleRegisterData.name);
+				params.put("user_google_mail", googleRegisterData.email);
+				params.put("user_google_image", googleRegisterData.image);
+				params.put("google_access_token", googleRegisterData.accessToken);
 
 				params.put("device_token", Data.deviceToken);
 				params.put("device_type", Data.DEVICE_TYPE);
@@ -738,7 +790,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 											if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 												new JSONParser().parseAccessTokenLoginData(activity, response);
 												loginDataFetched = true;
-												Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.googleSignInAccount.getEmail());
+												Database.getInstance(OTPConfirmScreen.this).insertEmail(googleRegisterData.email);
 												Database.getInstance(OTPConfirmScreen.this).close();
 												BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
 											}
