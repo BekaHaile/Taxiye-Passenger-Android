@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.google.gson.Gson;
@@ -293,15 +292,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		//new start
 		try {
-			//https://v.jugnoo.in/123456
+			//jungooautos-verify://app?otp=1234
 			Uri data = getIntent().getData();
-			String host = "verify";
+			String host = "app";
 			Gson gson = new Gson();
-//			jugnooautos://verify?otp=1234
-			Toast.makeText(this, data+"", Toast.LENGTH_LONG).show();
 
 			if(data != null && data.getHost().equalsIgnoreCase(host)) {
-				Toast.makeText(this, data.toString(), Toast.LENGTH_LONG).show();
 				String otp = data.getQueryParameter("otp");
 
 				String registrationMode = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE,
