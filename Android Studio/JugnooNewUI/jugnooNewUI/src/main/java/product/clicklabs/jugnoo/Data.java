@@ -186,6 +186,7 @@ public class Data {
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
 
 	public static String knowlarityMissedCallNumber = "";
+	public static int otpViaCallEnabled = 1;
 
 	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
