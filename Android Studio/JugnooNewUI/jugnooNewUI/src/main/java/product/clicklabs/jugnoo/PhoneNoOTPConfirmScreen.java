@@ -253,6 +253,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
 				if(Data.otpViaCallEnabled == 1){
 					relativeLayoutOr.setVisibility(View.VISIBLE);
+				} else{
+					relativeLayoutOr.setVisibility(View.GONE);
 				}
 				relativeLayoutMissCall.setVisibility(View.VISIBLE);
 			}

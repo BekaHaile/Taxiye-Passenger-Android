@@ -372,6 +372,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
 				if(Data.otpViaCallEnabled == 1){
 					relativeLayoutOr.setVisibility(View.VISIBLE);
+				} else{
+					relativeLayoutOr.setVisibility(View.GONE);
 				}
 				relativeLayoutMissCall.setVisibility(View.VISIBLE);
 			}
