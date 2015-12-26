@@ -256,6 +256,7 @@ public class JSONParser implements Constants {
 		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
+        Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 		int promoSuccess = userData.optInt("promo_success", 1);
 
 		int paytmEnabled = userData.optInt("paytm_enabled", 0);

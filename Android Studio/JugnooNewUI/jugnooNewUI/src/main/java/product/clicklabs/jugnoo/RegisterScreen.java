@@ -823,6 +823,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                         RegisterScreen.this.referralCode = referralCode;
                                         RegisterScreen.this.accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+                                        Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
                                         sendToOtpScreen = true;
                                     } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                         RegisterScreen.this.name = name;
@@ -946,6 +947,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                         RegisterScreen.this.referralCode = referralCode;
                                         RegisterScreen.this.accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+                                        Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
                                         sendToOtpScreen = true;
                                     } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                         RegisterScreen.this.phoneNo = phoneNo;
@@ -1066,6 +1068,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 											RegisterScreen.this.referralCode = referralCode;
 											RegisterScreen.this.accessToken = jObj.getString("access_token");
 											Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+                                            Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 											sendToOtpScreen = true;
 										} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
 											RegisterScreen.this.phoneNo = phoneNo;
