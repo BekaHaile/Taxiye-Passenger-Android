@@ -635,7 +635,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-										Data.otpViaCallEnabled = jObj.optInt("otp_via_call_enabled", 1);
+										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 										otpErrorMsg = jObj.getString("error");
 										RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 										sendToOtpScreen = true;
@@ -753,7 +753,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
                                         accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-										Data.otpViaCallEnabled = jObj.optInt("otp_via_call_enabled", 1);
+										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 										otpErrorMsg = jObj.getString("error");
 										RegisterScreen.registerationType = RegisterScreen.RegisterationType.FACEBOOK;
 										sendToOtpScreen = true;
@@ -869,7 +869,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 										accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-										Data.otpViaCallEnabled = jObj.optInt("otp_via_call_enabled", 1);
+										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 										otpErrorMsg = jObj.getString("error");
 										RegisterScreen.registerationType = RegisterScreen.RegisterationType.GOOGLE;
 										sendToOtpScreen = true;

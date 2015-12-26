@@ -25,4 +25,6 @@ public interface Constants {
 	String KEY_GOOGLE_PARCEL = "google_parcel";
 	String KEY_ETA = "eta";
 
+	String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
+
 }
