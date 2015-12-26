@@ -711,9 +711,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 			}
 		} else {
-			relativeLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
-			if (!AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				linearLayoutNoNet.setVisibility(View.GONE);
+				relativeLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
+			} else{
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
+				relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 			}
 			sendToRegisterThroughSms(Data.deepLinkReferralCode);
 		}
