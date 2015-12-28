@@ -736,10 +736,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					Data.loginLongitude = Data.locationFetcher.getLongitude();
 				}
 
-				params.put("user_google_id", googleRegisterData.id);
-				params.put("user_google_name", googleRegisterData.name);
-				params.put("user_google_mail", googleRegisterData.email);
-				params.put("user_google_image", googleRegisterData.image);
 				params.put("google_access_token", googleRegisterData.accessToken);
 
 				params.put("device_token", Data.getDeviceToken());

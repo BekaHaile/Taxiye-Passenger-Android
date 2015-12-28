@@ -76,16 +76,16 @@
         android:id="@+id/linearLayoutAddFav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:background="@drawable/background_wallet_border" >
 
         <RelativeLayout
             android:id="@+id/relativeLayoutAddHome"
             android:layout_width="match_parent"
             android:layout_height="90px"
-            android:layout_marginLeft="20px"
-            android:layout_marginRight="20px"
-            android:visibility="gone"
-            android:background="@drawable/background_wallet_border" >
+            android:visibility="visible" >
 
 
             <TextView
@@ -113,26 +113,22 @@
                 android:src="@drawable/home"
                 android:tag="mwar" />
 
-            <ImageView
-                android:id="@+id/imageViewEditHome"
-                android:layout_width="68px"
-                android:layout_height="68px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="15px"
-                android:layout_marginRight="20px"
-                android:src="@drawable/edit_icon_selector"
-                android:tag="mwar" />
         </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imageViewSep"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_dark_more"
+            />
+
+
 
         <RelativeLayout
             android:id="@+id/relativeLayoutAddWork"
             android:layout_width="match_parent"
             android:layout_height="90px"
-            android:layout_marginLeft="20px"
-            android:layout_marginRight="20px"
-            android:visibility="gone"
-            android:background="@drawable/background_wallet_border" >
+            android:visibility="visible" >
 
 
             <TextView
@@ -160,16 +156,6 @@
                 android:src="@drawable/work"
                 android:tag="mwar" />
 
-            <ImageView
-                android:id="@+id/imageViewEditWork"
-                android:layout_width="68px"
-                android:layout_height="68px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="15px"
-                android:layout_marginRight="20px"
-                android:src="@drawable/edit_icon_selector"
-                android:tag="mwar" />
         </RelativeLayout>
 
     </LinearLayout>

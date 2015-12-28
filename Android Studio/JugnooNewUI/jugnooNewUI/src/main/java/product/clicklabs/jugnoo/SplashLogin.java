@@ -808,10 +808,6 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
 
-			params.put("user_google_id", Data.googleSignInAccount.getId());
-			params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
-			params.put("user_google_mail", Data.googleSignInAccount.getEmail());
-			params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 			params.put("device_token", Data.getDeviceToken());
@@ -858,7 +854,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										facebookRegister = true;
+										googleRegister = true;
 										notRegisteredMsg = error;
 									}
 									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
@@ -932,7 +928,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 					OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
 							Data.googleSignInAccount.getDisplayName(),
 							Data.googleSignInAccount.getEmail(),
-							Data.googleSignInAccount.getPhotoUrl().toString(),
+							"",
 							phoneNoOfUnverifiedAccount, "", "", accessToken);
 				}
 				else{

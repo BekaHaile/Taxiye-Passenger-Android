@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -43,15 +42,15 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	
 	private LinearLayout linearLayoutRoot;
 
-	private RelativeLayout relativeLayoutSearchBar;
 	private EditText editTextSearch;
 	private ProgressWheel progressBarSearch;
 	private ImageView imageViewSearchCross;
-	
+
+	private LinearLayout linearLayoutAddFav;
 	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
 	private TextView textViewAddHome, textViewAddWork;
+	private ImageView imageViewSep;
 
-	private ScrollView scrollViewSearch;
 	private LinearLayout linearLayoutScrollSearch;
 	private NonScrollListView listViewSearch;
 	private TextView textViewScrollSearch;
@@ -94,19 +93,21 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
 
 
-		relativeLayoutSearchBar = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSearchBar);
 		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
 		editTextSearch.setTypeface(Fonts.latoRegular(activity));
 		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
-		scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
 		linearLayoutScrollSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutScrollSearch);
 		textViewScrollSearch = (TextView) rootView.findViewById(R.id.textViewScrollSearch);
+
+
+		linearLayoutAddFav = (LinearLayout) rootView.findViewById(R.id.linearLayoutAddFav);
 		relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
 		relativeLayoutAddWork = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddWork);
 		textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome);
 		textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork);
+		imageViewSep = (ImageView) rootView.findViewById(R.id.imageViewSep);
 
 		linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch,
 				textViewScrollSearch, new KeyboardLayoutListener.KeyBoardStateHandler() {
@@ -146,8 +147,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					public void onTextChange(String text) {
 						if(text.length() > 0){
 							imageViewSearchCross.setVisibility(View.VISIBLE);
-							relativeLayoutAddHome.setVisibility(View.GONE);
-							relativeLayoutAddWork.setVisibility(View.GONE);
+							hideSearchLayout();
 						}
 						else{
 							imageViewSearchCross.setVisibility(View.GONE);
@@ -240,16 +240,40 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	}
 
 	private void showSearchLayout(){
-		if(Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
+		String home = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+		String work = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+
+		if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
+			linearLayoutAddFav.setVisibility(View.VISIBLE);
+		} else{
+			linearLayoutAddFav.setVisibility(View.GONE);
+		}
+
+		if(home.equalsIgnoreCase("")){
 			relativeLayoutAddHome.setVisibility(View.VISIBLE);
 		}else{
 			relativeLayoutAddHome.setVisibility(View.GONE);
 		}
-		if(Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
+
+		if(work.equalsIgnoreCase("")){
 			relativeLayoutAddWork.setVisibility(View.VISIBLE);
+			if(home.equalsIgnoreCase("")){
+				imageViewSep.setVisibility(View.VISIBLE);
+			} else{
+				imageViewSep.setVisibility(View.GONE);
+			}
 		}else{
 			relativeLayoutAddWork.setVisibility(View.GONE);
+			imageViewSep.setVisibility(View.GONE);
 		}
+
+	}
+
+	private void hideSearchLayout(){
+		linearLayoutAddFav.setVisibility(View.GONE);
+		relativeLayoutAddHome.setVisibility(View.GONE);
+		relativeLayoutAddWork.setVisibility(View.GONE);
+		imageViewSep.setVisibility(View.GONE);
 	}
 
 

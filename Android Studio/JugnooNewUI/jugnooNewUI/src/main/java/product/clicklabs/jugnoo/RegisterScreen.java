@@ -991,10 +991,6 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
 
-			params.put("user_google_id", Data.googleSignInAccount.getId());
-			params.put("user_google_name", Data.googleSignInAccount.getDisplayName());
-			params.put("user_google_mail", Data.googleSignInAccount.getEmail());
-			params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
             params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 			params.put("phone_no", phoneNo);
@@ -1110,7 +1106,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 			OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
 					Data.googleSignInAccount.getDisplayName(),
 					Data.googleSignInAccount.getEmail(),
-					Data.googleSignInAccount.getPhotoUrl().toString(),
+                    "",
 					phoneNo, password, referralCode, accessToken);
 		}
 		else{
