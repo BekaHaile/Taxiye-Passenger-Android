@@ -814,7 +814,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                         DialogPopup.alertPopup(activity, "", error);
                                     } else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
                                         String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
+                                        DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                     } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                         RegisterScreen.this.name = name;
                                         RegisterScreen.this.emailId = emailId;
@@ -940,7 +940,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                                         DialogPopup.alertPopup(activity, "", error);
                                     } else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
                                         String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
+                                        DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                     } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                         RegisterScreen.this.phoneNo = jObj.getString("phone_no");
                                         RegisterScreen.this.password = password;
@@ -1057,7 +1057,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 											DialogPopup.alertPopup(activity, "", error);
 										} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
 											String error = jObj.getString("error");
-											DialogPopup.alertPopup(activity, "", error);
+                                            DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 										} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 											RegisterScreen.this.phoneNo = jObj.getString("phone_no");
 											RegisterScreen.this.password = password;
@@ -1170,6 +1170,19 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
+
+    private OnClickListener onClickListenerAlreadyRegistered = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            goToLoginScreen();
+        }
+    };
+    private void goToLoginScreen(){
+        Intent intent = new Intent(this, SplashLogin.class);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+    }
 
     @Override
     protected void onDestroy() {
