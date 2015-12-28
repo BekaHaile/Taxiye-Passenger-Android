@@ -528,7 +528,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 params.put("email", emailRegisterData.emailId);
                 params.put("password", emailRegisterData.password);
-                params.put("device_token", Data.deviceToken);
+                params.put("device_token", Data.getDeviceToken());
                 params.put("device_type", Data.DEVICE_TYPE);
                 params.put("device_name", Data.deviceName);
                 params.put("app_version", "" + Data.appVersion);
@@ -638,7 +638,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("fb_mail", facebookRegisterData.fbUserEmail);
                 params.put("username", facebookRegisterData.fbUserName);
 
-                params.put("device_token", Data.deviceToken);
+                params.put("device_token", Data.getDeviceToken());
                 params.put("device_type", Data.DEVICE_TYPE);
                 params.put("device_name", Data.deviceName);
                 params.put("app_version", "" + Data.appVersion);
@@ -742,7 +742,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("user_google_image", googleRegisterData.image);
 				params.put("google_access_token", googleRegisterData.accessToken);
 
-				params.put("device_token", Data.deviceToken);
+				params.put("device_token", Data.getDeviceToken());
 				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("device_name", Data.deviceName);
 				params.put("app_version", "" + Data.appVersion);

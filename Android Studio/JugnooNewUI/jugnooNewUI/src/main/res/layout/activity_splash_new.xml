@@ -66,13 +66,13 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="40px"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <Button
                     android:id="@+id/buttonLogin"
-                    android:layout_width="230px"
+                    android:layout_width="280px"
                     android:layout_height="100px"
-                    android:layout_marginLeft="85px"
+                    android:layout_marginLeft="65px"
                     android:background="@drawable/button_yellow_white_border_selector"
                     android:text="LOG IN"
                     android:textColor="@drawable/text_color_white_alpha_selector"
@@ -80,10 +80,10 @@
 
                 <Button
                     android:id="@+id/buttonRegister"
-                    android:layout_width="230px"
+                    android:layout_width="280px"
                     android:layout_height="100px"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="85px"
+                    android:layout_marginRight="65px"
                     android:background="@drawable/button_white_selector"
                     android:text="SIGN UP"
                     android:textColor="@drawable/text_color_yellow_alpha_selector"

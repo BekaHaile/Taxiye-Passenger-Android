@@ -55,7 +55,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
     @SuppressWarnings("deprecation")
     private void notificationManager(Context context, String title, String message, boolean ring) {
-
+		clearNotifications(context);
         try {
             long when = System.currentTimeMillis();
 
@@ -91,7 +91,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				builder.setPriority(Notification.PRIORITY_HIGH);
 			}
 
-
             Notification notification = builder.build();
             notificationManager.notify(NOTIFICATION_ID, notification);
 
@@ -107,7 +106,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
     @SuppressWarnings("deprecation")
     private void notificationManagerResume(Context context, String title, String message, boolean ring) {
-
+		clearNotifications(context);
         try {
             long when = System.currentTimeMillis();
 
@@ -121,11 +120,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-            builder.setAutoCancel(true);
-            builder.setContentTitle(title);
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-            builder.setContentText(message);
-            builder.setTicker(message);
+			builder.setAutoCancel(true);
+			builder.setContentTitle(title);
+			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+			builder.setContentText(message);
+			builder.setTicker(message);
 
             if (ring) {
                 builder.setLights(Color.GREEN, 500, 500);
@@ -133,14 +132,13 @@ public class GCMIntentService extends GcmListenerService implements Constants {
                 builder.setDefaults(Notification.DEFAULT_ALL);
             }
 
-            builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-            builder.setSmallIcon(R.drawable.notification_icon);
+			builder.setWhen(when);
+			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+			builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
 				builder.setPriority(Notification.PRIORITY_HIGH);
 			}
-
 
             Notification notification = builder.build();
             notificationManager.notify(NOTIFICATION_ID, notification);

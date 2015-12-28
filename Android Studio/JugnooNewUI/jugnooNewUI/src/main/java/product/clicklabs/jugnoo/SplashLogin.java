@@ -574,7 +574,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
                 params.put("email", emailId);
             }
 			params.put("password", password);
-			params.put("device_token", Data.deviceToken);
+			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
 			params.put("app_version", ""+Data.appVersion);
@@ -697,7 +697,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("fb_mail", Data.facebookUserData.userEmail);
 			params.put("username", Data.facebookUserData.userName);
 			
-			params.put("device_token", Data.deviceToken);
+			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
 			params.put("app_version", ""+Data.appVersion);
@@ -814,7 +814,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			params.put("user_google_image", Data.googleSignInAccount.getPhotoUrl().toString());
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
-			params.put("device_token", Data.deviceToken);
+			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
 			params.put("app_version", ""+Data.appVersion);

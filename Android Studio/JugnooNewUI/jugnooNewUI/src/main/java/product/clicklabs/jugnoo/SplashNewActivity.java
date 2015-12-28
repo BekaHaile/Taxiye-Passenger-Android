@@ -667,7 +667,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				RequestParams params = new RequestParams();
 				params.put("access_token", accessToken);
-				params.put("device_token", Data.deviceToken);
+				params.put("device_token", Data.getDeviceToken());
 
 
 				params.put("latitude", "" + Data.loginLatitude);

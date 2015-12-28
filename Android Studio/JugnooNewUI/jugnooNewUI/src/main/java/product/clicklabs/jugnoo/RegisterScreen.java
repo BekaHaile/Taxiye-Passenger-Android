@@ -761,7 +761,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
             params.put("client_id", Config.getClientId());
             params.put("referral_code", referralCode);
 
-            params.put("device_token", Data.deviceToken);
+            params.put("device_token", Data.getDeviceToken());
             params.put("unique_device_id", Data.uniqueDeviceId);
 
 			if(Data.branchReferringParams != null){
@@ -882,7 +882,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
-            params.put("device_token", Data.deviceToken);
+            params.put("device_token", Data.getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
             params.put("app_version", "" + Data.appVersion);
@@ -1003,7 +1003,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
-			params.put("device_token", Data.deviceToken);
+			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
 			params.put("app_version", "" + Data.appVersion);
