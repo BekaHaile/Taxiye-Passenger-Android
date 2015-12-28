@@ -1499,24 +1499,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 if (Data.feedbackReasons.size() > 0) {
                     if (rating > 0 && rating <= 3) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                textViewRSWhatImprove.setVisibility(View.VISIBLE);
-                                gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+                        textViewRSWhatImprove.setVisibility(View.VISIBLE);
+                        gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
 
-                                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-                                layoutParams.height = (int) (ASSL.Yscale() * 150);
-                                editTextRSFeedback.setLayoutParams(layoutParams);
-                            }
-                        }, 205);
-                    } else {
-                        textViewRSWhatImprove.setVisibility(View.GONE);
-                        gridViewRSFeedbackReasons.setVisibility(View.GONE);
                         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-                        layoutParams.height = (int) (ASSL.Yscale() * 200);
+                        layoutParams.height = (int) (ASSL.Yscale() * 150);
                         editTextRSFeedback.setLayoutParams(layoutParams);
-                        textViewRSOtherError.setText("");
+                    } else {
+                        setZeroRatingView();
                     }
                 }
             }
@@ -1537,7 +1527,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void keyBoardClosed() {
-                    editTextRSFeedback.setHint(getString(R.string.please_share_your_feedback));
+                    editTextRSFeedback.setHint(getString(R.string.leave_a_comment));
                 }
             });
         linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
@@ -2263,6 +2253,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         scrollViewRideSummary.scrollTo(0, 0);
                         ratingBarRSFeedback.setRating(0f);
+                        setZeroRatingView();
+
                         editTextRSFeedback.setText("");
                         for(int i=0; i<Data.feedbackReasons.size(); i++){
                             Data.feedbackReasons.get(i).checked = false;
@@ -2924,6 +2916,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
+    private void setZeroRatingView(){
+        textViewRSWhatImprove.setVisibility(View.GONE);
+        gridViewRSFeedbackReasons.setVisibility(View.GONE);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+        layoutParams.height = (int) (ASSL.Yscale() * 200);
+        editTextRSFeedback.setLayoutParams(layoutParams);
+        textViewRSOtherError.setText("");
+    }
 
     private PlaceSearchListFragment getPlaceSearchListFragment(PassengerScreenMode mode){
         Fragment frag = getSupportFragmentManager()

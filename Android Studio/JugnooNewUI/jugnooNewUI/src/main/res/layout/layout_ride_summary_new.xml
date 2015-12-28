@@ -186,7 +186,7 @@
             android:layout_marginTop="20px"
             android:background="@drawable/background_white_rounded_bordered"
             android:gravity="left"
-            android:hint="@string/please_share_your_feedback"
+            android:hint="@string/leave_a_comment"
             android:padding="20px"
             android:scrollbars="vertical"
             android:textSize="28px"
