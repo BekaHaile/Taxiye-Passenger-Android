@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import product.clicklabs.jugnoo.R;
-import rmn.androidscreenlibrary.ASSL;
+
 
 @SuppressWarnings("static-access")
 public class CustomMapMarkerCreator {

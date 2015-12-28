@@ -1,10 +1,6 @@
 package product.clicklabs.jugnoo;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,16 +18,15 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 
-import java.util.List;
-
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import rmn.androidscreenlibrary.ASSL;
+
 
 public class ShareActivity extends BaseActivity implements FlurryEventNames {
 	

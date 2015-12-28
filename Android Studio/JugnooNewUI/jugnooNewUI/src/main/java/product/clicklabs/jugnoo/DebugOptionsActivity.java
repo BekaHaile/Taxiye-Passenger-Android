@@ -20,10 +20,11 @@ import android.widget.Toast;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
-import rmn.androidscreenlibrary.ASSL;
+
 
 public class DebugOptionsActivity extends BaseActivity {
 

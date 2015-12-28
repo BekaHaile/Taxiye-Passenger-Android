@@ -24,7 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
-import rmn.androidscreenlibrary.ASSL;
+
 
 public class DialogPopup {
 

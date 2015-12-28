@@ -15,8 +15,9 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import rmn.androidscreenlibrary.ASSL;
+
 
 /**
  * Created by socomo20 on 7/27/15.
