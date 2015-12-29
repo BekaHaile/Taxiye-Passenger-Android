@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import product.clicklabs.jugnoo.adapters.ShareFragmentAdapter;
 import product.clicklabs.jugnoo.config.Config;
@@ -70,6 +71,9 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 		viewPager = (ViewPager) findViewById(R.id.viewPager);
 		shareFragmentAdapter = new ShareFragmentAdapter(getSupportFragmentManager());
 		viewPager.setAdapter(shareFragmentAdapter);
+
+		SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
+		viewPagerTab.setViewPager(viewPager);
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);

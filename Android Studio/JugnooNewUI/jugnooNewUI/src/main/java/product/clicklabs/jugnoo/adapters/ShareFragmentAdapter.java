@@ -42,4 +42,18 @@ public class ShareFragmentAdapter extends FragmentPagerAdapter {
 		return 3;
 	}
 
+	@Override
+	public CharSequence getPageTitle(int position) {
+		switch (position) {
+			case 0:
+				return "Earn";
+			case 1:
+				return "Leaderboard";
+			case 2:
+				return "Activity";
+		}
+
+		return null;
+	}
+
 }
