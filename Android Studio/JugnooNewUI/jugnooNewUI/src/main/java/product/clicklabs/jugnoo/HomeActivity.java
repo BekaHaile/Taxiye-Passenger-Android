@@ -1647,8 +1647,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
 				farAwayCity = "Our service is not available in this area";
 				setServiceAvailablityUI(farAwayCity);
+                Data.lastRefreshLatLng = new LatLng(22.971723, 78.754263);
             } else {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
+                Data.lastRefreshLatLng = new LatLng(Data.latitude, Data.longitude);
             }
 
 
@@ -2056,6 +2058,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void sendToFareDetails() {
         HelpParticularActivity.helpSection = HelpSection.FARE_DETAILS;
+        if(map != null) {
+            Data.lastRefreshLatLng = map.getCameraPosition().target;
+        }
 		startActivity(new Intent(HomeActivity.this, HelpParticularActivity.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		FlurryEventLogger.event(FARE_DETAILS);

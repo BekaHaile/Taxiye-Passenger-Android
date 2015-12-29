@@ -24,6 +24,8 @@ public interface Constants {
 	String KEY_GOOGLE_PARCEL = "google_parcel";
 	String KEY_ETA = "eta";
 	int ADD_HOME = 2, ADD_WORK = 3;
+	String KEY_LATITUDE = "latitude";
+	String KEY_LONGITUDE = "longitude";
 
 	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
 	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
