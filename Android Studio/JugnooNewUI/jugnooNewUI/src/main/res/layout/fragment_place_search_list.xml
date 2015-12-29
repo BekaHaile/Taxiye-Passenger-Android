@@ -118,8 +118,8 @@
         <ImageView
             android:id="@+id/imageViewSep"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/grey_dark_more"
+            android:layout_height="2px"
+            android:background="@color/grey_dark"
             />
 
 
