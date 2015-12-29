@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/linearLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+
+        >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutDownloads"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/share_activity_bar_height"
+            android:background="@drawable/background_white_yellow_selector" >
+
+            <TextView
+                android:id="@+id/textViewNumberOfDownloads"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/share_activity_text_margin_left"
+                android:text="@string/number_of_downloads"
+                android:textColor="@drawable/text_color_grey_dark_white_selector"
+                android:textSize="@dimen/share_activity_text_size" />
+
+            <TextView
+                android:id="@+id/textViewNumberOfDownloadsValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/share_activity_text_margin_right"
+                android:text="0"
+                android:textColor="@drawable/text_color_grey_dark_white_selector"
+                android:textSize="@dimen/share_activity_text_size" />
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_alignParentBottom="true"
+                android:src="@color/grey_dark_less" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutFirstRides"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/share_activity_bar_height"
+            android:background="@drawable/background_white_yellow_selector" >
+
+            <TextView
+                android:id="@+id/textViewNumberOfFirstRides"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/share_activity_text_margin_left"
+                android:text="@string/number_of_first_rides"
+                android:textColor="@drawable/text_color_grey_dark_white_selector"
+                android:textSize="@dimen/share_activity_text_size" />
+
+            <TextView
+                android:id="@+id/textViewNumberOfFirstRidesValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/share_activity_text_margin_right"
+                android:text="0"
+                android:textColor="@drawable/text_color_grey_dark_white_selector"
+                android:textSize="@dimen/share_activity_text_size" />
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_alignParentBottom="true"
+                android:src="@color/grey_dark_less" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutMoneyEarned"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/share_activity_bar_height"
+            android:background="@drawable/background_white_yellow_selector" >
+
+            <TextView
+                android:id="@+id/textViewMoneyEarned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/share_activity_text_margin_left"
+                android:text="@string/money_earned"
+                android:textColor="@drawable/text_color_grey_dark_white_selector"
+                android:textSize="@dimen/share_activity_text_size" />
+
+            <TextView
+                android:id="@+id/textViewMoneyEarnedValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/share_activity_text_margin_right"
+                android:text="0"
+                android:textColor="@drawable/text_color_grey_dark_white_selector"
+                android:textSize="@dimen/share_activity_text_size" />
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_alignParentBottom="true"
+                android:src="@color/grey_dark_less" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
