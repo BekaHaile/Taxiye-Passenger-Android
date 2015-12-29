@@ -286,6 +286,10 @@
 	<string name="number_of_first_rides">Number of first rides</string>
 	<string name="money_earned">Money earned</string>
 
+	<!-- Share Leaderboard-->
+	<string name="local_leaderboard">Local Leaderboard</string>
+	<string name="daily_leaderboard">Daily Leaderboard</string>
+	<string name="weekly_leaderboard">Weekly Leaderboard</string>
 
 	
 	<string-array name="CountryCodes" >

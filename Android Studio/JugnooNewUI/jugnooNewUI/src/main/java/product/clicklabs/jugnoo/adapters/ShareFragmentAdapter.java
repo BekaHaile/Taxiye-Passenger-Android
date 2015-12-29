@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import product.clicklabs.jugnoo.fragments.ShareActivityFragment;
 import product.clicklabs.jugnoo.fragments.ShareEarnFragment;
+import product.clicklabs.jugnoo.fragments.ShareLeaderboardFragment;
 
 /**
  * Created by shankar on 12/29/15.
@@ -25,7 +26,7 @@ public class ShareFragmentAdapter extends FragmentPagerAdapter {
 				break;
 
 			case 1:
-				fragment = new ShareEarnFragment();
+				fragment = new ShareLeaderboardFragment();
 				break;
 
 			case 2:

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
@@ -90,7 +89,6 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 
 			@Override
 			public void onPageSelected(int position) {
-				Toast.makeText(ShareActivity.this, ""+position, Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
