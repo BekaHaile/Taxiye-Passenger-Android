@@ -223,21 +223,21 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                         if(HelpSection.FARE_DETAILS.getOrdinal() == helpSection.getOrdinal()){
                             if(Data.lastRefreshLatLng != null) {
                                 params.put(KEY_LATITUDE, "" + Data.lastRefreshLatLng.latitude);
-                                params.put(KEY_LATITUDE, "" + Data.lastRefreshLatLng.latitude);
+                                params.put(KEY_LONGITUDE, "" + Data.lastRefreshLatLng.longitude);
                             }
                             else if(HomeActivity.myLocation != null) {
                                 params.put(KEY_LATITUDE, "" + HomeActivity.myLocation.getLatitude());
-                                params.put(KEY_LATITUDE, "" + HomeActivity.myLocation.getLongitude());
+                                params.put(KEY_LONGITUDE, "" + HomeActivity.myLocation.getLongitude());
                             }
                         }
                         else{
                             if(HomeActivity.myLocation != null) {
                                 params.put(KEY_LATITUDE, "" + HomeActivity.myLocation.getLatitude());
-                                params.put(KEY_LATITUDE, "" + HomeActivity.myLocation.getLongitude());
+                                params.put(KEY_LONGITUDE, "" + HomeActivity.myLocation.getLongitude());
                             }
                             else if(Data.lastRefreshLatLng != null) {
                                 params.put(KEY_LATITUDE, "" + Data.lastRefreshLatLng.latitude);
-                                params.put(KEY_LATITUDE, "" + Data.lastRefreshLatLng.latitude);
+                                params.put(KEY_LONGITUDE, "" + Data.lastRefreshLatLng.longitude);
                             }
                         }
 
