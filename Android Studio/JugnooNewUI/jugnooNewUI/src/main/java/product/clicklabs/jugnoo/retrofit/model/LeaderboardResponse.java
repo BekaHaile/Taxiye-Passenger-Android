@@ -3,10 +3,11 @@ package product.clicklabs.jugnoo.retrofit.model;
 /**
  * Created by socomo on 12/30/15.
  */
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -211,6 +212,8 @@ public class LeaderboardResponse {
         @Expose
         private String name;
 
+        private boolean isUser = false;
+
         /**
          * @return The downloads
          */
@@ -253,6 +256,26 @@ public class LeaderboardResponse {
             this.name = name;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            try{
+                if(((Ranklist)o).getRank().equals(this.getRank())){
+                    return true;
+                } else{
+                    return false;
+                }
+            } catch(Exception e){
+                return false;
+            }
+        }
+
+        public boolean getIsUser() {
+            return isUser;
+        }
+
+        public void setIsUser(boolean isUser) {
+            this.isUser = isUser;
+        }
     }
 
     public class Userinfo {

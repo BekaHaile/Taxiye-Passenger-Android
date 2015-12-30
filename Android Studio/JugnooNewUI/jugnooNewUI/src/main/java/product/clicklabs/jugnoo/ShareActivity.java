@@ -1,9 +1,9 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,21 +12,18 @@ import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.adapters.ShareFragmentAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.fragments.ShareLeaderboardFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -49,6 +46,8 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	ShareFragmentAdapter shareFragmentAdapter;
 	PagerSlidingTabStrip tabs;
     private CallbackManager callbackManager;
+
+	public LeaderboardResponse leaderboardResponse;
 
 
 	public CallbackManager getCallbackManager(){
@@ -98,7 +97,6 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
-		// **** Make LeaderBoard Api Call **** //
 		getLeaderboardCall();
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -158,34 +156,70 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	}
 
 	public void getLeaderboardCall() {
-		DialogPopup.showLoadingDialog(this, "Loading...");
-		RestClient.getApiServices().leaderboardServerCall(Data.userData.accessToken, Config.getClientId(),
-				new Callback<LeaderboardResponse>() {
-					@Override
-					public void success(LeaderboardResponse leaderboardResponse, Response response) {
-						DialogPopup.dismissLoadingDialog();
-						try {
-							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-							JSONObject jObj;
-							jObj = new JSONObject(jsonString);
-							int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
-								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									Log.v("success at","leaderboeard");
-									getLeaderboardActivityCall();
+		if(AppStatus.getInstance(this).isOnline(this)) {
+			DialogPopup.showLoadingDialog(this, "Loading...");
+			RestClient.getApiServices().leaderboardServerCall(Data.userData.accessToken, Config.getClientId(),
+					new Callback<LeaderboardResponse>() {
+						@Override
+						public void success(LeaderboardResponse leaderboardResponse, Response response) {
+							DialogPopup.dismissLoadingDialog();
+							try {
+								String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+								JSONObject jObj;
+								jObj = new JSONObject(jsonString);
+								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+								String message = JSONParser.getServerMessage(jObj);
+								if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
+									if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+										Log.v("success at", "leaderboeard");
+										ShareActivity.this.leaderboardResponse = leaderboardResponse;
+										updateLeaderboard();
+										getLeaderboardActivityCall();
+									}
+								} else{
+									retryLeaderboardDialog(message);
 								}
+							} catch (Exception exception) {
+								exception.printStackTrace();
+								retryLeaderboardDialog(Data.SERVER_ERROR_MSG);
 							}
-						} catch (Exception exception) {
-							exception.printStackTrace();
 						}
-					}
 
+						@Override
+						public void failure(RetrofitError error) {
+							DialogPopup.dismissLoadingDialog();
+							retryLeaderboardDialog(Data.SERVER_NOT_RESOPNDING_MSG);
+							getLeaderboardActivityCall();
+						}
+					});
+		} else{
+			retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+		}
+	}
+
+	public void updateLeaderboard() {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
+		if (page != null) {
+			((ShareLeaderboardFragment) page).update();
+		}
+	}
+
+	public void retryLeaderboardDialog(String message){
+		DialogPopup.alertPopupTwoButtonsWithListeners(this, "", message,
+				getResources().getString(R.string.retry),
+				getResources().getString(R.string.cancel),
+				new View.OnClickListener() {
 					@Override
-					public void failure(RetrofitError error) {
-						DialogPopup.dismissLoadingDialog();
-						getLeaderboardActivityCall();
+					public void onClick(View v) {
+						getLeaderboardCall();
 					}
-				});
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						performbackPressed();
+					}
+				}, true, false);
 	}
 
 	public void getLeaderboardActivityCall() {

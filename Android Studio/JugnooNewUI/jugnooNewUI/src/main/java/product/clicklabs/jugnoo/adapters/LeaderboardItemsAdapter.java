@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.LeaderboardItem;
+import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -24,10 +24,10 @@ public class LeaderboardItemsAdapter extends RecyclerView.Adapter<LeaderboardIte
 
     private Activity activity;
     private int rowLayout;
-    LeaderboardItem leaderboardItem;
-    private ArrayList<LeaderboardItem> leaderboardItems = new ArrayList<>();
+    LeaderboardResponse.Ranklist leaderboardItem;
+    private ArrayList<LeaderboardResponse.Ranklist> leaderboardItems = new ArrayList<>();
 
-    public LeaderboardItemsAdapter(ArrayList<LeaderboardItem> leaderboardItems, Activity activity, int rowLayout) {
+    public LeaderboardItemsAdapter(ArrayList<LeaderboardResponse.Ranklist> leaderboardItems, Activity activity, int rowLayout) {
         this.leaderboardItems = leaderboardItems;
         this.activity = activity;
         this.rowLayout = rowLayout;
@@ -48,9 +48,9 @@ public class LeaderboardItemsAdapter extends RecyclerView.Adapter<LeaderboardIte
     public void onBindViewHolder(LeaderboardItemsAdapter.ViewHolder holder, int position) {
         leaderboardItem = leaderboardItems.get(position);
 
-        holder.textViewRank.setText(""+leaderboardItem.rank);
-        holder.textViewName.setText(leaderboardItem.name);
-        holder.textViewNoOfDownloads.setText(""+leaderboardItem.downloads);
+        holder.textViewRank.setText(""+leaderboardItem.getRank());
+        holder.textViewName.setText(leaderboardItem.getName());
+        holder.textViewNoOfDownloads.setText(""+leaderboardItem.getDownloads());
 
         switch(position){
             case 0:
@@ -70,7 +70,7 @@ public class LeaderboardItemsAdapter extends RecyclerView.Adapter<LeaderboardIte
                 break;
         }
 
-        if(leaderboardItem.isUser){
+        if(leaderboardItem.getIsUser()){
             holder.textViewRank.setTextColor(activity.getResources().getColor(R.color.grey_black));
             holder.textViewName.setTextColor(activity.getResources().getColor(R.color.grey_black));
         }
