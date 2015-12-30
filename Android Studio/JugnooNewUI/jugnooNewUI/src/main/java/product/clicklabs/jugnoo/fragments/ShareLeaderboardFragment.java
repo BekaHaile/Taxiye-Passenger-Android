@@ -17,11 +17,13 @@ import com.flurry.android.FlurryAgent;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.adapters.LeaderboardItemsAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
+import product.clicklabs.jugnoo.retrofit.model.Ranklist;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -35,7 +37,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 	private TextView textViewDaily, textViewWeekly;
 	private RecyclerView recyclerViewLb;
 	private LeaderboardItemsAdapter leaderboardItemsAdapter;
-	private ArrayList<LeaderboardResponse.Ranklist> leaderboardItems;
+	private ArrayList<Ranklist> leaderboardItems;
 
 	private View rootView;
     private ShareActivity activity;
@@ -161,9 +163,13 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 				}
 				if(LBTimeType.DAILY == lbTimeType){
 					leaderboardItems.addAll(activity.leaderboardResponse.getLocal().getDaily().getRanklist());
+					LeaderboardResponse.Userinfo userInfo = activity.leaderboardResponse.getLocal().getDaily().getUserinfo();
+					fillUserInfo(userInfo);
 				}
 				else if(LBTimeType.WEEKLY == lbTimeType){
 					leaderboardItems.addAll(activity.leaderboardResponse.getLocal().getWeekly().getRanklist());
+					LeaderboardResponse.Userinfo userInfo = activity.leaderboardResponse.getLocal().getWeekly().getUserinfo();
+					fillUserInfo(userInfo);
 				}
 			}
 			else if(LBLocationType.GLOBAL == lbLocationType){
@@ -175,9 +181,13 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 				}
 				if(LBTimeType.DAILY == lbTimeType){
 					leaderboardItems.addAll(activity.leaderboardResponse.getGlobal().getDaily().getRanklist());
+					LeaderboardResponse.Userinfo userInfo = activity.leaderboardResponse.getGlobal().getDaily().getUserinfo();
+					fillUserInfo(userInfo);
 				}
 				else if(LBTimeType.WEEKLY == lbTimeType){
 					leaderboardItems.addAll(activity.leaderboardResponse.getGlobal().getWeekly().getRanklist());
+					LeaderboardResponse.Userinfo userInfo = activity.leaderboardResponse.getGlobal().getWeekly().getUserinfo();
+					fillUserInfo(userInfo);
 				}
 			}
 
@@ -190,6 +200,22 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		}
 	}
 
+	private void fillUserInfo(LeaderboardResponse.Userinfo userInfo){
+		if(userInfo != null && userInfo.getRank() != null){
+			if(userInfo.getRank() > 5){
+				leaderboardItems.add(new Ranklist(userInfo.getRank(),
+						userInfo.getDownloads(), Data.userData.userName, true));
+			} else {
+				for (int i=0; i<leaderboardItems.size(); i++) {
+					Ranklist ranklist = leaderboardItems.get(i);
+					if (ranklist.getRank().equals(userInfo.getRank())) {
+						leaderboardItems.get(i).setIsUser(true);
+						break;
+					}
+				}
+			}
+		}
+	}
 
 
     @Override

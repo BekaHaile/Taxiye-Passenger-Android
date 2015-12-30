@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
+import product.clicklabs.jugnoo.retrofit.model.Ranklist;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -24,10 +24,10 @@ public class LeaderboardItemsAdapter extends RecyclerView.Adapter<LeaderboardIte
 
     private Activity activity;
     private int rowLayout;
-    LeaderboardResponse.Ranklist leaderboardItem;
-    private ArrayList<LeaderboardResponse.Ranklist> leaderboardItems = new ArrayList<>();
+    Ranklist leaderboardItem;
+    private ArrayList<Ranklist> leaderboardItems = new ArrayList<>();
 
-    public LeaderboardItemsAdapter(ArrayList<LeaderboardResponse.Ranklist> leaderboardItems, Activity activity, int rowLayout) {
+    public LeaderboardItemsAdapter(ArrayList<Ranklist> leaderboardItems, Activity activity, int rowLayout) {
         this.leaderboardItems = leaderboardItems;
         this.activity = activity;
         this.rowLayout = rowLayout;
