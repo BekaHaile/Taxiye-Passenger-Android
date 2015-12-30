@@ -287,9 +287,13 @@
 	<string name="money_earned">Total Money Earned\nfrom Referrals</string>
 
 	<!-- Share Leaderboard-->
-	<string name="local_leaderboard">Local Leaderboard</string>
-	<string name="daily_leaderboard">Daily Leaderboard</string>
-	<string name="weekly_leaderboard">Weekly Leaderboard</string>
+	<string name="local_leaderboard">LOCAL</string>
+	<string name="global_leaderboard">GLOBAL</string>
+	<string name="daily_leaderboard">Daily</string>
+	<string name="weekly_leaderboard">Weekly</string>
+	<string name="lb_rank">Rank</string>
+	<string name="lb_name">Name</string>
+	<string name="lb_no_downloads">No. of\nDownloads</string>
 
 	
 	<string-array name="CountryCodes" >

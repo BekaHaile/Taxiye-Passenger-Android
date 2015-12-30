@@ -107,5 +107,14 @@
     <dimen name="share_activity_text_margin_top">62px</dimen>
 
 
+    <!-- share leaderboard screen-->
+    <dimen name="share_lb_button_width">310px</dimen>
+    <dimen name="share_lb_button_height">80px</dimen>
+    <dimen name="share_lb_text_view_layout_height">80px</dimen>
+    <dimen name="share_lb_text_size">34px</dimen>
+    <dimen name="share_lb_text_size_small">28px</dimen>
+
+
+
 
 </resources>

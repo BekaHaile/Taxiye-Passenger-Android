@@ -2,19 +2,26 @@ package product.clicklabs.jugnoo.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ShareActivity;
+import product.clicklabs.jugnoo.adapters.LeaderboardItemsAdapter;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.LeaderboardItem;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -24,11 +31,17 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 
 	private LinearLayout linearLayoutRoot;
 
-	private RelativeLayout relativeLayoutLocal, relativeLayoutDaily, relativeLayoutWeekly;
-	private TextView textViewLocal, textViewDaily, textViewWeekly;
+	private Button buttonLocal, buttonGlobal;
+	private TextView textViewDaily, textViewWeekly;
+	private RecyclerView recyclerViewLb;
+	private LeaderboardItemsAdapter leaderboardItemsAdapter;
+	private ArrayList<LeaderboardItem> leaderboardItems;
 
 	private View rootView;
     private ShareActivity activity;
+
+	private LBLocationType lbLocationType;
+	private LBTimeType lbTimeType;
 
     @Override
     public void onStart() {
@@ -55,46 +68,122 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
 
-		relativeLayoutLocal = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutLocal);
-		relativeLayoutDaily = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutDaily);
-		relativeLayoutWeekly = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutWeekly);
+		buttonLocal = (Button)rootView.findViewById(R.id.buttonLocal);
+		buttonLocal.setTypeface(Fonts.latoRegular(activity));
+		buttonGlobal = (Button)rootView.findViewById(R.id.buttonGlobal);
+		buttonGlobal.setTypeface(Fonts.latoRegular(activity));
 
-		textViewLocal = (TextView)rootView.findViewById(R.id.textViewLocal);
-		textViewLocal.setTypeface(Fonts.latoRegular(activity));
 		textViewDaily = (TextView)rootView.findViewById(R.id.textViewDaily);
 		textViewDaily.setTypeface(Fonts.latoRegular(activity));
 		textViewWeekly = (TextView)rootView.findViewById(R.id.textViewWeekly);
 		textViewWeekly.setTypeface(Fonts.latoRegular(activity));
 
-		relativeLayoutLocal.setOnClickListener(new View.OnClickListener() {
+		recyclerViewLb = (RecyclerView)rootView.findViewById(R.id.recyclerViewLb);
+		recyclerViewLb.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewLb.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewLb.setHasFixedSize(false);
+
+		leaderboardItems = new ArrayList<>();
+		leaderboardItemsAdapter = new LeaderboardItemsAdapter(leaderboardItems, activity, R.layout.list_item_lb_entry);
+		recyclerViewLb.setAdapter(leaderboardItemsAdapter);
+
+		buttonLocal.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				updateList(LBLocationType.LOCAL, lbTimeType);
 			}
 		});
 
-		relativeLayoutDaily.setOnClickListener(new View.OnClickListener() {
+		buttonGlobal.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				updateList(LBLocationType.GLOBAL, lbTimeType);
 			}
 		});
 
-		relativeLayoutWeekly.setOnClickListener(new View.OnClickListener() {
+		textViewDaily.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				updateList(lbLocationType, LBTimeType.DAILY);
 			}
 		});
+
+		textViewWeekly.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				updateList(lbLocationType, LBTimeType.WEEKLY);
+			}
+		});
+
 
 		try {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 
+		updateList(LBLocationType.LOCAL, LBTimeType.DAILY);
 
 		return rootView;
 	}
+
+
+
+	private void updateList(LBLocationType lbLocationType, LBTimeType lbTimeType){
+
+		if(LBLocationType.LOCAL == lbLocationType){
+			if(this.lbLocationType != lbLocationType){
+				buttonLocal.setBackgroundResource(R.drawable.button_yellow_normal);
+				buttonLocal.setTextColor(getResources().getColor(R.color.white));
+				buttonGlobal.setBackgroundResource(R.drawable.background_white_bordered_yellow_rounded_selector);
+				buttonGlobal.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
+			}
+			if(LBTimeType.DAILY == lbTimeType){
+
+			}
+			else if(LBTimeType.WEEKLY == lbTimeType){
+
+			}
+		}
+		else if(LBLocationType.GLOBAL == lbLocationType){
+			if(this.lbLocationType != lbLocationType) {
+				buttonLocal.setBackgroundResource(R.drawable.background_white_bordered_yellow_rounded_selector);
+				buttonLocal.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
+				buttonGlobal.setBackgroundResource(R.drawable.button_yellow_normal);
+				buttonGlobal.setTextColor(getResources().getColor(R.color.white));
+			}
+			if(LBTimeType.DAILY == lbTimeType){
+
+			}
+			else if(LBTimeType.WEEKLY == lbTimeType){
+
+			}
+		}
+
+
+		if(LBTimeType.DAILY == lbTimeType){
+			if(this.lbTimeType != lbTimeType) {
+				textViewDaily.setBackgroundResource(R.drawable.background_yellow);
+				textViewDaily.setTextColor(getResources().getColor(R.color.white));
+				textViewWeekly.setBackgroundResource(R.drawable.background_white_bordered_yellow_selector);
+				textViewWeekly.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
+			}
+		}
+		else if(LBTimeType.WEEKLY == lbTimeType){
+			if(this.lbTimeType != lbTimeType) {
+				textViewDaily.setBackgroundResource(R.drawable.background_white_bordered_yellow_selector);
+				textViewDaily.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
+				textViewWeekly.setBackgroundResource(R.drawable.background_yellow);
+				textViewWeekly.setTextColor(getResources().getColor(R.color.white));
+			}
+		}
+
+
+		this.lbLocationType = lbLocationType;
+		this.lbTimeType = lbTimeType;
+
+		leaderboardItemsAdapter.notifyDataSetChanged();
+	}
+
 
 
     @Override
@@ -102,6 +191,14 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		super.onDestroy();
         ASSL.closeActivity(linearLayoutRoot);
         System.gc();
+	}
+
+	enum LBLocationType{
+		LOCAL, GLOBAL
+	}
+
+	enum LBTimeType{
+		DAILY, WEEKLY
 	}
 
 
