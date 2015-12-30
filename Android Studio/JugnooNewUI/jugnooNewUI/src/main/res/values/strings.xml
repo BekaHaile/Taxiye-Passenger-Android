@@ -282,9 +282,9 @@
 
 
 	<!-- Share Activity-->
-	<string name="number_of_downloads">Number of downloads</string>
-	<string name="number_of_first_rides">Number of first rides</string>
-	<string name="money_earned">Money earned</string>
+	<string name="number_of_downloads">Number of\nDownloads</string>
+	<string name="number_of_first_rides">Number of\nFirst Ride Taken</string>
+	<string name="money_earned">Total Money Earned\nfrom Referrals</string>
 
 	<!-- Share Leaderboard-->
 	<string name="local_leaderboard">Local Leaderboard</string>

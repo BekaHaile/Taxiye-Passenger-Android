@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,13 +12,30 @@ import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.adapters.ShareFragmentAdapter;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
+import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class ShareActivity extends BaseFragmentActivity implements FlurryEventNames {
@@ -80,6 +98,9 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
+		// **** Make LeaderBoard Api Call **** //
+		getLeaderboardCall();
+
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -136,4 +157,63 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 		super.onDestroy();
 	}
 
+	public void getLeaderboardCall() {
+		DialogPopup.showLoadingDialog(this, "Loading...");
+		RestClient.getApiServices().leaderboardServerCall(Data.userData.accessToken, Config.getClientId(),
+				new Callback<LeaderboardResponse>() {
+					@Override
+					public void success(LeaderboardResponse leaderboardResponse, Response response) {
+						DialogPopup.dismissLoadingDialog();
+						try {
+							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+							JSONObject jObj;
+							jObj = new JSONObject(jsonString);
+							int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
+								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+									Log.v("success at","leaderboeard");
+									getLeaderboardActivityCall();
+								}
+							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						DialogPopup.dismissLoadingDialog();
+						getLeaderboardActivityCall();
+					}
+				});
+	}
+
+	public void getLeaderboardActivityCall() {
+		DialogPopup.showLoadingDialog(this, "Loading...");
+		RestClient.getApiServices().leaderboardActivityServerCall(Data.userData.accessToken, Config.getClientId(),
+				new Callback<LeaderboardActivityResponse>() {
+					@Override
+					public void success(LeaderboardActivityResponse leaderboardActivityResponse, Response response) {
+						DialogPopup.dismissLoadingDialog();
+						try {
+							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+							JSONObject jObj;
+							jObj = new JSONObject(jsonString);
+							int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
+								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+									Log.v("success at", "leaderboeard");
+								}
+							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						DialogPopup.dismissLoadingDialog();
+					}
+				});
+	}
 }
