@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import product.clicklabs.jugnoo.adapters.ShareFragmentAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
 
 public class ShareActivity extends BaseFragmentActivity implements FlurryEventNames {
@@ -29,7 +29,7 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 
 	ViewPager viewPager;
 	ShareFragmentAdapter shareFragmentAdapter;
-
+	PagerSlidingTabStrip tabs;
     private CallbackManager callbackManager;
 
 
@@ -72,8 +72,10 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 		shareFragmentAdapter = new ShareFragmentAdapter(getSupportFragmentManager());
 		viewPager.setAdapter(shareFragmentAdapter);
 
-		SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
-		viewPagerTab.setViewPager(viewPager);
+		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		tabs.setTextColorResource(R.color.yellow, R.color.grey_dark);
+		tabs.setTypeface(Fonts.latoRegular(this), Typeface.NORMAL);
+		tabs.setViewPager(viewPager);
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
