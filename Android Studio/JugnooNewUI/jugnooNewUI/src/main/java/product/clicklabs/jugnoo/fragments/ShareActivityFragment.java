@@ -72,10 +72,23 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 			e.printStackTrace();
 		}
 
+		update();
 
 		return rootView;
 	}
 
+
+	public void update(){
+		try{
+			if(activity.leaderboardActivityResponse != null){
+				textViewNumberOfDownloadsValue.setText(""+activity.leaderboardActivityResponse.getNDownloads());
+				textViewNumberOfFirstRidesValue.setText(""+activity.leaderboardActivityResponse.getNFirstRides());
+				textViewMoneyEarnedValue.setText(""+activity.leaderboardActivityResponse.getNMoneyEarned());
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
     @Override
 	public void onDestroy() {

@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import product.clicklabs.jugnoo.adapters.ShareFragmentAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.fragments.ShareActivityFragment;
 import product.clicklabs.jugnoo.fragments.ShareLeaderboardFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
@@ -48,6 +49,7 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
     private CallbackManager callbackManager;
 
 	public LeaderboardResponse leaderboardResponse;
+	public LeaderboardActivityResponse leaderboardActivityResponse;
 
 
 	public CallbackManager getCallbackManager(){
@@ -173,9 +175,9 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 									if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 										Log.v("success at", "leaderboeard");
 										ShareActivity.this.leaderboardResponse = leaderboardResponse;
-										updateLeaderboard();
-										getLeaderboardActivityCall();
+										updateLeaderboard(1);
 									}
+									getLeaderboardActivityCall();
 								} else{
 									retryLeaderboardDialog(message);
 								}
@@ -197,10 +199,14 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 		}
 	}
 
-	public void updateLeaderboard() {
-		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
+	public void updateLeaderboard(int pos) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + pos);
 		if (page != null) {
-			((ShareLeaderboardFragment) page).update();
+			if(pos == 1){
+				((ShareLeaderboardFragment) page).update();
+			} else if(pos == 2){
+				((ShareActivityFragment) page).update();
+			}
 		}
 	}
 
@@ -236,6 +242,8 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 							int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+									ShareActivity.this.leaderboardActivityResponse = leaderboardActivityResponse;
+									updateLeaderboard(2);
 									Log.v("success at", "leaderboeard");
 								}
 							}

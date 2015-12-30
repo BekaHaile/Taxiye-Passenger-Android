@@ -190,13 +190,13 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 					fillUserInfo(userInfo);
 				}
 			}
-
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
 			this.lbLocationType = lbLocationType;
 			this.lbTimeType = lbTimeType;
 
 			leaderboardItemsAdapter.notifyDataSetChanged();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
