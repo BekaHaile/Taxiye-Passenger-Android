@@ -208,7 +208,7 @@ public class LeaderboardResponse {
         private Integer rank;
         @SerializedName("downloads")
         @Expose
-        private String downloads;
+        private Integer downloads;
 
         /**
          * @return The rank
@@ -227,14 +227,14 @@ public class LeaderboardResponse {
         /**
          * @return The downloads
          */
-        public String getDownloads() {
+        public Integer getDownloads() {
             return downloads;
         }
 
         /**
          * @param downloads The downloads
          */
-        public void setDownloads(String downloads) {
+        public void setDownloads(Integer downloads) {
             this.downloads = downloads;
         }
 

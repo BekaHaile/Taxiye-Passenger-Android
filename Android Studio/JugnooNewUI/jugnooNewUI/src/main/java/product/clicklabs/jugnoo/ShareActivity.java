@@ -158,44 +158,48 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	}
 
 	public void getLeaderboardCall() {
-		if(AppStatus.getInstance(this).isOnline(this)) {
-			DialogPopup.showLoadingDialog(this, "Loading...");
-			RestClient.getApiServices().leaderboardServerCall(Data.userData.accessToken, Config.getClientId(),
-					new Callback<LeaderboardResponse>() {
-						@Override
-						public void success(LeaderboardResponse leaderboardResponse, Response response) {
-							DialogPopup.dismissLoadingDialog();
-							try {
-								String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-								JSONObject jObj;
-								jObj = new JSONObject(jsonString);
-								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-								String message = JSONParser.getServerMessage(jObj);
-								if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
-									if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-										Log.v("success at", "leaderboeard");
-										ShareActivity.this.leaderboardResponse = leaderboardResponse;
-										updateLeaderboard(1);
+		try {
+			if(!HomeActivity.checkIfUserDataNull(this) && AppStatus.getInstance(this).isOnline(this)) {
+				DialogPopup.showLoadingDialog(this, "Loading...");
+				RestClient.getApiServices().leaderboardServerCall(Data.userData.accessToken, Config.getClientId(),
+						new Callback<LeaderboardResponse>() {
+							@Override
+							public void success(LeaderboardResponse leaderboardResponse, Response response) {
+								DialogPopup.dismissLoadingDialog();
+								try {
+									String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+									JSONObject jObj;
+									jObj = new JSONObject(jsonString);
+									int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+									String message = JSONParser.getServerMessage(jObj);
+									if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
+										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+											Log.v("success at", "leaderboeard");
+											ShareActivity.this.leaderboardResponse = leaderboardResponse;
+											updateLeaderboard(1);
+										}
+										getLeaderboardActivityCall();
+									} else{
+										retryLeaderboardDialog(message);
 									}
-									getLeaderboardActivityCall();
-								} else{
-									retryLeaderboardDialog(message);
+								} catch (Exception exception) {
+									exception.printStackTrace();
+									retryLeaderboardDialog(Data.SERVER_ERROR_MSG);
 								}
-							} catch (Exception exception) {
-								exception.printStackTrace();
-								retryLeaderboardDialog(Data.SERVER_ERROR_MSG);
 							}
-						}
 
-						@Override
-						public void failure(RetrofitError error) {
-							DialogPopup.dismissLoadingDialog();
-							retryLeaderboardDialog(Data.SERVER_NOT_RESOPNDING_MSG);
-							getLeaderboardActivityCall();
-						}
-					});
-		} else{
-			retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+							@Override
+							public void failure(RetrofitError error) {
+								DialogPopup.dismissLoadingDialog();
+								retryLeaderboardDialog(Data.SERVER_NOT_RESOPNDING_MSG);
+								getLeaderboardActivityCall();
+							}
+						});
+			} else{
+				retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -229,33 +233,35 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	}
 
 	public void getLeaderboardActivityCall() {
-		DialogPopup.showLoadingDialog(this, "Loading...");
-		RestClient.getApiServices().leaderboardActivityServerCall(Data.userData.accessToken, Config.getClientId(),
-				new Callback<LeaderboardActivityResponse>() {
-					@Override
-					public void success(LeaderboardActivityResponse leaderboardActivityResponse, Response response) {
-						DialogPopup.dismissLoadingDialog();
-						try {
-							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-							JSONObject jObj;
-							jObj = new JSONObject(jsonString);
-							int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
-								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									ShareActivity.this.leaderboardActivityResponse = leaderboardActivityResponse;
-									updateLeaderboard(2);
-									Log.v("success at", "leaderboeard");
+		if(!HomeActivity.checkIfUserDataNull(this) && AppStatus.getInstance(this).isOnline(this)) {
+			DialogPopup.showLoadingDialog(this, "Loading...");
+			RestClient.getApiServices().leaderboardActivityServerCall(Data.userData.accessToken, Config.getClientId(),
+					new Callback<LeaderboardActivityResponse>() {
+						@Override
+						public void success(LeaderboardActivityResponse leaderboardActivityResponse, Response response) {
+							DialogPopup.dismissLoadingDialog();
+							try {
+								String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+								JSONObject jObj;
+								jObj = new JSONObject(jsonString);
+								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+								if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
+									if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+										ShareActivity.this.leaderboardActivityResponse = leaderboardActivityResponse;
+										updateLeaderboard(2);
+										Log.v("success at", "leaderboeard");
+									}
 								}
+							} catch (Exception exception) {
+								exception.printStackTrace();
 							}
-						} catch (Exception exception) {
-							exception.printStackTrace();
 						}
-					}
 
-					@Override
-					public void failure(RetrofitError error) {
-						DialogPopup.dismissLoadingDialog();
-					}
-				});
+						@Override
+						public void failure(RetrofitError error) {
+							DialogPopup.dismissLoadingDialog();
+						}
+					});
+		}
 	}
 }

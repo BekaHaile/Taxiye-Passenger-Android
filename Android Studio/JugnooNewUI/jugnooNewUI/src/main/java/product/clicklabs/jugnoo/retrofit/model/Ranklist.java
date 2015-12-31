@@ -10,7 +10,7 @@ public class Ranklist {
 
 	@SerializedName("downloads")
 	@Expose
-	private String downloads;
+	private Integer downloads;
 	@SerializedName("rank")
 	@Expose
 	private Integer rank;
@@ -20,7 +20,7 @@ public class Ranklist {
 
 	private boolean isUser = false;
 
-	public Ranklist(Integer rank, String downloads, String name, boolean isUser){
+	public Ranklist(Integer rank, Integer downloads, String name, boolean isUser){
 		this.rank = rank;
 		this.downloads = downloads;
 		this.name = name;
@@ -30,14 +30,23 @@ public class Ranklist {
 	/**
 	 * @return The downloads
 	 */
-	public String getDownloads() {
+	public Integer getDownloads() {
 		return downloads;
+	}
+
+	public String getDownloadsStr(){
+		if(downloads > 0){
+			return ""+downloads;
+		}
+		else{
+			return "-";
+		}
 	}
 
 	/**
 	 * @param downloads The downloads
 	 */
-	public void setDownloads(String downloads) {
+	public void setDownloads(Integer downloads) {
 		this.downloads = downloads;
 	}
 
@@ -46,6 +55,15 @@ public class Ranklist {
 	 */
 	public Integer getRank() {
 		return rank;
+	}
+
+	public String getRankStr(){
+		if(rank > 0){
+			return ""+rank;
+		}
+		else{
+			return "-";
+		}
 	}
 
 	/**

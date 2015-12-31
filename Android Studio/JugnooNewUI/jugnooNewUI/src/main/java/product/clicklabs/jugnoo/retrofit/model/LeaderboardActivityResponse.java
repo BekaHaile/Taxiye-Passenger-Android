@@ -19,6 +19,9 @@ public class LeaderboardActivityResponse {
     @SerializedName("nMoneyEarned")
     @Expose
     private Integer nMoneyEarned;
+    @SerializedName("date")
+    @Expose
+    private String date;
 
     /**
      *
@@ -92,4 +95,11 @@ public class LeaderboardActivityResponse {
         this.nMoneyEarned = nMoneyEarned;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

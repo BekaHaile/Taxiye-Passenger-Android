@@ -24,7 +24,8 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 
 	private LinearLayout linearLayoutRoot;
 
-	private TextView textViewNumberOfDownloadsValue, textViewNumberOfFirstRidesValue, textViewMoneyEarnedValue;
+	private TextView textViewNumberOfDownloadsValue, textViewNumberOfFirstRidesValue,
+			textViewMoneyEarnedValue, textViewDataEffective;
 
 	private View rootView;
     private ShareActivity activity;
@@ -54,9 +55,9 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
 
-		((TextView)rootView.findViewById(R.id.textViewNumberOfDownloads)).setTypeface(Fonts.latoRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewNumberOfFirstRides)).setTypeface(Fonts.latoRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewMoneyEarned)).setTypeface(Fonts.latoRegular(activity));
+		((TextView)rootView.findViewById(R.id.textViewNumberOfDownloads)).setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
+		((TextView)rootView.findViewById(R.id.textViewNumberOfFirstRides)).setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
+		((TextView)rootView.findViewById(R.id.textViewMoneyEarned)).setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
 
 		textViewNumberOfDownloadsValue = (TextView)rootView.findViewById(R.id.textViewNumberOfDownloadsValue);
 		textViewNumberOfDownloadsValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
@@ -64,6 +65,8 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 		textViewNumberOfFirstRidesValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 		textViewMoneyEarnedValue = (TextView)rootView.findViewById(R.id.textViewMoneyEarnedValue);
 		textViewMoneyEarnedValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		textViewDataEffective = (TextView)rootView.findViewById(R.id.textViewDataEffective);
+		textViewDataEffective.setTypeface(Fonts.latoRegular(activity));
 
 
 
@@ -84,6 +87,8 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 				textViewNumberOfDownloadsValue.setText(""+activity.leaderboardActivityResponse.getNDownloads());
 				textViewNumberOfFirstRidesValue.setText(""+activity.leaderboardActivityResponse.getNFirstRides());
 				textViewMoneyEarnedValue.setText(""+activity.leaderboardActivityResponse.getNMoneyEarned());
+				textViewDataEffective.setText(String.format(activity.getResources()
+						.getString(R.string.data_effective_format), activity.leaderboardActivityResponse.getDate()));
 			}
 		} catch(Exception e){
 			e.printStackTrace();

@@ -205,7 +205,12 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 			if(userInfo.getRank() > 5){
 				leaderboardItems.add(new Ranklist(userInfo.getRank(),
 						userInfo.getDownloads(), Data.userData.userName, true));
-			} else {
+			}
+			else if(userInfo.getRank() < 0){
+				leaderboardItems.add(new Ranklist(userInfo.getRank(),
+						userInfo.getDownloads(), Data.userData.userName, true));
+			}
+			else {
 				for (int i=0; i<leaderboardItems.size(); i++) {
 					Ranklist ranklist = leaderboardItems.get(i);
 					if (ranklist.getRank().equals(userInfo.getRank())) {

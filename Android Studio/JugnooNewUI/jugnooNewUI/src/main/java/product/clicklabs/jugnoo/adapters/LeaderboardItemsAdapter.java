@@ -48,9 +48,9 @@ public class LeaderboardItemsAdapter extends RecyclerView.Adapter<LeaderboardIte
     public void onBindViewHolder(LeaderboardItemsAdapter.ViewHolder holder, int position) {
         leaderboardItem = leaderboardItems.get(position);
 
-        holder.textViewRank.setText(""+leaderboardItem.getRank());
+        holder.textViewRank.setText(leaderboardItem.getRankStr());
         holder.textViewName.setText(leaderboardItem.getName());
-        holder.textViewNoOfDownloads.setText(""+leaderboardItem.getDownloads());
+        holder.textViewNoOfDownloads.setText(leaderboardItem.getDownloadsStr());
 
         switch(position){
             case 0:
@@ -73,10 +73,14 @@ public class LeaderboardItemsAdapter extends RecyclerView.Adapter<LeaderboardIte
         if(leaderboardItem.getIsUser()){
             holder.textViewRank.setTextColor(activity.getResources().getColor(R.color.grey_black));
             holder.textViewName.setTextColor(activity.getResources().getColor(R.color.grey_black));
+            holder.textViewRank.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+            holder.textViewName.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
         }
         else{
             holder.textViewRank.setTextColor(activity.getResources().getColor(R.color.grey_dark_more_receipt));
             holder.textViewName.setTextColor(activity.getResources().getColor(R.color.grey_dark_more_receipt));
+            holder.textViewRank.setTypeface(Fonts.latoRegular(activity));
+            holder.textViewName.setTypeface(Fonts.latoRegular(activity));
         }
 
 	}
