@@ -178,9 +178,10 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 											ShareActivity.this.leaderboardResponse = leaderboardResponse;
 											updateLeaderboard(1);
 										}
+										else{
+											retryLeaderboardDialog(message);
+										}
 										getLeaderboardActivityCall();
-									} else{
-										retryLeaderboardDialog(message);
 									}
 								} catch (Exception exception) {
 									exception.printStackTrace();
@@ -195,7 +196,7 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 								getLeaderboardActivityCall();
 							}
 						});
-			} else{
+			} else {
 				retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
 			}
 		} catch (Exception e) {
@@ -245,11 +246,15 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 								JSONObject jObj;
 								jObj = new JSONObject(jsonString);
 								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+								String message = JSONParser.getServerMessage(jObj);
 								if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
 									if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 										ShareActivity.this.leaderboardActivityResponse = leaderboardActivityResponse;
 										updateLeaderboard(2);
 										Log.v("success at", "leaderboeard");
+									}
+									else{
+										DialogPopup.alertPopup(ShareActivity.this, "", message);
 									}
 								}
 							} catch (Exception exception) {

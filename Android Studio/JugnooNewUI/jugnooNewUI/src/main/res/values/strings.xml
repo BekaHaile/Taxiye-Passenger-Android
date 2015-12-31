@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
+	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
+	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -283,7 +283,7 @@
 
 	<!-- Share Activity-->
 	<string name="number_of_downloads">Number of\nDownloads</string>
-	<string name="number_of_first_rides">Number of\nFirst Ride Taken</string>
+	<string name="number_of_first_rides">Number of\nFirst Rides Taken</string>
 	<string name="money_earned">Total Money Earned\nfrom Referrals</string>
 	<string name="data_effective_format">*Data effective from %s</string>
 
