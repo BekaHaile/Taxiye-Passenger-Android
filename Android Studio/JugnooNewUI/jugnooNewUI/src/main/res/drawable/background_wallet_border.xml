@@ -5,7 +5,7 @@
     <solid android:color="@color/white"/>
     <corners android:radius="@dimen/wallet_button_corner_radius"/>
     <stroke
-        android:width="2px"
+        android:width="1dp"
         android:color="@color/grey_dark"
         />
 

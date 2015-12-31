@@ -971,9 +971,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 									}
 									else if(ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag){
 
-										PicassoTools.clearCache(Picasso.with(activity));
+                                        try {
+                                            PicassoTools.clearCache(Picasso.with(activity));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
 
-										FacebookLoginHelper.logoutFacebook();
+                                        FacebookLoginHelper.logoutFacebook();
 
 										GCMIntentService.clearNotifications(activity);
 

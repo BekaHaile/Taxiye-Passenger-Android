@@ -29,6 +29,7 @@ import android.widget.ListView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,6 +50,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 
 
@@ -553,6 +555,7 @@ public class Utils {
         }
 
     }
+
 
 
     public static boolean isForeground(Context context) {

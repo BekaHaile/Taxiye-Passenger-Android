@@ -1,46 +1,60 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 
+import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.adapters.ShareFragmentAdapter;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.fragments.ShareActivityFragment;
+import product.clicklabs.jugnoo.fragments.ShareLeaderboardFragment;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
+import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
-public class ShareActivity extends BaseActivity implements FlurryEventNames {
+public class ShareActivity extends BaseFragmentActivity implements FlurryEventNames {
 	
-	RelativeLayout relative;
-	
+	LinearLayout linearLayoutRoot;
+
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
-	ImageView imageViewFacebook, imageViewWhatsapp, imageViewSMS, imageViewEmail;
-	TextView textViewReferralCode, textViewReferralCaption, textViewCode, textViewMoreInfo, textViewDesc;
-    WebView webViewReferralCaption;
-	private Button buttonInvite;
-    CallbackManager callbackManager;
+	ViewPager viewPager;
+	ShareFragmentAdapter shareFragmentAdapter;
+	PagerSlidingTabStrip tabs;
+    private CallbackManager callbackManager;
 
+	public LeaderboardResponse leaderboardResponse;
+	public LeaderboardActivityResponse leaderboardActivityResponse;
+
+
+	public CallbackManager getCallbackManager(){
+		return callbackManager;
+	}
 
 	@Override
 	protected void onStart() {
@@ -67,173 +81,26 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
-		
-		relative = (RelativeLayout) findViewById(R.id.relative);
-		new ASSL(ShareActivity.this, relative, 1134, 720, false);
 
+		linearLayoutRoot = (LinearLayout) findViewById(R.id.linearLayoutRoot);
+		new ASSL(ShareActivity.this, linearLayoutRoot, 1134, 720, false);
 
         callbackManager = CallbackManager.Factory.create();
-		
-		
+
+		viewPager = (ViewPager) findViewById(R.id.viewPager);
+		shareFragmentAdapter = new ShareFragmentAdapter(getSupportFragmentManager());
+		viewPager.setAdapter(shareFragmentAdapter);
+
+		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		tabs.setTextColorResource(R.color.yellow, R.color.grey_dark);
+		tabs.setTypeface(Fonts.latoRegular(this), Typeface.NORMAL);
+		tabs.setViewPager(viewPager);
+
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
-		imageViewFacebook = (ImageView) findViewById(R.id.imageViewFacebook);
-		imageViewWhatsapp = (ImageView) findViewById(R.id.imageViewWhatsapp);
-		imageViewSMS = (ImageView) findViewById(R.id.imageViewSMS);
-		imageViewEmail = (ImageView) findViewById(R.id.imageViewEmail);
+		getLeaderboardCall();
 
-        webViewReferralCaption = (WebView) findViewById(R.id.webViewReferralCaption);
-		textViewReferralCode = (TextView) findViewById(R.id.textViewReferralCode); textViewReferralCode.setTypeface(Fonts.latoRegular(this));
-        textViewReferralCaption = (TextView) findViewById(R.id.textViewReferralCaption); textViewReferralCaption.setTypeface(Fonts.latoRegular(this));
-		((TextView)findViewById(R.id.textViewShare)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-		textViewDesc = (TextView)findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.latoRegular(this));
-		textViewMoreInfo = (TextView)findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.latoRegular(this));
-
-		textViewCode = (TextView)findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.latoRegular(this));
-		buttonInvite = (Button)findViewById(R.id.buttonInvite);
-
-        webViewReferralCaption.getSettings().setJavaScriptEnabled(true);
-        webViewReferralCaption.getSettings().setDomStorageEnabled(true);
-        webViewReferralCaption.getSettings().setDatabaseEnabled(true);
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params.addRule(RelativeLayout.BELOW, R.id.imageViewLogo);
-        params.setMargins((int) (ASSL.Xscale() * 20.0f), (int) (ASSL.Yscale() * 20.0f), (int) (ASSL.Xscale() * 20.0f), (int) (ASSL.Yscale() * 20.0f));
-
-
-		
-		try {
-			if(Data.referralMessages.referralMessage.contains(Data.userData.referralCode)){
-				String strPre = Data.referralMessages.referralMessage.split(Data.userData.referralCode)[0];
-				String strPost = Data.referralMessages.referralMessage.split(Data.userData.referralCode)[1];
-				textViewCode.setText(Data.userData.referralCode);
-				textViewDesc.setText(Data.referralMessages.referralShortMessage);
-				Log.v("length of short message", "--> " + textViewDesc.getText().length());
-				
-				SpannableString sstr = new SpannableString(Data.userData.referralCode);
-				final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-				final ForegroundColorSpan clrs = new ForegroundColorSpan(Color.parseColor("#FAA31C"));
-				sstr.setSpan(bss, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				sstr.setSpan(clrs, 0, sstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				
-				textViewReferralCode.setText("");
-				textViewReferralCode.append(strPre);
-				textViewReferralCode.append(sstr);
-				textViewReferralCode.append(strPost);
-
-
-                if(1 == Data.referralMessages.referralCaptionEnabled) {
-                    webViewReferralCaption.setVisibility(View.VISIBLE);
-                    textViewReferralCaption.setVisibility(View.GONE);
-                    loadHTMLContent(Data.referralMessages.referralCaption);
-                }
-                else{
-                    webViewReferralCaption.setVisibility(View.GONE);
-                    textViewReferralCaption.setVisibility(View.VISIBLE);
-
-                    SpannableString spanFriends = new SpannableString("friends");
-                    spanFriends.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, spanFriends.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    SpannableString spanFreeRides = new SpannableString("Jugnoo Cash");
-                    spanFreeRides.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, spanFreeRides.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    textViewReferralCaption.setText("");
-                    textViewReferralCaption.append("Invite ");
-                    textViewReferralCaption.append(spanFriends);
-                    textViewReferralCaption.append(" and\nearn ");
-                    textViewReferralCaption.append(spanFreeRides);
-
-                }
-			}
-
-			try {
-				Log.e("Data.userData.jugnooFbBanner=", "="+Data.userData.jugnooFbBanner);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-                FlurryEventLogger.event(INVITE_EARN_MORE_INFO);
-				DialogPopup.alertPopupWithListener(ShareActivity.this, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-					}
-				});
-			}
-		});
-		
-		
-		buttonInvite.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-//				try {
-//					Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-//					shareIntent.setType("text/plain");
-//					shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Content to share");
-//					PackageManager pm = getApplicationContext().getPackageManager();
-//					List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
-//					for (final ResolveInfo app : activityList) {
-//						if ((app.activityInfo.name).contains("facebook")) {
-//							final ActivityInfo activity = app.activityInfo;
-//							final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
-//							shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-//							shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-//							shareIntent.setComponent(name);
-//							startActivity(shareIntent);
-//							break;
-//						}
-//						else{
-//							Intent share = new Intent(Intent.ACTION_SEND);
-//							share.setType("text/plain");
-//							share.putExtra(Intent.EXTRA_TEXT, Data.userData.referralCode);
-//							//share.putExtra(Intent.EXTRA_TEXT, "http://www.jugnoo.in");
-//							startActivity(Intent.createChooser(share, "Share Text"));
-//						}
-//					}
-//				}catch (Exception e){
-//					e.printStackTrace();
-//				}
-//
-//				String shareBody = "app string text more text! Get the app at http://jugnoo.in";
-//				String shareBody = Data.userData.referralCode + " http://share.jugnoo.in";
-//				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-//				sharingIntent.setType("text/plain");
-//				PackageManager pm = view.getContext().getPackageManager();
-//				List<ResolveInfo> activityList = pm.queryIntentActivities(sharingIntent, 0);
-//				for(final ResolveInfo app : activityList) {
-//					Log.i("ShareActivity", "app.actinfo.name: " + app.activityInfo.name);
-//					//if((app.activityInfo.name).contains("facebook")) {
-//					if("com.facebook.katana.ShareLinkActivity".equals(app.activityInfo.name)) {
-//						Log.v("facebook","facebook sdk called");
-//						sharingIntent.putExtra(Intent.EXTRA_SUBJECT, Data.userData.referralCode);
-//						sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-//						//startActivity(Intent.createChooser(sharingIntent, "Share idea"));
-//						break;
-//					} else {
-//						sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-//						sharingIntent.putExtra(android.content.Intent.EXTRA_TITLE, "JUgnoo");
-//						sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-//						//startActivity(Intent.createChooser(sharingIntent, "Share"));
-//						//break;
-//					}
-//				}
-//				startActivity(Intent.createChooser(sharingIntent, "Share"));
-                if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
-                    ReferralActions.openGenericShareIntent(ShareActivity.this, callbackManager);
-                    FlurryEventLogger.event(INVITE_GENERIC);
-                } else{
-                    DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
-                }
-			}
-		});
-		
-		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -241,75 +108,25 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 			}
 		});
 
+		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-		
-		imageViewFacebook.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
-					ReferralActions.shareToFacebook(ShareActivity.this, callbackManager);
-					FlurryEventLogger.event(INVITE_FACEBOOK);
-				} else{
-					DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
-				}
 			}
-		});
-		
-		
-		imageViewWhatsapp.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
-			public void onClick(View v) {
-				if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
-					ReferralActions.shareToWhatsapp(ShareActivity.this);
-					FlurryEventLogger.event(INVITE_WHATSAPP);
-				} else{
-					DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
-				}
+			public void onPageSelected(int position) {
 			}
-		});
-		
-		
-		imageViewSMS.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
-			public void onClick(View v) {
-				if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
-					ReferralActions.sendSMSIntent(ShareActivity.this);
-					FlurryEventLogger.event(INVITE_MESSAGE);
-				} else{
-					DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
-				}
+			public void onPageScrollStateChanged(int state) {
+
 			}
 		});
 
-		imageViewEmail.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if(AppStatus.getInstance(ShareActivity.this).isOnline(ShareActivity.this)) {
-					ReferralActions.openMailIntent(ShareActivity.this);
-					FlurryEventLogger.event(INVITE_EMAIL);
-				} else{
-					DialogPopup.alertPopup(ShareActivity.this, "", Data.CHECK_INTERNET_MSG);
-				}
-			}
-		});
-
-		
 	}
 
-    public void loadHTMLContent(String data) {
-        final String mimeType = "text/html";
-        final String encoding = "UTF-8";
-        webViewReferralCaption.loadDataWithBaseURL("", data, mimeType, encoding, "");
-    }
 
-
-	
-
-	
-	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
@@ -335,9 +152,116 @@ public class ShareActivity extends BaseActivity implements FlurryEventNames {
 	
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
-        ASSL.closeActivity(relative);
+        ASSL.closeActivity(linearLayoutRoot);
         System.gc();
+		super.onDestroy();
 	}
 
+	public void getLeaderboardCall() {
+		try {
+			if(!HomeActivity.checkIfUserDataNull(this) && AppStatus.getInstance(this).isOnline(this)) {
+				DialogPopup.showLoadingDialog(this, "Loading...");
+				RestClient.getApiServices().leaderboardServerCall(Data.userData.accessToken, Config.getClientId(),
+						new Callback<LeaderboardResponse>() {
+							@Override
+							public void success(LeaderboardResponse leaderboardResponse, Response response) {
+								DialogPopup.dismissLoadingDialog();
+								try {
+									String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+									JSONObject jObj;
+									jObj = new JSONObject(jsonString);
+									int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+									String message = JSONParser.getServerMessage(jObj);
+									if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
+										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+											Log.v("success at", "leaderboeard");
+											ShareActivity.this.leaderboardResponse = leaderboardResponse;
+											updateLeaderboard(1);
+										}
+										getLeaderboardActivityCall();
+									} else{
+										retryLeaderboardDialog(message);
+									}
+								} catch (Exception exception) {
+									exception.printStackTrace();
+									retryLeaderboardDialog(Data.SERVER_ERROR_MSG);
+								}
+							}
+
+							@Override
+							public void failure(RetrofitError error) {
+								DialogPopup.dismissLoadingDialog();
+								retryLeaderboardDialog(Data.SERVER_NOT_RESOPNDING_MSG);
+								getLeaderboardActivityCall();
+							}
+						});
+			} else{
+				retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateLeaderboard(int pos) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + pos);
+		if (page != null) {
+			if(pos == 1){
+				((ShareLeaderboardFragment) page).update();
+			} else if(pos == 2){
+				((ShareActivityFragment) page).update();
+			}
+		}
+	}
+
+	public void retryLeaderboardDialog(String message){
+		DialogPopup.alertPopupTwoButtonsWithListeners(this, "", message,
+				getResources().getString(R.string.retry),
+				getResources().getString(R.string.cancel),
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						getLeaderboardCall();
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						performbackPressed();
+					}
+				}, true, false);
+	}
+
+	public void getLeaderboardActivityCall() {
+		if(!HomeActivity.checkIfUserDataNull(this) && AppStatus.getInstance(this).isOnline(this)) {
+			DialogPopup.showLoadingDialog(this, "Loading...");
+			RestClient.getApiServices().leaderboardActivityServerCall(Data.userData.accessToken, Config.getClientId(),
+					new Callback<LeaderboardActivityResponse>() {
+						@Override
+						public void success(LeaderboardActivityResponse leaderboardActivityResponse, Response response) {
+							DialogPopup.dismissLoadingDialog();
+							try {
+								String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+								JSONObject jObj;
+								jObj = new JSONObject(jsonString);
+								int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+								if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
+									if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+										ShareActivity.this.leaderboardActivityResponse = leaderboardActivityResponse;
+										updateLeaderboard(2);
+										Log.v("success at", "leaderboeard");
+									}
+								}
+							} catch (Exception exception) {
+								exception.printStackTrace();
+							}
+						}
+
+						@Override
+						public void failure(RetrofitError error) {
+							DialogPopup.dismissLoadingDialog();
+						}
+					});
+		}
+	}
 }

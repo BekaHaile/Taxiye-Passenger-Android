@@ -56,6 +56,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -183,7 +184,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Config.CUSTOM_SERVER_URL = link;
 			Config.setConfigMode(ConfigMode.CUSTOM);
 		}
-
+		RestClient.setupRestClient();
 		Log.e("link", "=" + link);
 	}
 

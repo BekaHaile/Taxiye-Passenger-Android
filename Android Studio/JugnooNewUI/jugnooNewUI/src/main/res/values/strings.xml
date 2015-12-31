@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
+	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -278,6 +278,25 @@
 	<!-- Add Places -->
 	<string name="remove_place_confirm_dialog_message">Are you sure you want to remove this saved place?</string>
 
+
+
+
+	<!-- Share Activity-->
+	<string name="number_of_downloads">Number of\nDownloads</string>
+	<string name="number_of_first_rides">Number of\nFirst Ride Taken</string>
+	<string name="money_earned">Total Money Earned\nfrom Referrals</string>
+	<string name="data_effective_format">*Data effective from %s</string>
+
+	<!-- Share Leaderboard-->
+	<string name="local_leaderboard">LOCAL</string>
+	<string name="global_leaderboard">GLOBAL</string>
+	<string name="daily_leaderboard">Daily</string>
+	<string name="weekly_leaderboard">Weekly</string>
+	<string name="lb_rank">Rank</string>
+	<string name="lb_name">Name</string>
+	<string name="lb_no_downloads">No. of\nDownloads</string>
+
+	<string name="retry">Retry</string>
 
 	
 	<string-array name="CountryCodes" >
