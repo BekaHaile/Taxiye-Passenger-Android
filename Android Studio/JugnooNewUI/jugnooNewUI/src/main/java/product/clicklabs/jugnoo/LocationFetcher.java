@@ -14,7 +14,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -266,7 +265,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	public void onLocationChanged(Location location) {
 		try{
 			if(location!=null){
-				Log.i("loc chanfged ----******", "=" + location);
+//				Log.i("loc chanfged ----******", "=" + location);
 //				if(Utils.compareDouble(location.getLatitude(), 0) != 0 && Utils.compareDouble(location.getLongitude(), 0) != 0){
 					this.location = location;
 					locationUpdate.onLocationChanged(location, priority);

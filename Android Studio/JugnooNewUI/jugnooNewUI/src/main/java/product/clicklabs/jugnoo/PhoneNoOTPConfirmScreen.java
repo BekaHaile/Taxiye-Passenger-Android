@@ -27,15 +27,15 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyBoardStateHandler;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
-import rmn.androidscreenlibrary.ASSL;
+
 
 public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
@@ -245,8 +245,18 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 
 		try{
+			if(Data.otpViaCallEnabled == 1){
+				relativeLayoutOTPThroughCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				relativeLayoutOTPThroughCall.setVisibility(View.GONE);
+			}
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				relativeLayoutOr.setVisibility(View.VISIBLE);
+				if(Data.otpViaCallEnabled == 1){
+					relativeLayoutOr.setVisibility(View.VISIBLE);
+				} else{
+					relativeLayoutOr.setVisibility(View.GONE);
+				}
 				relativeLayoutMissCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -262,7 +272,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 		OTP_SCREEN_OPEN = "yes";
 
-		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
+		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
 			@Override
 			public void keyboardOpened() {
 

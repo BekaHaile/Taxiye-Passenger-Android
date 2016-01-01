@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
@@ -46,7 +47,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 
-public class JSONParser {
+public class JSONParser implements Constants {
 
     public JSONParser() {
 
@@ -255,6 +256,7 @@ public class JSONParser {
 		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
+        Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 		int promoSuccess = userData.optInt("promo_success", 1);
 
 		int paytmEnabled = userData.optInt("paytm_enabled", 0);
@@ -264,6 +266,38 @@ public class JSONParser {
 
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
+
+        if(userData.has("user_saved_addresses")){
+            JSONArray userSavedAddressArray = userData.getJSONArray("user_saved_addresses");
+            for(int i=0; i<userSavedAddressArray.length(); i++){
+                JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
+                if(jsonObject.optString("type").equalsIgnoreCase("home")){
+                    if(!jsonObject.optString("address").equalsIgnoreCase("")){
+                        JSONObject json = new JSONObject();
+                        json.put("address", jsonObject.optString("address"));
+                        json.put("name", jsonObject.optString("type"));
+                        json.put("placeId", jsonObject.optString("google_place_id"));
+                        String strResult = json.toString();
+                        Prefs.with(context).save(SPLabels.ADD_HOME, strResult);
+                    }else {
+                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                    }
+
+                }else if(jsonObject.optString("type").equalsIgnoreCase("work")){
+                    if(!jsonObject.optString("address").equalsIgnoreCase("")){
+                        JSONObject json = new JSONObject();
+                        json.put("address", jsonObject.optString("address"));
+                        json.put("name", jsonObject.optString("type"));
+                        json.put("placeId", jsonObject.optString("google_place_id"));
+                        String strResult = json.toString();
+                        Prefs.with(context).save(SPLabels.ADD_WORK, strResult);
+                    }else {
+                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                    }
+
+                }
+            }
+        }
 
 
 
@@ -313,6 +347,25 @@ public class JSONParser {
         parseFeedbackReasonArrayList(jObj);
 
         Data.referralMessages = parseReferralMessages(jObj);
+
+        int userAppMonitoring = jLoginObject.optInt("user_app_monitoring", 0);
+        if(userAppMonitoring == 1){
+			double serverTimeInDays = jLoginObject.optDouble("user_app_monitoring_duration", 1.0);
+			long serverTimeInMillis = (long)(serverTimeInDays * (double)(24 * 60 * 60 * 1000));
+            long currentTime = System.currentTimeMillis();
+            long savedTime = Prefs.with(context).getLong(SPLabels.APP_MONITORING_TRIGGER_TIME, currentTime);
+
+			if(savedTime <= currentTime){
+				Intent intent = new Intent(context, FetchAppDataService.class);
+				intent.putExtra(KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				intent.putExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (currentTime + serverTimeInMillis));
+				context.startService(intent);
+			} else {
+
+			}
+
+        }
+
 
         return resp;
     }

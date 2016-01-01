@@ -11,8 +11,9 @@ import com.flurry.android.FlurryAgent;
 import com.squareup.picasso.Picasso;
 
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import rmn.androidscreenlibrary.ASSL;
+
 
 public class ItemInfoDescriptionActivity extends BaseActivity{
 	

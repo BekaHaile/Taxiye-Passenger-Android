@@ -10,14 +10,21 @@ import android.widget.TextView;
  */
 public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
 
-    ViewGroup activityRootView;
-    TextView textViewScroll;
-    KeyBoardStateHandler keyBoardStateHandler;
+    private ViewGroup activityRootView;
+    private TextView textViewScroll;
+    private KeyBoardStateHandler keyBoardStateHandler;
+    /**
+     * 0 for closed and 1 for opened
+     */
+    private int keyBoardState;
+    private boolean resizeTextView;
 
     public KeyboardLayoutListener(ViewGroup activityRootView, TextView textViewScroll, KeyBoardStateHandler keyBoardStateHandler) {
         this.activityRootView = activityRootView;
         this.textViewScroll = textViewScroll;
         this.keyBoardStateHandler = keyBoardStateHandler;
+        this.keyBoardState = 0;
+        this.resizeTextView = true;
     }
 
 
@@ -35,14 +42,20 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
 
             /************** Adapter for the parent List *************/
 
+        if(resizeTextView) {
             ViewGroup.LayoutParams params_12 = textViewScroll
                 .getLayoutParams();
 
             params_12.height = (int) (heightDiff);
 
             textViewScroll.setLayoutParams(params_12);
+        }
 
-            keyBoardStateHandler.keyboardOpened();
+            if(keyBoardState != 1){
+                keyBoardStateHandler.keyboardOpened();
+                keyBoardState = 1;
+            }
+
 
         } else {
 
@@ -52,9 +65,29 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
             textViewScroll.setLayoutParams(params);
             textViewScroll.requestLayout();
 
-            keyBoardStateHandler.keyBoardClosed();
+            if(keyBoardState == 1) {
+                keyBoardStateHandler.keyBoardClosed();
+                keyBoardState = 0;
+            }
 
         }
+    }
+
+    public void setResizeTextView(boolean resizeTextView) {
+        this.resizeTextView = resizeTextView;
+        if(!resizeTextView){
+            ViewGroup.LayoutParams params = textViewScroll
+                .getLayoutParams();
+            params.height = 0;
+            textViewScroll.setLayoutParams(params);
+            textViewScroll.requestLayout();
+        }
+    }
+
+
+    public interface KeyBoardStateHandler {
+        void keyboardOpened();
+        void keyBoardClosed();
     }
 
 }

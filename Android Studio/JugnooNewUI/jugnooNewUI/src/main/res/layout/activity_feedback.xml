@@ -113,7 +113,7 @@
                     android:layout_marginTop="20px"
                     android:background="@drawable/background_white_yellow_bordered"
                     android:gravity="left"
-                    android:hint="Please share your valuable feedback"
+                    android:hint="@string/leave_a_comment"
                     android:padding="20px"
                     android:scrollbars="vertical"
                     android:textSize="28px" />

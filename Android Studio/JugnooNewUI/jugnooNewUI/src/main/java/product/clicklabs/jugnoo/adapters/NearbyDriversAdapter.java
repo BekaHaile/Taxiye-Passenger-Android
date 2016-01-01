@@ -12,7 +12,8 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.NearbyDriver;
-import rmn.androidscreenlibrary.ASSL;
+import product.clicklabs.jugnoo.utils.ASSL;
+
 
 /**
  * Created by socomo20 on 10/4/15.

@@ -66,13 +66,13 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="40px"
                 android:splitMotionEvents="false"
-                android:visibility="gone" >
+                android:visibility="visible" >
 
                 <Button
                     android:id="@+id/buttonLogin"
-                    android:layout_width="230px"
+                    android:layout_width="280px"
                     android:layout_height="100px"
-                    android:layout_marginLeft="85px"
+                    android:layout_marginLeft="65px"
                     android:background="@drawable/button_yellow_white_border_selector"
                     android:text="LOG IN"
                     android:textColor="@drawable/text_color_white_alpha_selector"
@@ -80,10 +80,10 @@
 
                 <Button
                     android:id="@+id/buttonRegister"
-                    android:layout_width="230px"
+                    android:layout_width="280px"
                     android:layout_height="100px"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="85px"
+                    android:layout_marginRight="65px"
                     android:background="@drawable/button_white_selector"
                     android:text="SIGN UP"
                     android:textColor="@drawable/text_color_yellow_alpha_selector"
@@ -97,40 +97,67 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:splitMotionEvents="false"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:orientation="vertical"
                 >
+                
+                <ImageView
+                    android:layout_width="90px"
+                    android:layout_height="80px"
+                    android:layout_gravity="center_horizontal"
+                    android:tag="mwar"
+                    android:src="@drawable/no_internet_icon"/>
 
                 <TextView
                     android:id="@+id/textViewNoNet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="No internet connection available"
+                    android:text="@string/no_internet_connection"
                     android:textColor="@color/white"
-                    android:textSize="32px"
-                    android:layout_gravity="center_horizontal"
-                    />
-
-
-                <Button
-                    android:id="@+id/buttonNoNetCall"
-                    android:layout_width="648px"
-                    android:layout_height="100px"
-                    android:background="@drawable/button_white_selector"
-                    android:text="Call on +919023121121 to book your ride"
-                    android:textColor="@drawable/text_color_black_alpha_selector"
-                    android:textSize="32px"
-                    android:layout_gravity="center_horizontal"
+                    android:textSize="@dimen/button_text_size"
                     android:layout_marginTop="20px"
+                    android:layout_gravity="center_horizontal"
                     />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutNoInternetButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="40px"
+                    android:layout_marginTop="40px"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible" >
+
+                    <Button
+                        android:id="@+id/buttonNoNetCall"
+                        android:layout_width="280px"
+                        android:layout_height="100px"
+                        android:layout_marginLeft="65px"
+                        android:singleLine="true"
+                        android:gravity="center"
+                        android:background="@drawable/button_yellow_white_border_selector"
+                        android:text="@string/call_to_book"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="32px" />
+
+                    <Button
+                        android:id="@+id/buttonRefresh"
+                        android:layout_width="280px"
+                        android:layout_height="100px"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="65px"
+                        android:gravity="center"
+                        android:background="@drawable/button_white_selector"
+                        android:text="@string/refresh"
+                        android:textColor="@drawable/text_color_yellow_alpha_selector"
+                        android:textSize="32px" />
+                </RelativeLayout>
+
             </LinearLayout>
             </LinearLayout>
 
-
-        
-        
-        
     </RelativeLayout>
 
 </LinearLayout>

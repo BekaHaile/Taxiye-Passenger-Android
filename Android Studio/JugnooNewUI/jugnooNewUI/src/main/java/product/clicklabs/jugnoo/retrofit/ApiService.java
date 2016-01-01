@@ -1,22 +1,28 @@
 package product.clicklabs.jugnoo.retrofit;
 
+import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
+import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
+import retrofit.Callback;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
+
 /**
  *Define all server calls here
  */
 public interface ApiService {
 
 
-//    @FormUrlEncoded
-//    @POST("/login_using_access_token")
-//    public void loginUsingAccessToken(@Field("access_token") String accessToken,
-//                      @Field("device_token") String deviceToken,
-//                      @Field("latitude") String latitude,
-//                      @Field("longitude") String longitude,
-//                      @Field("app_version") String appVersion,
-//                      @Field("device_type") String deviceType,
-//                      @Field("unique_device_id") String uniqueDeviceId,
-//                      @Field("client_id") String clientId,
-//                      @Field("is_access_token_new") String isAccessTokenNew,
-//                      Callback<String> callback);
+    @FormUrlEncoded
+    @POST("/leaderboard/referrals/get_leaderboards")
+    void leaderboardServerCall(@Field("access_token") String accessToken,
+                      @Field("client_id") String clientId,
+                      Callback<LeaderboardResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/leaderboard/referrals/get_activity")
+    void leaderboardActivityServerCall(@Field("access_token") String accessToken,
+                               @Field("client_id") String clientId,
+                               Callback<LeaderboardActivityResponse> callback);
 
 }

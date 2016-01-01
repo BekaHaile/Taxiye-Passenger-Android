@@ -48,4 +48,11 @@ public class SPLabels {
     public static final String UPLOAD_CONTACTS_ERROR = "upload_contacts_error";
     public static final String JUGNOO_JEANIE_STATE = "jugnoo_jeanie_state";
     public static final String SHOW_JUGNOO_JEANIE = "show_jugnoo_jeanie";
+    public static final String APP_MONITORING_TRIGGER_TIME = "app_monitoring_trigger_time";
+
+
+    public static final String LOGIN_UNVERIFIED_DATA_TYPE = "login_unverified_data_type";
+    public static final String LOGIN_UNVERIFIED_DATA = "login_unverified_data";
+
+
 }

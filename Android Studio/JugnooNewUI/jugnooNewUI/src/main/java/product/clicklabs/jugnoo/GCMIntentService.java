@@ -10,7 +10,13 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,6 +24,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
+import android.widget.TextView;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
@@ -31,6 +38,7 @@ import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -47,7 +55,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
     @SuppressWarnings("deprecation")
     private void notificationManager(Context context, String title, String message, boolean ring) {
-
+		clearNotifications(context);
         try {
             long when = System.currentTimeMillis();
 
@@ -83,7 +91,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				builder.setPriority(Notification.PRIORITY_HIGH);
 			}
 
-
             Notification notification = builder.build();
             notificationManager.notify(NOTIFICATION_ID, notification);
 
@@ -99,7 +106,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
     @SuppressWarnings("deprecation")
     private void notificationManagerResume(Context context, String title, String message, boolean ring) {
-
+		clearNotifications(context);
         try {
             long when = System.currentTimeMillis();
 
@@ -113,11 +120,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-            builder.setAutoCancel(true);
-            builder.setContentTitle(title);
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-            builder.setContentText(message);
-            builder.setTicker(message);
+			builder.setAutoCancel(true);
+			builder.setContentTitle(title);
+			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+			builder.setContentText(message);
+			builder.setTicker(message);
 
             if (ring) {
                 builder.setLights(Color.GREEN, 500, 500);
@@ -125,14 +132,13 @@ public class GCMIntentService extends GcmListenerService implements Constants {
                 builder.setDefaults(Notification.DEFAULT_ALL);
             }
 
-            builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-            builder.setSmallIcon(R.drawable.notification_icon);
+			builder.setWhen(when);
+			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+			builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
 				builder.setPriority(Notification.PRIORITY_HIGH);
 			}
-
 
             Notification notification = builder.build();
             notificationManager.notify(NOTIFICATION_ID, notification);
@@ -175,7 +181,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             builder.setTicker(message);
             builder.setDefaults(Notification.DEFAULT_ALL);
             builder.setWhen(when);
+
+//			Drawable drawable = context.getResources().getDrawable(R.drawable.circle_yellow_size);
+//			builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, "99", 18));
+
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
@@ -196,7 +207,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
     }
 
 	@SuppressWarnings("deprecation")
-	private void generateNotificationForCall(Context context, String title, String message, int notificationId, String callNumber) {
+	private void generateNotificationForCall(Context context, String title, String message, int notificationId, String callNumber, String eta) {
 
 		try {
 			long when = System.currentTimeMillis();
@@ -223,7 +234,15 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			builder.setTicker(message);
 			builder.setDefaults(Notification.DEFAULT_ALL);
 			builder.setWhen(when);
-			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+
+			if(eta != null){
+				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_yellow_size);
+				builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, eta, 16));
+			} else{
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
+			}
+
+//			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
 			builder.setSmallIcon(R.drawable.notification_icon);
 
 			Intent intentCall = new Intent(context, CallActivity.class);
@@ -246,7 +265,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
     @SuppressWarnings("deprecation")
@@ -378,6 +396,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					int flag = jObj.getInt(KEY_FLAG);
 					String title = jObj.optString(KEY_TITLE, getResources().getString(R.string.app_name));
 
+
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
@@ -387,7 +406,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						String message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo);
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null);
 						} else{
 							if (HomeActivity.appInterruptHandler != null) {
 								notificationManagerResume(this, title, message1, false);
@@ -405,7 +424,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, title, driverArrivedMessage, NOTIFICATION_ID, phoneNo);
+							generateNotificationForCall(this, title, driverArrivedMessage, NOTIFICATION_ID, phoneNo, null);
 						} else{
 							if (HomeActivity.appInterruptHandler != null) {
 								notificationManagerResume(this, title, driverArrivedMessage, false);
@@ -415,9 +434,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
-
+						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						if (HomeActivity.appInterruptHandler != null) {
-							notificationManagerResume(this, title, "Your ride has started.", false);
+							notificationManagerResume(this, title, message1, false);
 							HomeActivity.appInterruptHandler.startRideForCustomer(0);
 						} else {
 							String SHARED_PREF_NAME = "myPref",
@@ -428,25 +447,27 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
 							editor.commit();
 
-							notificationManager(this, title, "Your ride has started.", false);
+							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
+						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
 
 						if (HomeActivity.appInterruptHandler != null) {
 							if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
-								notificationManagerResume(this, title, "Your ride has ended.", false);
+								notificationManagerResume(this, title, message1, false);
 								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
 							}
 						} else {
-							notificationManager(this, title, "Your ride has ended.", false);
+							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
+						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has been cancelled due to an unexpected issue");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1);
-							notificationManagerResume(this, title, "Your ride has been cancelled due to an unexpected issue", false);
+							notificationManagerResume(this, title, message1, false);
 						} else {
-							notificationManager(this, title, "Your ride has been cancelled due to an unexpected issue", false);
+							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
@@ -565,7 +586,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						else{
 							Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, message1);
 						}
-					}
+					}  else if(PushFlags.DRIVER_ETA.getOrdinal() == flag){
+                        String message1 = jObj.getString(KEY_MESSAGE);
+                        String eta = jObj.optString(KEY_ETA, "-1");
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+                        if(!"-1".equalsIgnoreCase(eta) && !"".equalsIgnoreCase(phoneNo)){
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, eta);
+                        }
+                    }
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -623,6 +651,58 @@ public class GCMIntentService extends GcmListenerService implements Constants {
         }
 
     }
+
+
+
+	public static Bitmap drawableToBitmapPlusText(Context context, Drawable drawable, String text, float fontSize) {
+		Bitmap bitmap = null;
+
+		if (drawable instanceof BitmapDrawable) {
+			BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+			if(bitmapDrawable.getBitmap() != null) {
+				return bitmapDrawable.getBitmap();
+			}
+		}
+
+		if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+			bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+		} else {
+			bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+		}
+
+		final TextView textView1 = new TextView(context);
+		textView1.setText(text);
+		textView1.setTextSize(fontSize);
+		textView1.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
+
+		final Rect boundsText1 = new Rect();
+
+		final Paint paint1 = textView1.getPaint();
+		paint1.getTextBounds(text, 0, textView1.length(), boundsText1);
+		paint1.setTextAlign(Paint.Align.CENTER);
+		paint1.setColor(Color.WHITE);
+
+		final TextView textView2 = new TextView(context);
+		textView2.setText("min");
+		textView2.setTextSize(fontSize-4);
+		textView2.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
+
+		final Rect boundsText2 = new Rect();
+
+		final Paint paint2 = textView2.getPaint();
+		paint2.getTextBounds("min", 0, textView2.length(), boundsText2);
+		paint2.setTextAlign(Paint.Align.CENTER);
+		paint2.setColor(Color.WHITE);
+
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawable.draw(canvas);
+
+		canvas.drawText(text, canvas.getWidth() / 2, Utils.dpToPx(context, 24), paint1);
+		canvas.drawText("min", canvas.getWidth() / 2, Utils.dpToPx(context, 26) + boundsText1.height(), paint2);
+
+		return bitmap;
+	}
 
 
 

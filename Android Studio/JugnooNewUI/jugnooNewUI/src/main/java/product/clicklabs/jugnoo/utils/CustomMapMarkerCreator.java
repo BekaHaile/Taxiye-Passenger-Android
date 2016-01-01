@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import product.clicklabs.jugnoo.R;
-import rmn.androidscreenlibrary.ASSL;
+
 
 @SuppressWarnings("static-access")
 public class CustomMapMarkerCreator {
@@ -111,7 +111,6 @@ public class CustomMapMarkerCreator {
 		Drawable shape = context.getResources().getDrawable(R.drawable.ic_centre_pin_big);
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
-		Log.e("getTextBitmap text", "=" + text);
 
 		canvasText.drawText(text, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
 		canvasText.drawText("min", canvasText.getWidth() / 2, (int)(35f*assl.Yscale()) + boundsText.height(), paint);

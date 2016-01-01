@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.SyncHttpClient;
@@ -146,6 +147,13 @@ public class Data {
 	public static final String DEVICE_TYPE = "0";
 	public static String deviceToken = "", country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
 	public static int appVersion;
+
+	public static String getDeviceToken(){
+		if(deviceToken.equalsIgnoreCase("")){
+			deviceToken = "not_found";
+		}
+		return deviceToken;
+	}
 	
 	
 	
@@ -166,6 +174,7 @@ public class Data {
 	public static int pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 
 	public static FacebookUserData facebookUserData;
+	public static GoogleSignInAccount googleSignInAccount;
 	
 	
 	
@@ -184,6 +193,7 @@ public class Data {
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
 
 	public static String knowlarityMissedCallNumber = "";
+	public static int otpViaCallEnabled = 1;
 
 	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
