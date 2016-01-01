@@ -21,6 +21,7 @@ public class MyApplication extends Application{
 		} else {
 			Branch.getTestInstance(this);
 		}
+		Branch.getAutoInstance(this);
 	}
 
 	@Override
