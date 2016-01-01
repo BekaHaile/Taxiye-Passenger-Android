@@ -21,14 +21,15 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
-import rmn.androidscreenlibrary.ASSL;
 
-public class HelpParticularActivity extends BaseActivity {
+
+public class HelpParticularActivity extends BaseActivity implements Constants {
 
 
     LinearLayout relative;
@@ -218,6 +219,28 @@ public class HelpParticularActivity extends BaseActivity {
 						RequestParams params = new RequestParams();
 						params.put("access_token", Data.userData.accessToken);
 						params.put("section", "" + helpSection.getOrdinal());
+
+                        if(HelpSection.FARE_DETAILS.getOrdinal() == helpSection.getOrdinal()){
+                            if(Data.lastRefreshLatLng != null) {
+                                params.put(KEY_LATITUDE, "" + Data.lastRefreshLatLng.latitude);
+                                params.put(KEY_LONGITUDE, "" + Data.lastRefreshLatLng.longitude);
+                            }
+                            else if(HomeActivity.myLocation != null) {
+                                params.put(KEY_LATITUDE, "" + HomeActivity.myLocation.getLatitude());
+                                params.put(KEY_LONGITUDE, "" + HomeActivity.myLocation.getLongitude());
+                            }
+                        }
+                        else{
+                            if(HomeActivity.myLocation != null) {
+                                params.put(KEY_LATITUDE, "" + HomeActivity.myLocation.getLatitude());
+                                params.put(KEY_LONGITUDE, "" + HomeActivity.myLocation.getLongitude());
+                            }
+                            else if(Data.lastRefreshLatLng != null) {
+                                params.put(KEY_LATITUDE, "" + Data.lastRefreshLatLng.latitude);
+                                params.put(KEY_LONGITUDE, "" + Data.lastRefreshLatLng.longitude);
+                            }
+                        }
+
 
 						fetchHelpDataClient = Data.getClient();
 						fetchHelpDataClient.post(Config.getServerUrl() + "/get_information", params,

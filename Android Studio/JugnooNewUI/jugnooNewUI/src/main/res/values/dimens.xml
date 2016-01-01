@@ -62,7 +62,7 @@
 
 
 
-
+    <!-- payment option dialog dimensions -->
     <dimen name="payment_option_dialog_margin">70px</dimen>
     <dimen name="payment_option_dialog_title_text_size">28px</dimen>
     <dimen name="payment_option_dialog_title_margin_lr">25px</dimen>
@@ -79,10 +79,45 @@
     <dimen name="payment_option_paytm_balance_text_right_margin">10px</dimen>
     <dimen name="payment_option_paytm_balance_text_text_size">30px</dimen>
 
+
     <dimen name="line_width">2px</dimen>
 
     <dimen name="dialog_border_width">2px</dimen>
+    <dimen name="button_width">648px</dimen>
+    <dimen name="button_height">80px</dimen>
 
+
+
+    <dimen name="social_button_width">282px</dimen>
+    <dimen name="social_button_height">86px</dimen>
+    <dimen name="social_button_google_left_margin">60px</dimen>
+
+
+    <!-- end ride screen dimensions -->
+    <dimen name="end_ride_fare_value_text_size">46px</dimen>
+    <dimen name="end_ride_fare_title_text_size">26px</dimen>
+
+
+    <!-- share activity screen -->
+    <dimen name="share_activity_bar_height">200px</dimen>
+    <dimen name="share_activity_text_size">40px</dimen>
+    <dimen name="share_activity_number_text_size">54px</dimen>
+    <dimen name="share_activity_text_size_small">28px</dimen>
+    <dimen name="share_activity_text_margin_left">30px</dimen>
+    <dimen name="share_activity_text_margin_right">45px</dimen>
+    <dimen name="share_activity_text_margin_top">62px</dimen>
+    <dimen name="share_activity_data_text_margin_top">62px</dimen>
+    <dimen name="share_activity_first_rl_margin_top">62px</dimen>
+
+
+
+    <!-- share leaderboard screen-->
+    <dimen name="share_lb_button_width">310px</dimen>
+    <dimen name="share_lb_button_height">80px</dimen>
+    <dimen name="share_lb_text_view_layout_height">80px</dimen>
+    <dimen name="share_lb_text_size">34px</dimen>
+    <dimen name="share_lb_text_size_small">26px</dimen>
+    <dimen name="share_lb_text_size_medium">30px</dimen>
 
 
 

@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -38,9 +39,9 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
-import rmn.androidscreenlibrary.ASSL;
 
-public class RideSummaryActivity extends BaseFragmentActivity implements FlurryEventNames {
+
+public class RideSummaryActivity extends BaseFragmentActivity implements FlurryEventNames, Constants {
 
     RelativeLayout relative;
 
@@ -210,6 +211,10 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 				else{
 					getRideSummaryAPI(this, ""+engagementId);
 				}
+			}
+			else if(intent.hasExtra(KEY_END_RIDE_DATA)){
+				endRideData = Data.endRideData;
+				setRideData();
 			}
 			else{
 				throw new Exception();

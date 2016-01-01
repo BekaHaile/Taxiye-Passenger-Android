@@ -16,9 +16,10 @@ import com.google.gson.Gson;
 
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
-import rmn.androidscreenlibrary.ASSL;
+
 
 /**
  * Created by Ankit on 10/9/15.

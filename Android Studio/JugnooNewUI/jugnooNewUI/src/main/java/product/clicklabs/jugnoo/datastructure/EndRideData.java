@@ -55,5 +55,11 @@ public class EndRideData {
 
 		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount;
 	}
+
+
+	public void setDriverNameCarName(String driverName, String driverCarNumber){
+		this.driverName = driverName;
+		this.driverCarNumber = driverCarNumber;
+	}
 	
 }

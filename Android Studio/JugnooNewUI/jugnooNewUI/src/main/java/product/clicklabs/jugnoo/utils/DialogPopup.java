@@ -24,7 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
-import rmn.androidscreenlibrary.ASSL;
+
 
 public class DialogPopup {
 
@@ -121,6 +121,54 @@ public class DialogPopup {
 				
 			});
 			
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void alertPopupFromPoint(Activity activity, String title, String message) {
+		try {
+			dismissAlertPopup();
+			if("".equalsIgnoreCase(title)){
+				title = activity.getResources().getString(R.string.alert);
+			}
+
+			dialog = new Dialog(activity, R.style.MyCustomTheme);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.MyCustomTheme;
+			dialog.setContentView(R.layout.dialog_custom_one_button);
+
+			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, false);
+
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+
+
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
+
+			textMessage.setMovementMethod(new ScrollingMovementMethod());
+			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+			textHead.setText(title);
+			textMessage.setText(Html.fromHtml(message));
+
+			textHead.setVisibility(View.GONE);
+
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+
+			});
+
 			dialog.show();
 		} catch (Exception e) {
 			e.printStackTrace();

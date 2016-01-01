@@ -8,11 +8,13 @@
     <string name="filter_title">Jugnoo</string>
 
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
+	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
+
+	<string name="google_server_client_id">506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com</string>
 
 	<!-- i9Spmrdn1CLYJw2j7j1iOzIwzjs= -->
     
@@ -53,6 +55,9 @@
 	
 	<string name="save_to_favorite">Save To Favorite</string>
 	<string name="enter_name_for_favorite">Enter Name for Favorite</string>
+	<string name="no_internet_connection">No Internet Connection</string>
+	<string name="call_to_book">CALL TO BOOK</string>
+	<string name="refresh">REFRESH</string>
 	
 	<string name="ok">OK</string>
 	
@@ -233,7 +238,9 @@
 	<string name="upload_contact_yes">YES</string>
 	<string name="upload_contact_no_thanks">NO</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
-	
+
+
+	<!-- Jugnoo Jeanie Strings-->
 	<string name="jugnoo_jeanie">Jugnoo Jeanie</string>
 	<string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
 		We believe you should always get the best deal for your daily commute and thus we are allowing you to compare other available options with Jugnoo ETA and prices.
@@ -241,7 +248,56 @@
 		And don’t worry about the standard privacy notification on the next screen, we will never store any of your actions from Jugnoo Jeanie.
 		It is simply a tool to compare and reduce your commute costs.  </string>
 
-	
+	<!-- Account Settings Strings -->
+	<string name="add_home">Add Home</string>
+	<string name="add_work">Add Work</string>
+
+
+	<!-- Search state strings -->
+	<string name="search_state_edit_text_hint">Set pick up location</string>
+
+	<!-- Assigning state strings -->
+	<string name="assigning_state_edit_text_hint">Set drop location</string>
+
+	<!-- Ride Summary New Strings -->
+	<string name="total_fare">Total Fare</string>
+	<string name="Cash_to_be_paid">Cash to be paid</string>
+	<string name="view_invoice">View Invoice</string>
+	<string name="rate_your_ride">RATE YOUR RIDE</string>
+	<string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
+	<string name="skip">Skip</string>
+	<string name="star_required">* Required</string>
+	<string name="leave_a_comment">Leave a comment</string>
+	<string name="what_could_we_improve">What could we improve?</string>
+	<string name="ruppes_value_format">\u20B9 %s</string>
+	<string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
+	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
+	<string name="review_must_be_in">Review must be in 300 letters.</string>
+
+
+	<!-- Add Places -->
+	<string name="remove_place_confirm_dialog_message">Are you sure you want to remove this saved place?</string>
+
+
+
+
+	<!-- Share Activity-->
+	<string name="number_of_downloads">Number of\nDownloads</string>
+	<string name="number_of_first_rides">Number of\nFirst Rides Taken</string>
+	<string name="money_earned">Total Money Earned\nfrom Referrals</string>
+	<string name="data_effective_format">*Data effective from %s</string>
+
+	<!-- Share Leaderboard-->
+	<string name="local_leaderboard">LOCAL</string>
+	<string name="global_leaderboard">GLOBAL</string>
+	<string name="daily_leaderboard">Daily</string>
+	<string name="weekly_leaderboard">Weekly</string>
+	<string name="lb_rank">Rank</string>
+	<string name="lb_name">Name</string>
+	<string name="lb_no_downloads">No. of\nDownloads</string>
+
+	<string name="retry">Retry</string>
+
 	
 	<string-array name="CountryCodes" >
 <item>93,AF</item>
@@ -479,5 +535,8 @@
 	<string name="remove">Remove</string>
 
     <string name="promocode_invalid_message_on_signup">Invalid Promo code! Enter correct code to avail benefits</string>
+
+    <string name="loading">"Loading..."</string>
+
 
 </resources>

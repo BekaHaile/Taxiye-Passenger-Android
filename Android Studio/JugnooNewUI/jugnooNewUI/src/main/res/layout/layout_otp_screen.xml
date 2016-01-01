@@ -174,13 +174,14 @@
             android:id="@+id/linearLayoutOTPOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="100px">
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutOTPThroughCall"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
-                android:layout_marginTop="100px"
+
                 android:background="@color/white_light_grey"
                 android:visibility="visible"
                 >
@@ -220,6 +221,7 @@
                 android:layout_height="70px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20px"
+                android:layout_marginBottom="20px"
                 android:background="@drawable/ring_black_border"
                 android:tag="mwar"
                 >
@@ -236,7 +238,6 @@
                 android:id="@+id/relativeLayoutMissCall"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
-                android:layout_marginTop="20px"
                 android:background="@color/white_light_grey"
                 android:visibility="visible"
                 >

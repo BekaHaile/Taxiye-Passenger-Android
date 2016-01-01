@@ -293,6 +293,7 @@
                             wheel:matProg_barWidth="3dp"
                             wheel:matProg_fillRadius="true"
                             wheel:matProg_progressIndeterminate="true"
+                            android:tag="mwar"
                             />
                     </RelativeLayout>
 
@@ -662,10 +663,10 @@
                     android:id="@+id/assigningLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:animateLayoutChanges="true"
                     android:background="@color/black_translucent"
                     android:splitMotionEvents="false"
                     android:visibility="gone"
+                    android:animateLayoutChanges="true"
                     >
 
                     <!-- finding driver layout-->
@@ -751,123 +752,53 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/linearLayoutAssigningDropLocationClick"
+                        android:layout_width="match_parent"
+                        android:layout_height="100px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="15px"
+                        android:layout_marginLeft="10px"
+                        android:layout_marginRight="10px"
+                        android:layout_marginTop="15px"
+                        android:background="@drawable/dropshadow_black"
+                        android:splitMotionEvents="false"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/relativeLayoutAssigningInfo"
+                        >
+
+                        <ImageView
+                            android:layout_width="30px"
+                            android:layout_height="44px"
+                            android:layout_marginLeft="18px"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/search_location_icon"
+                            android:tag="mwar"/>
+
+                        <TextView
+                            android:id="@+id/textViewAssigningDropLocationClick"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="20px"
+                            android:background="@color/transparent"
+                            android:gravity="center_vertical"
+                            android:hint="Set drop location"
+                            android:singleLine="true"
+                            android:textColor="@color/black_text"
+                            android:textCursorDrawable="@null"
+                            android:textSize="30px"/>
+
+                    </LinearLayout>
+
                     <!-- drop location layout-->
                     <RelativeLayout
                         android:id="@+id/relativeLayoutAssigningDropLocationParent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/relativeLayoutAssigningInfo"
-                        android:background="@color/white_translucent"
                         android:visibility="visible"
                         >
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutAssigningDropLocationBar"
-                            android:layout_width="match_parent"
-                            android:layout_height="100px"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="15px"
-                            android:layout_marginLeft="10px"
-                            android:layout_marginRight="10px"
-                            android:layout_marginTop="15px"
-                            android:background="@drawable/dropshadow_grey"
-                            android:splitMotionEvents="false">
-
-                            <ImageView
-                                android:id="@+id/imageViewAssigningDropLocationGPSIcon"
-                                android:layout_width="30px"
-                                android:layout_height="44px"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="18px"
-                                android:src="@drawable/search_location_icon"
-                                android:tag="mwar"/>
-
-                            <EditText
-                                android:id="@+id/editTextAssigningDropLocation"
-                                android:layout_width="470px"
-                                android:layout_height="match_parent"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="20px"
-                                android:layout_toRightOf="@+id/imageViewAssigningDropLocationGPSIcon"
-                                android:background="@color/transparent"
-                                android:gravity="center_vertical"
-                                android:hint="Enter your destination"
-                                android:singleLine="true"
-                                android:textColor="@color/black_text"
-                                android:textCursorDrawable="@null"
-                                android:textSize="30px"/>
-
-                            <product.clicklabs.jugnoo.utils.ProgressWheel
-                                android:id="@+id/progressBarAssigningDropLocation"
-                                xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                                android:layout_width="70px"
-                                android:layout_height="70px"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="75px"
-                                wheel:matProg_barColor="@color/yellow"
-                                wheel:matProg_barWidth="3dp"
-                                wheel:matProg_fillRadius="true"
-                                wheel:matProg_progressIndeterminate="true"
-                                />
-
-                            <ImageView
-                                android:id="@+id/imageViewAssigningDropLocationCross"
-                                android:layout_width="70px"
-                                android:layout_height="70px"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="5px"
-                                android:padding="20px"
-                                android:src="@drawable/ic_cross_et"
-                                android:tag="mwar"/>
-
-
-                        </RelativeLayout>
-
-
-                        <ScrollView
-                            android:id="@+id/scrollViewAssigning"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_below="@+id/relativeLayoutAssigningDropLocationBar"
-                            >
-
-                            <LinearLayout
-                                android:id="@+id/linearLayoutScrollAssigning"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                >
-                                <product.clicklabs.jugnoo.utils.NonScrollListView
-                                    android:id="@+id/listViewAssigningDropLocationSearch"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:divider="@color/transparent"
-                                    android:dividerHeight="0px"
-                                    android:splitMotionEvents="false"
-                                    >
-                                </product.clicklabs.jugnoo.utils.NonScrollListView>
-
-                                <ImageView
-                                    android:id="@+id/imageViewPoweredByGoogleAssigning"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/powered_by_google_light"
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_marginBottom="8dp"
-                                    android:layout_marginTop="8dp"
-                                    android:tag="DontTouchMe"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/textViewScrollAssigning"
-                                    android:layout_width="10px"
-                                    android:layout_height="10px"
-                                    android:textSize="28px"/>
-                            </LinearLayout>
-                        </ScrollView>
-
-
 
                     </RelativeLayout>
 
@@ -917,6 +848,46 @@
                             android:textColor="@color/grey_dark"
                             android:textSize="28px"/>
                     </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutFinalDropLocationClick"
+                        android:layout_width="match_parent"
+                        android:layout_height="100px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="15px"
+                        android:layout_marginLeft="10px"
+                        android:layout_marginRight="10px"
+                        android:layout_marginTop="15px"
+                        android:background="@drawable/dropshadow_grey"
+                        android:splitMotionEvents="false"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/relativeLayoutInRideInfo"
+                        >
+
+                        <ImageView
+                            android:layout_width="30px"
+                            android:layout_height="44px"
+                            android:layout_marginLeft="18px"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/search_location_icon"
+                            android:tag="mwar"/>
+
+                        <TextView
+                            android:id="@+id/textViewFinalDropLocationClick"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="20px"
+                            android:background="@color/transparent"
+                            android:gravity="center_vertical"
+                            android:hint="Set drop location"
+                            android:singleLine="true"
+                            android:textColor="@color/black_text"
+                            android:textCursorDrawable="@null"
+                            android:textSize="30px"/>
+
+                    </LinearLayout>
+
 
                     <Button
                         android:id="@+id/customerInRideMyLocationBtn"
@@ -1170,110 +1141,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/relativeLayoutInRideInfo"
-                        android:background="@color/transparent"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         >
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutFinalDropLocationBar"
-                            android:layout_width="match_parent"
-                            android:layout_height="100px"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="15px"
-                            android:layout_marginLeft="10px"
-                            android:layout_marginRight="10px"
-                            android:layout_marginTop="15px"
-                            android:background="@drawable/dropshadow_grey"
-                            android:splitMotionEvents="false">
-
-                            <ImageView
-                                android:id="@+id/imageViewFinalDropLocationGPSIcon"
-                                android:layout_width="30px"
-                                android:layout_height="44px"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="18px"
-                                android:src="@drawable/search_location_icon"
-                                android:tag="mwar"/>
-
-                            <EditText
-                                android:id="@+id/editTextFinalDropLocation"
-                                android:layout_width="470px"
-                                android:layout_height="match_parent"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="20px"
-                                android:layout_toRightOf="@+id/imageViewFinalDropLocationGPSIcon"
-                                android:background="@color/transparent"
-                                android:gravity="center_vertical"
-                                android:hint="Enter your destination"
-                                android:singleLine="true"
-                                android:textColor="@color/black_text"
-                                android:textCursorDrawable="@null"
-                                android:textSize="30px"/>
-
-                            <product.clicklabs.jugnoo.utils.ProgressWheel
-                                android:id="@+id/progressBarFinalDropLocation"
-                                xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                                android:layout_width="70px"
-                                android:layout_height="70px"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="75px"
-                                wheel:matProg_barColor="@color/yellow"
-                                wheel:matProg_barWidth="3dp"
-                                wheel:matProg_fillRadius="true"
-                                wheel:matProg_progressIndeterminate="true"
-                                />
-
-                            <ImageView
-                                android:id="@+id/imageViewFinalDropLocationCross"
-                                android:layout_width="70px"
-                                android:layout_height="70px"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="5px"
-                                android:padding="20px"
-                                android:src="@drawable/ic_cross_et"
-                                android:tag="mwar"/>
-
-                        </RelativeLayout>
-
-                        <ScrollView
-                            android:id="@+id/scrollViewFinal"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_below="@+id/relativeLayoutFinalDropLocationBar"
-                            >
-
-                            <LinearLayout
-                                android:id="@+id/linearLayoutScrollFinal"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical">
-                                <product.clicklabs.jugnoo.utils.NonScrollListView
-                                    android:id="@+id/listViewFinalDropLocationSearch"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:divider="@color/transparent"
-                                    android:dividerHeight="0px"
-                                    android:splitMotionEvents="false"
-                                    >
-                                </product.clicklabs.jugnoo.utils.NonScrollListView>
-                                <ImageView
-                                    android:id="@+id/imageViewPoweredByGoogleFinal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/powered_by_google_light"
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_marginBottom="8dp"
-                                    android:layout_marginTop="8dp"
-                                    android:tag="DontTouchMe"
-                                    />
-                                <TextView
-                                    android:id="@+id/textViewScrollFinal"
-                                    android:layout_width="10px"
-                                    android:layout_height="10px"
-                                    android:textSize="28px"/>
-                            </LinearLayout>
-                        </ScrollView>
 
                     </RelativeLayout>
 
@@ -1292,128 +1161,6 @@
                 android:splitMotionEvents="false"
                 android:visibility="gone">
 
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutSearchBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="100px"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="15px"
-                    android:layout_marginLeft="10px"
-                    android:layout_marginRight="10px"
-                    android:layout_marginTop="15px"
-                    android:background="@drawable/dropshadow_grey"
-                    android:splitMotionEvents="false">
-
-                    <ImageView
-                        android:id="@+id/imageViewSearchGPSIcon"
-                        android:layout_width="30px"
-                        android:layout_height="44px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="18px"
-                        android:src="@drawable/search_location_icon"
-                        android:tag="mwar"/>
-
-                    <EditText
-                        android:id="@+id/editTextSearch"
-                        android:layout_width="470px"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
-                        android:background="@color/transparent"
-                        android:gravity="center_vertical"
-                        android:hint="Set pick up location"
-                        android:singleLine="true"
-                        android:textColor="@color/black_text"
-                        android:textCursorDrawable="@null"
-                        android:textSize="30px"/>
-
-                    <product.clicklabs.jugnoo.utils.ProgressWheel
-                        android:id="@+id/progressBarSearch"
-                        xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                        android:layout_width="70px"
-                        android:layout_height="70px"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="75px"
-                        wheel:matProg_barColor="@color/yellow"
-                        wheel:matProg_barWidth="3dp"
-                        wheel:matProg_fillRadius="true"
-                        wheel:matProg_progressIndeterminate="true"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewSearchCross"
-                        android:layout_width="70px"
-                        android:layout_height="70px"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5px"
-                        android:padding="20px"
-                        android:src="@drawable/ic_cross_et"
-                        android:tag="mwar"/>
-
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/textViewAddFav"
-                    android:layout_width="match_parent"
-                    android:layout_height="100px"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
-                    android:background="@drawable/background_wallet_border"
-                    android:drawableRight="@drawable/edit_icon_small"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:singleLine="true"
-                    android:tag="mwar"
-                    android:text="Add to Favrouite"
-                    android:textColor="@color/black_text"
-                    android:textSize="30px"
-                    android:visibility="gone"
-                    />
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/relativeLayoutSearchBar"
-                    >
-
-                    <LinearLayout
-                        android:id="@+id/linearLayoutScrollSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <product.clicklabs.jugnoo.utils.NonScrollListView
-                            android:id="@+id/listViewSearch"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:divider="@color/transparent"
-                            android:dividerHeight="0px"
-                            android:splitMotionEvents="false">
-                        </product.clicklabs.jugnoo.utils.NonScrollListView>
-
-                        <ImageView
-                            android:id="@+id/imageViewPoweredByGoogleSearch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/powered_by_google_light"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginTop="8dp"
-                            android:tag="DontTouchMe"
-                            />
-
-                        <TextView
-                            android:id="@+id/textViewScrollSearch"
-                            android:layout_width="10px"
-                            android:layout_height="10px"
-                            android:textSize="28px"/>
-
-                    </LinearLayout>
-                </ScrollView>
-
             </RelativeLayout>
 
             <!-- end ride layout -->
@@ -1426,7 +1173,7 @@
                 android:visibility="gone">
 
                 <include
-                    layout="@layout/layout_ride_summary"
+                    layout="@layout/layout_ride_summary_new"
                     ></include>
 
             </RelativeLayout>

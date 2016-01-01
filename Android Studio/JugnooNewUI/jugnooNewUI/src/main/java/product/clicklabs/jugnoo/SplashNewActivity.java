@@ -56,6 +56,8 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
@@ -71,7 +73,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
-import rmn.androidscreenlibrary.ASSL;
+
 
 public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames {
 
@@ -87,7 +89,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
-	Button buttonNoNetCall;
+	Button buttonNoNetCall, buttonRefresh;
 
 	boolean loginDataFetched = false, resumed = false;
 
@@ -182,7 +184,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Config.CUSTOM_SERVER_URL = link;
 			Config.setConfigMode(ConfigMode.CUSTOM);
 		}
-
+		RestClient.setupRestClient();
 		Log.e("link", "=" + link);
 	}
 
@@ -279,9 +281,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
 		textViewNoNet.setTypeface(Fonts.latoRegular(this));
 		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall);
-		buttonNoNetCall.setTypeface(Fonts.latoRegular(this));
+		buttonNoNetCall.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
+		buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
+		buttonRefresh.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
 
-		buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
+		//buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
 
 
 		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
@@ -305,7 +309,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(SIGNUP);
-				RegisterScreen.facebookLogin = false;
+				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
 				startActivity(intent);
 				finish();
@@ -319,6 +323,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			public void onClick(View v) {
 				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
 				FlurryEventLogger.event(CALL_WHEN_NO_INTERNET);
+			}
+		});
+
+		buttonRefresh.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				relative.performClick();
 			}
 		});
 
@@ -496,7 +507,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		if(!"".equalsIgnoreCase(referralCode)) {
 			Data.deepLinkIndex = -1;
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
-			RegisterScreen.facebookLogin = false;
+			RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 			Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
 			intent.putExtra("referral_code", referralCode);
 			startActivity(intent);
@@ -658,7 +669,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				RequestParams params = new RequestParams();
 				params.put("access_token", accessToken);
-				params.put("device_token", Data.deviceToken);
+				params.put("device_token", Data.getDeviceToken());
 
 
 				params.put("latitude", "" + Data.loginLatitude);
@@ -702,9 +713,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 			}
 		} else {
-			relativeLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
-			if (!AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				linearLayoutNoNet.setVisibility(View.GONE);
+				relativeLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
+			} else{
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
+				relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 			}
 			sendToRegisterThroughSms(Data.deepLinkReferralCode);
 		}

@@ -1,8 +1,12 @@
 package product.clicklabs.jugnoo.utils;
 
+import android.app.Activity;
+import android.graphics.Color;
 import android.location.Location;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -388,6 +392,36 @@ public class MapUtils {
 	    	e.printStackTrace();
 	    	return new ArrayList<LatLng>();
 	    }
+	}
+
+	public static void drawPathFromGoogle(Activity activity, final GoogleMap map, final LatLng sourceLatLng, final LatLng destinationLatLng){
+		if (AppStatus.getInstance(activity).isOnline(activity)) {
+			String url = MapUtils.makeDirectionsURL(sourceLatLng, destinationLatLng);
+			Log.i("url", "=" + url);
+			String result = new HttpRequester().getJSONFromUrl(url);
+			Log.i("result", "=" + result);
+			if (result != null) {
+				final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+				if (list.size() > 0) {
+					activity.runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+								PolylineOptions polylineOptions = new PolylineOptions();
+								polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
+								for (int z = 0; z < list.size(); z++) {
+									polylineOptions.add(list.get(z));
+								}
+								map.addPolyline(polylineOptions);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+			}
+		}
 	}
 	
 }

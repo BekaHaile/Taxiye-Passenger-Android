@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="product.clicklabs.jugnoo"
-    android:versionCode="204"
-    android:versionName="2.0.4"
+    android:versionCode="205"
+    android:versionName="2.0.5"
      >
 
     
@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     
     
@@ -102,15 +103,6 @@
             android:name="product.clicklabs.jugnoo.RegistrationIntentService"
             />
 
-
-
-
-
-
-
-
-
-        
         <activity
             android:name="product.clicklabs.jugnoo.SplashNewActivity"
             android:label="@string/app_name"
@@ -151,6 +143,7 @@
                 <data android:scheme="jungooautos"
                       android:host="app"/>
             </intent-filter>
+
 
         </activity>
 
@@ -194,6 +187,15 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
                 >
+                <!--jungooautos-verify://app?otp=1234-->
+                <intent-filter android:label="@string/app_name">
+                    <action android:name="android.intent.action.VIEW" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE" />
+                    <data android:scheme="jungooautos-verify"
+                          android:host="app"/>
+                </intent-filter>
+
         </activity>
         <receiver android:name="product.clicklabs.jugnoo.IncomingSmsReceiver">
             <intent-filter>
@@ -378,6 +380,14 @@
             >
         </activity>
 
+        <activity
+            android:name=".utils.GoogleSigninActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            >
+        </activity>
+
 
 
 
@@ -442,6 +452,13 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
+
+        <service
+            android:name="product.clicklabs.jugnoo.FetchAppDataService"
+            android:enabled="true"
+            >
+        </service>
+
 
 
 
