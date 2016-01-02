@@ -32,4 +32,6 @@ public interface Constants {
 
 	String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
 
+	String ACTION_LOADING_COMPLETE = "product.clicklabs.jugnoo.ACTION_LOADING_COMPLETE";
+
 }

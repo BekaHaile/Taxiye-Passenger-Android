@@ -3,9 +3,11 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
@@ -2748,6 +2750,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             syncContactsIntent.putExtra("session_id", Data.cSessionId);
                                             syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
                                             startService(syncContactsIntent);
+                                            registerDialogDismissReceiver();
                                         }
                                     }, new OnClickListener() {
                                         @Override
@@ -2849,6 +2852,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private BroadcastReceiver receiver;
+    private void registerDialogDismissReceiver() {
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(ACTION_LOADING_COMPLETE)) {
+                    DialogPopup.dismissLoadingDialog();
+                    unregisterReceiver(receiver);
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_LOADING_COMPLETE);
+        registerReceiver(receiver, intentFilter);
     }
 
     private void dismissReferAllDialog(PassengerScreenMode mode){
@@ -3306,7 +3326,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        DialogPopup.dismissLoadingDialog();
     }
 
     @Override
