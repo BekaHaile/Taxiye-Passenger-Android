@@ -298,6 +298,9 @@
 
 	<string name="retry">Retry</string>
 
+	<string name="insert_sd_card">Please insert SD Card to use this app</string>
+
+
 	
 	<string-array name="CountryCodes" >
 <item>93,AF</item>
