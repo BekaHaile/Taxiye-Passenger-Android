@@ -46,6 +46,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
@@ -413,7 +414,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+
+        try {
+            setContentView(R.layout.activity_home);
+        } catch(Exception e){
+            e.printStackTrace();
+            Crashlytics.logException(e);
+            DialogPopup.alertPopupWithListener(this, "", getResources().getString(R.string.insert_sd_card),
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    });
+            return;
+        }
 
 //		Data.getDeepLinkIndexFromIntent(getIntent());
 
@@ -557,7 +572,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         passengerMainLayout = (RelativeLayout) findViewById(R.id.passengerMainLayout);
 
 
-        //Initial layout 
+        //Initial layout
         initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
         textViewNearestDriverETA = (TextView) findViewById(R.id.textViewNearestDriverETA);
         textViewNearestDriverETA.setTypeface(Fonts.latoRegular(this));
@@ -6820,6 +6835,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 JSONObject jObj = new JSONObject(response);
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
+                                Log.e("message=", "="+message);
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
                                     Data.userData.contactSaved = -1;
                                 }

@@ -68,23 +68,27 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 	}
 
 	private void handleSignInResult(GoogleSignInResult result) {
-		android.util.Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-		if (result.isSuccess()) {
-			// Signed in successfully, show authenticated UI.
-			GoogleSignInAccount acct = result.getSignInAccount();
+		try {
+			android.util.Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+			if (result.isSuccess()) {
+				// Signed in successfully, show authenticated UI.
+				GoogleSignInAccount acct = result.getSignInAccount();
 
-			String idToken = acct.getIdToken();
-			Log.e(TAG, "idToken="+idToken);
+				String idToken = acct.getIdToken();
+				Log.e(TAG, "idToken="+idToken);
 
-			Intent intent = new Intent();
-			intent.putExtra(KEY_GOOGLE_PARCEL, acct);
-			setResult(RESULT_OK, intent);
-			signOut();
-			finish();
-		} else {
-			// Signed out, show unauthenticated UI.
-			setResult(RESULT_CANCELED);
-			finish();
+				Intent intent = new Intent();
+				intent.putExtra(KEY_GOOGLE_PARCEL, acct);
+				setResult(RESULT_OK, intent);
+				signOut();
+				finish();
+			} else {
+				// Signed out, show unauthenticated UI.
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

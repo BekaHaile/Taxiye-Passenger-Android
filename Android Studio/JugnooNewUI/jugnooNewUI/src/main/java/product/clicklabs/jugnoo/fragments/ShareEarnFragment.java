@@ -59,7 +59,13 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
         activity = (ShareActivity) getActivity();
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
-		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+		try {
+			if(linearLayoutRoot != null) {
+				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		((TextView)rootView.findViewById(R.id.textViewShare)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.latoRegular(activity));

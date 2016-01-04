@@ -53,7 +53,13 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
         activity = (ShareActivity) getActivity();
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
-		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+		try {
+			if(linearLayoutRoot != null) {
+				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		((TextView)rootView.findViewById(R.id.textViewNumberOfDownloads)).setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
 		((TextView)rootView.findViewById(R.id.textViewNumberOfFirstRides)).setTypeface(Fonts.latoLight(activity), Typeface.BOLD);

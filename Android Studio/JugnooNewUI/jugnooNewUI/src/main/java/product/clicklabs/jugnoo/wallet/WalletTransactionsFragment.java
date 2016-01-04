@@ -381,7 +381,11 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	 * Method used to remove fragment from stack
 	 */
 	public void performBackPressed() {
-		getActivity().getSupportFragmentManager().popBackStack ("WalletTransactionsFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+		try {
+			paymentActivity.getSupportFragmentManager().popBackStack ("WalletTransactionsFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
