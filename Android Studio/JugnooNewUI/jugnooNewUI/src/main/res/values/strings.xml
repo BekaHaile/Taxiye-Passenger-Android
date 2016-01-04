@@ -296,6 +296,13 @@
 	<string name="lb_name">Name</string>
 	<string name="lb_no_downloads">No. of\nDownloads</string>
 
+	<!-- Priority Tip -->
+	<string name="priority_tip">PRIORITY TIP</string>
+	<string name="priority_tip_message">Prices would be higher to \ngive priority to your ride request</string>
+	<string name="the_normal_fare">THE NORMAL\nFARE</string>
+	<string name="type">Type </string>
+	<string name="type_bottom">to confirm your fare multiplier</string>
+
 	<string name="retry">Retry</string>
 
 	

@@ -1153,6 +1153,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		buttonGetARide.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                new PriorityTipDialog(HomeActivity.this);
 				boolean proceed = displayAlertAndCheckForSelectedPaytmCoupon(promotionsListAdapter.getSelectedCoupon());
 				if(proceed) {
 					boolean callRequestRide = true;
@@ -1895,6 +1896,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
+
 
 
     }
