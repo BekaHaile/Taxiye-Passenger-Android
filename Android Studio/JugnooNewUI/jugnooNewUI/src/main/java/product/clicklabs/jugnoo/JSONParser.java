@@ -264,6 +264,10 @@ public class JSONParser implements Constants {
         String referAllText = userData.optString("refer_all_text", context.getResources().getString(R.string.upload_contact_message));
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
 
+        int userDebtDeducted = userData.optInt(KEY_USER_DEBT_DEDUCTED, 0);
+        double userDebt = userData.optDouble(KEY_USER_DEBT, 10);
+        String userDebtDate = userData.optString(KEY_USER_DEBT_DATE, "");
+
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
 
@@ -306,7 +310,8 @@ public class JSONParser implements Constants {
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
-                contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie);
+                contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie,
+                userDebtDeducted, userDebt, userDebtDate);
     }
 
 

@@ -237,7 +237,8 @@ public class DialogPopup {
 		}
 	}
 	
-	public static void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
+	public static void alertPopupWithListener(Activity activity, String title, String message, String buttonText,
+											  final View.OnClickListener onClickListener) {
 		try {
 			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
@@ -268,14 +269,20 @@ public class DialogPopup {
 			textMessage.setText(message);
 			
 			textHead.setVisibility(View.GONE);
-			
+
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-			
+
+			if(buttonText.length() > 0){
+				btnOk.setText(buttonText);
+			}
+
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					onClickListener.onClick(view);
+					if(onClickListener != null) {
+						onClickListener.onClick(view);
+					}
 				}
 				
 			});
@@ -284,6 +291,10 @@ public class DialogPopup {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
+		alertPopupWithListener(activity, title, message, "", onClickListener);
 	}
 
 

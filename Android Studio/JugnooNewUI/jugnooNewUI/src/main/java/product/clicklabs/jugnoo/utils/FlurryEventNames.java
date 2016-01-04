@@ -79,6 +79,7 @@ public interface FlurryEventNames {
 		LINE_PAYED_VIA_CASH = "Line_payed via cash",
 		JUGNOO_LINE_PAYMENT = "Line_payed via JC",
         JUGNOO_CASH_MENU = "Jugnoo Cash_Menu",
+            USER_DEBT_MAKE_PAYMENT = "User Debt make payment",
 			WALLET_MENU = "Wallet Menu",
 			WALLET_BEFORE_REQUEST_RIDE = "Wallet before request ride",
 			WALLET_VIA_TUTORIAL = "Wallet opened via Tutorial",

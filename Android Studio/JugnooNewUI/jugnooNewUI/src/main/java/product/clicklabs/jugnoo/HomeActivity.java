@@ -136,6 +136,7 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
@@ -410,6 +411,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     CallbackManager callbackManager;
     public final int ADD_HOME = 2, ADD_WORK = 3;
     private String dropLocationSearchText = "";
+
+
+    private UserDebtDialog userDebtDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1914,6 +1918,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
+        userDebtDialog = new UserDebtDialog(this);
 
     }
 
@@ -3405,6 +3410,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, "");
                     DialogPopup.alertPopup(this, "", alertMessage);
                 }
+
+                userDebtDialog.showUserDebtDialog(Data.userData);
 
             }
 

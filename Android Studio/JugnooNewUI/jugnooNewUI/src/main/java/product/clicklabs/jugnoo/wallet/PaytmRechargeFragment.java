@@ -183,7 +183,14 @@ public class PaytmRechargeFragment extends Fragment {
 							DialogPopup.dialogBanner(paymentActivity, "" + getResources().getString(R.string.amount_range));
 						}
 						else{
-							addBalance(editTextAmount.getText().toString().trim());
+							if(Data.userData != null) {
+								double amountDouble = Double.parseDouble(amount);
+								if (amountDouble >= Data.userData.getUserDebt()) {
+									addBalance(editTextAmount.getText().toString().trim());
+								} else {
+									DialogPopup.dialogBanner(paymentActivity, "" + getResources().getString(R.string.user_debt_recharge_time_error));
+								}
+							}
 						}
 					}
 				} catch (Exception e) {
@@ -627,6 +634,13 @@ public class PaytmRechargeFragment extends Fragment {
 					}
 					DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
 					paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
+
+					if(Data.userData != null){
+						if(Data.userData.getUserDebt() > 0){
+							Data.userData.setUserDebt(0);
+							Data.userData.setUserDebtDeducted(0);
+						}
+					}
 				}
 				else if(Data.paytmPaymentState == PaytmPaymentState.FAILURE){
 					DialogPopup.dialogBanner(paymentActivity, "Transaction failed");
