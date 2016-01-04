@@ -1053,8 +1053,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
-				startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+                Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+				startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(WALLET_MENU);
             }
@@ -1276,8 +1277,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					fireIntent = true;
 				}
 				if(fireIntent){
-					PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
-					startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+                    Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                    intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+                    startActivity(intent);
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					FlurryEventLogger.event(WALLET_BEFORE_REQUEST_RIDE);
 				}
@@ -1442,8 +1444,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			@Override
 			public void onClick(View v) {
-				PaymentActivity.addPaymentPath = AddPaymentPath.FROM_IN_RIDE;
-				startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+                Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                startActivity(intent);
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
 					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
@@ -6774,8 +6777,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					@Override
 					public void onClick(View v) {
 						dialog.dismiss();
-						PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
-						startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+                        Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                        intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+                        startActivity(intent);
 						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 						FlurryEventLogger.event(WALLET_VIA_TUTORIAL);
 					}

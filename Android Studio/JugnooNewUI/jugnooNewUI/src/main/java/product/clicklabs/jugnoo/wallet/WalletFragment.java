@@ -137,7 +137,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			public void onClick(View v) {
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 					paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-							.add(R.id.fragLayout, new PaytmRechargeFragment(), "PaytmRechargeFragment").addToBackStack("PaytmRechargeFragment")
+							.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
+							.addToBackStack(PaytmRechargeFragment.class.getName())
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 							.commit();
@@ -152,7 +153,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			public void onClick(View v) {
 				if(!Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 					paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-							.add(R.id.fragLayout, new AddPaytmFragment(), "AddPaytmFragment").addToBackStack("AddPaytmFragment")
+							.add(R.id.fragLayout, new AddPaytmFragment(), AddPaytmFragment.class.getName())
+							.addToBackStack(AddPaytmFragment.class.getName())
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 							.commit();
@@ -176,7 +178,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			@Override
 			public void onClick(View v) {
 				paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-						.add(R.id.fragLayout, new WalletTransactionsFragment(), "WalletTransactionsFragment").addToBackStack("WalletTransactionsFragment")
+						.add(R.id.fragLayout, new WalletTransactionsFragment(), WalletTransactionsFragment.class.getName())
+						.addToBackStack(WalletTransactionsFragment.class.getName())
 						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();

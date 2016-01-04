@@ -1,5 +1,16 @@
 package product.clicklabs.jugnoo.datastructure;
 
 public enum AddPaymentPath {
-	FROM_WALLET, FROM_IN_RIDE
+	WALLET(0),
+	PAYTM_RECHARGE(1);
+
+	private int ordinal;
+
+	AddPaymentPath(int ordinal){
+		this.ordinal = ordinal;
+	}
+
+	public int getOrdinal() {
+		return ordinal;
+	}
 }

@@ -11,6 +11,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
@@ -30,25 +31,7 @@ import product.clicklabs.jugnoo.utils.Log;
  */
 public class PaymentActivity extends BaseFragmentActivity{
 
-    public String txnId = "";
-    public String uName = "";
-    public String uProdInfo = "";
-    public String uEmail = "";
-    public String hash = "";
-    public String hashSdk = "";
-    public String payUOffer = "";
-
-    // for wallet cash
-    public String enterAmount = "";
-    public String pgName = "";
-    public String bankCode = "";
-    public String ccNum = "";
-    public String ccName = "";
-    public String ccvv = "";
-    public String ccexpmon = "";
-    public String ccexpyr = "";
-
-    public static AddPaymentPath addPaymentPath = AddPaymentPath.FROM_WALLET;
+	public int addPaymentPathInt = AddPaymentPath.WALLET.getOrdinal();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,17 +39,22 @@ public class PaymentActivity extends BaseFragmentActivity{
         setContentView(R.layout.activity_payment);
 
 		new ASSL(this, (ViewGroup) findViewById(R.id.mainHomelayout), 1134, 720, false);
-        
 
-//        if(AddPaymentPath.FROM_WALLET == addPaymentPath) {
-            getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragLayout, new WalletFragment(), "WalletFragment").addToBackStack("WalletFragment")
-                .commitAllowingStateLoss();
-//        } else {
-//            getSupportFragmentManager().beginTransaction()
-//                .add(R.id.fragLayout, new WalletAddPaymentFragment(), "WalletAddPaymentFragment").addToBackStack("WalletAddPaymentFragment")
-//                .commitAllowingStateLoss();
-//        }
+		addPaymentPathInt = getIntent()
+				.getIntExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+
+		if(AddPaymentPath.WALLET.getOrdinal() == addPaymentPathInt){
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
+					.addToBackStack(WalletFragment.class.getName())
+					.commitAllowingStateLoss();
+		}
+		else if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
+					.addToBackStack(PaytmRechargeFragment.class.getName())
+					.commitAllowingStateLoss();
+		}
 
 		Data.paytmPaymentState = PaytmPaymentState.INIT;
     }
@@ -75,18 +63,19 @@ public class PaymentActivity extends BaseFragmentActivity{
     @Override
     public void onBackPressed() {
 		try {
-			if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                 finish();
-                overridePendingTransition(R.anim.left_in, R.anim.left_out);
-            } else {
-                Fragment paytmRechargeFragment = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
-                if(paytmRechargeFragment != null && paytmRechargeFragment.isVisible()
-                    && paytmRechargeFragment instanceof PaytmRechargeFragment){
-                    ((PaytmRechargeFragment)paytmRechargeFragment).performBackPressed();
-                } else{
-                    super.onBackPressed();
-                }
-            }
+			Fragment paytmRechargeFragment = getSupportFragmentManager()
+					.findFragmentByTag(PaytmRechargeFragment.class.getName());
+			if (paytmRechargeFragment != null && paytmRechargeFragment.isVisible()
+					&& paytmRechargeFragment instanceof PaytmRechargeFragment) {
+				((PaytmRechargeFragment) paytmRechargeFragment).performBackPressed();
+			} else {
+				if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+					finish();
+					overridePendingTransition(R.anim.left_in, R.anim.left_out);
+				} else {
+					super.onBackPressed();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			super.onBackPressed();
@@ -107,7 +96,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 	public void updateWalletFragment(){
 		try {
-			Fragment currFrag = getSupportFragmentManager().findFragmentByTag("WalletFragment");
+			Fragment currFrag = getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName());
 			if(currFrag != null){
 				currFrag.onResume();
 			}
@@ -163,21 +152,28 @@ public class PaymentActivity extends BaseFragmentActivity{
 		try {
 			Fragment currFrag = null;
 			if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
-				currFrag = getSupportFragmentManager().findFragmentByTag("PaytmRechargeFragment");
+				currFrag = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
 				if(currFrag != null){
 					currFrag.onResume();
 					((PaytmRechargeFragment) currFrag).performBackPressed();
 				}
 			}
 			else if(fragName.equalsIgnoreCase(AddPaytmFragment.class.getName())){
-				currFrag = getSupportFragmentManager().findFragmentByTag("AddPaytmFragment");
+				currFrag = getSupportFragmentManager().findFragmentByTag(AddPaytmFragment.class.getName());
 				if(currFrag != null){
 					((AddPaytmFragment) currFrag).performBackPressed();
 				}
 			}
-			currFrag = getSupportFragmentManager().findFragmentByTag("WalletFragment");
+			currFrag = getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName());
 			if(currFrag != null){
 				currFrag.onResume();
+			}
+
+			if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
+				currFrag = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
+				if(currFrag != null){
+					currFrag.onResume();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -185,7 +181,8 @@ public class PaymentActivity extends BaseFragmentActivity{
 	}
 
 	private void retryDialog(String message, final String fragName){
-		DialogPopup.alertPopupTwoButtonsWithListeners(PaymentActivity.this, "", message, "Retry", "Cancel",
+		DialogPopup.alertPopupTwoButtonsWithListeners(PaymentActivity.this, "", message,
+				getResources().getString(R.string.retry), getResources().getString(R.string.cancel),
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {

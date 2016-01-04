@@ -34,4 +34,8 @@ public interface Constants {
 
 	String ACTION_LOADING_COMPLETE = "product.clicklabs.jugnoo.ACTION_LOADING_COMPLETE";
 
+	String KEY_ADD_PAYMENT_PATH = "addPaymentPath";
+
+	String POST_DATA = "post_data";
+
 }
