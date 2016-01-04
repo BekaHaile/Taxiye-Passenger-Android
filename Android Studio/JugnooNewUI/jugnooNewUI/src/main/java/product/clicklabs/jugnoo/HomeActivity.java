@@ -1153,7 +1153,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		buttonGetARide.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                new PriorityTipDialog(HomeActivity.this);
+                new PriorityTipDialog(HomeActivity.this, Data.fareStructure.fareFactor);
 				boolean proceed = displayAlertAndCheckForSelectedPaytmCoupon(promotionsListAdapter.getSelectedCoupon());
 				if(proceed) {
 					boolean callRequestRide = true;

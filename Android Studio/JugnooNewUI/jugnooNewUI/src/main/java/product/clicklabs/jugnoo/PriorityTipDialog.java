@@ -3,8 +3,10 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Typeface;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -17,6 +19,8 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by socomo on 1/4/16.
@@ -24,14 +28,16 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class PriorityTipDialog {
 
     Activity activity;
+    double fareFactor;
 
-    public PriorityTipDialog(Activity activity) {
+    public PriorityTipDialog(Activity activity, double fareFactor) {
         this.activity = activity;
-        showPriorityTipDialog(activity);
+        this.fareFactor = fareFactor;
+        showPriorityTipDialog(activity, fareFactor);
 
     }
 
-    private void showPriorityTipDialog(Activity activity){
+    private void showPriorityTipDialog(final Activity activity, double fareFactor){
         try {
             final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -46,16 +52,24 @@ public class PriorityTipDialog {
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
 
+            String string = String.valueOf(fareFactor);
+            String[] parts = string.split("\\.");
+            final String part1 = parts[0];
+            final String part2 = parts[1];
+
 
             TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
             textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
             TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
             textMessage.setTypeface(Fonts.latoRegular(activity));
             TextView textHighPriority = (TextView)dialog.findViewById(R.id.textViewHighPriority);
-            textHighPriority.setTypeface(Fonts.latoLight(activity));
+            textHighPriority.setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
             ImageView close = (ImageView)dialog.findViewById(R.id.close);
             EditText editTextValue1 = (EditText)dialog.findViewById(R.id.editTextValue1);
-            EditText editTextValue2 = (EditText)dialog.findViewById(R.id.editTextValue2);
+            final EditText editTextValue2 = (EditText)dialog.findViewById(R.id.editTextValue2);
+
+            editTextValue1.setHint(part1);
+            editTextValue2.setHint(part2);
 
             textMessage.setMovementMethod(new ScrollingMovementMethod());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -67,7 +81,7 @@ public class PriorityTipDialog {
             word.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.grey_black_light)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             textHighPriority.setText(word);
-            Spannable wordTwo = new SpannableString("(1.8)\n");
+            Spannable wordTwo = new SpannableString(" ("+fareFactor+")\n");
 
             wordTwo.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.yellow)), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textHighPriority.append(wordTwo);
@@ -75,6 +89,46 @@ public class PriorityTipDialog {
 
             wordThree.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.grey_black_light)), 0, wordThree.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textHighPriority.append(wordThree);
+
+            editTextValue1.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(s.toString().equals(part1)){
+                        editTextValue2.requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+            editTextValue2.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(s.toString().equals(part2)){
+                        Log.v("code matched", "code matched");
+                        dialog.dismiss();
+                        Utils.hideSoftKeyboard(activity, editTextValue2);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
 
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
