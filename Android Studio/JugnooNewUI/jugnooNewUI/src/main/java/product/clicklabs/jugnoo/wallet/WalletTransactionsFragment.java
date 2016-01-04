@@ -304,77 +304,83 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
 
     public void callRefreshAPI(final Activity activity){
-        RequestParams params = new RequestParams();
-        params.put("access_token", Data.userData.accessToken);
-        params.put("client_id", Config.getClientId());
-        params.put("is_access_token_new", "1");
-        params.put("start_from", ""+transactionInfoList.size());
+		try {
+			if(!HomeActivity.checkIfUserDataNull(activity)) {
+				RequestParams params = new RequestParams();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("client_id", Config.getClientId());
+				params.put("is_access_token_new", "1");
+				params.put("start_from", "" + transactionInfoList.size());
 
-        AsyncHttpClient asyncHttpClient = Data.getClient();
-		asyncHttpClient.post(Config.getServerUrl() + "/get_transaction_history", params,
-				new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+				AsyncHttpClient asyncHttpClient = Data.getClient();
+				asyncHttpClient.post(Config.getServerUrl() + "/get_transaction_history", params,
+						new CustomAsyncHttpResponseHandler() {
+							private JSONObject jObj;
 
-					@Override
-					public void onFailure(Throwable arg3) {
-						Log.e("request fail", arg3.toString());
-						progressBar.setVisibility(View.GONE);
-						updateListData("Some error occurred", true);
-					}
-
-					@Override
-					public void onSuccess(String response) {
-						Log.e("Server response", "response = " + response);
-						try {
-							jObj = new JSONObject(response);
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-								int flag = jObj.getInt("flag");
-								if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-									String error = jObj.getString("error");
-									updateListData(error, true);
-								} else if (ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag) {
-
-									jugnooBalance = jObj.getDouble("balance");
-									totalTransactions = jObj.getInt("num_txns");
-									pageSize = jObj.getInt("page_size");
-
-									JSONArray jTransactions = jObj.getJSONArray("transactions");
-									for (int i = 0; i < jTransactions.length(); i++) {
-										JSONObject jTransactionI = jTransactions.getJSONObject(i);
-
-										int paytm = jTransactionI.optInt("paytm", 0);
-
-										transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
-												jTransactionI.getInt("txn_type"),
-												jTransactionI.getString("txn_time"),
-												jTransactionI.getString("txn_date"),
-												jTransactionI.getString("txn_text"),
-												jTransactionI.getDouble("amount"),
-												paytm));
-									}
-
-									if (Data.userData != null) {
-										Data.userData.setJugnooBalance(jugnooBalance);
-									}
-									paymentActivity.updateWalletFragment();
-
-									updateListData("No transactions currently", false);
-								} else {
-									updateListData("Some error occurred", true);
-								}
-							} else {
+							@Override
+							public void onFailure(Throwable arg3) {
+								Log.e("request fail", arg3.toString());
+								progressBar.setVisibility(View.GONE);
 								updateListData("Some error occurred", true);
 							}
 
-						} catch (Exception exception) {
-							exception.printStackTrace();
-							updateListData("Some error occurred", true);
-						}
-						progressBar.setVisibility(View.GONE);
-					}
+							@Override
+							public void onSuccess(String response) {
+								Log.e("Server response", "response = " + response);
+								try {
+									jObj = new JSONObject(response);
+									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+										int flag = jObj.getInt("flag");
+										if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+											String error = jObj.getString("error");
+											updateListData(error, true);
+										} else if (ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag) {
 
-				});
-    }
+											jugnooBalance = jObj.getDouble("balance");
+											totalTransactions = jObj.getInt("num_txns");
+											pageSize = jObj.getInt("page_size");
+
+											JSONArray jTransactions = jObj.getJSONArray("transactions");
+											for (int i = 0; i < jTransactions.length(); i++) {
+												JSONObject jTransactionI = jTransactions.getJSONObject(i);
+
+												int paytm = jTransactionI.optInt("paytm", 0);
+
+												transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
+														jTransactionI.getInt("txn_type"),
+														jTransactionI.getString("txn_time"),
+														jTransactionI.getString("txn_date"),
+														jTransactionI.getString("txn_text"),
+														jTransactionI.getDouble("amount"),
+														paytm));
+											}
+
+											if (Data.userData != null) {
+												Data.userData.setJugnooBalance(jugnooBalance);
+											}
+											paymentActivity.updateWalletFragment();
+
+											updateListData("No transactions currently", false);
+										} else {
+											updateListData("Some error occurred", true);
+										}
+									} else {
+										updateListData("Some error occurred", true);
+									}
+
+								} catch (Exception exception) {
+									exception.printStackTrace();
+									updateListData("Some error occurred", true);
+								}
+								progressBar.setVisibility(View.GONE);
+							}
+
+						});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	/**
