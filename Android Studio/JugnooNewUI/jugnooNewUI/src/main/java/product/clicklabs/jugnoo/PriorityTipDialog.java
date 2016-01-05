@@ -79,7 +79,7 @@ public class PriorityTipDialog {
             ImageView close = (ImageView)dialog.findViewById(R.id.close);
             TextView textViewTipValue = (TextView)dialog.findViewById(R.id.textViewTipValue);
             textViewTipValue.setTypeface(Fonts.latoRegular(activity));
-            EditText editTextValue1 = (EditText)dialog.findViewById(R.id.editTextValue1);
+            final EditText editTextValue1 = (EditText)dialog.findViewById(R.id.editTextValue1);
             final EditText editTextValue2 = (EditText)dialog.findViewById(R.id.editTextValue2);
 
 
@@ -92,10 +92,10 @@ public class PriorityTipDialog {
                 linearLayoutLowPriority.setVisibility(View.VISIBLE);
                 linearLayoutHighPriority.setVisibility(View.GONE);
 
-                linearLayoutHighPriority.setVisibility(View.VISIBLE);
-                linearLayoutLowPriority.setVisibility(View.GONE);
-                editTextValue1.setHint(part1);
-                editTextValue2.setHint(part2);
+//                linearLayoutHighPriority.setVisibility(View.VISIBLE);
+//                linearLayoutLowPriority.setVisibility(View.GONE);
+//                editTextValue1.setHint(part1);
+//                editTextValue2.setHint(part2);
             }
 
             textViewTipValue.setText(String.valueOf(fareFactor)+"X");
@@ -128,7 +128,10 @@ public class PriorityTipDialog {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if(s.toString().equals(part1)){
+                        editTextValue1.setTextColor(activity.getResources().getColor(R.color.yellow));
                         editTextValue2.requestFocus();
+                    } else{
+                        editTextValue1.setTextColor(activity.getResources().getColor(R.color.red));
                     }
                 }
 
@@ -149,9 +152,16 @@ public class PriorityTipDialog {
                     Log.v("character is", "--> "+s.toString());
                     if(s.toString().equals(part2)){
                         Log.v("code matched", "code matched");
+                        editTextValue1.setTextColor(activity.getResources().getColor(R.color.yellow));
                         callback.onConfirmed();
                         dialog.dismiss();
                         Utils.hideSoftKeyboard(activity, editTextValue2);
+                    } else{
+                        if(part2.startsWith(s.toString())){
+                            editTextValue2.setTextColor(activity.getResources().getColor(R.color.yellow));
+                        } else {
+                            editTextValue2.setTextColor(activity.getResources().getColor(R.color.red));
+                        }
                     }
                 }
 
