@@ -25,9 +25,9 @@ public class RestClient {
         };
 
         OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(15, TimeUnit.SECONDS);
-        okHttpClient.setConnectTimeout(15, TimeUnit.SECONDS);
-        okHttpClient.setWriteTimeout(15, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
         okHttpClient.setRetryOnConnectionFailure(false);
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Config.getServerUrl())

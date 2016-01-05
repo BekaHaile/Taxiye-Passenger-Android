@@ -413,8 +413,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private String dropLocationSearchText = "";
 
 
-    private UserDebtDialog userDebtDialog;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -631,36 +629,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             @Override
-            public void onPromoListFetched(int totalPromoCoupons) {
-                promoOpened = true;
-				textViewRRMinFare.setText("Minimum Fare " + getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
-                imageViewMenu.setVisibility(View.GONE);
-                imageViewBack.setVisibility(View.VISIBLE);
-//                genieLayout.setVisibility(View.GONE);
-                centreLocationRl.setVisibility(View.VISIBLE);
-                linearLayoutPromo.setVisibility(View.VISIBLE);
-				initialMyLocationBtn.setVisibility(View.GONE);
-				imageViewRideNow.setVisibility(View.GONE);
-
-                setGoogleMapPadding(40);
-				updatePreferredPaymentOptionUI();
-
-                if(totalPromoCoupons > 0){
-                    listViewPromotions.setVisibility(View.VISIBLE);
-					listViewPromotions.setSelection(0);
-					imageViewListViewPromotionsSep.setVisibility(View.VISIBLE);
-					if(totalPromoCoupons > 3){
-						LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
-						layoutParamsList.height = (int) (ASSL.Yscale() * 300.0f);
-						listViewPromotions.setLayoutParams(layoutParamsList);
-					}
-					else{
-						Utils.expandListForVariableHeight(listViewPromotions);
-					}
+            public void onPromoListFetched(int totalPromoCoupons, double userDebt) {
+                if(userDebt > 0){
+                    new UserDebtDialog(HomeActivity.this)
+                            .showUserDebtDialog(Data.userData.getPaytmBalance(), userDebt);
                 }
                 else{
-					listViewPromotions.setVisibility(View.GONE);
-					imageViewListViewPromotionsSep.setVisibility(View.GONE);
+                    promoOpened = true;
+                    textViewRRMinFare.setText("Minimum Fare " + getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
+                    imageViewMenu.setVisibility(View.GONE);
+                    imageViewBack.setVisibility(View.VISIBLE);
+//                genieLayout.setVisibility(View.GONE);
+                    centreLocationRl.setVisibility(View.VISIBLE);
+                    linearLayoutPromo.setVisibility(View.VISIBLE);
+                    initialMyLocationBtn.setVisibility(View.GONE);
+                    imageViewRideNow.setVisibility(View.GONE);
+
+                    setGoogleMapPadding(40);
+                    updatePreferredPaymentOptionUI();
+
+                    if(totalPromoCoupons > 0){
+                        listViewPromotions.setVisibility(View.VISIBLE);
+                        listViewPromotions.setSelection(0);
+                        imageViewListViewPromotionsSep.setVisibility(View.VISIBLE);
+                        if(totalPromoCoupons > 3){
+                            LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
+                            layoutParamsList.height = (int) (ASSL.Yscale() * 300.0f);
+                            listViewPromotions.setLayoutParams(layoutParamsList);
+                        }
+                        else{
+                            Utils.expandListForVariableHeight(listViewPromotions);
+                        }
+                    }
+                    else{
+                        listViewPromotions.setVisibility(View.GONE);
+                        imageViewListViewPromotionsSep.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -1917,8 +1921,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
-
-        userDebtDialog = new UserDebtDialog(this);
 
     }
 
@@ -3410,8 +3412,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, "");
                     DialogPopup.alertPopup(this, "", alertMessage);
                 }
-
-                userDebtDialog.showUserDebtDialog(Data.userData);
 
             }
 

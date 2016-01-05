@@ -302,9 +302,8 @@
 
 
 	<!-- User Debt-->
-	<string name="user_debt_make_payment">Make Payment</string>
-	<string name="user_debt_settle_balance_message">Before you ride again, please settle balance from the last ride taken on %s</string>
-	<string name="user_debt_money_deducted">INR %1$s has been deducted from your Paytm account in lieu of balance remaining for last ride taken on %2$s</string>
+	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
+	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9 %s balance from the last ride</string>
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
 
 	

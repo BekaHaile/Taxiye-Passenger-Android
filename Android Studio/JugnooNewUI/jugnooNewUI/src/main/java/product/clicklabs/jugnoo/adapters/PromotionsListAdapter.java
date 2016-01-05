@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
@@ -296,8 +297,10 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
                                         selectedCoupon = new CouponInfo(0, "");
                                     }
 
+                                    double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, -1);
+
                                     PromotionsListAdapter.this.notifyDataSetChanged();
-									promotionListEventHandler.onPromoListFetched(promoCouponList.size());
+									promotionListEventHandler.onPromoListFetched(promoCouponList.size(), userDebt);
                                 }
                                 else{
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -318,7 +321,7 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 
 	public interface PromotionListEventHandler {
 		void onDismiss();
-		void onPromoListFetched(int totalPromoCoupons);
+		void onPromoListFetched(int totalPromoCoupons, double userDebt);
 		void onPromoSelected(PromoCoupon promoCoupon);
 		void onLowPaytmBalance();
 	}

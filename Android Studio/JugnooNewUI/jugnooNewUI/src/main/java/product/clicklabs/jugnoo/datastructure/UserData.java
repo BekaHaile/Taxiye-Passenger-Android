@@ -17,17 +17,13 @@ public class UserData {
 	public int paytmEnabled, paytmError, contactSaved;
     public String referAllText, referAllTitle;
 	private int promoSuccess;
-	private int userDebtDeducted;
-	private double userDebt;
-	private String userDebtDate;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
 			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled,
-                    int contactSaved, String referAllText, String referAllTitle, int promoSuccess, int showJugnooJeanie,
-					int userDebtDeducted, double userDebt, String userDebtDate){
+                    int contactSaved, String referAllText, String referAllTitle, int promoSuccess, int showJugnooJeanie){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -73,11 +69,6 @@ public class UserData {
 			this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 		}
 		setTotalWalletBalance();
-
-		this.userDebtDeducted = userDebtDeducted;
-		this.userDebt = userDebt;
-		this.userDebtDate = userDebtDate;
-
 	}
 
 	public double getJugnooBalance() {
@@ -141,27 +132,4 @@ public class UserData {
 		this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 	}
 
-	public double getUserDebt() {
-		return userDebt;
-	}
-
-	public void setUserDebt(double userDebt) {
-		this.userDebt = userDebt;
-	}
-
-	public String getUserDebtDate() {
-		return userDebtDate;
-	}
-
-	public void setUserDebtDate(String userDebtDate) {
-		this.userDebtDate = userDebtDate;
-	}
-
-	public int getUserDebtDeducted() {
-		return userDebtDeducted;
-	}
-
-	public void setUserDebtDeducted(int userDebtDeducted) {
-		this.userDebtDeducted = userDebtDeducted;
-	}
 }

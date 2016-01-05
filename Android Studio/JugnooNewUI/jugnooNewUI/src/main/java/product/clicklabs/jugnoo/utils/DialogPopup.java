@@ -257,7 +257,7 @@ public class DialogPopup {
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 			dialog.setCancelable(false);
 			dialog.setCanceledOnTouchOutside(false);
-			
+
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
@@ -286,7 +286,7 @@ public class DialogPopup {
 				}
 				
 			});
-			
+
 			dialog.show();
 		} catch (Exception e) {
 			e.printStackTrace();

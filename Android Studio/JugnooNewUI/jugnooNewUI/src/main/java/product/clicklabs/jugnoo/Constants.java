@@ -39,10 +39,7 @@ public interface Constants {
 	String POST_DATA = "post_data";
 
 
-//	User debt keys
-	String KEY_USER_DEBT_DEDUCTED = "user_debt_deducted";
 	String KEY_USER_DEBT = "user_debt";
-	String KEY_USER_DEBT_DATE = "user_debt_date";
 
 
 }
