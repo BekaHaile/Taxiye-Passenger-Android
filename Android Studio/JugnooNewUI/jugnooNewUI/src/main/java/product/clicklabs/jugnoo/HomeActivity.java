@@ -101,6 +101,7 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.RidePath;
@@ -395,7 +396,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public ASSL assl;
 
 
-    private int showAllDrivers = 0, showDriverInfo = 0;
+    private int showAllDrivers = 0, showDriverInfo = 0, priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 
     private boolean intentFired = false, dropLocationSearched = false, promoOpened = false;
 
@@ -1153,7 +1154,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		buttonGetARide.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                new PriorityTipDialog(HomeActivity.this, Data.fareStructure.fareFactor);
+
+
 				boolean proceed = displayAlertAndCheckForSelectedPaytmCoupon(promotionsListAdapter.getSelectedCoupon());
 				if(proceed) {
 					boolean callRequestRide = true;
@@ -2072,33 +2074,41 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     public void initiateRequestRide(boolean newRequest) {
-
         if (newRequest) {
-            Data.cSessionId = "";
-            Data.cEngagementId = "";
+            new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
+                    new PriorityTipDialog.Callback() {
+                        @Override
+                        public void onConfirmed() {
+                            Data.cSessionId = "";
+                            Data.cEngagementId = "";
 
-            if (Data.userData.canChangeLocation == 1) {
-                if (Data.pickupLatLng == null) {
-                    Data.pickupLatLng = map.getCameraPosition().target;
-                }
-                double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                if (distance > MAP_PAN_DISTANCE_CHECK) {
-                    switchRequestRideUI();
-                    startTimerRequestRide();
-                } else {
-                    checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
-                }
-            } else {
-                checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
-            }
-			if(Data.TRANSFER_FROM_JEANIE == 1){
-				FlurryEventLogger.event(JUGNOO_STICKY_RIDE_CONFIRMATION);
-				Data.TRANSFER_FROM_JEANIE = 0;
-			}
+                            if (Data.userData.canChangeLocation == 1) {
+                                if (Data.pickupLatLng == null) {
+                                    Data.pickupLatLng = map.getCameraPosition().target;
+                                }
+                                double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                                if (distance > MAP_PAN_DISTANCE_CHECK) {
+                                    switchRequestRideUI();
+                                    startTimerRequestRide();
+                                } else {
+                                    checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
+                                }
+                            } else {
+                                checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
+                            }
+                            if (Data.TRANSFER_FROM_JEANIE == 1) {
+                                FlurryEventLogger.event(JUGNOO_STICKY_RIDE_CONFIRMATION);
+                                Data.TRANSFER_FROM_JEANIE = 0;
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled() {
+                            Log.v("Request of Ride", "Aborted");
+                        }
+                    });
         } else {
-
             Data.cEngagementId = "";
-
             switchRequestRideUI();
             startTimerRequestRide();
         }
@@ -3861,6 +3871,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             new JSONParser().parseDriversToShow(jObj, "drivers");
                             etaMinutes = jObj.getString("eta");
                             Data.userData.fareFactor = jObj.getDouble("fare_factor");
+                            priorityTipCategory = jObj.optInt("priority_tip_category");
 
                             if (jObj.has("far_away_city")) {
                                 farAwayCity = jObj.getString("far_away_city");

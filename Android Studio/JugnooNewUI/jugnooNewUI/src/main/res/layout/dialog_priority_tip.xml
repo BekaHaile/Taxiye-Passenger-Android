@@ -7,23 +7,17 @@
     android:splitMotionEvents="false">
 
     <RelativeLayout
+        android:layout_width="620px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+    <RelativeLayout
         android:id="@+id/innerRl"
         android:layout_width="620px"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/button_yellow_normal"
         android:splitMotionEvents="false">
-
-
-        <ImageView
-            android:id="@+id/close"
-            android:layout_width="65px"
-            android:layout_height="65px"
-            android:paddingLeft="20px"
-            android:paddingBottom="20px"
-            android:tag="mwar"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/close_icon_selector"/>
 
         <TextView
             android:id="@+id/textHead"
@@ -84,11 +78,13 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayoutHighPriority"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textHead"
                 android:layout_marginTop="40px"
                 android:layout_marginBottom="50px"
+                android:visibility="visible"
                 android:orientation="vertical">
 
                 <ImageView
@@ -143,7 +139,7 @@
                         android:layout_height="100px"
                         android:layout_marginLeft="10px"
                         android:hint="8"
-                        android:maxLength="1"
+                        android:maxLength="2"
                         android:cursorVisible="false"
                         android:textColor="@color/yellow"
                         android:gravity="center"
@@ -171,9 +167,9 @@
                 android:id="@+id/textViewTipValue"
                 android:layout_width="180px"
                 android:layout_height="wrap_content"
-                android:text="1.8X"
+                android:text="1.25X"
                 android:singleLine="true"
-                android:textSize="72px"
+                android:textSize="66px"
                 android:gravity="center"
                 android:layout_marginTop="50px"
                 android:textColor="@color/yellow"/>
@@ -188,6 +184,18 @@
                 android:gravity="center"
                 android:textColor="@color/white"/>
         </LinearLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="65px"
+        android:layout_height="65px"
+        android:paddingLeft="20px"
+        android:paddingBottom="20px"
+        android:layout_alignParentRight="true"
+        android:tag="mwar"
+        android:src="@drawable/close_icon_selector" />
 
     </RelativeLayout>
 

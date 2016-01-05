@@ -15,8 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -29,18 +31,27 @@ public class PriorityTipDialog {
 
     Activity activity;
     double fareFactor;
+    int priorityTipCategory;
+    private Callback callback;
 
-    public PriorityTipDialog(Activity activity, double fareFactor) {
+    public PriorityTipDialog(Activity activity, double fareFactor, int priorityTipCategory, Callback callback) {
         this.activity = activity;
         this.fareFactor = fareFactor;
-        showPriorityTipDialog(activity, fareFactor);
-
+        this.priorityTipCategory = priorityTipCategory;
+        this.callback = callback;
+        if((priorityTipCategory == PriorityTipCategory.LOW_PRIORITY_DIALOG.getOrdinal() ||
+                (priorityTipCategory == PriorityTipCategory.HIGH_PRIORITY_DIALOG.getOrdinal()))){
+            showPriorityTipDialog(activity, fareFactor, priorityTipCategory);
+        }
+        else{
+            callback.onConfirmed();
+        }
     }
 
-    private void showPriorityTipDialog(final Activity activity, double fareFactor){
+    private void showPriorityTipDialog(final Activity activity, double fareFactor, int priorityTipCategory){
         try {
             final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-            dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+            dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_TopInBottomOut;
             dialog.setContentView(R.layout.dialog_priority_tip);
 
             FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
@@ -57,7 +68,8 @@ public class PriorityTipDialog {
             final String part1 = parts[0];
             final String part2 = parts[1];
 
-
+            LinearLayout linearLayoutLowPriority = (LinearLayout)dialog.findViewById(R.id.linearLayoutLowPriority);
+            LinearLayout linearLayoutHighPriority = (LinearLayout)dialog.findViewById(R.id.linearLayoutHighPriority);
             TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
             textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
             TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
@@ -65,11 +77,28 @@ public class PriorityTipDialog {
             TextView textHighPriority = (TextView)dialog.findViewById(R.id.textViewHighPriority);
             textHighPriority.setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
             ImageView close = (ImageView)dialog.findViewById(R.id.close);
+            TextView textViewTipValue = (TextView)dialog.findViewById(R.id.textViewTipValue);
+            textViewTipValue.setTypeface(Fonts.latoRegular(activity));
             EditText editTextValue1 = (EditText)dialog.findViewById(R.id.editTextValue1);
             final EditText editTextValue2 = (EditText)dialog.findViewById(R.id.editTextValue2);
 
-            editTextValue1.setHint(part1);
-            editTextValue2.setHint(part2);
+
+            if(priorityTipCategory == PriorityTipCategory.HIGH_PRIORITY_DIALOG.getOrdinal()){
+                linearLayoutHighPriority.setVisibility(View.VISIBLE);
+                linearLayoutLowPriority.setVisibility(View.GONE);
+                editTextValue1.setHint(part1);
+                editTextValue2.setHint(part2);
+            }else{
+                linearLayoutLowPriority.setVisibility(View.VISIBLE);
+                linearLayoutHighPriority.setVisibility(View.GONE);
+
+                linearLayoutHighPriority.setVisibility(View.VISIBLE);
+                linearLayoutLowPriority.setVisibility(View.GONE);
+                editTextValue1.setHint(part1);
+                editTextValue2.setHint(part2);
+            }
+
+            textViewTipValue.setText(String.valueOf(fareFactor)+"X");
 
             textMessage.setMovementMethod(new ScrollingMovementMethod());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -117,8 +146,10 @@ public class PriorityTipDialog {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Log.v("character is", "--> "+s.toString());
                     if(s.toString().equals(part2)){
                         Log.v("code matched", "code matched");
+                        callback.onConfirmed();
                         dialog.dismiss();
                         Utils.hideSoftKeyboard(activity, editTextValue2);
                     }
@@ -134,6 +165,7 @@ public class PriorityTipDialog {
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
+                    callback.onConfirmed();
                     // listenerPositive.onClick(view);
                 }
             });
@@ -141,6 +173,7 @@ public class PriorityTipDialog {
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    callback.onCancelled();
                     dialog.dismiss();
                 }
             });
@@ -151,4 +184,11 @@ public class PriorityTipDialog {
             e.printStackTrace();
         }
     }
+
+
+    public interface Callback{
+        void onConfirmed();
+        void onCancelled();
+    }
+
 }
