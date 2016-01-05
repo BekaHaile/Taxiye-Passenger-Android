@@ -1190,7 +1190,7 @@
                     android:id="@+id/topRl"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/top_bar_height"
-                    android:background="@color/yellow"
+                    android:background="@drawable/nl_background_theme_color"
                     android:splitMotionEvents="false">
 
                     <ImageView
