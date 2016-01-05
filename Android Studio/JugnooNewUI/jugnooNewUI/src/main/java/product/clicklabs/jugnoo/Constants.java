@@ -40,6 +40,8 @@ public interface Constants {
 
 
 	String KEY_USER_DEBT = "user_debt";
+	String KEY_CLIENT_ID = "client_id";
+	String KEY_IP_ADDRESS= "ip_addr";
 
 
 }

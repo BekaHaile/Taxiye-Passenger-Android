@@ -30,8 +30,8 @@ public interface ApiService {
                                Callback<LeaderboardActivityResponse> callback);
 
     @FormUrlEncoded
-    @POST("/settle_user_debt")
-    void settleUserDebt(@FieldMap Map<String, String> params,
+    @POST("/paytm/wallet/adjust_money")
+    void adjustUserDebt(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
 
 }

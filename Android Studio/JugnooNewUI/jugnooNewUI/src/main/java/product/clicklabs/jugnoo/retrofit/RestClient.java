@@ -39,6 +39,20 @@ public class RestClient {
         API_SERVICES = restAdapter.create(ApiService.class);
     }
 
+    public static ApiService getApiServiceForLink(String url) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.setRetryOnConnectionFailure(false);
+        RestAdapter.Builder builder = new RestAdapter.Builder()
+                .setEndpoint(url)
+                .setClient(new OkClient(okHttpClient))
+                .setLogLevel(RestAdapter.LogLevel.FULL);
+        RestAdapter restAdapter = builder.build();
+        return restAdapter.create(ApiService.class);
+    }
+
     public static ApiService getApiServices() {
         return API_SERVICES;
     }
