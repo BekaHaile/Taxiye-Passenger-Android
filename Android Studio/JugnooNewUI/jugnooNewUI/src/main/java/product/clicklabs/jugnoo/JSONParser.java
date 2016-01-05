@@ -265,7 +265,7 @@ public class JSONParser implements Constants {
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
 
         int userDebtDeducted = userData.optInt(KEY_USER_DEBT_DEDUCTED, 0);
-        double userDebt = userData.optDouble(KEY_USER_DEBT, 10);
+        double userDebt = userData.optDouble(KEY_USER_DEBT, 0);
         String userDebtDate = userData.optString(KEY_USER_DEBT_DATE, "");
 
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
