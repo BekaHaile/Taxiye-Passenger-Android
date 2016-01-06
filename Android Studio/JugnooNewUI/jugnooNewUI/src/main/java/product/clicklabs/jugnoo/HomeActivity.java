@@ -191,7 +191,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //Top RL
-    RelativeLayout topBarMain, topBarInitial;
+    RelativeLayout topBarMain;
     RelativeLayout topRl;
     ImageView imageViewMenu, imageViewSearchCancel, imageViewBack;
     TextView title;
@@ -551,7 +551,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Top RL
         topBarMain = (RelativeLayout) findViewById(R.id.topBarMain);
-        topBarInitial = (RelativeLayout) findViewById(R.id.topBarInitial);
         setupTopBarWithState(PassengerScreenMode.P_INITIAL);
 
 
@@ -1824,13 +1823,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setupTopBarWithState(PassengerScreenMode passengerScreenMode){
         RelativeLayout root = null;
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-            topBarMain.setVisibility(View.GONE);
-            topBarInitial.setVisibility(View.VISIBLE);
-            root = topBarInitial;
+            topBarMain.setVisibility(View.VISIBLE);
+            root = topBarMain;
         }
         else{
             topBarMain.setVisibility(View.VISIBLE);
-            topBarInitial.setVisibility(View.GONE);
             root = topBarMain;
         }
         topRl = (RelativeLayout) root.findViewById(R.id.topRl);
@@ -1874,7 +1871,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switch(v.getId()){
                 case R.id.topRl:
                     Log.e(TAG, "topBarMain.getVisibility()=>"+topBarMain.getVisibility());
-                    Log.e(TAG, "topBarInitial.getVisibility()=>"+topBarInitial.getVisibility());
                     break;
 
                 case R.id.imageViewMenu:
@@ -2418,8 +2414,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                 enableJugnooShopUI();
-
-                setupTopBarWithState(mode);
 
                 switch (mode) {
 
