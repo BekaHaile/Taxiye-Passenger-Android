@@ -144,6 +144,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         SearchListAdapter.SearchListActionsHandler, Constants{
 
 
+    private final String TAG = HomeActivity.class.getSimpleName();
+
     DrawerLayout drawerLayout;                                                                        // views declaration
 
 
@@ -189,6 +191,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //Top RL
+    RelativeLayout topBarMain, topBarInitial;
     RelativeLayout topRl;
     ImageView imageViewMenu, imageViewSearchCancel, imageViewBack;
     TextView title;
@@ -547,19 +550,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         //Top RL
-        topRl = (RelativeLayout) findViewById(R.id.topRl);
-        imageViewMenu = (ImageView) findViewById(R.id.imageViewMenu);
-        imageViewSearchCancel = (ImageView) findViewById(R.id.imageViewSearchCancel);
-        imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-        title = (TextView) findViewById(R.id.title);
-        title.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        checkServerBtn = (Button) findViewById(R.id.checkServerBtn);
-        imageViewHelp = (ImageView) findViewById(R.id.imageViewHelp);
-        jugnooShopImageView = (ImageView) findViewById(R.id.jugnooShopImageView);
-		relativeLayoutNotification = (RelativeLayout) findViewById(R.id.relativeLayoutNotification);
-		textViewNotificationValue = (TextView) findViewById(R.id.textViewNotificationValue);
-		textViewNotificationValue.setTypeface(Fonts.latoRegular(this));
-		textViewNotificationValue.setVisibility(View.GONE);
+        topBarMain = (RelativeLayout) findViewById(R.id.topBarMain);
+        topBarInitial = (RelativeLayout) findViewById(R.id.topBarInitial);
+        setupTopBarWithState(PassengerScreenMode.P_INITIAL);
 
 
         //Map Layout
@@ -914,93 +907,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-        //Top bar events
-		topRl.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
 
-        imageViewMenu.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(menuLayout);
-                hideAnims();
-                FlurryEventLogger.event(MENU_LOOKUP);
-            }
-        });
-
-        imageViewBack.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
-            }
-        });
-
-        checkServerBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				hideAnims();
-			}
-		});
-
-        checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(getApplicationContext(), "" + Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
-                FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
-                return false;
-            }
-        });
-
-
-        jugnooShopImageView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (Data.userData != null) {
-					if (Data.userData.nukkadEnable == 1) {
-						startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
-						overridePendingTransition(R.anim.right_in, R.anim.right_out);
-						FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
-					}
-				}
-				hideAnims();
-			}
-		});
-
-        imageViewSearchCancel.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                textViewInitialSearch.setText("");
-                Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
-                FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
-            }
-        });
-
-
-        imageViewHelp.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sosDialog(HomeActivity.this);
-                FlurryEventLogger.event(SOS_ALERT_USED);
-            }
-        });
-
-		relativeLayoutNotification.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
-				FlurryEventLogger.event(NOTIFICATION_ICON);
-			}
-		});
 
 
 
@@ -1914,6 +1821,112 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     }
 
+    private void setupTopBarWithState(PassengerScreenMode passengerScreenMode){
+        RelativeLayout root = null;
+        if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+            topBarMain.setVisibility(View.GONE);
+            topBarInitial.setVisibility(View.VISIBLE);
+            root = topBarInitial;
+        }
+        else{
+            topBarMain.setVisibility(View.VISIBLE);
+            topBarInitial.setVisibility(View.GONE);
+            root = topBarMain;
+        }
+        topRl = (RelativeLayout) root.findViewById(R.id.topRl);
+        imageViewMenu = (ImageView) root.findViewById(R.id.imageViewMenu);
+        imageViewSearchCancel = (ImageView) root.findViewById(R.id.imageViewSearchCancel);
+        imageViewBack = (ImageView) root.findViewById(R.id.imageViewBack);
+        title = (TextView) root.findViewById(R.id.title);title.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        checkServerBtn = (Button) root.findViewById(R.id.checkServerBtn);
+        imageViewHelp = (ImageView) root.findViewById(R.id.imageViewHelp);
+        jugnooShopImageView = (ImageView) root.findViewById(R.id.jugnooShopImageView);
+        relativeLayoutNotification = (RelativeLayout) root.findViewById(R.id.relativeLayoutNotification);
+        textViewNotificationValue = (TextView) root.findViewById(R.id.textViewNotificationValue);
+        textViewNotificationValue.setTypeface(Fonts.latoRegular(this));
+        textViewNotificationValue.setVisibility(View.GONE);
+
+        //Top bar events
+        topRl.setOnClickListener(topBarOnClickListener);
+        imageViewMenu.setOnClickListener(topBarOnClickListener);
+        imageViewBack.setOnClickListener(topBarOnClickListener);
+        checkServerBtn.setOnClickListener(topBarOnClickListener);
+
+        checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getApplicationContext(), "" + Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
+                FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
+                return false;
+            }
+        });
+
+        jugnooShopImageView.setOnClickListener(topBarOnClickListener);
+        imageViewSearchCancel.setOnClickListener(topBarOnClickListener);
+        imageViewHelp.setOnClickListener(topBarOnClickListener);
+        relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
+
+    }
+
+    private OnClickListener topBarOnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.topRl:
+                    Log.e(TAG, "topBarMain.getVisibility()=>"+topBarMain.getVisibility());
+                    Log.e(TAG, "topBarInitial.getVisibility()=>"+topBarInitial.getVisibility());
+                    break;
+
+                case R.id.imageViewMenu:
+                    drawerLayout.openDrawer(menuLayout);
+                    hideAnims();
+                    FlurryEventLogger.event(MENU_LOOKUP);
+                    break;
+
+                case R.id.imageViewBack:
+                    HomeActivity.this.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(HomeActivity.this.passengerScreenMode);
+                    break;
+
+                case R.id.checkServerBtn:
+                    hideAnims();
+                    break;
+
+                case R.id.jugnooShopImageView:
+                    if (Data.userData != null) {
+                        if (Data.userData.nukkadEnable == 1) {
+                            startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
+                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
+                        }
+                    }
+                    hideAnims();
+                    break;
+
+                case R.id.imageViewSearchCancel:
+                    textViewInitialSearch.setText("");
+                    Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
+                    HomeActivity.this.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(HomeActivity.this.passengerScreenMode);
+                    FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
+                    break;
+
+                case R.id.imageViewHelp:
+                    sosDialog(HomeActivity.this);
+                    FlurryEventLogger.event(SOS_ALERT_USED);
+                    break;
+
+                case R.id.relativeLayoutNotification:
+                    startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(NOTIFICATION_ICON);
+                    break;
+
+            }
+        }
+    };
+
+
 //	private void hideMenuDrawer(){
 //		drawerLayout.closeDrawer(menuLayout);
 //	}
@@ -2405,6 +2418,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                 enableJugnooShopUI();
+
+                setupTopBarWithState(mode);
 
                 switch (mode) {
 
