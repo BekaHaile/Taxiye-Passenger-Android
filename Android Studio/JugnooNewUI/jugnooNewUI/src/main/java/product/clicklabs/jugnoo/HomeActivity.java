@@ -66,6 +66,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -413,6 +414,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     CallbackManager callbackManager;
     public final int ADD_HOME = 2, ADD_WORK = 3;
     private String dropLocationSearchText = "";
+    private SlidingUpPanelLayout slidingUpPanelLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -546,6 +548,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
         textViewAbout.setTypeface(Fonts.latoRegular(this));
+
+        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slidingLayout);
+        slidingUpPanelLayout.setParallaxOffset((int) (96 * ASSL.Yscale()));
 
 
 
@@ -1576,6 +1581,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Data.lastRefreshLatLng = new LatLng(Data.latitude, Data.longitude);
             }
 
+            /*map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    Log.v("map", "click");
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+            });*/
 
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
@@ -1646,6 +1658,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapTouched() {
                     // Map touched
                     hideAnims();
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
 
                 @Override
@@ -1817,6 +1830,35 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
+        //slidingUpPanelLayout.setOverlayed(true);
+        slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelExpanded(View panel) {
+                Log.i(TAG, "onPanelExpanded");
+
+            }
+
+            @Override
+            public void onPanelCollapsed(View panel) {
+                Log.i(TAG, "onPanelCollapsed");
+
+            }
+
+            @Override
+            public void onPanelAnchored(View panel) {
+                Log.i(TAG, "onPanelAnchored");
+            }
+
+            @Override
+            public void onPanelHidden(View panel) {
+                Log.i(TAG, "onPanelHidden");
+            }
+        });
 
     }
 
@@ -2415,6 +2457,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 enableJugnooShopUI();
 
+                setSlidingUpPanelLayoutState(mode);
+
                 switch (mode) {
 
                     case P_INITIAL:
@@ -2875,6 +2919,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    private void setSlidingUpPanelLayoutState(PassengerScreenMode passengerScreenMode){
+        if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        } else{
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         }
     }
 

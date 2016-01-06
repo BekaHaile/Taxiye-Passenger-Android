@@ -17,8 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
-            sothree:umanoPanelHeight="68dp"
-            sothree:umanoShadowHeight="4dp">
+            sothree:umanoFadeColor="@color/transparent"
+            sothree:umanoPanelHeight="100px"
+            sothree:umanoShadowHeight="10px">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -1187,12 +1188,27 @@
 
         </RelativeLayout>
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/slidingBottom"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center|top"
-                android:text="The Awesome Sliding Up Panel"
-                android:textSize="16sp" />
+                android:layout_height="500px"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|top"
+                    android:text="The Awesome Sliding Up Panel"
+                    android:textSize="34px" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="100px"
+                    android:layout_margin="50px"
+                    android:background="@drawable/button_theme"/>
+
+            </LinearLayout>
+
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
     </FrameLayout>
 
