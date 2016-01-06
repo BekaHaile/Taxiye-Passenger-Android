@@ -324,9 +324,12 @@ public class Data {
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
 
+			if(data.getQueryParameter("referral_code") != null){
+				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
+			}
+
 			if(data.getQueryParameter("deepindex") != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
-				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
 			}
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
@@ -352,10 +355,12 @@ public class Data {
 				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
 				Uri dataTarget = Uri.parse(targetUrl);
 
+				if(dataTarget.getQueryParameter("referral_code") != null){
+					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
+				}
+
 				if(dataTarget.getQueryParameter("deepindex") != null){
 					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
-					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
-					Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 				}
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
 					Data.deepLinkPickup = 1;
