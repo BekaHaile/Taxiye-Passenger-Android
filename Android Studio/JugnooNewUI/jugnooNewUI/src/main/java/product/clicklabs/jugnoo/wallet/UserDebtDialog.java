@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -35,24 +36,41 @@ import retrofit.mime.TypedByteArray;
 public class UserDebtDialog {
 
 	private Activity activity;
-	public UserDebtDialog(Activity activity){
+	private UserData userData;
+	public UserDebtDialog(Activity activity, UserData userData){
 		this.activity = activity;
+		this.userData = userData;
 	}
 
-	public void showUserDebtDialog(final double paytmBalance, final double userDebt) {
-		DialogPopup.alertPopupWithListener(activity, "",
-				String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message),
-						userDebt),
+	public void showUserDebtDialog(final double userDebt, String message) {
+		if(message.length() == 0){
+			message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
+		}
+		DialogPopup.alertPopupWithListener(activity, "", message,
 				activity.getResources().getString(R.string.user_debt_pay_via_paytm),
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(paytmBalance >= userDebt){
-							settleUserDebt(activity);
-						}
-						else{
+						if(userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+							if(userData.getPaytmBalance() >= userDebt){
+								settleUserDebt(activity);
+							}
+							else{
+								Intent intent = new Intent(activity, PaymentActivity.class);
+								intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+								activity.startActivity(intent);
+								activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+								FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
+							}
+						} else if(userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)){
 							Intent intent = new Intent(activity, PaymentActivity.class);
-							intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+							intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+							activity.startActivity(intent);
+							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+							FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
+						} else{
+							Intent intent = new Intent(activity, PaymentActivity.class);
+							intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
 							activity.startActivity(intent);
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 							FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
@@ -73,7 +91,7 @@ public class UserDebtDialog {
 				params.put(Constants.KEY_IP_ADDRESS, Utils.getLocalIpAddress());
 				Log.i("params", "=" + params);
 
-				RestClient.getApiServiceForLink("https://test.jugnoo.in:8017").adjustUserDebt(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().adjustUserDebt(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						Log.e("Server response settle_user_debt", "response = " + response);

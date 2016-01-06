@@ -55,6 +55,12 @@ public class PaymentActivity extends BaseFragmentActivity{
 					.addToBackStack(PaytmRechargeFragment.class.getName())
 					.commitAllowingStateLoss();
 		}
+		else if(AddPaymentPath.ADD_PAYTM.getOrdinal() == addPaymentPathInt){
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.fragLayout, new AddPaytmFragment(), AddPaytmFragment.class.getName())
+					.addToBackStack(AddPaytmFragment.class.getName())
+					.commitAllowingStateLoss();
+		}
 
 		Data.paytmPaymentState = PaytmPaymentState.INIT;
     }
@@ -63,25 +69,49 @@ public class PaymentActivity extends BaseFragmentActivity{
     @Override
     public void onBackPressed() {
 		try {
-			Fragment paytmRechargeFragment = getSupportFragmentManager()
-					.findFragmentByTag(PaytmRechargeFragment.class.getName());
-			if (paytmRechargeFragment != null && paytmRechargeFragment.isVisible()
-					&& paytmRechargeFragment instanceof PaytmRechargeFragment) {
-				((PaytmRechargeFragment) paytmRechargeFragment).performBackPressed();
+			Fragment fragment = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
+			if (fragment != null
+					&& fragment.isVisible()
+					&& fragment instanceof PaytmRechargeFragment
+					&& ((PaytmRechargeFragment)fragment).getButtonRemoveWalletVisiblity() == View.VISIBLE) {
+				((PaytmRechargeFragment) fragment).performBackPressed();
 			} else {
-				if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-					finish();
-					overridePendingTransition(R.anim.left_in, R.anim.left_out);
-				} else {
-					super.onBackPressed();
-				}
+				goBack();
 			}
+
+//			if(AddPaymentPath.WALLET.getOrdinal() == addPaymentPathInt){
+//				goBack();
+//			}
+//			else if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
+//				Fragment fragment = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
+//				if (fragment != null && fragment.isVisible() && fragment instanceof PaytmRechargeFragment) {
+//					((PaytmRechargeFragment) fragment).performBackPressed();
+//				} else{
+//					goBack();
+//				}
+//			}
+//			else if(AddPaymentPath.ADD_PAYTM.getOrdinal() == addPaymentPathInt){
+//				Fragment fragment = getSupportFragmentManager().findFragmentByTag(AddPaytmFragment.class.getName());
+//				if (fragment != null && fragment.isVisible() && fragment instanceof AddPaytmFragment) {
+//					((AddPaytmFragment) fragment).performBackPressed();
+//				} else{
+//					goBack();
+//				}
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			super.onBackPressed();
 		}
 	}
 
+	private void goBack(){
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		} else {
+			super.onBackPressed();
+		}
+	}
 
 
 

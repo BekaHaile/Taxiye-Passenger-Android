@@ -20,7 +20,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
@@ -289,18 +288,7 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
                                     promoCouponList.addAll(JSONParser.parsePromoCoupons(jObj));
                                     JSONParser.parseCurrentFareStructure(jObj);
 
-                                    if(promoCouponList.size() > 0) {
-                                        selectedCoupon = noSelectionCoupon;
-                                        startDismissHandler();
-                                    }
-                                    else{
-                                        selectedCoupon = new CouponInfo(0, "");
-                                    }
-
-                                    double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, -1);
-
-                                    PromotionsListAdapter.this.notifyDataSetChanged();
-									promotionListEventHandler.onPromoListFetched(promoCouponList.size(), userDebt);
+                                    callOnPromoListFetched();
                                 }
                                 else{
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -318,10 +306,23 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
         }
     }
 
+    public void callOnPromoListFetched(){
+        if(promoCouponList.size() > 0) {
+            selectedCoupon = noSelectionCoupon;
+            startDismissHandler();
+        }
+        else{
+            selectedCoupon = new CouponInfo(0, "");
+        }
+
+        PromotionsListAdapter.this.notifyDataSetChanged();
+        promotionListEventHandler.onPromoListFetched(promoCouponList.size());
+    }
+
 
 	public interface PromotionListEventHandler {
 		void onDismiss();
-		void onPromoListFetched(int totalPromoCoupons, double userDebt);
+		void onPromoListFetched(int totalPromoCoupons);
 		void onPromoSelected(PromoCoupon promoCoupon);
 		void onLowPaytmBalance();
 	}

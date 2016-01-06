@@ -629,42 +629,34 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             @Override
-            public void onPromoListFetched(int totalPromoCoupons, double userDebt) {
-                if(userDebt > 0){
-                    new UserDebtDialog(HomeActivity.this)
-                            .showUserDebtDialog(Data.userData.getPaytmBalance(), userDebt);
-                }
-                else{
-                    promoOpened = true;
-                    textViewRRMinFare.setText("Minimum Fare " + getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
-                    imageViewMenu.setVisibility(View.GONE);
-                    imageViewBack.setVisibility(View.VISIBLE);
+            public void onPromoListFetched(int totalPromoCoupons) {
+                promoOpened = true;
+                textViewRRMinFare.setText("Minimum Fare " + getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
+                imageViewMenu.setVisibility(View.GONE);
+                imageViewBack.setVisibility(View.VISIBLE);
 //                genieLayout.setVisibility(View.GONE);
-                    centreLocationRl.setVisibility(View.VISIBLE);
-                    linearLayoutPromo.setVisibility(View.VISIBLE);
-                    initialMyLocationBtn.setVisibility(View.GONE);
-                    imageViewRideNow.setVisibility(View.GONE);
+                centreLocationRl.setVisibility(View.VISIBLE);
+                linearLayoutPromo.setVisibility(View.VISIBLE);
+                initialMyLocationBtn.setVisibility(View.GONE);
+                imageViewRideNow.setVisibility(View.GONE);
 
-                    setGoogleMapPadding(40);
-                    updatePreferredPaymentOptionUI();
+                setGoogleMapPadding(40);
+                updatePreferredPaymentOptionUI();
 
-                    if(totalPromoCoupons > 0){
-                        listViewPromotions.setVisibility(View.VISIBLE);
-                        listViewPromotions.setSelection(0);
-                        imageViewListViewPromotionsSep.setVisibility(View.VISIBLE);
-                        if(totalPromoCoupons > 3){
-                            LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
-                            layoutParamsList.height = (int) (ASSL.Yscale() * 300.0f);
-                            listViewPromotions.setLayoutParams(layoutParamsList);
-                        }
-                        else{
-                            Utils.expandListForVariableHeight(listViewPromotions);
-                        }
+                if (totalPromoCoupons > 0) {
+                    listViewPromotions.setVisibility(View.VISIBLE);
+                    listViewPromotions.setSelection(0);
+                    imageViewListViewPromotionsSep.setVisibility(View.VISIBLE);
+                    if (totalPromoCoupons > 3) {
+                        LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
+                        layoutParamsList.height = (int) (ASSL.Yscale() * 300.0f);
+                        listViewPromotions.setLayoutParams(layoutParamsList);
+                    } else {
+                        Utils.expandListForVariableHeight(listViewPromotions);
                     }
-                    else{
-                        listViewPromotions.setVisibility(View.GONE);
-                        imageViewListViewPromotionsSep.setVisibility(View.GONE);
-                    }
+                } else {
+                    listViewPromotions.setVisibility(View.GONE);
+                    imageViewListViewPromotionsSep.setVisibility(View.GONE);
                 }
             }
 
@@ -5855,7 +5847,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             }
                                         } else {
                                             int flag = jObj.getInt("flag");
-
                                             if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
                                                 Log.e("ASSIGNING_DRIVERS log", "=" + log);
@@ -5895,6 +5886,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 															pickupDropZoomed = false;
 															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                                             switchPassengerScreen(passengerScreenMode);
+                                                        }
+                                                    }
+                                                });
+                                            } else if(ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag){
+                                                final String message = jObj.optString(KEY_MESSAGE, "");
+                                                final double userDebt = jObj.optDouble(KEY_USER_DEBT, 0);
+                                                Log.e("USER_IN_DEBT message", "=" + message);
+                                                cancelTimerRequestRide();
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+                                                            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                                            switchPassengerScreen(passengerScreenMode);
+                                                            promotionsListAdapter.callOnPromoListFetched();
+                                                            new UserDebtDialog(HomeActivity.this, Data.userData).showUserDebtDialog(userDebt, message);
                                                         }
                                                     }
                                                 });

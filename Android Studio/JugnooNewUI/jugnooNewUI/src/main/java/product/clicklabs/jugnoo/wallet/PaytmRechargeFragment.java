@@ -84,6 +84,10 @@ public class PaytmRechargeFragment extends Fragment {
 		FlurryAgent.onEndSession(getActivity());
 	}
 
+	public int getButtonRemoveWalletVisiblity(){
+		return buttonRemoveWallet.getVisibility();
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_paytm_recharge, container, false);
@@ -373,6 +377,7 @@ public class PaytmRechargeFragment extends Fragment {
 		}
 
 	}
+
 
 
 	@Override
