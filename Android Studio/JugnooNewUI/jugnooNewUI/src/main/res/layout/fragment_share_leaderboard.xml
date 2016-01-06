@@ -31,7 +31,7 @@
             android:layout_width="@dimen/share_lb_button_width"
             android:layout_height="@dimen/share_lb_button_height"
             android:layout_marginRight="30px"
-            android:background="@drawable/button_yellow_normal"
+            android:background="@drawable/nl_button_theme_normal"
             android:text="@string/global_leaderboard"
             android:textColor="@color/white"
             android:textSize="@dimen/button_text_size"
@@ -56,7 +56,7 @@
             android:text="@string/daily_leaderboard"
             android:textColor="@color/white"
             android:textSize="@dimen/share_lb_text_size"
-            android:background="@drawable/background_yellow"
+            android:background="@drawable/nl_background_theme"
             />
         <TextView
             android:id="@+id/textViewWeekly"

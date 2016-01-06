@@ -145,7 +145,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 
 			if(LBTimeType.DAILY == lbTimeType){
 				if(this.lbTimeType != lbTimeType) {
-					textViewDaily.setBackgroundResource(R.drawable.background_yellow);
+					textViewDaily.setBackgroundResource(R.drawable.nl_background_theme);
 					textViewDaily.setTextColor(getResources().getColor(R.color.white));
 					textViewWeekly.setBackgroundResource(R.drawable.background_white_bordered_yellow_selector);
 					textViewWeekly.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
@@ -155,14 +155,14 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 				if(this.lbTimeType != lbTimeType) {
 					textViewDaily.setBackgroundResource(R.drawable.background_white_bordered_yellow_selector);
 					textViewDaily.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
-					textViewWeekly.setBackgroundResource(R.drawable.background_yellow);
+					textViewWeekly.setBackgroundResource(R.drawable.nl_background_theme);
 					textViewWeekly.setTextColor(getResources().getColor(R.color.white));
 				}
 			}
 
 			if(LBLocationType.LOCAL == lbLocationType){
 				if(this.lbLocationType != lbLocationType){
-					buttonLocal.setBackgroundResource(R.drawable.button_yellow_normal);
+					buttonLocal.setBackgroundResource(R.drawable.nl_button_theme_normal);
 					buttonLocal.setTextColor(getResources().getColor(R.color.white));
 					buttonGlobal.setBackgroundResource(R.drawable.background_white_bordered_yellow_rounded_selector);
 					buttonGlobal.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
@@ -182,7 +182,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 				if(this.lbLocationType != lbLocationType) {
 					buttonLocal.setBackgroundResource(R.drawable.background_white_bordered_yellow_rounded_selector);
 					buttonLocal.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
-					buttonGlobal.setBackgroundResource(R.drawable.button_yellow_normal);
+					buttonGlobal.setBackgroundResource(R.drawable.nl_button_theme_normal);
 					buttonGlobal.setTextColor(getResources().getColor(R.color.white));
 				}
 				if(LBTimeType.DAILY == lbTimeType){
